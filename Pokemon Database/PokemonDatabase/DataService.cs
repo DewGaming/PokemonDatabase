@@ -24,14 +24,34 @@ namespace PokemonDatabase
             return _dataContext.Abilities.ToList().Find(x => x.ID == ID);
         }
 
-        public List<PokemonDatabase.Models.Type> GetTypes()
+        public PokemonDatabase.Models.Type GetType(int ID)
         {
-            return _dataContext.Types.ToList();
+            return _dataContext.Types.ToList().Find(x => x.ID == ID);;
         }
 
-        public List<EggGroup> GetEggGroups()
+        public EggGroup GetEggGroup(int ID)
         {
-            return _dataContext.EggGroups.ToList();
+            return _dataContext.EggGroups.ToList().Find(x => x.ID == ID);;
+        }
+
+        public BaseHappiness GetBaseHappiness(int ID)
+        {
+            return _dataContext.BaseHappiness.ToList().Find(x => x.ID == ID);
+        }
+
+        public Classification GetClassification(int ID)
+        {
+            return _dataContext.Classifications.ToList().Find(x => x.ID == ID);;
+        }
+
+        public CaptureRate GetCaptureRate(int ID)
+        {
+            return _dataContext.CaptureRates.ToList().Find(x => x.ID == ID);
+        }
+
+        public EggCycle GetEggCycle(int ID)
+        {
+            return _dataContext.EggCycles.ToList().Find(x => x.ID == ID);;
         }
     }
 }

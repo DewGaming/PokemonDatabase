@@ -31,29 +31,5 @@ namespace PokemonDatabase.Controllers
 
             return View();
         }
-
-        [Route("ability/{ID:int}")]
-        public IActionResult Ability(int ID)
-        {
-            Ability model = _dataService.GetAbility(ID);
-
-            return View(model);
-        }
-
-        [Route("type")]
-        public IActionResult Type()
-        {
-            List<PokemonDatabase.Models.Type> model = _dataService.GetTypes();
-
-            return View(model);
-        }
-
-        [Route("egggroup")]
-        public IActionResult EggGroup()
-        {
-            List<EggGroup> model = _dataService.GetEggGroups();
-
-            return View(model);
-        }
     }
 }
