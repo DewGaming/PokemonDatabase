@@ -22,5 +22,13 @@ namespace PokemonDatabase.Models
         public DbSet<Classification> Classifications { get; set; }
 
         public DbSet<EggCycle> EggCycles { get; set; }
+
+        public DbSet<ExperienceGrowth> ExperienceGrowths { get; set; }
+
+        public DbSet<GenderRatio> GenderRatios { get; set; }
+
+        public DbSet<Generation> Generations { get; set; }
+
+        public DbSet<Pokemon> Pokemon { get; set; }
     }
 }

@@ -31,5 +31,21 @@ namespace PokemonDatabase.Controllers
 
             return View();
         }
+
+        [Route("pokemon")]
+        public IActionResult AllPokemon()
+        {
+            List<Pokemon> model = _dataService.GetAllPokemon();
+
+            return View(model);
+        }
+
+        [Route("pokemon/{ID}")]
+        public IActionResult Pokemon(string ID)
+        {
+            Pokemon model = _dataService.GetPokemon(ID);
+
+            return View(model);
+        }
     }
 }
