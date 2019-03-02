@@ -14,24 +14,50 @@ namespace PokemonDatabase
            _dataContext = dataContext;
         }
 
-        public List<Ability> GetAbilities()
-        {
-            return _dataContext.Abilities.ToList();
-        }
-
         public Ability GetAbility(int ID)
         {
             return _dataContext.Abilities.ToList().Find(x => x.ID == ID);
         }
 
-        public PokemonDatabase.Models.Type GetType(int ID)
+        public List<Ability> GetAbilities(string PokemonID)
+        {
+            PokemonAbilityDetail abilityDetail = _dataContext.PokemonAbilityDetails.ToList().Find(x => x.PokemonID == PokemonID);
+            List<Ability> abilities = new List<Ability>();
+            abilities.Add(this.GetAbility(abilityDetail.PrimaryAbilityID));
+            if (abilityDetail.SecondaryAbilityID != null)
+            {
+                abilities.Add(this.GetAbility((int)abilityDetail.SecondaryAbilityID));
+            }
+            
+            if (abilityDetail.HiddenAbilityID != null)
+            {
+                abilities.Add(this.GetAbility((int)abilityDetail.HiddenAbilityID));
+            }
+
+            return abilities;
+        }
+
+        public Models.Type GetType(int ID)
         {
             return _dataContext.Types.ToList().Find(x => x.ID == ID);
         }
 
-        public List<PokemonDatabase.Models.Type> GetTypes()
+        public List<Models.Type> GetTypes()
         {
             return _dataContext.Types.ToList();
+        }
+
+        public List<Models.Type> GetTyping(string PokemonID)
+        {
+            PokemonTypeDetail typeDetail = _dataContext.PokemonTypeDetails.ToList().Find(x => x.PokemonID == PokemonID);
+            List<Models.Type> types = new List<Models.Type>();
+            types.Add(this.GetType(typeDetail.PrimaryTypeID));
+            if (typeDetail.SecondaryTypeID != null)
+            {
+                types.Add(this.GetType((int)typeDetail.SecondaryTypeID));
+            }
+
+            return types;
         }
 
         public EggGroup GetEggGroup(int ID)

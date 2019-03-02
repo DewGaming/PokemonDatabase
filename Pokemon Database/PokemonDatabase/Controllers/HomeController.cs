@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -43,10 +44,18 @@ namespace PokemonDatabase.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string Name)
         {
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            if (Name != textInfo.ToTitleCase(Name))
+            {
+                Name = textInfo.ToTitleCase(Name);
+            }
+
             PokemonViewModel viewModel = new PokemonViewModel();
             viewModel.pokemon = _dataService.GetPokemon(Name);
             viewModel.baseStats = _dataService.GetBaseStat(viewModel.pokemon.ID);
             viewModel.evYields = _dataService.GetEVYield(viewModel.pokemon.ID);
+            viewModel.types = _dataService.GetTyping(viewModel.pokemon.ID);
+            viewModel.abilities = _dataService.GetAbilities(viewModel.pokemon.ID);
 
             return View(viewModel);
         }

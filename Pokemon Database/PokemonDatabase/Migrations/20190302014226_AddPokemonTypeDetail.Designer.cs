@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokemonDatabase.Models;
 
 namespace PokemonDatabase.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190302014226_AddPokemonTypeDetail")]
+    partial class AddPokemonTypeDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,33 +266,6 @@ namespace PokemonDatabase.Migrations
                     b.ToTable("Pokemon");
                 });
 
-            modelBuilder.Entity("PokemonDatabase.Models.PokemonAbilityDetail", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("HiddenAbilityID");
-
-                    b.Property<string>("PokemonID");
-
-                    b.Property<int>("PrimaryAbilityID");
-
-                    b.Property<int?>("SecondaryAbilityID");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("HiddenAbilityID");
-
-                    b.HasIndex("PokemonID");
-
-                    b.HasIndex("PrimaryAbilityID");
-
-                    b.HasIndex("SecondaryAbilityID");
-
-                    b.ToTable("PokemonAbilityDetails");
-                });
-
             modelBuilder.Entity("PokemonDatabase.Models.PokemonTypeDetail", b =>
                 {
                     b.Property<int>("ID")
@@ -397,26 +372,6 @@ namespace PokemonDatabase.Migrations
                     b.HasOne("PokemonDatabase.Models.Generation", "Generation")
                         .WithMany()
                         .HasForeignKey("GenerationID");
-                });
-
-            modelBuilder.Entity("PokemonDatabase.Models.PokemonAbilityDetail", b =>
-                {
-                    b.HasOne("PokemonDatabase.Models.Ability", "HiddenAbility")
-                        .WithMany()
-                        .HasForeignKey("HiddenAbilityID");
-
-                    b.HasOne("PokemonDatabase.Models.Pokemon", "Pokemon")
-                        .WithMany()
-                        .HasForeignKey("PokemonID");
-
-                    b.HasOne("PokemonDatabase.Models.Ability", "PrimaryAbility")
-                        .WithMany()
-                        .HasForeignKey("PrimaryAbilityID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("PokemonDatabase.Models.Ability", "SecondaryAbility")
-                        .WithMany()
-                        .HasForeignKey("SecondaryAbilityID");
                 });
 
             modelBuilder.Entity("PokemonDatabase.Models.PokemonTypeDetail", b =>

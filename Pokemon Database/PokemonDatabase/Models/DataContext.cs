@@ -34,5 +34,7 @@ namespace PokemonDatabase.Models
         public DbSet<EVYield> EVYields { get; set; }
         public DbSet<Form> Forms { get; set; }
         public DbSet<TypeChart> TypeChart { get; set; }
+        public DbSet<PokemonTypeDetail> PokemonTypeDetails { get; set; }
+        public DbSet<PokemonAbilityDetail> PokemonAbilityDetails { get; set; }
     }
 }

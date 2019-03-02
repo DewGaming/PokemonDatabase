@@ -3,8 +3,40 @@
     Layout = "_Layout";
 }
 
-<h2>#@Model.pokemon.ID @Model.pokemon.Name @Model.pokemon.Classification.Name</h2>
-<div>
+<div class="pokemonName">
+    <b>#@Model.pokemon.ID @Model.pokemon.Name</b>
+</div>
+<div class="classification">
+    @Model.pokemon.Classification.Name
+</div>
+<div class="typing">Typing: 
+    @for(int i = 0; i < Model.types.Count; i++)
+    {
+        if (i > 0)
+        {
+            @(" / ");
+        }
+
+        @Model.types[i].Name
+    }
+</div>
+<div class="abilities">Abilities: 
+    @for(int i = 0; i < Model.abilities.Count; i++)
+    {
+        if (i > 0)
+        {
+            @(" / ");
+        }
+
+        @Model.abilities[i].Name
+
+        if (i + 1 == Model.abilities.Count && i != 0)
+        {
+            @(" (Hidden)");
+        }
+    }
+</div>
+<div class="baseStats">
     <h4>Base Stats (@Model.baseStats.StatTotal Total)</h4>
     <table class="baseStatTable">
         <tr>
@@ -25,7 +57,7 @@
         </tr>
     </table>
 </div>
-<div>
+<div class="evYield">
     <h4>EV Yield (@Model.evYields.EVTotal Total)</h4>
     <table class="evYieldTable">
         <tr>
