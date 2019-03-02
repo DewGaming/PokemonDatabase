@@ -1,6 +1,84 @@
-@model PokemonDatabase.Models.Pokemon
+@model PokemonDatabase.Models.PokemonViewModel
 @{
     Layout = "_Layout";
 }
 
-<h2>#@Model.ID @Model.Name @Model.Classification.Name</h2>
+<h2>#@Model.pokemon.ID @Model.pokemon.Name @Model.pokemon.Classification.Name</h2>
+<div>
+    <h4>Base Stats (@Model.baseStats.StatTotal Total)</h4>
+    <table class="baseStatTable">
+        <tr>
+            <th scope="col">Health</th>
+            <th scope="col">Attack</th>
+            <th scope="col">Defense</th>
+            <th scope="col">Special Attack</th>
+            <th scope="col">Special Defense</th>
+            <th scope="col">Speed</th>
+        </tr>
+        <tr>
+            <td>@Model.baseStats.Health</td>
+            <td>@Model.baseStats.Attack</td>
+            <td>@Model.baseStats.Defense</td>
+            <td>@Model.baseStats.SpecialAttack</td>
+            <td>@Model.baseStats.SpecialDefense</td>
+            <td>@Model.baseStats.Speed</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <h4>EV Yield (@Model.evYields.EVTotal Total)</h4>
+    <table class="evYieldTable">
+        <tr>
+            @if (Model.evYields.Health != 0)
+            {
+                <th scope="col">Health</th>
+            }
+            @if (Model.evYields.Attack != 0)
+            {
+                <th scope="col">Attack</th>
+            }
+            @if (Model.evYields.Defense != 0)
+            {
+                <th scope="col">Defense</th>
+            }
+            @if (Model.evYields.SpecialAttack != 0)
+            {
+                <th scope="col">Special Attack</th>
+            }
+            @if (Model.evYields.SpecialDefense != 0)
+            {
+                <th scope="col">Special Defense</th>
+            }
+            @if (Model.evYields.Speed != 0)
+            {
+                <th scope="col">Speed</th>
+            }
+        </tr>
+        <tr>
+            @if(Model.evYields.Health != 0)
+            {
+                <td>@Model.evYields.Health</td>
+            }
+            @if(Model.evYields.Attack != 0)
+            {
+                <td>@Model.evYields.Attack</td>
+            }
+            @if(Model.evYields.Defense != 0)
+            {
+                <td>@Model.evYields.Defense</td>
+            }
+            @if(Model.evYields.SpecialAttack != 0)
+            {
+                <td>@Model.evYields.SpecialAttack</td>
+            }
+            @if(Model.evYields.SpecialDefense != 0)
+            {
+                <td>@Model.evYields.SpecialDefense</td>
+            }
+            @if(Model.evYields.Speed != 0)
+            {
+                <td>@Model.evYields.Speed</td>
+            }
+        </tr>
+    </table>
+</div>

@@ -43,9 +43,12 @@ namespace PokemonDatabase.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string Name)
         {
-            Pokemon model = _dataService.GetPokemon(Name);
+            PokemonViewModel viewModel = new PokemonViewModel();
+            viewModel.pokemon = _dataService.GetPokemon(Name);
+            viewModel.baseStats = _dataService.GetBaseStat(viewModel.pokemon.ID);
+            viewModel.evYields = _dataService.GetEVYield(viewModel.pokemon.ID);
 
-            return View(model);
+            return View(viewModel);
         }
     }
 }

@@ -101,14 +101,14 @@ namespace PokemonDatabase
             return pokemon;
         }
 
-        public BaseStat GetBaseStat(string ID)
+        public BaseStat GetBaseStat(string PokemonID)
         {
-            return _dataContext.BaseStats.ToList().Find(x => x.PokemonID == ID);
+            return _dataContext.BaseStats.ToList().Find(x => x.PokemonID == PokemonID);
         }
 
-        public EVYield GetEVYield(string ID)
+        public EVYield GetEVYield(string PokemonID)
         {
-            return _dataContext.EVYields.ToList().Find(x => x.PokemonID == ID);
+            return _dataContext.EVYields.ToList().Find(x => x.PokemonID == PokemonID);
         }
 
         public Form GetForm(int ID)
