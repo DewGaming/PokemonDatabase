@@ -30,5 +30,9 @@ namespace PokemonDatabase.Models
         public DbSet<Generation> Generations { get; set; }
 
         public DbSet<Pokemon> Pokemon { get; set; }
+        public DbSet<BaseStat> BaseStats { get; set; }
+        public DbSet<EVYield> EVYields { get; set; }
+        public DbSet<Form> Forms { get; set; }
+        public DbSet<TypeChart> TypeChart { get; set; }
     }
 }

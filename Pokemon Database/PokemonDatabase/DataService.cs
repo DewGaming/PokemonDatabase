@@ -29,6 +29,11 @@ namespace PokemonDatabase
             return _dataContext.Types.ToList().Find(x => x.ID == ID);
         }
 
+        public List<PokemonDatabase.Models.Type> GetTypes()
+        {
+            return _dataContext.Types.ToList();
+        }
+
         public EggGroup GetEggGroup(int ID)
         {
             return _dataContext.EggGroups.ToList().Find(x => x.ID == ID);
@@ -69,9 +74,9 @@ namespace PokemonDatabase
             return _dataContext.Generations.ToList().Find(x => x.ID == ID);
         }
 
-        public Pokemon GetPokemon(string ID)
+        public Pokemon GetPokemon(string Name)
         {
-            Pokemon pokemon = _dataContext.Pokemon.ToList().Find(x => x.ID == ID);
+            Pokemon pokemon = _dataContext.Pokemon.ToList().Find(x => x.Name == Name);
             
             pokemon.Classification = this.GetClassification(pokemon.ClassificationID);
 
@@ -94,6 +99,33 @@ namespace PokemonDatabase
             pokemon = pokemon.OrderBy(p => p.ID.Length).ThenBy(p => p.ID).ToList();
 
             return pokemon;
+        }
+
+        public BaseStat GetBaseStat(string ID)
+        {
+            return _dataContext.BaseStats.ToList().Find(x => x.PokemonID == ID);
+        }
+
+        public EVYield GetEVYield(string ID)
+        {
+            return _dataContext.EVYields.ToList().Find(x => x.PokemonID == ID);
+        }
+
+        public Form GetForm(int ID)
+        {
+            return _dataContext.Forms.ToList().Find(x => x.ID == ID);
+        }
+
+        public List<TypeChart> GetTypeChart()
+        {
+            List<TypeChart> typeChart = _dataContext.TypeChart.ToList();
+            List<PokemonDatabase.Models.Type> typeList = this.GetTypes();
+            foreach (TypeChart t in typeChart)
+            {
+                t.Attack = typeList.Find(c => c.ID == t.AttackID);
+                t.Defend = typeList.Find(c => c.ID == t.DefendID);
+            }
+            return typeChart;
         }
     }
 }

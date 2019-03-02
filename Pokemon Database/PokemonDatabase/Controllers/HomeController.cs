@@ -40,10 +40,10 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("pokemon/{ID}")]
-        public IActionResult Pokemon(string ID)
+        [Route("pokemon/{Name}")]
+        public IActionResult Pokemon(string Name)
         {
-            Pokemon model = _dataService.GetPokemon(ID);
+            Pokemon model = _dataService.GetPokemon(Name);
 
             return View(model);
         }
