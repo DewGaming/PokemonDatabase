@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.Models;
+using PokemonDatabase.DataAccess.Models;
 
 namespace PokemonDatabase.Controllers
 {
@@ -52,10 +53,10 @@ namespace PokemonDatabase.Controllers
 
             PokemonViewModel viewModel = new PokemonViewModel();
             viewModel.pokemon = _dataService.GetPokemon(Name);
-            viewModel.baseStats = _dataService.GetBaseStat(viewModel.pokemon.ID);
-            viewModel.evYields = _dataService.GetEVYield(viewModel.pokemon.ID);
-            viewModel.types = _dataService.GetTyping(viewModel.pokemon.ID);
-            viewModel.abilities = _dataService.GetAbilities(viewModel.pokemon.ID);
+            viewModel.baseStats = _dataService.GetBaseStat(viewModel.pokemon.Id);
+            viewModel.evYields = _dataService.GetEVYield(viewModel.pokemon.Id);
+            viewModel.types = _dataService.GetTyping(viewModel.pokemon.Id);
+            viewModel.abilities = _dataService.GetAbilities(viewModel.pokemon.Id);
 
             return View(viewModel);
         }

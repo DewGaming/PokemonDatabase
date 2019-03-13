@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PokemonDatabase.DataAccess.Models;
 
 namespace PokemonDatabase.Models
 {
@@ -8,7 +9,7 @@ namespace PokemonDatabase.Models
         public Pokemon pokemon { get; set; }
         public BaseStat baseStats { get; set; }
         public EVYield evYields { get; set; }
-        public List<Models.Type> types { get; set; }
+        public List<DataAccess.Models.Type> types { get; set; }
         public List<Ability> abilities { get; set; }
     }
 }

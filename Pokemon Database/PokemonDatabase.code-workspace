@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "PokemonDatabase"
+		},
+		{
+			"path": "PokemonDatabase.DataAccess"
 		}
 	],
 	"settings": {}
