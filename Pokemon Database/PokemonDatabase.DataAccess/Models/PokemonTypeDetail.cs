@@ -8,9 +8,9 @@ namespace PokemonDatabase.DataAccess.Models
     {
         public int Id { get; set; }
         [Required]
-        public virtual Pokemon Pokemon { get; set; }
+        public Pokemon Pokemon { get; set; }
         [Required]
-        public virtual Models.Type PrimaryType { get; set; }
-        public virtual Models.Type SecondaryType { get; set; }
+        public Models.Type PrimaryType { get; set; }
+        public Models.Type SecondaryType { get; set; }
     }
 }

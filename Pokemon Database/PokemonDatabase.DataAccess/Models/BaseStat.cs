@@ -20,6 +20,6 @@ namespace PokemonDatabase.DataAccess.Models
         public Int16 Speed { get; set; }
         [Required]
         public Int16 StatTotal { get; set; }
-        public virtual Pokemon Pokemon { get; set; }
+        public Pokemon Pokemon { get; set; }
     }
 }

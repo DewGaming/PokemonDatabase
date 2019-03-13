@@ -16,19 +16,19 @@ namespace PokemonDatabase.DataAccess.Models
         [Required]
         public int ExpYield { get; set; }
         [Required]
-        public virtual EggCycle EggCycle { get; set; }
+        public EggCycle EggCycle { get; set; }
         [Required]
-        public virtual GenderRatio GenderRatio { get; set; }
+        public GenderRatio GenderRatio { get; set; }
         [Required]
-        public virtual Classification Classification { get; set; }
+        public Classification Classification { get; set; }
         [StringLength(20)]
         [Required]
-        public virtual Generation Generation { get; set; }
+        public Generation Generation { get; set; }
         [Required]
-        public virtual ExperienceGrowth ExperienceGrowth { get; set; }
+        public ExperienceGrowth ExperienceGrowth { get; set; }
         [Required]
-        public virtual CaptureRate CaptureRate { get; set; }
+        public CaptureRate CaptureRate { get; set; }
         [Required]
-        public virtual BaseHappiness BaseHappiness { get; set; }
+        public BaseHappiness BaseHappiness { get; set; }
     }
 }

@@ -7,10 +7,10 @@ namespace PokemonDatabase.DataAccess.Models
     {
         public int Id { get; set; }
         [Required]
-        public virtual Pokemon Pokemon { get; set; }
+        public Pokemon Pokemon { get; set; }
         [Required]
-        public virtual Ability PrimaryAbility { get; set; }
-        public virtual Ability SecondaryAbility { get; set; }
-        public virtual Ability HiddenAbility { get; set; }
+        public Ability PrimaryAbility { get; set; }
+        public Ability SecondaryAbility { get; set; }
+        public Ability HiddenAbility { get; set; }
     }
 }
