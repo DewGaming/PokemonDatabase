@@ -5,6 +5,7 @@ namespace PokemonDatabase.DataAccess.Models
 {
     public class Pokemon   
     {
+        [StringLength(6)]
         public string Id { get; set; }
         [StringLength(25)]
         [Required]
