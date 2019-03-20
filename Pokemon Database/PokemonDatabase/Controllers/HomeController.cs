@@ -51,14 +51,14 @@ namespace PokemonDatabase.Controllers
                 Name = textInfo.ToTitleCase(Name);
             }
 
-            PokemonViewModel viewModel = new PokemonViewModel();
-            viewModel.pokemon = _dataService.GetPokemon(Name);
-            viewModel.baseStats = _dataService.GetBaseStat(viewModel.pokemon.Id);
-            viewModel.evYields = _dataService.GetEVYield(viewModel.pokemon.Id);
-            viewModel.types = _dataService.GetTyping(viewModel.pokemon.Id);
-            viewModel.abilities = _dataService.GetAbilities(viewModel.pokemon.Id);
+            PokemonViewModel model = new PokemonViewModel();
+            model.pokemon = _dataService.GetPokemon(Name);
+            model.baseStats = _dataService.GetBaseStat(model.pokemon.Id);
+            model.evYields = _dataService.GetEVYield(model.pokemon.Id);
+            model.types = _dataService.GetTyping(model.pokemon.Id);
+            model.abilities = _dataService.GetAbilities(model.pokemon.Id);
 
-            return View(viewModel);
+            return View(model);
         }
     }
 }
