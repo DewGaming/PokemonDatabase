@@ -114,3 +114,79 @@
         </tr>
     </table>
 </div>
+@if(Model.preEvolution != null)
+{
+    <div class="preEvolution">
+        <table class="preEvolutionTable">
+            <tr>
+                <td>Pre-Evolution</td>
+                <td>Evolved By</td>
+            </tr>
+            <tr>
+                <td><a href="@Model.preEvolution.PreevolutionPokemon.Name">@Model.preEvolution.PreevolutionPokemon.Name</a></td>
+                <td>
+                    @Model.preEvolution.EvolutionMethod.Name
+                    @if(@Model.preEvolution.EvolutionDetails != null)
+                    {
+                        @(" (" + @Model.preEvolution.EvolutionDetails + ")");
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+@if(Model.evolutions.Count > 0)
+{
+    <div class="evolutions">
+        <table class="evolutionTable">
+            <tr>
+                <td>Evolution</td>
+                <td>Evolves By</td>
+            </tr>
+            @foreach(var evolution in Model.evolutions)
+            {
+                <tr>
+                    <td><a href="@evolution.EvolutionPokemon.Name">@evolution.EvolutionPokemon.Name</a></td>
+                    <td>
+                        @evolution.EvolutionMethod.Name
+                        @if(@evolution.EvolutionDetails != null)
+                        {
+                            @(" (" + @evolution.EvolutionDetails + ")");
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+@if(Model.forms.Count > 0)
+{
+    <div class="forms">
+        <table class="formTable">
+            <tr>
+                <td>Alternate Forms</td>
+            </tr>
+            @foreach(var form in Model.forms)
+            {
+                <tr>
+                    <td><a href="@form.AltFormPokemon.Name">@form.Form.Name</a></td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+@if(Model.originalForm != null)
+{
+    <div class="originalForm">
+        <table class="originalFormTable">
+            <tr>
+                <td>Original Form</td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="@Model.originalForm.OriginalPokemon.Name">@Model.originalForm.OriginalPokemon.Name</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+}

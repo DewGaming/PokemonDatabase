@@ -49,7 +49,7 @@ namespace PokemonDatabase
             else
             {
                 // TODO: Add error view!
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
 
