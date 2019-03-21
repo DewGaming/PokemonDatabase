@@ -33,12 +33,12 @@ namespace PokemonDatabase
             abilities.Add(this.GetAbility(abilityDetail.PrimaryAbility.Id));
             if (abilityDetail.SecondaryAbility != null)
             {
-                abilities.Add(this.GetAbility((int)abilityDetail.SecondaryAbility.Id));
+                abilities.Add(this.GetAbility(abilityDetail.SecondaryAbility.Id));
             }
             
             if (abilityDetail.HiddenAbility != null)
             {
-                abilities.Add(this.GetAbility((int)abilityDetail.HiddenAbility.Id));
+                abilities.Add(this.GetAbility(abilityDetail.HiddenAbility.Id));
             }
 
             return abilities;
@@ -145,9 +145,7 @@ namespace PokemonDatabase
 
         public Pokemon GetPokemon(string Name)
         {
-            Pokemon pokemon = _pokemonList.Find(x => x.Name == Name);
-
-            return pokemon;
+            return _pokemonList.Find(x => x.Name == Name);
         }
 
         public List<Pokemon> GetAllPokemon()

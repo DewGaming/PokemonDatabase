@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.Models;
 using PokemonDatabase.DataAccess.Models;
-using Microsoft.AspNetCore.Routing;
 
 namespace PokemonDatabase.Controllers
 {
@@ -46,6 +45,7 @@ namespace PokemonDatabase.Controllers
         [Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
+            Name = Name.Replace('_', ' ');
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             if (Name != textInfo.ToTitleCase(Name))
             {

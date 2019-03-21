@@ -123,7 +123,7 @@
                 <td>Evolved By</td>
             </tr>
             <tr>
-                <td><a href="@Model.preEvolution.PreevolutionPokemon.Name">@Model.preEvolution.PreevolutionPokemon.Name</a></td>
+                <td><a href="@Model.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_')">@Model.preEvolution.PreevolutionPokemon.Name</a></td>
                 <td>
                     @Model.preEvolution.EvolutionMethod.Name
                     @if(@Model.preEvolution.EvolutionDetails != null)
@@ -146,7 +146,7 @@
             @foreach(var evolution in Model.evolutions)
             {
                 <tr>
-                    <td><a href="@evolution.EvolutionPokemon.Name">@evolution.EvolutionPokemon.Name</a></td>
+                    <td><a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_')">@evolution.EvolutionPokemon.Name</a></td>
                     <td>
                         @evolution.EvolutionMethod.Name
                         @if(@evolution.EvolutionDetails != null)
@@ -169,7 +169,7 @@
             @foreach(var form in Model.forms)
             {
                 <tr>
-                    <td><a href="@form.AltFormPokemon.Name">@form.Form.Name</a></td>
+                    <td><a href="@form.AltFormPokemon.Name.Replace(' ', '_')">@form.Form.Name</a></td>
                 </tr>
             }
         </table>
@@ -184,7 +184,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="@Model.originalForm.OriginalPokemon.Name">@Model.originalForm.OriginalPokemon.Name</a>
+                    <a href="@Model.originalForm.OriginalPokemon.Name.Replace(' ', '_')">@Model.originalForm.OriginalPokemon.Name</a>
                 </td>
             </tr>
         </table>
