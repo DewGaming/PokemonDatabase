@@ -4,12 +4,80 @@
 }
 
 <div class="pokemonName">
-    <b>#@Model.pokemon.Id @Model.pokemon.Name</b>
+    <b>
+        @if (Model.pokemon.Id.IndexOf('-') > -1)
+        {
+            @("#")@Model.pokemon.Id.Substring(0, Model.pokemon.Id.IndexOf('-'))
+        }
+        else
+        {
+            @("#")@Model.pokemon.Id
+        }
+
+        @Model.pokemon.Name
+    </b>
 </div>
 <div class="classification">
-    @Model.pokemon.Classification.Name
+    <b>Classification: </b> @Model.pokemon.Classification.Name
 </div>
-<div class="typing">Typing: 
+<div class="height">
+    <b>Height (In Meters):</b> @Model.pokemon.Height.ToString("0.####")
+</div>
+<div class="weight">
+    <b>Weight (In Kilograms):</b> @Model.pokemon.Weight.ToString("0.####")
+</div>
+<div class="catchRate">
+    <b>Catch Rate:</b> @Model.pokemon.CaptureRate.CatchRate (@Model.pokemon.CaptureRate.ChanceOfCapture.ToString("0.####")%)
+</div>
+<div class="experienceGrowth">
+    <b>Experience Growth:</b> @Model.pokemon.ExperienceGrowth.Name (@Model.pokemon.ExperienceGrowth.ExpPointTotal XP)
+</div>
+<div class="experienceYield">
+    <b>Experience Yield:</b> @Model.pokemon.ExpYield
+</div>
+<div class="eggCycles">
+    <b>Egg Cycles:</b> @Model.pokemon.EggCycle.CycleCount
+</div>
+<div class="baseHappiness">
+    <b>Base Happiness:</b> @Model.pokemon.BaseHappiness.Happiness
+</div>
+<div class="genderRatios">
+    <b>Gender Ratio:</b>
+    @if (Model.pokemon.GenderRatio.MaleRatio == 0 && Model.pokemon.GenderRatio.FemaleRatio == 0)
+    {
+        @("Genderless");
+    }
+    else
+    {
+        if (Model.pokemon.GenderRatio.FemaleRatio == 0)
+        {
+            @Model.pokemon.GenderRatio.MaleRatio@("% Male");
+        }
+        else if (Model.pokemon.GenderRatio.MaleRatio == 0)
+        {
+            @Model.pokemon.GenderRatio.FemaleRatio@("% Female");
+        }
+        else
+        {
+            @Model.pokemon.GenderRatio.MaleRatio@("% Male / ")@Model.pokemon.GenderRatio.FemaleRatio@("% Female");
+        }
+    }
+</div>
+<div class="gamesOfOrigin">
+    <b>
+        @if (Model.pokemon.Generation.Games.IndexOf('/') > -1)
+        {
+            @("Games of Origin: ");
+        }
+        else
+        {
+            @("Game of Origin: ");
+        }
+    </b>
+
+    @Model.pokemon.Generation.Games
+</div>
+<div class="typing"><b>Typing:</b> 
     @for(int i = 0; i < Model.types.Count; i++)
     {
         if (i > 0)
@@ -20,7 +88,7 @@
         @Model.types[i].Name
     }
 </div>
-<div class="abilities">Abilities: 
+<div class="abilities"><b>Abilities:</b> 
     @for(int i = 0; i < Model.abilities.Count; i++)
     {
         if (i > 0)
@@ -34,6 +102,17 @@
         {
             @(" (Hidden)");
         }
+    }
+</div>
+<div class="eggGroups"><b>Egg Groups:</b> 
+    @for(int i = 0; i < Model.eggGroups.Count; i++)
+    {
+        if (i > 0)
+        {
+            @(" / ");
+        }
+
+        @Model.eggGroups[i].Name
     }
 </div>
 <div class="baseStats">
@@ -87,46 +166,90 @@
             }
         </tr>
         <tr>
-            @if(Model.evYields.Health != 0)
+            @if (Model.evYields.Health != 0)
             {
                 <td>@Model.evYields.Health</td>
             }
-            @if(Model.evYields.Attack != 0)
+            @if (Model.evYields.Attack != 0)
             {
                 <td>@Model.evYields.Attack</td>
             }
-            @if(Model.evYields.Defense != 0)
+            @if (Model.evYields.Defense != 0)
             {
                 <td>@Model.evYields.Defense</td>
             }
-            @if(Model.evYields.SpecialAttack != 0)
+            @if (Model.evYields.SpecialAttack != 0)
             {
                 <td>@Model.evYields.SpecialAttack</td>
             }
-            @if(Model.evYields.SpecialDefense != 0)
+            @if (Model.evYields.SpecialDefense != 0)
             {
                 <td>@Model.evYields.SpecialDefense</td>
             }
-            @if(Model.evYields.Speed != 0)
+            @if (Model.evYields.Speed != 0)
             {
                 <td>@Model.evYields.Speed</td>
             }
         </tr>
     </table>
 </div>
-@if(Model.preEvolution != null)
+<div class="effectivenessChart">
+    @if (Model.effectiveness.strongAgainst.Count > 0)
+    {
+        <table class="strongAgainstTable">
+            <tr>
+                <th>Resistances</th>
+            </tr>
+            @foreach(string s in Model.effectiveness.strongAgainst)
+            {
+                <tr>
+                    <td>@s</td>
+                </tr>
+            }
+        </table>
+    }
+    @if (Model.effectiveness.weakAgainst.Count > 0)
+    {
+        <table class="weakAgainstTable">
+            <tr>
+                <th>Weaknesses</th>
+            </tr>
+            @foreach(string w in Model.effectiveness.weakAgainst)
+            {
+                <tr>
+                    <td>@w</td>
+                </tr>
+            }
+        </table>
+    }
+    @if (Model.effectiveness.immuneTo.Count > 0)
+    {
+        <table class="immuneToTable">
+            <tr>
+                <th>Immunities</th>
+            </tr>
+            @foreach(string i in Model.effectiveness.immuneTo)
+            {
+                <tr>
+                    <td>@i</td>
+                </tr>
+            }
+        </table>
+    }
+</div>
+@if (Model.preEvolution != null)
 {
     <div class="preEvolution">
         <table class="preEvolutionTable">
             <tr>
-                <td>Pre-Evolution</td>
-                <td>Evolved By</td>
+                <th>Pre-Evolution</th>
+                <th>Evolved By</th>
             </tr>
             <tr>
                 <td><a href="@Model.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_')">@Model.preEvolution.PreevolutionPokemon.Name</a></td>
                 <td>
                     @Model.preEvolution.EvolutionMethod.Name
-                    @if(@Model.preEvolution.EvolutionDetails != null)
+                    @if (@Model.preEvolution.EvolutionDetails != null)
                     {
                         @(" (" + @Model.preEvolution.EvolutionDetails + ")");
                     }
@@ -135,13 +258,13 @@
         </table>
     </div>
 }
-@if(Model.evolutions.Count > 0)
+@if (Model.evolutions.Count > 0)
 {
     <div class="evolutions">
         <table class="evolutionTable">
             <tr>
-                <td>Evolution</td>
-                <td>Evolves By</td>
+                <th>Evolution</th>
+                <th>Evolves By</th>
             </tr>
             @foreach(var evolution in Model.evolutions)
             {
@@ -149,7 +272,7 @@
                     <td><a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_')">@evolution.EvolutionPokemon.Name</a></td>
                     <td>
                         @evolution.EvolutionMethod.Name
-                        @if(@evolution.EvolutionDetails != null)
+                        @if (@evolution.EvolutionDetails != null)
                         {
                             @(" (" + @evolution.EvolutionDetails + ")");
                         }
@@ -159,12 +282,12 @@
         </table>
     </div>
 }
-@if(Model.forms.Count > 0)
+@if (Model.forms.Count > 0)
 {
     <div class="forms">
         <table class="formTable">
             <tr>
-                <td>Alternate Forms</td>
+                <th>Alternate Forms</th>
             </tr>
             @foreach(var form in Model.forms)
             {
@@ -175,12 +298,12 @@
         </table>
     </div>
 }
-@if(Model.originalForm != null)
+@if (Model.originalForm != null)
 {
     <div class="originalForm">
         <table class="originalFormTable">
             <tr>
-                <td>Original Form</td>
+                <th>Original Form</th>
             </tr>
             <tr>
                 <td>

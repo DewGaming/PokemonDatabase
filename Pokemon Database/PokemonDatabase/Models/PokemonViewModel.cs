@@ -15,5 +15,6 @@ namespace PokemonDatabase.Models
         public List<Evolution> evolutions { get; set; }
         public List<PokemonFormDetail> forms { get; set; }
         public PokemonFormDetail originalForm { get; set; }
+        public TypeEffectivenessViewModel effectiveness { get; set; }
     }
 }

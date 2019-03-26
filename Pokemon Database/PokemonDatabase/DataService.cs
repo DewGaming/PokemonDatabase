@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.DataAccess.Models;
+using PokemonDatabase.Models;
 
 namespace PokemonDatabase
 {
@@ -47,6 +48,11 @@ namespace PokemonDatabase
         public Type GetType(int Id)
         {
             return _dataContext.Types.ToList().Find(x => x.Id == Id);
+        }
+
+        public List<Type> GetTypes()
+        {
+            return _dataContext.Types.ToList();
         }
 
         public List<Type> GetPokemonTypes(string PokemonId)
@@ -167,6 +173,93 @@ namespace PokemonDatabase
         public EVYield GetEVYield(string PokemonId)
         {
             return _dataContext.EVYields.Include(e => e.Pokemon).ToList().Find(e => e.Pokemon.Id == PokemonId);
+        }
+
+        public List<decimal> GetEffectiveness(Type type, List<Type> typeList)
+        {
+            List<decimal> effectiveness = new List<decimal>();
+            List<TypeChart> typeChart = _dataContext.TypeCharts.Where(t => t.Defend == type).ToList();
+            foreach(var t in typeList)
+            {
+                effectiveness.Add(typeChart.Find(c => c.Attack == t).Effective);
+            }
+
+            return effectiveness;
+        }
+
+        public TypeEffectivenessViewModel GetTypeChartPokemon(string pokemonId)
+        {
+            List<Type> typeList = GetTypes();
+            List<Type> pokemonTypes = GetPokemonTypes(pokemonId);
+            List<decimal> primaryTypeEffectiveness = new List<decimal>();
+            List<decimal> secondaryTypeEffectiveness = new List<decimal>();
+            List<decimal> pokemonTypeEffectiveness = new List<decimal>();
+            List<string> strongAgainst = new List<string>();
+            List<string> superStrongAgainst = new List<string>();
+            List<string> weakAgainst = new List<string>();
+            List<string> superWeakAgainst = new List<string>();
+            List<string> immuneTo = new List<string>();
+
+            primaryTypeEffectiveness = GetEffectiveness(pokemonTypes[0], typeList);
+            if (pokemonTypes.Count > 1)
+            {
+                secondaryTypeEffectiveness = GetEffectiveness(pokemonTypes[1], typeList);
+                pokemonTypeEffectiveness = primaryTypeEffectiveness.Select((dValue, index) => dValue * secondaryTypeEffectiveness[index]).ToList();
+            }
+            else
+            {
+                pokemonTypeEffectiveness = primaryTypeEffectiveness;
+            }
+
+            for (var i = 0; i < typeList.Count - 1; i++)
+            {
+                string effectiveValue = pokemonTypeEffectiveness[i].ToString("0.####");
+            
+                if (effectiveValue != "1")
+                {
+                    if (effectiveValue == "0")
+                    {
+                        immuneTo.Add(typeList[i].Name);
+                    }
+                    else if (effectiveValue == "0.25")
+                    {
+                        superStrongAgainst.Add(typeList[i].Name + " (1/4x)");
+                    }
+                    else if (effectiveValue == "0.5")
+                    {
+                        strongAgainst.Add(typeList[i].Name);
+                    }
+                    else if (effectiveValue == "2")
+                    {
+                        weakAgainst.Add(typeList[i].Name);
+                    }
+                    else if (effectiveValue == "4")
+                    {
+                        superWeakAgainst.Add(typeList[i].Name + " (4x)");
+                    }
+                }
+            }
+
+            immuneTo.Sort();
+            strongAgainst.Sort();
+            superStrongAgainst.Sort();
+            weakAgainst.Sort();
+            superWeakAgainst.Sort();
+
+            List<string> strongAgainstList = superStrongAgainst;
+            strongAgainstList.AddRange(strongAgainst);
+
+            List<string> weakAgainstList = superWeakAgainst;
+            weakAgainstList.AddRange(weakAgainst);
+
+            TypeEffectivenessViewModel effectivenessChart = new TypeEffectivenessViewModel()
+            {
+                immuneTo = immuneTo,
+                strongAgainst = strongAgainstList,
+                weakAgainst = weakAgainstList
+            };
+
+            return effectivenessChart;
         }
     }
 }

@@ -63,6 +63,7 @@ namespace PokemonDatabase.Controllers
             model.evolutions = _dataService.GetPokemonEvolutions(model.pokemon.Id);
             model.forms = _dataService.GetPokemonForms(model.pokemon.Id);
             model.originalForm = _dataService.GetOriginalForm(model.pokemon.Id);
+            model.effectiveness = _dataService.GetTypeChartPokemon(model.pokemon.Id);
 
             return View(model);
         }
