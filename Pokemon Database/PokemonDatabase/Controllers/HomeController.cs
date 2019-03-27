@@ -37,7 +37,30 @@ namespace PokemonDatabase.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
-            List<Pokemon> model = _dataService.GetAllPokemon();
+            List<PokemonTypeDetail> model = _dataService.GetPokemonWithTypes();
+
+            return View(model);
+        }
+
+        [Route("ability")]
+        public IActionResult AllAbilities()
+        {
+            List<Ability> model = _dataService.GetAbilities();
+
+            return View(model);
+        }
+
+        [Route("ability/{Name}")]
+        public IActionResult Ability(string Name)
+        {
+            Name = Name.Replace('_', ' ');
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            if (Name != textInfo.ToTitleCase(Name))
+            {
+                Name = textInfo.ToTitleCase(Name);
+            }
+            
+            Ability model = _dataService.GetAbilityDescription(Name);
 
             return View(model);
         }

@@ -10,7 +10,7 @@ namespace PokemonDatabase.DataAccess.Models
         [Required]
         public Pokemon Pokemon { get; set; }
         [Required]
-        public Models.Type PrimaryType { get; set; }
-        public Models.Type SecondaryType { get; set; }
+        public Type PrimaryType { get; set; }
+        public Type SecondaryType { get; set; }
     }
 }

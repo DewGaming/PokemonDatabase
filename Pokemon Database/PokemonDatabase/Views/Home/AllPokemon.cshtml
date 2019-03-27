@@ -1,21 +1,28 @@
-@model IEnumerable<PokemonDatabase.DataAccess.Models.Pokemon>;
+@model IEnumerable<PokemonDatabase.DataAccess.Models.PokemonTypeDetail>;
 @{
     Layout = "_Layout";
 }
 
+<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <div>
     <table class="table">
         <tr>
             <th scope="col">Pokedex Number</th>
             <th scope="col">Name</th>
-            <th scope="col">Classification</th>
+            <th scope="col">Typing</th>
         </tr>
         @foreach(var item in Model)
         {
             <tr>
-                <td>@item.Id</td>
-                <td><a href="@item.Name.Replace(' ', '_')">@item.Name</a></td>
-                <td>@item.Classification.Name</td>
+                <td>@item.Pokemon.Id</td>
+                <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(' ', '_')})">@item.Pokemon.Name</a></td>
+                <td>
+                    <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                    @if(@item.SecondaryType != null)
+                    {
+                        <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                    }
+                </td>
             </tr>
         }
     </table>

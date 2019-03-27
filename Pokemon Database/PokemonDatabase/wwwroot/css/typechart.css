@@ -1,5 +1,4 @@
-.type-icon {
- width:66px;
+.type-icon, .quad-icon {
  margin-bottom:4px;
  background:#dbdbdb;
  border:1px solid #a3a3a3;
@@ -13,6 +12,12 @@
  text-shadow:1px 1px 2px rgba(0,0,0,0.7);
  text-transform:uppercase;
  transition:opacity .4s
+}
+.type-icon {
+ width:66px;
+}
+.quad-icon {
+ width:96px;
 }
 .type-normal {
  background-color:#aa9
@@ -68,10 +73,19 @@
 .type-fairy {
  background-color:#e9e
 }
+.quad-resist {
+ background-color: #73d216
+}
+.quad-weak {
+ background-color: #7c0000
+}
 .type-table th,
 .type-table td {
  padding:0;
  border:1px solid #f0f0f0
+}
+.pokemon-type {
+ display: inline-block;
 }
 .cell-atkdef {
  font-size:.625rem;

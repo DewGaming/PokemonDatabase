@@ -3,6 +3,7 @@
     Layout = "_Layout";
 }
 
+<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <div class="pokemonName">
     <b>
         @if (Model.pokemon.Id.IndexOf('-') > -1)
@@ -16,6 +17,12 @@
 
         @Model.pokemon.Name
     </b>
+</div>
+<div class="typing">
+    @for(int i = 0; i < Model.types.Count; i++)
+    {
+        <div class="pokemon-type type-icon type-@Model.types[i].Name.ToLower()">@Model.types[i].Name</div>
+    }
 </div>
 <div class="classification">
     <b>Classification: </b> @Model.pokemon.Classification.Name
@@ -77,17 +84,6 @@
 
     @Model.pokemon.Generation.Games
 </div>
-<div class="typing"><b>Typing:</b> 
-    @for(int i = 0; i < Model.types.Count; i++)
-    {
-        if (i > 0)
-        {
-            @(" / ");
-        }
-
-        @Model.types[i].Name
-    }
-</div>
 <div class="abilities"><b>Abilities:</b> 
     @for(int i = 0; i < Model.abilities.Count; i++)
     {
@@ -96,12 +92,14 @@
             @(" / ");
         }
 
-        @Model.abilities[i].Name
+        <ins style="text-decoration:none;" title="Description: @Model.abilities[i].Description">
+            @Model.abilities[i].Name
 
-        if (i + 1 == Model.abilities.Count && i != 0)
-        {
-            @(" (Hidden)");
-        }
+            @if (i + 1 == Model.abilities.Count && i != 0)
+            {
+                @(" (Hidden)");
+            }
+        </ins>
     }
 </div>
 <div class="eggGroups"><b>Egg Groups:</b> 
@@ -203,7 +201,17 @@
             @foreach(string s in Model.effectiveness.strongAgainst)
             {
                 <tr>
-                    <td>@s</td>
+                    @if (@s.IndexOf(" ") > -1)
+                    {
+                        <td>
+                            <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" "))">@s.Substring(0, @s.IndexOf(" "))</div>
+                            <div class="pokemon-type quad-icon quad-resist">Quad Resist</div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="pokemon-type type-icon type-@s.ToLower()">@s</td>
+                    }
                 </tr>
             }
         </table>
@@ -217,7 +225,17 @@
             @foreach(string w in Model.effectiveness.weakAgainst)
             {
                 <tr>
-                    <td>@w</td>
+                    @if (@w.IndexOf(" ") > -1)
+                    {
+                        <td>
+                            <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" "))">@w.Substring(0, @w.IndexOf(" "))</div>
+                            <div class="pokemon-type quad-icon quad-weak">Quad Weak</div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="pokemon-type type-icon type-@w.ToLower()">@w</td>
+                    }
                 </tr>
             }
         </table>
@@ -231,7 +249,7 @@
             @foreach(string i in Model.effectiveness.immuneTo)
             {
                 <tr>
-                    <td>@i</td>
+                    <td class="pokemon-type type-icon type-@i.ToLower()">@i</td>
                 </tr>
             }
         </table>

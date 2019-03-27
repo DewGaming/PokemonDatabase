@@ -27,6 +27,16 @@ namespace PokemonDatabase
             return _dataContext.Abilities.ToList().Find(x => x.Id == Id);
         }
 
+        public Ability GetAbilityDescription(string Name)
+        {
+            return _dataContext.Abilities.ToList().Find(x => x.Name == Name);
+        }
+
+        public List<Ability> GetAbilities()
+        {
+            return _dataContext.Abilities.ToList();
+        }
+
         public List<Ability> GetPokemonAbilities(string PokemonId)
         {
             PokemonAbilityDetail abilityDetail = _dataContext.PokemonAbilityDetails.Include(a => a.Pokemon).Include(a => a.PrimaryAbility).Include(a => a.SecondaryAbility).Include(a => a.HiddenAbility).ToList().Find(a => a.Pokemon.Id == PokemonId);
@@ -161,6 +171,17 @@ namespace PokemonDatabase
             pokemon = pokemon.Except(altForms).ToList();
 
             pokemon = pokemon.OrderBy(p => p.Id.Length).ThenBy(p => p.Id).ToList();
+
+            return pokemon;
+        }
+
+        public List<PokemonTypeDetail> GetPokemonWithTypes()
+        {
+            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
+            List<PokemonTypeDetail> altForms = pokemon.Where(p => p.Pokemon.Id.Contains("-")).ToList();
+            pokemon = pokemon.Except(altForms).ToList();
+
+            pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
 
             return pokemon;
         }
