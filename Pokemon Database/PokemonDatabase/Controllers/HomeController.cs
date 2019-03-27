@@ -68,6 +68,14 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
+        [Route("type")]
+        public IActionResult TypeChart()
+        {
+            List<TypeChart> model = _dataService.GetTypeChart();
+
+            return View(model);
+        }
+
         [Route("error")]
         public IActionResult Error()
         {

@@ -187,6 +187,13 @@ namespace PokemonDatabase
             return effectiveness;
         }
 
+        public List<TypeChart> GetTypeChart()
+        {
+            List<TypeChart> typeChart = _dataContext.TypeCharts.Include(t => t.Attack).Include(t => t.Defend).OrderBy(t => t.Attack.Id).ThenBy(t => t.Defend.Id).ToList();
+
+            return typeChart;
+        }
+
         public TypeEffectivenessViewModel GetTypeChartPokemon(string pokemonId)
         {
             List<Type> typeList = GetTypes();

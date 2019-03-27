@@ -1,0 +1,52 @@
+@model List<PokemonDatabase.DataAccess.Models.TypeChart>;
+@{
+    Layout = "_Layout";
+}
+<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
+<div>
+    <table class="type-table">
+        <thead>
+            <tr>
+                <th class="cell-atkdef">
+                    DEFENSE →
+                    <br>
+                    ATTACK ↴
+                </th>
+                @foreach(var item in Model)
+                {
+                    @if (item.Defend.Id == 1)
+                    {
+                        <th class="type-icon type-@item.Attack.Name.ToLower() type-cell type-abbr" title="@item.Attack.Name">@item.Attack.Name.Substring(0, 3)</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var atk in Model.Where(t => t.Defend.Id == 1))
+            {
+                <tr>
+                    <th class="type-icon type-@atk.Attack.Name.ToLower() type-cell">@atk.Attack.Name</th>
+                    @foreach(var def in Model.Where(t => t.Attack == atk.Attack))
+                    {
+                        @if(@def.Effective.ToString("0.####") == "0")
+                        {
+                            <td class="type-fx-cell type-fx-0" title="@def.Attack.Name → @def.Defend.Name = No Efecct">0</td>
+                        }
+                        else if(@def.Effective.ToString("0.####") == "0.5")
+                        {
+                            <td class="type-fx-cell type-fx-50" title="@def.Attack.Name → @def.Defend.Name = Not Very Effective">½</td>
+                        }
+                        else if(def.Effective.ToString("0.####") == "1")
+                        {
+                            <td class="type-fx-cell type-fx-100" title="@def.Attack.Name → @def.Defend.Name = Normal Efecctiveness"></td>
+                        }
+                        else if(@def.Effective.ToString("0.####") == "2")
+                        {
+                            <td class="type-fx-cell type-fx-200" title="@def.Attack.Name → @def.Defend.Name = Super Effective">2</td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody> 
+    </table>
+</div>
