@@ -1,3 +1,11 @@
 footer{
+    background-color: white;
     color: gray;
+    height: 55px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+footer hr{
+    margin-top: 0;
 }

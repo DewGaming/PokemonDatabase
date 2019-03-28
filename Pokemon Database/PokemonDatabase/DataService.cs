@@ -14,22 +14,34 @@ namespace PokemonDatabase
 
         public DataService(DataContext dataContext)
         {
-           _dataContext = dataContext;
-           _pokemonList = _dataContext.Pokemon.Include(p => p.EggCycle).Include(p => p.GenderRatio).Include(p => p.Classification).Include(p => p.Generation).Include(p => p.ExperienceGrowth).Include(p => p.CaptureRate).Include(p => p.BaseHappiness).ToList();
+            _dataContext = dataContext;
+            _pokemonList = _dataContext.Pokemon
+                .Include(p => p.EggCycle)
+                .Include(p => p.GenderRatio)
+                .Include(p => p.Classification)
+                .Include(p => p.Generation)
+                .Include(p => p.ExperienceGrowth)
+                .Include(p => p.CaptureRate)
+                .Include(p => p.BaseHappiness)
+                .ToList();
             foreach(var pokemon in _pokemonList.Where(p => p.Id.Contains('-')))
             {
                 pokemon.Name += " (" + this.GetPokemonForm(pokemon.Id).Name + ")";
             }
         }
 
-        public Ability GetAbility(int Id)
+        public Ability GetAbility(int id)
         {
-            return _dataContext.Abilities.ToList().Find(x => x.Id == Id);
+            return _dataContext.Abilities
+                .ToList()
+                .Find(x => x.Id == id);
         }
 
         public Ability GetAbilityDescription(string Name)
         {
-            return _dataContext.Abilities.ToList().Find(x => x.Name == Name);
+            return _dataContext.Abilities
+                .ToList()
+                .Find(x => x.Name == Name);
         }
 
         public List<Ability> GetAbilities()
@@ -55,9 +67,11 @@ namespace PokemonDatabase
             return abilities;
         }
 
-        public Type GetType(int Id)
+        public Type GetType(int id)
         {
-            return _dataContext.Types.ToList().Find(x => x.Id == Id);
+            return _dataContext.Types
+                .ToList()
+                .Find(x => x.Id == id);
         }
 
         public List<Type> GetTypes()
@@ -78,9 +92,11 @@ namespace PokemonDatabase
             return types;
         }
 
-        public EggGroup GetEggGroup(int Id)
+        public EggGroup GetEggGroup(int id)
         {
-            return _dataContext.EggGroups.ToList().Find(e => e.Id == Id);
+            return _dataContext.EggGroups
+                .ToList()
+                .Find(e => e.Id == id);
         }
 
         public List<EggGroup> GetPokemonEggGroups(string PokemonId)
@@ -98,12 +114,14 @@ namespace PokemonDatabase
         
         public List<Evolution> GetEvolutions()
         {
-            return _dataContext.Evolutions.Include(e => e.EvolutionMethod).ToList();
+            return _dataContext.Evolutions
+                .Include(e => e.EvolutionMethod)
+                .ToList();
         }
         
-        public Evolution GetEvolution(int Id)
+        public Evolution GetEvolution(int id)
         {
-            return this.GetEvolutions().Find(e => e.Id ==Id);
+            return this.GetEvolutions().Find(e => e.Id == id);
         }
 
         public Evolution GetPreEvolution(string PokemonId)
@@ -114,48 +132,48 @@ namespace PokemonDatabase
         public List<Evolution> GetPokemonEvolutions(string PokemonId)
         {
             List<Evolution> evolutions = this.GetEvolutions()
-                                             .Where(e => e.PreevolutionPokemon.Id == PokemonId)
-                                             .OrderBy(p => p.EvolutionPokemon.Id.Length)
-                                             .ThenBy(p => p.EvolutionPokemon.Id)
-                                             .ToList();
+                .Where(e => e.PreevolutionPokemon.Id == PokemonId)
+                .OrderBy(p => p.EvolutionPokemon.Id.Length)
+                .ThenBy(p => p.EvolutionPokemon.Id)
+                .ToList();
             return evolutions;
         }
 
-        public Form GetForm(int Id)
+        public Form GetForm(int id)
         {
-            return _dataContext.Forms.ToList().Find(f => f.Id == Id);
+            return _dataContext.Forms.ToList().Find(f => f.Id == id);
         }
 
         public List<PokemonFormDetail> GetPokemonForms(string PokemonId)
         {
             return _dataContext.PokemonFormDetails
-                               .Include(f => f.Form)
-                               .Include(f => f.OriginalPokemon)
-                               .Include(f => f.AltFormPokemon)
-                               .Where(f => f.OriginalPokemon.Id == PokemonId)
-                               .OrderBy(p => p.AltFormPokemon.Id.Substring(p.AltFormPokemon.Id.IndexOf("-") + 1).Length)
-                               .ThenBy(p => p.AltFormPokemon.Id.Substring(p.AltFormPokemon.Id.IndexOf("-") + 1))
-                               .ToList();
+                .Include(f => f.Form)
+                .Include(f => f.OriginalPokemon)
+                .Include(f => f.AltFormPokemon)
+                .Where(f => f.OriginalPokemon.Id == PokemonId)
+                .OrderBy(p => p.AltFormPokemon.Id.Substring(p.AltFormPokemon.Id.IndexOf("-") + 1).Length)
+                .ThenBy(p => p.AltFormPokemon.Id.Substring(p.AltFormPokemon.Id.IndexOf("-") + 1))
+                .ToList();
         }
 
         public PokemonFormDetail GetOriginalForm(string PokemonId)
         {
             return _dataContext.PokemonFormDetails
-                               .Include(f => f.Form)
-                               .Include(f => f.OriginalPokemon)
-                               .Include(f => f.AltFormPokemon)
-                               .ToList()
-                               .Find(f => f.AltFormPokemon.Id == PokemonId);
+                .Include(f => f.Form)
+                .Include(f => f.OriginalPokemon)
+                .Include(f => f.AltFormPokemon)
+                .ToList()
+                .Find(f => f.AltFormPokemon.Id == PokemonId);
         }
 
         public Form GetPokemonForm(string PokemonId)
         {
             PokemonFormDetail formDetail = _dataContext.PokemonFormDetails
-                                                       .Include(f => f.Form)
-                                                       .Include(f => f.OriginalPokemon)
-                                                       .Include(f => f.AltFormPokemon)
-                                                       .ToList()
-                                                       .Find(f => f.AltFormPokemon.Id == PokemonId);
+                .Include(f => f.Form)
+                .Include(f => f.OriginalPokemon)
+                .Include(f => f.AltFormPokemon)
+                .ToList()
+                .Find(f => f.AltFormPokemon.Id == PokemonId);
             return formDetail.Form;
         }
 
@@ -175,6 +193,17 @@ namespace PokemonDatabase
             return pokemon;
         }
 
+        public List<Pokemon> GetAltForms(Pokemon pokemon)
+        {
+            List<PokemonFormDetail> pokemonFormList = _dataContext.PokemonFormDetails.Include(p => p.AltFormPokemon).Where(p => p.OriginalPokemon == pokemon).ToList();
+            List<Pokemon> pokemonList = new List<Pokemon>();
+            foreach (var p in pokemonFormList)
+            {
+                pokemonList.Add(p.AltFormPokemon);
+            }
+            return pokemonList;
+        }
+
         public List<PokemonTypeDetail> GetPokemonWithTypes()
         {
             List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
@@ -188,12 +217,18 @@ namespace PokemonDatabase
 
         public BaseStat GetBaseStat(string PokemonId)
         {
-            return _dataContext.BaseStats.Include(b => b.Pokemon).ToList().Find(b => b.Pokemon.Id == PokemonId);
+            return _dataContext.BaseStats
+                .Include(b => b.Pokemon)
+                .ToList()
+                .Find(b => b.Pokemon.Id == PokemonId);
         }
 
         public EVYield GetEVYield(string PokemonId)
         {
-            return _dataContext.EVYields.Include(e => e.Pokemon).ToList().Find(e => e.Pokemon.Id == PokemonId);
+            return _dataContext.EVYields
+                .Include(e => e.Pokemon)
+                .ToList()
+                .Find(e => e.Pokemon.Id == PokemonId);
         }
 
         public List<decimal> GetEffectiveness(Type type, List<Type> typeList)
@@ -210,7 +245,11 @@ namespace PokemonDatabase
 
         public List<TypeChart> GetTypeChart()
         {
-            List<TypeChart> typeChart = _dataContext.TypeCharts.Include(t => t.Attack).Include(t => t.Defend).OrderBy(t => t.Attack.Id).ThenBy(t => t.Defend.Id).ToList();
+            List<TypeChart> typeChart = _dataContext.TypeCharts
+                .Include(t => t.Attack)
+                .Include(t => t.Defend)
+                .OrderBy(t => t.Attack.Id)
+                .ThenBy(t => t.Defend.Id).ToList();
 
             return typeChart;
         }
@@ -251,7 +290,7 @@ namespace PokemonDatabase
                     }
                     else if (effectiveValue == "0.25")
                     {
-                        superStrongAgainst.Add(typeList[i].Name + " (1/4x)");
+                        superStrongAgainst.Add(typeList[i].Name + " Quad");
                     }
                     else if (effectiveValue == "0.5")
                     {
@@ -263,7 +302,7 @@ namespace PokemonDatabase
                     }
                     else if (effectiveValue == "4")
                     {
-                        superWeakAgainst.Add(typeList[i].Name + " (4x)");
+                        superWeakAgainst.Add(typeList[i].Name + " Quad");
                     }
                 }
             }

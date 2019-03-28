@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.Models;
 using PokemonDatabase.DataAccess.Models;
+using System.IO;
 
 namespace PokemonDatabase.Controllers
 {
@@ -42,29 +43,6 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("ability")]
-        public IActionResult AllAbilities()
-        {
-            List<Ability> model = _dataService.GetAbilities();
-
-            return View(model);
-        }
-
-        [Route("ability/{Name}")]
-        public IActionResult Ability(string Name)
-        {
-            Name = Name.Replace('_', ' ');
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            if (Name != textInfo.ToTitleCase(Name))
-            {
-                Name = textInfo.ToTitleCase(Name);
-            }
-            
-            Ability model = _dataService.GetAbilityDescription(Name);
-
-            return View(model);
-        }
-
         [Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
@@ -74,19 +52,41 @@ namespace PokemonDatabase.Controllers
             {
                 Name = textInfo.ToTitleCase(Name);
             }
+
+            Pokemon pokemon = _dataService.GetPokemon(Name);
+            List<Pokemon> altForms = _dataService.GetAltForms(pokemon);
             
-            PokemonViewModel model = new PokemonViewModel();
-            model.pokemon = _dataService.GetPokemon(Name);
-            model.baseStats = _dataService.GetBaseStat(model.pokemon.Id);
-            model.evYields = _dataService.GetEVYield(model.pokemon.Id);
-            model.types = _dataService.GetPokemonTypes(model.pokemon.Id);
-            model.abilities = _dataService.GetPokemonAbilities(model.pokemon.Id);
-            model.eggGroups = _dataService.GetPokemonEggGroups(model.pokemon.Id);
-            model.preEvolution = _dataService.GetPreEvolution(model.pokemon.Id);
-            model.evolutions = _dataService.GetPokemonEvolutions(model.pokemon.Id);
-            model.forms = _dataService.GetPokemonForms(model.pokemon.Id);
-            model.originalForm = _dataService.GetOriginalForm(model.pokemon.Id);
-            model.effectiveness = _dataService.GetTypeChartPokemon(model.pokemon.Id);
+            List<PokemonViewModel> model = new List<PokemonViewModel>();
+            model.Add(new PokemonViewModel(){
+                pokemon = pokemon,
+                baseStats = _dataService.GetBaseStat(pokemon.Id),
+                evYields = _dataService.GetEVYield(pokemon.Id),
+                types = _dataService.GetPokemonTypes(pokemon.Id),
+                abilities = _dataService.GetPokemonAbilities(pokemon.Id),
+                eggGroups = _dataService.GetPokemonEggGroups(pokemon.Id),
+                preEvolution = _dataService.GetPreEvolution(pokemon.Id),
+                evolutions = _dataService.GetPokemonEvolutions(pokemon.Id),
+                forms = _dataService.GetPokemonForms(pokemon.Id),
+                originalForm = _dataService.GetOriginalForm(pokemon.Id),
+                effectiveness = _dataService.GetTypeChartPokemon(pokemon.Id)
+            });
+
+            foreach(var p in altForms)
+            {
+                model.Add(new PokemonViewModel(){
+                    pokemon = p,
+                    baseStats = _dataService.GetBaseStat(p.Id),
+                    evYields = _dataService.GetEVYield(p.Id),
+                    types = _dataService.GetPokemonTypes(p.Id),
+                    abilities = _dataService.GetPokemonAbilities(p.Id),
+                    eggGroups = _dataService.GetPokemonEggGroups(p.Id),
+                    preEvolution = _dataService.GetPreEvolution(p.Id),
+                    evolutions = _dataService.GetPokemonEvolutions(p.Id),
+                    forms = _dataService.GetPokemonForms(p.Id),
+                    originalForm = _dataService.GetOriginalForm(p.Id),
+                    effectiveness = _dataService.GetTypeChartPokemon(p.Id)
+            });
+            }
 
             return View(model);
         }
