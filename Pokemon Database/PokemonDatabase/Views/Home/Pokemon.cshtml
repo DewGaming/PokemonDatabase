@@ -287,7 +287,7 @@
                         <th>Evolved By</th>
                     </tr>
                     <tr>
-                        <td><a href="@item.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_')">@item.preEvolution.PreevolutionPokemon.Name</a></td>
+                        <td><a href="@item.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower()">@item.preEvolution.PreevolutionPokemon.Name</a></td>
                         <td>
                             @item.preEvolution.EvolutionMethod.Name
                             @if (@item.preEvolution.EvolutionDetails != null)
@@ -310,7 +310,7 @@
                     @foreach(var evolution in item.evolutions)
                     {
                         <tr>
-                            <td><a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_')">@evolution.EvolutionPokemon.Name</a></td>
+                            <td><a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower()">@evolution.EvolutionPokemon.Name</a></td>
                             <td>
                                 @evolution.EvolutionMethod.Name
                                 @if (@evolution.EvolutionDetails != null)

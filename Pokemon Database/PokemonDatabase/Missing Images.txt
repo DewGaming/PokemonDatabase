@@ -1,60 +1,12 @@
-Every Alt Form (Except the following:)
-    Mega:
-        Venusaur
-        Charizard X
-        Charizard Y
-        Blastoise
-        Beedrill
-        Pidgeot
-        Alakazam
-        Slowbro
-        Gengar
-        Kangaskhan
-        Pinsir
-        Gyarados
-        Aerodactyl
-        Ampharos
-        Steelix
-        Scizor
-        Heracross
-        Tyranitar
-        Sceptile
-        Blaziken
-        Gardevoir
-        Sableye
-        Mawile
-        Aggron
-        Medicham
-        Sharpedo
-        Camerupt
-        Altaria
-        Banette
-        Glalie
-        Salamence
-        Metagross
-        Lopunny
-        Garchomp
-        Lucario
-        Abomasnow
-        Gallade
-        Audino
-        Diancie
-    Castorm
-    Deoxys
-    Shellos
-    Gastrodon
-    Rotom
-    Origin Giratina
+Alt Forms Needed
     Basculin
-    Darmanitan
-    Kyurem
-    Meloetta
-    Ash Greninja
     Female Meowstic
     Aegislash
     Pumpkaboo
     Gourgeist
-    Hoopa Unbound
-    Dusk Lycanroc
-    School Wishiwashi
-    Necrozma
+Needs photo updated:
+    Basculin
+    Aegislash
+Needs photo copied:
+    Pumpkaboo
+    Gourgeist
