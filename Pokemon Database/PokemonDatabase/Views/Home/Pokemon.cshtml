@@ -24,7 +24,7 @@
 }
 @foreach(var item in Model)
 {
-    <div class="tabcontent@(@item.pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.pokemon.Name" style="display: @(@item.pokemon.Id.IndexOf('-') == -1 ? "block;" : "none;")">
+    <div class="tabcontent@(@item.pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.pokemon.Name">
         <div class="pokemonPicture"><img width="100" title="@item.pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.pokemon.Name.Replace(":".ToString(), string.Empty) + ".png")" /></div>
         <div class="pokemonName">
             <b>

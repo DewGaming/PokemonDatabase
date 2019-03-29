@@ -39,25 +39,6 @@ Every Alt Form (Except the following:)
         Gallade
         Audino
         Diancie
-    Alolan:
-        Rattata
-        Raticate
-        Raichu
-        Sandshrew
-        Sandslash
-        Vulpix
-        Nintales
-        Diglett
-        Dugtrio
-        Meowth
-        Persian
-        Geodude
-        Graveler
-        Golem
-        Grimer
-        Muk
-        Exeggutor
-        Marowak
     Castorm
     Deoxys
     Shellos
