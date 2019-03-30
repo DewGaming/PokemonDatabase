@@ -46,7 +46,10 @@ namespace PokemonDatabase.Controllers
         [Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
-            Name = Name.Replace('_', ' ');
+            if (!Name.Contains("nidoran"))
+            {
+                Name = Name.Replace('_', ' ');
+            }
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             if (Name != textInfo.ToTitleCase(Name))
             {

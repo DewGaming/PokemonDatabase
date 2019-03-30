@@ -42,6 +42,10 @@
   padding: 6px 12px;
 }
 
+.tabcontent.generation {
+  padding-bottom: 0px;
+}
+
 .tabcontent.active {
   display: block;
   margin-bottom: 60px;

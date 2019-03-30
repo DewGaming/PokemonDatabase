@@ -37,7 +37,7 @@
                     @("#")@item.pokemon.Id
                 }
 
-                @item.pokemon.Name
+                @item.pokemon.Name.Replace('_', ' ')
             </b>
             (@item.pokemon.Classification.Name)
         </div>
@@ -287,7 +287,16 @@
                         <th>Evolved By</th>
                     </tr>
                     <tr>
-                        <td><a href="@item.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower()">@item.preEvolution.PreevolutionPokemon.Name</a></td>
+                        <td>
+                            @if(@item.preEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                            {
+                                <a href="@item.preEvolution.PreevolutionPokemon.Name.Substring(0, item.preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower()">@item.preEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
+                            }
+                            else
+                            {
+                                <a href="@item.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower()">@item.preEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
+                            }
+                        </td>
                         <td>
                             @item.preEvolution.EvolutionMethod.Name
                             @if (@item.preEvolution.EvolutionDetails != null)
@@ -310,7 +319,16 @@
                     @foreach(var evolution in item.evolutions)
                     {
                         <tr>
-                            <td><a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower()">@evolution.EvolutionPokemon.Name</a></td>
+                            <td>
+                                @if(@evolution.EvolutionPokemon.Name.Contains(" ("))
+                                {
+                                    <a href="@evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower()">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
+                                }
+                                else
+                                {
+                                    <a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower()">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
+                                }
+                            </td>
                             <td>
                                 @evolution.EvolutionMethod.Name
                                 @if (@evolution.EvolutionDetails != null)
