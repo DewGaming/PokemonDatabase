@@ -1,26 +1,125 @@
 footer{
-    background-color: white;
-    color: gray;
-    height: 55px;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
+  background-color: white;
+  color: gray;
+  height: 55px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+
+main {
+  max-width: 1220px !important;
+}
+
+.pokemonTables {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 0 -1rem 1rem 0;
+}
+
+.pokemonTables table {
+  width: 100%;
+}
+
+.effectivenessChart {
+  display: flex;
+}
+
+.effectivenessChart div {
+  margin-right: 10px;
+}
+
+.effectivenessChart table tbody tr:first-of-type td {
+  padding-top: 5px;
+}
+
+.noRowBorders td {
+  border-width: 0;
+}
+
+.noRowBorders table tbody tr:first-of-type td {
+  border-top-width: 1px;
 }
 
 footer hr{
-    margin-top: 0;
+  margin-top: 0;
 }
 
-table.baseStatTable {
-  display: flex;
-  line-height: 1rem;
+img {
+  border: 0;
+  max-width: 100%;
+  height: auto;
 }
 
-table.baseStatTable th, table.baseStatTable td, table.evYieldTable th, table.evYieldTable td {
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.effectivenessChart table td, .evolutions td {
+  padding: 0;
+}
+
+.pokemonPicture {
+  margin-bottom: 10px;
+}
+
+.baseStatTable td, .evYieldTable td {
   padding-left: 10px;
   padding-bottom: 5px;
 }
 
-table.baseStatTable th:first-child, table.baseStatTable td:first-child, table.evYieldTable th:first-child, table.evYieldTable td:first-child {
+.pokemonTables {
+  padding: 0 1rem;
+}
+
+.pokemonTables th {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.tableWithHeaders {
+  float: left;
+  margin: 0px 10px 5px 0px;
+}
+
+.tableWithHeaders thead th {
+  width: auto;
+  color: #212529;
+  text-align: left;
   padding-left: 0px;
+  white-space: nowrap;
+  border-top-width: 0px;
+}
+
+.evolutions thead th:first-child, .evolutions tbody th:first-child {
+  padding-right: 20px;
+}
+
+.evolutions thead th:first-of-type {
+  min-width: 155px;
+}
+
+.evolutions tbody th {
+  text-align: left;
+}
+
+.pokemonTraining br:last-of-type {
+  display: none;
+}
+
+.evolutions thead th:last-child {
+  width: 100%;
+}
+
+.evolutions tbody th {
+  font-size: 1rem;
+}
+
+.maleRatio {
+  color: #3273dc;
+}
+
+.femaleRatio {
+  color: #ff6bce;
 }

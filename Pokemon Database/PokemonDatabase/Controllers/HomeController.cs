@@ -55,10 +55,8 @@ namespace PokemonDatabase.Controllers
                 pokemon = allPokemon[ram.Next(allPokemon.Count)];
                 model.Add(new PokemonViewModel(){
                     pokemon = pokemon,
-                    baseStats = _dataService.GetBaseStat(pokemon.Id),
                     types = _dataService.GetPokemonTypes(pokemon.Id),
-                    abilities = _dataService.GetPokemonAbilities(pokemon.Id),
-                    effectiveness = _dataService.GetTypeChartPokemon(pokemon.Id)
+                    abilities = _dataService.GetPokemonAbilities(pokemon.Id)
                 });
             }
 
