@@ -1,21 +1,21 @@
  /* Style the tab */
  .tab-list {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   border-bottom: 1px solid #dbdbdb;
 }
 
 /* Style the buttons that are used to open the tab content */
 .tab-list button {
   list-style: none;
-  min-width: auto;
+  min-width: 100px;
   margin: 0 0 -1px .25rem;
   padding: .25rem 1rem;
   border: 1px solid #dbdbdb;
   border-radius: 4px 4px 0 0;
   line-height: 1.2;
   text-align: center;
-  flex: 1 1 0;
+  flex: 0 1 auto;
   color: #737373;
   transition: color .2s, background-color .2s;
 }
@@ -49,4 +49,22 @@
 .tabcontent.active {
   display: block;
   margin-bottom: 60px;
+}
+
+div.effectivenessChart table {
+  float: left;
+  padding-bottom: 5;
+  margin-right: 10px;
+}
+
+div.effectivenessChart table th:last-child, div.effectivenessChart table td:last-child {
+  margin-right: 0px;
+}
+
+div.effectivenessChart .strongAgainstTable {
+  margin-left: 0px;
+}
+
+div.preEvolution, div.evolution {
+  clear: both;
 }

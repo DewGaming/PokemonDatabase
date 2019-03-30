@@ -140,20 +140,20 @@
             <h4>Base Stats (@item.baseStats.StatTotal Total)</h4>
             <table class="baseStatTable">
                 <tr>
-                    <th scope="col">Health</th>
-                    <th scope="col">Attack</th>
-                    <th scope="col">Defense</th>
-                    <th scope="col">Special Attack</th>
-                    <th scope="col">Special Defense</th>
-                    <th scope="col">Speed</th>
+                    <th class="Health" scope="col">Health</th>
+                    <th class="Attack" scope="col">Attack</th>
+                    <th class="Defense" scope="col">Defense</th>
+                    <th class="SpecialAttack" scope="col">Special Attack</th>
+                    <th class="SpecialDefense" scope="col">Special Defense</th>
+                    <th class="Speed" scope="col">Speed</th>
                 </tr>
                 <tr>
-                    <td>@item.baseStats.Health</td>
-                    <td>@item.baseStats.Attack</td>
-                    <td>@item.baseStats.Defense</td>
-                    <td>@item.baseStats.SpecialAttack</td>
-                    <td>@item.baseStats.SpecialDefense</td>
-                    <td>@item.baseStats.Speed</td>
+                    <td class="Health">@item.baseStats.Health</td>
+                    <td class="Attack">@item.baseStats.Attack</td>
+                    <td class="Defense">@item.baseStats.Defense</td>
+                    <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
+                    <td class="SpecialDefense">@item.baseStats.SpecialDefense</td>
+                    <td class="Speed">@item.baseStats.Speed</td>
                 </tr>
             </table>
         </div>
@@ -163,53 +163,53 @@
                 <tr>
                     @if (item.evYields.Health != 0)
                     {
-                        <th scope="col">Health</th>
+                        <th class="Health" scope="col">Health</th>
                     }
                     @if (item.evYields.Attack != 0)
                     {
-                        <th scope="col">Attack</th>
+                        <th class="Attack" scope="col">Attack</th>
                     }
                     @if (item.evYields.Defense != 0)
                     {
-                        <th scope="col">Defense</th>
+                        <th class="Defense" scope="col">Defense</th>
                     }
                     @if (item.evYields.SpecialAttack != 0)
                     {
-                        <th scope="col">Special Attack</th>
+                        <th class="SpecialAttack" scope="col">Special Attack</th>
                     }
                     @if (item.evYields.SpecialDefense != 0)
                     {
-                        <th scope="col">Special Defense</th>
+                        <th class="SpecialDefense" scope="col">Special Defense</th>
                     }
                     @if (item.evYields.Speed != 0)
                     {
-                        <th scope="col">Speed</th>
+                        <th class="Speed" scope="col">Speed</th>
                     }
                 </tr>
                 <tr>
                     @if (item.evYields.Health != 0)
                     {
-                        <td>@item.evYields.Health</td>
+                        <td class="Health">@item.evYields.Health</td>
                     }
                     @if (item.evYields.Attack != 0)
                     {
-                        <td>@item.evYields.Attack</td>
+                        <td class="Attack">@item.evYields.Attack</td>
                     }
                     @if (item.evYields.Defense != 0)
                     {
-                        <td>@item.evYields.Defense</td>
+                        <td class="Defense">@item.evYields.Defense</td>
                     }
                     @if (item.evYields.SpecialAttack != 0)
                     {
-                        <td>@item.evYields.SpecialAttack</td>
+                        <td class="SpecialAttack">@item.evYields.SpecialAttack</td>
                     }
                     @if (item.evYields.SpecialDefense != 0)
                     {
-                        <td>@item.evYields.SpecialDefense</td>
+                        <td class="SpecialDefense">@item.evYields.SpecialDefense</td>
                     }
                     @if (item.evYields.Speed != 0)
                     {
-                        <td>@item.evYields.Speed</td>
+                        <td class="Speed">@item.evYields.Speed</td>
                     }
                 </tr>
             </table>

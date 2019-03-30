@@ -13,8 +13,6 @@ namespace PokemonDatabase.Models
         public List<EggGroup> eggGroups { get; set; }
         public Evolution preEvolution { get; set; }
         public List<Evolution> evolutions { get; set; }
-        public List<PokemonFormDetail> forms { get; set; }
-        public PokemonFormDetail originalForm { get; set; }
         public TypeEffectivenessViewModel effectiveness { get; set; }
     }
 }

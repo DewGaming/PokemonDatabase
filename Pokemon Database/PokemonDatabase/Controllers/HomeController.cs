@@ -43,6 +43,28 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
+        [Route("team_generator")]
+        public IActionResult TeamGenerator()
+        {
+            Pokemon pokemon;
+            List<Pokemon> allPokemon = _dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
+            List<PokemonViewModel> model = new List<PokemonViewModel>();
+            Random ram = new Random();
+            for(var i = 0; i < 6; i++)
+            {
+                pokemon = allPokemon[ram.Next(allPokemon.Count)];
+                model.Add(new PokemonViewModel(){
+                    pokemon = pokemon,
+                    baseStats = _dataService.GetBaseStat(pokemon.Id),
+                    types = _dataService.GetPokemonTypes(pokemon.Id),
+                    abilities = _dataService.GetPokemonAbilities(pokemon.Id),
+                    effectiveness = _dataService.GetTypeChartPokemon(pokemon.Id)
+                });
+            }
+
+            return View(model);
+        }
+
         [Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
@@ -69,8 +91,6 @@ namespace PokemonDatabase.Controllers
                 eggGroups = _dataService.GetPokemonEggGroups(pokemon.Id),
                 preEvolution = _dataService.GetPreEvolution(pokemon.Id),
                 evolutions = _dataService.GetPokemonEvolutions(pokemon.Id),
-                forms = _dataService.GetPokemonForms(pokemon.Id),
-                originalForm = _dataService.GetOriginalForm(pokemon.Id),
                 effectiveness = _dataService.GetTypeChartPokemon(pokemon.Id)
             });
 
@@ -85,8 +105,6 @@ namespace PokemonDatabase.Controllers
                     eggGroups = _dataService.GetPokemonEggGroups(p.Id),
                     preEvolution = _dataService.GetPreEvolution(p.Id),
                     evolutions = _dataService.GetPokemonEvolutions(p.Id),
-                    forms = _dataService.GetPokemonForms(p.Id),
-                    originalForm = _dataService.GetOriginalForm(p.Id),
                     effectiveness = _dataService.GetTypeChartPokemon(p.Id)
             });
             }
@@ -94,7 +112,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("type")]
+        [Route("type_chart")]
         public IActionResult TypeChart()
         {
             List<TypeChart> model = _dataService.GetTypeChart();

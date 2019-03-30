@@ -6,6 +6,21 @@ footer{
     position: fixed;
     bottom: 0;
 }
+
 footer hr{
     margin-top: 0;
+}
+
+table.baseStatTable {
+  display: flex;
+  line-height: 1rem;
+}
+
+table.baseStatTable th, table.baseStatTable td, table.evYieldTable th, table.evYieldTable td {
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+table.baseStatTable th:first-child, table.baseStatTable td:first-child, table.evYieldTable th:first-child, table.evYieldTable td:first-child {
+  padding-left: 0px;
 }

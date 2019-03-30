@@ -156,16 +156,6 @@ namespace PokemonDatabase
                 .ToList();
         }
 
-        public PokemonFormDetail GetOriginalForm(string PokemonId)
-        {
-            return _dataContext.PokemonFormDetails
-                .Include(f => f.Form)
-                .Include(f => f.OriginalPokemon)
-                .Include(f => f.AltFormPokemon)
-                .ToList()
-                .Find(f => f.AltFormPokemon.Id == PokemonId);
-        }
-
         public Form GetPokemonForm(string PokemonId)
         {
             PokemonFormDetail formDetail = _dataContext.PokemonFormDetails
@@ -185,8 +175,6 @@ namespace PokemonDatabase
         public List<Pokemon> GetAllPokemon()
         {
             List<Pokemon> pokemon = _pokemonList;
-            List<Pokemon> altForms = pokemon.Where(p => p.Id.Contains("-")).ToList();
-            pokemon = pokemon.Except(altForms).ToList();
 
             pokemon = pokemon.OrderBy(p => p.Id.Length).ThenBy(p => p.Id).ToList();
 
