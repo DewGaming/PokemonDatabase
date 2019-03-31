@@ -50,7 +50,11 @@
 .tabcontent.active {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 60px;
+  margin-bottom: 45px;
+}
+
+.tabcontent.active .evolutions {
+  margin-bottom: 20px;
 }
 
 .tabcontent th {
@@ -69,8 +73,8 @@
 
 @media (max-width: 899px) {
   .tab-list button {
-   flex:1 1 0;
-   min-width:auto
+   flex: 1 1 0;
+   min-width: auto;
   }
 }
 

@@ -9,6 +9,7 @@ footer{
 
 main {
   max-width: 1220px !important;
+  padding-left: 5px !important;
 }
 
 .pokemonTables {
@@ -86,11 +87,6 @@ h2 {
   white-space: nowrap;
 }
 
-.tableWithHeaders {
-  float: left;
-  margin: 0px 10px 5px 0px;
-}
-
 .tableWithHeaders thead th {
   width: auto;
   color: #212529;
@@ -98,6 +94,11 @@ h2 {
   padding-left: 0px;
   white-space: nowrap;
   border-top-width: 0px;
+}
+
+.evolutions thead tr h2 {
+  margin-top: -4px;
+  margin-bottom: 4px;
 }
 
 .evolutions thead th:first-child, .evolutions tbody th:first-child {
@@ -110,10 +111,6 @@ h2 {
 
 .evolutions tbody th {
   text-align: left;
-}
-
-.pokemonTraining br:last-of-type {
-  display: none;
 }
 
 .evolutions thead th:last-child {
