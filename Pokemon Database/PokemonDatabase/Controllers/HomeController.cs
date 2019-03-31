@@ -47,17 +47,19 @@ namespace PokemonDatabase.Controllers
         public IActionResult TeamGenerator()
         {
             Pokemon pokemon;
+            List<Pokemon> model = new List<Pokemon>();
             List<Pokemon> allPokemon = _dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
-            List<PokemonViewModel> model = new List<PokemonViewModel>();
-            Random ram = new Random();
+            Random rnd = new Random();
+
             for(var i = 0; i < 6; i++)
             {
-                pokemon = allPokemon[ram.Next(allPokemon.Count)];
-                model.Add(new PokemonViewModel(){
-                    pokemon = pokemon,
-                    types = _dataService.GetPokemonTypes(pokemon.Id),
-                    abilities = _dataService.GetPokemonAbilities(pokemon.Id)
-                });
+                pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                while(model.Contains(pokemon))
+                {
+                    pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                }
+
+                model.Add(pokemon);
             }
 
             return View(model);

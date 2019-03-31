@@ -1,4 +1,4 @@
-@model IEnumerable<PokemonDatabase.Models.PokemonViewModel>
+@model IEnumerable<PokemonDatabase.DataAccess.Models.Pokemon>
 @{
     Layout = "_Layout";
 }
@@ -6,63 +6,43 @@
 <link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <script src="/js/TabContent.js"></script>
-@if(Model.Count() > 1)
-{
-    <div class="tab-list">
-        @foreach(var button in Model)
-        {
-            @if(button == Model.First())
-            {
-                <button class="tab active" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name.Replace('_', ' ')</button>
-            }
-            else
-            {
-                <button class="tab" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name.Replace('_', ' ')</button>
-            }
-        }
+<div class="teamGenerator">
+    <div class="Table3x2">
+        <table  class="teamGeneratorTable">
+            <tr class="borderTop">
+                @for(var i = 0; i < 3; i++)
+                {
+                    <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
+                }
+            </tr>
+            <tr>
+                @for(var i = 3; i < 6; i++)
+                {
+                    <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
+                }
+            </tr>
+        </table>
     </div>
-}
-@foreach(var item in Model)
-{
-    <div class="tabcontent@(@item == @Model.First() ? " active" : "")" id="@item.pokemon.Name">
-        <div class="pokemonPicture span-md-6 span-lg-4"><a href="@Url.Action("Pokemon", "Home", new { Name = @item.pokemon.Name.Replace(' ', '_').ToLower()})"><img width="327" title="@item.pokemon.Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @item.pokemon.Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></div>
-        <div class="pokemonData pokemonTables span-md-6 span-lg-4">
-            <h2>Pokemon Data</h2>
-            <table class="pokedexNumber">
-                <tbody>
-                    <tr>
-                        <th>Typing</th>
-                        <td>
-                            @for(int i = 0; i < item.types.Count; i++)
-                            {
-                                <div class="pokemon-type type-icon type-@item.types[i].Name.ToLower()">@item.types[i].Name</div>
-                            }
-                            </td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <th>Abilities</th>
-                        <td>
-                            @for(int i = 0; i < item.abilities.Count; i++)
-                            {
-                                if (i > 0)
-                                {
-                                    <br>
-                                }
-
-                                <span title="Description: @item.abilities[i].Description">
-                                    @item.abilities[i].Name
-
-                                    @if (i + 1 == item.abilities.Count && i != 0)
-                                    {
-                                        @(" (Hidden)");
-                                    }
-                                </span>
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="Table2x3">
+        <table  class="teamGeneratorTable">
+            <tr class="borderTop">
+                @for(var i = 0; i < 2; i++)
+                {
+                    <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
+                }
+            </tr>
+            <tr>
+                @for(var i = 2; i < 4; i++)
+                {
+                    <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
+                }
+            </tr>
+            <tr>
+                @for(var i = 4; i < 6; i++)
+                {
+                    <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
+                }
+            </tr>
+        </table>
     </div>
-}
+</div>

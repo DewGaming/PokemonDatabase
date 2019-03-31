@@ -41,6 +41,10 @@ main {
   border-top-width: 1px;
 }
 
+.teamGeneratorTable td {
+  border-width: 0;
+}
+
 footer hr{
   margin-top: 0;
 }
@@ -61,7 +65,11 @@ h2 {
 }
 
 .pokemonPicture {
-  margin-bottom: 10px;
+  margin: 10px;
+}
+
+.generatorPicture {
+  padding: 10px;
 }
 
 .baseStatTable td, .evYieldTable td {
@@ -122,4 +130,30 @@ h2 {
 
 .femaleRatio {
   color: #ff6bce;
+}
+
+.teamGenerator {
+  margin-top: 10px;
+}
+
+@media (max-width: 660px) {
+  .Table2x3 {
+    display: block;
+    margin-bottom: 60px;
+  }
+  .Table3x2 {
+    display: none;
+    margin-bottom: 0px;
+  }
+}
+
+@media (min-width: 661px) {
+  .Table2x3 {
+    display: none;
+    margin-bottom: 0px;
+  }
+  .Table3x2 {
+    display: block;
+    margin-bottom: 60px;
+  }
 }

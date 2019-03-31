@@ -6,22 +6,19 @@
 <link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <script src="/js/TabContent.js"></script>
-@if(Model.Count() > 1)
-{
-    <div class="tab-list">
-        @foreach(var button in Model)
+<div class="tab-list">
+    @foreach(var button in Model)
+    {
+        @if(button.pokemon.Id.IndexOf('-') == -1)
         {
-            @if(button.pokemon.Id.IndexOf('-') == -1)
-            {
-                <button class="tab active" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name</button>
-            }
-            else
-            {
-                <button class="tab" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name</button>
-            }
+            <button class="tab active" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name</button>
         }
-    </div>
-}
+        else
+        {
+            <button class="tab" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name</button>
+        }
+    }
+</div>
 @foreach(var item in Model)
 {
     <div class="tabcontent@(@item.pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.pokemon.Name">
