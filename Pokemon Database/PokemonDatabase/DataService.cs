@@ -316,5 +316,10 @@ namespace PokemonDatabase
 
             return effectivenessChart;
         }
+
+        public List<Generation> GetGeneration()
+        {
+            return _dataContext.Generations.ToList();
+        }
     }
 }

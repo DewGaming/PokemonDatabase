@@ -73,6 +73,10 @@ h2 {
   padding: 10px;
 }
 
+.generationTable {
+  width: 50%;
+}
+
 .baseStatTable td, .evYieldTable td {
   padding-left: 10px;
   padding-bottom: 5px;

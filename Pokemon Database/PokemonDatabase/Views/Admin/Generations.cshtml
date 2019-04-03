@@ -1,0 +1,22 @@
+@model IEnumerable<PokemonDatabase.DataAccess.Models.Generation>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="generationTable">
+    <table class="table">
+        <tr>
+            <th scope="col">Generation ID</th>
+            <th scope="col">Region</th>
+            <th scope="col">Game(s) of Origin</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Region</td>
+                <td>@item.Games (@item.Abbreviation)</td>
+            </tr>
+        }
+    </table>
+</div>
