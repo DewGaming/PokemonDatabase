@@ -1,0 +1,20 @@
+@model IEnumerable<PokemonDatabase.DataAccess.Models.EggGroup>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="eggGroupTable">
+    <table class="table">
+        <tr>
+            <th scope="col">Egg Group ID</th>
+            <th scope="col">Egg Group</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,0 +1,20 @@
+@model IEnumerable<PokemonDatabase.DataAccess.Models.Type>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="typeTable">
+    <table class="table">
+        <tr>
+            <th scope="col">Type ID</th>
+            <th scope="col">Type</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+            </tr>
+        }
+    </table>
+</div>

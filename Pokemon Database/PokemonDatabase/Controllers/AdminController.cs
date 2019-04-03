@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -47,6 +46,30 @@ namespace PokemonDatabase.Controllers
         public IActionResult Generations()
         {
             List<Generation> model = _dataService.GetGeneration();
+
+            return View(model);
+        }
+
+        [Route("type")]
+        public IActionResult Types()
+        {
+            List<Type> model = _dataService.GetTypes();
+
+            return View(model);
+        }
+
+        [Route("ability")]
+        public IActionResult Abilities()
+        {
+            List<Ability> model = _dataService.GetAbilities();
+
+            return View(model);
+        }
+
+        [Route("egggroup")]
+        public IActionResult EggGroups()
+        {
+            List<EggGroup> model = _dataService.GetEggGroups();
 
             return View(model);
         }

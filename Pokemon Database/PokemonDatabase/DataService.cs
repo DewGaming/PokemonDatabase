@@ -99,6 +99,11 @@ namespace PokemonDatabase
                 .Find(e => e.Id == id);
         }
 
+        public List<EggGroup> GetEggGroups()
+        {
+            return _dataContext.EggGroups.ToList();
+        }
+
         public List<EggGroup> GetPokemonEggGroups(string PokemonId)
         {
             PokemonEggGroupDetail eggGroupDetail = _dataContext.PokemonEggGroupDetails.Include(e => e.Pokemon).Include(e => e.PrimaryEggGroup).Include(e => e.SecondaryEggGroup).ToList().Find(e => e.Pokemon.Id == PokemonId);
