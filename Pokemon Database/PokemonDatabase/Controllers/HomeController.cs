@@ -72,6 +72,7 @@ namespace PokemonDatabase.Controllers
             {
                 Name = Name.Replace('_', ' ');
             }
+
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             if (Name != textInfo.ToTitleCase(Name))
             {
@@ -106,7 +107,7 @@ namespace PokemonDatabase.Controllers
                     preEvolution = _dataService.GetPreEvolution(p.Id),
                     evolutions = _dataService.GetPokemonEvolutions(p.Id),
                     effectiveness = _dataService.GetTypeChartPokemon(p.Id)
-            });
+                });
             }
 
             return View(model);
