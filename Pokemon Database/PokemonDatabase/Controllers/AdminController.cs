@@ -76,7 +76,10 @@ namespace PokemonDatabase.Controllers
         [Route("egggroup")]
         public IActionResult EggGroups()
         {
-            List<EggGroup> model = _dataService.GetEggGroups();
+            EggGroupViewModel model = new EggGroupViewModel(){
+                AllEggGroups = _dataService.GetEggGroups(),
+                AllPokemon = _dataService.GetAllPokemonWithEggGroups()
+            };
 
             return View(model);
         }
@@ -98,6 +101,25 @@ namespace PokemonDatabase.Controllers
             _dataService.AddGeneration(generation);
 
             return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("add-egg-group")]
+        public IActionResult AddEggGroup()
+        {
+            return View();
+        }
+
+        [HttpPost, Route("add-egg-group")]
+        public IActionResult AddEggGroup(EggGroup eggGroup)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            _dataService.AddEggGroup(eggGroup);
+
+            return RedirectToAction("EggGroups");
         }
 
         [HttpGet, Route("add-ability")]
@@ -142,7 +164,30 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("edit-ability/{id}")]
+        [HttpGet, Route("edit-egg-group/{id:int}")]
+        public IActionResult EditEggGroup(int id)
+        {
+            EggGroup model = _dataService.GetEggGroup(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("edit-egg-group/{id:int}")]
+        public IActionResult EditEggGroup(EggGroup eggGroup)
+        {
+            if (!ModelState.IsValid)
+            {
+                EggGroup model = _dataService.GetEggGroup(eggGroup.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateEggGroup(eggGroup);
+
+            return RedirectToAction("EggGroups");
+        }
+
+        [HttpGet, Route("edit-ability/{id:int}")]
         public IActionResult EditAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
@@ -150,7 +195,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("edit-ability/{id}")]
+        [HttpPost, Route("edit-ability/{id:int}")]
         public IActionResult EditAbility(Ability ability)
         {
             if (!ModelState.IsValid)
@@ -181,7 +226,23 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("delete-ability/{id}")]
+        [HttpGet, Route("delete-egg-group/{id:int}")]
+        public IActionResult DeleteEggGroup(int id)
+        {
+            EggGroup model = _dataService.GetEggGroup(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("delete-egg-group/{id:int}")]
+        public IActionResult DeleteEggGroup(EggGroup eggGroup)
+        {
+            _dataService.DeleteEggGroup(eggGroup.Id);
+
+            return RedirectToAction("EggGroups");
+        }
+
+        [HttpGet, Route("delete-ability/{id:int}")]
         public IActionResult DeleteAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
@@ -189,7 +250,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("delete-ability/{id}")]
+        [HttpPost, Route("delete-ability/{id:int}")]
         public IActionResult DeleteAbility(Ability ability)
         {
             _dataService.DeleteAbility(ability.Id);

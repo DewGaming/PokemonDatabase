@@ -99,7 +99,7 @@ namespace PokemonDatabase
 
         public List<EggGroup> GetEggGroups()
         {
-            return _dataContext.EggGroups.ToList();
+            return _dataContext.EggGroups.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
         public List<EggGroup> GetPokemonEggGroups(string PokemonId)
@@ -223,20 +223,17 @@ namespace PokemonDatabase
 
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
-            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
-
-            pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
-
-            return pokemon;
+            return _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
         }
 
         public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
         {
-            List<PokemonAbilityDetail> pokemon = _dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList();
+            return _dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList();
+        }
 
-            pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
-
-            return pokemon;
+        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
+        {
+            return _dataContext.PokemonEggGroupDetails.Include(p => p.Pokemon).Include(p => p.PrimaryEggGroup).Include(p => p.SecondaryEggGroup).ToList();
         }
 
         public BaseStat GetBaseStat(string PokemonId)
@@ -390,6 +387,12 @@ namespace PokemonDatabase
             _dataContext.SaveChanges();
         }
 
+        public void AddEggGroup(EggGroup eggGroup)
+        {
+            _dataContext.EggGroups.Add(eggGroup);
+            _dataContext.SaveChanges();
+        }
+
         public void AddAbility(Ability ability)
         {
             _dataContext.Abilities.Add(ability);
@@ -405,6 +408,12 @@ namespace PokemonDatabase
         public void UpdateGeneration(Generation generation)
         {
             _dataContext.Generations.Update(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateEggGroup(EggGroup eggGroup)
+        {
+            _dataContext.EggGroups.Update(eggGroup);
             _dataContext.SaveChanges();
         }
 
@@ -426,6 +435,13 @@ namespace PokemonDatabase
             Generation generation = this.GetGeneration(id);
             generation.IsArchived = true;
             this.UpdateGeneration(generation);
+        }
+
+        public void DeleteEggGroup(int id)
+        {
+            EggGroup eggGroup = this.GetEggGroup(id);
+            eggGroup.IsArchived = true;
+            this.UpdateEggGroup(eggGroup);
         }
 
         public void DeleteAbility(int id)
