@@ -8,26 +8,24 @@ namespace PokemonDatabase
 {
     public class DataService
     {
-        private readonly List<Pokemon> _pokemonList;
-
         private readonly DataContext _dataContext;
 
         public DataService(DataContext dataContext)
         {
             _dataContext = dataContext;
-            _pokemonList = _dataContext.Pokemon
-                .Include(p => p.EggCycle)
-                .Include(p => p.GenderRatio)
-                .Include(p => p.Classification)
-                .Include(p => p.Generation)
-                .Include(p => p.ExperienceGrowth)
-                .Include(p => p.CaptureRate)
-                .Include(p => p.BaseHappiness)
-                .ToList();
-            foreach(var pokemon in _pokemonList.Where(p => p.Id.Contains('-')))
-            {
-                pokemon.Name += " (" + this.GetPokemonForm(pokemon.Id).Name + ")";
-            }
+            //List<Pokemon> _pokemonList = _dataContext.Pokemon
+            //    .Include(p => p.EggCycle)
+            //    .Include(p => p.GenderRatio)
+            //    .Include(p => p.Classification)
+            //    .Include(p => p.Generation)
+            //    .Include(p => p.ExperienceGrowth)
+            //    .Include(p => p.CaptureRate)
+            //    .Include(p => p.BaseHappiness)
+            //    .ToList();
+            //foreach(var pokemon in _pokemonList.Where(p => p.Id.Contains('-')))
+            //{
+            //    pokemon.Name += " (" + this.GetPokemonForm(pokemon.Id).Name + ")";
+            //}
         }
 
         public Ability GetAbility(int id)
@@ -161,7 +159,7 @@ namespace PokemonDatabase
                 .ToList();
         }
 
-        public Form GetPokemonForm(string PokemonId)
+        public string GetPokemonFormName(string PokemonId)
         {
             PokemonFormDetail formDetail = _dataContext.PokemonFormDetails
                 .Include(f => f.Form)
@@ -169,21 +167,36 @@ namespace PokemonDatabase
                 .Include(f => f.AltFormPokemon)
                 .ToList()
                 .Find(f => f.AltFormPokemon.Id == PokemonId);
-            return formDetail.Form;
+            return formDetail.Form.Name;
         }
 
         public Pokemon GetPokemon(string Name)
         {
-            return _pokemonList.Find(x => x.Name == Name);
+            return _dataContext.Pokemon
+                .Include(p => p.EggCycle)
+                .Include(p => p.GenderRatio)
+                .Include(p => p.Classification)
+                .Include(p => p.Generation)
+                .Include(p => p.ExperienceGrowth)
+                .Include(p => p.CaptureRate)
+                .Include(p => p.BaseHappiness)
+                .ToList()
+                .Find(x => x.Name == Name);
         }
 
         public List<Pokemon> GetAllPokemon()
         {
-            List<Pokemon> pokemon = _pokemonList;
-
-            pokemon = pokemon.OrderBy(p => p.Id.Length).ThenBy(p => p.Id).ToList();
-
-            return pokemon;
+            return _dataContext.Pokemon
+                .Include(p => p.EggCycle)
+                .Include(p => p.GenderRatio)
+                .Include(p => p.Classification)
+                .Include(p => p.Generation)
+                .Include(p => p.ExperienceGrowth)
+                .Include(p => p.CaptureRate)
+                .Include(p => p.BaseHappiness)
+                .OrderBy(p => p.Id.Length)
+                .ThenBy(p => p.Id)
+                .ToList();;
         }
 
         public List<Pokemon> GetAltForms(Pokemon pokemon)
@@ -325,6 +338,17 @@ namespace PokemonDatabase
         public List<Generation> GetGeneration()
         {
             return _dataContext.Generations.ToList();
+        }
+
+        public void AddUser(User user)
+        {
+            _dataContext.Users.Add(user);
+            _dataContext.SaveChanges();
+        }
+
+        public User GetUser(string email)
+        {
+            return _dataContext.Users.ToList().Find(x => x.EmailAddress == email);
         }
     }
 }

@@ -43,5 +43,6 @@ namespace PokemonDatabase.DataAccess.Models
         public DbSet<PokemonTypeDetail> PokemonTypeDetails { get; set; }
         public DbSet<Type> Types { get; set; }
         public DbSet<TypeChart> TypeCharts { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

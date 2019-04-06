@@ -9,10 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.Models;
 using PokemonDatabase.DataAccess.Models;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PokemonDatabase.Controllers
 {
-    [Route("admin")]
+    [Authorize(Roles = "Admin"), Route("admin")]
     public class AdminController : Controller
     {
         private readonly AppConfig _appConfig;
