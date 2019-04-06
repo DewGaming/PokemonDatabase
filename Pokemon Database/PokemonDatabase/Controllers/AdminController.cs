@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PokemonDatabase.Controllers
 {
-    [Authorize(Roles = "Admin"), Route("admin")]
+    [Authorize(Roles = "Admin,Owner"), Route("admin")]
     public class AdminController : Controller
     {
         private readonly AppConfig _appConfig;

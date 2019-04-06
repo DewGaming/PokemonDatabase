@@ -1,0 +1,30 @@
+@model IEnumerable<PokemonDatabase.DataAccess.Models.User>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="userTable">
+    <table class="table">
+        <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email Address</th>
+            <th scope="col">Is Admin</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.EmailAddress</td>
+                <td>@item.IsAdmin</td>
+                <td>
+                    <a href="@Url.Action("EditUser", "Owner", new { id = item.Id })">Edit</a>
+                    |
+                    <a href="@Url.Action("DeleteUser", "Owner", new { id = item.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

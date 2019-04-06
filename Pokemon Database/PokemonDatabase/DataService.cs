@@ -350,5 +350,28 @@ namespace PokemonDatabase
         {
             return _dataContext.Users.ToList().Find(x => x.EmailAddress == email);
         }
+
+        public User GetUserById(int id)
+        {
+            return _dataContext.Users.ToList().Find(x => x.Id == id);
+        }
+
+        public List<User> GetUsers()
+        {
+            return _dataContext.Users.Where(x => x.IsArchived == false).ToList();
+        }
+
+        public void UpdateUser(User user)
+        {
+            _dataContext.Users.Update(user);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteUser(int id)
+        {
+            User user = this.GetUserById(id);
+            user.IsArchived = true;
+            this.UpdateUser(user);
+        }
     }
 }

@@ -22,6 +22,9 @@ namespace PokemonDatabase.DataAccess.Models
         public string PasswordHash { get; set; }
 
         [Required]
+        public bool IsOwner { get; set; }
+
+        [Required]
         public bool IsAdmin { get; set; }
 
         [Required]
