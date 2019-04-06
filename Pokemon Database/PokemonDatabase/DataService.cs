@@ -44,7 +44,7 @@ namespace PokemonDatabase
 
         public List<Ability> GetAbilities()
         {
-            return _dataContext.Abilities.ToList();
+            return _dataContext.Abilities.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
         public List<Ability> GetPokemonAbilities(string PokemonId)
@@ -221,6 +221,24 @@ namespace PokemonDatabase
             return pokemon;
         }
 
+        public List<PokemonTypeDetail> GetAllPokemonWithTypes()
+        {
+            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
+
+            pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
+
+            return pokemon;
+        }
+
+        public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
+        {
+            List<PokemonAbilityDetail> pokemon = _dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList();
+
+            pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
+
+            return pokemon;
+        }
+
         public BaseStat GetBaseStat(string PokemonId)
         {
             return _dataContext.BaseStats
@@ -372,6 +390,12 @@ namespace PokemonDatabase
             _dataContext.SaveChanges();
         }
 
+        public void AddAbility(Ability ability)
+        {
+            _dataContext.Abilities.Add(ability);
+            _dataContext.SaveChanges();
+        }
+
         public void UpdateUser(User user)
         {
             _dataContext.Users.Update(user);
@@ -381,6 +405,12 @@ namespace PokemonDatabase
         public void UpdateGeneration(Generation generation)
         {
             _dataContext.Generations.Update(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateAbility(Ability ability)
+        {
+            _dataContext.Abilities.Update(ability);
             _dataContext.SaveChanges();
         }
 
@@ -396,6 +426,13 @@ namespace PokemonDatabase
             Generation generation = this.GetGeneration(id);
             generation.IsArchived = true;
             this.UpdateGeneration(generation);
+        }
+
+        public void DeleteAbility(int id)
+        {
+            Ability ability = this.GetAbility(id);
+            ability.IsArchived = true;
+            this.UpdateAbility(ability);
         }
     }
 }

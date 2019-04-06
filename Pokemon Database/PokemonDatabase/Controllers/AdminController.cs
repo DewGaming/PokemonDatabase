@@ -38,7 +38,7 @@ namespace PokemonDatabase.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<PokemonTypeDetail> model = _dataService.GetPokemonWithTypes();
+            List<PokemonTypeDetail> model = _dataService.GetAllPokemonWithTypes();
 
             return View(model);
         }
@@ -65,7 +65,10 @@ namespace PokemonDatabase.Controllers
         [Route("ability")]
         public IActionResult Abilities()
         {
-            List<Ability> model = _dataService.GetAbilities();
+            AbilityViewModel model = new AbilityViewModel(){
+                AllAbilities = _dataService.GetAbilities(),
+                AllPokemon = _dataService.GetAllPokemonWithAbilities()
+            };
 
             return View(model);
         }
@@ -97,6 +100,25 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Generations");
         }
 
+        [HttpGet, Route("add-ability")]
+        public IActionResult AddAbility()
+        {
+            return View();
+        }
+
+        [HttpPost, Route("add-ability")]
+        public IActionResult AddAbility(Ability ability)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            _dataService.AddAbility(ability);
+
+            return RedirectToAction("Abilities");
+        }
+
         [HttpGet, Route("edit-generation/{id}")]
         public IActionResult EditGeneration(string id)
         {
@@ -120,6 +142,29 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Generations");
         }
 
+        [HttpGet, Route("edit-ability/{id}")]
+        public IActionResult EditAbility(int id)
+        {
+            Ability model = _dataService.GetAbility(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("edit-ability/{id}")]
+        public IActionResult EditAbility(Ability ability)
+        {
+            if (!ModelState.IsValid)
+            {
+                Ability model = _dataService.GetAbility(ability.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateAbility(ability);
+
+            return RedirectToAction("Abilities");
+        }
+
         [HttpGet, Route("delete-generation/{id}")]
         public IActionResult DeleteGeneration(string id)
         {
@@ -134,6 +179,22 @@ namespace PokemonDatabase.Controllers
             _dataService.DeleteGeneration(generation.Id);
 
             return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("delete-ability/{id}")]
+        public IActionResult DeleteAbility(int id)
+        {
+            Ability model = _dataService.GetAbility(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("delete-ability/{id}")]
+        public IActionResult DeleteAbility(Ability ability)
+        {
+            _dataService.DeleteAbility(ability.Id);
+
+            return RedirectToAction("Abilities");
         }
 
         [Route("error")]
