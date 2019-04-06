@@ -219,18 +219,6 @@ namespace PokemonDatabase
                 .Find(e => e.Pokemon.Id == PokemonId);
         }
 
-        public List<decimal> GetEffectiveness(Type type, List<Type> typeList)
-        {
-            List<decimal> effectiveness = new List<decimal>();
-            List<TypeChart> typeChart = _dataContext.TypeCharts.Where(t => t.Defend == type).ToList();
-            foreach(var t in typeList)
-            {
-                effectiveness.Add(typeChart.Find(c => c.Attack == t).Effective);
-            }
-
-            return effectiveness;
-        }
-
         public List<TypeChart> GetTypeChart()
         {
             List<TypeChart> typeChart = _dataContext.TypeCharts
@@ -246,51 +234,61 @@ namespace PokemonDatabase
         {
             List<Type> typeList = GetTypes();
             List<Type> pokemonTypes = GetPokemonTypes(pokemonId);
-            List<decimal> primaryTypeEffectiveness = new List<decimal>();
-            List<decimal> secondaryTypeEffectiveness = new List<decimal>();
-            List<decimal> pokemonTypeEffectiveness = new List<decimal>();
             List<string> strongAgainst = new List<string>();
             List<string> superStrongAgainst = new List<string>();
             List<string> weakAgainst = new List<string>();
             List<string> superWeakAgainst = new List<string>();
             List<string> immuneTo = new List<string>();
+            List<TypeChart> typeChart;
+            string effectiveValue, attackType;
 
-            primaryTypeEffectiveness = GetEffectiveness(pokemonTypes[0], typeList);
-            if (pokemonTypes.Count > 1)
+            foreach(var type in pokemonTypes)
             {
-                secondaryTypeEffectiveness = GetEffectiveness(pokemonTypes[1], typeList);
-                pokemonTypeEffectiveness = primaryTypeEffectiveness.Select((dValue, index) => dValue * secondaryTypeEffectiveness[index]).ToList();
-            }
-            else
-            {
-                pokemonTypeEffectiveness = primaryTypeEffectiveness;
-            }
-
-            for (var i = 0; i < typeList.Count - 1; i++)
-            {
-                string effectiveValue = pokemonTypeEffectiveness[i].ToString("0.####");
-            
-                if (effectiveValue != "1")
+                typeChart = _dataContext.TypeCharts.Where(t => t.Defend == type).ToList();
+                foreach(var t in typeList)
                 {
-                    if (effectiveValue == "0")
+                    if (typeChart.Exists(c => c.Attack == t))
                     {
-                        immuneTo.Add(typeList[i].Name);
-                    }
-                    else if (effectiveValue == "0.25")
-                    {
-                        superStrongAgainst.Add(typeList[i].Name + " Quad");
-                    }
-                    else if (effectiveValue == "0.5")
-                    {
-                        strongAgainst.Add(typeList[i].Name);
-                    }
-                    else if (effectiveValue == "2")
-                    {
-                        weakAgainst.Add(typeList[i].Name);
-                    }
-                    else if (effectiveValue == "4")
-                    {
-                        superWeakAgainst.Add(typeList[i].Name + " Quad");
+                        attackType = typeChart.Find(c => c.Attack == t).Attack.Name;
+                        effectiveValue = typeChart.Find(c => c.Attack == t).Effective.ToString("0.####");
+                        if (effectiveValue == "0")
+                        {
+                            strongAgainst.Remove(attackType);
+                            weakAgainst.Remove(attackType);
+                            immuneTo.Add(attackType);
+                        }
+                        else if (effectiveValue == "0.5")
+                        {
+                            if (strongAgainst.Exists(x => x == attackType))
+                            {
+                                strongAgainst.Remove(attackType);
+                                superStrongAgainst.Add(attackType + " Quad");
+                            }
+                            else if (weakAgainst.Exists(x => x == attackType))
+                            {
+                                weakAgainst.Remove(attackType);
+                            }
+                            else
+                            {
+                                strongAgainst.Add(attackType);
+                            }
+                        }
+                        else if (effectiveValue == "2")
+                        {
+                            if (weakAgainst.Exists(x => x == attackType))
+                            {
+                                weakAgainst.Remove(attackType);
+                                superWeakAgainst.Add(attackType + " Quad");
+                            }
+                            else if (strongAgainst.Exists(x => x == attackType))
+                            {
+                                strongAgainst.Remove(attackType);
+                            }
+                            else
+                            {
+                                weakAgainst.Add(attackType);
+                            }
+                        }
                     }
                 }
             }
