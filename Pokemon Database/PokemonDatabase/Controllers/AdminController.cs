@@ -46,7 +46,7 @@ namespace PokemonDatabase.Controllers
         [Route("generation")]
         public IActionResult Generations()
         {
-            List<Generation> model = _dataService.GetGeneration();
+            List<Generation> model = _dataService.GetGenerations();
 
             return View(model);
         }
@@ -73,6 +73,64 @@ namespace PokemonDatabase.Controllers
             List<EggGroup> model = _dataService.GetEggGroups();
 
             return View(model);
+        }
+
+        [HttpGet, Route("add-generation")]
+        public IActionResult AddGeneration()
+        {
+            return View();
+        }
+
+        [HttpPost, Route("add-generation")]
+        public IActionResult AddGeneration(Generation generation)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            _dataService.AddGeneration(generation);
+
+            return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("edit-generation/{id}")]
+        public IActionResult EditGeneration(string id)
+        {
+            Generation model = _dataService.GetGeneration(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("edit-generation/{id}")]
+        public IActionResult EditGeneration(Generation generation)
+        {
+            if (!ModelState.IsValid)
+            {
+                Generation model = _dataService.GetGeneration(generation.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateGeneration(generation);
+
+            return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("delete-generation/{id}")]
+        public IActionResult DeleteGeneration(string id)
+        {
+            Generation model = _dataService.GetGeneration(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("delete-generation/{id}")]
+        public IActionResult DeleteGeneration(Generation generation)
+        {
+            _dataService.DeleteGeneration(generation.Id);
+
+            return RedirectToAction("Generations");
         }
 
         [Route("error")]

@@ -335,15 +335,14 @@ namespace PokemonDatabase
             return effectivenessChart;
         }
 
-        public List<Generation> GetGeneration()
+        public List<Generation> GetGenerations()
         {
-            return _dataContext.Generations.ToList();
+            return _dataContext.Generations.Where(x => x.IsArchived == false).ToList();
         }
 
-        public void AddUser(User user)
+        public Generation GetGeneration(string id)
         {
-            _dataContext.Users.Add(user);
-            _dataContext.SaveChanges();
+            return _dataContext.Generations.ToList().Find(x => x.Id == id);
         }
 
         public User GetUser(string email)
@@ -361,9 +360,27 @@ namespace PokemonDatabase
             return _dataContext.Users.Where(x => x.IsArchived == false).ToList();
         }
 
+        public void AddUser(User user)
+        {
+            _dataContext.Users.Add(user);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddGeneration(Generation generation)
+        {
+            _dataContext.Generations.Add(generation);
+            _dataContext.SaveChanges();
+        }
+
         public void UpdateUser(User user)
         {
             _dataContext.Users.Update(user);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateGeneration(Generation generation)
+        {
+            _dataContext.Generations.Update(generation);
             _dataContext.SaveChanges();
         }
 
@@ -372,6 +389,13 @@ namespace PokemonDatabase
             User user = this.GetUserById(id);
             user.IsArchived = true;
             this.UpdateUser(user);
+        }
+
+        public void DeleteGeneration(string id)
+        {
+            Generation generation = this.GetGeneration(id);
+            generation.IsArchived = true;
+            this.UpdateGeneration(generation);
         }
     }
 }

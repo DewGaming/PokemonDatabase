@@ -16,5 +16,7 @@ namespace PokemonDatabase.DataAccess.Models
         [StringLength(5)]
         [Required]
         public string Abbreviation { get; set; }
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }
