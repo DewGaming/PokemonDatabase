@@ -133,28 +133,43 @@ h2 {
   margin-top: 10px;
 }
 
+.teamGenerator img {
+  min-width: 175px;
+}
+
 a {
   outline: none;
 }
 
-@media (max-width: 660px) {
+@media (min-width: 1px){
+  .Table1x6 {
+    display: block;
+    margin-bottom: 60px;
+  }
+  .Table3x2, .Table2x3 {
+    display: none;
+    margin-bottom: 0px;
+  }
+}
+
+@media (min-width: 401px) {
   .Table2x3 {
     display: block;
     margin-bottom: 60px;
   }
-  .Table3x2 {
+  .Table3x2, .Table1x6 {
     display: none;
     margin-bottom: 0px;
   }
 }
 
 @media (min-width: 661px) {
-  .Table2x3 {
-    display: none;
-    margin-bottom: 0px;
-  }
   .Table3x2 {
     display: block;
     margin-bottom: 60px;
+  }
+  .Table2x3, .Table1x6 {
+    display: none;
+    margin-bottom: 0px;
   }
 }

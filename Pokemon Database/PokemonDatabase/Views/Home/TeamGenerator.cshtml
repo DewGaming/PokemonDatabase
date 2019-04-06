@@ -45,4 +45,14 @@
             </tr>
         </table>
     </div>
+    <div class="Table1x6">
+        <table  class="teamGeneratorTable">
+                @foreach(var item in Model)
+                {
+                    <tr>
+                        <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@item.Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @item.Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
+                    </tr>
+                }
+        </table>
+    </div>
 </div>
