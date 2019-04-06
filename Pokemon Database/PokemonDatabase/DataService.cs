@@ -24,7 +24,7 @@ namespace PokemonDatabase
             //    .ToList();
             //foreach(var pokemon in _pokemonList.Where(p => p.Id.Contains('-')))
             //{
-            //    pokemon.Name += " (" + this.GetPokemonForm(pokemon.Id).Name + ")";
+            //    pokemon.Name += " (" + this.GetPokemonFormName(pokemon.Id) + ")";
             //}
         }
 
@@ -212,7 +212,7 @@ namespace PokemonDatabase
 
         public List<PokemonTypeDetail> GetPokemonWithTypes()
         {
-            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
+            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
             List<PokemonTypeDetail> altForms = pokemon.Where(p => p.Pokemon.Id.Contains("-")).ToList();
             pokemon = pokemon.Except(altForms).ToList();
 

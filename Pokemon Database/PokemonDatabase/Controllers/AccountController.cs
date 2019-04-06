@@ -59,9 +59,7 @@ namespace PokemonDatabase.Controllers
                 FirstName = registerViewModel.FirstName,
                 LastName = registerViewModel.LastName,
                 EmailAddress = registerViewModel.EmailAddress,
-                PasswordHash = passwordHasher.HashPassword(null, registerViewModel.Password),
-                IsAdmin = false,
-                IsArchived = false
+                PasswordHash = passwordHasher.HashPassword(null, registerViewModel.Password)
             };
         
             _dataService.AddUser(user);
