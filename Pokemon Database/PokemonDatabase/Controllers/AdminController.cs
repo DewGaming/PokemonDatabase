@@ -46,7 +46,10 @@ namespace PokemonDatabase.Controllers
         [Route("generation")]
         public IActionResult Generations()
         {
-            List<Generation> model = _dataService.GetGenerations();
+            GenerationViewModel model = new GenerationViewModel(){
+                AllGenerations = _dataService.GetGenerations(),
+                AllPokemon = _dataService.GetAllPokemon()
+            };
 
             return View(model);
         }
