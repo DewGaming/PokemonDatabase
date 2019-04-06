@@ -9,7 +9,7 @@
 <div class="teamGenerator">
     <div class="Table3x2">
         <table  class="teamGeneratorTable">
-            <tr class="borderTop">
+            <tr>
                 @for(var i = 0; i < 3; i++)
                 {
                     <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
@@ -25,7 +25,7 @@
     </div>
     <div class="Table2x3">
         <table  class="teamGeneratorTable">
-            <tr class="borderTop">
+            <tr>
                 @for(var i = 0; i < 2; i++)
                 {
                     <td class="generatorPicture"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(' ', '_').ToLower()})" target="_blank"><img width="327" title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Name.Replace(":".ToString(), string.Empty) + ".png")" /></a></td>
