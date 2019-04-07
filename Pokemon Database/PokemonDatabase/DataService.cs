@@ -74,7 +74,7 @@ namespace PokemonDatabase
 
         public List<Type> GetTypes()
         {
-            return _dataContext.Types.ToList();
+            return _dataContext.Types.Where(x => x.IsArchived == false).ToList();
         }
 
         public List<Type> GetPokemonTypes(string PokemonId)
@@ -196,6 +196,7 @@ namespace PokemonDatabase
                 .Include(p => p.BaseHappiness)
                 .OrderBy(p => p.Id.Length)
                 .ThenBy(p => p.Id)
+                .Where(x => x.IsArchived == false)
                 .ToList();;
         }
 
