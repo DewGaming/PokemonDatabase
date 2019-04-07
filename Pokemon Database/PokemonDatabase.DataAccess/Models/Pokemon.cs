@@ -17,6 +17,8 @@ namespace PokemonDatabase.DataAccess.Models
         [Required]
         public int ExpYield { get; set; }
         [Required]
+        public bool IsArchived { get; set; }
+        [Required]
         public EggCycle EggCycle { get; set; }
         [Required]
         public GenderRatio GenderRatio { get; set; }

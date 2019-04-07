@@ -1,0 +1,30 @@
+@model PokemonDatabase.Models.EggGroupViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="eggGroupTable">
+    <p>
+        <a class="btn btn-primary" href="@Url.Action("AddEggGroup", "Admin")" role="button">Add Egg Group</a>
+    </p>
+    <table class="table">
+        <tr>
+            <th scope="col">Egg Group</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllEggGroups)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a href="@(Url.Action("EditEggGroup", "Admin", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteEggGroup", "Admin", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

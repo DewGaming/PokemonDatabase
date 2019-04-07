@@ -1,0 +1,32 @@
+@model PokemonDatabase.Models.AbilityViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="abilityTable">
+    <p>
+        <a class="btn btn-primary" href="@Url.Action("AddAbility", "Admin")" role="button">Add Ability</a>
+    </p>
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllAbilities)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="@(Url.Action("EditAbility", "Admin", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteAbility", "Admin", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

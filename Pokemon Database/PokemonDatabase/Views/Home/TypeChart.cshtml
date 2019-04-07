@@ -27,7 +27,9 @@
                     @foreach(var atk in Model.types)
                     {
                         <tr>
-                            <th class="type-icon type-@atk.Name.ToLower() type-cell">@atk.Name</th>
+                            <th>
+                                <span class="type-icon type-@atk.Name.ToLower() type-cell">@atk.Name</span>
+                            </th>
                             @foreach(var def in Model.types)
                             {
                                 @if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "0"))

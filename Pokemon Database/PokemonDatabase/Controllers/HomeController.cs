@@ -10,10 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.Models;
 using PokemonDatabase.DataAccess.Models;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PokemonDatabase.Controllers
 {
-    [Route("")]
+    [Authorize, Route("")]
     public class HomeController : Controller
     {
         private readonly AppConfig _appConfig;
@@ -26,7 +27,7 @@ namespace PokemonDatabase.Controllers
             _appConfig = appConfig.Value;
         }
 
-        [Route("")]
+        [AllowAnonymous, Route("")]
         public IActionResult Index()
         {
             ViewBag.ApplicationName = _appConfig.AppName;
@@ -35,7 +36,7 @@ namespace PokemonDatabase.Controllers
             return View();
         }
 
-        [Route("pokemon")]
+        [AllowAnonymous, Route("pokemon")]
         public IActionResult AllPokemon()
         {
             List<PokemonTypeDetail> model = _dataService.GetPokemonWithTypes();
@@ -43,7 +44,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("team_generator")]
+        [AllowAnonymous, Route("team_generator")]
         public IActionResult TeamGenerator()
         {
             Pokemon pokemon;
@@ -65,7 +66,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("{Name}")]
+        [AllowAnonymous, Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
             if (!Name.Contains("nidoran"))
@@ -97,7 +98,7 @@ namespace PokemonDatabase.Controllers
 
             foreach(var p in altForms)
             {
-                model.Add(new PokemonViewModel(){
+                var pokemonModel = new PokemonViewModel(){
                     pokemon = p,
                     baseStats = _dataService.GetBaseStat(p.Id),
                     evYields = _dataService.GetEVYield(p.Id),
@@ -107,13 +108,16 @@ namespace PokemonDatabase.Controllers
                     preEvolution = _dataService.GetPreEvolution(p.Id),
                     evolutions = _dataService.GetPokemonEvolutions(p.Id),
                     effectiveness = _dataService.GetTypeChartPokemon(p.Id)
-                });
+                };
+                pokemonModel.pokemon.Name += " (" + _dataService.GetPokemonFormName(pokemonModel.pokemon.Id) + ")";
+
+                model.Add(pokemonModel);
             }
 
             return View(model);
         }
 
-        [Route("type_chart")]
+        [AllowAnonymous, Route("type_chart")]
         public IActionResult TypeChart()
         {
             TypeChartViewModel model = new TypeChartViewModel(){
@@ -124,7 +128,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("error")]
+        [AllowAnonymous, Route("error")]
         public IActionResult Error()
         {
             return View();

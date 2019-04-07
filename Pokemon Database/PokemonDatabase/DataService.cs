@@ -8,26 +8,24 @@ namespace PokemonDatabase
 {
     public class DataService
     {
-        private readonly List<Pokemon> _pokemonList;
-
         private readonly DataContext _dataContext;
 
         public DataService(DataContext dataContext)
         {
             _dataContext = dataContext;
-            _pokemonList = _dataContext.Pokemon
-                .Include(p => p.EggCycle)
-                .Include(p => p.GenderRatio)
-                .Include(p => p.Classification)
-                .Include(p => p.Generation)
-                .Include(p => p.ExperienceGrowth)
-                .Include(p => p.CaptureRate)
-                .Include(p => p.BaseHappiness)
-                .ToList();
-            foreach(var pokemon in _pokemonList.Where(p => p.Id.Contains('-')))
-            {
-                pokemon.Name += " (" + this.GetPokemonForm(pokemon.Id).Name + ")";
-            }
+            //List<Pokemon> _pokemonList = _dataContext.Pokemon
+            //    .Include(p => p.EggCycle)
+            //    .Include(p => p.GenderRatio)
+            //    .Include(p => p.Classification)
+            //    .Include(p => p.Generation)
+            //    .Include(p => p.ExperienceGrowth)
+            //    .Include(p => p.CaptureRate)
+            //    .Include(p => p.BaseHappiness)
+            //    .ToList();
+            //foreach(var pokemon in _pokemonList.Where(p => p.Id.Contains('-')))
+            //{
+            //    pokemon.Name += " (" + this.GetPokemonFormName(pokemon.Id) + ")";
+            //}
         }
 
         public Ability GetAbility(int id)
@@ -46,7 +44,7 @@ namespace PokemonDatabase
 
         public List<Ability> GetAbilities()
         {
-            return _dataContext.Abilities.ToList();
+            return _dataContext.Abilities.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
         public List<Ability> GetPokemonAbilities(string PokemonId)
@@ -76,7 +74,7 @@ namespace PokemonDatabase
 
         public List<Type> GetTypes()
         {
-            return _dataContext.Types.ToList();
+            return _dataContext.Types.Where(x => x.IsArchived == false).ToList();
         }
 
         public List<Type> GetPokemonTypes(string PokemonId)
@@ -97,6 +95,11 @@ namespace PokemonDatabase
             return _dataContext.EggGroups
                 .ToList()
                 .Find(e => e.Id == id);
+        }
+
+        public List<EggGroup> GetEggGroups()
+        {
+            return _dataContext.EggGroups.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
         public List<EggGroup> GetPokemonEggGroups(string PokemonId)
@@ -156,7 +159,7 @@ namespace PokemonDatabase
                 .ToList();
         }
 
-        public Form GetPokemonForm(string PokemonId)
+        public string GetPokemonFormName(string PokemonId)
         {
             PokemonFormDetail formDetail = _dataContext.PokemonFormDetails
                 .Include(f => f.Form)
@@ -164,21 +167,37 @@ namespace PokemonDatabase
                 .Include(f => f.AltFormPokemon)
                 .ToList()
                 .Find(f => f.AltFormPokemon.Id == PokemonId);
-            return formDetail.Form;
+            return formDetail.Form.Name;
         }
 
         public Pokemon GetPokemon(string Name)
         {
-            return _pokemonList.Find(x => x.Name == Name);
+            return _dataContext.Pokemon
+                .Include(p => p.EggCycle)
+                .Include(p => p.GenderRatio)
+                .Include(p => p.Classification)
+                .Include(p => p.Generation)
+                .Include(p => p.ExperienceGrowth)
+                .Include(p => p.CaptureRate)
+                .Include(p => p.BaseHappiness)
+                .ToList()
+                .Find(x => x.Name == Name);
         }
 
         public List<Pokemon> GetAllPokemon()
         {
-            List<Pokemon> pokemon = _pokemonList;
-
-            pokemon = pokemon.OrderBy(p => p.Id.Length).ThenBy(p => p.Id).ToList();
-
-            return pokemon;
+            return _dataContext.Pokemon
+                .Include(p => p.EggCycle)
+                .Include(p => p.GenderRatio)
+                .Include(p => p.Classification)
+                .Include(p => p.Generation)
+                .Include(p => p.ExperienceGrowth)
+                .Include(p => p.CaptureRate)
+                .Include(p => p.BaseHappiness)
+                .OrderBy(p => p.Id.Length)
+                .ThenBy(p => p.Id)
+                .Where(x => x.IsArchived == false)
+                .ToList();;
         }
 
         public List<Pokemon> GetAltForms(Pokemon pokemon)
@@ -194,13 +213,28 @@ namespace PokemonDatabase
 
         public List<PokemonTypeDetail> GetPokemonWithTypes()
         {
-            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
+            List<PokemonTypeDetail> pokemon = _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
             List<PokemonTypeDetail> altForms = pokemon.Where(p => p.Pokemon.Id.Contains("-")).ToList();
             pokemon = pokemon.Except(altForms).ToList();
 
             pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
 
             return pokemon;
+        }
+
+        public List<PokemonTypeDetail> GetAllPokemonWithTypes()
+        {
+            return _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
+        }
+
+        public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
+        {
+            return _dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList();
+        }
+
+        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
+        {
+            return _dataContext.PokemonEggGroupDetails.Include(p => p.Pokemon).Include(p => p.PrimaryEggGroup).Include(p => p.SecondaryEggGroup).ToList();
         }
 
         public BaseStat GetBaseStat(string PokemonId)
@@ -313,6 +347,126 @@ namespace PokemonDatabase
             };
 
             return effectivenessChart;
+        }
+
+        public List<Generation> GetGenerations()
+        {
+            return _dataContext.Generations.Where(x => x.IsArchived == false).ToList();
+        }
+
+        public Generation GetGeneration(string id)
+        {
+            return _dataContext.Generations.ToList().Find(x => x.Id == id);
+        }
+
+        public User GetUser(string email)
+        {
+            return _dataContext.Users.ToList().Find(x => x.EmailAddress == email);
+        }
+
+        public User GetUserById(int id)
+        {
+            return _dataContext.Users.ToList().Find(x => x.Id == id);
+        }
+
+        public List<User> GetUsers()
+        {
+            return _dataContext.Users.Where(x => x.IsArchived == false).ToList();
+        }
+
+        public void AddUser(User user)
+        {
+            _dataContext.Users.Add(user);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddGeneration(Generation generation)
+        {
+            _dataContext.Generations.Add(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddType(Type type)
+        {
+            _dataContext.Types.Add(type);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddEggGroup(EggGroup eggGroup)
+        {
+            _dataContext.EggGroups.Add(eggGroup);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddAbility(Ability ability)
+        {
+            _dataContext.Abilities.Add(ability);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateUser(User user)
+        {
+            _dataContext.Users.Update(user);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateGeneration(Generation generation)
+        {
+            _dataContext.Generations.Update(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateType(Type type)
+        {
+            _dataContext.Types.Update(type);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateEggGroup(EggGroup eggGroup)
+        {
+            _dataContext.EggGroups.Update(eggGroup);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateAbility(Ability ability)
+        {
+            _dataContext.Abilities.Update(ability);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteUser(int id)
+        {
+            User user = this.GetUserById(id);
+            user.IsArchived = true;
+            this.UpdateUser(user);
+        }
+
+        public void DeleteGeneration(string id)
+        {
+            Generation generation = this.GetGeneration(id);
+            generation.IsArchived = true;
+            this.UpdateGeneration(generation);
+        }
+
+        public void DeleteType(int id)
+        {
+            Type type = this.GetType(id);
+            type.IsArchived = true;
+            this.UpdateType(type);
+        }
+
+        public void DeleteEggGroup(int id)
+        {
+            EggGroup eggGroup = this.GetEggGroup(id);
+            eggGroup.IsArchived = true;
+            this.UpdateEggGroup(eggGroup);
+        }
+
+        public void DeleteAbility(int id)
+        {
+            Ability ability = this.GetAbility(id);
+            ability.IsArchived = true;
+            this.UpdateAbility(ability);
         }
     }
 }
