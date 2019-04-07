@@ -1,3 +1,21 @@
+.resp-scroll {
+ overflow-x: auto;
+ margin-bottom: 1rem;
+}
+.grid-col {
+ margin-bottom: 1rem;
+ padding: 0 1rem;
+ width: 100%;
+ margin-left: -.5rem;
+ margin-right: -.5rem;
+}
+.resp-scroll > :last-child {
+ margin-bottom: 0;
+}
+.grid-col > :last-child {
+ overflow-x: auto;
+ margin-bottom: 0;
+}
 .type-icon, .quad-icon {
  margin-bottom: 4px;
  background: #dbdbdb;
@@ -14,6 +32,7 @@
  transition: opacity .4s
 }
 .type-icon {
+ display: inline-block;
  width: 66px;
 }
 .quad-icon {
@@ -79,10 +98,14 @@
 .quad-weak {
  background-color: #7c0000
 }
+.type-table {
+ margin: 0 auto 1rem;
+ border-spacing: 0;
+}
 .type-table th,
 .type-table td {
  padding: 0;
- border: 1px solid #f0f0f0
+ border: 1px solid #f0f0f0;
 }
 .pokemon-type {
  display: inline-block;
@@ -93,6 +116,7 @@
  line-height: 1
 }
 .type-cell {
+ display: block;
  width: 66px;
  height: 28px;
  font-size: .625rem;

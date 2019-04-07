@@ -3,47 +3,54 @@
     Layout = "_Layout";
 }
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
-<div>
-    <table class="type-table">
-        <thead>
-            <tr>
-                <th class="cell-atkdef">
-                    DEFENSE →
-                    <br>
-                    ATTACK ↴
-                </th>
-                @foreach(var item in Model.types)
-                {
-                    <th class="type-icon type-@item.Name.ToLower() type-cell type-abbr" title="@item.Name">@item.Name.Substring(0, 3)</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var atk in Model.types)
-            {
-                <tr>
-                    <th class="type-icon type-@atk.Name.ToLower() type-cell">@atk.Name</th>
-                    @foreach(var def in Model.types)
+<link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
+<div class="grid-row">
+    <div class="grid-col span-lg-8 resp-scroll">
+        <div class="resp-scroll">
+            <table class="type-table">
+                <thead>
+                    <tr>
+                        <th class="cell-atkdef">
+                            DEFENSE →
+                            <br>
+                            ATTACK ↴
+                        </th>
+                        @foreach(var item in Model.types)
+                        {
+                            <th>
+                                <span class="type-icon type-@item.Name.ToLower() type-cell type-abbr" title="@item.Name">@item.Name.Substring(0, 3)</span>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var atk in Model.types)
                     {
-                        @if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "0"))
-                        {
-                            <td class="type-fx-cell type-fx-0" title="@atk.Name → @def.Name = No Efecct">0</td>
-                        }
-                        else if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "0.5"))
-                        {
-                            <td class="type-fx-cell type-fx-50" title="@atk.Name → @def.Name = Not Very Effective">½</td>
-                        }
-                        else if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "2"))
-                        {
-                            <td class="type-fx-cell type-fx-200" title="@atk.Name → @def.Name = Super Effective">2</td>
-                        }
-                        else
-                        {
-                            <td class="type-fx-cell type-fx-100" title="@atk.Name → @def.Name = Normal Effectiveness"></td>
-                        }
+                        <tr>
+                            <th class="type-icon type-@atk.Name.ToLower() type-cell">@atk.Name</th>
+                            @foreach(var def in Model.types)
+                            {
+                                @if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "0"))
+                                {
+                                    <td class="type-fx-cell type-fx-0" title="@atk.Name → @def.Name = No Efecct">0</td>
+                                }
+                                else if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "0.5"))
+                                {
+                                    <td class="type-fx-cell type-fx-50" title="@atk.Name → @def.Name = Not Very Effective">½</td>
+                                }
+                                else if(@Model.typeChart.Exists(x => x.Attack == atk && x.Defend == def && x.Effective.ToString("0.####") == "2"))
+                                {
+                                    <td class="type-fx-cell type-fx-200" title="@atk.Name → @def.Name = Super Effective">2</td>
+                                }
+                                else
+                                {
+                                    <td class="type-fx-cell type-fx-100" title="@atk.Name → @def.Name = Normal Effectiveness"></td>
+                                }
+                            }
+                        </tr>
                     }
-                </tr>
-            }
-        </tbody> 
-    </table>
+                </tbody> 
+            </table>
+        </div>
+    </div>
 </div>

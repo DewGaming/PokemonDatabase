@@ -10,6 +10,7 @@ footer{
 main {
   max-width: 1220px !important;
   padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 
 .pokemonTables {
