@@ -10,5 +10,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PokemonDatabase.DataAccess\PokemonDatabase.DataAccess.csproj"/>
-  </ItemGroup>  
+  </ItemGroup>
+  <ItemGroup>
+   <Content Update="wwwroot\images\**\*.*" CopyToPublishDirectory="Never" />
+  </ItemGroup>
 </Project>
