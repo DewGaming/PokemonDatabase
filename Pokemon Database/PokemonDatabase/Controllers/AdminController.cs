@@ -38,7 +38,7 @@ namespace PokemonDatabase.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<PokemonTypeDetail> model = _dataService.GetAllPokemonWithTypes();
+            List<Pokemon> model = _dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
 
             return View(model);
         }

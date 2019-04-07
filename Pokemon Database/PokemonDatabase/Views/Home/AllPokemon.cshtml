@@ -6,18 +6,15 @@
 <link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <script src="/js/TabContent.js"></script>
-@if(Model.Count() > 1)
-{
-    <div class="tab-list">
-        @foreach(var id in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+<div class="tab-list">
+    @foreach(var id in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+    {
+        @if (id.IndexOf('-') == -1)
         {
-            @if (id.IndexOf('-') == -1)
-            {
-                <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
-            }
+            <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
         }
-    </div>
-}
+    }
+</div>
 @foreach(var gen in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
 {
     @if(@gen.IndexOf('-') == -1)

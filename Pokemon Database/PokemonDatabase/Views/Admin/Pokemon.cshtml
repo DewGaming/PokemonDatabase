@@ -1,4 +1,4 @@
-@model IEnumerable<PokemonDatabase.DataAccess.Models.PokemonTypeDetail>;
+@model IEnumerable<PokemonDatabase.DataAccess.Models.Pokemon>;
 @{
     Layout = "_Layout";
 }
@@ -6,19 +6,16 @@
 <link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <script src="/js/TabContent.js"></script>
-@if(Model.Count() > 1)
-{
-    <div class="tab-list">
-        @foreach(var id in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+<div class="tab-list">
+    @foreach(var id in Model.Select(x => x.Generation.Id).Distinct().OrderBy(x => x))
+    {
+        @if (id.IndexOf('-') == -1)
         {
-            @if (id.IndexOf('-') == -1)
-            {
-                <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
-            }
+            <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
         }
-    </div>
-}
-@foreach(var gen in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+    }
+</div>
+@foreach(var gen in Model.Select(x => x.Generation.Id).Distinct())
 {
     @if(@gen.IndexOf('-') == -1)
     {
@@ -27,19 +24,15 @@
                 <tr>
                     <th scope="col">Pokedex Number</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Typing</th>
+                    <th scope="col">Actions</th>
                 </tr>
-                @foreach(var item in Model.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
+                @foreach(var item in Model.Where(x => (x.Generation.Id == @gen) || (x.Generation.Id.IndexOf('-') > -1 && x.Generation.Id.Substring(0, x.Generation.Id.IndexOf('-')) == @gen)))
                 {
                     <tr>
-                        <td>@item.Pokemon.Id</td>
-                        <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
+                        <td>@item.Id</td>
+                        <td>@item.Name.Replace('_', ' ')</td>
                         <td>
-                            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                            @if(@item.SecondaryType != null)
-                            {
-                                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                            }
+
                         </td>
                     </tr>
                 }
