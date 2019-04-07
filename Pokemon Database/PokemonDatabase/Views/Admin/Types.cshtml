@@ -1,17 +1,29 @@
-@model IEnumerable<PokemonDatabase.DataAccess.Models.Type>;
+@model PokemonDatabase.Models.TypeViewModel;
 @{
     Layout = "_Layout";
 }
 
 <div class="typeTable">
+    <p>
+        <a class="btn btn-primary" href="@Url.Action("AddType", "Admin")" role="button">Add Type</a>
+    </p>
     <table class="table">
         <tr>
             <th scope="col">Type</th>
+            <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model)
+        @foreach(var item in Model.AllTypes)
         {
             <tr>
                 <td>@item.Name</td>
+                <td>
+                    <a href="@(Url.Action("EditType", "Admin", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.PrimaryType.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryType != null && x.SecondaryType.Id == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteType", "Admin", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
             </tr>
         }
     </table>

@@ -387,6 +387,12 @@ namespace PokemonDatabase
             _dataContext.SaveChanges();
         }
 
+        public void AddType(Type type)
+        {
+            _dataContext.Types.Add(type);
+            _dataContext.SaveChanges();
+        }
+
         public void AddEggGroup(EggGroup eggGroup)
         {
             _dataContext.EggGroups.Add(eggGroup);
@@ -408,6 +414,12 @@ namespace PokemonDatabase
         public void UpdateGeneration(Generation generation)
         {
             _dataContext.Generations.Update(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateType(Type type)
+        {
+            _dataContext.Types.Update(type);
             _dataContext.SaveChanges();
         }
 
@@ -435,6 +447,13 @@ namespace PokemonDatabase
             Generation generation = this.GetGeneration(id);
             generation.IsArchived = true;
             this.UpdateGeneration(generation);
+        }
+
+        public void DeleteType(int id)
+        {
+            Type type = this.GetType(id);
+            type.IsArchived = true;
+            this.UpdateType(type);
         }
 
         public void DeleteEggGroup(int id)

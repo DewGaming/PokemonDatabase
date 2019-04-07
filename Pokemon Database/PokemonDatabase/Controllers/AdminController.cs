@@ -57,7 +57,10 @@ namespace PokemonDatabase.Controllers
         [Route("type")]
         public IActionResult Types()
         {
-            List<Type> model = _dataService.GetTypes();
+            TypeViewModel model = new TypeViewModel(){
+                AllTypes = _dataService.GetTypes(),
+                AllPokemon = _dataService.GetAllPokemonWithTypes()
+            };
 
             return View(model);
         }
@@ -101,6 +104,25 @@ namespace PokemonDatabase.Controllers
             _dataService.AddGeneration(generation);
 
             return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("add-type")]
+        public IActionResult AddType()
+        {
+            return View();
+        }
+
+        [HttpPost, Route("add-type")]
+        public IActionResult AddType(Type type)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            _dataService.AddType(type);
+
+            return RedirectToAction("Types");
         }
 
         [HttpGet, Route("add-egg-group")]
@@ -164,6 +186,29 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Generations");
         }
 
+        [HttpGet, Route("edit-type/{id:int}")]
+        public IActionResult EditType(int id)
+        {
+            Type model = _dataService.GetType(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("edit-type/{id:int}")]
+        public IActionResult EditType(Type type)
+        {
+            if (!ModelState.IsValid)
+            {
+                Type model = _dataService.GetType(type.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateType(type);
+
+            return RedirectToAction("Types");
+        }
+
         [HttpGet, Route("edit-egg-group/{id:int}")]
         public IActionResult EditEggGroup(int id)
         {
@@ -224,6 +269,22 @@ namespace PokemonDatabase.Controllers
             _dataService.DeleteGeneration(generation.Id);
 
             return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("delete-type/{id:int}")]
+        public IActionResult DeleteType(int id)
+        {
+            Type model = _dataService.GetType(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("delete-type/{id:int}")]
+        public IActionResult DeleteType(Type type)
+        {
+            _dataService.DeleteType(type.Id);
+
+            return RedirectToAction("Types");
         }
 
         [HttpGet, Route("delete-egg-group/{id:int}")]
