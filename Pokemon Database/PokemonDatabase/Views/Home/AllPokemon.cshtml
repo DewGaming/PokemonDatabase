@@ -31,7 +31,7 @@
                 {
                     <tr>
                         <td>@item.Pokemon.Id</td>
-                        <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
+                        <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
                         <td>
                             <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                             @if(@item.SecondaryType != null)

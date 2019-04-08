@@ -69,7 +69,11 @@ namespace PokemonDatabase.Controllers
         [AllowAnonymous, Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
-            if (!Name.Contains("nidoran"))
+            if (Name.Contains("type_null"))
+            {
+                Name = "Type: Null";
+            }
+            else if (!Name.Contains("nidoran"))
             {
                 Name = Name.Replace('_', ' ');
             }

@@ -62,7 +62,9 @@ footer hr{
 
 img {
   border: 0;
-  max-width: 100%;
+  max-width: 300px;
+  max-height: 300px;
+  width: auto;
   height: auto;
 }
 
@@ -143,8 +145,8 @@ h2 {
   margin-top: 10px;
 }
 
-.teamGenerator img {
-  min-width: 300px;
+.teamGenerator .generatorPicture {
+  text-align: center;
 }
 
 a {
