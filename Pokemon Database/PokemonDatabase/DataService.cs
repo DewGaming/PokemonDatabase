@@ -126,11 +126,6 @@ namespace PokemonDatabase
                 .Include(e => e.EvolutionMethod)
                 .ToList();
         }
-        
-        public Evolution GetEvolution(int id)
-        {
-            return this.GetEvolutions().Find(e => e.Id == id);
-        }
 
         public Evolution GetPreEvolution(string PokemonId)
         {
