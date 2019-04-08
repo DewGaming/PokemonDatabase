@@ -3,10 +3,9 @@
     Layout = "_Layout";
 }
 
-<link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
+<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
-
-<script src="/js/TabContent.js"></script>
+<script src="/js/tabContent.js"></script>
 
 <div class="tab-list">
     @foreach(var button in Model)
@@ -24,7 +23,7 @@
 @foreach(var item in Model)
 {
     <div class="tabcontent@(@item.pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.pokemon.Name">
-        <div class="pokemonPicture"><img width="327" title="@item.pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.pokemon.Id + ".png")" /></div>
+        <div class="pokemonPicture shadowed"><img width="327" title="@item.pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.pokemon.Id + ".png")" /></div>
         <div class="pokemonData pokemonTables span-md-5 span-lg-4">
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">

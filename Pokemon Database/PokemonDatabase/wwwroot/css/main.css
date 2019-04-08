@@ -8,9 +8,18 @@ footer{
 }
 
 main {
-  max-width: 1220px !important;
-  padding-left: 5px !important;
-  padding-right: 5px !important;
+  padding: 0 5px !important;
+}
+
+.shadowed img {
+  -webkit-filter: drop-shadow(2px 2px 2px #222);
+  filter: drop-shadow(2px 2px 2px #222); 
+}
+
+.table tbody tr:first-of-type * {
+  border-top-width: 0px;
+  padding-bottom: 10px;
+  font-size: 1rem;
 }
 
 .pokemonTables {
@@ -135,7 +144,7 @@ h2 {
 }
 
 .teamGenerator img {
-  min-width: 175px;
+  min-width: 300px;
 }
 
 a {
@@ -153,7 +162,7 @@ a {
   }
 }
 
-@media (min-width: 401px) {
+@media (min-width: 768px) {
   .Table2x3 {
     display: block;
     margin-bottom: 60px;
@@ -164,7 +173,7 @@ a {
   }
 }
 
-@media (min-width: 661px) {
+@media (min-width: 1000px) {
   .Table3x2 {
     display: block;
     margin-bottom: 60px;

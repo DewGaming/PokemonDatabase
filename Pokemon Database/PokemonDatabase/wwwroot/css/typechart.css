@@ -6,8 +6,7 @@
  margin-bottom: 1rem;
  padding: 0 1rem;
  width: 100%;
- margin-left: -.5rem;
- margin-right: -.5rem;
+ margin: 0 -.5rem;
 }
 .resp-scroll > :last-child {
  margin-bottom: 0;
@@ -17,7 +16,7 @@
  margin-bottom: 0;
 }
 .type-icon, .quad-icon {
- margin-bottom: 4px;
+ margin: 2px 0 2px;
  background: #dbdbdb;
  border: 1px solid #a3a3a3;
  border-radius: 4px;
@@ -29,7 +28,6 @@
  text-align: center;
  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
  text-transform: uppercase;
- transition: opacity .4s
 }
 .type-icon {
  display: inline-block;
@@ -102,6 +100,11 @@
  margin: 0 auto 1rem;
  border-spacing: 0;
 }
+
+.type-table .type-icon {
+  margin: 0;
+}
+
 .type-table th,
 .type-table td {
  padding: 0;

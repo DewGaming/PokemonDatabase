@@ -3,9 +3,10 @@
     Layout = "_Layout";
 }
 
-<link href="/css/TabContent.css" rel="stylesheet" type="text/css" />
+<link href="/css/maxWidth1220.css" rel="stylesheet" type="text/css" />
+<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
-<script src="/js/TabContent.js"></script>
+<script src="/js/tabContent.js"></script>
 <div class="tab-list">
     @foreach(var id in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
     {
