@@ -75,5 +75,21 @@ namespace PokemonDatabase.Controllers
 
             return RedirectToAction("Users");
         }
+
+        [HttpGet, Route("restore-user/{id:int}")]
+        public IActionResult RestoreUser(int id)
+        {
+            User model = _dataService.GetUserById(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("restore-user/{id:int}")]
+        public IActionResult RestoreUser(User user)
+        {
+            _dataService.RestoreUser(user.Id);
+
+            return RedirectToAction("Users");
+        }
     }
 }

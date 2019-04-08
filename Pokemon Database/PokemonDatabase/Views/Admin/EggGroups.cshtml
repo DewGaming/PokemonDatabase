@@ -15,13 +15,26 @@
         @foreach(var item in Model.AllEggGroups)
         {
             <tr>
-                <td>@item.Name</td>
+                <td>
+                    @item.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Deleted)")
+                    }
+                </td>
                 <td>
                     <a href="@(Url.Action("EditEggGroup", "Admin", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("DeleteEggGroup", "Admin", new { id = item.Id }))">Delete</a>
+                        @if(item.IsArchived == false)
+                        {
+                            <a href="@(Url.Action("DeleteEggGroup", "Admin", new { id = item.Id }))">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("RestoreEggGroup", "Admin", new { id = item.Id }))">Restore</a>
+                        }
                     }
                 </td>
             </tr>

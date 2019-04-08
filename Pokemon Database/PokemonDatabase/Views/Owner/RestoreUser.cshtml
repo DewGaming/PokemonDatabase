@@ -1,0 +1,38 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model PokemonDatabase.DataAccess.Models.User
+@{
+    Layout = "_Layout";
+}
+
+<h2>Restore User Confirm</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(x => x.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.FirstName)
+            @Html.EditorFor(x => x.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.FirstName)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.LastName)
+            @Html.EditorFor(x => x.LastName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.LastName)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.EmailAddress)
+            @Html.EditorFor(x => x.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.EmailAddress)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-success" role="button">Restore</button>
+        </p>
+    }
+
+</div>

@@ -16,14 +16,27 @@
         @foreach(var item in Model.AllAbilities)
         {
             <tr>
-                <td>@item.Name</td>
+                <td>
+                    @item.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Deleted)")
+                    }
+                </td>
                 <td>@item.Description</td>
                 <td>
                     <a href="@(Url.Action("EditAbility", "Admin", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("DeleteAbility", "Admin", new { id = item.Id }))">Delete</a>
+                        @if(item.IsArchived == false)
+                        {
+                            <a href="@(Url.Action("DeleteAbility", "Admin", new { id = item.Id }))">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("RestoreAbility", "Admin", new { id = item.Id }))">Restore</a>
+                        }
                     }
                 </td>
             </tr>

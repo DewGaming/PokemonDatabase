@@ -351,6 +351,38 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Types");
         }
 
+        [HttpGet, Route("restore-ability/{id:int}")]
+        public IActionResult RestoreAbility(int id)
+        {
+            Ability model = _dataService.GetAbility(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("restore-ability/{id:int}")]
+        public IActionResult RestoreAbility(Ability ability)
+        {
+            _dataService.RestoreAbility(ability.Id);
+
+            return RedirectToAction("Abilities");
+        }
+
+        [HttpGet, Route("restore-egg-group/{id:int}")]
+        public IActionResult RestoreEggGroup(int id)
+        {
+            EggGroup model = _dataService.GetEggGroup(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("restore-egg-group/{id:int}")]
+        public IActionResult RestoreEggGroup(EggGroup eggGroup)
+        {
+            _dataService.RestoreEggGroup(eggGroup.Id);
+
+            return RedirectToAction("EggGroups");
+        }
+
         [Route("error")]
         public IActionResult Error()
         {

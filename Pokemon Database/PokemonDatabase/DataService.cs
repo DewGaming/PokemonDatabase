@@ -487,5 +487,26 @@ namespace PokemonDatabase
             type.IsArchived = false;
             this.UpdateType(type);
         }
+
+        public void RestoreAbility(int id)
+        {
+            Ability ability = this.GetAbility(id);
+            ability.IsArchived = false;
+            this.UpdateAbility(ability);
+        }
+
+        public void RestoreEggGroup(int id)
+        {
+            EggGroup eggGroup = this.GetEggGroup(id);
+            eggGroup.IsArchived = false;
+            this.UpdateEggGroup(eggGroup);
+        }
+
+        public void RestoreUser(int id)
+        {
+            User user = this.GetUserById(id);
+            user.IsArchived = false;
+            this.UpdateUser(user);
+        }
     }
 }
