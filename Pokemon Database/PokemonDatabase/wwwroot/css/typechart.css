@@ -19,7 +19,7 @@
  margin: 2px 0 2px;
  background: #dbdbdb;
  border: 1px solid #a3a3a3;
- border-radius: 4px;
+ border-radius: 10px;
  border: 1px solid rgba(0,0,0,0.2);
  color: #fff;
  font-size: .75rem;
@@ -33,78 +33,86 @@
  display: inline-block;
  width: 66px;
 }
+.type-table thead th, .type-table tbody th {
+  border-width: 0px;
+  padding: 1px;
+}
+.type-table thead th {
+  padding-bottom: 7.5px;
+}
+.type-table tbody th {
+  padding-right: 7.5px;
+}
 .quad-icon {
  width: 96px;
 }
 .type-normal {
- background-color: #aa9
+ background-color: #aa9;
 }
 .type-fire {
- background-color: #f42
+ background-color: #f42;
 }
 .type-water {
- background-color: #39f
+ background-color: #39f;
 }
 .type-electric {
- background-color: #fc3
+ background-color: #fc3;
 }
 .type-grass {
- background-color: #7c5
+ background-color: #7c5;
 }
 .type-ice {
- background-color: #6cf
+ background-color: #6cf;
 }
 .type-fighting {
- background-color: #b54
+ background-color: #b54;
 }
 .type-poison {
- background-color: #a59
+ background-color: #a59;
 }
 .type-ground {
- background-color: #db5
+ background-color: #db5;
 }
 .type-flying {
- background-color: #89f
+ background-color: #89f;
 }
 .type-psychic {
- background-color: #f59
+ background-color: #f59;
 }
 .type-bug {
- background-color: #ab2
+ background-color: #ab2;
 }
 .type-rock {
- background-color: #ba6
+ background-color: #ba6;
 }
 .type-ghost {
- background-color: #66b
+ background-color: #66b;
 }
 .type-dragon {
- background-color: #76e
+ background-color: #76e;
 }
 .type-dark {
- background-color: #754
+ background-color: #754;
 }
 .type-steel {
- background-color: #aab
+ background-color: #aab;
 }
 .type-fairy {
- background-color: #e9e
+ background-color: #e9e;
 }
 .quad-resist {
- background-color: #73d216
+ background-color: #73d216;
 }
 .quad-weak {
- background-color: #7c0000
+ background-color: #7c0000;
 }
 .type-table {
  margin: 0 auto 1rem;
  border-spacing: 0;
 }
-
 .type-table .type-icon {
   margin: 0;
 }
-
 .type-table th,
 .type-table td {
  padding: 0;
@@ -114,9 +122,10 @@
  display: inline-block;
 }
 .cell-atkdef {
- font-size: .625rem;
+ font-size: .75rem;
  font-weight: normal;
- line-height: 1
+ line-height: 1rem;
+ text-align: center;
 }
 .type-cell {
  display: block;
@@ -124,10 +133,10 @@
  height: 28px;
  font-size: .625rem;
  margin-bottom: 0;
- line-height: 26px
+ line-height: 26px;
 }
 .type-abbr {
- width: 28px
+ width: 28px;
 }
 .type-fx-cell,
 .type-fx-icon {
@@ -136,52 +145,52 @@
  width: 28px;
  height: 28px;
  line-height: 26px;
- text-align: center
+ text-align: center;
 }
 .type-fx-icon {
- border: 1px solid #f0f0f0
+ border: 1px solid #f0f0f0;
 }
 .type-fx-25,
 .type-fx-50 {
- font-size: .75rem
+ font-size: .75rem;
 }
 .type-fx-0 {
- background-color: #2e3436
+ background-color: #2e3436;
 }
 .type-fx-50 {
- background-color: #a40000
+ background-color: #a40000;
 }
 .type-fx-100 {
- background-color: #ffffff
+ background-color: #ffffff;
 }
 .type-fx-200 {
- background-color: #4e9a06
+ background-color: #4e9a06;
 }
-@media (min-width: 900px) {
+@media (min-width: 820px) {
  .type-cell,
  .type-fx-cell,
  .type-fx-icon {
   height: 36px;
   font-size: .75rem;
-  line-height: 34px
+  line-height: 34px;
  }
  .type-abbr,
  .type-fx-cell,
  .type-fx-icon {
-  width: 36px
+  width: 36px;
  }
  .cell-atkdef {
-  line-height: 1.2
+  line-height: 1rem;
  }
  .type-fx-cell,
  .type-fx-icon {
-  font-size: .75rem
+  font-size: .75rem;
  }
  .type-fx-25,
  .type-fx-50 {
-  font-size: .875rem
+  font-size: .875rem;
  }
 }
 .type-fx-list {
- margin-left: 1.75rem
+ margin-left: 1.75rem;
 }

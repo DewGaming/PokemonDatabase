@@ -74,6 +74,11 @@ namespace PokemonDatabase
 
         public List<Type> GetTypes()
         {
+            return _dataContext.Types.ToList();
+        }
+
+        public List<Type> GetTypesNoArchive()
+        {
             return _dataContext.Types.Where(x => x.IsArchived == false).ToList();
         }
 
@@ -266,7 +271,7 @@ namespace PokemonDatabase
 
         public TypeEffectivenessViewModel GetTypeChartPokemon(string pokemonId)
         {
-            List<Type> typeList = GetTypes();
+            List<Type> typeList = GetTypesNoArchive();
             List<Type> pokemonTypes = GetPokemonTypes(pokemonId);
             List<string> strongAgainst = new List<string>();
             List<string> superStrongAgainst = new List<string>();
@@ -351,7 +356,7 @@ namespace PokemonDatabase
 
         public List<Generation> GetGenerations()
         {
-            return _dataContext.Generations.Where(x => x.IsArchived == false).ToList();
+            return _dataContext.Generations.ToList();
         }
 
         public Generation GetGeneration(string id)
@@ -467,6 +472,20 @@ namespace PokemonDatabase
             Ability ability = this.GetAbility(id);
             ability.IsArchived = true;
             this.UpdateAbility(ability);
+        }
+
+        public void RestoreGeneration(string id)
+        {
+            Generation generation = this.GetGeneration(id);
+            generation.IsArchived = false;
+            this.UpdateGeneration(generation);
+        }
+
+        public void RestoreType(int id)
+        {
+            Type type = this.GetType(id);
+            type.IsArchived = false;
+            this.UpdateType(type);
         }
     }
 }

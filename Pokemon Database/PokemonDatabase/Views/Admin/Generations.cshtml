@@ -19,13 +19,26 @@
             <tr>
                 <td>@item.Id</td>
                 <td>@item.Region</td>
-                <td>@item.Games (@item.Abbreviation)</td>
+                <td>
+                    @item.Games (@item.Abbreviation)
+                    @if (item.IsArchived == true)
+                    {
+                        @("(Deleted)")
+                    }
+                </td>
                 <td>
                     <a href="@(Url.Action("EditGeneration", "Admin", new { id = item.Id }))">Edit</a>
                     @if(!Model.AllPokemon.Exists(x => x.Generation.Id == item.Id))
                     {
-                        @('|')
-                        <a href="@(Url.Action("DeleteGeneration", "Admin", new { id = item.Id }))">Delete</a>
+                        @("|")
+                        @if(item.IsArchived == false)
+                        {
+                            <a href="@(Url.Action("DeleteGeneration", "Admin", new { id = item.Id }))">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("RestoreGeneration", "Admin", new { id = item.Id }))">Restore</a>
+                        }
                     }
                 </td>
             </tr>

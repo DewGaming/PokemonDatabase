@@ -15,13 +15,26 @@
         @foreach(var item in Model.AllTypes)
         {
             <tr>
-                <td>@item.Name</td>
+                <td>
+                    @item.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Deleted)")
+                    }
+                </td>
                 <td>
                     <a href="@(Url.Action("EditType", "Admin", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryType.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryType != null && x.SecondaryType.Id == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("DeleteType", "Admin", new { id = item.Id }))">Delete</a>
+                        @if(item.IsArchived == false)
+                        {
+                            <a href="@(Url.Action("DeleteType", "Admin", new { id = item.Id }))">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("RestoreType", "Admin", new { id = item.Id }))">Restore</a>
+                        }
                     }
                 </td>
             </tr>

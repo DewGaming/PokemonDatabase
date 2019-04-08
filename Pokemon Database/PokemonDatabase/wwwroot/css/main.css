@@ -9,6 +9,7 @@ footer{
 
 main {
   padding: 0 5px !important;
+  margin-bottom: 60px;
 }
 
 .shadowed img {
@@ -90,6 +91,11 @@ h2 {
   padding-bottom: 5px;
 }
 
+.baseStatTable th {
+  text-align: left !important;
+  font-size: 1rem !important;
+}
+
 .pokemonTables {
   padding: 0 1rem;
 }
@@ -97,6 +103,10 @@ h2 {
 .pokemonTables th {
   width: 1px;
   white-space: nowrap;
+}
+
+.pokemonTraining {
+  margin-left: 1rem;
 }
 
 .tableWithHeaders thead th {
@@ -156,32 +166,26 @@ a {
 @media (min-width: 1px){
   .Table1x6 {
     display: block;
-    margin-bottom: 60px;
   }
   .Table3x2, .Table2x3 {
     display: none;
-    margin-bottom: 0px;
   }
 }
 
 @media (min-width: 768px) {
   .Table2x3 {
     display: block;
-    margin-bottom: 60px;
   }
   .Table3x2, .Table1x6 {
     display: none;
-    margin-bottom: 0px;
   }
 }
 
 @media (min-width: 1000px) {
   .Table3x2 {
     display: block;
-    margin-bottom: 60px;
   }
   .Table2x3, .Table1x6 {
     display: none;
-    margin-bottom: 0px;
   }
 }

@@ -107,41 +107,35 @@
                 </tbody>
             </table>
         </div>
-        <div class="pokemonStats pokemonTables span-md-4 span-lg-3">
+        <div class="pokemonStats pokemonTables span-md-5 span-lg-4">
             <h2>Base Stats</h2>
             <table class="baseStatTable">
                 <tbody>
                     <tr>
                         <th class="Health" scope="col">Health</th>
-                        <td class="Health">@item.baseStats.Health</td>
-                    </tr>
-                    <tr>
                         <th class="Attack" scope="col">Attack</th>
-                        <td class="Attack">@item.baseStats.Attack</td>
+                        <th class="Defense" scope="col">Defense</th>
                     </tr>
                     <tr>
-                        <th class="Defense" scope="col">Defense</th>
+                        <td class="Health">@item.baseStats.Health</td>
+                        <td class="Attack">@item.baseStats.Attack</td>
                         <td class="Defense">@item.baseStats.Defense</td>
                     </tr>
                     <tr>
                         <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                        <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
-                    </tr>
-                    <tr>
                         <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                        <td class="SpecialDefense">@item.baseStats.SpecialDefense</td>
+                        <th class="Speed" scope="col">Speed</th>
                     </tr>
                     <tr>
-                        <th class="Speed" scope="col">Speed</th>
+                        <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
+                        <td class="SpecialDefense">@item.baseStats.SpecialDefense</td>
                         <td class="Speed">@item.baseStats.Speed</td>
                     </tr>
-                </tbody>
-                <tfoot>
                     <tr>
                         <th class="baseStatTotal" scope="col">Total</th>
-                        <td class="baseStatTotal"><b>@item.baseStats.StatTotal</b></td>
+                        <td colspan="2" class="baseStatTotal"><b>@item.baseStats.StatTotal</b></td>
                     </tr>
-                </tfoot>
+                </tbody>
             </table>
         </div>
         <div class="pokemonTraining pokemonTables span-md-5 span-lg-4">
@@ -202,7 +196,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="pokemonBreeding pokemonTables span-md-3 span-lg-3">
+        <div class="pokemonBreeding pokemonTables span-md-5 span-lg-4">
             <h2>Breeding</h2>
             <table>
                 <tbody>

@@ -126,7 +126,7 @@ namespace PokemonDatabase.Controllers
         {
             TypeChartViewModel model = new TypeChartViewModel(){
                 typeChart = _dataService.GetTypeChart(),
-                types = _dataService.GetTypes()
+                types = _dataService.GetTypesNoArchive()
             };
 
             return View(model);

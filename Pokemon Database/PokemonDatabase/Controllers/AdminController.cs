@@ -319,6 +319,38 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Abilities");
         }
 
+        [HttpGet, Route("restore-generation/{id}")]
+        public IActionResult RestoreGeneration(string id)
+        {
+            Generation model = _dataService.GetGeneration(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("restore-generation/{id}")]
+        public IActionResult RestoreGeneration(Generation generation)
+        {
+            _dataService.RestoreGeneration(generation.Id);
+
+            return RedirectToAction("Generations");
+        }
+
+        [HttpGet, Route("restore-type/{id:int}")]
+        public IActionResult RestoreType(int id)
+        {
+            Type model = _dataService.GetType(id);
+
+            return View(model);
+        }
+
+        [HttpPost, Route("restore-type/{id:int}")]
+        public IActionResult RestoreType(Type type)
+        {
+            _dataService.RestoreType(type.Id);
+
+            return RedirectToAction("Types");
+        }
+
         [Route("error")]
         public IActionResult Error()
         {
