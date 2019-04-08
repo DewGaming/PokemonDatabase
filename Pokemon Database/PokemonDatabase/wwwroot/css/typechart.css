@@ -166,6 +166,30 @@
 .type-fx-200 {
  background-color: #4e9a06;
 }
+.health.statBar {
+  background-color: #FF0000;
+  border-color: #A60000;
+}
+.attack.statBar {
+  background-color: #F08030;
+  border-color: #9C531F;
+}
+.defense.statBar {
+  background-color: #F8D030;
+  border-color: #A1871F;
+}
+.specialAttack.statBar {
+  background-color: #6890F0;
+  border-color: #445E9C;
+}
+.specialDefense.statBar {
+  background-color: #78C850;
+  border-color: #4E8234;
+}
+.speed.statBar {
+  background-color: #F85888;
+  border-color: #A13959;
+}
 @media (min-width: 820px) {
  .type-cell,
  .type-fx-cell,

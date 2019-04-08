@@ -1,4 +1,4 @@
-footer{
+footer {
   background-color: white;
   color: gray;
   height: 55px;
@@ -37,8 +37,8 @@ main {
   display: flex;
 }
 
-.effectivenessChart div {
-  margin-right: 10px;
+.strongAgainst {
+  margin-right: 1rem;
 }
 
 .effectivenessChart table tbody tr:first-of-type td {
@@ -92,7 +92,6 @@ h2 {
 }
 
 .baseStatTable th {
-  text-align: left !important;
   font-size: 1rem !important;
 }
 
@@ -105,8 +104,16 @@ h2 {
   white-space: nowrap;
 }
 
-.pokemonTraining {
-  margin-left: 1rem;
+.pokemonStats .statBar {
+  border: 1px solid black;
+}
+
+.pokemonStats tr td:last-child {
+  text-align: right;
+}
+
+.pokemonStats .statBar {
+  height: 20px;
 }
 
 .tableWithHeaders thead th {

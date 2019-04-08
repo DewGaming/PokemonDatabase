@@ -53,10 +53,6 @@
   margin-bottom: 45px;
 }
 
-.tabcontent.active .evolutions {
-  margin-bottom: 20px;
-}
-
 .tabcontent th {
   color: #737373;
   font-size: .875rem;

@@ -107,35 +107,47 @@
                 </tbody>
             </table>
         </div>
-        <div class="pokemonStats pokemonTables span-md-5 span-lg-4">
+        <div class="pokemonStats pokemonTables">
             <h2>Base Stats</h2>
             <table class="baseStatTable">
                 <tbody>
                     <tr>
                         <th class="Health" scope="col">Health</th>
-                        <th class="Attack" scope="col">Attack</th>
-                        <th class="Defense" scope="col">Defense</th>
+                        <td class="statData"><div class="health statBar" style="width: @(@item.baseStats.Health)px;"></div></td>
+                        <td class="Health">@item.baseStats.Health</td>
                     </tr>
                     <tr>
-                        <td class="Health">@item.baseStats.Health</td>
+                        <th class="Attack" scope="col">Attack</th>
+                        <td class="statData"><div class="attack statBar" style="width: @(@item.baseStats.Attack)px;"></div></td>
                         <td class="Attack">@item.baseStats.Attack</td>
+                    </tr>
+                    <tr>
+                        <th class="Defense" scope="col">Defense</th>
+                        <td class="statData"><div class="defense statBar" style="width: @(@item.baseStats.Defense)px;"></div></td>
                         <td class="Defense">@item.baseStats.Defense</td>
                     </tr>
                     <tr>
                         <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                        <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                        <th class="Speed" scope="col">Speed</th>
+                        <td class="statData"><div class="specialAttack statBar" style="width: @(@item.baseStats.SpecialAttack)px;"></div></td>
+                        <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
                     </tr>
                     <tr>
-                        <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
+                        <th class="SpecialDefense" scope="col">Sp. Defense</th>
+                        <td class="statData"><div class="specialDefense statBar" style="width: @(@item.baseStats.SpecialDefense)px;"></div></td>
                         <td class="SpecialDefense">@item.baseStats.SpecialDefense</td>
+                    </tr>
+                    <tr>
+                        <th class="Speed" scope="col">Speed</th>
+                        <td class="statData"><div class="speed statBar" style="width: @(@item.baseStats.Speed)px;"></div></td>
                         <td class="Speed">@item.baseStats.Speed</td>
                     </tr>
+                </tbody>
+                <tfoot>
                     <tr>
                         <th class="baseStatTotal" scope="col">Total</th>
                         <td colspan="2" class="baseStatTotal"><b>@item.baseStats.StatTotal</b></td>
                     </tr>
-                </tbody>
+                </tfoot>
             </table>
         </div>
         <div class="pokemonTraining pokemonTables span-md-5 span-lg-4">
@@ -196,7 +208,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="pokemonBreeding pokemonTables span-md-5 span-lg-4">
+        <div class="pokemonBreeding pokemonTables span-md-4 span-lg-3">
             <h2>Breeding</h2>
             <table>
                 <tbody>
@@ -281,56 +293,58 @@
                     </table>
                 </div>
             }
-            @if (item.effectiveness.weakAgainst.Count > 0)
-            {
-                <div class="weakAgainst">
-                    <h2>Weaknesses</h2>
-                    <table class="weakAgainstTable">
-                        <tbody>
-                            @foreach(string w in item.effectiveness.weakAgainst)
-                            {
-                                <tr>
-                                    @if (@w.IndexOf(" Quad") > -1)
-                                    {
+            <div class="nonResistances">
+                @if (item.effectiveness.weakAgainst.Count > 0)
+                {
+                    <div class="weakAgainst">
+                        <h2>Weaknesses</h2>
+                        <table class="weakAgainstTable">
+                            <tbody>
+                                @foreach(string w in item.effectiveness.weakAgainst)
+                                {
+                                    <tr>
+                                        @if (@w.IndexOf(" Quad") > -1)
+                                        {
+                                            <td>
+                                                <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
+                                                <div class="pokemon-type quad-icon quad-weak">Quad Weak</div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                @if (item.effectiveness.immuneTo.Count > 0)
+                {
+                    <div class="immuneTo">
+                        <h2>Immunities</h2>
+                        <table class="immuneToTable">
+                            <tbody>
+                                @foreach(string i in item.effectiveness.immuneTo)
+                                {
+                                    <tr>
                                         <td>
-                                            <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
-                                            <div class="pokemon-type quad-icon quad-weak">Quad Weak</div>
+                                            <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
                                         </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            @if (item.effectiveness.immuneTo.Count > 0)
-            {
-                <div class="immuneTo">
-                    <h2>Immunities</h2>
-                    <table class="immuneToTable">
-                        <tbody>
-                            @foreach(string i in item.effectiveness.immuneTo)
-                            {
-                                <tr>
-                                    <td>
-                                        <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
         </div>
         @if (item.preEvolution != null || item.evolutions.Count > 0)
         {
-            <div class="evolutions">
+            <div class="evolutions pokemonTables">
                 @if (item.preEvolution != null)
                 {
                     <table class="preEvolutionTable tableWithHeaders">
