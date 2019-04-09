@@ -78,11 +78,7 @@ namespace PokemonDatabase.Controllers
                 Name = Name.Replace('_', ' ');
             }
 
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            if (Name != textInfo.ToTitleCase(Name))
-            {
-                Name = textInfo.ToTitleCase(Name);
-            }
+            Name = _dataService.ConvertToTitleCase(Name);
 
             Pokemon pokemon = _dataService.GetPokemon(Name);
             List<Pokemon> altForms = _dataService.GetAltForms(pokemon);

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using PokemonDatabase.DataAccess.Models;
 using PokemonDatabase.Models;
@@ -26,6 +27,34 @@ namespace PokemonDatabase
             //{
             //    pokemon.Name += " (" + this.GetPokemonFormName(pokemon.Id) + ")";
             //}
+        }
+
+        public string ConvertToTitleCase (string input)
+        {
+            input = input.ToLower();
+            char[] ca = input.ToCharArray();
+            StringBuilder sb = new StringBuilder();
+
+            for(int i = 0; i < ca.Length; i++)
+            {
+                if(ca[i] == ' ')
+                {
+                    string t = ca[i + 1].ToString().ToUpper();
+                    sb.Append(t);
+                    i++;
+                }
+                else if (i == 0)
+                {
+                    string t = ca[i].ToString().ToUpper();
+                    sb.Append(t);
+                }
+                else
+                {
+                    sb.Append(ca[i].ToString());
+                }
+            }
+
+            return sb.ToString();
         }
 
         public Ability GetAbility(int id)
