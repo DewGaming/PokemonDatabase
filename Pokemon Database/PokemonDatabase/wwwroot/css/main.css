@@ -1,15 +1,23 @@
+footer, .fixed-nav {
+  width: 100%;
+  position: fixed;
+  z-index: 500;
+}
+
 footer {
   background-color: white;
   color: gray;
   height: 55px;
-  width: 100%;
-  position: fixed;
   bottom: 0;
+}
+
+.fixed-nav {
+  top: 0;
 }
 
 main {
   padding: 0 5px !important;
-  margin-bottom: 60px;
+  margin: 70px 0 60px;
 }
 
 .shadowed img {
