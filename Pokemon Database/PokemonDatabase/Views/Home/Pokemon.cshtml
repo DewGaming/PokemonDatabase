@@ -12,11 +12,11 @@
     {
         @if(button.pokemon.Id.IndexOf('-') == -1)
         {
-            <button class="tab active" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name</button>
+            <button class="tab active" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name.Replace('_', ' ')</button>
         }
         else
         {
-            <button class="tab" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name</button>
+            <button class="tab" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name.Replace('_', ' ')</button>
         }
     }
 </div>
