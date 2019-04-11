@@ -41,8 +41,8 @@ namespace PokemonDatabase
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
-                    options.LoginPath = "/sign-in";
-                    options.LogoutPath = "/sign-out";
+                    options.LoginPath = "/login";
+                    options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/access-denied";
                     options.Cookie.Name = "UserAuth";
                 });

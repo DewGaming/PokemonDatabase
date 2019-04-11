@@ -29,13 +29,13 @@ namespace PokemonDatabase.Controllers
             _dataService = new DataService(dataContext);
         }
 
-        [AllowAnonymous, HttpGet, Route("register")]
+        [AllowAnonymous, HttpGet, Route("signup")]
         public IActionResult Register()
         {
             return View();
         }
 
-        [AllowAnonymous, HttpPost, Route("register")]
+        [AllowAnonymous, HttpPost, Route("signup")]
         public IActionResult Register(RegisterViewModel registerViewModel)
         {
             if (!ModelState.IsValid)
@@ -67,13 +67,13 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        [AllowAnonymous, HttpGet, Route("sign-in")]
+        [AllowAnonymous, HttpGet, Route("login")]
         public IActionResult Login()
         {
             return View();
         }
 
-        [AllowAnonymous, HttpPost, Route("sign-in")]
+        [AllowAnonymous, HttpPost, Route("login")]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel, string returnUrl)
         {          
             if (!ModelState.IsValid)
@@ -134,7 +134,7 @@ namespace PokemonDatabase.Controllers
             }
         }
 
-        [HttpGet, Route("sign-out")]
+        [HttpGet, Route("logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(
@@ -143,7 +143,7 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet, Route("access-denied")]
+        [HttpGet, Route("access_denied")]
         public IActionResult AccessDenied()
         {
             return View();

@@ -44,11 +44,12 @@
                     <tr>
                         <th>Typing</th>
                         <td>
-                            @for(int i = 0; i < item.types.Count; i++)
+                            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                            @if (item.SecondaryType != null)
                             {
-                                <div class="pokemon-type type-icon type-@item.types[i].Name.ToLower()">@item.types[i].Name</div>
+                                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
                             }
-                            </td>
+                        </td>
                     </tr>
                     <tr>
                         <th>Classification</th>
@@ -71,20 +72,21 @@
                     <tr>
                         <th>Abilities</th>
                         <td>
-                            @for(int i = 0; i < item.abilities.Count; i++)
+                            <span title="Description: @item.PrimaryAbility.Description">
+                                @item.PrimaryAbility.Name
+                            </span>
+                            @if (@item.SecondaryAbility != null)
                             {
-                                if (i > 0)
-                                {
-                                    <br>
-                                }
-
-                                <span title="Description: @item.abilities[i].Description">
-                                    @item.abilities[i].Name
-
-                                    @if (i + 1 == item.abilities.Count && i != 0)
-                                    {
-                                        @(" (Hidden)");
-                                    }
+                                <br>
+                                <span title="Description: @item.SecondaryAbility.Description">
+                                    @item.SecondaryAbility.Name
+                                </span>
+                            }
+                            @if (@item.HiddenAbility != null)
+                            {
+                                <br>
+                                <span title="Description: @item.HiddenAbility.Description">
+                                    @item.HiddenAbility.Name (Hidden)
                                 </span>
                             }
                         </td>
@@ -239,7 +241,7 @@
                         </td>
                     </tr>
                     <tr>
-                        @if (item.eggGroups.Count > 1)
+                        @if (item.SecondaryEggGroup != null)
                         {
                             <th>Egg Groups</th>
                         }
@@ -248,14 +250,11 @@
                             <th>Egg Group</th>
                         }
                         <td>
-                            @for(int i = 0; i < item.eggGroups.Count; i++)
+                            @item.PrimaryEggGroup.Name
+                            @if (item.SecondaryEggGroup != null)
                             {
-                                if (i > 0)
-                                {
-                                    <br>;
-                                }
-
-                                @item.eggGroups[i].Name
+                                <br>
+                                @item.SecondaryEggGroup.Name
                             }
                         </td>
                     </tr>

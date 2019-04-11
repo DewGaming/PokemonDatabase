@@ -223,14 +223,29 @@ namespace PokemonDatabase
             return pokemon;
         }
 
+        public PokemonTypeDetail GetPokemonWithTypes(string pokemonId)
+        {
+            return _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList().Find(x => x.Pokemon.Id == pokemonId);
+        }
+
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
             return _dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
         }
 
+        public PokemonAbilityDetail GetPokemonWithAbilities(string pokemonId)
+        {
+            return _dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList().Find(x => x.Pokemon.Id == pokemonId);
+        }
+
         public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
         {
             return _dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList();
+        }
+
+        public PokemonEggGroupDetail GetPokemonWithEggGroups(string pokemonId)
+        {
+            return _dataContext.PokemonEggGroupDetails.Include(p => p.Pokemon).Include(p => p.PrimaryEggGroup).Include(p => p.SecondaryEggGroup).ToList().Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
