@@ -5,33 +5,38 @@ namespace PokemonDatabase.DataAccess.Models
 {
     public class Pokemon   
     {
-        [StringLength(6)]
+        [Display(Name = "Pokedex Number"), StringLength(6)]
         public string Id { get; set; }
-        [StringLength(25)]
-        [Required]
+        [Display(Name = "Pokemon Name"), StringLength(25), Required]
         public string Name { get; set; }
         [Required]
         public decimal Height { get; set; }
         [Required]
         public decimal Weight { get; set; }
-        [Required]
+        [Display(Name = "Experience Yield"), Required]
         public int ExpYield { get; set; }
         [Required]
         public bool IsArchived { get; set; }
-        [Required]
+        [Display(Name = "Egg Cycle Count"), Required]
+        public int? EggCycleId { get; set; }
         public EggCycle EggCycle { get; set; }
-        [Required]
+        [Display(Name = "Gender Ratios"), Required]
+        public int? GenderRatioId { get; set; }
         public GenderRatio GenderRatio { get; set; }
-        [Required]
+        [Display(Name = "Classification"), Required]
+        public int? ClassificationId { get; set; }
         public Classification Classification { get; set; }
-        [StringLength(20)]
-        [Required]
+        [Display(Name = "Game(s) of Origin"), StringLength(20), Required]
+        public string GenerationId { get; set; }
         public Generation Generation { get; set; }
-        [Required]
+        [Display(Name = "Experience Growth"), Required]
+        public int? ExperienceGrowthId { get; set; }
         public ExperienceGrowth ExperienceGrowth { get; set; }
-        [Required]
+        [Display(Name = "Capture Rate"), Required]
+        public int? CaptureRateId { get; set; }
         public CaptureRate CaptureRate { get; set; }
-        [Required]
+        [Display(Name = "Base Happiness"), Required]
+        public int? BaseHappinessId { get; set; }
         public BaseHappiness BaseHappiness { get; set; }
     }
 }

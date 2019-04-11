@@ -163,6 +163,76 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Abilities");
         }
 
+        [HttpGet, Route("add-pokemon")]
+        public IActionResult AddPokemon()
+        {
+            BasePokemonViewModel model = new BasePokemonViewModel(){
+                AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                AllClassifications = _dataService.GetClassifications(),
+                AllCaptureRates = _dataService.GetCaptureRates(),
+                AllEggCycles = _dataService.GetEggCycles(),
+                AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                AllGenderRatios = _dataService.GetGenderRatios(),
+                AllGenerations = _dataService.GetGenerations()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-pokemon")]
+        public IActionResult AddPokemon(BasePokemonViewModel pokemon)
+        {
+            int pokedexNumber;
+            if (!ModelState.IsValid)
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                    AllClassifications = _dataService.GetClassifications(),
+                    AllCaptureRates = _dataService.GetCaptureRates(),
+                    AllEggCycles = _dataService.GetEggCycles(),
+                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                    AllGenderRatios = _dataService.GetGenderRatios(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                return View(model);
+            }
+            else if (!System.Int32.TryParse(pokemon.Id, out pokedexNumber))
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                    AllClassifications = _dataService.GetClassifications(),
+                    AllCaptureRates = _dataService.GetCaptureRates(),
+                    AllEggCycles = _dataService.GetEggCycles(),
+                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                    AllGenderRatios = _dataService.GetGenderRatios(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
+                return View(model);
+            }
+            else if (_dataService.GetAllPokemon().Exists(x => x.Id == pokemon.Id))
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                    AllClassifications = _dataService.GetClassifications(),
+                    AllCaptureRates = _dataService.GetCaptureRates(),
+                    AllEggCycles = _dataService.GetEggCycles(),
+                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                    AllGenderRatios = _dataService.GetGenderRatios(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
+                return View(model);
+            }
+
+            _dataService.AddPokemon(pokemon);
+
+            return RedirectToAction("Pokemon");
+        }
+
         [HttpGet, Route("edit-generation/{id}")]
         public IActionResult EditGeneration(string id)
         {

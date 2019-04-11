@@ -365,6 +365,36 @@ namespace PokemonDatabase
             return effectivenessChart;
         }
 
+        public List<BaseHappiness> GetBaseHappinesses()
+        {
+            return _dataContext.BaseHappiness.ToList();
+        }
+
+        public List<Classification> GetClassifications()
+        {
+            return _dataContext.Classifications.ToList();
+        }
+
+        public List<CaptureRate> GetCaptureRates()
+        {
+            return _dataContext.CaptureRates.ToList();
+        }
+
+        public List<EggCycle> GetEggCycles()
+        {
+            return _dataContext.EggCycles.ToList();
+        }
+
+        public List<ExperienceGrowth> GetExperienceGrowths()
+        {
+            return _dataContext.ExperienceGrowths.ToList();
+        }
+
+        public List<GenderRatio> GetGenderRatios()
+        {
+            return _dataContext.GenderRatios.ToList();
+        }
+
         public List<Generation> GetGenerations()
         {
             return _dataContext.Generations.ToList();
@@ -417,6 +447,12 @@ namespace PokemonDatabase
         public void AddAbility(Ability ability)
         {
             _dataContext.Abilities.Add(ability);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemon(Pokemon pokemon)
+        {
+            _dataContext.Pokemon.Add(pokemon);
             _dataContext.SaveChanges();
         }
 
