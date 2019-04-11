@@ -50,7 +50,6 @@
 .tabcontent.active {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 45px;
 }
 
 .tabcontent th {

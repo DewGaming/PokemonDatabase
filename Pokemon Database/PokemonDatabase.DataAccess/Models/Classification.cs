@@ -9,5 +9,7 @@ namespace PokemonDatabase.DataAccess.Models
         [StringLength(25)]
         [Required]
         public string Name { get; set; }
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }

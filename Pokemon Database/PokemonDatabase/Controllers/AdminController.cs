@@ -58,7 +58,7 @@ namespace PokemonDatabase.Controllers
         public IActionResult Types()
         {
             TypeViewModel model = new TypeViewModel(){
-                AllTypes = _dataService.GetTypes(),
+                AllTypes = _dataService.GetTypesWithArchive(),
                 AllPokemon = _dataService.GetAllPokemonWithTypes()
             };
 
@@ -161,6 +161,282 @@ namespace PokemonDatabase.Controllers
             _dataService.AddAbility(ability);
 
             return RedirectToAction("Abilities");
+        }
+
+        [HttpGet, Route("add-pokemon")]
+        public IActionResult AddPokemon()
+        {
+            BasePokemonViewModel model = new BasePokemonViewModel(){
+                AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                AllClassifications = _dataService.GetClassifications(),
+                AllCaptureRates = _dataService.GetCaptureRates(),
+                AllEggCycles = _dataService.GetEggCycles(),
+                AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                AllGenderRatios = _dataService.GetGenderRatios(),
+                AllGenerations = _dataService.GetGenerations()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-pokemon")]
+        public IActionResult AddPokemon(BasePokemonViewModel pokemon)
+        {
+            int pokedexNumber;
+            if (!ModelState.IsValid)
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                    AllClassifications = _dataService.GetClassifications(),
+                    AllCaptureRates = _dataService.GetCaptureRates(),
+                    AllEggCycles = _dataService.GetEggCycles(),
+                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                    AllGenderRatios = _dataService.GetGenderRatios(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                return View(model);
+            }
+            else if (!System.Int32.TryParse(pokemon.Id, out pokedexNumber))
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                    AllClassifications = _dataService.GetClassifications(),
+                    AllCaptureRates = _dataService.GetCaptureRates(),
+                    AllEggCycles = _dataService.GetEggCycles(),
+                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                    AllGenderRatios = _dataService.GetGenderRatios(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
+                return View(model);
+            }
+            else if (_dataService.GetAllPokemon().Exists(x => x.Id == pokemon.Id))
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
+                    AllClassifications = _dataService.GetClassifications(),
+                    AllCaptureRates = _dataService.GetCaptureRates(),
+                    AllEggCycles = _dataService.GetEggCycles(),
+                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
+                    AllGenderRatios = _dataService.GetGenderRatios(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
+                return View(model);
+            }
+
+            _dataService.AddPokemon(pokemon);
+
+            return RedirectToAction("AddTyping", "Admin", new { pokemonId = pokemon.Id });
+        }
+
+        [HttpGet, Route("add-typing/{pokemonId}")]
+        public IActionResult AddTyping(string pokemonId)
+        {
+            PokemonTypingViewModel model = new PokemonTypingViewModel(){
+                AllTypes = _dataService.GetTypes(),
+                PokemonId = pokemonId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-typing/{pokemonId}")]
+        public IActionResult AddTyping(PokemonTypingViewModel typing)
+        {
+            if (!ModelState.IsValid)
+            {
+                PokemonTypingViewModel model = new PokemonTypingViewModel(){
+                    AllTypes = _dataService.GetTypes(),
+                    PokemonId = typing.PokemonId
+                };
+
+                return View(model);
+            }
+
+            _dataService.AddPokemonTyping(typing);
+
+            return RedirectToAction("AddAbilities", "Admin", new { pokemonId = typing.PokemonId });
+        }
+
+        [HttpGet, Route("add-abilities/{pokemonId}")]
+        public IActionResult AddAbilities(string pokemonId)
+        {
+            PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
+                AllAbilities = _dataService.GetAbilities(),
+                PokemonId = pokemonId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-abilities/{pokemonId}")]
+        public IActionResult AddAbilities(PokemonAbilitiesViewModel abilities)
+        {
+            if (!ModelState.IsValid)
+            {
+                PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
+                    AllAbilities = _dataService.GetAbilities(),
+                    PokemonId = abilities.PokemonId
+                };
+
+                return View(model);
+            }
+
+            _dataService.AddPokemonAbilities(abilities);
+
+            return RedirectToAction("AddEggGroups", "Admin", new { pokemonId = abilities.PokemonId });
+        }
+
+        [HttpGet, Route("add-egg-groups/{pokemonId}")]
+        public IActionResult AddEggGroups(string pokemonId)
+        {
+            PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
+                AllEggGroups = _dataService.GetEggGroups(),
+                PokemonId = pokemonId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-egg-groups/{pokemonId}")]
+        public IActionResult AddEggGroups(PokemonEggGroupsViewModel eggGroups)
+        {
+            if (!ModelState.IsValid)
+            {
+                PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
+                    AllEggGroups = _dataService.GetEggGroups(),
+                    PokemonId = eggGroups.PokemonId
+                };
+
+                return View(model);
+            }
+
+            _dataService.AddPokemonEggGroups(eggGroups);
+
+            return RedirectToAction("AddBaseStats", "Admin", new { pokemonId = eggGroups.PokemonId });
+        }
+
+        [HttpGet, Route("add-base-stats/{pokemonId}")]
+        public IActionResult AddBaseStats(string pokemonId)
+        {
+            BaseStat model = new BaseStat(){
+                PokemonId = pokemonId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-base-stats/{pokemonId}")]
+        public IActionResult AddBaseStats(BaseStat baseStat)
+        {
+            if (!ModelState.IsValid)
+            {
+                BaseStat model = new BaseStat(){
+                    PokemonId = baseStat.PokemonId
+                };
+
+                return View(model);
+            }
+
+            _dataService.AddPokemonBaseStat(baseStat);
+
+            return RedirectToAction("AddEVYields", "Admin", new { pokemonId = baseStat.PokemonId });
+        }
+
+        [HttpGet, Route("add-ev-yields/{pokemonId}")]
+        public IActionResult AddEVYields(string pokemonId)
+        {
+            EVYield model = new EVYield(){
+                PokemonId = pokemonId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-ev-yields/{pokemonId}")]
+        public IActionResult AddEVYields(EVYield evYield)
+        {
+            if (!ModelState.IsValid)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                return View(model);
+            }
+            else if (evYield.Health > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "Health must be 3 or less.");
+                return View(model);
+            }
+            else if (evYield.Attack > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "Attack must be 3 or less.");
+                return View(model);
+            }
+            else if (evYield.Defense > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "Defense must be 3 or less.");
+                return View(model);
+            }
+            else if (evYield.SpecialAttack > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "Special Attack must be 3 or less.");
+                return View(model);
+            }
+            else if (evYield.SpecialDefense > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "Special Defense must be 3 or less.");
+                return View(model);
+            }
+            else if (evYield.Speed > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "Speed must be 3 or less.");
+                return View(model);
+            }
+            else if (evYield.EVTotal > 3)
+            {
+                EVYield model = new EVYield(){
+                    PokemonId = evYield.PokemonId
+                };
+
+                ModelState.AddModelError("EVTotal", "EV Total must be 3 or less.");
+                return View(model);
+            }
+
+            _dataService.AddPokemonEVYield(evYield);
+
+            Pokemon pokemon = _dataService.GetPokemonById(evYield.PokemonId);
+
+            return RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
         }
 
         [HttpGet, Route("edit-generation/{id}")]

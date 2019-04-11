@@ -137,12 +137,12 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [AllowAnonymous, Route("type_chart")]
+        [AllowAnonymous, Route("type-chart")]
         public IActionResult TypeChart()
         {
             TypeChartViewModel model = new TypeChartViewModel(){
                 typeChart = _dataService.GetTypeChart(),
-                types = _dataService.GetTypesNoArchive()
+                types = _dataService.GetTypes()
             };
 
             return View(model);

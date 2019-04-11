@@ -7,8 +7,16 @@ footer, .fixed-nav {
 footer {
   background-color: white;
   color: gray;
-  height: 55px;
+  height: 30px;
   bottom: 0;
+}
+
+footer div {
+  margin-top: 2.5px;
+}
+
+footer hr {
+  margin: 0;
 }
 
 .fixed-nav {
@@ -17,7 +25,7 @@ footer {
 
 main {
   padding: 0 5px !important;
-  margin: 70px 0 60px;
+  margin: 70px 0 15px;
 }
 
 .shadowed img {

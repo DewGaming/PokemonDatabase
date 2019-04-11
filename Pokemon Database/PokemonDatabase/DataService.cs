@@ -73,14 +73,14 @@ namespace PokemonDatabase
                 .Find(x => x.Id == id);
         }
 
-        public List<Type> GetTypes()
+        public List<Type> GetTypesWithArchive()
         {
-            return _dataContext.Types.ToList();
+            return _dataContext.Types.OrderBy(x => x.Name).ToList();
         }
 
-        public List<Type> GetTypesNoArchive()
+        public List<Type> GetTypes()
         {
-            return _dataContext.Types.Where(x => x.IsArchived == false).ToList();
+            return _dataContext.Types.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
         public List<Type> GetPokemonTypes(string PokemonId)
@@ -185,6 +185,20 @@ namespace PokemonDatabase
                 .Find(x => x.Name == Name);
         }
 
+        public Pokemon GetPokemonById(string Id)
+        {
+            return _dataContext.Pokemon
+                .Include(p => p.EggCycle)
+                .Include(p => p.GenderRatio)
+                .Include(p => p.Classification)
+                .Include(p => p.Generation)
+                .Include(p => p.ExperienceGrowth)
+                .Include(p => p.CaptureRate)
+                .Include(p => p.BaseHappiness)
+                .ToList()
+                .Find(x => x.Id == Id);
+        }
+
         public List<Pokemon> GetAllPokemon()
         {
             return _dataContext.Pokemon
@@ -282,7 +296,7 @@ namespace PokemonDatabase
 
         public TypeEffectivenessViewModel GetTypeChartPokemon(string pokemonId)
         {
-            List<Type> typeList = GetTypesNoArchive();
+            List<Type> typeList = GetTypes();
             List<Type> pokemonTypes = GetPokemonTypes(pokemonId);
             List<string> strongAgainst = new List<string>();
             List<string> superStrongAgainst = new List<string>();
@@ -365,9 +379,39 @@ namespace PokemonDatabase
             return effectivenessChart;
         }
 
+        public List<BaseHappiness> GetBaseHappinesses()
+        {
+            return _dataContext.BaseHappiness.OrderBy(x => x.Happiness).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<Classification> GetClassifications()
+        {
+            return _dataContext.Classifications.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<CaptureRate> GetCaptureRates()
+        {
+            return _dataContext.CaptureRates.OrderBy(x => x.CatchRate).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<EggCycle> GetEggCycles()
+        {
+            return _dataContext.EggCycles.OrderBy(x => x.CycleCount).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<ExperienceGrowth> GetExperienceGrowths()
+        {
+            return _dataContext.ExperienceGrowths.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<GenderRatio> GetGenderRatios()
+        {
+            return _dataContext.GenderRatios.Where(x => x.IsArchived == false).ToList();
+        }
+
         public List<Generation> GetGenerations()
         {
-            return _dataContext.Generations.ToList();
+            return _dataContext.Generations.Where(x => x.IsArchived == false).ToList();
         }
 
         public Generation GetGeneration(string id)
@@ -387,7 +431,7 @@ namespace PokemonDatabase
 
         public List<User> GetUsers()
         {
-            return _dataContext.Users.Where(x => x.IsArchived == false).ToList();
+            return _dataContext.Users.ToList();
         }
 
         public void AddUser(User user)
@@ -417,6 +461,42 @@ namespace PokemonDatabase
         public void AddAbility(Ability ability)
         {
             _dataContext.Abilities.Add(ability);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemon(Pokemon pokemon)
+        {
+            _dataContext.Pokemon.Add(pokemon);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemonTyping(PokemonTypeDetail typing)
+        {
+            _dataContext.PokemonTypeDetails.Add(typing);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemonAbilities(PokemonAbilityDetail abilities)
+        {
+            _dataContext.PokemonAbilityDetails.Add(abilities);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemonEggGroups(PokemonEggGroupDetail eggGroups)
+        {
+            _dataContext.PokemonEggGroupDetails.Add(eggGroups);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemonBaseStat(BaseStat baseStat)
+        {
+            _dataContext.BaseStats.Add(baseStat);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddPokemonEVYield(EVYield evYield)
+        {
+            _dataContext.EVYields.Add(evYield);
             _dataContext.SaveChanges();
         }
 

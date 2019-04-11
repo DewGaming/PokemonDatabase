@@ -10,5 +10,7 @@ namespace PokemonDatabase.DataAccess.Models
         public double MaleRatio { get; set; }
         [Required]
         public double FemaleRatio { get; set; }
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }
