@@ -9,7 +9,9 @@
 <div class="form-horizontal">
 
     @using (Html.BeginForm())
-    {        
+    {    
+        @Html.AntiForgeryToken()
+            
         @Html.HiddenFor(x => x.Id)
 
         @Html.ValidationSummary()

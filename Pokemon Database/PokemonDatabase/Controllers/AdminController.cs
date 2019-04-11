@@ -93,7 +93,7 @@ namespace PokemonDatabase.Controllers
             return View();
         }
 
-        [HttpPost, Route("add-generation")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add-generation")]
         public IActionResult AddGeneration(Generation generation)
         {
             if (!ModelState.IsValid)
@@ -112,7 +112,7 @@ namespace PokemonDatabase.Controllers
             return View();
         }
 
-        [HttpPost, Route("add-type")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add-type")]
         public IActionResult AddType(Type type)
         {
             if (!ModelState.IsValid)
@@ -131,7 +131,7 @@ namespace PokemonDatabase.Controllers
             return View();
         }
 
-        [HttpPost, Route("add-egg-group")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add-egg-group")]
         public IActionResult AddEggGroup(EggGroup eggGroup)
         {
             if (!ModelState.IsValid)
@@ -150,7 +150,7 @@ namespace PokemonDatabase.Controllers
             return View();
         }
 
-        [HttpPost, Route("add-ability")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add-ability")]
         public IActionResult AddAbility(Ability ability)
         {
             if (!ModelState.IsValid)
@@ -171,7 +171,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("edit-generation/{id}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit-generation/{id}")]
         public IActionResult EditGeneration(Generation generation)
         {
             if (!ModelState.IsValid)
@@ -194,7 +194,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("edit-type/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit-type/{id:int}")]
         public IActionResult EditType(Type type)
         {
             if (!ModelState.IsValid)
@@ -217,7 +217,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("edit-egg-group/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit-egg-group/{id:int}")]
         public IActionResult EditEggGroup(EggGroup eggGroup)
         {
             if (!ModelState.IsValid)
@@ -240,7 +240,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("edit-ability/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit-ability/{id:int}")]
         public IActionResult EditAbility(Ability ability)
         {
             if (!ModelState.IsValid)
@@ -263,7 +263,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("delete-generation/{id}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("delete-generation/{id}")]
         public IActionResult DeleteGeneration(Generation generation)
         {
             _dataService.DeleteGeneration(generation.Id);
@@ -279,7 +279,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("delete-type/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("delete-type/{id:int}")]
         public IActionResult DeleteType(Type type)
         {
             _dataService.DeleteType(type.Id);
@@ -295,7 +295,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("delete-egg-group/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("delete-egg-group/{id:int}")]
         public IActionResult DeleteEggGroup(EggGroup eggGroup)
         {
             _dataService.DeleteEggGroup(eggGroup.Id);
@@ -311,7 +311,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("delete-ability/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("delete-ability/{id:int}")]
         public IActionResult DeleteAbility(Ability ability)
         {
             _dataService.DeleteAbility(ability.Id);
@@ -327,7 +327,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("restore-generation/{id}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("restore-generation/{id}")]
         public IActionResult RestoreGeneration(Generation generation)
         {
             _dataService.RestoreGeneration(generation.Id);
@@ -343,7 +343,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("restore-type/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("restore-type/{id:int}")]
         public IActionResult RestoreType(Type type)
         {
             _dataService.RestoreType(type.Id);
@@ -359,7 +359,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("restore-ability/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("restore-ability/{id:int}")]
         public IActionResult RestoreAbility(Ability ability)
         {
             _dataService.RestoreAbility(ability.Id);
@@ -375,7 +375,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("restore-egg-group/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("restore-egg-group/{id:int}")]
         public IActionResult RestoreEggGroup(EggGroup eggGroup)
         {
             _dataService.RestoreEggGroup(eggGroup.Id);
