@@ -143,10 +143,10 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet, Route("access_denied")]
+        [HttpGet, Route("access-denied")]
         public IActionResult AccessDenied()
         {
-            return View();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

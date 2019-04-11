@@ -137,7 +137,7 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [AllowAnonymous, Route("type_chart")]
+        [AllowAnonymous, Route("type-chart")]
         public IActionResult TypeChart()
         {
             TypeChartViewModel model = new TypeChartViewModel(){

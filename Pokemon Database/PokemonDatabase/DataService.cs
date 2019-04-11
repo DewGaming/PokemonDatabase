@@ -431,7 +431,7 @@ namespace PokemonDatabase
 
         public List<User> GetUsers()
         {
-            return _dataContext.Users.Where(x => x.IsArchived == false).ToList();
+            return _dataContext.Users.ToList();
         }
 
         public void AddUser(User user)
