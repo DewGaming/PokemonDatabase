@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokemonDatabase.DataAccess.Models;
 
 namespace PokemonDatabase.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190411151855_TotalsCalculatedNow")]
+    partial class TotalsCalculatedNow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,8 +49,6 @@ namespace PokemonDatabase.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte>("Happiness");
-
-                    b.Property<bool>("IsArchived");
 
                     b.HasKey("Id");
 
@@ -92,8 +92,6 @@ namespace PokemonDatabase.DataAccess.Migrations
 
                     b.Property<decimal>("ChanceOfCapture");
 
-                    b.Property<bool>("IsArchived");
-
                     b.HasKey("Id");
 
                     b.ToTable("CaptureRates");
@@ -104,8 +102,6 @@ namespace PokemonDatabase.DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsArchived");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -123,8 +119,6 @@ namespace PokemonDatabase.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<short>("CycleCount");
-
-                    b.Property<bool>("IsArchived");
 
                     b.HasKey("Id");
 
@@ -226,8 +220,6 @@ namespace PokemonDatabase.DataAccess.Migrations
 
                     b.Property<int>("ExpPointTotal");
 
-                    b.Property<bool>("IsArchived");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(15);
@@ -259,8 +251,6 @@ namespace PokemonDatabase.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("FemaleRatio");
-
-                    b.Property<bool>("IsArchived");
 
                     b.Property<double>("MaleRatio");
 

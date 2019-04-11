@@ -10,5 +10,7 @@ namespace PokemonDatabase.DataAccess.Models
         public Int16 CatchRate { get; set; }
         [Required]
         public decimal ChanceOfCapture { get; set; }
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }

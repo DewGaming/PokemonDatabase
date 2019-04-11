@@ -11,5 +11,7 @@ namespace PokemonDatabase.DataAccess.Models
         public string Name { get; set; }
         [Required]
         public int ExpPointTotal { get; set; }
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }
