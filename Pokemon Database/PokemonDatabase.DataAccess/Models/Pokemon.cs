@@ -26,8 +26,9 @@ namespace PokemonDatabase.DataAccess.Models
         [Display(Name = "Classification"), Required]
         public int? ClassificationId { get; set; }
         public Classification Classification { get; set; }
-        [Display(Name = "Game(s) of Origin"), StringLength(20), Required]
+        [Display(Name = "Game(s) of Origin"), Required]
         public string GenerationId { get; set; }
+        [StringLength(20)]
         public Generation Generation { get; set; }
         [Display(Name = "Experience Growth"), Required]
         public int? ExperienceGrowthId { get; set; }
