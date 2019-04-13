@@ -76,12 +76,23 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
-        [Route("egggroup")]
+        [Route("egg-group")]
         public IActionResult EggGroups()
         {
             EggGroupViewModel model = new EggGroupViewModel(){
                 AllEggGroups = _dataService.GetEggGroups(),
                 AllPokemon = _dataService.GetAllPokemonWithEggGroups()
+            };
+
+            return View(model);
+        }
+
+        [Route("classification")]
+        public IActionResult Classifications()
+        {
+            ClassificationViewModel model = new ClassificationViewModel(){
+                AllClassifications = _dataService.GetClassificationsWithArchive(),
+                AllPokemon = _dataService.GetAllPokemonWithClassifications()
             };
 
             return View(model);
@@ -142,6 +153,25 @@ namespace PokemonDatabase.Controllers
             _dataService.AddEggGroup(eggGroup);
 
             return RedirectToAction("EggGroups");
+        }
+
+        [HttpGet, Route("add-classification")]
+        public IActionResult AddClassification()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-classification")]
+        public IActionResult AddClassification(Classification classification)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            _dataService.AddClassification(classification);
+
+            return RedirectToAction("Classifications");
         }
 
         [HttpGet, Route("add-ability")]
@@ -508,6 +538,29 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("EggGroups");
         }
 
+        [HttpGet, Route("edit-classification/{id:int}")]
+        public IActionResult EditClassification(int id)
+        {
+            Classification model = _dataService.GetClassification(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("edit-classification/{id:int}")]
+        public IActionResult EditClassification(Classification classification)
+        {
+            if (!ModelState.IsValid)
+            {
+                Classification model = _dataService.GetClassification(classification.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateClassification(classification);
+
+            return RedirectToAction("Classifications");
+        }
+
         [HttpGet, Route("edit-ability/{id:int}")]
         public IActionResult EditAbility(int id)
         {
@@ -579,6 +632,22 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("EggGroups");
         }
 
+        [HttpGet, Route("delete-classification/{id:int}")]
+        public IActionResult DeleteClassification(int id)
+        {
+            Classification model = _dataService.GetClassification(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete-classification/{id:int}")]
+        public IActionResult DeleteClassification(Classification classification)
+        {
+            _dataService.DeleteClassification(classification.Id);
+
+            return RedirectToAction("Classifications");
+        }
+
         [HttpGet, Route("delete-ability/{id:int}")]
         public IActionResult DeleteAbility(int id)
         {
@@ -625,6 +694,22 @@ namespace PokemonDatabase.Controllers
             _dataService.RestoreType(type.Id);
 
             return RedirectToAction("Types");
+        }
+
+        [HttpGet, Route("restore-classification/{id:int}")]
+        public IActionResult RestoreClassification(int id)
+        {
+            Classification model = _dataService.GetClassification(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("restore-classification/{id:int}")]
+        public IActionResult RestoreType(Classification classification)
+        {
+            _dataService.RestoreClassification(classification.Id);
+
+            return RedirectToAction("Classifications");
         }
 
         [HttpGet, Route("restore-ability/{id:int}")]

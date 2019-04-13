@@ -267,6 +267,11 @@ namespace PokemonDatabase
             return _dataContext.PokemonEggGroupDetails.Include(p => p.Pokemon).Include(p => p.PrimaryEggGroup).Include(p => p.SecondaryEggGroup).ToList();
         }
 
+        public List<Pokemon> GetAllPokemonWithClassifications()
+        {
+            return _dataContext.Pokemon.Include(p => p.Classification).ToList();
+        }
+
         public BaseStat GetBaseStat(string PokemonId)
         {
             return _dataContext.BaseStats
@@ -384,9 +389,19 @@ namespace PokemonDatabase
             return _dataContext.BaseHappiness.OrderBy(x => x.Happiness).Where(x => x.IsArchived == false).ToList();
         }
 
+        public Classification GetClassification(int id)
+        {
+            return _dataContext.Classifications.ToList().Find(x => x.Id == id);
+        }
+
         public List<Classification> GetClassifications()
         {
             return _dataContext.Classifications.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<Classification> GetClassificationsWithArchive()
+        {
+            return _dataContext.Classifications.OrderBy(x => x.Name).ToList();
         }
 
         public List<CaptureRate> GetCaptureRates()
@@ -500,6 +515,12 @@ namespace PokemonDatabase
             _dataContext.SaveChanges();
         }
 
+        public void AddClassification(Classification classification)
+        {
+            _dataContext.Classifications.Add(classification);
+            _dataContext.SaveChanges();
+        }
+
         public void UpdateUser(User user)
         {
             _dataContext.Users.Update(user);
@@ -527,6 +548,12 @@ namespace PokemonDatabase
         public void UpdateAbility(Ability ability)
         {
             _dataContext.Abilities.Update(ability);
+            _dataContext.SaveChanges();
+        }
+
+        public void UpdateClassification(Classification classification)
+        {
+            _dataContext.Classifications.Update(classification);
             _dataContext.SaveChanges();
         }
 
@@ -565,6 +592,13 @@ namespace PokemonDatabase
             this.UpdateAbility(ability);
         }
 
+        public void DeleteClassification(int id)
+        {
+            Classification classification = this.GetClassification(id);
+            classification.IsArchived = true;
+            this.UpdateClassification(classification);
+        }
+
         public void RestoreGeneration(string id)
         {
             Generation generation = this.GetGeneration(id);
@@ -591,6 +625,13 @@ namespace PokemonDatabase
             EggGroup eggGroup = this.GetEggGroup(id);
             eggGroup.IsArchived = false;
             this.UpdateEggGroup(eggGroup);
+        }
+
+        public void RestoreClassification(int id)
+        {
+            Classification classification = this.GetClassification(id);
+            classification.IsArchived = false;
+            this.UpdateClassification(classification);
         }
 
         public void RestoreUser(int id)

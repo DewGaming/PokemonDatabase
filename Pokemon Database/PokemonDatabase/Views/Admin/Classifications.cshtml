@@ -1,0 +1,43 @@
+@model PokemonDatabase.Models.ClassificationViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="classificationTable">
+    <p>
+        <a class="btn btn-primary" href="@Url.Action("AddClassification", "Admin")" role="button">Add Classification</a>
+    </p>
+    <table class="table">
+        <tr>
+            <th scope="col">Classification</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllClassifications)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Deleted)")
+                    }
+                </td>
+                <td>
+                    <a href="@(Url.Action("EditEggGroup", "Admin", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.Classification.Id == item.Id)))
+                    {
+                        @('|')
+                        @if(item.IsArchived == false)
+                        {
+                            <a href="@(Url.Action("DeleteClassification", "Admin", new { id = item.Id }))">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("RestoreClassification", "Admin", new { id = item.Id }))">Restore</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -193,7 +193,7 @@
                     </tr>
                     <tr>
                         <th>Catch Rate</th>
-                        <td>@item.pokemon.CaptureRate.CatchRate (@item.pokemon.CaptureRate.ChanceOfCapture.ToString("0.####")% With A Pokeball At Full HP)</td>
+                        <td>@item.pokemon.CaptureRate.CatchRate (@Decimal.Round(item.pokemon.CaptureRate.CatchRate * 100 / 765m, 1)% With A Pokeball At Full HP)</td>
                     </tr>
                     <tr>
                         <th>Experience Growth</th>
