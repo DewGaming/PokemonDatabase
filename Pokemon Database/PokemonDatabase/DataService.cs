@@ -83,6 +83,11 @@ namespace PokemonDatabase
             return _dataContext.Types.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
+        public List<Type> GetTypeChartTypes()
+        {
+            return _dataContext.Types.Where(x => x.IsArchived == false).ToList();
+        }
+
         public List<Type> GetPokemonTypes(string PokemonId)
         {
             PokemonTypeDetail typeDetail = _dataContext.PokemonTypeDetails.Include(t => t.Pokemon).Include(t => t.PrimaryType).Include(t => t.SecondaryType).ToList().Find(t => t.Pokemon.Id == PokemonId);

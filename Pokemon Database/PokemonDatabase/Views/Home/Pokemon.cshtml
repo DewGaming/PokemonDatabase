@@ -115,32 +115,32 @@
                 <tbody>
                     <tr>
                         <th class="Health" scope="col">Health</th>
-                        <td class="statData"><div class="health statBar" style="width: @(@item.baseStats.Health)px;"></div></td>
+                        <td class="statData"><div class="health statBar" style="width: @(@item.baseStats.Health * 100 / 255m)%;"></div></td>
                         <td class="Health">@item.baseStats.Health</td>
                     </tr>
                     <tr>
                         <th class="Attack" scope="col">Attack</th>
-                        <td class="statData"><div class="attack statBar" style="width: @(@item.baseStats.Attack)px;"></div></td>
+                        <td class="statData"><div class="attack statBar" style="width: @(@item.baseStats.Attack * 100 / 255m)%;"></div></td>
                         <td class="Attack">@item.baseStats.Attack</td>
                     </tr>
                     <tr>
                         <th class="Defense" scope="col">Defense</th>
-                        <td class="statData"><div class="defense statBar" style="width: @(@item.baseStats.Defense)px;"></div></td>
+                        <td class="statData"><div class="defense statBar" style="width: @(@item.baseStats.Defense * 100 / 255m)%;"></div></td>
                         <td class="Defense">@item.baseStats.Defense</td>
                     </tr>
                     <tr>
                         <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                        <td class="statData"><div class="specialAttack statBar" style="width: @(@item.baseStats.SpecialAttack)px;"></div></td>
+                        <td class="statData"><div class="specialAttack statBar" style="width: @(@item.baseStats.SpecialAttack * 100 / 255m)%;"></div></td>
                         <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
                     </tr>
                     <tr>
                         <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                        <td class="statData"><div class="specialDefense statBar" style="width: @(@item.baseStats.SpecialDefense)px;"></div></td>
+                        <td class="statData"><div class="specialDefense statBar" style="width: @(@item.baseStats.SpecialDefense * 100 / 255m)%;"></div></td>
                         <td class="SpecialDefense">@item.baseStats.SpecialDefense</td>
                     </tr>
                     <tr>
                         <th class="Speed" scope="col">Speed</th>
-                        <td class="statData"><div class="speed statBar" style="width: @(@item.baseStats.Speed)px;"></div></td>
+                        <td class="statData"><div class="speed statBar" style="width: @(@item.baseStats.Speed * 100 / 255m)%;"></div></td>
                         <td class="Speed">@item.baseStats.Speed</td>
                     </tr>
                 </tbody>

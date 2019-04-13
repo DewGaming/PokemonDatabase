@@ -23,6 +23,10 @@ footer hr {
   top: 0;
 }
 
+.statData {
+  width: 150px;
+}
+
 main {
   padding: 0 5px !important;
   margin: 70px 0 15px;
@@ -130,6 +134,7 @@ h2 {
 
 .pokemonStats .statBar {
   height: 20px;
+  min-width: 3px;
 }
 
 .tableWithHeaders thead th {
