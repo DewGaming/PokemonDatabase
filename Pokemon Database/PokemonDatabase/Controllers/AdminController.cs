@@ -98,6 +98,31 @@ namespace PokemonDatabase.Controllers
             return View(model);
         }
 
+        [HttpGet, Route("add-evolution")]
+        public IActionResult AddEvolution()
+        {
+            EvolutionViewModel model = new EvolutionViewModel(){
+                AllEvolutionMethods = _dataService.GetEvolutionMethods()
+            };
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add-evolution")]
+        public IActionResult AddEvolution(Evolution evolution)
+        {
+            if (!ModelState.IsValid)
+            {
+                EvolutionViewModel model = new EvolutionViewModel(){
+                    AllEvolutionMethods = _dataService.GetEvolutionMethods()
+                };
+                return View(model);
+            }
+
+            _dataService.AddEvolution(evolution);
+
+            return RedirectToAction("Pokemon");
+        }
+
         [HttpGet, Route("add-generation")]
         public IActionResult AddGeneration()
         {

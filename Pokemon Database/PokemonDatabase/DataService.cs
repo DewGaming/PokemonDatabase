@@ -429,6 +429,11 @@ namespace PokemonDatabase
             return _dataContext.GenderRatios.Where(x => x.IsArchived == false).ToList();
         }
 
+        public List<EvolutionMethod> GetEvolutionMethods()
+        {
+            return _dataContext.EvolutionMethods.OrderBy(x => x.Name).ToList();
+        }
+
         public List<Generation> GetGenerations()
         {
             return _dataContext.Generations.Where(x => x.IsArchived == false).ToList();
@@ -463,6 +468,12 @@ namespace PokemonDatabase
         public void AddGeneration(Generation generation)
         {
             _dataContext.Generations.Add(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void AddEvolution(Evolution evolution)
+        {
+            _dataContext.Evolutions.Add(evolution);
             _dataContext.SaveChanges();
         }
 

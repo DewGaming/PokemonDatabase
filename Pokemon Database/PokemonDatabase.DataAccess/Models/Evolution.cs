@@ -6,13 +6,16 @@ namespace PokemonDatabase.DataAccess.Models
     public class Evolution   
     {
         public int Id { get; set; }
-        [StringLength(200)]
+        [StringLength(200), Display(Name = "Evolution Details (If Any)")]
         public string EvolutionDetails { get; set; }
-        [Required]
+        [Required, Display(Name = "Evolution Methods")]
+        public int? EvolutionMethodId { get; set; }
         public EvolutionMethod EvolutionMethod { get; set; }
-        [Required]
+        [Required, Display(Name = "Pokedex Number of Pre-Evolution")]
+        public string PreevolutionPokemonId { get; set; }
         public Pokemon PreevolutionPokemon { get; set; }
-        [Required]
+        [Required, Display(Name = "Pokedex Number of Evolution")]
+        public string EvolutionPokemonId { get; set; }
         public Pokemon EvolutionPokemon { get; set; }
     }
 }
