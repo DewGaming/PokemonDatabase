@@ -6,14 +6,16 @@ namespace PokemonDatabase.Models
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required, Display(Name = "First Name")]
         public string FirstName { get; set; }
-        
-        [Required]
+
+        [Required, Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Required]
-        [DataType(DataType.EmailAddress)]
+        [Required, StringLength(25)]
+        public string Username { get; set; }
+
+        [Required, DataType(DataType.EmailAddress), Display(Name = "Email Address")]
         public string EmailAddress { get; set; }
 
         [Required]

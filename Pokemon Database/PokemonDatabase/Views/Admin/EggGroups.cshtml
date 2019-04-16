@@ -4,9 +4,12 @@
 }
 
 <div class="eggGroupTable">
-    <p>
-        <a class="btn btn-primary" href="@Url.Action("AddEggGroup", "Admin")" role="button">Add Egg Group</a>
-    </p>
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("AddEggGroup", "Owner")" role="button">Add Egg Group</a>
+        </p>
+    }
     <table class="table">
         <tr>
             <th scope="col">Egg Group</th>
@@ -19,7 +22,7 @@
                     @item.Name
                     @if(item.IsArchived == true)
                     {
-                        @("(Deleted)")
+                        @("(Archived)")
                     }
                 </td>
                 <td>
@@ -27,14 +30,19 @@
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
                     {
                         @('|')
-                        @if(item.IsArchived == false)
+                        @if(!item.IsArchived)
                         {
-                            <a href="@(Url.Action("DeleteEggGroup", "Admin", new { id = item.Id }))">Delete</a>
+                            <a href="@(Url.Action("ArchiveEggGroup", "Admin", new { id = item.Id }))">Archive</a>
                         }
                         else
                         {
-                            <a href="@(Url.Action("RestoreEggGroup", "Admin", new { id = item.Id }))">Restore</a>
+                            <a href="@(Url.Action("UnarchiveEggGroup", "Admin", new { id = item.Id }))">Unarchive</a>
                         }
+                    }
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteEggGroup", "Owner", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

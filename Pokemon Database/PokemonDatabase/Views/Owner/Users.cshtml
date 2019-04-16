@@ -8,8 +8,8 @@
     {
         <table class="table">
             <tr>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
                 <th scope="col">Email Address</th>
                 <th scope="col">Is Admin</th>
                 <th scope="col">Actions</th>
@@ -17,8 +17,17 @@
             @foreach(var item in Model.Where(x => x.IsOwner == false))
             {
                 <tr>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
+                    <td>
+                        @if(!item.IsArchived)
+                        {
+                            @item.FirstName@(' ')@item.LastName
+                        }
+                        else
+                        {
+                            @item.FirstName@(' ')@item.LastName@(" (Archived)")
+                        }
+                    </td>
+                    <td>@item.Username</td>
                     <td>@item.EmailAddress</td>
                     <td>@item.IsAdmin</td>
                     <td>
@@ -26,11 +35,11 @@
                         |
                         @if(item.IsArchived == false)
                         {
-                            <a href="@Url.Action("DeleteUser", "Owner", new { id = item.Id })">Delete</a>
+                            <a href="@Url.Action("ArchiveUser", "Owner", new { id = item.Id })">Archive</a>
                         }
                         else
                         {
-                            <a href="@Url.Action("RestoreUser", "Owner", new { id = item.Id })">Restore</a>
+                            <a href="@Url.Action("UnarchiveUser", "Owner", new { id = item.Id })">Unarchive</a>
                         }
                     </td>
                 </tr>

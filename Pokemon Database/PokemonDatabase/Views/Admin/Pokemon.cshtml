@@ -7,10 +7,13 @@
 <link href="/css/maxWidth1220.css" rel="stylesheet" type="text/css" />
 <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
 <script src="/js/tabContent.js"></script>
-<p class="additionButtons">
-    <a class="btn btn-primary" href="@Url.Action("AddPokemon", "Admin")" role="button">Add Pokemon</a>
-    <a class="btn btn-primary" href="@Url.Action("AddEvolution", "Admin")" role="button">Add Evolution</a>
-</p>
+@if(User.IsInRole("Owner"))
+{
+    <p class="additionButtons">
+        <a class="btn btn-primary" href="@Url.Action("AddPokemon", "Owner")" role="button">Add Pokemon</a>
+        <a class="btn btn-primary" href="@Url.Action("AddEvolution", "Owner")" role="button">Add Evolution</a>
+    </p>
+}
 <div class="tab-list">
     @foreach(var id in Model.Select(x => x.Generation.Id).Distinct().OrderBy(x => x))
     {

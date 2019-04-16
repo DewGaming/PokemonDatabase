@@ -47,7 +47,7 @@ namespace PokemonDatabase.Controllers
         public IActionResult Generations()
         {
             GenerationViewModel model = new GenerationViewModel(){
-                AllGenerations = _dataService.GetGenerations(),
+                AllGenerations = _dataService.GetGenerationsWithArchive(),
                 AllPokemon = _dataService.GetAllPokemon()
             };
 
@@ -69,7 +69,7 @@ namespace PokemonDatabase.Controllers
         public IActionResult Abilities()
         {
             AbilityViewModel model = new AbilityViewModel(){
-                AllAbilities = _dataService.GetAbilities(),
+                AllAbilities = _dataService.GetAbilitiesWithArchive(),
                 AllPokemon = _dataService.GetAllPokemonWithAbilities()
             };
 
@@ -80,7 +80,7 @@ namespace PokemonDatabase.Controllers
         public IActionResult EggGroups()
         {
             EggGroupViewModel model = new EggGroupViewModel(){
-                AllEggGroups = _dataService.GetEggGroups(),
+                AllEggGroups = _dataService.GetEggGroupsWithArchive(),
                 AllPokemon = _dataService.GetAllPokemonWithEggGroups()
             };
 
@@ -96,402 +96,6 @@ namespace PokemonDatabase.Controllers
             };
 
             return View(model);
-        }
-
-        [HttpGet, Route("add-evolution")]
-        public IActionResult AddEvolution()
-        {
-            EvolutionViewModel model = new EvolutionViewModel(){
-                AllEvolutionMethods = _dataService.GetEvolutionMethods()
-            };
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-evolution")]
-        public IActionResult AddEvolution(Evolution evolution)
-        {
-            if (!ModelState.IsValid)
-            {
-                EvolutionViewModel model = new EvolutionViewModel(){
-                    AllEvolutionMethods = _dataService.GetEvolutionMethods()
-                };
-                return View(model);
-            }
-
-            _dataService.AddEvolution(evolution);
-
-            return RedirectToAction("Pokemon");
-        }
-
-        [HttpGet, Route("add-generation")]
-        public IActionResult AddGeneration()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-generation")]
-        public IActionResult AddGeneration(Generation generation)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            _dataService.AddGeneration(generation);
-
-            return RedirectToAction("Generations");
-        }
-
-        [HttpGet, Route("add-type")]
-        public IActionResult AddType()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-type")]
-        public IActionResult AddType(Type type)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            _dataService.AddType(type);
-
-            return RedirectToAction("Types");
-        }
-
-        [HttpGet, Route("add-egg-group")]
-        public IActionResult AddEggGroup()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-egg-group")]
-        public IActionResult AddEggGroup(EggGroup eggGroup)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            _dataService.AddEggGroup(eggGroup);
-
-            return RedirectToAction("EggGroups");
-        }
-
-        [HttpGet, Route("add-classification")]
-        public IActionResult AddClassification()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-classification")]
-        public IActionResult AddClassification(Classification classification)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            _dataService.AddClassification(classification);
-
-            return RedirectToAction("Classifications");
-        }
-
-        [HttpGet, Route("add-ability")]
-        public IActionResult AddAbility()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-ability")]
-        public IActionResult AddAbility(Ability ability)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            _dataService.AddAbility(ability);
-
-            return RedirectToAction("Abilities");
-        }
-
-        [HttpGet, Route("add-pokemon")]
-        public IActionResult AddPokemon()
-        {
-            BasePokemonViewModel model = new BasePokemonViewModel(){
-                AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                AllClassifications = _dataService.GetClassifications(),
-                AllCaptureRates = _dataService.GetCaptureRates(),
-                AllEggCycles = _dataService.GetEggCycles(),
-                AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                AllGenderRatios = _dataService.GetGenderRatios(),
-                AllGenerations = _dataService.GetGenerations()
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-pokemon")]
-        public IActionResult AddPokemon(BasePokemonViewModel pokemon)
-        {
-            int pokedexNumber;
-            if (!ModelState.IsValid)
-            {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                    AllClassifications = _dataService.GetClassifications(),
-                    AllCaptureRates = _dataService.GetCaptureRates(),
-                    AllEggCycles = _dataService.GetEggCycles(),
-                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                    AllGenderRatios = _dataService.GetGenderRatios(),
-                    AllGenerations = _dataService.GetGenerations()
-                };
-
-                return View(model);
-            }
-            else if (!System.Int32.TryParse(pokemon.Id, out pokedexNumber))
-            {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                    AllClassifications = _dataService.GetClassifications(),
-                    AllCaptureRates = _dataService.GetCaptureRates(),
-                    AllEggCycles = _dataService.GetEggCycles(),
-                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                    AllGenderRatios = _dataService.GetGenderRatios(),
-                    AllGenerations = _dataService.GetGenerations()
-                };
-
-                ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
-                return View(model);
-            }
-            else if (_dataService.GetAllPokemon().Exists(x => x.Id == pokemon.Id))
-            {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                    AllClassifications = _dataService.GetClassifications(),
-                    AllCaptureRates = _dataService.GetCaptureRates(),
-                    AllEggCycles = _dataService.GetEggCycles(),
-                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                    AllGenderRatios = _dataService.GetGenderRatios(),
-                    AllGenerations = _dataService.GetGenerations()
-                };
-
-                ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
-                return View(model);
-            }
-
-            _dataService.AddPokemon(pokemon);
-
-            return RedirectToAction("AddTyping", "Admin", new { pokemonId = pokemon.Id });
-        }
-
-        [HttpGet, Route("add-typing/{pokemonId}")]
-        public IActionResult AddTyping(string pokemonId)
-        {
-            PokemonTypingViewModel model = new PokemonTypingViewModel(){
-                AllTypes = _dataService.GetTypes(),
-                PokemonId = pokemonId
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-typing/{pokemonId}")]
-        public IActionResult AddTyping(PokemonTypingViewModel typing)
-        {
-            if (!ModelState.IsValid)
-            {
-                PokemonTypingViewModel model = new PokemonTypingViewModel(){
-                    AllTypes = _dataService.GetTypes(),
-                    PokemonId = typing.PokemonId
-                };
-
-                return View(model);
-            }
-
-            _dataService.AddPokemonTyping(typing);
-
-            return RedirectToAction("AddAbilities", "Admin", new { pokemonId = typing.PokemonId });
-        }
-
-        [HttpGet, Route("add-abilities/{pokemonId}")]
-        public IActionResult AddAbilities(string pokemonId)
-        {
-            PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
-                AllAbilities = _dataService.GetAbilities(),
-                PokemonId = pokemonId
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-abilities/{pokemonId}")]
-        public IActionResult AddAbilities(PokemonAbilitiesViewModel abilities)
-        {
-            if (!ModelState.IsValid)
-            {
-                PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
-                    AllAbilities = _dataService.GetAbilities(),
-                    PokemonId = abilities.PokemonId
-                };
-
-                return View(model);
-            }
-
-            _dataService.AddPokemonAbilities(abilities);
-
-            return RedirectToAction("AddEggGroups", "Admin", new { pokemonId = abilities.PokemonId });
-        }
-
-        [HttpGet, Route("add-egg-groups/{pokemonId}")]
-        public IActionResult AddEggGroups(string pokemonId)
-        {
-            PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
-                AllEggGroups = _dataService.GetEggGroups(),
-                PokemonId = pokemonId
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-egg-groups/{pokemonId}")]
-        public IActionResult AddEggGroups(PokemonEggGroupsViewModel eggGroups)
-        {
-            if (!ModelState.IsValid)
-            {
-                PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
-                    AllEggGroups = _dataService.GetEggGroups(),
-                    PokemonId = eggGroups.PokemonId
-                };
-
-                return View(model);
-            }
-
-            _dataService.AddPokemonEggGroups(eggGroups);
-
-            return RedirectToAction("AddBaseStats", "Admin", new { pokemonId = eggGroups.PokemonId });
-        }
-
-        [HttpGet, Route("add-base-stats/{pokemonId}")]
-        public IActionResult AddBaseStats(string pokemonId)
-        {
-            BaseStat model = new BaseStat(){
-                PokemonId = pokemonId
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-base-stats/{pokemonId}")]
-        public IActionResult AddBaseStats(BaseStat baseStat)
-        {
-            if (!ModelState.IsValid)
-            {
-                BaseStat model = new BaseStat(){
-                    PokemonId = baseStat.PokemonId
-                };
-
-                return View(model);
-            }
-
-            _dataService.AddPokemonBaseStat(baseStat);
-
-            return RedirectToAction("AddEVYields", "Admin", new { pokemonId = baseStat.PokemonId });
-        }
-
-        [HttpGet, Route("add-ev-yields/{pokemonId}")]
-        public IActionResult AddEVYields(string pokemonId)
-        {
-            EVYield model = new EVYield(){
-                PokemonId = pokemonId
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Route("add-ev-yields/{pokemonId}")]
-        public IActionResult AddEVYields(EVYield evYield)
-        {
-            if (!ModelState.IsValid)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                return View(model);
-            }
-            else if (evYield.Health > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "Health must be 3 or less.");
-                return View(model);
-            }
-            else if (evYield.Attack > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "Attack must be 3 or less.");
-                return View(model);
-            }
-            else if (evYield.Defense > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "Defense must be 3 or less.");
-                return View(model);
-            }
-            else if (evYield.SpecialAttack > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "Special Attack must be 3 or less.");
-                return View(model);
-            }
-            else if (evYield.SpecialDefense > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "Special Defense must be 3 or less.");
-                return View(model);
-            }
-            else if (evYield.Speed > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "Speed must be 3 or less.");
-                return View(model);
-            }
-            else if (evYield.EVTotal > 3)
-            {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
-                };
-
-                ModelState.AddModelError("EVTotal", "EV Total must be 3 or less.");
-                return View(model);
-            }
-
-            _dataService.AddPokemonEVYield(evYield);
-
-            Pokemon pokemon = _dataService.GetPokemonById(evYield.PokemonId);
-
-            return RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
         }
 
         [HttpGet, Route("edit-generation/{id}")]
@@ -609,162 +213,162 @@ namespace PokemonDatabase.Controllers
             return RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("delete-generation/{id}")]
-        public IActionResult DeleteGeneration(string id)
+        [HttpGet, Route("archive-generation/{id}")]
+        public IActionResult ArchiveGeneration(string id)
         {
             Generation model = _dataService.GetGeneration(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete-generation/{id}")]
-        public IActionResult DeleteGeneration(Generation generation)
+        [HttpPost, ValidateAntiForgeryToken, Route("archive-generation/{id}")]
+        public IActionResult ArchiveGeneration(Generation generation)
         {
-            _dataService.DeleteGeneration(generation.Id);
+            _dataService.ArchiveGeneration(generation.Id);
 
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("delete-type/{id:int}")]
-        public IActionResult DeleteType(int id)
+        [HttpGet, Route("archive-type/{id:int}")]
+        public IActionResult ArchiveType(int id)
         {
             Type model = _dataService.GetType(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete-type/{id:int}")]
-        public IActionResult DeleteType(Type type)
+        [HttpPost, ValidateAntiForgeryToken, Route("archive-type/{id:int}")]
+        public IActionResult ArchiveType(Type type)
         {
-            _dataService.DeleteType(type.Id);
+            _dataService.ArchiveType(type.Id);
 
             return RedirectToAction("Types");
         }
 
-        [HttpGet, Route("delete-egg-group/{id:int}")]
-        public IActionResult DeleteEggGroup(int id)
+        [HttpGet, Route("archive-egg-group/{id:int}")]
+        public IActionResult ArchiveEggGroup(int id)
         {
             EggGroup model = _dataService.GetEggGroup(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete-egg-group/{id:int}")]
-        public IActionResult DeleteEggGroup(EggGroup eggGroup)
+        [HttpPost, ValidateAntiForgeryToken, Route("archive-egg-group/{id:int}")]
+        public IActionResult ArchiveEggGroup(EggGroup eggGroup)
         {
-            _dataService.DeleteEggGroup(eggGroup.Id);
+            _dataService.ArchiveEggGroup(eggGroup.Id);
 
             return RedirectToAction("EggGroups");
         }
 
-        [HttpGet, Route("delete-classification/{id:int}")]
-        public IActionResult DeleteClassification(int id)
+        [HttpGet, Route("archive-classification/{id:int}")]
+        public IActionResult ArchiveClassification(int id)
         {
             Classification model = _dataService.GetClassification(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete-classification/{id:int}")]
-        public IActionResult DeleteClassification(Classification classification)
+        [HttpPost, ValidateAntiForgeryToken, Route("archive-classification/{id:int}")]
+        public IActionResult ArchiveClassification(Classification classification)
         {
-            _dataService.DeleteClassification(classification.Id);
+            _dataService.ArchiveClassification(classification.Id);
 
             return RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("delete-ability/{id:int}")]
-        public IActionResult DeleteAbility(int id)
+        [HttpGet, Route("archive-ability/{id:int}")]
+        public IActionResult ArchiveAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete-ability/{id:int}")]
-        public IActionResult DeleteAbility(Ability ability)
+        [HttpPost, ValidateAntiForgeryToken, Route("archive-ability/{id:int}")]
+        public IActionResult ArchiveAbility(Ability ability)
         {
-            _dataService.DeleteAbility(ability.Id);
+            _dataService.ArchiveAbility(ability.Id);
 
             return RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("restore-generation/{id}")]
-        public IActionResult RestoreGeneration(string id)
+        [HttpGet, Route("unarchive-generation/{id}")]
+        public IActionResult UnarchiveGeneration(string id)
         {
             Generation model = _dataService.GetGeneration(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("restore-generation/{id}")]
-        public IActionResult RestoreGeneration(Generation generation)
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-generation/{id}")]
+        public IActionResult UnarchiveGeneration(Generation generation)
         {
-            _dataService.RestoreGeneration(generation.Id);
+            _dataService.UnarchiveGeneration(generation.Id);
 
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("restore-type/{id:int}")]
-        public IActionResult RestoreType(int id)
+        [HttpGet, Route("unarchive-type/{id:int}")]
+        public IActionResult UnarchiveType(int id)
         {
             Type model = _dataService.GetType(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("restore-type/{id:int}")]
-        public IActionResult RestoreType(Type type)
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-type/{id:int}")]
+        public IActionResult UnarchiveType(Type type)
         {
-            _dataService.RestoreType(type.Id);
+            _dataService.UnarchiveType(type.Id);
 
             return RedirectToAction("Types");
         }
 
-        [HttpGet, Route("restore-classification/{id:int}")]
-        public IActionResult RestoreClassification(int id)
+        [HttpGet, Route("unarchive-classification/{id:int}")]
+        public IActionResult UnarchiveClassification(int id)
         {
             Classification model = _dataService.GetClassification(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("restore-classification/{id:int}")]
-        public IActionResult RestoreType(Classification classification)
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-classification/{id:int}")]
+        public IActionResult UnarchiveType(Classification classification)
         {
-            _dataService.RestoreClassification(classification.Id);
+            _dataService.UnarchiveClassification(classification.Id);
 
             return RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("restore-ability/{id:int}")]
-        public IActionResult RestoreAbility(int id)
+        [HttpGet, Route("unarchive-ability/{id:int}")]
+        public IActionResult UnarchiveAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("restore-ability/{id:int}")]
-        public IActionResult RestoreAbility(Ability ability)
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-ability/{id:int}")]
+        public IActionResult UnarchiveAbility(Ability ability)
         {
-            _dataService.RestoreAbility(ability.Id);
+            _dataService.UnarchiveAbility(ability.Id);
 
             return RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("restore-egg-group/{id:int}")]
-        public IActionResult RestoreEggGroup(int id)
+        [HttpGet, Route("unarchive-egg-group/{id:int}")]
+        public IActionResult UnarchiveEggGroup(int id)
         {
             EggGroup model = _dataService.GetEggGroup(id);
 
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("restore-egg-group/{id:int}")]
-        public IActionResult RestoreEggGroup(EggGroup eggGroup)
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-egg-group/{id:int}")]
+        public IActionResult UnarchiveEggGroup(EggGroup eggGroup)
         {
-            _dataService.RestoreEggGroup(eggGroup.Id);
+            _dataService.UnarchiveEggGroup(eggGroup.Id);
 
             return RedirectToAction("EggGroups");
         }

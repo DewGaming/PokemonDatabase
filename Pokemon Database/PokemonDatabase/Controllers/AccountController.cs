@@ -43,7 +43,16 @@ namespace PokemonDatabase.Controllers
                 return View();
             }
 
-            User existingUser = _dataService.GetUser(registerViewModel.EmailAddress);
+            User existingUser = _dataService.GetUserWithUsername(registerViewModel.Username);
+            if (existingUser != null) 
+            {
+                // Set email address already in use error message.
+                ModelState.AddModelError("Error", "An account already exists with that username.");
+
+                return View();
+            }
+
+            existingUser = _dataService.GetUserWithEmail(registerViewModel.EmailAddress);
             if (existingUser != null) 
             {
                 // Set email address already in use error message.
@@ -59,6 +68,7 @@ namespace PokemonDatabase.Controllers
                 FirstName = registerViewModel.FirstName,
                 LastName = registerViewModel.LastName,
                 EmailAddress = registerViewModel.EmailAddress,
+                Username = registerViewModel.Username,
                 PasswordHash = passwordHasher.HashPassword(null, registerViewModel.Password)
             };
         
@@ -81,7 +91,7 @@ namespace PokemonDatabase.Controllers
                 return View();
             }
 
-            User user = _dataService.GetUser(loginViewModel.EmailAddress);
+            User user = _dataService.GetUserWithUsername(loginViewModel.Username);
 
             if (user == null) 
             {
@@ -111,7 +121,7 @@ namespace PokemonDatabase.Controllers
             var claims = new List<Claim>
             {
                 new Claim("UserId", user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.IsOwner ? "Owner" : user.IsAdmin ? "Admin" : "User")
             };
 

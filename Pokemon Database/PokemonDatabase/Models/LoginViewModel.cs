@@ -7,11 +7,9 @@ namespace PokemonDatabase.Models
     public class LoginViewModel
     {
         [Required]
-        [DataType(DataType.EmailAddress)]
-        public string EmailAddress { get; set; }
+        public string Username { get; set; }
     
-        [Required]
-        [DataType(DataType.Password)]
+        [Required, DataType(DataType.Password)]
         public string Password{ get; set; }
     }
 }

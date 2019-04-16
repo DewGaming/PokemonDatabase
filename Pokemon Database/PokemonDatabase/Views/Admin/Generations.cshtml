@@ -4,9 +4,12 @@
 }
 
 <div class="generationTable">
-    <p>
-        <a class="btn btn-primary" href="@Url.Action("AddGeneration", "Admin")" role="button">Add Generation</a>
-    </p>
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("AddGeneration", "Owner")" role="button">Add Generation</a>
+        </p>
+    }
     <table class="table">
         <tr>
             <th scope="col">Generation ID</th>
@@ -23,7 +26,7 @@
                     @item.Games (@item.Abbreviation)
                     @if (item.IsArchived == true)
                     {
-                        @("(Deleted)")
+                        @("(Archived)")
                     }
                 </td>
                 <td>
@@ -31,14 +34,19 @@
                     @if(!Model.AllPokemon.Exists(x => x.Generation.Id == item.Id))
                     {
                         @("|")
-                        @if(item.IsArchived == false)
+                        @if(!item.IsArchived)
                         {
-                            <a href="@(Url.Action("DeleteGeneration", "Admin", new { id = item.Id }))">Delete</a>
+                            <a href="@(Url.Action("ArchiveGeneration", "Admin", new { id = item.Id }))">Archive</a>
                         }
                         else
                         {
-                            <a href="@(Url.Action("RestoreGeneration", "Admin", new { id = item.Id }))">Restore</a>
+                            <a href="@(Url.Action("UnarchiveGeneration", "Admin", new { id = item.Id }))">Unarchive</a>
                         }
+                    }
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteGeneration", "Owner", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

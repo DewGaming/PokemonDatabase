@@ -48,6 +48,11 @@ namespace PokemonDatabase
             return _dataContext.Abilities.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
+        public List<Ability> GetAbilitiesWithArchive()
+        {
+            return _dataContext.Abilities.OrderBy(x => x.Name).ToList();
+        }
+
         public List<Ability> GetPokemonAbilities(string PokemonId)
         {
             PokemonAbilityDetail abilityDetail = _dataContext.PokemonAbilityDetails.Include(a => a.Pokemon).Include(a => a.PrimaryAbility).Include(a => a.SecondaryAbility).Include(a => a.HiddenAbility).ToList().Find(a => a.Pokemon.Id == PokemonId);
@@ -111,6 +116,11 @@ namespace PokemonDatabase
         public List<EggGroup> GetEggGroups()
         {
             return _dataContext.EggGroups.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<EggGroup> GetEggGroupsWithArchive()
+        {
+            return _dataContext.EggGroups.OrderBy(x => x.Name).ToList();
         }
 
         public List<EggGroup> GetPokemonEggGroups(string PokemonId)
@@ -439,12 +449,22 @@ namespace PokemonDatabase
             return _dataContext.Generations.Where(x => x.IsArchived == false).ToList();
         }
 
+        public List<Generation> GetGenerationsWithArchive()
+        {
+            return _dataContext.Generations.ToList();
+        }
+
         public Generation GetGeneration(string id)
         {
             return _dataContext.Generations.ToList().Find(x => x.Id == id);
         }
 
-        public User GetUser(string email)
+        public User GetUserWithUsername(string username)
+        {
+            return _dataContext.Users.ToList().Find(x => x.Username == username);
+        }
+
+        public User GetUserWithEmail(string email)
         {
             return _dataContext.Users.ToList().Find(x => x.EmailAddress == email);
         }
@@ -573,84 +593,84 @@ namespace PokemonDatabase
             _dataContext.SaveChanges();
         }
 
-        public void DeleteUser(int id)
+        public void ArchiveUser(int id)
         {
             User user = this.GetUserById(id);
             user.IsArchived = true;
             this.UpdateUser(user);
         }
 
-        public void DeleteGeneration(string id)
+        public void ArchiveGeneration(string id)
         {
             Generation generation = this.GetGeneration(id);
             generation.IsArchived = true;
             this.UpdateGeneration(generation);
         }
 
-        public void DeleteType(int id)
+        public void ArchiveType(int id)
         {
             Type type = this.GetType(id);
             type.IsArchived = true;
             this.UpdateType(type);
         }
 
-        public void DeleteEggGroup(int id)
+        public void ArchiveEggGroup(int id)
         {
             EggGroup eggGroup = this.GetEggGroup(id);
             eggGroup.IsArchived = true;
             this.UpdateEggGroup(eggGroup);
         }
 
-        public void DeleteAbility(int id)
+        public void ArchiveAbility(int id)
         {
             Ability ability = this.GetAbility(id);
             ability.IsArchived = true;
             this.UpdateAbility(ability);
         }
 
-        public void DeleteClassification(int id)
+        public void ArchiveClassification(int id)
         {
             Classification classification = this.GetClassification(id);
             classification.IsArchived = true;
             this.UpdateClassification(classification);
         }
 
-        public void RestoreGeneration(string id)
+        public void UnarchiveGeneration(string id)
         {
             Generation generation = this.GetGeneration(id);
             generation.IsArchived = false;
             this.UpdateGeneration(generation);
         }
 
-        public void RestoreType(int id)
+        public void UnarchiveType(int id)
         {
             Type type = this.GetType(id);
             type.IsArchived = false;
             this.UpdateType(type);
         }
 
-        public void RestoreAbility(int id)
+        public void UnarchiveAbility(int id)
         {
             Ability ability = this.GetAbility(id);
             ability.IsArchived = false;
             this.UpdateAbility(ability);
         }
 
-        public void RestoreEggGroup(int id)
+        public void UnarchiveEggGroup(int id)
         {
             EggGroup eggGroup = this.GetEggGroup(id);
             eggGroup.IsArchived = false;
             this.UpdateEggGroup(eggGroup);
         }
 
-        public void RestoreClassification(int id)
+        public void UnarchiveClassification(int id)
         {
             Classification classification = this.GetClassification(id);
             classification.IsArchived = false;
             this.UpdateClassification(classification);
         }
 
-        public void RestoreUser(int id)
+        public void UnarchiveUser(int id)
         {
             User user = this.GetUserById(id);
             user.IsArchived = false;

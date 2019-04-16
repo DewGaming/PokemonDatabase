@@ -4,9 +4,12 @@
 }
 
 <div class="classificationTable">
-    <p>
-        <a class="btn btn-primary" href="@Url.Action("AddClassification", "Admin")" role="button">Add Classification</a>
-    </p>
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("AddClassification", "Owner")" role="button">Add Classification</a>
+        </p>
+    }
     <table class="table">
         <tr>
             <th scope="col">Classification</th>
@@ -19,7 +22,7 @@
                     @item.Name
                     @if(item.IsArchived == true)
                     {
-                        @("(Deleted)")
+                        @("(Archived)")
                     }
                 </td>
                 <td>
@@ -27,14 +30,19 @@
                     @if(!(Model.AllPokemon.Exists(x => x.Classification.Id == item.Id)))
                     {
                         @('|')
-                        @if(item.IsArchived == false)
+                        @if(!item.IsArchived)
                         {
-                            <a href="@(Url.Action("DeleteClassification", "Admin", new { id = item.Id }))">Delete</a>
+                            <a href="@(Url.Action("ArchiveClassification", "Admin", new { id = item.Id }))">Archive</a>
                         }
                         else
                         {
-                            <a href="@(Url.Action("RestoreClassification", "Admin", new { id = item.Id }))">Restore</a>
+                            <a href="@(Url.Action("UnarchiveClassification", "Admin", new { id = item.Id }))">Unarchive</a>
                         }
+                    }
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteClassification", "Owner", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>
