@@ -227,7 +227,7 @@ namespace Pokedex
                 .OrderBy(p => p.Id.Length)
                 .ThenBy(p => p.Id)
                 .Where(x => x.IsArchived == false)
-                .ToList();;
+                .ToList();
         }
 
         public List<Pokemon> GetAltForms(Pokemon pokemon)

@@ -66,6 +66,31 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [AllowAnonymous, HttpPost]
+        public IActionResult Results(string searchText)
+        {
+            searchText = searchText.ToLower();
+            if (searchText.Contains("type null"))
+            {
+                searchText = "Type: Null";
+            }
+
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            searchText = textInfo.ToTitleCase(searchText);
+
+            if (searchText.Substring(searchText.Length - 2, 2) == "-O")
+            {
+                searchText = searchText.Remove(searchText.Length - 2, 2) + "-o";
+            }
+
+            if (_dataService.GetPokemon(searchText) != null)
+            {
+                return RedirectToAction("Pokemon", "Home", new { Name = searchText.Replace(": ", "_").Replace(' ', '_').ToLower() });
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [AllowAnonymous, Route("{Name}")]
         public IActionResult Pokemon(string Name)
         {
@@ -137,7 +162,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [AllowAnonymous, Route("type-chart")]
+        [AllowAnonymous, Route("type_chart")]
         public IActionResult TypeChart()
         {
             TypeChartViewModel model = new TypeChartViewModel(){

@@ -84,6 +84,8 @@ namespace Pokedex.Controllers
                 User updateUser = CompareUsers(existingUser, registerViewModel);
 
                 existingUser.IsArchived = false;
+
+                existingUser.IsAdmin = false;
                 
                 _dataService.UpdateUser(updateUser);
 

@@ -1,0 +1,9 @@
+<ul class="navbar-nav search-bar">
+    <li>
+        @using (Html.BeginForm("Results", "Home"))
+        {
+            @Html.TextBox("SearchText")
+            <input class="search-button" type="submit" value="Search" />
+        }
+    </li>
+</ul>
