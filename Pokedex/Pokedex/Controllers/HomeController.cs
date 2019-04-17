@@ -74,6 +74,10 @@ namespace Pokedex.Controllers
             {
                 searchText = "Type: Null";
             }
+            else if (searchText.Contains("nidoran"))
+            {
+                searchText = searchText.Replace(' ', '_');
+            }
 
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             searchText = textInfo.ToTitleCase(searchText);

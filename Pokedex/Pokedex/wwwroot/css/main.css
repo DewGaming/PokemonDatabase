@@ -21,7 +21,6 @@ footer hr {
 
 .search-bar input {
   list-style: none;
-  min-width: 75px;
   padding: .25rem 0rem;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
@@ -30,6 +29,14 @@ footer hr {
   text-align: center;
   background-color: #fff;
   color: #404040;
+}
+
+.search-bar .search-button {
+  width: 75px;
+}
+
+.search-bar #SearchText {
+  width: 7.25rem;
 }
 
 .search-bar {
