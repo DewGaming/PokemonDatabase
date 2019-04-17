@@ -22,6 +22,12 @@
           <li class="nav-item">
             <a class="nav-link" href="@Url.Action("TeamGenerator", "Home")">Team Generator</a>
           </li>
+          @if(User.Identity.IsAuthenticated)
+          {
+            <li class="nav-item">
+              <a class="nav-link" href="@Url.Action("ShinyHuntingCounter", "Home")">Shiny Hunting Counter</a>
+            </li>
+          }
           @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
           {
             <li class="nav-item dropdown">
@@ -37,6 +43,7 @@
                 <a class="dropdown-item" href="@Url.Action("Types", "Admin")">Types</a>
                 <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
                 <a class="dropdown-item" href="@Url.Action("EggGroups", "Admin")">Egg Groups</a>
+                <a class="dropdown-item" href="@Url.Action("ShinyHuntingTechniques", "Admin")">Shiny Hunting Techniques</a>
               </div>
             </li>
           }

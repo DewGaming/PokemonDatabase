@@ -66,6 +66,12 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [AllowAnonymous, Route("shiny_hunting_counter")]
+        public IActionResult ShinyHuntingCounter()
+        {
+            return View();
+        }
+
         [AllowAnonymous, HttpPost]
         public IActionResult Results(string searchText)
         {

@@ -98,6 +98,17 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [Route("shiny_hunting_technique")]
+        public IActionResult ShinyHuntingTechniques()
+        {
+            UserShinyHuntingViewModel model = new UserShinyHuntingViewModel(){
+                AllShinyHunters = _dataService.GetShinyHunters(),
+                AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniquesWithArchive()
+            };
+
+            return View(model);
+        }
+
         [HttpGet, Route("edit_generation/{id}")]
         public IActionResult EditGeneration(string id)
         {

@@ -419,6 +419,16 @@ namespace Pokedex
             return _dataContext.Classifications.OrderBy(x => x.Name).ToList();
         }
 
+        public List<UserShinyHuntingTechniqueDetail> GetShinyHunters()
+        {
+            return _dataContext.UserShinyHuntingTechniqueDetails.Include(x => x.User).OrderBy(x => x.User.Username).ToList();
+        }
+
+        public List<ShinyHuntingTechnique> GetShinyHuntingTechniquesWithArchive()
+        {
+            return _dataContext.ShinyHuntingTechniques.OrderBy(x => x.Name).ToList();
+        }
+
         public List<CaptureRate> GetCaptureRates()
         {
             return _dataContext.CaptureRates.OrderBy(x => x.CatchRate).Where(x => x.IsArchived == false).ToList();
