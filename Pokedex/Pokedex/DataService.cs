@@ -676,5 +676,40 @@ namespace Pokedex
             user.IsArchived = false;
             this.UpdateUser(user);
         }
+
+        public void DeleteGeneration(string id)
+        {
+            Generation generation = GetGeneration(id);
+            _dataContext.Generations.Remove(generation);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteType(int id)
+        {
+            Type type = GetType(id);
+            _dataContext.Types.Remove(type);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteAbility(int id)
+        {
+            Ability ability = GetAbility(id);
+            _dataContext.Abilities.Remove(ability);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteEggGroup(int id)
+        {
+            EggGroup eggGroup = GetEggGroup(id);
+            _dataContext.EggGroups.Remove(eggGroup);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteClassification(int id)
+        {
+            Classification classification = GetClassification(id);
+            _dataContext.Classifications.Remove(classification);
+            _dataContext.SaveChanges();
+        }
     }
 }

@@ -23,7 +23,7 @@
                     @item.Name
                     @if(item.IsArchived == true)
                     {
-                        @("(Deleted)")
+                        @("(Archived)")
                     }
                 </td>
                 <td>@item.Description</td>
@@ -39,12 +39,12 @@
                         else
                         {
                             <a href="@(Url.Action("UnarchiveAbility", "Admin", new { id = item.Id }))">Unarchive</a>
+                            @if(User.IsInRole("Owner"))
+                            {
+                                @('|')
+                                <a href="@(Url.Action("DeleteAbility", "Owner", new { id = item.Id }))">Delete</a>
+                            }
                         }
-                    }
-                    @if(User.IsInRole("Owner"))
-                    {
-                        @('|')
-                        <a href="@(Url.Action("DeleteAbility", "Owner", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

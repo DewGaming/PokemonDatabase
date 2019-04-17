@@ -25,7 +25,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpGet, Route("edit-user/{id:int}")]
+        [HttpGet, Route("edit_user/{id:int}")]
         public IActionResult EditUser(int id)
         {
             User model = _dataService.GetUserById(id);
@@ -33,7 +33,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("edit-user/{id:int}")]
+        [HttpPost, Route("edit_user/{id:int}")]
         public IActionResult EditUser(User user)
         {
             if (!ModelState.IsValid)
@@ -48,7 +48,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Users");
         }
 
-        [HttpGet, Route("archive-user/{id:int}")]
+        [HttpGet, Route("archive_user/{id:int}")]
         public IActionResult ArchiveUser(int id)
         {
             User model = _dataService.GetUserById(id);
@@ -56,7 +56,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("archive-user/{id:int}")]
+        [HttpPost, Route("archive_user/{id:int}")]
         public IActionResult ArchiveUser(User user)
         {
             _dataService.ArchiveUser(user.Id);
@@ -64,7 +64,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Users");
         }
 
-        [HttpGet, Route("unarchive-user/{id:int}")]
+        [HttpGet, Route("unarchive_user/{id:int}")]
         public IActionResult UnarchiveUser(int id)
         {
             User model = _dataService.GetUserById(id);
@@ -72,7 +72,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, Route("unarchive-user/{id:int}")]
+        [HttpPost, Route("unarchive_user/{id:int}")]
         public IActionResult UnarchiveUser(User user)
         {
             _dataService.UnarchiveUser(user.Id);
@@ -80,7 +80,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Users");
         }
 
-        [HttpGet, Route("add-evolution")]
+        [HttpGet, Route("add_evolution")]
         public IActionResult AddEvolution()
         {
             EvolutionViewModel model = new EvolutionViewModel(){
@@ -89,7 +89,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-evolution")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_evolution")]
         public IActionResult AddEvolution(Evolution evolution)
         {
             if (!ModelState.IsValid)
@@ -102,16 +102,16 @@ namespace Pokedex.Controllers
 
             _dataService.AddEvolution(evolution);
 
-            return RedirectToAction("Pokemon");
+            return RedirectToAction("Pokemon", "Admin");
         }
 
-        [HttpGet, Route("add-generation")]
+        [HttpGet, Route("add_generation")]
         public IActionResult AddGeneration()
         {
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-generation")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_generation")]
         public IActionResult AddGeneration(Generation generation)
         {
             if (!ModelState.IsValid)
@@ -121,16 +121,96 @@ namespace Pokedex.Controllers
 
             _dataService.AddGeneration(generation);
 
-            return RedirectToAction("Generations");
+            return RedirectToAction("Generations", "Admin");
         }
 
-        [HttpGet, Route("add-type")]
+        [HttpGet, Route("delete_generation/{id}")]
+        public IActionResult DeleteGeneration(string id)
+        {
+            Generation model = _dataService.GetGeneration(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_generation/{id}")]
+        public IActionResult DeleteGeneration(Generation generation)
+        {
+            _dataService.DeleteGeneration(generation.Id);
+
+            return RedirectToAction("Generations", "Admin");
+        }
+
+        [HttpGet, Route("delete_type/{id:int}")]
+        public IActionResult DeleteType(int id)
+        {
+            Type model = _dataService.GetType(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_type/{id:int}")]
+        public IActionResult DeleteType(Type type)
+        {
+            _dataService.DeleteType(type.Id);
+
+            return RedirectToAction("Types", "Admin");
+        }
+
+        [HttpGet, Route("delete_ability/{id:int}")]
+        public IActionResult DeleteAbility(int id)
+        {
+            Ability model = _dataService.GetAbility(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_ability/{id:int}")]
+        public IActionResult DeleteAbility(Ability ability)
+        {
+            _dataService.DeleteAbility(ability.Id);
+
+            return RedirectToAction("Abilities", "Admin");
+        }
+
+        [HttpGet, Route("delete_egg_group/{id:int}")]
+        public IActionResult DeleteEggGroup(int id)
+        {
+            EggGroup model = _dataService.GetEggGroup(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_egg_group/{id:int}")]
+        public IActionResult DeleteEggGroup(EggGroup eggGroup)
+        {
+            _dataService.DeleteEggGroup(eggGroup.Id);
+
+            return RedirectToAction("EggGroups", "Admin");
+        }
+
+        [HttpGet, Route("delete_classification/{id:int}")]
+        public IActionResult DeleteClassification(int id)
+        {
+            Classification model = _dataService.GetClassification(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_classification/{id:int}")]
+        public IActionResult DeleteClassification(Classification classification)
+        {
+            _dataService.DeleteClassification(classification.Id);
+
+            return RedirectToAction("Classifications", "Admin");
+        }
+
+        [HttpGet, Route("add_type")]
         public IActionResult AddType()
         {
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-type")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_type")]
         public IActionResult AddType(Type type)
         {
             if (!ModelState.IsValid)
@@ -140,16 +220,16 @@ namespace Pokedex.Controllers
 
             _dataService.AddType(type);
 
-            return RedirectToAction("Types");
+            return RedirectToAction("Types", "Admin");
         }
 
-        [HttpGet, Route("add-egg-group")]
+        [HttpGet, Route("add_egg_group")]
         public IActionResult AddEggGroup()
         {
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-egg-group")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_egg_group")]
         public IActionResult AddEggGroup(EggGroup eggGroup)
         {
             if (!ModelState.IsValid)
@@ -159,16 +239,16 @@ namespace Pokedex.Controllers
 
             _dataService.AddEggGroup(eggGroup);
 
-            return RedirectToAction("EggGroups");
+            return RedirectToAction("EggGroups", "Admin");
         }
 
-        [HttpGet, Route("add-classification")]
+        [HttpGet, Route("add_classification")]
         public IActionResult AddClassification()
         {
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-classification")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_classification")]
         public IActionResult AddClassification(Classification classification)
         {
             if (!ModelState.IsValid)
@@ -178,16 +258,16 @@ namespace Pokedex.Controllers
 
             _dataService.AddClassification(classification);
 
-            return RedirectToAction("Classifications");
+            return RedirectToAction("Classifications", "Admin");
         }
 
-        [HttpGet, Route("add-ability")]
+        [HttpGet, Route("add_ability")]
         public IActionResult AddAbility()
         {
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-ability")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_ability")]
         public IActionResult AddAbility(Ability ability)
         {
             if (!ModelState.IsValid)
@@ -197,10 +277,10 @@ namespace Pokedex.Controllers
 
             _dataService.AddAbility(ability);
 
-            return RedirectToAction("Abilities");
+            return RedirectToAction("Abilities", "Admin");
         }
 
-        [HttpGet, Route("add-pokemon")]
+        [HttpGet, Route("add_pokemon")]
         public IActionResult AddPokemon()
         {
             BasePokemonViewModel model = new BasePokemonViewModel(){
@@ -216,7 +296,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-pokemon")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_pokemon")]
         public IActionResult AddPokemon(BasePokemonViewModel pokemon)
         {
             int pokedexNumber;
@@ -270,7 +350,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("AddTyping", "Admin", new { pokemonId = pokemon.Id });
         }
 
-        [HttpGet, Route("add-typing/{pokemonId}")]
+        [HttpGet, Route("add_typing/{pokemonId}")]
         public IActionResult AddTyping(string pokemonId)
         {
             PokemonTypingViewModel model = new PokemonTypingViewModel(){
@@ -281,7 +361,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-typing/{pokemonId}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_typing/{pokemonId}")]
         public IActionResult AddTyping(PokemonTypingViewModel typing)
         {
             if (!ModelState.IsValid)
@@ -299,7 +379,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("AddAbilities", "Admin", new { pokemonId = typing.PokemonId });
         }
 
-        [HttpGet, Route("add-abilities/{pokemonId}")]
+        [HttpGet, Route("add_abilities/{pokemonId}")]
         public IActionResult AddAbilities(string pokemonId)
         {
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
@@ -310,7 +390,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-abilities/{pokemonId}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_abilities/{pokemonId}")]
         public IActionResult AddAbilities(PokemonAbilitiesViewModel abilities)
         {
             if (!ModelState.IsValid)
@@ -328,7 +408,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("AddEggGroups", "Admin", new { pokemonId = abilities.PokemonId });
         }
 
-        [HttpGet, Route("add-egg-groups/{pokemonId}")]
+        [HttpGet, Route("add_egg_groups/{pokemonId}")]
         public IActionResult AddEggGroups(string pokemonId)
         {
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
@@ -339,7 +419,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-egg-groups/{pokemonId}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_egg_groups/{pokemonId}")]
         public IActionResult AddEggGroups(PokemonEggGroupsViewModel eggGroups)
         {
             if (!ModelState.IsValid)
@@ -357,7 +437,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("AddBaseStats", "Admin", new { pokemonId = eggGroups.PokemonId });
         }
 
-        [HttpGet, Route("add-base-stats/{pokemonId}")]
+        [HttpGet, Route("add_base_stats/{pokemonId}")]
         public IActionResult AddBaseStats(string pokemonId)
         {
             BaseStat model = new BaseStat(){
@@ -367,7 +447,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-base-stats/{pokemonId}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_base_stats/{pokemonId}")]
         public IActionResult AddBaseStats(BaseStat baseStat)
         {
             if (!ModelState.IsValid)
@@ -384,7 +464,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("AddEVYields", "Admin", new { pokemonId = baseStat.PokemonId });
         }
 
-        [HttpGet, Route("add-ev-yields/{pokemonId}")]
+        [HttpGet, Route("add_ev_yields/{pokemonId}")]
         public IActionResult AddEVYields(string pokemonId)
         {
             EVYield model = new EVYield(){
@@ -394,7 +474,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add-ev-yields/{pokemonId}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("add_ev_yields/{pokemonId}")]
         public IActionResult AddEVYields(EVYield evYield)
         {
             if (!ModelState.IsValid)

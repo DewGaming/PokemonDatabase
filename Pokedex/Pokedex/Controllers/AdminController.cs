@@ -76,7 +76,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [Route("egg-group")]
+        [Route("egg_group")]
         public IActionResult EggGroups()
         {
             EggGroupViewModel model = new EggGroupViewModel(){
@@ -98,7 +98,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpGet, Route("edit-generation/{id}")]
+        [HttpGet, Route("edit_generation/{id}")]
         public IActionResult EditGeneration(string id)
         {
             Generation model = _dataService.GetGeneration(id);
@@ -106,7 +106,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit-generation/{id}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_generation/{id}")]
         public IActionResult EditGeneration(Generation generation)
         {
             if (!ModelState.IsValid)
@@ -121,7 +121,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("edit-type/{id:int}")]
+        [HttpGet, Route("edit_type/{id:int}")]
         public IActionResult EditType(int id)
         {
             Type model = _dataService.GetType(id);
@@ -129,7 +129,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit-type/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_type/{id:int}")]
         public IActionResult EditType(Type type)
         {
             if (!ModelState.IsValid)
@@ -144,7 +144,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Types");
         }
 
-        [HttpGet, Route("edit-egg-group/{id:int}")]
+        [HttpGet, Route("edit_egg_group/{id:int}")]
         public IActionResult EditEggGroup(int id)
         {
             EggGroup model = _dataService.GetEggGroup(id);
@@ -152,7 +152,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit-egg-group/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_egg_group/{id:int}")]
         public IActionResult EditEggGroup(EggGroup eggGroup)
         {
             if (!ModelState.IsValid)
@@ -167,7 +167,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("EggGroups");
         }
 
-        [HttpGet, Route("edit-classification/{id:int}")]
+        [HttpGet, Route("edit_classification/{id:int}")]
         public IActionResult EditClassification(int id)
         {
             Classification model = _dataService.GetClassification(id);
@@ -175,7 +175,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit-classification/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_classification/{id:int}")]
         public IActionResult EditClassification(Classification classification)
         {
             if (!ModelState.IsValid)
@@ -190,7 +190,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("edit-ability/{id:int}")]
+        [HttpGet, Route("edit_ability/{id:int}")]
         public IActionResult EditAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
@@ -198,7 +198,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit-ability/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_ability/{id:int}")]
         public IActionResult EditAbility(Ability ability)
         {
             if (!ModelState.IsValid)
@@ -213,7 +213,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("archive-generation/{id}")]
+        [HttpGet, Route("archive_generation/{id}")]
         public IActionResult ArchiveGeneration(string id)
         {
             Generation model = _dataService.GetGeneration(id);
@@ -221,7 +221,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive-generation/{id}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_generation/{id}")]
         public IActionResult ArchiveGeneration(Generation generation)
         {
             _dataService.ArchiveGeneration(generation.Id);
@@ -229,7 +229,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("archive-type/{id:int}")]
+        [HttpGet, Route("archive_type/{id:int}")]
         public IActionResult ArchiveType(int id)
         {
             Type model = _dataService.GetType(id);
@@ -237,7 +237,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive-type/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_type/{id:int}")]
         public IActionResult ArchiveType(Type type)
         {
             _dataService.ArchiveType(type.Id);
@@ -245,7 +245,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Types");
         }
 
-        [HttpGet, Route("archive-egg-group/{id:int}")]
+        [HttpGet, Route("archive_egg_group/{id:int}")]
         public IActionResult ArchiveEggGroup(int id)
         {
             EggGroup model = _dataService.GetEggGroup(id);
@@ -253,7 +253,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive-egg-group/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_egg_group/{id:int}")]
         public IActionResult ArchiveEggGroup(EggGroup eggGroup)
         {
             _dataService.ArchiveEggGroup(eggGroup.Id);
@@ -261,7 +261,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("EggGroups");
         }
 
-        [HttpGet, Route("archive-classification/{id:int}")]
+        [HttpGet, Route("archive_classification/{id:int}")]
         public IActionResult ArchiveClassification(int id)
         {
             Classification model = _dataService.GetClassification(id);
@@ -269,7 +269,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive-classification/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_classification/{id:int}")]
         public IActionResult ArchiveClassification(Classification classification)
         {
             _dataService.ArchiveClassification(classification.Id);
@@ -277,7 +277,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("archive-ability/{id:int}")]
+        [HttpGet, Route("archive_ability/{id:int}")]
         public IActionResult ArchiveAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
@@ -285,7 +285,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive-ability/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_ability/{id:int}")]
         public IActionResult ArchiveAbility(Ability ability)
         {
             _dataService.ArchiveAbility(ability.Id);
@@ -293,7 +293,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("unarchive-generation/{id}")]
+        [HttpGet, Route("unarchive_generation/{id}")]
         public IActionResult UnarchiveGeneration(string id)
         {
             Generation model = _dataService.GetGeneration(id);
@@ -301,7 +301,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-generation/{id}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_generation/{id}")]
         public IActionResult UnarchiveGeneration(Generation generation)
         {
             _dataService.UnarchiveGeneration(generation.Id);
@@ -309,7 +309,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("unarchive-type/{id:int}")]
+        [HttpGet, Route("unarchive_type/{id:int}")]
         public IActionResult UnarchiveType(int id)
         {
             Type model = _dataService.GetType(id);
@@ -317,7 +317,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-type/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_type/{id:int}")]
         public IActionResult UnarchiveType(Type type)
         {
             _dataService.UnarchiveType(type.Id);
@@ -325,7 +325,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Types");
         }
 
-        [HttpGet, Route("unarchive-classification/{id:int}")]
+        [HttpGet, Route("unarchive_classification/{id:int}")]
         public IActionResult UnarchiveClassification(int id)
         {
             Classification model = _dataService.GetClassification(id);
@@ -333,7 +333,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-classification/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_classification/{id:int}")]
         public IActionResult UnarchiveType(Classification classification)
         {
             _dataService.UnarchiveClassification(classification.Id);
@@ -341,7 +341,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("unarchive-ability/{id:int}")]
+        [HttpGet, Route("unarchive_ability/{id:int}")]
         public IActionResult UnarchiveAbility(int id)
         {
             Ability model = _dataService.GetAbility(id);
@@ -349,7 +349,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-ability/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_ability/{id:int}")]
         public IActionResult UnarchiveAbility(Ability ability)
         {
             _dataService.UnarchiveAbility(ability.Id);
@@ -357,7 +357,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("unarchive-egg-group/{id:int}")]
+        [HttpGet, Route("unarchive_egg_group/{id:int}")]
         public IActionResult UnarchiveEggGroup(int id)
         {
             EggGroup model = _dataService.GetEggGroup(id);
@@ -365,7 +365,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive-egg-group/{id:int}")]
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_egg_group/{id:int}")]
         public IActionResult UnarchiveEggGroup(EggGroup eggGroup)
         {
             _dataService.UnarchiveEggGroup(eggGroup.Id);

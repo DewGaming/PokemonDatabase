@@ -193,7 +193,7 @@ namespace Pokedex.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet, Route("access-denied")]
+        [HttpGet, Route("access_denied")]
         public IActionResult AccessDenied()
         {
             return RedirectToAction("Index", "Home");

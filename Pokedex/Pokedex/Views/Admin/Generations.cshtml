@@ -41,12 +41,12 @@
                         else
                         {
                             <a href="@(Url.Action("UnarchiveGeneration", "Admin", new { id = item.Id }))">Unarchive</a>
+                            @if(User.IsInRole("Owner"))
+                            {
+                                @('|')
+                                <a href="@(Url.Action("DeleteGeneration", "Owner", new { id = item.Id }))">Delete</a>
+                            }
                         }
-                    }
-                    @if(User.IsInRole("Owner"))
-                    {
-                        @('|')
-                        <a href="@(Url.Action("DeleteGeneration", "Owner", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>
