@@ -1,0 +1,53 @@
+@model Pokedex.Models.AbilityViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="abilityTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("AddAbility", "Owner")" role="button">Add Ability</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllAbilities)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Deleted)")
+                    }
+                </td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="@(Url.Action("EditAbility", "Admin", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id)))
+                    {
+                        @('|')
+                        @if(!item.IsArchived)
+                        {
+                            <a href="@(Url.Action("ArchiveAbility", "Admin", new { id = item.Id }))">Archive</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("UnarchiveAbility", "Admin", new { id = item.Id }))">Unarchive</a>
+                        }
+                    }
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteAbility", "Owner", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

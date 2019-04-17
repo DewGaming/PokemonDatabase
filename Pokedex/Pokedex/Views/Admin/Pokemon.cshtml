@@ -1,0 +1,50 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Pokemon>;
+@{
+    Layout = "_Layout";
+}
+
+<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+<link href="/css/maxWidth1220.css" rel="stylesheet" type="text/css" />
+<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
+<script src="/js/tabContent.js"></script>
+@if(User.IsInRole("Owner"))
+{
+    <p class="additionButtons">
+        <a class="btn btn-primary" href="@Url.Action("AddPokemon", "Owner")" role="button">Add Pokemon</a>
+        <a class="btn btn-primary" href="@Url.Action("AddEvolution", "Owner")" role="button">Add Evolution</a>
+    </p>
+}
+<div class="tab-list">
+    @foreach(var id in Model.Select(x => x.Generation.Id).Distinct().OrderBy(x => x))
+    {
+        @if (id.IndexOf('-') == -1)
+        {
+            <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
+        }
+    }
+</div>
+@foreach(var gen in Model.Select(x => x.Generation.Id).Distinct())
+{
+    @if(@gen.IndexOf('-') == -1)
+    {
+        <div class="tabcontent generation" id="Generation @gen">
+            <table class="table">
+                <tr>
+                    <th scope="col">Pokedex Number</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var item in Model.Where(x => (x.Generation.Id == @gen) || (x.Generation.Id.IndexOf('-') > -1 && x.Generation.Id.Substring(0, x.Generation.Id.IndexOf('-')) == @gen)))
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Name.Replace('_', ' ')</td>
+                        <td>
+
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+}

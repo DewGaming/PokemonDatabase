@@ -1,0 +1,53 @@
+@model IEnumerable<Pokedex.DataAccess.Models.User>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="userTable">
+    @if(Model.Where(x => x.IsOwner == false).Count() > 0)
+    {
+        <table class="table">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email Address</th>
+                <th scope="col">Is Admin</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @foreach(var item in Model.Where(x => x.IsOwner == false))
+            {
+                <tr>
+                    <td>
+                        @if(!item.IsArchived)
+                        {
+                            @item.FirstName@(' ')@item.LastName
+                        }
+                        else
+                        {
+                            @item.FirstName@(' ')@item.LastName@(" (Archived)")
+                        }
+                    </td>
+                    <td>@item.Username</td>
+                    <td>@item.EmailAddress</td>
+                    <td>@item.IsAdmin</td>
+                    <td>
+                        <a href="@Url.Action("EditUser", "Owner", new { id = item.Id })">Edit</a>
+                        |
+                        @if(item.IsArchived == false)
+                        {
+                            <a href="@Url.Action("ArchiveUser", "Owner", new { id = item.Id })">Archive</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("UnarchiveUser", "Owner", new { id = item.Id })">Unarchive</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div class="noUsers">There are no users at all!</div>
+    }
+</div>

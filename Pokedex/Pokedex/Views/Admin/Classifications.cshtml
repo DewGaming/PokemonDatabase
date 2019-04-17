@@ -1,0 +1,51 @@
+@model Pokedex.Models.ClassificationViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="classificationTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("AddClassification", "Owner")" role="button">Add Classification</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Classification</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllClassifications)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Archived)")
+                    }
+                </td>
+                <td>
+                    <a href="@(Url.Action("EditEggGroup", "Admin", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.Classification.Id == item.Id)))
+                    {
+                        @('|')
+                        @if(!item.IsArchived)
+                        {
+                            <a href="@(Url.Action("ArchiveClassification", "Admin", new { id = item.Id }))">Archive</a>
+                        }
+                        else
+                        {
+                            <a href="@(Url.Action("UnarchiveClassification", "Admin", new { id = item.Id }))">Unarchive</a>
+                        }
+                    }
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("DeleteClassification", "Owner", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

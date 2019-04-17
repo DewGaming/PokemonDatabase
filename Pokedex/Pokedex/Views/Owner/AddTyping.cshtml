@@ -1,0 +1,36 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonTypingViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Add Typing</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.PokemonId)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PrimaryTypeId)
+            @Html.DropDownListFor(x => x.PrimaryTypeId, new SelectList(Model.AllTypes, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PrimaryTypeId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.SecondaryTypeId)
+            @Html.DropDownListFor(x => x.SecondaryTypeId, new SelectList(Model.AllTypes, "Id", "Name"), string.Empty, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.SecondaryTypeId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

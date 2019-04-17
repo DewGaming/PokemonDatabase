@@ -1,0 +1,36 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonEggGroupsViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Add Egg Groups</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.PokemonId)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PrimaryEggGroupId)
+            @Html.DropDownListFor(x => x.PrimaryEggGroupId, new SelectList(Model.AllEggGroups, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PrimaryEggGroupId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.SecondaryEggGroupId)
+            @Html.DropDownListFor(x => x.SecondaryEggGroupId, new SelectList(Model.AllEggGroups, "Id", "Name"), string.Empty, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.SecondaryEggGroupId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

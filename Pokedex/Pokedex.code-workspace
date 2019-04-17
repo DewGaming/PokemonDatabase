@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "Pokedex"
+		},
+		{
+			"path": "Pokedex.DataAccess"
+		}
+	],
+	"settings": {}
+}

@@ -1,0 +1,47 @@
+@model IEnumerable<Pokedex.DataAccess.Models.PokemonTypeDetail>;
+@{
+    Layout = "_Layout";
+}
+
+<link href="/css/maxWidth1220.css" rel="stylesheet" type="text/css" />
+<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
+<script src="/js/tabContent.js"></script>
+<div class="tab-list">
+    @foreach(var id in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+    {
+        @if (id.IndexOf('-') == -1)
+        {
+            <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
+        }
+    }
+</div>
+@foreach(var gen in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+{
+    @if(@gen.IndexOf('-') == -1)
+    {
+        <div class="tabcontent generation" id="Generation @gen">
+            <table class="table">
+                <tr>
+                    <th scope="col">Pokedex Number</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Typing</th>
+                </tr>
+                @foreach(var item in Model.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
+                {
+                    <tr>
+                        <td>@item.Pokemon.Id</td>
+                        <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
+                        <td>
+                            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                            @if(@item.SecondaryType != null)
+                            {
+                                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+}
