@@ -29,6 +29,34 @@ namespace Pokedex.Controllers
             _dataService = new DataService(dataContext);
         }
 
+        private User CompareUsers(User existingUser, RegisterViewModel newUser)
+        {
+            PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
+            string passwordHash = passwordHasher.HashPassword(null, newUser.Password);
+            if(existingUser.FirstName != newUser.FirstName)
+            {
+                existingUser.FirstName = newUser.FirstName;
+            }
+            if(existingUser.LastName != newUser.LastName)
+            {
+                existingUser.LastName = newUser.LastName;
+            }
+            if(existingUser.Username != newUser.Username)
+            {
+                existingUser.Username = newUser.Username;
+            }
+            if(existingUser.EmailAddress != newUser.EmailAddress)
+            {
+                existingUser.EmailAddress = newUser.EmailAddress;
+            }
+            if(existingUser.PasswordHash != passwordHash)
+            {
+                existingUser.PasswordHash = passwordHash;
+            }
+
+            return existingUser;
+        }
+
         [AllowAnonymous, HttpGet, Route("signup")]
         public IActionResult Register()
         {
@@ -44,16 +72,26 @@ namespace Pokedex.Controllers
             }
 
             User existingUser = _dataService.GetUserWithUsername(registerViewModel.Username);
-            if (existingUser != null) 
+            if (existingUser != null && !existingUser.IsArchived) 
             {
                 // Set email address already in use error message.
                 ModelState.AddModelError("Error", "An account already exists with that username.");
 
                 return View();
             }
+            else if (existingUser != null && existingUser.IsArchived)
+            {
+                User updateUser = CompareUsers(existingUser, registerViewModel);
+
+                existingUser.IsArchived = false;
+                
+                _dataService.UpdateUser(updateUser);
+
+                return RedirectToAction("Login", "Account");
+            }
 
             existingUser = _dataService.GetUserWithEmail(registerViewModel.EmailAddress);
-            if (existingUser != null) 
+            if (existingUser != null && !existingUser.IsArchived) 
             {
                 // Set email address already in use error message.
                 ModelState.AddModelError("Error", "An account already exists with that email address.");
@@ -93,10 +131,10 @@ namespace Pokedex.Controllers
 
             User user = _dataService.GetUserWithUsername(loginViewModel.Username);
 
-            if (user == null) 
+            if (user == null || user.IsArchived) 
             {
-                // Set email address not registered error message.
-                ModelState.AddModelError("Error", "An account does not exist with that email address.");
+                // Set username not registered error message.
+                ModelState.AddModelError("Error", "An account does not exist with that username.");
             
                 return View();
             }
