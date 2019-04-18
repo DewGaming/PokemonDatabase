@@ -43,7 +43,7 @@ namespace Pokedex
                 .AddCookie(options => {
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
-                    options.AccessDeniedPath = "/access-denied";
+                    options.AccessDeniedPath = "/access_denied";
                     options.Cookie.Name = "UserAuth";
                 });
         }
