@@ -3,22 +3,39 @@
 @if(User.Identity.IsAuthenticated)
 {
     <ul class="nav navbar-nav navbar-right">
-        <span class="navbar-text">
-            Hello, @User.Identity.Name
-        </span>
-        <li>
-            <a class="nav-link" href="@Url.Action("Logout", "Account")">Logout</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hello, @User.Identity.Name</a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
+                {
+                    <a class="dropdown-item dropdown-toggle" href="" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                    <div class="dropdown-menu user-menu" aria-labelledby="adminDropdown">
+                        @if(User.IsInRole("Owner"))
+                        {
+                            <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
+                        }
+                        <a class="dropdown-item" href="@Url.Action("Generations", "Admin")">Generations</a>
+                        <a class="dropdown-item" href="@Url.Action("Pokemon", "Admin")">Pokemon</a>
+                        <a class="dropdown-item" href="@Url.Action("Classifications", "Admin")">Classifications</a>
+                        <a class="dropdown-item" href="@Url.Action("Types", "Admin")">Types</a>
+                        <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
+                        <a class="dropdown-item" href="@Url.Action("EggGroups", "Admin")">Egg Groups</a>
+                    </div>
+                }
+                <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
+            </div>
         </li>
     </ul>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>
-            <a class="nav-link" href="@Url.Action("Register", "Account")">Register</a>
-        </li>
-        <li>
-            <a class="nav-link" href="@Url.Action("Login", "Account")">Login</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="loginDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Login</a>
+            <div class="dropdown-menu" aria-labelledby="loginDropdown">
+                <a class="dropdown-item" href="@Url.Action("Login", "Account")">Login</a>
+                <a class="dropdown-item" href="@Url.Action("Register", "Account")">Sign Up</a>
+            </div>
         </li>
     </ul>
 }
