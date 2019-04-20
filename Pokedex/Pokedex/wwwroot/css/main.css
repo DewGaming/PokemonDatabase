@@ -19,6 +19,18 @@ footer hr {
   margin: 0;
 }
 
+.dropdown-menu {
+  min-width: auto;
+}
+
+.collapse-button {
+  margin: 5px 0;
+}
+
+.collapse-button:focus {
+  outline: none;
+}
+
 .search-bar input {
   list-style: none;
   padding: .25rem 0rem;
@@ -35,13 +47,9 @@ footer hr {
   width: 75px;
 }
 
-.search-bar #SearchText {
-  width: 7.25rem;
-}
-
 .search-bar {
   height: 30px;
-  margin-right: 15px;
+  margin: 15px 0 10px 0;
 }
 
 .fixed-nav {
@@ -54,7 +62,7 @@ footer hr {
 
 main {
   padding: 0 5px !important;
-  margin: 70px 0 30px;
+  margin: 80px 0 30px;
 }
 
 .shadowed img {
@@ -231,6 +239,12 @@ a {
   }
   .Table3x2, .Table1x6 {
     display: none;
+  }
+  .search-bar {
+    margin: 0;
+  }
+  .main {
+    margin-top: 70px;
   }
 }
 

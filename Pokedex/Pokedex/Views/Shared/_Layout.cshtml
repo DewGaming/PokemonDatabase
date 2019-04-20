@@ -7,49 +7,23 @@
 </head>
 <body>
     <nav class="fixed-nav navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokedex</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler collapse-button" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
+        @await Html.PartialAsync("_LoginPartial")
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("AllPokemon", "Home")">Pokemon</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="pokedexDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pokedex</a>
+            <div class="dropdown-menu" aria-labelledby="pokedexDropdown">
+              <a class="dropdown-item" href="@Url.Action("Index", "Home")">Home</a>
+              <a class="dropdown-item" href="@Url.Action("AllPokemon", "Home")">Pokemon</a>
+              <a class="dropdown-item" href="@Url.Action("TypeChart", "Home")">Type Chart</a>
+              <a class="dropdown-item" href="@Url.Action("TeamGenerator", "Home")">Team Generator</a>
+            </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("TypeChart", "Home")">Type Chart</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("TeamGenerator", "Home")">Team Generator</a>
-          </li>
-          @if(User.Identity.IsAuthenticated)
-          {
-            <li class="nav-item">
-              <a class="nav-link" href="@Url.Action("ShinyHuntingCounter", "Home")">Shiny Hunting Counter</a>
-            </li>
-          }
-          @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
-          {
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown01">
-                @if(User.IsInRole("Owner"))
-                {
-                  <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
-                }
-                <a class="dropdown-item" href="@Url.Action("Generations", "Admin")">Generations</a>
-                <a class="dropdown-item" href="@Url.Action("Pokemon", "Admin")">Pokemon</a>
-                <a class="dropdown-item" href="@Url.Action("Classifications", "Admin")">Classifications</a>
-                <a class="dropdown-item" href="@Url.Action("Types", "Admin")">Types</a>
-                <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
-                <a class="dropdown-item" href="@Url.Action("EggGroups", "Admin")">Egg Groups</a>
-                <a class="dropdown-item" href="@Url.Action("ShinyHuntingTechniques", "Admin")">Shiny Hunting Techniques</a>
-              </div>
-            </li>
-          }
         </ul>
         @await Html.PartialAsync("_SearchBarPartial")
-        @await Html.PartialAsync("_LoginPartial")
       </div>
     </nav>
 
