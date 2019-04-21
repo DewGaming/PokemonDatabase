@@ -6,11 +6,9 @@ namespace Pokedex.DataAccess.Models
     public class ShinyHuntingTechnique   
     {
         public int Id { get; set; }
-        [Required]
+        [Display(Name = "Name of Technique"), Required]
         public string Name { get; set; }
-        [StringLength(5), Required]
-        public string Abbreviation { get; set; }
-        [Required]
+        [Display(Name = "Description of Technique"), Required]
         public string Technique { get; set; }
         [Required]
         public bool IsArchived { get; set; }
