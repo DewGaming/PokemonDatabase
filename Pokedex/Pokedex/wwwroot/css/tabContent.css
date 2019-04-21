@@ -42,11 +42,6 @@
   padding: 6px 12px;
 }
 
-.tabcontent.generation th {
-  padding-bottom: 0px;
-  text-align: left;
-}
-
 .tabcontent.active {
   display: flex;
   flex-wrap: wrap;
@@ -64,6 +59,11 @@
   border-style: solid;
   border-color: #dbdbdb;
   padding: 4px 10px;
+}
+
+.tabcontent.generation th, .huntInProgressTable th, .huntCompleteTable th {
+  padding-bottom: 0px;
+  text-align: left !important;
 }
 
 @media (max-width: 899px) {

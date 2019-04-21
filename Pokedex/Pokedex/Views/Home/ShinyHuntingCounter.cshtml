@@ -1,5 +1,78 @@
+@model IEnumerable<Pokedex.DataAccess.Models.UserShinyHuntingTechniqueDetail>
 @{
     Layout = "_Layout";
 }
 
-<p>Feature coming soon!</p>
+<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+<script src="/js/tabContent.js"></script>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("BeginShinyHunt", "Home")" role="button">Begin Shiny Hunt</a>
+</p>
+<div class="tab-list">
+    <button class="tab active" onclick="openPage(event, 'huntsInProgress')">Hunts In Progress</button>
+    <button class="tab" onclick="openPage(event, 'huntsCompleted')">Hunts Completed</button>
+</div>
+<div class="tabcontent active" id="huntsInProgress">
+    <table class="table huntInProgressTable">
+        <tbody>
+            <tr>
+                <th scope="col">Pokemon</th>
+                <th scope="col">Game(s)</th>
+                <th scope="col">Technique</th>
+                <th scope="col">Shiny Charm Used</th>
+                <th scope="col">Number of Attempts</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @foreach(var hunts in Model.Where(x => !x.IsPokemonCaught))
+            {
+                <tr>
+                    <td>@hunts.Pokemon.Name</td>
+                    <td>@hunts.Generation.Games</td>
+                    <td>@hunts.ShinyHuntingTechnique.Name</td>
+                    <td>@(@hunts.HasShinyCharm ? "True" : "False")</td>
+                    <td>@hunts.ShinyAttemptCount</td>
+                    <td>
+                        <a href="@Url.Action("ContinueHunt", "Home")">
+                            @if (hunts.ShinyAttemptCount == 0)
+                            {
+                                @("Begin Hunt");
+                            }
+                            else
+                            {
+                                @("Continue Hunt");
+                            }
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="tabcontent" id="huntsCompleted">
+    <table class="table huntCompleteTable">
+        <tbody>
+            <tr>
+                <th scope="col">Pokemon</th>
+                <th scope="col">Game(s)</th>
+                <th scope="col">Technique</th>
+                <th scope="col">Shiny Charm Used</th>
+                <th scope="col">Number of Attempts</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @foreach(var hunts in Model.Where(x => x.IsPokemonCaught))
+            {
+                <tr>
+                    <td>@hunts.Pokemon.Name</td>
+                    <td>@hunts.Generation.Games</td>
+                    <td>@hunts.ShinyHuntingTechnique.Name</td>
+                    <td>@(@hunts.HasShinyCharm ? "True" : "False")</td>
+                    <td>@hunts.ShinyAttemptCount</td>
+                    <td>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

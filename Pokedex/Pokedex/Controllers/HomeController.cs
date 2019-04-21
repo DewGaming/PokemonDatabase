@@ -11,6 +11,7 @@ using Pokedex.Models;
 using Pokedex.DataAccess.Models;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Pokedex.Controllers
 {
@@ -66,10 +67,32 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [AllowAnonymous, Route("shiny_hunting_counter")]
+        [Authorize, Route("shiny_hunting_counter")]
         public IActionResult ShinyHuntingCounter()
         {
-            return View();
+            List<UserShinyHuntingTechniqueDetail> model = _dataService.GetShinyHunter(User.Identity.Name);
+            return View(model);
+        }
+
+        [HttpGet, Route("begin_shiny_hunt")]
+        public IActionResult BeginShinyHunt()
+        {
+            BeginShinyHuntViewModel model = new BeginShinyHuntViewModel(){
+                UserId = _dataService.GetUserWithUsername(User.Identity.Name).Id,
+                AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniques(),
+                AllPokemon = _dataService.GetAllPokemon(),
+                AllGenerations = _dataService.GetGenerations()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("begin_shiny_hunt")]
+        public IActionResult BeginShinyHunt(UserShinyHuntingTechniqueDetail shinyHunt)
+        {
+            _dataService.AddShinyHunt(shinyHunt);
+
+            return RedirectToAction("ShinyHuntingCounter", "Home");
         }
 
         [AllowAnonymous, HttpPost]
