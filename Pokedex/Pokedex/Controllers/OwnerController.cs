@@ -105,6 +105,25 @@ namespace Pokedex.Controllers
             return RedirectToAction("Pokemon", "Admin");
         }
 
+        [HttpGet, Route("add_shiny_hunting_technique")]
+        public IActionResult AddShinyHuntingTechnique()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("add_shiny_hunting_technique")]
+        public IActionResult AddShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            _dataService.AddShinyHuntingTechnique(shinyHuntingTechnique);
+
+            return RedirectToAction("ShinyHuntingTechniques", "Admin");
+        }
+
         [HttpGet, Route("add_generation")]
         public IActionResult AddGeneration()
         {
@@ -154,6 +173,22 @@ namespace Pokedex.Controllers
             _dataService.DeleteType(type.Id);
 
             return RedirectToAction("Types", "Admin");
+        }
+
+        [HttpGet, Route("delete_shiny_hunting_technique/{id:int}")]
+        public IActionResult DeleteShinyHuntingTechnique(int id)
+        {
+            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_shiny_hunting_technique/{id:int}")]
+        public IActionResult DeleteShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
+        {
+            _dataService.DeleteShinyHuntingTechnique(shinyHuntingTechnique.Id);
+
+            return RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
 
         [HttpGet, Route("delete_ability/{id:int}")]
