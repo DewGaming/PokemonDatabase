@@ -7,16 +7,16 @@
 </head>
 <body>
     <nav class="fixed-nav navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokedex</a>
       <button class="navbar-toggler collapse-button" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        @await Html.PartialAsync("_LoginPartial")
         <ul class="navbar-nav mr-auto">
+          @await Html.PartialAsync("_LoginPartial")
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="" id="pokedexDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pokedex</a>
             <div class="dropdown-menu" aria-labelledby="pokedexDropdown">
-              <a class="dropdown-item" href="@Url.Action("Index", "Home")">Home</a>
               <a class="dropdown-item" href="@Url.Action("AllPokemon", "Home")">Pokemon</a>
               <a class="dropdown-item" href="@Url.Action("TypeChart", "Home")">Type Chart</a>
               <a class="dropdown-item" href="@Url.Action("TeamGenerator", "Home")">Team Generator</a>

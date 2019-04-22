@@ -191,6 +191,22 @@ namespace Pokedex.Controllers
             return RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
 
+        [HttpGet, Route("delete_shiny_hunt/{id:int}")]
+        public IActionResult DeleteShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_shiny_hunt/{id:int}")]
+        public IActionResult DeleteShinyHunt(ShinyHunt shinyHunt)
+        {
+            _dataService.DeleteShinyHunt(shinyHunt.Id);
+
+            return RedirectToAction("ShinyHunts", "Admin");
+        }
+
         [HttpGet, Route("delete_ability/{id:int}")]
         public IActionResult DeleteAbility(int id)
         {
@@ -205,6 +221,22 @@ namespace Pokedex.Controllers
             _dataService.DeleteAbility(ability.Id);
 
             return RedirectToAction("Abilities", "Admin");
+        }
+
+        [HttpGet, Route("delete_user/{id:int}")]
+        public IActionResult DeleteUser(int id)
+        {
+            User model = _dataService.GetUserById(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("delete_user/{id:int}")]
+        public IActionResult DeleteUser(User user)
+        {
+            _dataService.DeleteUser(user.Id);
+
+            return RedirectToAction("Users", "Owner");
         }
 
         [HttpGet, Route("delete_egg_group/{id:int}")]

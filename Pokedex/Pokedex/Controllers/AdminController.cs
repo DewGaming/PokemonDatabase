@@ -109,6 +109,14 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [Route("shiny_hunt")]
+        public IActionResult ShinyHunts()
+        {
+            List<ShinyHunt> model = _dataService.GetShinyHuntersWithArchive();
+
+            return View(model);
+        }
+
         [HttpGet, Route("edit_generation/{id}")]
         public IActionResult EditGeneration(string id)
         {
@@ -224,6 +232,29 @@ namespace Pokedex.Controllers
             return RedirectToAction("Classifications");
         }
 
+        [HttpGet, Route("edit_shiny_hunt/{id:int}")]
+        public IActionResult EditShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_shiny_hunt/{id:int}")]
+        public IActionResult EditShinyHunt(ShinyHunt shinyHunt)
+        {
+            if (!ModelState.IsValid)
+            {
+                ShinyHunt model = _dataService.GetShinyHunt(shinyHunt.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateShinyHunt(shinyHunt);
+
+            return RedirectToAction("ShinyHunts");
+        }
+
         [HttpGet, Route("edit_ability/{id:int}")]
         public IActionResult EditAbility(int id)
         {
@@ -277,6 +308,22 @@ namespace Pokedex.Controllers
             _dataService.ArchiveType(type.Id);
 
             return RedirectToAction("Types");
+        }
+
+        [HttpGet, Route("archive_shiny_hunt/{id:int}")]
+        public IActionResult ArchiveShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_shiny_hunt/{id:int}")]
+        public IActionResult ArchiveShinyHunt(Type type)
+        {
+            _dataService.ArchiveShinyHunt(type.Id);
+
+            return RedirectToAction("ShinyHunts");
         }
 
         [HttpGet, Route("archive_egg_group/{id:int}")]
@@ -373,6 +420,22 @@ namespace Pokedex.Controllers
             _dataService.UnarchiveType(type.Id);
 
             return RedirectToAction("Types");
+        }
+
+        [HttpGet, Route("unarchive_shiny_hunt/{id:int}")]
+        public IActionResult UnarchiveShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_shiny_hunt/{id:int}")]
+        public IActionResult UnarchiveShinyHunt(ShinyHunt shinyHunt)
+        {
+            _dataService.UnarchiveShinyHunt(shinyHunt.Id);
+
+            return RedirectToAction("ShinyHunts");
         }
 
         [HttpGet, Route("unarchive_classification/{id:int}")]

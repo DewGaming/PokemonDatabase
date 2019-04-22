@@ -429,6 +429,11 @@ namespace Pokedex
             return _dataContext.Classifications.OrderBy(x => x.Name).ToList();
         }
 
+        public ShinyHunt GetShinyHunt(int id)
+        {
+            return _dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).ToList().Find(x => x.Id == id);
+        }
+
         public List<ShinyHunt> GetShinyHunter(string username)
         {
             return _dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).Where(x => x.User.Username == username && !x.IsArchived).OrderBy(x => x.User.Username).ToList();
@@ -437,6 +442,11 @@ namespace Pokedex
         public List<ShinyHunt> GetShinyHunters()
         {
             return _dataContext.ShinyHunts.Include(x => x.User).Where(x => !x.IsArchived).OrderBy(x => x.User.Username).ToList();
+        }
+
+        public List<ShinyHunt> GetShinyHuntersWithArchive()
+        {
+            return _dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.ShinyHuntingTechnique).Include(x => x.Generation).OrderBy(x => x.User.Username).ToList();
         }
 
         public List<ShinyHuntingTechnique> GetShinyHuntingTechniquesWithArchive()
@@ -482,6 +492,11 @@ namespace Pokedex
         public Generation GetGeneration(string id)
         {
             return _dataContext.Generations.ToList().Find(x => x.Id == id);
+        }
+
+        public Generation GetGenerationByPokemon(string id)
+        {
+            return GetGeneration(GetPokemonById(id).GenerationId);
         }
 
         public User GetUserWithUsername(string username)
@@ -600,6 +615,12 @@ namespace Pokedex
             _dataContext.SaveChanges();
         }
 
+        public void UpdateShinyHunt(ShinyHunt shinyHunt)
+        {
+            _dataContext.ShinyHunts.Update(shinyHunt);
+            _dataContext.SaveChanges();
+        }
+
         public void UpdateGeneration(Generation generation)
         {
             _dataContext.Generations.Update(generation);
@@ -641,6 +662,13 @@ namespace Pokedex
             User user = this.GetUserById(id);
             user.IsArchived = true;
             this.UpdateUser(user);
+        }
+
+        public void ArchiveShinyHunt(int id)
+        {
+            ShinyHunt shinyHunt = this.GetShinyHunt(id);
+            shinyHunt.IsArchived = true;
+            this.UpdateShinyHunt(shinyHunt);
         }
 
         public void ArchiveGeneration(string id)
@@ -699,6 +727,13 @@ namespace Pokedex
             this.UpdateType(type);
         }
 
+        public void UnarchiveShinyHunt(int id)
+        {
+            ShinyHunt shinyHunt = this.GetShinyHunt(id);
+            shinyHunt.IsArchived = false;
+            this.UpdateShinyHunt(shinyHunt);
+        }
+
         public void UnarchiveAbility(int id)
         {
             Ability ability = this.GetAbility(id);
@@ -755,6 +790,13 @@ namespace Pokedex
             _dataContext.SaveChanges();
         }
 
+        public void DeleteUser(int id)
+        {
+            User user = GetUserById(id);
+            _dataContext.Users.Remove(user);
+            _dataContext.SaveChanges();
+        }
+
         public void DeleteEggGroup(int id)
         {
             EggGroup eggGroup = GetEggGroup(id);
@@ -773,6 +815,13 @@ namespace Pokedex
         {
             ShinyHuntingTechnique shinyHuntingTechnique = GetShinyHuntingTechnique(id);
             _dataContext.ShinyHuntingTechniques.Remove(shinyHuntingTechnique);
+            _dataContext.SaveChanges();
+        }
+
+        public void DeleteShinyHunt(int id)
+        {
+            ShinyHunt shinyHunt = GetShinyHunt(id);
+            _dataContext.ShinyHunts.Remove(shinyHunt);
             _dataContext.SaveChanges();
         }
     }

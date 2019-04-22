@@ -61,7 +61,7 @@
   padding: 4px 10px;
 }
 
-.tabcontent.generation th, .huntInProgressTable th, .huntCompleteTable th {
+.tabcontent.generation th, .pokemonHunt th {
   padding-bottom: 0px;
   text-align: left !important;
 }

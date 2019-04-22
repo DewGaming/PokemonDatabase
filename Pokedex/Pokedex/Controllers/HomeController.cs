@@ -74,6 +74,14 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [Route("shiny_hunt/{id:int}")]
+        public IActionResult ContinueHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
         [HttpGet, Route("begin_shiny_hunt")]
         public IActionResult BeginShinyHunt()
         {
@@ -90,9 +98,37 @@ namespace Pokedex.Controllers
         [HttpPost, ValidateAntiForgeryToken, Route("begin_shiny_hunt")]
         public IActionResult BeginShinyHunt(ShinyHunt shinyHunt)
         {
+            List<Generation> generations = _dataService.GetGenerations().OrderBy(p => p.Id).ToList();
+            if(generations.IndexOf(_dataService.GetGeneration(shinyHunt.GenerationId)) < generations.IndexOf(_dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
+            {
+                BeginShinyHuntViewModel model = new BeginShinyHuntViewModel(){
+                    UserId = _dataService.GetUserWithUsername(User.Identity.Name).Id,
+                    AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniques(),
+                    AllPokemon = _dataService.GetAllPokemon(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                ModelState.AddModelError("GenerationId", "Pokemon does not exist in this generation");
+
+                return View(model);
+            }
+
             _dataService.AddShinyHunt(shinyHunt);
 
             return RedirectToAction("ShinyHuntingCounter", "Home");
+        }
+
+        [Route("remove_hunt/{id:int}")]
+        public IActionResult RemoveHunt(int id)
+        {
+            ShinyHunt shinyHunt = _dataService.GetShinyHunt(id);
+
+            if(shinyHunt != null)
+            {
+                _dataService.ArchiveShinyHunt(shinyHunt.Id);
+            }
+
+            return RedirectToAction("ShinyHuntingCounter");
         }
 
         [AllowAnonymous, HttpPost]

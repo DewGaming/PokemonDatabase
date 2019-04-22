@@ -1,0 +1,52 @@
+@model List<Pokedex.DataAccess.Models.ShinyHunt>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="shinyHuntTable">
+    <table class="table">
+        <tr>
+            <th scope="col">Hunter</th>
+            <th scope="col">Pokemon</th>
+            <th scope="col">Games</th>
+            <th scope="col">Using Shiny Charm</th>
+            <th scope="col">Technique</th>
+            <th scope="col">Attempts</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.User.Username</td>
+                <td>
+                    @item.Pokemon.Name
+                    @if(item.IsArchived == true)
+                    {
+                        @("(Archived)")
+                    }
+                </td>
+                <td>@item.Generation.Games</td>
+                <td>@(item.HasShinyCharm ? "Yes" : "No")</td>
+                <td>@item.ShinyHuntingTechnique.Name</td>
+                <td>@item.ShinyAttemptCount</td>
+                <td>
+                    <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = item.Id }))">Edit</a>
+                    @('|')
+                    @if(!item.IsArchived)
+                    {
+                        <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = item.Id }))">Archive</a>
+                    }
+                    else
+                    {
+                        <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = item.Id }))">Unarchive</a>
+                        @if(User.IsInRole("Owner"))
+                        {
+                            @('|')
+                            <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = item.Id }))">Delete</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

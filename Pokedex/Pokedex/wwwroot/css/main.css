@@ -11,6 +11,12 @@ footer {
   bottom: 0;
 }
 
+.attemptCounter {
+  padding: 0;
+  height: 30px;
+  width: 30px;
+}
+
 footer div {
   margin-top: 2.5px;
 }
