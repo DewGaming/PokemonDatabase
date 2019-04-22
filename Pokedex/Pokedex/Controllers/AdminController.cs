@@ -101,7 +101,7 @@ namespace Pokedex.Controllers
         [Route("shiny_hunting_technique")]
         public IActionResult ShinyHuntingTechniques()
         {
-            UserShinyHuntingViewModel model = new UserShinyHuntingViewModel(){
+            ShinyHuntViewModel model = new ShinyHuntViewModel(){
                 AllShinyHunters = _dataService.GetShinyHunters(),
                 AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniquesWithArchive()
             };

@@ -45,6 +45,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<TypeChart> TypeCharts { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<ShinyHuntingTechnique> ShinyHuntingTechniques { get; set; }
-        public DbSet<UserShinyHuntingTechniqueDetail> UserShinyHuntingTechniqueDetails { get; set; }
+        public DbSet<ShinyHunt> ShinyHunts { get; set; }
     }
 }

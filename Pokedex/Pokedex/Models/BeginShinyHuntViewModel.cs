@@ -3,7 +3,7 @@ using Pokedex.DataAccess.Models;
 
 namespace Pokedex.Models
 {
-    public class BeginShinyHuntViewModel : UserShinyHuntingTechniqueDetail
+    public class BeginShinyHuntViewModel : ShinyHunt
     {
         public List<ShinyHuntingTechnique> AllShinyHuntingTechniques { get; set; }
         public List<Pokemon> AllPokemon { get; set; }

@@ -429,14 +429,14 @@ namespace Pokedex
             return _dataContext.Classifications.OrderBy(x => x.Name).ToList();
         }
 
-        public List<UserShinyHuntingTechniqueDetail> GetShinyHunter(string username)
+        public List<ShinyHunt> GetShinyHunter(string username)
         {
-            return _dataContext.UserShinyHuntingTechniqueDetails.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).Where(x => x.User.Username == username && !x.IsArchived).OrderBy(x => x.User.Username).ToList();
+            return _dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).Where(x => x.User.Username == username && !x.IsArchived).OrderBy(x => x.User.Username).ToList();
         }
 
-        public List<UserShinyHuntingTechniqueDetail> GetShinyHunters()
+        public List<ShinyHunt> GetShinyHunters()
         {
-            return _dataContext.UserShinyHuntingTechniqueDetails.Include(x => x.User).Where(x => !x.IsArchived).OrderBy(x => x.User.Username).ToList();
+            return _dataContext.ShinyHunts.Include(x => x.User).Where(x => !x.IsArchived).OrderBy(x => x.User.Username).ToList();
         }
 
         public List<ShinyHuntingTechnique> GetShinyHuntingTechniquesWithArchive()
@@ -534,9 +534,9 @@ namespace Pokedex
             _dataContext.SaveChanges();
         }
 
-        public void AddShinyHunt(UserShinyHuntingTechniqueDetail shinyHunt)
+        public void AddShinyHunt(ShinyHunt shinyHunt)
         {
-            _dataContext.UserShinyHuntingTechniqueDetails.Add(shinyHunt);
+            _dataContext.ShinyHunts.Add(shinyHunt);
             _dataContext.SaveChanges();
         }
 

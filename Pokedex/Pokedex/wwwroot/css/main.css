@@ -23,6 +23,10 @@ footer hr {
   min-width: auto;
 }
 
+.check-box {
+  width: auto;
+}
+
 .collapse-button {
   margin: 5px 0;
 }

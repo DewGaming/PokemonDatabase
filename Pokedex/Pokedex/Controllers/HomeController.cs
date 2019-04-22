@@ -70,7 +70,7 @@ namespace Pokedex.Controllers
         [Authorize, Route("shiny_hunting_counter")]
         public IActionResult ShinyHuntingCounter()
         {
-            List<UserShinyHuntingTechniqueDetail> model = _dataService.GetShinyHunter(User.Identity.Name);
+            List<ShinyHunt> model = _dataService.GetShinyHunter(User.Identity.Name);
             return View(model);
         }
 
@@ -88,7 +88,7 @@ namespace Pokedex.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, Route("begin_shiny_hunt")]
-        public IActionResult BeginShinyHunt(UserShinyHuntingTechniqueDetail shinyHunt)
+        public IActionResult BeginShinyHunt(ShinyHunt shinyHunt)
         {
             _dataService.AddShinyHunt(shinyHunt);
 
