@@ -118,6 +118,28 @@ namespace Pokedex.Controllers
             return RedirectToAction("ShinyHuntingCounter", "Home");
         }
 
+        [HttpGet, Route("end_shiny_hunt/{id:int}")]
+        public IActionResult EndShinyHunt(int id)
+        {
+            EndShinyHuntViewModel model = new EndShinyHuntViewModel(){
+                shinyHuntId = id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("end_shiny_hunt/{id:int}")]
+        public IActionResult EndShinyHunt(EndShinyHuntViewModel endShinyHuntViewModel)
+        {
+            ShinyHunt shinyHunt = _dataService.GetShinyHunt(endShinyHuntViewModel.shinyHuntId);
+            shinyHunt.HuntComplete = true;
+            shinyHunt.IsPokemonCaught = endShinyHuntViewModel.HuntSuccessful;
+
+            _dataService.UpdateShinyHunt(shinyHunt);
+
+            return RedirectToAction("ShinyHuntingCounter", "Home");
+        }
+
         [Route("remove_hunt/{id:int}")]
         public IActionResult RemoveHunt(int id)
         {
