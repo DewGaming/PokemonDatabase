@@ -3,6 +3,7 @@
     <title>Dew's Pokedex</title>
     <link href="/lib/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/main.css" rel="stylesheet" type="text/css">
+    @RenderSection("styles", required: false)
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
@@ -40,5 +41,7 @@
 
     <script src="/lib/js/jquery-3.3.1.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
+
+    @RenderSection("scripts", required: false)
 </body>
 </html>

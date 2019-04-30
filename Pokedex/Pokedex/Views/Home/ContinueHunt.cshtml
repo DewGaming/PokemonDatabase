@@ -3,8 +3,18 @@
     Layout = "_Layout";
 }
 
-<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
-<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
+@section styles
+{
+    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts 
+{
+    <script src="/js/continueHunt.js"></script>
+}
+
+@Html.HiddenFor(x => x.Id, new { id = "shinyHuntId" })
 
 <div class="tab-list">
     <button class="tab active" onclick="openPage(event, '@Model.Pokemon.Name')">@Model.Pokemon.Name.Replace('_', ' ')</button>
@@ -49,7 +59,7 @@
                     <th>Attempts</th>
                     <td>
                         <button class="attemptCounter subtractAttemptCount btn btn-primary">-</button>
-                        <span style="margin: 0 .625rem;">@Model.ShinyAttemptCount</span>
+                        <span class="attemptCount" style="margin: 0 .625rem;">@Model.ShinyAttemptCount</span>
                         <button class="attemptCounter addAttemptCount btn btn-primary">+</button>
                     </td>
                 </tr>

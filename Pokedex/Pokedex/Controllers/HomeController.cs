@@ -264,6 +264,22 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [HttpPost, Route("subtract-attempt-count/{id:int}")]
+        public int SubtractAttemptCount(int id)
+        {
+            ShinyHunt shinyHunt = _dataService.GetShinyHunt(id);
+            if (shinyHunt.ShinyAttemptCount == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                shinyHunt.ShinyAttemptCount -= 1;
+                _dataService.UpdateShinyHunt(shinyHunt);
+                return shinyHunt.ShinyAttemptCount;
+            }
+        }
+
         [AllowAnonymous, Route("error")]
         public IActionResult Error()
         {
