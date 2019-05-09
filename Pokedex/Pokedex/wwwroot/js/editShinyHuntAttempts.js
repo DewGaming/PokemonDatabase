@@ -1,19 +1,29 @@
 $('.subtractAttemptCount').click(function() {
-    var shinyHuntId = $('#shinyHuntId').val(); // maybe .value()
+    var shinyHuntId = $('#shinyHuntId').val();
 
-    $.post('/subtract-attempt-count/' + shinyHuntId, function(returnData) {
-        // This is the callback...
-        alert('Attempt Count Subtracted');
-        $(".attemptCount").text(returnData);
+    $.ajax({
+        url: '/subtract-hunt-attempt/' + shinyHuntId,
+        method: "POST"
+    })
+    .done(function(data) {
+        $(".attemptCount").text(data);
+    })
+    .fail( function() {
+        alert("Subtraction Failed!");
     });
 });
 
 $('.addAttemptCount').click(function() {
-    var shinyHuntId = $('#shinyHuntId').val(); // maybe .value()
+    var shinyHuntId = $('#shinyHuntId').val();
 
-    $.post('/add-attempt-count/' + shinyHuntId, function(returnData) {
-        // This is the callback...
-        alert('Attempt Count Increased');
-        $(".attemptCount").text(returnData);
+    $.ajax({
+        url: '/add-hunt-attempt/' + shinyHuntId,
+        method: "POST"
+    })
+    .done(function(data) {
+        $(".attemptCount").text(data);
+    })
+    .fail( function() {
+        alert("Addition Failed!");
     });
 });

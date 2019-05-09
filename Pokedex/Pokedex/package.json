@@ -7,6 +7,7 @@
   },
   "scripts": {
     "test": "echo It works!",
+    "update-database": "dotnet ef database update -p ..\\Pokedex.DataAccess\\Pokedex.DataAccess.csproj",
     "build-app": "dotnet publish --configuration Release",
     "copy-to-dist": "npx kpy bin/Release/netcoreapp2.1/publish/ ** !package.json !package-lock.json .dist",
     "minify-css": "npx uglifycss .dist/wwwroot/css/main.css --output .dist/wwwroot/css/main.css",

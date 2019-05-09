@@ -37,6 +37,31 @@ namespace Pokedex.Controllers
             return View();
         }
 
+        [HttpPost, Route("add-hunt-attempt/{huntId:int}")]
+        public int AddShinyCounter(int huntId)
+        {
+            ShinyHunt hunt = _dataService.GetShinyHunt(huntId);
+            hunt.ShinyAttemptCount++;
+            _dataService.UpdateShinyHunt(hunt);
+            return hunt.ShinyAttemptCount;
+        }
+
+        [HttpPost, Route("subtract-hunt-attempt/{huntId:int}")]
+        public int SubtractShinyCounter(int huntId)
+        {
+            ShinyHunt hunt = _dataService.GetShinyHunt(huntId);
+            if(hunt.ShinyAttemptCount > 0)
+            {
+                hunt.ShinyAttemptCount--;
+            }
+            else
+            {
+                hunt.ShinyAttemptCount = 0;
+            }
+            _dataService.UpdateShinyHunt(hunt);
+            return hunt.ShinyAttemptCount;
+        }
+
         [AllowAnonymous, Route("pokemon")]
         public IActionResult AllPokemon()
         {

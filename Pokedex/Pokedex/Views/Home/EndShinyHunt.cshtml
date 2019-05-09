@@ -18,7 +18,7 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.HuntSuccessful):
-            @Html.EditorFor(x => x.HuntSuccessful, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.CheckBoxFor(x => x.HuntSuccessful, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(x => x.HuntSuccessful)
         </div>
 

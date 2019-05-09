@@ -12,6 +12,7 @@
             <th scope="col">Using Shiny Charm</th>
             <th scope="col">Technique</th>
             <th scope="col">Attempts</th>
+            <th scope="col">Hunt Complete</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach(var item in Model)
@@ -29,6 +30,7 @@
                 <td>@(item.HasShinyCharm ? "Yes" : "No")</td>
                 <td>@item.ShinyHuntingTechnique.Name</td>
                 <td>@item.ShinyAttemptCount</td>
+                <td>@(item.HuntComplete == false ? "No" : "Yes (" + (item.IsPokemonCaught == true ? "Success" : "Fail") + ")")</td>
                 <td>
                     <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = item.Id }))">Edit</a>
                     @('|')
