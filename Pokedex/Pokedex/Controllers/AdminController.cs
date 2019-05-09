@@ -98,6 +98,25 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [Route("shiny_hunting_technique")]
+        public IActionResult ShinyHuntingTechniques()
+        {
+            ShinyHuntViewModel model = new ShinyHuntViewModel(){
+                AllShinyHunters = _dataService.GetShinyHunters(),
+                AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniquesWithArchive()
+            };
+
+            return View(model);
+        }
+
+        [Route("shiny_hunt")]
+        public IActionResult ShinyHunts()
+        {
+            List<ShinyHunt> model = _dataService.GetShinyHuntersWithArchive();
+
+            return View(model);
+        }
+
         [HttpGet, Route("edit_generation/{id}")]
         public IActionResult EditGeneration(string id)
         {
@@ -144,6 +163,29 @@ namespace Pokedex.Controllers
             return RedirectToAction("Types");
         }
 
+        [HttpGet, Route("edit_shiny_hunting_technique/{id:int}")]
+        public IActionResult EditShinyHuntingTechnique(int id)
+        {
+            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_shiny_hunting_technique/{id:int}")]
+        public IActionResult EditShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
+        {
+            if (!ModelState.IsValid)
+            {
+                ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(shinyHuntingTechnique.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
+
+            return RedirectToAction("ShinyHuntingTechniques");
+        }
+
         [HttpGet, Route("edit_egg_group/{id:int}")]
         public IActionResult EditEggGroup(int id)
         {
@@ -188,6 +230,29 @@ namespace Pokedex.Controllers
             _dataService.UpdateClassification(classification);
 
             return RedirectToAction("Classifications");
+        }
+
+        [HttpGet, Route("edit_shiny_hunt/{id:int}")]
+        public IActionResult EditShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("edit_shiny_hunt/{id:int}")]
+        public IActionResult EditShinyHunt(ShinyHunt shinyHunt)
+        {
+            if (!ModelState.IsValid)
+            {
+                ShinyHunt model = _dataService.GetShinyHunt(shinyHunt.Id);
+
+                return View(model);
+            }
+
+            _dataService.UpdateShinyHunt(shinyHunt);
+
+            return RedirectToAction("ShinyHunts");
         }
 
         [HttpGet, Route("edit_ability/{id:int}")]
@@ -245,6 +310,22 @@ namespace Pokedex.Controllers
             return RedirectToAction("Types");
         }
 
+        [HttpGet, Route("archive_shiny_hunt/{id:int}")]
+        public IActionResult ArchiveShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_shiny_hunt/{id:int}")]
+        public IActionResult ArchiveShinyHunt(Type type)
+        {
+            _dataService.ArchiveShinyHunt(type.Id);
+
+            return RedirectToAction("ShinyHunts");
+        }
+
         [HttpGet, Route("archive_egg_group/{id:int}")]
         public IActionResult ArchiveEggGroup(int id)
         {
@@ -293,6 +374,22 @@ namespace Pokedex.Controllers
             return RedirectToAction("Abilities");
         }
 
+        [HttpGet, Route("archive_shiny_hunting_technique/{id:int}")]
+        public IActionResult ArchiveShinyHuntingTechnique(int id)
+        {
+            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("archive_shiny_hunting_technique/{id:int}")]
+        public IActionResult ArchiveShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
+        {
+            _dataService.ArchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
+
+            return RedirectToAction("ShinyHuntingTechniques");
+        }
+
         [HttpGet, Route("unarchive_generation/{id}")]
         public IActionResult UnarchiveGeneration(string id)
         {
@@ -325,6 +422,22 @@ namespace Pokedex.Controllers
             return RedirectToAction("Types");
         }
 
+        [HttpGet, Route("unarchive_shiny_hunt/{id:int}")]
+        public IActionResult UnarchiveShinyHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_shiny_hunt/{id:int}")]
+        public IActionResult UnarchiveShinyHunt(ShinyHunt shinyHunt)
+        {
+            _dataService.UnarchiveShinyHunt(shinyHunt.Id);
+
+            return RedirectToAction("ShinyHunts");
+        }
+
         [HttpGet, Route("unarchive_classification/{id:int}")]
         public IActionResult UnarchiveClassification(int id)
         {
@@ -355,6 +468,22 @@ namespace Pokedex.Controllers
             _dataService.UnarchiveAbility(ability.Id);
 
             return RedirectToAction("Abilities");
+        }
+
+        [HttpGet, Route("unarchive_shiny_hunting_technique/{id:int}")]
+        public IActionResult UnarchiveShinyHuntingTechnique(int id)
+        {
+            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_shiny_hunting_technique/{id:int}")]
+        public IActionResult UnarchiveShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
+        {
+            _dataService.UnarchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
+
+            return RedirectToAction("ShinyHuntingTechniques");
         }
 
         [HttpGet, Route("unarchive_egg_group/{id:int}")]

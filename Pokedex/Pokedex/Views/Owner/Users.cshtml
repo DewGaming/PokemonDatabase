@@ -4,7 +4,7 @@
 }
 
 <div class="userTable">
-    @if(Model.Where(x => x.IsOwner == false).Count() > 0)
+    @if(Model.ToList().Count() > 0)
     {
         <table class="table">
             <tr>
@@ -14,18 +14,11 @@
                 <th scope="col">Is Admin</th>
                 <th scope="col">Actions</th>
             </tr>
-            @foreach(var item in Model.Where(x => x.IsOwner == false))
+            @foreach(var item in Model)
             {
                 <tr>
                     <td>
-                        @if(!item.IsArchived)
-                        {
-                            @item.FirstName@(' ')@item.LastName
-                        }
-                        else
-                        {
-                            @item.FirstName@(' ')@item.LastName@(" (Archived)")
-                        }
+                        @item.FirstName@(' ')@item.LastName@(item.IsOwner ? " (Owner)" : item.IsArchived ? " (Archived)" : item.IsAdmin ? " (Admin)" : "")
                     </td>
                     <td>@item.Username</td>
                     <td>@item.EmailAddress</td>
@@ -40,6 +33,8 @@
                         else
                         {
                             <a href="@Url.Action("UnarchiveUser", "Owner", new { id = item.Id })">Unarchive</a>
+                            @("|")
+                            <a href="@Url.Action("DeleteUser", "Owner", new { id = item.Id })">Delete</a>
                         }
                     </td>
                 </tr>

@@ -1,0 +1,37 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.DataAccess.Models.User
+@{
+    Layout = "_Layout";
+}
+
+<h2>Delete Classification Confirm</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.HiddenFor(x => x.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.FirstName):
+            @Html.DisplayFor(x => x.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.LastName):
+            @Html.DisplayFor(x => x.LastName, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Username):
+            @Html.DisplayFor(x => x.Username, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-danger" role="button">Delete</button>
+        </p>
+    }
+
+</div>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190421013000_RemoveShinyHuntingAbbreviation")]
+    partial class RemoveShinyHuntingAbbreviation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -455,47 +457,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.ToTable("PokemonTypeDetails");
                 });
 
-            modelBuilder.Entity("Pokedex.DataAccess.Models.ShinyHunt", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("GenerationId")
-                        .IsRequired();
-
-                    b.Property<bool>("HasShinyCharm");
-
-                    b.Property<bool>("HuntComplete");
-
-                    b.Property<bool>("IsArchived");
-
-                    b.Property<bool>("IsPokemonCaught");
-
-                    b.Property<string>("PokemonId")
-                        .IsRequired();
-
-                    b.Property<int>("ShinyAttemptCount");
-
-                    b.Property<int?>("ShinyHuntingTechniqueId")
-                        .IsRequired();
-
-                    b.Property<int?>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GenerationId");
-
-                    b.HasIndex("PokemonId");
-
-                    b.HasIndex("ShinyHuntingTechniqueId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ShinyHunts");
-                });
-
             modelBuilder.Entity("Pokedex.DataAccess.Models.ShinyHuntingTechnique", b =>
                 {
                     b.Property<int>("Id")
@@ -584,6 +545,45 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.UserShinyHuntingTechniqueDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("GenerationId")
+                        .IsRequired();
+
+                    b.Property<bool>("HasShinyCharm");
+
+                    b.Property<bool>("IsArchived");
+
+                    b.Property<bool>("IsPokemonCaught");
+
+                    b.Property<string>("PokemonId")
+                        .IsRequired();
+
+                    b.Property<int>("ShinyAttemptCount");
+
+                    b.Property<int?>("ShinyHuntingTechniqueId")
+                        .IsRequired();
+
+                    b.Property<int?>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GenerationId");
+
+                    b.HasIndex("PokemonId");
+
+                    b.HasIndex("ShinyHuntingTechniqueId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserShinyHuntingTechniqueDetails");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.BaseStat", b =>
@@ -729,7 +729,20 @@ namespace Pokedex.DataAccess.Migrations
                         .HasForeignKey("SecondaryTypeId");
                 });
 
-            modelBuilder.Entity("Pokedex.DataAccess.Models.ShinyHunt", b =>
+            modelBuilder.Entity("Pokedex.DataAccess.Models.TypeChart", b =>
+                {
+                    b.HasOne("Pokedex.DataAccess.Models.Type", "Attack")
+                        .WithMany()
+                        .HasForeignKey("AttackId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Pokedex.DataAccess.Models.Type", "Defend")
+                        .WithMany()
+                        .HasForeignKey("DefendId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.UserShinyHuntingTechniqueDetail", b =>
                 {
                     b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
                         .WithMany()
@@ -749,19 +762,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Pokedex.DataAccess.Models.TypeChart", b =>
-                {
-                    b.HasOne("Pokedex.DataAccess.Models.Type", "Attack")
-                        .WithMany()
-                        .HasForeignKey("AttackId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Pokedex.DataAccess.Models.Type", "Defend")
-                        .WithMany()
-                        .HasForeignKey("DefendId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

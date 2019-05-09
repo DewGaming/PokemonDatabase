@@ -11,6 +11,7 @@ using Pokedex.Models;
 using Pokedex.DataAccess.Models;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Pokedex.Controllers
 {
@@ -28,12 +29,70 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous, Route("")]
-        public IActionResult Index()
+        public IActionResult Index(string search)
         {
-            ViewBag.ApplicationName = _appConfig.AppName;
-            ViewBag.ApplicationVersion = _appConfig.AppVersion;
+            ViewData["Search"] = search;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                if (search.Contains("type null"))
+                {
+                    search = "Type: Null";
+                }
+                else if (search.Contains("nidoran"))
+                {
+                    search = search.Replace(' ', '_');
+                }
+
+                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                search = textInfo.ToTitleCase(search);
+
+                if (search.Contains("-O") && search.Substring(search.Length - 2, 2) == "-O")
+                {
+                    search = search.Remove(search.Length - 2, 2) + "-o";
+                }
+
+                List<PokemonTypeDetail> model = _dataService.GetPokemonWithTypes();
+                model = model
+                    .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
+                    .ToList();
+
+                if(model.Count() == 1 && _dataService.GetPokemon(model[0].Pokemon.Name) != null)
+                {
+                    return RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
+                }
+                else
+                {
+                    return View("AllPokemon", model);
+                }
+            }
 
             return View();
+        }
+
+        [HttpPost, Route("add-hunt-attempt/{huntId:int}")]
+        public int AddShinyCounter(int huntId)
+        {
+            ShinyHunt hunt = _dataService.GetShinyHunt(huntId);
+            hunt.ShinyAttemptCount++;
+            _dataService.UpdateShinyHunt(hunt);
+            return hunt.ShinyAttemptCount;
+        }
+
+        [HttpPost, Route("subtract-hunt-attempt/{huntId:int}")]
+        public int SubtractShinyCounter(int huntId)
+        {
+            ShinyHunt hunt = _dataService.GetShinyHunt(huntId);
+            if(hunt.ShinyAttemptCount > 0)
+            {
+                hunt.ShinyAttemptCount--;
+            }
+            else
+            {
+                hunt.ShinyAttemptCount = 0;
+            }
+            _dataService.UpdateShinyHunt(hunt);
+            return hunt.ShinyAttemptCount;
         }
 
         [AllowAnonymous, Route("pokemon")]
@@ -66,33 +125,90 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
-        [AllowAnonymous, HttpPost]
-        public IActionResult Results(string searchText)
+        [Authorize, Route("shiny_hunting_counter")]
+        public IActionResult ShinyHuntingCounter()
         {
-            searchText = searchText.ToLower();
-            if (searchText.Contains("type null"))
+            List<ShinyHunt> model = _dataService.GetShinyHunter(User.Identity.Name);
+            return View(model);
+        }
+
+        [Route("shiny_hunt/{id:int}")]
+        public IActionResult ContinueHunt(int id)
+        {
+            ShinyHunt model = _dataService.GetShinyHunt(id);
+
+            return View(model);
+        }
+
+        [HttpGet, Route("begin_shiny_hunt")]
+        public IActionResult BeginShinyHunt()
+        {
+            BeginShinyHuntViewModel model = new BeginShinyHuntViewModel(){
+                UserId = _dataService.GetUserWithUsername(User.Identity.Name).Id,
+                AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniques(),
+                AllPokemon = _dataService.GetAllPokemon(),
+                AllGenerations = _dataService.GetGenerations()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("begin_shiny_hunt")]
+        public IActionResult BeginShinyHunt(ShinyHunt shinyHunt)
+        {
+            List<Generation> generations = _dataService.GetGenerations().OrderBy(p => p.Id).ToList();
+            if(generations.IndexOf(_dataService.GetGeneration(shinyHunt.GenerationId)) < generations.IndexOf(_dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
             {
-                searchText = "Type: Null";
-            }
-            else if (searchText.Contains("nidoran"))
-            {
-                searchText = searchText.Replace(' ', '_');
+                BeginShinyHuntViewModel model = new BeginShinyHuntViewModel(){
+                    UserId = _dataService.GetUserWithUsername(User.Identity.Name).Id,
+                    AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniques(),
+                    AllPokemon = _dataService.GetAllPokemon(),
+                    AllGenerations = _dataService.GetGenerations()
+                };
+
+                ModelState.AddModelError("GenerationId", "Pokemon does not exist in this generation");
+
+                return View(model);
             }
 
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            searchText = textInfo.ToTitleCase(searchText);
+            _dataService.AddShinyHunt(shinyHunt);
 
-            if (searchText.Substring(searchText.Length - 2, 2) == "-O")
+            return RedirectToAction("ShinyHuntingCounter", "Home");
+        }
+
+        [HttpGet, Route("end_shiny_hunt/{id:int}")]
+        public IActionResult EndShinyHunt(int id)
+        {
+            EndShinyHuntViewModel model = new EndShinyHuntViewModel(){
+                shinyHuntId = id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("end_shiny_hunt/{id:int}")]
+        public IActionResult EndShinyHunt(EndShinyHuntViewModel endShinyHuntViewModel)
+        {
+            ShinyHunt shinyHunt = _dataService.GetShinyHunt(endShinyHuntViewModel.shinyHuntId);
+            shinyHunt.HuntComplete = true;
+            shinyHunt.IsPokemonCaught = endShinyHuntViewModel.HuntSuccessful;
+
+            _dataService.UpdateShinyHunt(shinyHunt);
+
+            return RedirectToAction("ShinyHuntingCounter", "Home");
+        }
+
+        [Route("remove_hunt/{id:int}")]
+        public IActionResult RemoveHunt(int id)
+        {
+            ShinyHunt shinyHunt = _dataService.GetShinyHunt(id);
+
+            if(shinyHunt != null)
             {
-                searchText = searchText.Remove(searchText.Length - 2, 2) + "-o";
+                _dataService.ArchiveShinyHunt(shinyHunt.Id);
             }
 
-            if (_dataService.GetPokemon(searchText) != null)
-            {
-                return RedirectToAction("Pokemon", "Home", new { Name = searchText.Replace(": ", "_").Replace(' ', '_').ToLower() });
-            }
-
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("ShinyHuntingCounter");
         }
 
         [AllowAnonymous, Route("{Name}")]
@@ -175,6 +291,22 @@ namespace Pokedex.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost, Route("subtract-attempt-count/{id:int}")]
+        public int SubtractAttemptCount(int id)
+        {
+            ShinyHunt shinyHunt = _dataService.GetShinyHunt(id);
+            if (shinyHunt.ShinyAttemptCount == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                shinyHunt.ShinyAttemptCount -= 1;
+                _dataService.UpdateShinyHunt(shinyHunt);
+                return shinyHunt.ShinyAttemptCount;
+            }
         }
 
         [AllowAnonymous, Route("error")]

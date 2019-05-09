@@ -1,0 +1,127 @@
+@model IEnumerable<Pokedex.DataAccess.Models.ShinyHunt>
+@{
+    Layout = "_Layout";
+}
+
+@section styles
+{
+    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/tabContent.js"></script>
+}
+<p>
+    <a class="btn btn-primary" href="@Url.Action("BeginShinyHunt", "Home")" role="button">Begin Shiny Hunt</a>
+</p>
+<div class="tab-list">
+    <button class="tab active" onclick="openPage(event, 'huntsInProgress')">Hunts In Progress</button>
+    <button class="tab" onclick="openPage(event, 'huntsCompleted')">Hunts Completed</button>
+    <button class="tab" onclick="openPage(event, 'huntsFailed')">Hunts Failed</button>
+</div>
+<div class="tabcontent active" id="huntsInProgress">
+    @if (Model.Where(x => !x.HuntComplete && !x.IsArchived).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntInProgressTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">Game(s)</th>
+                    <th scope="col">Technique</th>
+                    <th scope="col">Using Shiny Charm</th>
+                    <th scope="col">Number of Attempts</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => !x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                        <td>@hunts.ShinyAttemptCount</td>
+                        <td>
+                            <a href="@Url.Action("ContinueHunt", "Home", new { id = @hunts.Id })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
+                            @if(hunts.ShinyAttemptCount > 0)
+                            {
+                                @("|")
+                                <a href="@Url.Action("EndHunt", "Home")">End Hunt</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No pokemon are being hunted right now.</div>
+    }
+</div>
+<div class="tabcontent" id="huntsCompleted">
+    @if(Model.Where(x => x.HuntComplete & x.IsPokemonCaught && !x.IsArchived).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntCompleteTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">Game(s)</th>
+                    <th scope="col">Technique</th>
+                    <th scope="col">Used Shiny Charm</th>
+                    <th scope="col">Number of Attempts</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                        <td>@hunts.ShinyAttemptCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No hunts have been completed.</div>
+    }
+</div>
+<div class="tabcontent" id="huntsFailed">
+    @if(Model.Where(x => x.HuntComplete && !x.IsPokemonCaught && !x.IsArchived).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntFailedTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">Game(s)</th>
+                    <th scope="col">Technique</th>
+                    <th scope="col">Used Shiny Charm</th>
+                    <th scope="col">Number of Attempts</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => !x.IsPokemonCaught && x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                        <td>@hunts.ShinyAttemptCount</td>
+                        <td>
+                            <a href="@Url.Action("RetryHunt", "Home")">Retry</a>
+                            |
+                            <a href="@Url.Action("RemoveHunt", "Home", new { id = @hunts.Id })">Remove</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No hunts have been failed.</div>
+    }
+</div>

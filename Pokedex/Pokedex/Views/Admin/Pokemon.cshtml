@@ -3,10 +3,18 @@
     Layout = "_Layout";
 }
 
-<link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
-<link href="/css/maxWidth1220.css" rel="stylesheet" type="text/css" />
-<link href="/css/typechart.css" rel="stylesheet" type="text/css" />
-<script src="/js/tabContent.js"></script>
+@section styles
+{
+    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+    <link href="/css/maxWidth1220.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typechart.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/tabContent.js"></script>
+}
+
 @if(User.IsInRole("Owner"))
 {
     <p class="additionButtons">
