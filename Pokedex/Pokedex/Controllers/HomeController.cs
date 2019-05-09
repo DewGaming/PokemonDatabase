@@ -29,10 +29,43 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous, Route("")]
-        public IActionResult Index()
+        public IActionResult Index(string search)
         {
-            ViewBag.ApplicationName = _appConfig.AppName;
-            ViewBag.ApplicationVersion = _appConfig.AppVersion;
+            ViewData["Search"] = search;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                if (search.Contains("type null"))
+                {
+                    search = "Type: Null";
+                }
+                else if (search.Contains("nidoran"))
+                {
+                    search = search.Replace(' ', '_');
+                }
+
+                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                search = textInfo.ToTitleCase(search);
+
+                if (search.Contains("-O") && search.Substring(search.Length - 2, 2) == "-O")
+                {
+                    search = search.Remove(search.Length - 2, 2) + "-o";
+                }
+
+                List<PokemonTypeDetail> model = _dataService.GetPokemonWithTypes();
+                model = model
+                    .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
+                    .ToList();
+
+                if(model.Count() == 1 && _dataService.GetPokemon(model[0].Pokemon.Name) != null)
+                {
+                    return RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
+                }
+                else
+                {
+                    return View("AllPokemon", model);
+                }
+            }
 
             return View();
         }
@@ -176,35 +209,6 @@ namespace Pokedex.Controllers
             }
 
             return RedirectToAction("ShinyHuntingCounter");
-        }
-
-        [AllowAnonymous, HttpPost]
-        public IActionResult Results(string searchText)
-        {
-            searchText = searchText.ToLower();
-            if (searchText.Contains("type null"))
-            {
-                searchText = "Type: Null";
-            }
-            else if (searchText.Contains("nidoran"))
-            {
-                searchText = searchText.Replace(' ', '_');
-            }
-
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            searchText = textInfo.ToTitleCase(searchText);
-
-            if (searchText.Substring(searchText.Length - 2, 2) == "-O")
-            {
-                searchText = searchText.Remove(searchText.Length - 2, 2) + "-o";
-            }
-
-            if (_dataService.GetPokemon(searchText) != null)
-            {
-                return RedirectToAction("Pokemon", "Home", new { Name = searchText.Replace(": ", "_").Replace(' ', '_').ToLower() });
-            }
-
-            return RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous, Route("{Name}")]

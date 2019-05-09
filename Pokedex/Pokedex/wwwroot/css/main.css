@@ -41,20 +41,26 @@ footer hr {
   outline: none;
 }
 
-.search-bar input {
+.search-bar input, .search-bar .search-button, .search-bar .reset-button {
   list-style: none;
   padding: .25rem 0rem;
-  border: 1px solid #dbdbdb;
   border-radius: 4px;
-  background-color: #f0f0f0;
-  line-height: 1.2;
+  line-height: 1rem;
+  height: 1.75rem;
   text-align: center;
-  background-color: #fff;
-  color: #404040;
 }
 
-.search-bar .search-button {
+.search-bar .search-button, .search-bar .reset-button {
   width: 75px;
+}
+
+.search-bar input, .search-bar .reset-button {
+  background-color: #fff;
+}
+
+.search-bar input {
+  border: 1px solid #dbdbdb;
+  color: #404040;
 }
 
 .search-bar {
@@ -77,7 +83,7 @@ main {
 
 .shadowed img {
   -webkit-filter: drop-shadow(2px 2px 2px #222);
-  filter: drop-shadow(2px 2px 2px #222); 
+          filter: drop-shadow(2px 2px 2px #222); 
 }
 
 .table tbody tr:first-of-type * {
@@ -87,8 +93,11 @@ main {
 }
 
 .pokemonTables {
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
   margin: 0 -1rem 1rem 0;
 }
 
@@ -97,6 +106,8 @@ main {
 }
 
 .effectivenessChart {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
