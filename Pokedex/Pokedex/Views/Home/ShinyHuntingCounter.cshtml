@@ -46,7 +46,7 @@
                             @if(hunts.ShinyAttemptCount > 0)
                             {
                                 @("|")
-                                <a href="@Url.Action("EndHunt", "Home")">End Hunt</a>
+                                <a href="@Url.Action("EndShinyHunt", "Home", new { id = @hunts.Id })">End Hunt</a>
                             }
                         </td>
                     </tr>

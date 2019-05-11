@@ -139,6 +139,8 @@ namespace Pokedex
         public List<Evolution> GetEvolutions()
         {
             return _dataContext.Evolutions
+                .Include(x => x.PreevolutionPokemon)
+                .Include(x => x.EvolutionPokemon)
                 .Include(e => e.EvolutionMethod)
                 .ToList();
         }
@@ -232,7 +234,35 @@ namespace Pokedex
 
         public List<Pokemon> GetAltForms(Pokemon pokemon)
         {
-            List<PokemonFormDetail> pokemonFormList = _dataContext.PokemonFormDetails.Include(p => p.AltFormPokemon).Where(p => p.OriginalPokemon == pokemon).ToList();
+            List<PokemonFormDetail> pokemonFormList = _dataContext.PokemonFormDetails
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.EggCycle)
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.GenderRatio)
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.Classification)
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.Generation)
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.ExperienceGrowth)
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.CaptureRate)
+                .Include(p => p.AltFormPokemon)
+                    .ThenInclude(x => x.BaseHappiness)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.EggCycle)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.GenderRatio)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.Classification)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.Generation)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.ExperienceGrowth)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.CaptureRate)
+                .Include(p => p.OriginalPokemon)
+                    .ThenInclude(x => x.BaseHappiness).Where(p => p.OriginalPokemon == pokemon).ToList();
             List<Pokemon> pokemonList = new List<Pokemon>();
             foreach (var p in pokemonFormList)
             {
