@@ -69,34 +69,6 @@ namespace Pokedex.Controllers
             return this.View();
         }
 
-        [HttpPost]
-        [Route("add-hunt-attempt/{huntId:int}")]
-        public int AddShinyCounter(int huntId)
-        {
-            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            hunt.ShinyAttemptCount++;
-            this._dataService.UpdateShinyHunt(hunt);
-            return hunt.ShinyAttemptCount;
-        }
-
-        [HttpPost]
-        [Route("subtract-hunt-attempt/{huntId:int}")]
-        public int SubtractShinyCounter(int huntId)
-        {
-            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            if (hunt.ShinyAttemptCount > 0)
-            {
-                hunt.ShinyAttemptCount--;
-            }
-            else
-            {
-                hunt.ShinyAttemptCount = 0;
-            }
-
-            this._dataService.UpdateShinyHunt(hunt);
-            return hunt.ShinyAttemptCount;
-        }
-
         [AllowAnonymous]
         [Route("pokemon")]
         public IActionResult AllPokemon()
@@ -127,102 +99,6 @@ namespace Pokedex.Controllers
             }
 
             return this.View(model);
-        }
-
-        [Authorize]
-        [Route("shiny_hunting_counter")]
-        public IActionResult ShinyHuntingCounter()
-        {
-            List<ShinyHunt> model = this._dataService.GetShinyHunter(this.User.Identity.Name);
-            return this.View(model);
-        }
-
-        [Route("shiny_hunt/{id:int}")]
-        public IActionResult ContinueHunt(int id)
-        {
-            ShinyHunt model = this._dataService.GetShinyHunt(id);
-
-            return this.View(model);
-        }
-
-        [HttpGet]
-        [Route("begin_shiny_hunt")]
-        public IActionResult BeginShinyHunt()
-        {
-            BeginShinyHuntViewModel model = new BeginShinyHuntViewModel()
-            {
-                UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
-                AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
-                AllPokemon = this._dataService.GetAllPokemon(),
-                AllGenerations = this._dataService.GetGenerations(),
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("begin_shiny_hunt")]
-        public IActionResult BeginShinyHunt(ShinyHunt shinyHunt)
-        {
-            List<Generation> generations = this._dataService.GetGenerations().OrderBy(p => p.Id).ToList();
-            if (generations.IndexOf(this._dataService.GetGeneration(shinyHunt.GenerationId)) < generations.IndexOf(this._dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
-            {
-                BeginShinyHuntViewModel model = new BeginShinyHuntViewModel()
-                {
-                    UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
-                    AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
-                    AllPokemon = this._dataService.GetAllPokemon(),
-                    AllGenerations = this._dataService.GetGenerations(),
-                };
-
-                this.ModelState.AddModelError("GenerationId", "Pokemon does not exist in this generation");
-
-                return this.View(model);
-            }
-
-            this._dataService.AddShinyHunt(shinyHunt);
-
-            return this.RedirectToAction("ShinyHuntingCounter", "Home");
-        }
-
-        [HttpGet]
-        [Route("end_shiny_hunt/{id:int}")]
-        public IActionResult EndShinyHunt(int id)
-        {
-            EndShinyHuntViewModel model = new EndShinyHuntViewModel()
-            {
-                ShinyHuntId = id,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("end_shiny_hunt/{id:int}")]
-        public IActionResult EndShinyHunt(EndShinyHuntViewModel endShinyHuntViewModel)
-        {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(endShinyHuntViewModel.ShinyHuntId);
-            shinyHunt.HuntComplete = true;
-            shinyHunt.IsPokemonCaught = endShinyHuntViewModel.HuntSuccessful;
-
-            this._dataService.UpdateShinyHunt(shinyHunt);
-
-            return this.RedirectToAction("ShinyHuntingCounter", "Home");
-        }
-
-        [Route("remove_hunt/{id:int}")]
-        public IActionResult RemoveHunt(int id)
-        {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(id);
-
-            if (shinyHunt != null)
-            {
-                this._dataService.ArchiveShinyHunt(shinyHunt.Id);
-            }
-
-            return this.RedirectToAction("ShinyHuntingCounter");
         }
 
         [AllowAnonymous]
@@ -310,23 +186,6 @@ namespace Pokedex.Controllers
             };
 
             return this.View(model);
-        }
-
-        [HttpPost]
-        [Route("subtract-attempt-count/{id:int}")]
-        public int SubtractAttemptCount(int id)
-        {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(id);
-            if (shinyHunt.ShinyAttemptCount == 0)
-            {
-                return 0;
-            }
-            else
-            {
-                shinyHunt.ShinyAttemptCount -= 1;
-                this._dataService.UpdateShinyHunt(shinyHunt);
-                return shinyHunt.ShinyAttemptCount;
-            }
         }
 
         [AllowAnonymous]
