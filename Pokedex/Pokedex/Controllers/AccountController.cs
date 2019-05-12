@@ -29,38 +29,6 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
-        public User CompareUsers(User existingUser, RegisterViewModel newUser)
-        {
-            PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
-            string passwordHash = passwordHasher.HashPassword(null, newUser.Password);
-            if (existingUser.FirstName != newUser.FirstName)
-            {
-                existingUser.FirstName = newUser.FirstName;
-            }
-
-            if (existingUser.LastName != newUser.LastName)
-            {
-                existingUser.LastName = newUser.LastName;
-            }
-
-            if (existingUser.Username != newUser.Username)
-            {
-                existingUser.Username = newUser.Username;
-            }
-
-            if (existingUser.EmailAddress != newUser.EmailAddress)
-            {
-                existingUser.EmailAddress = newUser.EmailAddress;
-            }
-
-            if (existingUser.PasswordHash != passwordHash)
-            {
-                existingUser.PasswordHash = passwordHash;
-            }
-
-            return existingUser;
-        }
-
         [AllowAnonymous]
         [HttpGet]
         [Route("signup")]
@@ -204,6 +172,38 @@ namespace Pokedex.Controllers
         public IActionResult AccessDenied()
         {
             return this.RedirectToAction("Index", "Home");
+        }
+
+        private User CompareUsers(User existingUser, RegisterViewModel newUser)
+        {
+            PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
+            string passwordHash = passwordHasher.HashPassword(null, newUser.Password);
+            if (existingUser.FirstName != newUser.FirstName)
+            {
+                existingUser.FirstName = newUser.FirstName;
+            }
+
+            if (existingUser.LastName != newUser.LastName)
+            {
+                existingUser.LastName = newUser.LastName;
+            }
+
+            if (existingUser.Username != newUser.Username)
+            {
+                existingUser.Username = newUser.Username;
+            }
+
+            if (existingUser.EmailAddress != newUser.EmailAddress)
+            {
+                existingUser.EmailAddress = newUser.EmailAddress;
+            }
+
+            if (existingUser.PasswordHash != passwordHash)
+            {
+                existingUser.PasswordHash = passwordHash;
+            }
+
+            return existingUser;
         }
     }
 }

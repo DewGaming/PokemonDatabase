@@ -27,7 +27,18 @@
             <tbody>
                 <tr>
                     <th scope="col">Pokemon</th>
-                    <th scope="col">Game(s)</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
                     <th scope="col">Technique</th>
                     <th scope="col">Using Shiny Charm</th>
                     <th scope="col">Number of Attempts</th>
@@ -66,7 +77,18 @@
             <tbody>
                 <tr>
                     <th scope="col">Pokemon</th>
-                    <th scope="col">Game(s)</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
                     <th scope="col">Technique</th>
                     <th scope="col">Used Shiny Charm</th>
                     <th scope="col">Number of Attempts</th>
@@ -96,7 +118,18 @@
             <tbody>
                 <tr>
                     <th scope="col">Pokemon</th>
-                    <th scope="col">Game(s)</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
                     <th scope="col">Technique</th>
                     <th scope="col">Used Shiny Charm</th>
                     <th scope="col">Number of Attempts</th>

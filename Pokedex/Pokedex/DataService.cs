@@ -459,7 +459,7 @@ namespace Pokedex
 
         public List<ShinyHunt> GetShinyHunters()
         {
-            return this._dataContext.ShinyHunts.Include(x => x.User).Where(x => !x.IsArchived).OrderBy(x => x.User.Username).ToList();
+            return this._dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).Where(x => !x.IsArchived).OrderBy(x => x.User.Username).ToList();
         }
 
         public List<ShinyHunt> GetShinyHuntersWithArchive()
