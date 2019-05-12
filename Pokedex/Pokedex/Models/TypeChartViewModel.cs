@@ -5,7 +5,8 @@ namespace Pokedex.Models
 {
     public class TypeChartViewModel
     {
-        public List<TypeChart> typeChart { get; set; }
-        public List<Type> types { get; set; }
+        public List<TypeChart> TypeChart { get; set; }
+
+        public List<Type> Types { get; set; }
     }
 }

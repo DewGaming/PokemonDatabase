@@ -19,7 +19,7 @@ namespace Pokedex
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -36,12 +36,12 @@ namespace Pokedex
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<DataContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"))
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("LocalConnection"))
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => {
+                .AddCookie(options =>
+                {
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/access_denied";

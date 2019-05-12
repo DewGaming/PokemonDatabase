@@ -17,20 +17,20 @@
 <div class="tab-list">
     @foreach(var button in Model)
     {
-        @if(button.pokemon.Id.IndexOf('-') == -1)
+        @if(button.Pokemon.Id.IndexOf('-') == -1)
         {
-            <button class="tab active" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
         else
         {
-            <button class="tab" onclick="openPage(event, '@button.pokemon.Name')">@button.pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
     }
 </div>
 @foreach(var item in Model)
 {
-    <div class="tabcontent@(@item.pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.pokemon.Name">
-        <div class="pokemonPicture shadowed"><img width="327" title="@item.pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.pokemon.Id + ".png")" /></div>
+    <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name">
+        <div class="pokemonPicture shadowed"><img width="327" title="@item.Pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")" /></div>
         <div class="pokemonData pokemonTables span-md-5 span-lg-4">
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
@@ -38,13 +38,13 @@
                     <tr>
                         <th>Pokedex Number</th>
                         <td>
-                            @if (item.pokemon.Id.IndexOf('-') > -1)
+                            @if (item.Pokemon.Id.IndexOf('-') > -1)
                             {
-                                @item.pokemon.Id.Substring(0, item.pokemon.Id.IndexOf('-'))
+                                @item.Pokemon.Id.Substring(0, item.Pokemon.Id.IndexOf('-'))
                             }
                             else
                             {
-                                @item.pokemon.Id
+                                @item.Pokemon.Id
                             }
                         </td>
                     </tr>
@@ -60,20 +60,20 @@
                     </tr>
                     <tr>
                         <th>Classification</th>
-                        <td>@item.pokemon.Classification.Name</td>
+                        <td>@item.Pokemon.Classification.Name</td>
                     </tr>
                     <tr>
                         <th>Height</th>
                         <td>
-                            @((int)(@item.pokemon.Height * (decimal)3.281))@("\'")@(((int)(@item.pokemon.Height * (decimal)39.97) - (int)(@item.pokemon.Height * (decimal)3.281) * 12))@("\"")
-                            (@item.pokemon.Height.ToString("0.####") m)
+                            @((int)(@item.Pokemon.Height * (decimal)3.281))@("\'")@(((int)(@item.Pokemon.Height * (decimal)39.97) - (int)(@item.Pokemon.Height * (decimal)3.281) * 12))@("\"")
+                            (@item.Pokemon.Height.ToString("0.####") m)
                         </td>
                     </tr>
                     <tr>
                         <th>Weight</th>
                         <td>
-                            @(Math.Round(@item.pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####")) lbs
-                            (@item.pokemon.Weight.ToString("0.####") kg)
+                            @(Math.Round(@item.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####")) lbs
+                            (@item.Pokemon.Weight.ToString("0.####") kg)
                         </td>
                     </tr>
                     <tr>
@@ -100,7 +100,7 @@
                     </tr>
                     <tr>
                         <th>
-                            @if (item.pokemon.Generation.Games.IndexOf('/') > -1)
+                            @if (item.Pokemon.Generation.Games.IndexOf('/') > -1)
                             {
                                 @("Games of Origin");
                             }
@@ -110,7 +110,7 @@
                             }
                         </th>
                         <td>
-                            @item.pokemon.Generation.Games
+                            @item.Pokemon.Generation.Games
                         </td>
                     </tr>
                 </tbody>
@@ -122,39 +122,39 @@
                 <tbody>
                     <tr>
                         <th class="Health" scope="col">Health</th>
-                        <td class="statData"><div class="health statBar" style="width: @(@item.baseStats.Health * 100 / 255m)%;"></div></td>
-                        <td class="Health">@item.baseStats.Health</td>
+                        <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.Health * 100 / 255m)%;"></div></td>
+                        <td class="Health">@item.BaseStats.Health</td>
                     </tr>
                     <tr>
                         <th class="Attack" scope="col">Attack</th>
-                        <td class="statData"><div class="attack statBar" style="width: @(@item.baseStats.Attack * 100 / 255m)%;"></div></td>
-                        <td class="Attack">@item.baseStats.Attack</td>
+                        <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.Attack * 100 / 255m)%;"></div></td>
+                        <td class="Attack">@item.BaseStats.Attack</td>
                     </tr>
                     <tr>
                         <th class="Defense" scope="col">Defense</th>
-                        <td class="statData"><div class="defense statBar" style="width: @(@item.baseStats.Defense * 100 / 255m)%;"></div></td>
-                        <td class="Defense">@item.baseStats.Defense</td>
+                        <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.Defense * 100 / 255m)%;"></div></td>
+                        <td class="Defense">@item.BaseStats.Defense</td>
                     </tr>
                     <tr>
                         <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                        <td class="statData"><div class="specialAttack statBar" style="width: @(@item.baseStats.SpecialAttack * 100 / 255m)%;"></div></td>
-                        <td class="SpecialAttack">@item.baseStats.SpecialAttack</td>
+                        <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
+                        <td class="SpecialAttack">@item.BaseStats.SpecialAttack</td>
                     </tr>
                     <tr>
                         <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                        <td class="statData"><div class="specialDefense statBar" style="width: @(@item.baseStats.SpecialDefense * 100 / 255m)%;"></div></td>
-                        <td class="SpecialDefense">@item.baseStats.SpecialDefense</td>
+                        <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
+                        <td class="SpecialDefense">@item.BaseStats.SpecialDefense</td>
                     </tr>
                     <tr>
                         <th class="Speed" scope="col">Speed</th>
-                        <td class="statData"><div class="speed statBar" style="width: @(@item.baseStats.Speed * 100 / 255m)%;"></div></td>
-                        <td class="Speed">@item.baseStats.Speed</td>
+                        <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.Speed * 100 / 255m)%;"></div></td>
+                        <td class="Speed">@item.BaseStats.Speed</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th class="baseStatTotal" scope="col">Total</th>
-                        <td colspan="2" class="baseStatTotal"><b>@item.baseStats.StatTotal</b></td>
+                        <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.StatTotal</b></td>
                     </tr>
                 </tfoot>
             </table>
@@ -166,53 +166,53 @@
                     <tr>
                         <th>EV Yield</th>
                         <td>
-                            @if (item.evYields.Health != 0)
+                            @if (item.EVYields.Health != 0)
                             {
-                                @item.evYields.Health@(" Health");
+                                @item.EVYields.Health@(" Health");
                                 <br>
                             }
-                            @if (item.evYields.Attack != 0)
+                            @if (item.EVYields.Attack != 0)
                             {
-                                @item.evYields.Attack@(" Attack");
+                                @item.EVYields.Attack@(" Attack");
                                 <br>
                             }
-                            @if (item.evYields.Defense != 0)
+                            @if (item.EVYields.Defense != 0)
                             {
-                                @item.evYields.Defense@(" Defense");
+                                @item.EVYields.Defense@(" Defense");
                                 <br>
                             }
-                            @if (item.evYields.SpecialAttack != 0)
+                            @if (item.EVYields.SpecialAttack != 0)
                             {
-                                @item.evYields.SpecialAttack@(" Sp. Attack");
+                                @item.EVYields.SpecialAttack@(" Sp. Attack");
                                 <br>
                             }
-                            @if (item.evYields.SpecialDefense != 0)
+                            @if (item.EVYields.SpecialDefense != 0)
                             {
-                                @item.evYields.SpecialDefense@(" Sp. Defense");
+                                @item.EVYields.SpecialDefense@(" Sp. Defense");
                                 <br>
                             }
-                            @if (item.evYields.Speed != 0)
+                            @if (item.EVYields.Speed != 0)
                             {
-                                @item.evYields.Speed@(" Speed");
+                                @item.EVYields.Speed@(" Speed");
                                 <br>
                             }
                         </td>
                     </tr>
                     <tr>
                         <th>Catch Rate</th>
-                        <td>@item.pokemon.CaptureRate.CatchRate (@Decimal.Round(item.pokemon.CaptureRate.CatchRate * 100 / 765m, 1)% With A Pokeball At Full HP)</td>
+                        <td>@item.Pokemon.CaptureRate.CatchRate (@Decimal.Round(item.Pokemon.CaptureRate.CatchRate * 100 / 765m, 1)% With A Pokeball At Full HP)</td>
                     </tr>
                     <tr>
                         <th>Experience Growth</th>
-                        <td>@item.pokemon.ExperienceGrowth.Name (@item.pokemon.ExperienceGrowth.ExpPointTotal XP)</td>
+                        <td>@item.Pokemon.ExperienceGrowth.Name (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)</td>
                     </tr>
                     <tr>
                         <th>Experience Yield</th>
-                        <td>@item.pokemon.ExpYield</td>
+                        <td>@item.Pokemon.ExpYield</td>
                     </tr>
                     <tr>
                         <th>Base Happiness</th>
-                        <td>@item.pokemon.BaseHappiness.Happiness</td>
+                        <td>@item.Pokemon.BaseHappiness.Happiness</td>
                     </tr>
                 </tbody>
             </table>
@@ -224,25 +224,25 @@
                     <tr>
                         <th>Gender Ratio</th>
                         <td>
-                            @if (item.pokemon.GenderRatio.MaleRatio == 0 && item.pokemon.GenderRatio.FemaleRatio == 0)
+                            @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
                             {
                                 @("Genderless");
                             }
                             else
                             {
-                                if (item.pokemon.GenderRatio.FemaleRatio == 0)
+                                if (item.Pokemon.GenderRatio.FemaleRatio == 0)
                                 {
-                                    <span class="maleRatio">@item.pokemon.GenderRatio.MaleRatio@("% Male")</span>;
+                                    <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
                                 }
-                                else if (item.pokemon.GenderRatio.MaleRatio == 0)
+                                else if (item.Pokemon.GenderRatio.MaleRatio == 0)
                                 {
-                                    <span class="femaleRatio">@item.pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
                                 }
                                 else
                                 {
-                                    <span class="maleRatio">@item.pokemon.GenderRatio.MaleRatio@("% Male")</span>
+                                    <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
                                     <br>
-                                    <span class="femaleRatio">@item.pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
                                 }
                             }
                         </td>
@@ -267,19 +267,19 @@
                     </tr>
                     <tr>
                        <th>Egg Cycles</th>
-                       <td>@item.pokemon.EggCycle.CycleCount (@(item.pokemon.EggCycle.CycleCount * 257) Steps to Hatch)</td>
+                       <td>@item.Pokemon.EggCycle.CycleCount (@(item.Pokemon.EggCycle.CycleCount * 257) Steps to Hatch)</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="effectivenessChart pokemonTables tableWithHeaders noRowBorders">
-            @if (item.effectiveness.strongAgainst.Count > 0)
+            @if (item.Effectiveness.StrongAgainst.Count > 0)
             {
-                <div class="strongAgainst">
+                <div class="StrongAgainst">
                     <h2>Resistances</h2>
-                    <table class="strongAgainstTable">
+                    <table class="StrongAgainstTable">
                         <tbody>
-                            @foreach(string s in item.effectiveness.strongAgainst)
+                            @foreach(string s in item.Effectiveness.StrongAgainst)
                             {
                                 <tr>
                                     @if (@s.IndexOf(" Quad") > -1)
@@ -302,13 +302,13 @@
                 </div>
             }
             <div class="nonResistances">
-                @if (item.effectiveness.weakAgainst.Count > 0)
+                @if (item.Effectiveness.WeakAgainst.Count > 0)
                 {
-                    <div class="weakAgainst">
+                    <div class="WeakAgainst">
                         <h2>Weaknesses</h2>
-                        <table class="weakAgainstTable">
+                        <table class="WeakAgainstTable">
                             <tbody>
-                                @foreach(string w in item.effectiveness.weakAgainst)
+                                @foreach(string w in item.Effectiveness.WeakAgainst)
                                 {
                                     <tr>
                                         @if (@w.IndexOf(" Quad") > -1)
@@ -330,13 +330,13 @@
                         </table>
                     </div>
                 }
-                @if (item.effectiveness.immuneTo.Count > 0)
+                @if (item.Effectiveness.ImmuneTo.Count > 0)
                 {
-                    <div class="immuneTo">
+                    <div class="ImmuneTo">
                         <h2>Immunities</h2>
-                        <table class="immuneToTable">
+                        <table class="ImmuneToTable">
                             <tbody>
-                                @foreach(string i in item.effectiveness.immuneTo)
+                                @foreach(string i in item.Effectiveness.ImmuneTo)
                                 {
                                     <tr>
                                         <td>
@@ -350,10 +350,10 @@
                 }
             </div>
         </div>
-        @if (item.preEvolution != null || item.evolutions.Count > 0)
+        @if (item.PreEvolution != null || item.Evolutions.Count > 0)
         {
             <div class="evolutions pokemonTables">
-                @if (item.preEvolution != null)
+                @if (item.PreEvolution != null)
                 {
                     <table class="preEvolutionTable tableWithHeaders">
                         <thead>
@@ -365,27 +365,27 @@
                         <tbody>
                             <tr>
                                 <th>
-                                    @if(@item.preEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                                    @if(@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                     {
-                                        <a href="@item.preEvolution.PreevolutionPokemon.Name.Substring(0, item.preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower()">@item.preEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
+                                        <a href="@item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower()">@item.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
                                     }
                                     else
                                     {
-                                        <a href="@item.preEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower()">@item.preEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
+                                        <a href="@item.PreEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower()">@item.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
                                     }
                                 </th>
                                 <td>
-                                    @item.preEvolution.EvolutionMethod.Name
-                                    @if (@item.preEvolution.EvolutionDetails != null)
+                                    @item.PreEvolution.EvolutionMethod.Name
+                                    @if (@item.PreEvolution.EvolutionDetails != null)
                                     {
-                                        @(" (" + @item.preEvolution.EvolutionDetails + ")");
+                                        @(" (" + @item.PreEvolution.EvolutionDetails + ")");
                                     }
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 }
-                @if (item.evolutions.Count > 0)
+                @if (item.Evolutions.Count > 0)
                 {
                     <table class="evolutionTable tableWithHeaders">
                         <thead>
@@ -395,7 +395,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var evolution in item.evolutions)
+                            @foreach(var evolution in item.Evolutions)
                             {
                                 <tr>
                                     <th>

@@ -1,626 +1,719 @@
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Pokedex.Models;
-using Pokedex.DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 
 namespace Pokedex.Controllers
 {
-    [Authorize(Roles = "Owner"), Route("admin")]
-    public class OwnerController : Controller  
+    [Authorize(Roles = "Owner")]
+    [Route("admin")]
+    public class OwnerController : Controller
     {
         private readonly DataService _dataService;
 
         public OwnerController(DataContext dataContext)
         {
             // Instantiate an instance of the data service.
-            _dataService = new DataService(dataContext);
+            this._dataService = new DataService(dataContext);
         }
 
         [Route("users")]
         public IActionResult Users()
         {
-            List<User> model = _dataService.GetUsers();
+            List<User> model = this._dataService.GetUsers();
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpGet, Route("edit_user/{id:int}")]
+        [HttpGet]
+        [Route("edit_user/{id:int}")]
         public IActionResult EditUser(int id)
         {
-            User model = _dataService.GetUserById(id);
+            User model = this._dataService.GetUserById(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, Route("edit_user/{id:int}")]
+        [HttpPost]
+        [Route("edit_user/{id:int}")]
         public IActionResult EditUser(User user)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                User model = _dataService.GetUserWithUsername(user.Username);
+                User model = this._dataService.GetUserWithUsername(user.Username);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateUser(user);
+            this._dataService.UpdateUser(user);
 
-            return RedirectToAction("Users");
+            return this.RedirectToAction("Users");
         }
 
-        [HttpGet, Route("archive_user/{id:int}")]
+        [HttpGet]
+        [Route("archive_user/{id:int}")]
         public IActionResult ArchiveUser(int id)
         {
-            User model = _dataService.GetUserById(id);
+            User model = this._dataService.GetUserById(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, Route("archive_user/{id:int}")]
+        [HttpPost]
+        [Route("archive_user/{id:int}")]
         public IActionResult ArchiveUser(User user)
         {
-            _dataService.ArchiveUser(user.Id);
+            this._dataService.ArchiveUser(user.Id);
 
-            return RedirectToAction("Users");
+            return this.RedirectToAction("Users");
         }
 
-        [HttpGet, Route("unarchive_user/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_user/{id:int}")]
         public IActionResult UnarchiveUser(int id)
         {
-            User model = _dataService.GetUserById(id);
+            User model = this._dataService.GetUserById(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, Route("unarchive_user/{id:int}")]
+        [HttpPost]
+        [Route("unarchive_user/{id:int}")]
         public IActionResult UnarchiveUser(User user)
         {
-            _dataService.UnarchiveUser(user.Id);
+            this._dataService.UnarchiveUser(user.Id);
 
-            return RedirectToAction("Users");
+            return this.RedirectToAction("Users");
         }
 
-        [HttpGet, Route("add_evolution")]
+        [HttpGet]
+        [Route("add_evolution")]
         public IActionResult AddEvolution()
         {
-            EvolutionViewModel model = new EvolutionViewModel(){
-                AllEvolutionMethods = _dataService.GetEvolutionMethods()
+            EvolutionViewModel model = new EvolutionViewModel()
+            {
+                AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
             };
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_evolution")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_evolution")]
         public IActionResult AddEvolution(Evolution evolution)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                EvolutionViewModel model = new EvolutionViewModel(){
-                    AllEvolutionMethods = _dataService.GetEvolutionMethods()
+                EvolutionViewModel model = new EvolutionViewModel()
+                {
+                    AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
                 };
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.AddEvolution(evolution);
+            this._dataService.AddEvolution(evolution);
 
-            return RedirectToAction("Pokemon", "Admin");
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
-        [HttpGet, Route("add_shiny_hunting_technique")]
+        [HttpGet]
+        [Route("add_shiny_hunting_technique")]
         public IActionResult AddShinyHuntingTechnique()
         {
-            return View();
+            return this.View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_shiny_hunting_technique")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_shiny_hunting_technique")]
         public IActionResult AddShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View();
+                return this.View();
             }
 
-            _dataService.AddShinyHuntingTechnique(shinyHuntingTechnique);
+            this._dataService.AddShinyHuntingTechnique(shinyHuntingTechnique);
 
-            return RedirectToAction("ShinyHuntingTechniques", "Admin");
+            return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
 
-        [HttpGet, Route("add_generation")]
+        [HttpGet]
+        [Route("add_generation")]
         public IActionResult AddGeneration()
         {
-            return View();
+            return this.View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_generation")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_generation")]
         public IActionResult AddGeneration(Generation generation)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View();
+                return this.View();
             }
 
-            _dataService.AddGeneration(generation);
+            this._dataService.AddGeneration(generation);
 
-            return RedirectToAction("Generations", "Admin");
+            return this.RedirectToAction("Generations", "Admin");
         }
 
-        [HttpGet, Route("delete_generation/{id}")]
+        [HttpGet]
+        [Route("delete_generation/{id}")]
         public IActionResult DeleteGeneration(string id)
         {
-            Generation model = _dataService.GetGeneration(id);
+            Generation model = this._dataService.GetGeneration(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_generation/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_generation/{id}")]
         public IActionResult DeleteGeneration(Generation generation)
         {
-            _dataService.DeleteGeneration(generation.Id);
+            this._dataService.DeleteGeneration(generation.Id);
 
-            return RedirectToAction("Generations", "Admin");
+            return this.RedirectToAction("Generations", "Admin");
         }
 
-        [HttpGet, Route("delete_type/{id:int}")]
+        [HttpGet]
+        [Route("delete_type/{id:int}")]
         public IActionResult DeleteType(int id)
         {
-            Type model = _dataService.GetType(id);
+            Type model = this._dataService.GetType(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_type/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_type/{id:int}")]
         public IActionResult DeleteType(Type type)
         {
-            _dataService.DeleteType(type.Id);
+            this._dataService.DeleteType(type.Id);
 
-            return RedirectToAction("Types", "Admin");
+            return this.RedirectToAction("Types", "Admin");
         }
 
-        [HttpGet, Route("delete_shiny_hunting_technique/{id:int}")]
+        [HttpGet]
+        [Route("delete_shiny_hunting_technique/{id:int}")]
         public IActionResult DeleteShinyHuntingTechnique(int id)
         {
-            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+            ShinyHuntingTechnique model = this._dataService.GetShinyHuntingTechnique(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_shiny_hunting_technique/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_shiny_hunting_technique/{id:int}")]
         public IActionResult DeleteShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
         {
-            _dataService.DeleteShinyHuntingTechnique(shinyHuntingTechnique.Id);
+            this._dataService.DeleteShinyHuntingTechnique(shinyHuntingTechnique.Id);
 
-            return RedirectToAction("ShinyHuntingTechniques", "Admin");
+            return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
 
-        [HttpGet, Route("delete_shiny_hunt/{id:int}")]
+        [HttpGet]
+        [Route("delete_shiny_hunt/{id:int}")]
         public IActionResult DeleteShinyHunt(int id)
         {
-            ShinyHunt model = _dataService.GetShinyHunt(id);
+            ShinyHunt model = this._dataService.GetShinyHunt(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_shiny_hunt/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_shiny_hunt/{id:int}")]
         public IActionResult DeleteShinyHunt(ShinyHunt shinyHunt)
         {
-            _dataService.DeleteShinyHunt(shinyHunt.Id);
+            this._dataService.DeleteShinyHunt(shinyHunt.Id);
 
-            return RedirectToAction("ShinyHunts", "Admin");
+            return this.RedirectToAction("ShinyHunts", "Admin");
         }
 
-        [HttpGet, Route("delete_ability/{id:int}")]
+        [HttpGet]
+        [Route("delete_ability/{id:int}")]
         public IActionResult DeleteAbility(int id)
         {
-            Ability model = _dataService.GetAbility(id);
+            Ability model = this._dataService.GetAbility(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_ability/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_ability/{id:int}")]
         public IActionResult DeleteAbility(Ability ability)
         {
-            _dataService.DeleteAbility(ability.Id);
+            this._dataService.DeleteAbility(ability.Id);
 
-            return RedirectToAction("Abilities", "Admin");
+            return this.RedirectToAction("Abilities", "Admin");
         }
 
-        [HttpGet, Route("delete_user/{id:int}")]
+        [HttpGet]
+        [Route("delete_user/{id:int}")]
         public IActionResult DeleteUser(int id)
         {
-            User model = _dataService.GetUserById(id);
+            User model = this._dataService.GetUserById(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_user/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_user/{id:int}")]
         public IActionResult DeleteUser(User user)
         {
-            _dataService.DeleteUser(user.Id);
+            this._dataService.DeleteUser(user.Id);
 
-            return RedirectToAction("Users", "Owner");
+            return this.RedirectToAction("Users", "Owner");
         }
 
-        [HttpGet, Route("delete_egg_group/{id:int}")]
+        [HttpGet]
+        [Route("delete_egg_group/{id:int}")]
         public IActionResult DeleteEggGroup(int id)
         {
-            EggGroup model = _dataService.GetEggGroup(id);
+            EggGroup model = this._dataService.GetEggGroup(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_egg_group/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_egg_group/{id:int}")]
         public IActionResult DeleteEggGroup(EggGroup eggGroup)
         {
-            _dataService.DeleteEggGroup(eggGroup.Id);
+            this._dataService.DeleteEggGroup(eggGroup.Id);
 
-            return RedirectToAction("EggGroups", "Admin");
+            return this.RedirectToAction("EggGroups", "Admin");
         }
 
-        [HttpGet, Route("delete_classification/{id:int}")]
+        [HttpGet]
+        [Route("delete_classification/{id:int}")]
         public IActionResult DeleteClassification(int id)
         {
-            Classification model = _dataService.GetClassification(id);
+            Classification model = this._dataService.GetClassification(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("delete_classification/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_classification/{id:int}")]
         public IActionResult DeleteClassification(Classification classification)
         {
-            _dataService.DeleteClassification(classification.Id);
+            this._dataService.DeleteClassification(classification.Id);
 
-            return RedirectToAction("Classifications", "Admin");
+            return this.RedirectToAction("Classifications", "Admin");
         }
 
-        [HttpGet, Route("add_type")]
+        [HttpGet]
+        [Route("add_type")]
         public IActionResult AddType()
         {
-            return View();
+            return this.View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_type")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_type")]
         public IActionResult AddType(Type type)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View();
+                return this.View();
             }
 
-            _dataService.AddType(type);
+            this._dataService.AddType(type);
 
-            return RedirectToAction("Types", "Admin");
+            return this.RedirectToAction("Types", "Admin");
         }
 
-        [HttpGet, Route("add_egg_group")]
+        [HttpGet]
+        [Route("add_egg_group")]
         public IActionResult AddEggGroup()
         {
-            return View();
+            return this.View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_egg_group")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_egg_group")]
         public IActionResult AddEggGroup(EggGroup eggGroup)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View();
+                return this.View();
             }
 
-            _dataService.AddEggGroup(eggGroup);
+            this._dataService.AddEggGroup(eggGroup);
 
-            return RedirectToAction("EggGroups", "Admin");
+            return this.RedirectToAction("EggGroups", "Admin");
         }
 
-        [HttpGet, Route("add_classification")]
+        [HttpGet]
+        [Route("add_classification")]
         public IActionResult AddClassification()
         {
-            return View();
+            return this.View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_classification")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_classification")]
         public IActionResult AddClassification(Classification classification)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View();
+                return this.View();
             }
 
-            _dataService.AddClassification(classification);
+            this._dataService.AddClassification(classification);
 
-            return RedirectToAction("Classifications", "Admin");
+            return this.RedirectToAction("Classifications", "Admin");
         }
 
-        [HttpGet, Route("add_ability")]
+        [HttpGet]
+        [Route("add_ability")]
         public IActionResult AddAbility()
         {
-            return View();
+            return this.View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_ability")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_ability")]
         public IActionResult AddAbility(Ability ability)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View();
+                return this.View();
             }
 
-            _dataService.AddAbility(ability);
+            this._dataService.AddAbility(ability);
 
-            return RedirectToAction("Abilities", "Admin");
+            return this.RedirectToAction("Abilities", "Admin");
         }
 
-        [HttpGet, Route("add_pokemon")]
+        [HttpGet]
+        [Route("add_pokemon")]
         public IActionResult AddPokemon()
         {
-            BasePokemonViewModel model = new BasePokemonViewModel(){
-                AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                AllClassifications = _dataService.GetClassifications(),
-                AllCaptureRates = _dataService.GetCaptureRates(),
-                AllEggCycles = _dataService.GetEggCycles(),
-                AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                AllGenderRatios = _dataService.GetGenderRatios(),
-                AllGenerations = _dataService.GetGenerations()
+            BasePokemonViewModel model = new BasePokemonViewModel()
+            {
+                AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                AllClassifications = this._dataService.GetClassifications(),
+                AllCaptureRates = this._dataService.GetCaptureRates(),
+                AllEggCycles = this._dataService.GetEggCycles(),
+                AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                AllGenderRatios = this._dataService.GetGenderRatios(),
+                AllGenerations = this._dataService.GetGenerations(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_pokemon")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokemon")]
         public IActionResult AddPokemon(BasePokemonViewModel pokemon)
         {
             int pokedexNumber;
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                    AllClassifications = _dataService.GetClassifications(),
-                    AllCaptureRates = _dataService.GetCaptureRates(),
-                    AllEggCycles = _dataService.GetEggCycles(),
-                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                    AllGenderRatios = _dataService.GetGenderRatios(),
-                    AllGenerations = _dataService.GetGenerations()
+                BasePokemonViewModel model = new BasePokemonViewModel()
+                {
+                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                    AllClassifications = this._dataService.GetClassifications(),
+                    AllCaptureRates = this._dataService.GetCaptureRates(),
+                    AllEggCycles = this._dataService.GetEggCycles(),
+                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                    AllGenderRatios = this._dataService.GetGenderRatios(),
+                    AllGenerations = this._dataService.GetGenerations(),
                 };
 
-                return View(model);
+                return this.View(model);
             }
-            else if (!System.Int32.TryParse(pokemon.Id, out pokedexNumber))
+            else if (!int.TryParse(pokemon.Id, out pokedexNumber))
             {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                    AllClassifications = _dataService.GetClassifications(),
-                    AllCaptureRates = _dataService.GetCaptureRates(),
-                    AllEggCycles = _dataService.GetEggCycles(),
-                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                    AllGenderRatios = _dataService.GetGenderRatios(),
-                    AllGenerations = _dataService.GetGenerations()
+                BasePokemonViewModel model = new BasePokemonViewModel()
+                {
+                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                    AllClassifications = this._dataService.GetClassifications(),
+                    AllCaptureRates = this._dataService.GetCaptureRates(),
+                    AllEggCycles = this._dataService.GetEggCycles(),
+                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                    AllGenderRatios = this._dataService.GetGenderRatios(),
+                    AllGenerations = this._dataService.GetGenerations(),
                 };
 
-                ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
-                return View(model);
+                this.ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
+                return this.View(model);
             }
-            else if (_dataService.GetAllPokemon().Exists(x => x.Id == pokemon.Id))
+            else if (this._dataService.GetAllPokemon().Exists(x => x.Id == pokemon.Id))
             {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    AllBaseHappinesses = _dataService.GetBaseHappinesses(),
-                    AllClassifications = _dataService.GetClassifications(),
-                    AllCaptureRates = _dataService.GetCaptureRates(),
-                    AllEggCycles = _dataService.GetEggCycles(),
-                    AllExperienceGrowths = _dataService.GetExperienceGrowths(),
-                    AllGenderRatios = _dataService.GetGenderRatios(),
-                    AllGenerations = _dataService.GetGenerations()
+                BasePokemonViewModel model = new BasePokemonViewModel()
+                {
+                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                    AllClassifications = this._dataService.GetClassifications(),
+                    AllCaptureRates = this._dataService.GetCaptureRates(),
+                    AllEggCycles = this._dataService.GetEggCycles(),
+                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                    AllGenderRatios = this._dataService.GetGenderRatios(),
+                    AllGenerations = this._dataService.GetGenerations(),
                 };
 
-                ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
-                return View(model);
+                this.ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
+                return this.View(model);
             }
 
-            _dataService.AddPokemon(pokemon);
+            this._dataService.AddPokemon(pokemon);
 
-            return RedirectToAction("AddTyping", "Admin", new { pokemonId = pokemon.Id });
+            return this.RedirectToAction("AddTyping", "Admin", new { pokemonId = pokemon.Id });
         }
 
-        [HttpGet, Route("add_typing/{pokemonId}")]
+        [HttpGet]
+        [Route("add_typing/{pokemonId}")]
         public IActionResult AddTyping(string pokemonId)
         {
-            PokemonTypingViewModel model = new PokemonTypingViewModel(){
-                AllTypes = _dataService.GetTypes(),
-                PokemonId = pokemonId
+            PokemonTypingViewModel model = new PokemonTypingViewModel()
+            {
+                AllTypes = this._dataService.GetTypes(),
+                PokemonId = pokemonId,
             };
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_typing/{pokemonId}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_typing/{pokemonId}")]
         public IActionResult AddTyping(PokemonTypingViewModel typing)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                PokemonTypingViewModel model = new PokemonTypingViewModel(){
-                    AllTypes = _dataService.GetTypes(),
-                    PokemonId = typing.PokemonId
+                PokemonTypingViewModel model = new PokemonTypingViewModel()
+                {
+                    AllTypes = this._dataService.GetTypes(),
+                    PokemonId = typing.PokemonId,
                 };
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.AddPokemonTyping(typing);
+            this._dataService.AddPokemonTyping(typing);
 
-            return RedirectToAction("AddAbilities", "Admin", new { pokemonId = typing.PokemonId });
+            return this.RedirectToAction("AddAbilities", "Admin", new { pokemonId = typing.PokemonId });
         }
 
-        [HttpGet, Route("add_abilities/{pokemonId}")]
+        [HttpGet]
+        [Route("add_abilities/{pokemonId}")]
         public IActionResult AddAbilities(string pokemonId)
         {
-            PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
-                AllAbilities = _dataService.GetAbilities(),
-                PokemonId = pokemonId
+            PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
+            {
+                AllAbilities = this._dataService.GetAbilities(),
+                PokemonId = pokemonId,
             };
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_abilities/{pokemonId}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_abilities/{pokemonId}")]
         public IActionResult AddAbilities(PokemonAbilitiesViewModel abilities)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel(){
-                    AllAbilities = _dataService.GetAbilities(),
-                    PokemonId = abilities.PokemonId
+                PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
+                {
+                    AllAbilities = this._dataService.GetAbilities(),
+                    PokemonId = abilities.PokemonId,
                 };
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.AddPokemonAbilities(abilities);
+            this._dataService.AddPokemonAbilities(abilities);
 
-            return RedirectToAction("AddEggGroups", "Admin", new { pokemonId = abilities.PokemonId });
+            return this.RedirectToAction("AddEggGroups", "Admin", new { pokemonId = abilities.PokemonId });
         }
 
-        [HttpGet, Route("add_egg_groups/{pokemonId}")]
+        [HttpGet]
+        [Route("add_egg_groups/{pokemonId}")]
         public IActionResult AddEggGroups(string pokemonId)
         {
-            PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
-                AllEggGroups = _dataService.GetEggGroups(),
-                PokemonId = pokemonId
+            PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
+            {
+                AllEggGroups = this._dataService.GetEggGroups(),
+                PokemonId = pokemonId,
             };
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_egg_groups/{pokemonId}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_egg_groups/{pokemonId}")]
         public IActionResult AddEggGroups(PokemonEggGroupsViewModel eggGroups)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel(){
-                    AllEggGroups = _dataService.GetEggGroups(),
-                    PokemonId = eggGroups.PokemonId
+                PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
+                {
+                    AllEggGroups = this._dataService.GetEggGroups(),
+                    PokemonId = eggGroups.PokemonId,
                 };
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.AddPokemonEggGroups(eggGroups);
+            this._dataService.AddPokemonEggGroups(eggGroups);
 
-            return RedirectToAction("AddBaseStats", "Admin", new { pokemonId = eggGroups.PokemonId });
+            return this.RedirectToAction("AddBaseStats", "Admin", new { pokemonId = eggGroups.PokemonId });
         }
 
-        [HttpGet, Route("add_base_stats/{pokemonId}")]
+        [HttpGet]
+        [Route("add_base_stats/{pokemonId}")]
         public IActionResult AddBaseStats(string pokemonId)
         {
-            BaseStat model = new BaseStat(){
-                PokemonId = pokemonId
+            BaseStat model = new BaseStat()
+            {
+                PokemonId = pokemonId,
             };
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_base_stats/{pokemonId}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_base_stats/{pokemonId}")]
         public IActionResult AddBaseStats(BaseStat baseStat)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                BaseStat model = new BaseStat(){
-                    PokemonId = baseStat.PokemonId
+                BaseStat model = new BaseStat()
+                {
+                    PokemonId = baseStat.PokemonId,
                 };
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.AddPokemonBaseStat(baseStat);
+            this._dataService.AddPokemonBaseStat(baseStat);
 
-            return RedirectToAction("AddEVYields", "Admin", new { pokemonId = baseStat.PokemonId });
+            return this.RedirectToAction("AddEVYields", "Admin", new { pokemonId = baseStat.PokemonId });
         }
 
-        [HttpGet, Route("add_ev_yields/{pokemonId}")]
+        [HttpGet]
+        [Route("add_ev_yields/{pokemonId}")]
         public IActionResult AddEVYields(string pokemonId)
         {
-            EVYield model = new EVYield(){
-                PokemonId = pokemonId
+            EVYield model = new EVYield()
+            {
+                PokemonId = pokemonId,
             };
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("add_ev_yields/{pokemonId}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_ev_yields/{pokemonId}")]
         public IActionResult AddEVYields(EVYield evYield)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                return View(model);
+                return this.View(model);
             }
             else if (evYield.Health > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "Health must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "Health must be 3 or less.");
+                return this.View(model);
             }
             else if (evYield.Attack > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "Attack must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "Attack must be 3 or less.");
+                return this.View(model);
             }
             else if (evYield.Defense > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "Defense must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "Defense must be 3 or less.");
+                return this.View(model);
             }
             else if (evYield.SpecialAttack > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "Special Attack must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "Special Attack must be 3 or less.");
+                return this.View(model);
             }
             else if (evYield.SpecialDefense > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "Special Defense must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "Special Defense must be 3 or less.");
+                return this.View(model);
             }
             else if (evYield.Speed > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "Speed must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "Speed must be 3 or less.");
+                return this.View(model);
             }
             else if (evYield.EVTotal > 3)
             {
-                EVYield model = new EVYield(){
-                    PokemonId = evYield.PokemonId
+                EVYield model = new EVYield()
+                {
+                    PokemonId = evYield.PokemonId,
                 };
 
-                ModelState.AddModelError("EVTotal", "EV Total must be 3 or less.");
-                return View(model);
+                this.ModelState.AddModelError("EVTotal", "EV Total must be 3 or less.");
+                return this.View(model);
             }
 
-            _dataService.AddPokemonEVYield(evYield);
+            this._dataService.AddPokemonEVYield(evYield);
 
-            Pokemon pokemon = _dataService.GetPokemonById(evYield.PokemonId);
+            Pokemon pokemon = this._dataService.GetPokemonById(evYield.PokemonId);
 
-            return RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
+            return this.RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
         }
     }
 }

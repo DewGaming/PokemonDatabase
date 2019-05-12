@@ -1,511 +1,575 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
-using Pokedex.Models;
-using Pokedex.DataAccess.Models;
-using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 
 namespace Pokedex.Controllers
 {
-    [Authorize(Roles = "Admin,Owner"), Route("admin")]
+    [Authorize(Roles = "Admin,Owner")]
+    [Route("admin")]
     public class AdminController : Controller
     {
-        private readonly AppConfig _appConfig;
-
         private readonly DataService _dataService;
 
-        public AdminController(IOptions<AppConfig> appConfig, DataContext dataContext)
+        public AdminController(DataContext dataContext)
         {
-            _dataService = new DataService(dataContext);
-            _appConfig = appConfig.Value;
+            this._dataService = new DataService(dataContext);
         }
 
         [Route("")]
         public IActionResult Index()
         {
-            ViewBag.ApplicationName = _appConfig.AppName;
-            ViewBag.ApplicationVersion = _appConfig.AppVersion;
-
-            return View();
+            return this.View();
         }
 
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<Pokemon> model = _dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
+            List<Pokemon> model = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("generation")]
         public IActionResult Generations()
         {
-            GenerationViewModel model = new GenerationViewModel(){
-                AllGenerations = _dataService.GetGenerationsWithArchive(),
-                AllPokemon = _dataService.GetAllPokemon()
+            GenerationViewModel model = new GenerationViewModel()
+            {
+                AllGenerations = this._dataService.GetGenerationsWithArchive(),
+                AllPokemon = this._dataService.GetAllPokemon(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("type")]
         public IActionResult Types()
         {
-            TypeViewModel model = new TypeViewModel(){
-                AllTypes = _dataService.GetTypesWithArchive(),
-                AllPokemon = _dataService.GetAllPokemonWithTypes()
+            TypeViewModel model = new TypeViewModel()
+            {
+                AllTypes = this._dataService.GetTypesWithArchive(),
+                AllPokemon = this._dataService.GetAllPokemonWithTypes(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("ability")]
         public IActionResult Abilities()
         {
-            AbilityViewModel model = new AbilityViewModel(){
-                AllAbilities = _dataService.GetAbilitiesWithArchive(),
-                AllPokemon = _dataService.GetAllPokemonWithAbilities()
+            AbilityViewModel model = new AbilityViewModel()
+            {
+                AllAbilities = this._dataService.GetAbilitiesWithArchive(),
+                AllPokemon = this._dataService.GetAllPokemonWithAbilities(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("egg_group")]
         public IActionResult EggGroups()
         {
-            EggGroupViewModel model = new EggGroupViewModel(){
-                AllEggGroups = _dataService.GetEggGroupsWithArchive(),
-                AllPokemon = _dataService.GetAllPokemonWithEggGroups()
+            EggGroupViewModel model = new EggGroupViewModel()
+            {
+                AllEggGroups = this._dataService.GetEggGroupsWithArchive(),
+                AllPokemon = this._dataService.GetAllPokemonWithEggGroups(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("classification")]
         public IActionResult Classifications()
         {
-            ClassificationViewModel model = new ClassificationViewModel(){
-                AllClassifications = _dataService.GetClassificationsWithArchive(),
-                AllPokemon = _dataService.GetAllPokemonWithClassifications()
+            ClassificationViewModel model = new ClassificationViewModel()
+            {
+                AllClassifications = this._dataService.GetClassificationsWithArchive(),
+                AllPokemon = this._dataService.GetAllPokemonWithClassifications(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("shiny_hunting_technique")]
         public IActionResult ShinyHuntingTechniques()
         {
-            ShinyHuntViewModel model = new ShinyHuntViewModel(){
-                AllShinyHunters = _dataService.GetShinyHunters(),
-                AllShinyHuntingTechniques = _dataService.GetShinyHuntingTechniquesWithArchive()
+            ShinyHuntViewModel model = new ShinyHuntViewModel()
+            {
+                AllShinyHunters = this._dataService.GetShinyHunters(),
+                AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniquesWithArchive(),
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [Route("shiny_hunt")]
         public IActionResult ShinyHunts()
         {
-            List<ShinyHunt> model = _dataService.GetShinyHuntersWithArchive();
+            List<ShinyHunt> model = this._dataService.GetShinyHuntersWithArchive();
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpGet, Route("edit_generation/{id}")]
+        [HttpGet]
+        [Route("edit_generation/{id}")]
         public IActionResult EditGeneration(string id)
         {
-            Generation model = _dataService.GetGeneration(id);
+            Generation model = this._dataService.GetGeneration(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_generation/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_generation/{id}")]
         public IActionResult EditGeneration(Generation generation)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                Generation model = _dataService.GetGeneration(generation.Id);
+                Generation model = this._dataService.GetGeneration(generation.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateGeneration(generation);
+            this._dataService.UpdateGeneration(generation);
 
-            return RedirectToAction("Generations");
+            return this.RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("edit_type/{id:int}")]
+        [HttpGet]
+        [Route("edit_type/{id:int}")]
         public IActionResult EditType(int id)
         {
-            Type model = _dataService.GetType(id);
+            Type model = this._dataService.GetType(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_type/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_type/{id:int}")]
         public IActionResult EditType(Type type)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                Type model = _dataService.GetType(type.Id);
+                Type model = this._dataService.GetType(type.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateType(type);
+            this._dataService.UpdateType(type);
 
-            return RedirectToAction("Types");
+            return this.RedirectToAction("Types");
         }
 
-        [HttpGet, Route("edit_shiny_hunting_technique/{id:int}")]
+        [HttpGet]
+        [Route("edit_shiny_hunting_technique/{id:int}")]
         public IActionResult EditShinyHuntingTechnique(int id)
         {
-            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+            ShinyHuntingTechnique model = this._dataService.GetShinyHuntingTechnique(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_shiny_hunting_technique/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_shiny_hunting_technique/{id:int}")]
         public IActionResult EditShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(shinyHuntingTechnique.Id);
+                ShinyHuntingTechnique model = this._dataService.GetShinyHuntingTechnique(shinyHuntingTechnique.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
+            this._dataService.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
 
-            return RedirectToAction("ShinyHuntingTechniques");
+            return this.RedirectToAction("ShinyHuntingTechniques");
         }
 
-        [HttpGet, Route("edit_egg_group/{id:int}")]
+        [HttpGet]
+        [Route("edit_egg_group/{id:int}")]
         public IActionResult EditEggGroup(int id)
         {
-            EggGroup model = _dataService.GetEggGroup(id);
+            EggGroup model = this._dataService.GetEggGroup(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_egg_group/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_egg_group/{id:int}")]
         public IActionResult EditEggGroup(EggGroup eggGroup)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                EggGroup model = _dataService.GetEggGroup(eggGroup.Id);
+                EggGroup model = this._dataService.GetEggGroup(eggGroup.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateEggGroup(eggGroup);
+            this._dataService.UpdateEggGroup(eggGroup);
 
-            return RedirectToAction("EggGroups");
+            return this.RedirectToAction("EggGroups");
         }
 
-        [HttpGet, Route("edit_classification/{id:int}")]
+        [HttpGet]
+        [Route("edit_classification/{id:int}")]
         public IActionResult EditClassification(int id)
         {
-            Classification model = _dataService.GetClassification(id);
+            Classification model = this._dataService.GetClassification(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_classification/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_classification/{id:int}")]
         public IActionResult EditClassification(Classification classification)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                Classification model = _dataService.GetClassification(classification.Id);
+                Classification model = this._dataService.GetClassification(classification.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateClassification(classification);
+            this._dataService.UpdateClassification(classification);
 
-            return RedirectToAction("Classifications");
+            return this.RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("edit_shiny_hunt/{id:int}")]
+        [HttpGet]
+        [Route("edit_shiny_hunt/{id:int}")]
         public IActionResult EditShinyHunt(int id)
         {
-            ShinyHunt model = _dataService.GetShinyHunt(id);
+            ShinyHunt model = this._dataService.GetShinyHunt(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_shiny_hunt/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_shiny_hunt/{id:int}")]
         public IActionResult EditShinyHunt(ShinyHunt shinyHunt)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                ShinyHunt model = _dataService.GetShinyHunt(shinyHunt.Id);
+                ShinyHunt model = this._dataService.GetShinyHunt(shinyHunt.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateShinyHunt(shinyHunt);
+            this._dataService.UpdateShinyHunt(shinyHunt);
 
-            return RedirectToAction("ShinyHunts");
+            return this.RedirectToAction("ShinyHunts");
         }
 
-        [HttpGet, Route("edit_ability/{id:int}")]
+        [HttpGet]
+        [Route("edit_ability/{id:int}")]
         public IActionResult EditAbility(int id)
         {
-            Ability model = _dataService.GetAbility(id);
+            Ability model = this._dataService.GetAbility(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("edit_ability/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_ability/{id:int}")]
         public IActionResult EditAbility(Ability ability)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                Ability model = _dataService.GetAbility(ability.Id);
+                Ability model = this._dataService.GetAbility(ability.Id);
 
-                return View(model);
+                return this.View(model);
             }
 
-            _dataService.UpdateAbility(ability);
+            this._dataService.UpdateAbility(ability);
 
-            return RedirectToAction("Abilities");
+            return this.RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("archive_generation/{id}")]
+        [HttpGet]
+        [Route("archive_generation/{id}")]
         public IActionResult ArchiveGeneration(string id)
         {
-            Generation model = _dataService.GetGeneration(id);
+            Generation model = this._dataService.GetGeneration(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_generation/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_generation/{id}")]
         public IActionResult ArchiveGeneration(Generation generation)
         {
-            _dataService.ArchiveGeneration(generation.Id);
+            this._dataService.ArchiveGeneration(generation.Id);
 
-            return RedirectToAction("Generations");
+            return this.RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("archive_type/{id:int}")]
+        [HttpGet]
+        [Route("archive_type/{id:int}")]
         public IActionResult ArchiveType(int id)
         {
-            Type model = _dataService.GetType(id);
+            Type model = this._dataService.GetType(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_type/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_type/{id:int}")]
         public IActionResult ArchiveType(Type type)
         {
-            _dataService.ArchiveType(type.Id);
+            this._dataService.ArchiveType(type.Id);
 
-            return RedirectToAction("Types");
+            return this.RedirectToAction("Types");
         }
 
-        [HttpGet, Route("archive_shiny_hunt/{id:int}")]
+        [HttpGet]
+        [Route("archive_shiny_hunt/{id:int}")]
         public IActionResult ArchiveShinyHunt(int id)
         {
-            ShinyHunt model = _dataService.GetShinyHunt(id);
+            ShinyHunt model = this._dataService.GetShinyHunt(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_shiny_hunt/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_shiny_hunt/{id:int}")]
         public IActionResult ArchiveShinyHunt(Type type)
         {
-            _dataService.ArchiveShinyHunt(type.Id);
+            this._dataService.ArchiveShinyHunt(type.Id);
 
-            return RedirectToAction("ShinyHunts");
+            return this.RedirectToAction("ShinyHunts");
         }
 
-        [HttpGet, Route("archive_egg_group/{id:int}")]
+        [HttpGet]
+        [Route("archive_egg_group/{id:int}")]
         public IActionResult ArchiveEggGroup(int id)
         {
-            EggGroup model = _dataService.GetEggGroup(id);
+            EggGroup model = this._dataService.GetEggGroup(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_egg_group/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_egg_group/{id:int}")]
         public IActionResult ArchiveEggGroup(EggGroup eggGroup)
         {
-            _dataService.ArchiveEggGroup(eggGroup.Id);
+            this._dataService.ArchiveEggGroup(eggGroup.Id);
 
-            return RedirectToAction("EggGroups");
+            return this.RedirectToAction("EggGroups");
         }
 
-        [HttpGet, Route("archive_classification/{id:int}")]
+        [HttpGet]
+        [Route("archive_classification/{id:int}")]
         public IActionResult ArchiveClassification(int id)
         {
-            Classification model = _dataService.GetClassification(id);
+            Classification model = this._dataService.GetClassification(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_classification/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_classification/{id:int}")]
         public IActionResult ArchiveClassification(Classification classification)
         {
-            _dataService.ArchiveClassification(classification.Id);
+            this._dataService.ArchiveClassification(classification.Id);
 
-            return RedirectToAction("Classifications");
+            return this.RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("archive_ability/{id:int}")]
+        [HttpGet]
+        [Route("archive_ability/{id:int}")]
         public IActionResult ArchiveAbility(int id)
         {
-            Ability model = _dataService.GetAbility(id);
+            Ability model = this._dataService.GetAbility(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_ability/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_ability/{id:int}")]
         public IActionResult ArchiveAbility(Ability ability)
         {
-            _dataService.ArchiveAbility(ability.Id);
+            this._dataService.ArchiveAbility(ability.Id);
 
-            return RedirectToAction("Abilities");
+            return this.RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("archive_shiny_hunting_technique/{id:int}")]
+        [HttpGet]
+        [Route("archive_shiny_hunting_technique/{id:int}")]
         public IActionResult ArchiveShinyHuntingTechnique(int id)
         {
-            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+            ShinyHuntingTechnique model = this._dataService.GetShinyHuntingTechnique(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("archive_shiny_hunting_technique/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_shiny_hunting_technique/{id:int}")]
         public IActionResult ArchiveShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
         {
-            _dataService.ArchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
+            this._dataService.ArchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
 
-            return RedirectToAction("ShinyHuntingTechniques");
+            return this.RedirectToAction("ShinyHuntingTechniques");
         }
 
-        [HttpGet, Route("unarchive_generation/{id}")]
+        [HttpGet]
+        [Route("unarchive_generation/{id}")]
         public IActionResult UnarchiveGeneration(string id)
         {
-            Generation model = _dataService.GetGeneration(id);
+            Generation model = this._dataService.GetGeneration(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_generation/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_generation/{id}")]
         public IActionResult UnarchiveGeneration(Generation generation)
         {
-            _dataService.UnarchiveGeneration(generation.Id);
+            this._dataService.UnarchiveGeneration(generation.Id);
 
-            return RedirectToAction("Generations");
+            return this.RedirectToAction("Generations");
         }
 
-        [HttpGet, Route("unarchive_type/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_type/{id:int}")]
         public IActionResult UnarchiveType(int id)
         {
-            Type model = _dataService.GetType(id);
+            Type model = this._dataService.GetType(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_type/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_type/{id:int}")]
         public IActionResult UnarchiveType(Type type)
         {
-            _dataService.UnarchiveType(type.Id);
+            this._dataService.UnarchiveType(type.Id);
 
-            return RedirectToAction("Types");
+            return this.RedirectToAction("Types");
         }
 
-        [HttpGet, Route("unarchive_shiny_hunt/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_shiny_hunt/{id:int}")]
         public IActionResult UnarchiveShinyHunt(int id)
         {
-            ShinyHunt model = _dataService.GetShinyHunt(id);
+            ShinyHunt model = this._dataService.GetShinyHunt(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_shiny_hunt/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_shiny_hunt/{id:int}")]
         public IActionResult UnarchiveShinyHunt(ShinyHunt shinyHunt)
         {
-            _dataService.UnarchiveShinyHunt(shinyHunt.Id);
+            this._dataService.UnarchiveShinyHunt(shinyHunt.Id);
 
-            return RedirectToAction("ShinyHunts");
+            return this.RedirectToAction("ShinyHunts");
         }
 
-        [HttpGet, Route("unarchive_classification/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_classification/{id:int}")]
         public IActionResult UnarchiveClassification(int id)
         {
-            Classification model = _dataService.GetClassification(id);
+            Classification model = this._dataService.GetClassification(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_classification/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_classification/{id:int}")]
         public IActionResult UnarchiveType(Classification classification)
         {
-            _dataService.UnarchiveClassification(classification.Id);
+            this._dataService.UnarchiveClassification(classification.Id);
 
-            return RedirectToAction("Classifications");
+            return this.RedirectToAction("Classifications");
         }
 
-        [HttpGet, Route("unarchive_ability/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_ability/{id:int}")]
         public IActionResult UnarchiveAbility(int id)
         {
-            Ability model = _dataService.GetAbility(id);
+            Ability model = this._dataService.GetAbility(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_ability/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_ability/{id:int}")]
         public IActionResult UnarchiveAbility(Ability ability)
         {
-            _dataService.UnarchiveAbility(ability.Id);
+            this._dataService.UnarchiveAbility(ability.Id);
 
-            return RedirectToAction("Abilities");
+            return this.RedirectToAction("Abilities");
         }
 
-        [HttpGet, Route("unarchive_shiny_hunting_technique/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_shiny_hunting_technique/{id:int}")]
         public IActionResult UnarchiveShinyHuntingTechnique(int id)
         {
-            ShinyHuntingTechnique model = _dataService.GetShinyHuntingTechnique(id);
+            ShinyHuntingTechnique model = this._dataService.GetShinyHuntingTechnique(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_shiny_hunting_technique/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_shiny_hunting_technique/{id:int}")]
         public IActionResult UnarchiveShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
         {
-            _dataService.UnarchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
+            this._dataService.UnarchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
 
-            return RedirectToAction("ShinyHuntingTechniques");
+            return this.RedirectToAction("ShinyHuntingTechniques");
         }
 
-        [HttpGet, Route("unarchive_egg_group/{id:int}")]
+        [HttpGet]
+        [Route("unarchive_egg_group/{id:int}")]
         public IActionResult UnarchiveEggGroup(int id)
         {
-            EggGroup model = _dataService.GetEggGroup(id);
+            EggGroup model = this._dataService.GetEggGroup(id);
 
-            return View(model);
+            return this.View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("unarchive_egg_group/{id:int}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_egg_group/{id:int}")]
         public IActionResult UnarchiveEggGroup(EggGroup eggGroup)
         {
-            _dataService.UnarchiveEggGroup(eggGroup.Id);
+            this._dataService.UnarchiveEggGroup(eggGroup.Id);
 
-            return RedirectToAction("EggGroups");
+            return this.RedirectToAction("EggGroups");
         }
 
         [Route("error")]
         public IActionResult Error()
         {
-            return View();
+            return this.View();
         }
     }
 }

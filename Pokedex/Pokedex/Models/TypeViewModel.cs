@@ -6,6 +6,7 @@ namespace Pokedex.Models
     public class TypeViewModel
     {
         public List<Type> AllTypes { get; set; }
+
         public List<PokemonTypeDetail> AllPokemon { get; set; }
     }
 }

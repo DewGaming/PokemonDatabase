@@ -6,8 +6,10 @@ namespace Pokedex.Models
 {
     public class EndShinyHuntViewModel
     {
-        public int shinyHuntId { get; set; }
-        public ShinyHunt shinyHunt { get; set; }
+        public int ShinyHuntId { get; set; }
+
+        public ShinyHunt ShinyHunt { get; set; }
+
         [Display(Name = "Was Hunt Successful")]
         public bool HuntSuccessful { get; set; }
     }

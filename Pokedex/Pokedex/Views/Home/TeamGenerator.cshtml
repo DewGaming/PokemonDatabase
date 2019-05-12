@@ -18,13 +18,13 @@
     <div class="Table3x2">
         <table  class="teamGeneratorTable">
             <tr>
-                @for(var i = 0; i < 3; i++)
+                @for (var i = 0; i < 3; i++)
                 {
                     <td class="generatorPicture shadowed"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" target="_blank"><img title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Id + ".png")" /></a></td>
                 }
             </tr>
             <tr>
-                @for(var i = 3; i < 6; i++)
+                @for (var i = 3; i < 6; i++)
                 {
                     <td class="generatorPicture shadowed"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" target="_blank"><img title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Id + ".png")" /></a></td>
                 }
@@ -34,19 +34,19 @@
     <div class="Table2x3">
         <table  class="teamGeneratorTable">
             <tr>
-                @for(var i = 0; i < 2; i++)
+                @for (var i = 0; i < 2; i++)
                 {
                     <td class="generatorPicture shadowed"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" target="_blank"><img title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Id + ".png")" /></a></td>
                 }
             </tr>
             <tr>
-                @for(var i = 2; i < 4; i++)
+                @for (var i = 2; i < 4; i++)
                 {
                     <td class="generatorPicture shadowed"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" target="_blank"><img title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Id + ".png")" /></a></td>
                 }
             </tr>
             <tr>
-                @for(var i = 4; i < 6; i++)
+                @for (var i = 4; i < 6; i++)
                 {
                     <td class="generatorPicture shadowed"><a href="@Url.Action("Pokemon", "Home", new { Name = @Model.ElementAt(i).Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" target="_blank"><img title="@Model.ElementAt(i).Name (Click to learn more)" src="@Url.Content("/images/pokemon/" + @Model.ElementAt(i).Id + ".png")" /></a></td>
                 }
