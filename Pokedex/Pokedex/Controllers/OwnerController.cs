@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.DataAccess.Models;
@@ -95,6 +96,14 @@ namespace Pokedex.Controllers
             {
                 AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
             };
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+            foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+            {
+                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+            }
+
+            model.AllPokemon = pokemonList;
+            
             return this.View(model);
         }
 
@@ -109,6 +118,14 @@ namespace Pokedex.Controllers
                 {
                     AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
                 };
+                List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+                foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+                {
+                    pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                }
+
+                model.AllPokemon = pokemonList;
+
                 return this.View(model);
             }
 

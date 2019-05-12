@@ -16,13 +16,13 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.PreevolutionPokemonId)
-            @Html.EditorFor(x => x.PreevolutionPokemonId, new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.PreevolutionPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control" })
             @Html.ValidationMessageFor(x => x.PreevolutionPokemonId)
         </div>
 
         <div class="form-group">
             @Html.LabelFor(x => x.EvolutionPokemonId)
-            @Html.EditorFor(x => x.EvolutionPokemonId, new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.EvolutionPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control" })
             @Html.ValidationMessageFor(x => x.EvolutionPokemonId)
         </div>
 
