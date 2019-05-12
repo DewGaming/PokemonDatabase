@@ -38,6 +38,12 @@
             @Html.ValidationMessageFor(x => x.Abbreviation)
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(x => x.ReleaseDate)
+            @Html.EditorFor(x => x.ReleaseDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.ReleaseDate)
+        </div>
+
         <p>
             <button type="submit" class="btn btn-primary" role="button">Add</button>
         </p>

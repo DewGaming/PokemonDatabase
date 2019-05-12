@@ -15,6 +15,7 @@
             <th scope="col">Generation ID</th>
             <th scope="col">Region</th>
             <th scope="col">Game(s) of Origin</th>
+            <th scope="col">Release Date</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach(var item in Model.AllGenerations)
@@ -29,6 +30,7 @@
                         @("(Archived)")
                     }
                 </td>
+                <td>@item.ReleaseDate.ToString("MMMM d, yyyy")</td>
                 <td>
                     <a href="@(Url.Action("EditGeneration", "Admin", new { id = item.Id }))">Edit</a>
                     @if(!Model.AllPokemon.Exists(x => x.Generation.Id == item.Id))

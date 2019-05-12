@@ -40,7 +40,16 @@
                         }
                     </th>
                     <th scope="col">Technique</th>
-                    <th scope="col">Using Shiny Charm</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
                     <th scope="col">Number of Attempts</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -50,7 +59,16 @@
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Generation.Games</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
-                        <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
                             <a href="@Url.Action("ContinueHunt", "User", new { id = @hunts.Id })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
@@ -90,7 +108,16 @@
                         }
                     </th>
                     <th scope="col">Technique</th>
-                    <th scope="col">Used Shiny Charm</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
                     <th scope="col">Number of Attempts</th>
                 </tr>
                 @foreach(var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
@@ -99,7 +126,16 @@
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Generation.Games</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
-                        <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
                         <td>@hunts.ShinyAttemptCount</td>
                     </tr>
                 }
@@ -131,7 +167,16 @@
                         }
                     </th>
                     <th scope="col">Technique</th>
-                    <th scope="col">Used Shiny Charm</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
                     <th scope="col">Number of Attempts</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -141,7 +186,16 @@
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Generation.Games</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
-                        <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
                             <a href="@Url.Action("RetryHunt", "User", new { huntId = @hunts.Id })">Retry</a>
