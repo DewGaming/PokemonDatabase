@@ -36,7 +36,7 @@ namespace Pokedex
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("LocalConnection"))
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
