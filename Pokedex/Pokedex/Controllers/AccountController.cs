@@ -50,7 +50,6 @@ namespace Pokedex.Controllers
             User existingUser = this._dataService.GetUserWithUsername(registerViewModel.Username);
             if (existingUser != null && !existingUser.IsArchived)
             {
-                // Set email address already in use error message.
                 this.ModelState.AddModelError("Error", "An account already exists with that username.");
 
                 return this.View();
@@ -68,22 +67,10 @@ namespace Pokedex.Controllers
                 return this.RedirectToAction("Login", "Account");
             }
 
-            existingUser = this._dataService.GetUserWithEmail(registerViewModel.EmailAddress);
-            if (existingUser != null && !existingUser.IsArchived)
-            {
-                // Set email address already in use error message.
-                this.ModelState.AddModelError("Error", "An account already exists with that email address.");
-
-                return this.View();
-            }
-
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
 
             User user = new User()
             {
-                FirstName = registerViewModel.FirstName,
-                LastName = registerViewModel.LastName,
-                EmailAddress = registerViewModel.EmailAddress,
                 Username = registerViewModel.Username,
                 PasswordHash = passwordHasher.HashPassword(null, registerViewModel.Password),
             };
@@ -178,24 +165,9 @@ namespace Pokedex.Controllers
         {
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
             string passwordHash = passwordHasher.HashPassword(null, newUser.Password);
-            if (existingUser.FirstName != newUser.FirstName)
-            {
-                existingUser.FirstName = newUser.FirstName;
-            }
-
-            if (existingUser.LastName != newUser.LastName)
-            {
-                existingUser.LastName = newUser.LastName;
-            }
-
             if (existingUser.Username != newUser.Username)
             {
                 existingUser.Username = newUser.Username;
-            }
-
-            if (existingUser.EmailAddress != newUser.EmailAddress)
-            {
-                existingUser.EmailAddress = newUser.EmailAddress;
             }
 
             if (existingUser.PasswordHash != passwordHash)

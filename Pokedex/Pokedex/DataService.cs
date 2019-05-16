@@ -522,11 +522,6 @@ namespace Pokedex
             return this._dataContext.Users.ToList().Find(x => x.Username == username);
         }
 
-        public User GetUserWithEmail(string email)
-        {
-            return this._dataContext.Users.ToList().Find(x => x.EmailAddress == email);
-        }
-
         public User GetUserById(int id)
         {
             return this._dataContext.Users.ToList().Find(x => x.Id == id);
