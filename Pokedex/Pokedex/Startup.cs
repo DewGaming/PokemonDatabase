@@ -34,6 +34,11 @@ namespace Pokedex
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSession(opts => 
+            {
+                opts.Cookie.IsEssential = true;
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<DataContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
@@ -63,6 +68,7 @@ namespace Pokedex
                 app.UseHsts();
             }
 
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
