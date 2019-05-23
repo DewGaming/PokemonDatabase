@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -24,6 +25,46 @@ namespace Pokedex.Controllers
         public UserController(DataContext dataContext)
         {
             this._dataService = new DataService(dataContext);
+        }
+
+        [HttpGet]
+        [Route("edit_password")]
+        public IActionResult EditPassword()
+        {
+            NewPasswordViewModel model = new NewPasswordViewModel()
+            {
+                UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("edit_password")]
+        public IActionResult EditPassword(NewPasswordViewModel newPasswordViewModel)
+        {
+            User user = this._dataService.GetUserById(newPasswordViewModel.UserId);
+            PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
+            PasswordVerificationResult passwordVerificationResult =
+                passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
+
+            if (!this.ModelState.IsValid || passwordVerificationResult == PasswordVerificationResult.Failed)
+            {
+                NewPasswordViewModel model = new NewPasswordViewModel()
+                {
+                    UserId = newPasswordViewModel.UserId
+                };
+                // Set invalid password error message.
+                this.ModelState.AddModelError("Error", "Invalid password.");
+
+                return this.View(model);
+            }
+
+            user.PasswordHash = passwordHasher.HashPassword(null, newPasswordViewModel.NewPassword);
+
+            this._dataService.UpdateUser(user);
+
+            return this.RedirectToAction("Index", "Home");
         }
         
         [Authorize]

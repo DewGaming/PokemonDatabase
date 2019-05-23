@@ -25,6 +25,10 @@ footer hr {
   margin: 0;
 }
 
+hr.dropdown-line {
+  margin: .25rem 0;
+}
+
 .dropdown-menu {
   min-width: auto;
 }

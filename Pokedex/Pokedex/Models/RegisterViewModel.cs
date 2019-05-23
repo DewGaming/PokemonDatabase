@@ -18,6 +18,7 @@ namespace Pokedex.Models
 
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
         [Compare("Password")]
         public string PasswordConfirm { get; set; }
     }

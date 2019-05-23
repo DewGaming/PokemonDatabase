@@ -20,7 +20,7 @@
             @Html.ValidationMessageFor(x => x.Password)
         </div>
         <div class="form-group">
-            @Html.LabelFor(x => x.PasswordConfirm, "Confirm Password")
+            @Html.LabelFor(x => x.PasswordConfirm)
             @Html.PasswordFor(x => x.PasswordConfirm, new { @class = "form-control" })
             @Html.ValidationMessageFor(x => x.PasswordConfirm)
         </div>
