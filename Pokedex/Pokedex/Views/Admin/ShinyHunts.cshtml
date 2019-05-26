@@ -3,52 +3,255 @@
     Layout = "_Layout";
 }
 
-<div class="shinyHuntTable">
-    <table class="table">
-        <tr>
-            <th scope="col">Hunter</th>
-            <th scope="col">Pokemon</th>
-            <th scope="col">Games</th>
-            <th scope="col">Using Shiny Charm</th>
-            <th scope="col">Technique</th>
-            <th scope="col">Attempts</th>
-            <th scope="col">Hunt Complete</th>
-            <th scope="col">Actions</th>
-        </tr>
-        @foreach(var item in Model)
-        {
-            <tr>
-                <td>@item.User.Username</td>
-                <td>
-                    @item.Pokemon.Name
-                    @if(item.IsArchived == true)
-                    {
-                        @("(Archived)")
-                    }
-                </td>
-                <td>@item.Generation.Games</td>
-                <td>@(item.HasShinyCharm ? "Yes" : "No")</td>
-                <td>@item.ShinyHuntingTechnique.Name</td>
-                <td>@item.ShinyAttemptCount</td>
-                <td>@(item.HuntComplete == false ? "No" : "Yes (" + (item.IsPokemonCaught == true ? "Success" : "Fail") + ")")</td>
-                <td>
-                    <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = item.Id }))">Edit</a>
-                    @('|')
-                    @if(!item.IsArchived)
-                    {
-                        <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = item.Id }))">Archive</a>
-                    }
-                    else
-                    {
-                        <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = item.Id }))">Unarchive</a>
-                        @if(User.IsInRole("Owner"))
+@section styles
+{
+    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/tabContent.js"></script>
+}
+
+<div class="tab-list">
+    <button class="tab active" onclick="openPage(event, 'huntsInProgress')">Hunts In Progress</button>
+    <button class="tab" onclick="openPage(event, 'huntsCompleted')">Hunts Completed</button>
+    <button class="tab" onclick="openPage(event, 'huntsFailed')">Hunts Failed</button>
+</div>
+<div class="tabcontent active" id="huntsInProgress">
+    @if (Model.Where(x => !x.HuntComplete && !x.IsArchived).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntInProgressTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Hunter</th>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Technique</th>
+                    @{
+                        foreach(var hunt in Model)
                         {
-                            @('|')
-                            <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = item.Id }))">Delete</a>
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
                         }
                     }
-                </td>
-            </tr>
-        }
-    </table>
+                    <th scope="col">Number of Attempts</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => !x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.User.Username</td>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
+                        <td>@hunts.ShinyAttemptCount</td>
+                        <td>
+                            <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = hunts.Id }))">Edit</a>
+                            @('|')
+                            @if(!hunts.IsArchived)
+                            {
+                                <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = hunts.Id }))">Archive</a>
+                            }
+                            else
+                            {
+                                <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = hunts.Id }))">Unarchive</a>
+                                @if(User.IsInRole("Owner"))
+                                {
+                                    @('|')
+                                    <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = hunts.Id }))">Delete</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No pokemon are being hunted right now.</div>
+    }
+</div>
+<div class="tabcontent" id="huntsCompleted">
+    @if(Model.Where(x => x.HuntComplete & x.IsPokemonCaught && !x.IsArchived).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntCompleteTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Hunter</th>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Technique</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
+                    <th scope="col">Number of Attempts</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.User.Username</td>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
+                        <td>@hunts.ShinyAttemptCount</td>
+                        <td>
+                            <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = hunts.Id }))">Edit</a>
+                            @('|')
+                            @if(!hunts.IsArchived)
+                            {
+                                <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = hunts.Id }))">Archive</a>
+                            }
+                            else
+                            {
+                                <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = hunts.Id }))">Unarchive</a>
+                                @if(User.IsInRole("Owner"))
+                                {
+                                    @('|')
+                                    <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = hunts.Id }))">Delete</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No hunts have been completed.</div>
+    }
+</div>
+<div class="tabcontent" id="huntsFailed">
+    @if(Model.Where(x => x.HuntComplete && !x.IsPokemonCaught && !x.IsArchived).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntFailedTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Hunter</th>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Technique</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
+                    <th scope="col">Number of Attempts</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => !x.IsPokemonCaught && x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.User.Username</td>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
+                        <td>@hunts.ShinyAttemptCount</td>
+                        <td>
+                            <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = hunts.Id }))">Edit</a>
+                            @('|')
+                            @if(!hunts.IsArchived)
+                            {
+                                <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = hunts.Id }))">Archive</a>
+                            }
+                            else
+                            {
+                                <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = hunts.Id }))">Unarchive</a>
+                                @if(User.IsInRole("Owner"))
+                                {
+                                    @('|')
+                                    <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = hunts.Id }))">Delete</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No hunts have been failed.</div>
+    }
 </div>
