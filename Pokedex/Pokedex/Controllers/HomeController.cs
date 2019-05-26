@@ -56,7 +56,7 @@ namespace Pokedex.Controllers
                     .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
                     .ToList();
 
-                if (model.Count() == 1 && this._dataService.GetPokemon(model[0].Pokemon.Name) != null)
+                if (model.Count() == 1 || this._dataService.GetPokemon(model[0].Pokemon.Name) != null)
                 {
                     return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
