@@ -346,13 +346,17 @@ namespace Pokedex
 
             foreach (var type in pokemonTypes)
             {
-                typeChart = this._dataContext.TypeCharts.Where(t => t.Defend == type).ToList();
+                typeChart = this._dataContext.TypeCharts
+                    .Include(t => t.Attack)
+                    .Include(t => t.Defend)
+                    .Where(t => t.Defend == type)
+                    .ToList();
                 foreach (var t in typeList)
                 {
-                    if (typeChart.Exists(c => c.Attack == t))
+                    if (typeChart.Exists(c => c.Attack.Name == t.Name))
                     {
-                        attackType = typeChart.Find(c => c.Attack == t).Attack.Name;
-                        effectiveValue = typeChart.Find(c => c.Attack == t).Effective.ToString("0.####");
+                        attackType = t.Name;
+                        effectiveValue = typeChart.Find(c => c.Attack.Name == attackType).Effective.ToString("0.####");
                         if (effectiveValue == "0")
                         {
                             strongAgainst.Remove(attackType);
