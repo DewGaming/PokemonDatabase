@@ -1,14 +1,16 @@
 $(this).ready(function() {
+    updateCounterWidth();
+});
+
+var updateCounterWidth = function() {
     $(".attemptCount").css({
         'width': (($(".attemptCount").val().length + 1) * 8) + 'px'
     });
-});
+}
 
 var updateCounter = function(data) {
     $(".attemptCount").val(data);
-    $(".attemptCount").css({
-        'width': (($(".attemptCount").val().length + 1) * 8) + 'px'
-    });
+    updateCounterWidth();
 }
 
 var subtractCounter = function() {
@@ -41,15 +43,15 @@ var addCounter = function() {
     });
 }
 
-$('.subtractAttemptCount').click(function() {
+$('.subtractAttemptCount').on('click', (function() {
     subtractCounter();
-});
+}));
 
-$('.addAttemptCount').click(function() {
+$('.addAttemptCount').on('click', function() {
     addCounter();
 });
 
-$('.attemptCount').focusout(function() {
+$('.attemptCount').on('focusout', function() {
     var shinyHuntId = $('#shinyHuntId').val();
     var attemptCount = $('.attemptCount').val();
 
@@ -65,7 +67,11 @@ $('.attemptCount').focusout(function() {
     });
 });
 
-$(this).keypress(function(e) {
+$('.attemptCount').on('input', function() {
+    updateCounterWidth();
+});
+
+$(this).on('keypress', function(e) {
     if (e.keyCode == 45)
     {
         subtractCounter();

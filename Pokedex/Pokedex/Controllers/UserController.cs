@@ -193,10 +193,10 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [Route("update-hunt-attempt/{huntId:int}/{attemptCount:int}")]
-        public int SubtractShinyCounter(int huntId, int attemptCount)
+        public int UpdateShinyCounter(int huntId, int attemptCount)
         {
             ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            if (hunt.ShinyAttemptCount > 0)
+            if (attemptCount > 0)
             {
                 hunt.ShinyAttemptCount = attemptCount;
                 this._dataService.UpdateShinyHunt(hunt);
@@ -204,6 +204,7 @@ namespace Pokedex.Controllers
             else
             {
                 hunt.ShinyAttemptCount = 0;
+                this._dataService.UpdateShinyHunt(hunt);
             }
 
             return hunt.ShinyAttemptCount;
