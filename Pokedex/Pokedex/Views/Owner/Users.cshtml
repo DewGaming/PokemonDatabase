@@ -9,14 +9,12 @@
         <table class="table">
             <tr>
                 <th scope="col">Username</th>
-                <th scope="col">Is Admin</th>
                 <th scope="col">Actions</th>
             </tr>
             @foreach(var item in Model)
             {
                 <tr>
                     <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsArchived ? " (Archived)" : item.IsAdmin ? " (Admin)" : "")</td>
-                    <td>@item.IsAdmin</td>
                     <td>
                         <a href="@Url.Action("EditUser", "Owner", new { id = item.Id })">Edit</a>
                         |

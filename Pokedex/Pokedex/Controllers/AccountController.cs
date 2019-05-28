@@ -40,7 +40,7 @@ namespace Pokedex.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("signup")]
-        public IActionResult Register(RegisterViewModel registerViewModel)
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
             if (!this.ModelState.IsValid)
             {
@@ -77,7 +77,21 @@ namespace Pokedex.Controllers
 
             this._dataService.AddUser(user);
 
-            return this.RedirectToAction("Login", "Account");
+            var claims = new List<Claim>
+            {
+                new Claim("UserId", user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.IsOwner ? "Owner" : user.IsAdmin ? "Admin" : "User"),
+            };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties { };
+
+            await this.HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+
+            return this.RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous]

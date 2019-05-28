@@ -12,7 +12,7 @@ namespace Pokedex.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(255, ErrorMessage = "Password must be between 5 and 255 characters", MinimumLength = 5)]
+        [StringLength(255, ErrorMessage = "Password must be between 1 and 255 characters", MinimumLength = 1)]
 
         public string Password { get; set; }
 
