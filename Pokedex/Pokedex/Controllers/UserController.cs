@@ -91,8 +91,8 @@ namespace Pokedex.Controllers
             {
                 UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                 AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
-                AllPokemon = this._dataService.GetAllPokemon(),
                 AllGenerations = this._dataService.GetGenerations(),
+                AllPokemon = new List<Pokemon>(),
             };
 
             return this.View(model);
@@ -122,6 +122,15 @@ namespace Pokedex.Controllers
             this._dataService.AddShinyHunt(shinyHunt);
 
             return this.RedirectToAction("ShinyHuntingCounter");
+        }
+
+        [HttpPost]
+        [Route("update_pokemon_list/{generationId}")]
+        public List<Pokemon> UpdatePokemonList(string generationId)
+        {
+            Generation gen = this._dataService.GetGeneration(generationId);
+            List<Pokemon> pokemon = this._dataService.GetAllPokemon().Where(x => x.Generation.ReleaseDate <= gen.ReleaseDate && !x.Id.Contains('-')).ToList();
+            return pokemon;
         }
 
         [HttpGet]
