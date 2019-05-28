@@ -145,6 +145,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokemon/{id}")]
+        public IActionResult EditPokemon(string id)
+        {
+            Pokemon model = this._dataService.GetPokemonById(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon/{id}")]
+        public IActionResult EditPokemon(Pokemon pokemon)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Pokemon model = this._dataService.GetPokemon(pokemon.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdatePokemon(pokemon);
+
+            return this.RedirectToAction("Pokemon");
+        }
+
+        [HttpGet]
         [Route("edit_type/{id:int}")]
         public IActionResult EditType(int id)
         {

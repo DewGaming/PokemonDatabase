@@ -632,6 +632,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdatePokemon(Pokemon pokemon)
+        {
+            this._dataContext.Pokemon.Update(pokemon);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdateShinyHunt(ShinyHunt shinyHunt)
         {
             this._dataContext.ShinyHunts.Update(shinyHunt);
