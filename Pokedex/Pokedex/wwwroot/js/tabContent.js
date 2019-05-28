@@ -1,4 +1,4 @@
-function openPage(evt, pageName) {
+function openPage(evt, pageName, username) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {
@@ -11,5 +11,6 @@ function openPage(evt, pageName) {
   }
 
   document.getElementById(pageName).className += " active";
+  document.getElementById(username).className += " active";
   evt.currentTarget.className += " active";
 } 
