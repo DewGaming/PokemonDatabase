@@ -19,17 +19,17 @@
     {
         @if(button.Pokemon.Id.IndexOf('-') == -1)
         {
-            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name')">@button.Pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
         else
         {
-            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name')">@button.Pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
     }
 </div>
 @foreach(var item in Model)
 {
-    <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name">
+    <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")">
         <div class="pokemonPicture shadowed"><img width="327" title="@item.Pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")" /></div>
         <div class="pokemonData pokemonTables span-md-5 span-lg-4">
             <h2>Pokemon Data</h2>

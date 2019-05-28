@@ -31,7 +31,7 @@
     {
         @if (id.IndexOf('-') == -1)
         {
-            <button class="tab" onclick="openPage(event, 'Generation @id')">Generation @id</button>
+            <button class="tab" onclick="openPage(event, 'Generation@(id)')">Generation @id</button>
         }
     }
 </div>
@@ -39,7 +39,7 @@
 {
     @if(@gen.IndexOf('-') == -1)
     {
-        <div class="tabcontent generation" id="Generation @gen">
+        <div class="tabcontent generation" id="Generation@(gen)">
             <table class="table">
                 <tr>
                     <th scope="col">Pokedex Number</th>
@@ -52,7 +52,7 @@
                         <td>@item.Id</td>
                         <td>@item.Name.Replace('_', ' ')</td>
                         <td>
-
+                            <a href="@(Url.Action("EditPokemon", "Admin", new { id = item.Id }))">Edit</a>
                         </td>
                     </tr>
                 }
