@@ -7,7 +7,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.8"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.8"/>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-rc.114"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pokedex.DataAccess\Pokedex.DataAccess.csproj"/>
