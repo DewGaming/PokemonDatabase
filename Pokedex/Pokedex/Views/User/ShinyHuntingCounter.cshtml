@@ -77,6 +77,8 @@
                                 @("|")
                                 <a href="@Url.Action("EndShinyHunt", "User", new { id = @hunts.Id })">End Hunt</a>
                             }
+                            |
+                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
                         </td>
                     </tr>
                 }
@@ -119,6 +121,7 @@
                         }
                     }
                     <th scope="col">Number of Attempts</th>
+                    <th scope="col">Actions</th>
                 </tr>
                 @foreach(var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
                 {
@@ -137,6 +140,9 @@
                             }
                         }
                         <td>@hunts.ShinyAttemptCount</td>
+                        <td>
+                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -198,9 +204,12 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("RetryHunt", "User", new { huntId = @hunts.Id })">Retry</a>
-                            |
-                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Remove</a>
+                            @if (!hunts.HuntRetried)
+                            {
+                                <a href="@Url.Action("RetryHunt", "User", new { huntId = @hunts.Id })">Retry Hunt</a>
+                                @("|")
+                            }
+                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
                         </td>
                     </tr>
                 }
