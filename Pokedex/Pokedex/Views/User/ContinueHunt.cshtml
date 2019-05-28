@@ -7,6 +7,7 @@
 {
     <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <link href="/css/shinyHunt.css" rel="stylesheet" type="text/css" />
 }
 
 @section scripts 
@@ -23,8 +24,8 @@
     <div class="pokemonPicture shadowed">
         <img width="327" title="@Model.Pokemon.Name" src="@Url.Content("/images/pokemon/" + @Model.Pokemon.Id + ".png")" />
     </div>
-    <div class="span-lg-1"></div>
-    <div class="pokemonData pokemonTables span-md-5 span-lg-4">
+    <div class="input-lg-1"></div>
+    <div class="pokemonData pokemonTables input-md-5 input-lg-4">
         <h2>Pokemon Data</h2>
         <table class="pokedexNumber">
             <tbody>
@@ -59,7 +60,7 @@
                     <th>Attempts</th>
                     <td>
                         <button class="attemptCounter subtractAttemptCount btn btn-primary">-</button>
-                        <span class="attemptCount" style="margin: 0 .625rem;">@Model.ShinyAttemptCount</span>
+                        <input value="@Model.ShinyAttemptCount" class="attemptCount" onchange="this.style.width = ((this.value.length + 1) * 8) + 'px';" />
                         <button class="attemptCounter addAttemptCount btn btn-primary">+</button>
                     </td>
                 </tr>

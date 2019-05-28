@@ -191,6 +191,24 @@ namespace Pokedex.Controllers
             return hunt.ShinyAttemptCount;
         }
 
+        [HttpPost]
+        [Route("update-hunt-attempt/{huntId:int}/{attemptCount:int}")]
+        public int SubtractShinyCounter(int huntId, int attemptCount)
+        {
+            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
+            if (hunt.ShinyAttemptCount > 0)
+            {
+                hunt.ShinyAttemptCount = attemptCount;
+                this._dataService.UpdateShinyHunt(hunt);
+            }
+            else
+            {
+                hunt.ShinyAttemptCount = 0;
+            }
+
+            return hunt.ShinyAttemptCount;
+        }
+
         [Route("retry-hunt/{huntId:int}")]
         public IActionResult RetryHunt(int huntId)
         {

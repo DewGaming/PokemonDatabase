@@ -12,7 +12,8 @@
     "minify-main-css": "npx uglifycss .dist/wwwroot/css/main.css --output .dist/wwwroot/css/main.css",
     "minify-tabContent-css": "npx uglifycss .dist/wwwroot/css/tabContent.css --output .dist/wwwroot/css/tabContent.css",
     "minify-typeChart-css": "npx uglifycss .dist/wwwroot/css/typeChart.css --output .dist/wwwroot/css/typeChart.css",
-    "minify-css": "npm run minify-main-css && npm run minify-tabContent-css && npm run minify-typeChart-css",
+    "minify-shinyHunt-css": "npx uglifycss .dist/wwwroot/css/shinyHunt.css --output .dist/wwwroot/css/shinyHunt.css",
+    "minify-css": "npm run minify-main-css && npm run minify-tabContent-css && npm run minify-typeChart-css && npm run minify-shinyHunt-css",
     "minify-js": "npx uglifyjs-folder .dist/wwwroot/js/ -p \"*.js,!*.min.js\" -x .js -c -m -eo .dist/wwwroot/js/",
     "minify": "npm run minify-css & npm run minify-js",
     "build": "npm run build-app && npm run copy-to-dist && npm run minify && echo Done!"
