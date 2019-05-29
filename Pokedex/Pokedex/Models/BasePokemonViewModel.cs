@@ -6,6 +6,7 @@ namespace Pokedex.Models
 {
     public class BasePokemonViewModel : Pokemon
     {
+        public Pokemon Pokemon { get; set; }
         public List<EggCycle> AllEggCycles { get; set; }
 
         public List<GenderRatio> AllGenderRatios { get; set; }

@@ -1,5 +1,5 @@
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
-@model Pokedex.DataAccess.Models.Pokemon
+@model Pokedex.Models.BasePokemonViewModel
 @{
     Layout = "_layout";
 }
@@ -9,51 +9,85 @@
 <div class="form-horizontal">
 
     @using (Html.BeginForm())
-    {      
+    {
         @Html.AntiForgeryToken()
-
-        @Html.HiddenFor(x => x.ClassificationId)
-        @Html.HiddenFor(x => x.EggCycleId)
-        @Html.HiddenFor(x => x.GenerationId)
-        @Html.HiddenFor(x => x.ExperienceGrowthId)
-        @Html.HiddenFor(x => x.CaptureRateId)
-        @Html.HiddenFor(x => x.GenderRatioId)
-        @Html.HiddenFor(x => x.BaseHappinessId)
-
+        
         @Html.ValidationSummary()
 
         <div class="form-group">
-            @Html.LabelFor(x => x.Id)
-            @Html.EditorFor(x => x.Id, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(x => x.Id)
+            @Html.LabelFor(x => x.Pokemon.Id)
+            @Html.EditorFor(x => x.Pokemon.Id, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.Id)
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.Name)
+            @Html.EditorFor(x => x.Pokemon.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.Name)
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(x => x.Name)
-            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(x => x.Name)
+            @Html.LabelFor(x => x.Pokemon.Height)
+            @Html.EditorFor(x => x.Pokemon.Height, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.Height)
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(x => x.Height)
-            @Html.EditorFor(x => x.Height, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(x => x.Height)
+            @Html.LabelFor(x => x.Pokemon.Weight)
+            @Html.EditorFor(x => x.Pokemon.Weight, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.Weight)
+        </div>   
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.ExpYield)
+            @Html.EditorFor(x => x.Pokemon.ExpYield, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.ExpYield)
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(x => x.Weight)
-            @Html.EditorFor(x => x.Weight, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(x => x.Weight)
+            @Html.LabelFor(x => x.Pokemon.EggCycleId)
+            @Html.DropDownListFor(x => x.Pokemon.EggCycleId, new SelectList(Model.AllEggCycles, "Id", "CycleCount"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.EggCycleId)
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(x => x.ExpYield)
-            @Html.EditorFor(x => x.ExpYield, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(x => x.ExpYield)
+            @Html.LabelFor(x => x.Pokemon.GenderRatioId)
+            @Html.DropDownListFor(x => x.Pokemon.GenderRatioId, new SelectList(Model.AllGenderRatios, "Id", "MaleRatio"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.GenderRatioId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.ClassificationId)
+            @Html.DropDownListFor(x => x.Pokemon.ClassificationId, new SelectList(Model.AllClassifications, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.ClassificationId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.GenerationId)
+            @Html.DropDownListFor(x => x.Pokemon.GenerationId, new SelectList(Model.AllGenerations, "Id", "Games"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.GenerationId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.ExperienceGrowthId)
+            @Html.DropDownListFor(x => x.Pokemon.ExperienceGrowthId, new SelectList(Model.AllExperienceGrowths, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.ExperienceGrowthId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.CaptureRateId)
+            @Html.DropDownListFor(x => x.Pokemon.CaptureRateId, new SelectList(Model.AllCaptureRates, "Id", "CatchRate"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.CaptureRateId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.BaseHappinessId)
+            @Html.DropDownListFor(x => x.Pokemon.BaseHappinessId, new SelectList(Model.AllBaseHappinesses, "Id", "Happiness"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.BaseHappinessId)
         </div>
 
         <p>
-            <button type="submit" class="btn btn-primary" role="button">Save</button>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
         </p>
     }
 

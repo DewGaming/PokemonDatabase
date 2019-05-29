@@ -1,4 +1,4 @@
-function openPage(evt, pageName, username) {
+function openPage(evt, pageName, parentName) {
   $('.tabcontent').each(function() {
     $(this).removeClass('active');
   })
@@ -9,8 +9,8 @@ function openPage(evt, pageName, username) {
 
   $('#' + pageName).addClass('active');
   $(evt.currentTarget).addClass('active');
-  if ('#' + username != null)
+  if ('#' + parentName != null)
   {
-    $('#' + username).addClass('active');
+    $('#' + parentName).addClass('active');
   }
 }

@@ -33,7 +33,15 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<Pokemon> model = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
+            List<Pokemon> model = this._dataService.GetAllPokemon().ToList();
+
+            foreach(var altForm in model)
+            {
+                if (altForm.Id.Contains('-'))
+                {
+                    altForm.Name += " (" + this._dataService.GetPokemonFormName(altForm.Id) + ")";
+                }
+            }
 
             return this.View(model);
         }
@@ -148,7 +156,16 @@ namespace Pokedex.Controllers
         [Route("edit_pokemon/{id}")]
         public IActionResult EditPokemon(string id)
         {
-            Pokemon model = this._dataService.GetPokemonById(id);
+            BasePokemonViewModel model = new BasePokemonViewModel(){
+                Pokemon = this._dataService.GetPokemonById(id),
+                AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                AllClassifications = this._dataService.GetClassifications(),
+                AllCaptureRates = this._dataService.GetCaptureRates(),
+                AllEggCycles = this._dataService.GetEggCycles(),
+                AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                AllGenderRatios = this._dataService.GetGenderRatios(),
+                AllGenerations = this._dataService.GetGenerations(),
+            };
 
             return this.View(model);
         }
@@ -160,7 +177,16 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Pokemon model = this._dataService.GetPokemon(pokemon.Id);
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    Pokemon = this._dataService.GetPokemonById(pokemon.Id),
+                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                    AllClassifications = this._dataService.GetClassifications(),
+                    AllCaptureRates = this._dataService.GetCaptureRates(),
+                    AllEggCycles = this._dataService.GetEggCycles(),
+                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                    AllGenderRatios = this._dataService.GetGenderRatios(),
+                    AllGenerations = this._dataService.GetGenerations(),
+                };
 
                 return this.View(model);
             }
