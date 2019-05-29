@@ -52,7 +52,17 @@
                         <td>@item.Id</td>
                         <td>@item.Name.Replace('_', ' ')</td>
                         <td>
-                            <a href="@(Url.Action("EditPokemon", "Admin", new { id = item.Id }))">Edit</a>
+                            <a href="@(Url.Action("EditPokemon", "Admin", new { id = item.Id }))">Edit Pokemon</a>
+                            |
+                            <a href="@(Url.Action("EditTyping", "Admin", new { id = item.Id }))">Edit Typing</a>
+                            |
+                            <a href="@(Url.Action("EditAbilities", "Admin", new { id = item.Id }))">Edit Abilities</a>
+                            |
+                            <a href="@(Url.Action("EditEggGroups", "Admin", new { id = item.Id }))">Edit Egg Groups</a>
+                            |
+                            <a href="@(Url.Action("EditBaseStats", "Admin", new { id = item.Id }))">Edit Base Stats</a>
+                            |
+                            <a href="@(Url.Action("EditEVYields", "Admin", new { id = item.Id }))">Edit EV Yields</a>
                         </td>
                     </tr>
                 }
