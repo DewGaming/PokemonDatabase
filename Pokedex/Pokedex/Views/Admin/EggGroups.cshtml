@@ -7,7 +7,7 @@
     @if(User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("AddEggGroup", "Owner")" role="button">Add Egg Group</a>
+            <a class="btn btn-primary" href="@Url.Action("EggGroup", "Add")" role="button">Add Egg Group</a>
         </p>
     }
     <table class="table">
@@ -26,22 +26,22 @@
                     }
                 </td>
                 <td>
-                    <a href="@(Url.Action("EditEggGroup", "Admin", new { id = item.Id }))">Edit</a>
+                    <a href="@(Url.Action("EggGroup", "Edit", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
                     {
                         @('|')
                         @if(!item.IsArchived)
                         {
-                            <a href="@(Url.Action("ArchiveEggGroup", "Admin", new { id = item.Id }))">Archive</a>
+                            <a href="@(Url.Action("EggGroup", "Archive", new { id = item.Id }))">Archive</a>
                         }
                         else
                         {
-                            <a href="@(Url.Action("UnarchiveEggGroup", "Admin", new { id = item.Id }))">Unarchive</a>
-                            @if(User.IsInRole("Owner"))
-                            {
-                                @('|')
-                                <a href="@(Url.Action("DeleteEggGroup", "Owner", new { id = item.Id }))">Delete</a>
-                            }
+                            <a href="@(Url.Action("EggGroup", "Unarchive", new { id = item.Id }))">Unarchive</a>
+                        }
+                        @if(User.IsInRole("Owner"))
+                        {
+                            @('|')
+                            <a href="@(Url.Action("EggGroup", "Delete", new { id = item.Id }))">Delete</a>
                         }
                     }
                 </td>

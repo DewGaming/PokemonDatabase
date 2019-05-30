@@ -7,7 +7,7 @@
     @if(User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("AddShinyHuntingTechnique", "Owner")" role="button">Add Shiny Hunting Technique</a>
+            <a class="btn btn-primary" href="@Url.Action("ShinyHuntingTechnique", "Add")" role="button">Add Shiny Hunting Technique</a>
         </p>
     }
     <table class="table">
@@ -28,22 +28,22 @@
                 </td>
                 <td>@item.Technique</td>
                 <td>
-                    <a href="@(Url.Action("EditShinyHuntingTechnique", "Admin", new { id = item.Id }))">Edit</a>
+                    <a href="@(Url.Action("ShinyHuntingTechnique", "Edit", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllShinyHunters.Exists(x => x.ShinyHuntingTechnique.Id == item.Id)))
                     {
                         @('|')
                         @if(!item.IsArchived)
                         {
-                            <a href="@(Url.Action("ArchiveShinyHuntingTechnique", "Admin", new { id = item.Id }))">Archive</a>
+                            <a href="@(Url.Action("ShinyHuntingTechnique", "Archive", new { id = item.Id }))">Archive</a>
                         }
                         else
                         {
-                            <a href="@(Url.Action("UnarchiveShinyHuntingTechnique", "Admin", new { id = item.Id }))">Unarchive</a>
-                            @if(User.IsInRole("Owner"))
-                            {
-                                @('|')
-                                <a href="@(Url.Action("DeleteShinyHuntingTechnique", "Owner", new { id = item.Id }))">Delete</a>
-                            }
+                            <a href="@(Url.Action("ShinyHuntingTechnique", "Unarchive", new { id = item.Id }))">Unarchive</a>
+                        }
+                        @if(User.IsInRole("Owner"))
+                        {
+                            @('|')
+                            <a href="@(Url.Action("ShinyHuntingTechnique", "Delete", new { id = item.Id }))">Delete</a>
                         }
                     }
                 </td>

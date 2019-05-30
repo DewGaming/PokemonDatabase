@@ -7,7 +7,7 @@
     @if(User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("AddGeneration", "Owner")" role="button">Add Generation</a>
+            <a class="btn btn-primary" href="@Url.Action("Generation", "Add")" role="button">Add Generation</a>
         </p>
     }
     <table class="table">
@@ -32,22 +32,22 @@
                 </td>
                 <td>@item.ReleaseDate.ToString("MMMM d, yyyy")</td>
                 <td>
-                    <a href="@(Url.Action("EditGeneration", "Admin", new { id = item.Id }))">Edit</a>
+                    <a href="@(Url.Action("Generation", "Edit", new { id = item.Id }))">Edit</a>
                     @if(!Model.AllPokemon.Exists(x => x.Generation.Id == item.Id))
                     {
                         @("|")
                         @if(!item.IsArchived)
                         {
-                            <a href="@(Url.Action("ArchiveGeneration", "Admin", new { id = item.Id }))">Archive</a>
+                            <a href="@(Url.Action("Generation", "Archive", new { id = item.Id }))">Archive</a>
                         }
                         else
                         {
-                            <a href="@(Url.Action("UnarchiveGeneration", "Admin", new { id = item.Id }))">Unarchive</a>
-                            @if(User.IsInRole("Owner"))
-                            {
-                                @('|')
-                                <a href="@(Url.Action("DeleteGeneration", "Owner", new { id = item.Id }))">Delete</a>
-                            }
+                            <a href="@(Url.Action("Generation", "Unarchive", new { id = item.Id }))">Unarchive</a>
+                        }
+                        @if(User.IsInRole("Owner"))
+                        {
+                            @('|')
+                            <a href="@(Url.Action("Generation", "Delete", new { id = item.Id }))">Delete</a>
                         }
                     }
                 </td>

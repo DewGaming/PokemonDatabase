@@ -78,20 +78,20 @@
                                 }
                                 <td>@hunts.ShinyAttemptCount</td>
                                 <td>
-                                    <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = hunts.Id }))">Edit</a>
+                                    <a href="@(Url.Action("ShinyHunt", "Edit", new { id = hunts.Id }))">Edit</a>
                                     @('|')
                                     @if(!hunts.IsArchived)
                                     {
-                                        <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = hunts.Id }))">Archive</a>
+                                        <a href="@(Url.Action("ShinyHunt", "Archive", new { id = hunts.Id }))">Archive</a>
                                     }
                                     else
                                     {
-                                        <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = hunts.Id }))">Unarchive</a>
-                                        @if(User.IsInRole("Owner"))
-                                        {
-                                            @('|')
-                                            <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = hunts.Id }))">Delete</a>
-                                        }
+                                        <a href="@(Url.Action("ShinyHunt", "Unarchive", new { id = hunts.Id }))">Unarchive</a>
+                                    }
+                                    @if(User.IsInRole("Owner"))
+                                    {
+                                        @('|')
+                                        <a href="@(Url.Action("ShinyHunt", "Delete", new { id = hunts.Id }))">Delete</a>
                                     }
                                 </td>
                             </tr>
@@ -155,19 +155,19 @@
                                 }
                                 <td>@hunts.ShinyAttemptCount</td>
                                 <td>
-                                    <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = hunts.Id }))">Edit</a>
+                                    <a href="@(Url.Action("ShinyHunt", "Edit", new { id = hunts.Id }))">Edit</a>
                                     @('|')
                                     @if(!hunts.IsArchived)
                                     {
-                                        <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = hunts.Id }))">Archive</a>
+                                        <a href="@(Url.Action("ShinyHunt", "Archive", new { id = hunts.Id }))">Archive</a>
                                     }
                                     else
                                     {
-                                        <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = hunts.Id }))">Unarchive</a>
+                                        <a href="@(Url.Action("ShinyHunt", "Unarchive", new { id = hunts.Id }))">Unarchive</a>
                                         @if(User.IsInRole("Owner"))
                                         {
                                             @('|')
-                                            <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = hunts.Id }))">Delete</a>
+                                            <a href="@(Url.Action("ShinyHunt", "Delete", new { id = hunts.Id }))">Delete</a>
                                         }
                                     }
                                 </td>
@@ -232,19 +232,19 @@
                                 }
                                 <td>@hunts.ShinyAttemptCount</td>
                                 <td>
-                                    <a href="@(Url.Action("EditShinyHunt", "Admin", new { id = hunts.Id }))">Edit</a>
+                                    <a href="@(Url.Action("ShinyHunt", "Edit", new { id = hunts.Id }))">Edit</a>
                                     @('|')
                                     @if(!hunts.IsArchived)
                                     {
-                                        <a href="@(Url.Action("ArchiveShinyHunt", "Admin", new { id = hunts.Id }))">Archive</a>
+                                        <a href="@(Url.Action("ShinyHunt", "Archive", new { id = hunts.Id }))">Archive</a>
                                     }
                                     else
                                     {
-                                        <a href="@(Url.Action("UnarchiveShinyHunt", "Admin", new { id = hunts.Id }))">Unarchive</a>
+                                        <a href="@(Url.Action("ShinyHunt", "Unarchive", new { id = hunts.Id }))">Unarchive</a>
                                         @if(User.IsInRole("Owner"))
                                         {
                                             @('|')
-                                            <a href="@(Url.Action("DeleteShinyHunt", "Owner", new { id = hunts.Id }))">Delete</a>
+                                            <a href="@(Url.Action("ShinyHunt", "Delete", new { id = hunts.Id }))">Delete</a>
                                         }
                                     }
                                 </td>

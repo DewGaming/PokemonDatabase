@@ -22,8 +22,8 @@
 @if(User.IsInRole("Owner"))
 {
     <p class="additionButtons">
-        <a class="btn btn-primary" href="@Url.Action("AddPokemon", "Owner")" role="button">Add Pokemon</a>
-        <a class="btn btn-primary" href="@Url.Action("AddEvolution", "Owner")" role="button">Add Evolution</a>
+        <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokemon</a>
+        <a class="btn btn-primary" href="@Url.Action("Evolution", "Add")" role="button">Add Evolution</a>
     </p>
 }
 <div class="tab-list">
@@ -52,17 +52,17 @@
                         <td>@item.Id</td>
                         <td>@item.Name.Replace('_', ' ')</td>
                         <td>
-                            <a href="@(Url.Action("EditPokemon", "Admin", new { id = item.Id }))">Edit Pokemon</a>
+                            <a href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a>
                             |
-                            <a href="@(Url.Action("EditTyping", "Admin", new { id = item.Id }))">Edit Typing</a>
+                            <a href="@(Url.Action("Typing", "Edit", new { id = item.Id }))">Edit Typing</a>
                             |
-                            <a href="@(Url.Action("EditAbilities", "Admin", new { id = item.Id }))">Edit Abilities</a>
+                            <a href="@(Url.Action("Abilities", "Edit", new { id = item.Id }))">Edit Abilities</a>
                             |
-                            <a href="@(Url.Action("EditEggGroups", "Admin", new { id = item.Id }))">Edit Egg Groups</a>
+                            <a href="@(Url.Action("EggGroups", "Edit", new { id = item.Id }))">Edit Egg Groups</a>
                             |
-                            <a href="@(Url.Action("EditBaseStats", "Admin", new { id = item.Id }))">Edit Base Stats</a>
+                            <a href="@(Url.Action("BaseStats", "Edit", new { id = item.Id }))">Edit Base Stats</a>
                             |
-                            <a href="@(Url.Action("EditEVYields", "Admin", new { id = item.Id }))">Edit EV Yields</a>
+                            <a href="@(Url.Action("EVYields", "Edit", new { id = item.Id }))">Edit EV Yields</a>
                         </td>
                     </tr>
                 }
