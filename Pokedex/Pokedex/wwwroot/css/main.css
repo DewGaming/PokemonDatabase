@@ -1,3 +1,36 @@
+.pokemonListPicture {
+  max-width: 150px;
+  height: auto;
+  margin: 5px;
+}
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: gray;
+  padding: 7.5px 10px;
+}
+
+.grid-container > div {
+  padding: 2.5px;
+  margin: 2.5px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid black;
+  text-align: center;
+  font-size: 1rem;
+  flex: 1;
+  flex-basis: 20%;
+}
+
+.grid-container .typing {
+  font-size: 0;
+}
+
+.grid-container .typing div {
+  margin: 0 2.5px 5px;
+  width: 45%
+}
+
 footer, .fixed-nav {
   width: 100%;
   position: fixed;

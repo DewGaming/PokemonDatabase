@@ -36,27 +36,26 @@
         @if(@gen.IndexOf('-') == -1)
         {
             <div class="tabcontent generation" id="Generation@(gen)">
-                <table class="table">
-                    <tr>
-                        <th scope="col">Pokedex Number</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Typing</th>
-                    </tr>
+                <div class="grid-container">
                     @foreach(var item in Model.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
                     {
-                        <tr>
-                            <td>@item.Pokemon.Id</td>
-                            <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
-                            <td>
-                                <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                                @if(@item.SecondaryType != null)
-                                {
-                                    <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                                }
-                            </td>
-                        </tr>
+                        <div class="@item.Pokemon.Name">
+                            <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                                <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
+                            </a>
+                            <div>
+                                <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
+                                <div class="typing">
+                                    <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                                    @if(@item.SecondaryType != null)
+                                    {
+                                        <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     }
-                </table>
+                </div>
             </div>
         }
     }
@@ -64,26 +63,25 @@
 else
 {
     <div>
-        <table class="table">
-            <tr>
-                <th scope="col">Pokedex Number</th>
-                <th scope="col">Name</th>
-                <th scope="col">Typing</th>
-            </tr>
+        <div class="grid-container">
             @foreach(var item in Model)
             {
-                <tr>
-                    <td>@item.Pokemon.Id</td>
-                    <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
-                    <td>
-                        <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                        @if(@item.SecondaryType != null)
-                        {
-                            <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                        }
-                    </td>
-                </tr>
+                <div class="@item.Pokemon.Name">
+                    <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                        <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
+                    </a>
+                    <div>
+                        <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
+                        <div class="typing">
+                            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                            @if(@item.SecondaryType != null)
+                            {
+                                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                            }
+                        </div>
+                    </div>
+                </div>
             }
-        </table>
+        </div>
     </div>
 }

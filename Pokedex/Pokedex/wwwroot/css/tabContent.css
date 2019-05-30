@@ -59,7 +59,7 @@
 /* Style the tab content */
 .tabcontent {
   display: none;
-  padding: 6px 12px;
+  padding-top: 10px;
 }
 
 .tabcontent.active {

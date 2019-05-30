@@ -30,7 +30,7 @@
 @foreach(var item in Model)
 {
     <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")">
-        <div class="pokemonPicture shadowed"><img width="327" title="@item.Pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")" /></div>
+        <div class="pokemonPicture shadowed"><img title="@item.Pokemon.Name" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")" /></div>
         <div class="pokemonData pokemonTables span-md-5 span-lg-4">
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
