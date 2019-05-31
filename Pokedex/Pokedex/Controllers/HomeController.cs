@@ -66,7 +66,12 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    return this.View("AllPokemon", model);
+                    AllPokemonViewModel viewModel = new AllPokemonViewModel(){
+                        AllPokemon = model,
+                        SlowConnection = slowConnection
+                    };
+
+                    return this.View("AllPokemon", viewModel);
                 }
             }
 
@@ -75,9 +80,14 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("pokemon")]
-        public IActionResult AllPokemon()
+        public IActionResult AllPokemon(bool slowConnection)
         {
-            List<PokemonTypeDetail> model = this._dataService.GetPokemonWithTypes();
+            List<PokemonTypeDetail> pokemonList = this._dataService.GetPokemonWithTypes();
+
+            AllPokemonViewModel model = new AllPokemonViewModel(){
+                AllPokemon = pokemonList,
+                SlowConnection = slowConnection
+            };
 
             return this.View(model);
         }

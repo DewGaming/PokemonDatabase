@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.PokemonTypeDetail>;
+@model Pokedex.Models.AllPokemonViewModel;
 @{
     Layout = "_Layout";
 }
@@ -7,11 +7,7 @@
 {
     <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <style>
-        main {
-            max-width: 1220px !important;
-        }
-    </style>
+    <style>main { max-width: 1220px !important; }</style>
 }
 
 @section scripts
@@ -19,11 +15,18 @@
     <script src="/js/tabContent.js"></script>
 }
 
-
 @if(ViewData["Search"] == null)
 {
+    @if(!@Model.SlowConnection)
+    {
+        <a class="btn btn-primary pokemonListButton" href="@Url.Action("AllPokemon", "Home", new { slowConnection = true })">View As Table<br/>Use For Slower Connections</a>
+    }
+    else
+    {
+        <a class="btn btn-primary pokemonListButton" href="@Url.Action("AllPokemon", "Home")">Retrun To Grid</a>
+    }
     <div class="tab-list">
-        @foreach(var id in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+        @foreach(var id in Model.AllPokemon.Select(x => x.Pokemon.Generation.Id).Distinct())
         {
             @if (id.IndexOf('-') == -1)
             {
@@ -31,57 +34,117 @@
             }
         }
     </div>
-    @foreach(var gen in Model.Select(x => x.Pokemon.Generation.Id).Distinct())
+    @foreach(var gen in Model.AllPokemon.Select(x => x.Pokemon.Generation.Id).Distinct())
     {
         @if(@gen.IndexOf('-') == -1)
         {
-            <div class="tabcontent generation" id="Generation@(gen)">
-                <div class="grid-container">
-                    @foreach(var item in Model.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
-                    {
-                        <div class="@item.Pokemon.Name">
-                            <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
-                                <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
-                            </a>
-                            <div>
-                                <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
-                                <div class="typing">
+            @if(!@Model.SlowConnection)
+            {
+                <div class="tabcontent generation" id="Generation@(gen)">
+                    <div class="grid-container">
+                        @foreach(var item in Model.AllPokemon.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
+                        {
+                            <div class="@item.Pokemon.Name">
+                                <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                                    <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
+                                </a>
+                                <div>
+                                    <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
+                                    <div class="typing">
+                                        <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                                        @if(@item.SecondaryType != null)
+                                        {
+                                            <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="tabcontent generation" id="Generation@(gen)">
+                    <table class="table">
+                        <tr>
+                            <th scope="col">Pokedex Number</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Typing</th>
+                        </tr>
+                        @foreach(var item in Model.AllPokemon.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
+                        {
+                            <tr>
+                                <td>@item.Pokemon.Id</td>
+                                <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
+                                <td>
                                     <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                                     @if(@item.SecondaryType != null)
                                     {
                                         <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
                                     }
-                                </div>
-                            </div>
-                        </div>
-                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
-            </div>
+            }
         }
     }
 }
 else
 {
-    <div>
-        <div class="grid-container">
-            @foreach(var item in Model)
-            {
-                <div class="@item.Pokemon.Name">
-                    <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
-                        <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
-                    </a>
-                    <div>
-                        <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
-                        <div class="typing">
+    @if(!@Model.SlowConnection)
+    {
+        <a class="btn btn-primary pokemonListButton" href="@Url.Action("Index", "Home", new { search = ViewData["Search"], slowConnection = true })">View As Table<br/>Use For Slower Connections</a>
+        <div>
+            <div class="grid-container">
+                @foreach(var item in Model.AllPokemon)
+                {
+                    <div class="@item.Pokemon.Name">
+                        <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                            <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
+                        </a>
+                        <div>
+                            <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
+                            <div class="typing">
+                                <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                                @if(@item.SecondaryType != null)
+                                {
+                                    <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-primary pokemonListButton" href="@Url.Action("Index", "Home", new { search = ViewData["Search"] })">Retrun To Grid</a>
+        <div>
+            <table class="table">
+                <tr>
+                    <th scope="col">Pokedex Number</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Typing</th>
+                </tr>
+                @foreach(var item in Model.AllPokemon)
+                {
+                    <tr>
+                        <td>@item.Pokemon.Id</td>
+                        <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
+                        <td>
                             <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                             @if(@item.SecondaryType != null)
                             {
                                 <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
                             }
-                        </div>
-                    </div>
-                </div>
-            }
+                        </td>
+                    </tr>
+                }
+            </table>
         </div>
-    </div>
+    }
 }
