@@ -16,7 +16,7 @@
 
 @section scripts
 {
-    <script src="/js/tabContent.js"></script>
+    <script src="/js/tabContent.js" type="text/javascript"></script>
 }
 
 @if(User.IsInRole("Owner"))
@@ -35,7 +35,7 @@
         }
     }
 </div>
-@foreach(var gen in Model.Select(x => x.Generation.Id).Distinct())
+@foreach(var gen in Model.Select(x => x.Generation.Id).Distinct().OrderBy(x => x))
 {
     @if(@gen.IndexOf('-') == -1)
     {
@@ -52,17 +52,17 @@
                         <td>@item.Id</td>
                         <td>@item.Name.Replace('_', ' ')</td>
                         <td>
-                            <a href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a>
-                            |
-                            <a href="@(Url.Action("Typing", "Edit", new { id = item.Id }))">Edit Typing</a>
-                            |
-                            <a href="@(Url.Action("Abilities", "Edit", new { id = item.Id }))">Edit Abilities</a>
-                            |
-                            <a href="@(Url.Action("EggGroups", "Edit", new { id = item.Id }))">Edit Egg Groups</a>
-                            |
-                            <a href="@(Url.Action("BaseStats", "Edit", new { id = item.Id }))">Edit Base Stats</a>
-                            |
-                            <a href="@(Url.Action("EVYields", "Edit", new { id = item.Id }))">Edit EV Yields</a>
+                            <div class="btn-group">
+                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit</button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a>
+                                    <a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { id = item.Id }))">Edit Typing</a>
+                                    <a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { id = item.Id }))">Edit Abilities</a>
+                                    <a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { id = item.Id }))">Edit Egg Groups</a>
+                                    <a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { id = item.Id }))">Edit Base Stats</a>
+                                    <a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { id = item.Id }))">Edit EV Yields</a>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 }
