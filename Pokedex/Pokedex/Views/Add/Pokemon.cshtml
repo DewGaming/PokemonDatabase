@@ -52,7 +52,7 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.GenderRatioId)
-            @Html.DropDownListFor(x => x.GenderRatioId, new SelectList(Model.AllGenderRatios, "Id", "MaleRatio"), new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.GenderRatioId, new SelectList(Model.AllGenderRatios, "Id", "GenderRatioString"), new { @class = "form-control" })
             @Html.ValidationMessageFor(x => x.GenderRatioId)
         </div>
 

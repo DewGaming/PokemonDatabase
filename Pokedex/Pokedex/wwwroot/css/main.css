@@ -30,7 +30,8 @@
 
 .grid-container .typing div {
   margin: 0 2.5px 5px;
-  width: 45%
+  width: 45%;
+  max-width: 150px;
 }
 
 .pokemonName {

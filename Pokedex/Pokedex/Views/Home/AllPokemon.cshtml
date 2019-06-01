@@ -106,7 +106,7 @@ else
                             <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
                         </a>
                         <div>
-                            <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
+                            <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</a>
                             <div class="typing">
                                 <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                                 @if(@item.SecondaryType != null)

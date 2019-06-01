@@ -9,7 +9,7 @@ namespace Pokedex.Models
         public Pokemon Pokemon { get; set; }
         public List<EggCycle> AllEggCycles { get; set; }
 
-        public List<GenderRatio> AllGenderRatios { get; set; }
+        public List<GenderRatioViewModel> AllGenderRatios { get; set; }
 
         public List<Classification> AllClassifications { get; set; }
 

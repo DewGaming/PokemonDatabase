@@ -28,7 +28,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("")]
-        public IActionResult Index(string search)
+        public IActionResult Index(string search, bool slowConnection)
         {
             this.ViewData["Search"] = search;
 
