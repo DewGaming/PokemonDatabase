@@ -6,7 +6,7 @@
         <a class="nav-link dropdown-toggle" href="" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hello, @User.Identity.Name</a>
         <div class="dropdown-menu" aria-labelledby="userDropdown">
             <a class="dropdown-item" href="@Url.Action("ShinyHuntingCounter", "User")">Shiny Hunting Counter</a>
-            <hr class="dropdown-line">
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
             <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
         </div>

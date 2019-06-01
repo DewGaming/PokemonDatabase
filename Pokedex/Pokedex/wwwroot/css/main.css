@@ -1,5 +1,7 @@
 .pokemonListPicture {
   max-width: 150px;
+  max-height: 150px;
+  width: auto;
   height: auto;
   margin: 5px;
 }
@@ -29,6 +31,14 @@
 .grid-container .typing div {
   margin: 0 2.5px 5px;
   width: 45%
+}
+
+.pokemonName {
+  color: black;
+}
+
+.pokemonName:hover {
+  color: blue;
 }
 
 .pokemonListButton {
