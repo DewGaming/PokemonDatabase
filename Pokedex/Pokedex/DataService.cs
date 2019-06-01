@@ -632,6 +632,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdatePokemonTypeDetail(PokemonTypeDetail pokemonTypeDetail)
+        {
+            this._dataContext.PokemonTypeDetails.Update(pokemonTypeDetail);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdatePokemon(Pokemon pokemon)
         {
             this._dataContext.Pokemon.Update(pokemon);

@@ -152,6 +152,50 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_typing/{id}")]
+        public IActionResult Typing(string id)
+        {
+            PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == id);
+            PokemonTypingViewModel model = new PokemonTypingViewModel()
+            {
+                Id = typeDetail.Id,
+                AllTypes = this._dataService.GetTypes(),
+                PokemonId = typeDetail.PokemonId,
+                PrimaryTypeId = typeDetail.PrimaryTypeId,
+                SecondaryTypeId = typeDetail.SecondaryTypeId
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_typing/{id}")]
+        public IActionResult Typing(PokemonTypeDetail pokemonTypeDetail)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonTypeDetail.PokemonId);
+                PokemonTypingViewModel model = new PokemonTypingViewModel()
+                {
+                    Id = typeDetail.Id,
+                    AllTypes = this._dataService.GetTypes(),
+                    PokemonId = typeDetail.PokemonId,
+                    PrimaryTypeId = typeDetail.PrimaryTypeId,
+                    SecondaryTypeId = typeDetail.SecondaryTypeId
+                };
+
+                return this.View(model);
+            }
+
+            pokemonTypeDetail.Id = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonTypeDetail.PokemonId).Id;
+
+            this._dataService.UpdatePokemonTypeDetail(pokemonTypeDetail);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_type/{id:int}")]
         public IActionResult Type(int id)
         {
