@@ -132,6 +132,13 @@ namespace Pokedex.Controllers
         [Route("team_generator")]
         public IActionResult TeamGenerator()
         {
+            return this.View();
+        }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-team")]
+        public List<Pokemon> GetPokemonTeam()
+        {
             Pokemon pokemon;
             List<Pokemon> model = new List<Pokemon>();
             List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
@@ -148,7 +155,7 @@ namespace Pokedex.Controllers
                 model.Add(pokemon);
             }
 
-            return this.View(model);
+            return model;
         }
 
         [AllowAnonymous]
