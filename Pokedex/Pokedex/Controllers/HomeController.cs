@@ -61,6 +61,7 @@ namespace Pokedex.Controllers
             return this.View();
         }
 
+        [AllowAnonymous]
         [HttpGet()]
         [Route("search")]
         public IActionResult Search(string search, bool slowConnection)
