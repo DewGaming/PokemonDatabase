@@ -55,7 +55,14 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("")]
-        public IActionResult Index(string search, bool slowConnection)
+        public IActionResult Index()
+        {
+            return this.View();
+        }
+
+        [HttpGet()]
+        [Route("search")]
+        public IActionResult Search(string search, bool slowConnection)
         {
             this.ViewData["Search"] = search;
 
@@ -102,7 +109,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            return this.View();
+            return this.RedirectToAction("Error");
         }
 
         [AllowAnonymous]

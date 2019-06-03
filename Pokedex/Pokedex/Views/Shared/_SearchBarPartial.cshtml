@@ -1,6 +1,6 @@
 <ul class="navbar-nav search-bar">
     <li>
-        @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-inline" } ))
+        @using (Html.BeginForm("Search", "Home", FormMethod.Get, new { @class = "form-inline" } ))
         {
             <div class="form-group mb-2">
                 @Html.Editor("search", new { htmlAttributes = new { @class = "form-control", @list = "pokemonList", @autocomplete = "off" }, @Value = @ViewData["Search"] })
