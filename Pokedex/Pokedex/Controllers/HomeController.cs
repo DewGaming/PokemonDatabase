@@ -26,6 +26,7 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("get-pokemon-list")]
         public List<Pokemon> GetPokemonList()
