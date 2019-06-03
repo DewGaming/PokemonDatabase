@@ -152,10 +152,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_typing/{id}")]
-        public IActionResult Typing(string id)
+        [Route("edit_typing/{pokemonId}")]
+        public IActionResult Typing(string pokemonId)
         {
-            PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == id);
+            PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonId);
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 Id = typeDetail.Id,
@@ -191,6 +191,52 @@ namespace Pokedex.Controllers
             pokemonTypeDetail.Id = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonTypeDetail.PokemonId).Id;
 
             this._dataService.UpdatePokemonTypeDetail(pokemonTypeDetail);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_abilities/{pokemonId}")]
+        public IActionResult Abilities(string pokemonId)
+        {
+            PokemonAbilityDetail abilityDetail = this._dataService.GetPokemonWithAbilities(pokemonId);
+            PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
+            {
+                Id = abilityDetail.Id,
+                AllAbilities = this._dataService.GetAbilities(),
+                PokemonId = abilityDetail.PokemonId,
+                PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
+                SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
+                HiddenAbilityId = abilityDetail.HiddenAbilityId
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_abilities/{pokemonId}")]
+        public IActionResult Abilities(PokemonAbilityDetail pokemonAbilityDetail)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonAbilityDetail abilityDetail = this._dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId);
+                PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
+                {
+                    Id = abilityDetail.Id,
+                    AllAbilities = this._dataService.GetAbilities(),
+                    PokemonId = abilityDetail.PokemonId,
+                    PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
+                    SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
+                    HiddenAbilityId = abilityDetail.HiddenAbilityId
+                };
+
+                return this.View(model);
+            }
+
+            pokemonAbilityDetail.Id = this._dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId).Id;
+
+            this._dataService.UpdatePokemonAbilityDetail(pokemonAbilityDetail);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

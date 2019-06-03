@@ -1,0 +1,43 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonAbilitiesViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Update Abilities</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.PokemonId)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PrimaryAbilityId)
+            @Html.DropDownListFor(x => x.PrimaryAbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PrimaryAbilityId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.SecondaryAbilityId)
+            @Html.DropDownListFor(x => x.SecondaryAbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.SecondaryAbilityId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.HiddenAbilityId)
+            @Html.DropDownListFor(x => x.HiddenAbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.HiddenAbilityId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
+        </p>
+    }
+
+</div>

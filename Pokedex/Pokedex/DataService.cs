@@ -638,6 +638,30 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdatePokemonAbilityDetail(PokemonAbilityDetail pokemonAbilityDetail)
+        {
+            this._dataContext.PokemonAbilityDetails.Update(pokemonAbilityDetail);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonEggGroupDetail(PokemonEggGroupDetail pokemonEggGroupDetail)
+        {
+            this._dataContext.PokemonEggGroupDetails.Update(pokemonEggGroupDetail);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateBaseStat(BaseStat baseStats)
+        {
+            this._dataContext.BaseStats.Update(baseStats);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateEVYield(EVYield evYields)
+        {
+            this._dataContext.EVYields.Update(evYields);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdatePokemon(Pokemon pokemon)
         {
             this._dataContext.Pokemon.Update(pokemon);

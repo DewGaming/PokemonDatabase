@@ -56,11 +56,11 @@
                                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit</button>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a>
-                                    <a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { id = item.Id }))">Edit Typing</a>
-                                    <a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { id = item.Id }))">Edit Abilities</a>
-                                    <a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { id = item.Id }))">Edit Egg Groups</a>
-                                    <a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { id = item.Id }))">Edit Base Stats</a>
-                                    <a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { id = item.Id }))">Edit EV Yields</a>
+                                    <a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { pokemonId = item.Id }))">Edit Typing</a>
+                                    <a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = item.Id }))">Edit Abilities</a>
+                                    <a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = item.Id }))">Edit Egg Groups</a>
+                                    <a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = item.Id }))">Edit Base Stats</a>
+                                    <a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = item.Id }))">Edit EV Yields</a>
                                 </div>
                             </div>
                         </td>
