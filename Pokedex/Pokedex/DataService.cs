@@ -42,7 +42,13 @@ namespace Pokedex
 
         public List<Ability> GetPokemonAbilities(string pokemonId)
         {
-            PokemonAbilityDetail abilityDetail = this._dataContext.PokemonAbilityDetails.Include(a => a.Pokemon).Include(a => a.PrimaryAbility).Include(a => a.SecondaryAbility).Include(a => a.HiddenAbility).ToList().Find(a => a.Pokemon.Id == pokemonId);
+            PokemonAbilityDetail abilityDetail = this._dataContext.PokemonAbilityDetails
+                                                    .Include(x => x.Pokemon)
+                                                    .Include(x => x.PrimaryAbility)
+                                                    .Include(x => x.SecondaryAbility)
+                                                    .Include(x => x.HiddenAbility)
+                                                    .ToList()
+                                                    .Find(x => x.Pokemon.Id == pokemonId);
             List<Ability> abilities = new List<Ability>();
             abilities.Add(this.GetAbility(abilityDetail.PrimaryAbility.Id));
             if (abilityDetail.SecondaryAbility != null)
@@ -82,7 +88,12 @@ namespace Pokedex
 
         public List<Type> GetPokemonTypes(string pokemonId)
         {
-            PokemonTypeDetail typeDetail = this._dataContext.PokemonTypeDetails.Include(t => t.Pokemon).Include(t => t.PrimaryType).Include(t => t.SecondaryType).ToList().Find(t => t.Pokemon.Id == pokemonId);
+            PokemonTypeDetail typeDetail = this._dataContext.PokemonTypeDetails
+                                                .Include(x => x.Pokemon)
+                                                .Include(x => x.PrimaryType)
+                                                .Include(x => x.SecondaryType)
+                                                .ToList()
+                                                .Find(x => x.Pokemon.Id == pokemonId);
             List<Type> types = new List<Type>();
             types.Add(this.GetType(typeDetail.PrimaryType.Id));
             if (typeDetail.SecondaryType != null)
@@ -97,7 +108,7 @@ namespace Pokedex
         {
             return this._dataContext.EggGroups
                 .ToList()
-                .Find(e => e.Id == id);
+                .Find(x => x.Id == id);
         }
 
         public List<EggGroup> GetEggGroups()
@@ -112,7 +123,12 @@ namespace Pokedex
 
         public List<EggGroup> GetPokemonEggGroups(string pokemonId)
         {
-            PokemonEggGroupDetail eggGroupDetail = this._dataContext.PokemonEggGroupDetails.Include(e => e.Pokemon).Include(e => e.PrimaryEggGroup).Include(e => e.SecondaryEggGroup).ToList().Find(e => e.Pokemon.Id == pokemonId);
+            PokemonEggGroupDetail eggGroupDetail = this._dataContext.PokemonEggGroupDetails
+                                                        .Include(x => x.Pokemon)
+                                                        .Include(x => x.PrimaryEggGroup)
+                                                        .Include(x => x.SecondaryEggGroup)
+                                                        .ToList()
+                                                        .Find(x => x.Pokemon.Id == pokemonId);
             List<EggGroup> eggGroups = new List<EggGroup>();
             eggGroups.Add(this.GetEggGroup(eggGroupDetail.PrimaryEggGroup.Id));
             if (eggGroupDetail.SecondaryEggGroup != null)
@@ -128,63 +144,63 @@ namespace Pokedex
             return this._dataContext.Evolutions
                 .Include(x => x.PreevolutionPokemon)
                 .Include(x => x.EvolutionPokemon)
-                .Include(e => e.EvolutionMethod)
+                .Include(x => x.EvolutionMethod)
                 .ToList();
         }
 
         public Evolution GetPreEvolution(string pokemonId)
         {
-            return this.GetEvolutions().Find(e => e.EvolutionPokemon.Id == pokemonId);
+            return this.GetEvolutions().Find(x => x.EvolutionPokemon.Id == pokemonId);
         }
 
         public List<Evolution> GetPokemonEvolutions(string pokemonId)
         {
             List<Evolution> evolutions = this.GetEvolutions()
-                .Where(e => e.PreevolutionPokemon.Id == pokemonId)
-                .OrderBy(p => p.EvolutionPokemon.Id.Length)
-                .ThenBy(p => p.EvolutionPokemon.Id)
+                .Where(x => x.PreevolutionPokemon.Id == pokemonId)
+                .OrderBy(x => x.EvolutionPokemon.Id.Length)
+                .ThenBy(x => x.EvolutionPokemon.Id)
                 .ToList();
             return evolutions;
         }
 
         public Form GetForm(int id)
         {
-            return this._dataContext.Forms.ToList().Find(f => f.Id == id);
+            return this._dataContext.Forms.ToList().Find(x => x.Id == id);
         }
 
         public List<PokemonFormDetail> GetPokemonForms(string pokemonId)
         {
             return this._dataContext.PokemonFormDetails
-                .Include(f => f.Form)
-                .Include(f => f.OriginalPokemon)
-                .Include(f => f.AltFormPokemon)
-                .Where(f => f.OriginalPokemon.Id == pokemonId)
-                .OrderBy(p => p.AltFormPokemon.Id.Substring(p.AltFormPokemon.Id.IndexOf("-") + 1).Length)
-                .ThenBy(p => p.AltFormPokemon.Id.Substring(p.AltFormPokemon.Id.IndexOf("-") + 1))
+                .Include(x => x.Form)
+                .Include(x => x.OriginalPokemon)
+                .Include(x => x.AltFormPokemon)
+                .Where(x => x.OriginalPokemon.Id == pokemonId)
+                .OrderBy(x => x.AltFormPokemon.Id.Substring(x.AltFormPokemon.Id.IndexOf("-") + 1).Length)
+                .ThenBy(x => x.AltFormPokemon.Id.Substring(x.AltFormPokemon.Id.IndexOf("-") + 1))
                 .ToList();
         }
 
         public string GetPokemonFormName(string pokemonId)
         {
             PokemonFormDetail formDetail = this._dataContext.PokemonFormDetails
-                .Include(f => f.Form)
-                .Include(f => f.OriginalPokemon)
-                .Include(f => f.AltFormPokemon)
+                .Include(x => x.Form)
+                .Include(x => x.OriginalPokemon)
+                .Include(x => x.AltFormPokemon)
                 .ToList()
-                .Find(f => f.AltFormPokemon.Id == pokemonId);
+                .Find(x => x.AltFormPokemon.Id == pokemonId);
             return formDetail.Form.Name;
         }
 
         public Pokemon GetPokemon(string name)
         {
             return this._dataContext.Pokemon
-                .Include(p => p.EggCycle)
-                .Include(p => p.GenderRatio)
-                .Include(p => p.Classification)
-                .Include(p => p.Generation)
-                .Include(p => p.ExperienceGrowth)
-                .Include(p => p.CaptureRate)
-                .Include(p => p.BaseHappiness)
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Generation)
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
                 .ToList()
                 .Find(x => x.Name == name);
         }
@@ -192,13 +208,13 @@ namespace Pokedex
         public Pokemon GetPokemonById(string id)
         {
             return this._dataContext.Pokemon
-                .Include(p => p.EggCycle)
-                .Include(p => p.GenderRatio)
-                .Include(p => p.Classification)
-                .Include(p => p.Generation)
-                .Include(p => p.ExperienceGrowth)
-                .Include(p => p.CaptureRate)
-                .Include(p => p.BaseHappiness)
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Generation)
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
                 .ToList()
                 .Find(x => x.Id == id);
         }
@@ -206,15 +222,15 @@ namespace Pokedex
         public List<Pokemon> GetAllPokemon()
         {
             return this._dataContext.Pokemon
-                .Include(p => p.EggCycle)
-                .Include(p => p.GenderRatio)
-                .Include(p => p.Classification)
-                .Include(p => p.Generation)
-                .Include(p => p.ExperienceGrowth)
-                .Include(p => p.CaptureRate)
-                .Include(p => p.BaseHappiness)
-                .OrderBy(p => p.Id.Length)
-                .ThenBy(p => p.Id)
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Generation)
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
+                .OrderBy(x => x.Id.Length)
+                .ThenBy(x => x.Id)
                 .Where(x => x.IsArchived == false)
                 .ToList();
         }
@@ -222,34 +238,23 @@ namespace Pokedex
         public List<Pokemon> GetAltForms(Pokemon pokemon)
         {
             List<PokemonFormDetail> pokemonFormList = this._dataContext.PokemonFormDetails
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.EggCycle)
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.GenderRatio)
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.Classification)
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.Generation)
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.ExperienceGrowth)
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.CaptureRate)
-                .Include(p => p.AltFormPokemon)
-                    .ThenInclude(x => x.BaseHappiness)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.EggCycle)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.GenderRatio)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.Classification)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.Generation)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.ExperienceGrowth)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.CaptureRate)
-                .Include(p => p.OriginalPokemon)
-                    .ThenInclude(x => x.BaseHappiness).Where(p => p.OriginalPokemon == pokemon).ToList();
+                .Include(x => x.AltFormPokemon)
+                    .Include("AltFormPokemon.EggCycle")
+                    .Include("AltFormPokemon.GenderRatio")
+                    .Include("AltFormPokemon.Classification")
+                    .Include("AltFormPokemon.Generation")
+                    .Include("AltFormPokemon.ExperienceGrowth")
+                    .Include("AltFormPokemon.CaptureRate")
+                    .Include("AltFormPokemon.BaseHappiness")
+                .Include(x => x.OriginalPokemon)
+                    .Include("OriginalPokemon.EggCycle")
+                    .Include("OriginalPokemon.GenderRatio")
+                    .Include("OriginalPokemon.Classification")
+                    .Include("OriginalPokemon.Generation")
+                    .Include("OriginalPokemon.ExperienceGrowth")
+                    .Include("OriginalPokemon.CaptureRate")
+                    .Include("OriginalPokemon.BaseHappiness")
+                .Where(x => x.OriginalPokemon == pokemon).ToList();
             List<Pokemon> pokemonList = new List<Pokemon>();
             foreach (var p in pokemonFormList)
             {
@@ -259,75 +264,105 @@ namespace Pokedex
             return pokemonList;
         }
 
-        public List<PokemonTypeDetail> GetPokemonWithTypes()
-        {
-            List<PokemonTypeDetail> pokemon = this._dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include("Pokemon.EggCycle").Include("Pokemon.BaseHappiness").Include("Pokemon.CaptureRate").Include("Pokemon.ExperienceGrowth").Include("Pokemon.Generation").Include("Pokemon.Classification").Include("Pokemon.GenderRatio").Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
-            List<PokemonTypeDetail> altForms = pokemon.Where(p => p.Pokemon.Id.Contains("-")).ToList();
-            pokemon = pokemon.Except(altForms).ToList();
-
-            pokemon = pokemon.OrderBy(p => p.Pokemon.Id.Length).ThenBy(p => p.Pokemon.Id).ToList();
-
-            return pokemon;
-        }
-
         public PokemonTypeDetail GetPokemonWithTypes(string pokemonId)
         {
-            return this._dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList().Find(x => x.Pokemon.Id == pokemonId);
+            return this._dataContext.PokemonTypeDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryType)
+                .Include(x => x.SecondaryType)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
-            return this._dataContext.PokemonTypeDetails.Include(p => p.Pokemon).Include(p => p.PrimaryType).Include(p => p.SecondaryType).ToList();
+            List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails
+                                                        .Include(x => x.Pokemon)
+                                                            .Include("Pokemon.EggCycle")
+                                                            .Include("Pokemon.BaseHappiness")
+                                                            .Include("Pokemon.CaptureRate")
+                                                            .Include("Pokemon.ExperienceGrowth")
+                                                            .Include("Pokemon.Generation")
+                                                            .Include("Pokemon.Classification")
+                                                            .Include("Pokemon.GenderRatio")
+                                                        .Include(x => x.PrimaryType)
+                                                        .Include(x => x.SecondaryType)
+                                                        .ToList();
+            List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
+            pokemonList = pokemonList.Except(altFormList).ToList();
+
+            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
+
+            return pokemonList;
         }
 
         public PokemonAbilityDetail GetPokemonWithAbilities(string pokemonId)
         {
-            return this._dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList().Find(x => x.Pokemon.Id == pokemonId);
+            return this._dataContext.PokemonAbilityDetails.Include(x => x.Pokemon)
+                .Include(x => x.PrimaryAbility)
+                .Include(x => x.SecondaryAbility)
+                .Include(x => x.HiddenAbility)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
         {
-            return this._dataContext.PokemonAbilityDetails.Include(p => p.Pokemon).Include(p => p.PrimaryAbility).Include(p => p.SecondaryAbility).Include(p => p.HiddenAbility).ToList();
+            return this._dataContext.PokemonAbilityDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryAbility)
+                .Include(x => x.SecondaryAbility)
+                .Include(x => x.HiddenAbility)
+                .ToList();
         }
 
         public PokemonEggGroupDetail GetPokemonWithEggGroups(string pokemonId)
         {
-            return this._dataContext.PokemonEggGroupDetails.Include(p => p.Pokemon).Include(p => p.PrimaryEggGroup).Include(p => p.SecondaryEggGroup).ToList().Find(x => x.Pokemon.Id == pokemonId);
+            return this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
         {
-            return this._dataContext.PokemonEggGroupDetails.Include(p => p.Pokemon).Include(p => p.PrimaryEggGroup).Include(p => p.SecondaryEggGroup).ToList();
+            return this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .ToList();
         }
 
         public List<Pokemon> GetAllPokemonWithClassifications()
         {
-            return this._dataContext.Pokemon.Include(p => p.Classification).ToList();
+            return this._dataContext.Pokemon.Include(x => x.Classification).ToList();
         }
 
         public BaseStat GetBaseStat(string pokemonId)
         {
             return this._dataContext.BaseStats
-                .Include(b => b.Pokemon)
+                .Include(x => x.Pokemon)
                 .ToList()
-                .Find(b => b.Pokemon.Id == pokemonId);
+                .Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public EVYield GetEVYield(string pokemonId)
         {
             return this._dataContext.EVYields
-                .Include(e => e.Pokemon)
+                .Include(x => x.Pokemon)
                 .ToList()
-                .Find(e => e.Pokemon.Id == pokemonId);
+                .Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public List<TypeChart> GetTypeChart()
         {
             List<TypeChart> typeChart = this._dataContext.TypeCharts
-                .Include(t => t.Attack)
-                .Include(t => t.Defend)
-                .OrderBy(t => t.Attack.Id)
-                .ThenBy(t => t.Defend.Id).ToList();
+                .Include(x => x.Attack)
+                .Include(x => x.Defend)
+                .OrderBy(x => x.Attack.Id)
+                .ThenBy(x => x.Defend.Id).ToList();
 
             return typeChart;
         }
@@ -347,16 +382,16 @@ namespace Pokedex
             foreach (var type in pokemonTypes)
             {
                 typeChart = this._dataContext.TypeCharts
-                    .Include(t => t.Attack)
-                    .Include(t => t.Defend)
-                    .Where(t => t.Defend == type)
+                    .Include(x => x.Attack)
+                    .Include(x => x.Defend)
+                    .Where(x => x.Defend == type)
                     .ToList();
                 foreach (var t in typeList)
                 {
-                    if (typeChart.Exists(c => c.Attack.Name == t.Name))
+                    if (typeChart.Exists(x => x.Attack.Name == t.Name))
                     {
                         attackType = t.Name;
-                        effectiveValue = typeChart.Find(c => c.Attack.Name == attackType).Effective.ToString("0.####");
+                        effectiveValue = typeChart.Find(x => x.Attack.Name == attackType).Effective.ToString("0.####");
                         if (effectiveValue == "0")
                         {
                             strongAgainst.Remove(attackType);
@@ -453,22 +488,47 @@ namespace Pokedex
 
         public ShinyHunt GetShinyHunt(int id)
         {
-            return this._dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).ToList().Find(x => x.Id == id);
+            return this._dataContext.ShinyHunts.Include(x => x.User)
+                .Include(x => x.Pokemon)
+                .Include(x => x.Generation)
+                .Include(x => x.ShinyHuntingTechnique)
+                .ToList()
+                .Find(x => x.Id == id);
         }
 
         public List<ShinyHunt> GetShinyHunter(string username)
         {
-            return this._dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).Where(x => x.User.Username == username && !x.IsArchived).OrderBy(x => x.User.Username).ToList();
+            return this._dataContext.ShinyHunts
+                .Include(x => x.User)
+                .Include(x => x.Pokemon)
+                .Include(x => x.Generation)
+                .Include(x => x.ShinyHuntingTechnique)
+                .Where(x => x.User.Username == username && !x.IsArchived)
+                .OrderBy(x => x.User.Username)
+                .ToList();
         }
 
         public List<ShinyHunt> GetShinyHunters()
         {
-            return this._dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.Generation).Include(x => x.ShinyHuntingTechnique).Where(x => !x.IsArchived).OrderBy(x => x.User.Username).ToList();
+            return this._dataContext.ShinyHunts
+                .Include(x => x.User)
+                .Include(x => x.Pokemon)
+                .Include(x => x.Generation)
+                .Include(x => x.ShinyHuntingTechnique)
+                .Where(x => !x.IsArchived)
+                .OrderBy(x => x.User.Username)
+                .ToList();
         }
 
         public List<ShinyHunt> GetShinyHuntersWithArchive()
         {
-            return this._dataContext.ShinyHunts.Include(x => x.User).Include(x => x.Pokemon).Include(x => x.ShinyHuntingTechnique).Include(x => x.Generation).OrderBy(x => x.User.Username).ToList();
+            return this._dataContext.ShinyHunts
+                .Include(x => x.User)
+                .Include(x => x.Pokemon)
+                .Include(x => x.ShinyHuntingTechnique)
+                .Include(x => x.Generation)
+                .OrderBy(x => x.User.Username)
+                .ToList();
         }
 
         public List<ShinyHuntingTechnique> GetShinyHuntingTechniquesWithArchive()

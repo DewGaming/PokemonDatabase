@@ -51,7 +51,7 @@ namespace Pokedex.Controllers
                     search = search.Remove(search.Length - 2, 2) + "-o";
                 }
 
-                List<PokemonTypeDetail> model = this._dataService.GetPokemonWithTypes();
+                List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes();
                 model = model
                     .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
                     .ToList();
@@ -82,7 +82,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon(bool slowConnection)
         {
-            List<PokemonTypeDetail> pokemonList = this._dataService.GetPokemonWithTypes();
+            List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypes();
 
             AllPokemonViewModel model = new AllPokemonViewModel(){
                 AllPokemon = pokemonList,

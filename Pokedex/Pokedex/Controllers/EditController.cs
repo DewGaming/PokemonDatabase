@@ -155,7 +155,7 @@ namespace Pokedex.Controllers
         [Route("edit_typing/{pokemonId}")]
         public IActionResult Typing(string pokemonId)
         {
-            PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonId);
+            PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes(pokemonId);
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 Id = typeDetail.Id,
@@ -175,7 +175,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonTypeDetail.PokemonId);
+                PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId);
                 PokemonTypingViewModel model = new PokemonTypingViewModel()
                 {
                     Id = typeDetail.Id,
@@ -188,7 +188,12 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            pokemonTypeDetail.Id = this._dataService.GetPokemonWithTypes().Find(x => x.PokemonId == pokemonTypeDetail.PokemonId).Id;
+            pokemonTypeDetail.Id = this._dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId).Id;
+
+            if (pokemonTypeDetail.PrimaryTypeId == pokemonTypeDetail.SecondaryTypeId)
+            {
+                pokemonTypeDetail.SecondaryTypeId = null;
+            }
 
             this._dataService.UpdatePokemonTypeDetail(pokemonTypeDetail);
 
