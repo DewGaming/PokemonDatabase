@@ -1,9 +1,7 @@
 .resp-scroll {
  overflow-x: auto;
- margin-bottom: 1rem;
 }
 .grid-col {
- margin-bottom: 1rem;
  padding: 0 1rem;
  width: 100%;
  margin: 0 -.5rem;

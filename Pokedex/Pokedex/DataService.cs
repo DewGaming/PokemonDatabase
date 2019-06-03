@@ -235,6 +235,28 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<Pokemon> GetAllPokemonWithoutForms()
+        {
+            List<Pokemon> pokemonList = this._dataContext.Pokemon
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Generation)
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
+                .OrderBy(x => x.Id.Length)
+                .ThenBy(x => x.Id)
+                .Where(x => x.IsArchived == false)
+                .ToList();
+            List<Pokemon> altFormList = pokemonList.Where(x => x.Id.Contains("-")).ToList();
+            pokemonList = pokemonList.Except(altFormList).ToList();
+
+            pokemonList = pokemonList.OrderBy(x => x.Id.Length).ThenBy(x => x.Id).ToList();
+
+            return pokemonList;
+        }
+
         public List<Pokemon> GetAltForms(Pokemon pokemon)
         {
             List<PokemonFormDetail> pokemonFormList = this._dataContext.PokemonFormDetails

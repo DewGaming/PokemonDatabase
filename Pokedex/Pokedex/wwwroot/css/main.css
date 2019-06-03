@@ -130,7 +130,7 @@ hr.dropdown-line {
 
 main {
   padding: 0 5px !important;
-  margin: 80px 0 30px;
+  margin: 80px 0 40px;
 }
 
 .shadowed img {
@@ -283,10 +283,6 @@ h2 {
 
 .femaleRatio {
   color: #ff6bce;
-}
-
-.teamGenerator {
-  margin-bottom: 55px;
 }
 
 .teamGenerator .generatorPicture {

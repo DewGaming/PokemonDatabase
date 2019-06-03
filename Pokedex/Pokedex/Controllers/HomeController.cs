@@ -26,6 +26,33 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [HttpPost]
+        [Route("get-pokemon-list")]
+        public List<Pokemon> GetPokemonList()
+        {
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutForms();
+
+            foreach(var pokemon in pokemonList)
+            {
+                if (pokemon.Name.Contains("type null"))
+                {
+                    pokemon.Name = "Type: Null";
+                }
+                
+                pokemon.Name = pokemon.Name.Replace('_', ' ');
+
+                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                pokemon.Name = textInfo.ToTitleCase(pokemon.Name);
+
+                if (pokemon.Name.Contains("-O") && pokemon.Name.Substring(pokemon.Name.Length - 2, 2) == "-O")
+                {
+                    pokemon.Name = pokemon.Name.Remove(pokemon.Name.Length - 2, 2) + "-o";
+                }
+            }
+
+            return pokemonList;
+        }
+
         [AllowAnonymous]
         [Route("")]
         public IActionResult Index(string search, bool slowConnection)
