@@ -22,11 +22,28 @@ namespace Pokedex.Controllers
         [Authorize(Roles = "Owner")]
         [HttpGet]
         [Route("edit_user/{id:int}")]
-        public IActionResult User(int id)
+        public new IActionResult User(int id)
         {
             User model = this._dataService.GetUserById(id);
 
             return this.View(model);
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPost]
+        [Route("edit_user/{id:int}")]
+        public new IActionResult User(User user)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                User model = this._dataService.GetUserWithUsername(user.Username);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateUser(user);
+
+            return this.RedirectToAction("Users", "Owner");
         }
 
         [HttpGet]
@@ -52,7 +69,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateGeneration(generation);
 
-            return this.RedirectToAction("Generations");
+            return this.RedirectToAction("Generations", "Admin");
         }
 
         [HttpGet]
@@ -269,7 +286,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateType(type);
 
-            return this.RedirectToAction("Types");
+            return this.RedirectToAction("Types", "Admin");
         }
 
         [HttpGet]
@@ -295,7 +312,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
 
-            return this.RedirectToAction("ShinyHuntingTechniques");
+            return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
 
         [HttpGet]
@@ -321,7 +338,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateEggGroup(eggGroup);
 
-            return this.RedirectToAction("EggGroups");
+            return this.RedirectToAction("EggGroups", "Admin");
         }
 
         [HttpGet]
@@ -347,7 +364,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateClassification(classification);
 
-            return this.RedirectToAction("Classifications");
+            return this.RedirectToAction("Classifications", "Admin");
         }
 
         [HttpGet]
@@ -373,7 +390,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateShinyHunt(shinyHunt);
 
-            return this.RedirectToAction("ShinyHunts");
+            return this.RedirectToAction("ShinyHunts", "Admin");
         }
 
         [HttpGet]
@@ -399,24 +416,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateAbility(ability);
 
-            return this.RedirectToAction("Abilities");
-        }
-
-        [Authorize(Roles = "Owner")]
-        [HttpPost]
-        [Route("edit_user/{id:int}")]
-        public IActionResult User(User user)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                User model = this._dataService.GetUserWithUsername(user.Username);
-
-                return this.View(model);
-            }
-
-            this._dataService.UpdateUser(user);
-
-            return this.RedirectToAction("Users");
+            return this.RedirectToAction("Abilities", "Admin");
         }
     }
 }

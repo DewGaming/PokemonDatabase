@@ -116,7 +116,7 @@ namespace Pokedex.Controllers
 
         [HttpGet]
         [Route("delete_user/{id:int}")]
-        public IActionResult User(int id)
+        public new IActionResult User(int id)
         {
             User model = this._dataService.GetUserById(id);
 
@@ -126,7 +126,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("delete_user/{id:int}")]
-        public IActionResult User(User user)
+        public new IActionResult User(User user)
         {
             this._dataService.DeleteUser(user.Id);
 
