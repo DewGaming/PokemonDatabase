@@ -132,27 +132,62 @@ namespace Pokedex.Controllers
         [Route("team_generator")]
         public IActionResult TeamGenerator()
         {
-            return this.View();
+            List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
+            List<Generation> generations = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
+            List<Generation> model = new List<Generation>();
+
+            foreach(var gen in generations)
+            {
+                if(allPokemon.Where(x => x.GenerationId == gen.Id).ToList().Count() != 0)
+                {
+                    model.Add(gen);
+                }
+            }
+
+            return this.View(model);
         }
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public List<Pokemon> GetPokemonTeam()
+        public List<Pokemon> GetPokemonTeam(List<string> selectedGens, bool useAlternateForms)
         {
+            List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
+            foreach(var item in selectedGens)
+            {
+                unselectedGens.Remove(unselectedGens.Find(x => x.Id == item));
+            }
+
             Pokemon pokemon;
             List<Pokemon> model = new List<Pokemon>();
-            List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
+            List<Pokemon> allPokemon = this._dataService.GetAllPokemon().ToList();
             Random rnd = new Random();
-
-            for (var i = 0; i < 6; i++)
+            if (!useAlternateForms)
             {
-                pokemon = allPokemon[rnd.Next(allPokemon.Count)];
-                while (model.Contains(pokemon))
+                allPokemon = allPokemon.Where(x => x.Id.IndexOf('-') == -1).ToList();
+            }
+
+            foreach(var gen in unselectedGens)
+            {
+                allPokemon = allPokemon.Except(allPokemon.Where(x => (x.GenerationId == gen.Id) || (x.GenerationId.IndexOf('-') > -1 && x.GenerationId.Substring(0, x.GenerationId.IndexOf('-')) == gen.Id)).ToList()).ToList();
+            }
+
+            if (useAlternateForms && allPokemon.Count() == 0)
+            {
+                allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') != -1).ToList();
+            }
+
+            if(allPokemon.Count() > 0)
+            {
+                for (var i = 0; i < 6; i++)
                 {
                     pokemon = allPokemon[rnd.Next(allPokemon.Count)];
-                }
+                    while (model.Contains(pokemon))
+                    {
+                        pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                    }
 
-                model.Add(pokemon);
+                    model.Add(pokemon);
+                }
             }
 
             return model;

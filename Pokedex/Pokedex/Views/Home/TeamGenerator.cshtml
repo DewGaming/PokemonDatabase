@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Pokemon>
+@model IEnumerable<Pokedex.DataAccess.Models.Generation>
 @{
     Layout = "_Layout";
 }
@@ -7,6 +7,26 @@
 {
     <script src="/js/teamGenerator.js"></script>
 }
+
+<div class="btn-group">
+    <button class="btn btn-primary dropdown-toggle generatorDropdown" data-toggle="dropdown">Generator Options</button>
+    <ul class="dropdown-menu">
+        <span class="generatorCheckboxTitle">Selected Generations</span>
+        @foreach(var gen in Model)
+        {
+            <li class="dropdown-item generatorCheckbox generationCheckbox">
+                <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked />
+                <span class="generatorCheckboxTitle">Generation @gen.Id</span>
+            </li>
+        }
+        <hr class="generationOptionSeparator">
+        <span class="generatorCheckboxTitle">Other Options</span>
+        <li class="dropdown-item generatorCheckbox altGenerationCheckbox">
+            <input id="useAlternateForm" type="checkbox" value="useAlternateForm" />
+            <span class="generatorCheckboxTitle">Use Alternate Forms</span>
+        </li>
+    </ul>
+</div>
 
 <button class="btn btn-primary generatorButton">Generate Team</button>
 

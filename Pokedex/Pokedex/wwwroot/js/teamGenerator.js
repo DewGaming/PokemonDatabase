@@ -67,9 +67,17 @@ $(window).on('resize', function() {
 });
 
 $('.generatorButton').on('click', function() {
+    var selectedGens = [];
+    $('.generationCheckbox input').each(function() {
+        if($(this).is(':checked')){
+            selectedGens.push(this.value);
+        }
+    });
+
     $.ajax({
         url: '/get-pokemon-team/',
-        method: "POST"
+        method: 'POST',
+        data: { 'selectedGens': selectedGens, 'useAlternateForms': $('#useAlternateForm').is(':checked') }
     })
     .done(function(data) {
         pokemonList = data;

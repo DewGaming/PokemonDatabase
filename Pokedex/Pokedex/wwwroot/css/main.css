@@ -183,6 +183,22 @@ main {
   border-width: 0;
 }
 
+.generationOptionSeparator {
+  margin: 5px 0;
+}
+
+.generatorDropdown {
+  margin-top: -15px;
+}
+
+.generatorDropdown, .generatorButton {
+  height: 50px;
+}
+
+.generatorCheckboxTitle {
+  padding-left: 5px;
+}
+
 footer hr{
   margin-top: 0;
 }
