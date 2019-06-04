@@ -289,39 +289,19 @@ h2 {
   text-align: center;
 }
 
+.generatorButton {
+  margin-bottom: 15px;
+}
+
 a {
   outline: none;
 }
 
-@media (min-width: 1px){
-  .Table1x6 {
-    display: block;
-  }
-  .Table3x2, .Table2x3 {
-    display: none;
-  }
-}
-
 @media (min-width: 768px) {
-  .Table2x3 {
-    display: block;
-  }
-  .Table3x2, .Table1x6 {
-    display: none;
-  }
   .search-bar {
     margin: 0;
   }
   .main {
     margin-top: 70px;
-  }
-}
-
-@media (min-width: 1000px) {
-  .Table3x2 {
-    display: block;
-  }
-  .Table2x3, .Table1x6 {
-    display: none;
   }
 }

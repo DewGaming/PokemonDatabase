@@ -9,9 +9,6 @@ $(document).ready(function() {
                 value: this.name
             }));
         });
-    })
-    .fail( function() {
-        alert("Failed To Get Pokemon!");
     });
 });
 

@@ -11,7 +11,8 @@
 .displayBlock {
   display: block;
   font-size: 0;
-  flex-basis: 100%;
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
 }
 
 .displayBlock > button {
