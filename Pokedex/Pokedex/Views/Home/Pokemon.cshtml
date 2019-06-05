@@ -65,7 +65,7 @@
                     <tr>
                         <th>Height</th>
                         <td>
-                            @((int)(@item.Pokemon.Height * (decimal)3.281))@("\'")@(((int)(@item.Pokemon.Height * (decimal)39.97) - (int)(@item.Pokemon.Height * (decimal)3.281) * 12))@("\"")
+                            @((int)(@item.Pokemon.Height * (decimal)(1/(0.0254*12))))@("\'")@(((int)(@item.Pokemon.Height * (decimal)(1/0.0254)) - (int)(@item.Pokemon.Height * (decimal)(1/(0.0254*12))) * 12))@("\"")
                             (@item.Pokemon.Height.ToString("0.####") m)
                         </td>
                     </tr>
