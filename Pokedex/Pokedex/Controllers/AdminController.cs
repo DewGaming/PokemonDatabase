@@ -25,17 +25,18 @@ namespace Pokedex.Controllers
         }
 
         [Route("pokemon")]
-        public IActionResult Pokemon()
+        public IActionResult Pokemon(bool slowConnection)
         {
-            List<Pokemon> model = this._dataService.GetAllPokemon().ToList();
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutForms();
+            List<PokemonFormDetail> altFormsList = this._dataService.GetAllAltForms();
+            List<Evolution> evolutionList = this._dataService.GetEvolutions();
 
-            foreach(var altForm in model)
-            {
-                if (altForm.Id.Contains('-'))
-                {
-                    altForm.Name += " (" + this._dataService.GetPokemonFormName(altForm.Id) + ")";
-                }
-            }
+            AllAdminPokemonViewModel model = new AllAdminPokemonViewModel(){
+                AllPokemon = pokemonList,
+                AllAltForms = altFormsList,
+                AllEvolutions = evolutionList,
+                SlowConnection = slowConnection
+            };
 
             return this.View(model);
         }

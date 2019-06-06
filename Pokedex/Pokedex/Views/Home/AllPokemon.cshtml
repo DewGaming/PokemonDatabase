@@ -1,4 +1,4 @@
-@model Pokedex.Models.AllPokemonViewModel;
+@model Pokedex.Models.AllPokemonTypeViewModel;
 @{
     Layout = "_Layout";
 }
@@ -7,7 +7,11 @@
 {
     <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <style>main { max-width: 1220px !important; }</style>
+    <style>
+        main {
+            max-width: 1220px !important;
+        }
+    </style>
 }
 
 @section scripts
@@ -17,14 +21,16 @@
 
 @if(ViewData["Search"] == null)
 {
-    @if(!@Model.SlowConnection)
-    {
-        <a class="btn btn-primary pokemonListButton" href="@Url.Action("AllPokemon", "Home", new { slowConnection = true })">View As Table<br/>Use For Slower Connections</a>
-    }
-    else
-    {
-        <a class="btn btn-primary pokemonListButton" href="@Url.Action("AllPokemon", "Home")">Retrun To Grid</a>
-    }
+    <p>
+        @if(!@Model.SlowConnection)
+        {
+            <a class="btn btn-primary" href="@Url.Action("AllPokemon", "Home", new { slowConnection = true })">View As Table (Use For Slower Connections)</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" href="@Url.Action("AllPokemon", "Home")">Retrun To Grid</a>
+        }
+    </p>
     <div class="tab-list">
         @foreach(var id in Model.AllPokemon.Select(x => x.Pokemon.Generation.Id).Distinct())
         {

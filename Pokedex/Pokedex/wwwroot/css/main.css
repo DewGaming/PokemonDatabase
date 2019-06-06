@@ -42,10 +42,6 @@
   color: blue;
 }
 
-.pokemonListButton {
-  margin-bottom: 10px;
-}
-
 footer, .fixed-nav {
   width: 100%;
   position: fixed;
@@ -183,7 +179,7 @@ main {
   border-width: 0;
 }
 
-.generationOptionSeparator {
+.generationOptionSeparator, .adminOptionSeparator {
   margin: 5px 0;
 }
 
@@ -195,7 +191,7 @@ main {
   height: 50px;
 }
 
-.generatorCheckboxTitle {
+.generatorCheckboxTitle, .adminMenuTitle {
   padding-left: 5px;
 }
 

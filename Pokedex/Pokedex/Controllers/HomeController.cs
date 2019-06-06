@@ -102,7 +102,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    AllPokemonViewModel viewModel = new AllPokemonViewModel(){
+                    AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel(){
                         AllPokemon = model,
                         SlowConnection = slowConnection
                     };
@@ -120,7 +120,7 @@ namespace Pokedex.Controllers
         {
             List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypes();
 
-            AllPokemonViewModel model = new AllPokemonViewModel(){
+            AllPokemonTypeViewModel model = new AllPokemonTypeViewModel(){
                 AllPokemon = pokemonList,
                 SlowConnection = slowConnection
             };

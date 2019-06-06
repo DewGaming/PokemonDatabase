@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Pokemon>;
+@model Pokedex.Models.AllAdminPokemonViewModel;
 @{
     Layout = "_Layout";
 }
@@ -19,15 +19,23 @@
     <script src="/js/tabContent.js" type="text/javascript"></script>
 }
 
-@if(User.IsInRole("Owner"))
-{
-    <p class="additionButtons">
+<p class="adminButtons">
+    @if(User.IsInRole("Owner"))
+    {
         <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokemon</a>
         <a class="btn btn-primary" href="@Url.Action("Evolution", "Add")" role="button">Add Evolution</a>
-    </p>
-}
+    }
+    @if(!@Model.SlowConnection)
+    {
+        <a class="btn btn-primary" href="@Url.Action("Pokemon", "Admin", new { slowConnection = true })">View As Table (Use For Slower Connections)</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" href="@Url.Action("Pokemon", "Admin")">Retrun To Grid</a>
+    }
+</p>
 <div class="tab-list">
-    @foreach(var id in Model.Select(x => x.Generation.Id).Distinct().OrderBy(x => x))
+    @foreach(var id in Model.AllPokemon.Select(x => x.Generation.Id).Distinct())
     {
         @if (id.IndexOf('-') == -1)
         {
@@ -35,38 +43,181 @@
         }
     }
 </div>
-@foreach(var gen in Model.Select(x => x.Generation.Id).Distinct().OrderBy(x => x))
+@foreach(var gen in Model.AllPokemon.Select(x => x.Generation.Id).Distinct())
 {
     @if(@gen.IndexOf('-') == -1)
     {
-        <div class="tabcontent generation" id="Generation@(gen)">
-            <table class="table">
-                <tr>
-                    <th scope="col">Pokedex Number</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Actions</th>
-                </tr>
-                @foreach(var item in Model.Where(x => (x.Generation.Id == @gen) || (x.Generation.Id.IndexOf('-') > -1 && x.Generation.Id.Substring(0, x.Generation.Id.IndexOf('-')) == @gen)))
-                {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Name.Replace('_', ' ')</td>
-                        <td>
-                            <div class="btn-group">
-                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit</button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a>
-                                    <a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { pokemonId = item.Id }))">Edit Typing</a>
-                                    <a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = item.Id }))">Edit Abilities</a>
-                                    <a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = item.Id }))">Edit Egg Groups</a>
-                                    <a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = item.Id }))">Edit Base Stats</a>
-                                    <a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = item.Id }))">Edit EV Yields</a>
+        @if(!@Model.SlowConnection)
+        {
+            <div class="tabcontent generation" id="Generation@(gen)">
+                <div class="grid-container">
+                    @foreach(var item in Model.AllPokemon.Where(x => (x.Generation.Id == @gen) || (x.Generation.Id.IndexOf('-') > -1 && x.Generation.Id.Substring(0, x.Generation.Id.IndexOf('-')) == @gen)))
+                    {
+                        <div class="@item.Name">
+                            <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                                <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Id + ".png")"/>
+                            </a>
+                            <div>
+                                <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" class="pokemonName">@('#')@item.Id @item.Name.Replace('_', ' ')</a>
+                                <br>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <span class="adminMenuTitle">Edit Pokemon</span>
+                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { pokemonId = item.Id }))">Edit Typing</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = item.Id }))">Edit Abilities</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = item.Id }))">Edit Egg Groups</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = item.Id }))">Edit Base Stats</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = item.Id }))">Edit EV Yields</a></li>
+                                        @if((Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id)) || Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                        {
+                                            <hr class="adminOptionSeparator">
+                                            <span class="adminMenuTitle">Edit Relations</span>
+                                        }
+                                        @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                        {
+                                            <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Edit", new { pokemonId = item.Id }))">Edit Evolution</a></li>
+                                        }
+                                        @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                        {
+                                            <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = item.Id }))">Edit Alternate Forms</a></li>
+                                        }
+                                        <hr class="adminOptionSeparator">
+                                        @if(!item.IsArchived)
+                                        {
+                                            <span class="adminMenuTitle">Archive</span>
+                                            <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Archive", new { pokemonId = item.Id }))">Archive Pokemon</a></li>
+                                            @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Archive", new { pokemonId = item.Id }))">Archive Evolution</a></li>
+                                            }
+                                            @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Archive", new { pokemonId = item.Id }))">Archive Alternate Forms</a></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="adminMenuTitle">Unarchive</span>
+                                            <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Unarchive", new { pokemonId = item.Id }))">Unarchive Pokemon</a></li>
+                                            @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Unarchive", new { pokemonId = item.Id }))">Unarchive Evolution</a></li>
+                                            }
+                                            @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Unarchive", new { pokemonId = item.Id }))">Unarchive Alternate Forms</a></li>
+                                            }
+                                        }
+                                        @if(User.IsInRole("Owner"))
+                                        {
+                                            <hr class="adminOptionSeparator">
+                                            <span class="adminMenuTitle">Delete</span>
+                                            <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Delete", new { pokemonId = item.Id }))">Delete Pokemon</a></li>
+                                            @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Delete", new { pokemonId = item.Id }))">Delete Evolution</a></li>
+                                            }
+                                            @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Delete", new { pokemonId = item.Id }))">Delete Alternate Forms</a></li>
+                                            }
+                                        }
+                                    </ul>
                                 </div>
                             </div>
-                        </td>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="tabcontent generation" id="Generation@(gen)">
+                <table class="table">
+                    <tr>
+                        <th scope="col">Pokedex Number</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
                     </tr>
-                }
-            </table>
-        </div>
+                    @foreach(var item in Model.AllPokemon.Where(x => (x.Generation.Id == @gen) || (x.Generation.Id.IndexOf('-') > -1 && x.Generation.Id.Substring(0, x.Generation.Id.IndexOf('-')) == @gen)))
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Name.Replace('_', ' ')</a></td>
+                            <td>
+                                <div class="btn-group">
+                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                        <span class="adminMenuTitle">Edit Pokemon</span>
+                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Edit", new { id = item.Id }))">Edit Pokemon</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { pokemonId = item.Id }))">Edit Typing</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = item.Id }))">Edit Abilities</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = item.Id }))">Edit Egg Groups</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = item.Id }))">Edit Base Stats</a></li>
+                                        <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = item.Id }))">Edit EV Yields</a></li>
+                                        @if((Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id)) || Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                        {
+                                            <hr class="adminOptionSeparator">
+                                            <span class="adminMenuTitle">Edit Relations</span>
+                                        }
+                                        @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                        {
+                                            <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Edit", new { pokemonId = item.Id }))">Edit Evolution</a></li>
+                                        }
+                                        @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                        {
+                                            <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = item.Id }))">Edit Alternate Forms</a></li>
+                                        }
+                                        <hr class="adminOptionSeparator">
+                                        @if(!item.IsArchived)
+                                        {
+                                            <span class="adminMenuTitle">Archive</span>
+                                            <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Archive", new { pokemonId = item.Id }))">Archive Pokemon</a></li>
+                                            @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Archive", new { pokemonId = item.Id }))">Archive Evolution</a></li>
+                                            }
+                                            @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Archive", new { pokemonId = item.Id }))">Archive Alternate Forms</a></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="adminMenuTitle">Unarchive</span>
+                                            <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Unarchive", new { pokemonId = item.Id }))">Unarchive Pokemon</a></li>
+                                            @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Unarchive", new { pokemonId = item.Id }))">Unarchive Evolution</a></li>
+                                            }
+                                            @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Unarchive", new { pokemonId = item.Id }))">Unarchive Alternate Forms</a></li>
+                                            }
+                                        }
+                                        @if(User.IsInRole("Owner"))
+                                        {
+                                            <hr class="adminOptionSeparator">
+                                            <span class="adminMenuTitle">Delete</span>
+                                            <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Delete", new { pokemonId = item.Id }))">Delete Pokemon</a></li>
+                                            @if(Model.AllEvolutions.Exists(x => x.EvolutionPokemonId == item.Id) || Model.AllEvolutions.Exists(x => x.PreevolutionPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Delete", new { pokemonId = item.Id }))">Delete Evolution</a></li>
+                                            }
+                                            @if(Model.AllAltForms.Exists(x => x.OriginalPokemonId == item.Id))
+                                            {
+                                                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Delete", new { pokemonId = item.Id }))">Delete Alternate Forms</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
     }
 }

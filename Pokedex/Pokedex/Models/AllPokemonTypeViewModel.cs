@@ -3,7 +3,7 @@ using Pokedex.DataAccess.Models;
 
 namespace Pokedex.Models
 {
-    public class AllPokemonViewModel
+    public class AllPokemonTypeViewModel
     {
         public List<PokemonTypeDetail> AllPokemon { get; set; }
 

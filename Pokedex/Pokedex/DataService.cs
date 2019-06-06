@@ -286,6 +286,30 @@ namespace Pokedex
             return pokemonList;
         }
 
+        public List<PokemonFormDetail> GetAllAltForms()
+        {
+            List<PokemonFormDetail> pokemonFormList = this._dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                    .Include("AltFormPokemon.EggCycle")
+                    .Include("AltFormPokemon.GenderRatio")
+                    .Include("AltFormPokemon.Classification")
+                    .Include("AltFormPokemon.Generation")
+                    .Include("AltFormPokemon.ExperienceGrowth")
+                    .Include("AltFormPokemon.CaptureRate")
+                    .Include("AltFormPokemon.BaseHappiness")
+                .Include(x => x.OriginalPokemon)
+                    .Include("OriginalPokemon.EggCycle")
+                    .Include("OriginalPokemon.GenderRatio")
+                    .Include("OriginalPokemon.Classification")
+                    .Include("OriginalPokemon.Generation")
+                    .Include("OriginalPokemon.ExperienceGrowth")
+                    .Include("OriginalPokemon.CaptureRate")
+                    .Include("OriginalPokemon.BaseHappiness")
+                .ToList();
+
+            return pokemonFormList;
+        }
+
         public PokemonTypeDetail GetPokemonWithTypes(string pokemonId)
         {
             return this._dataContext.PokemonTypeDetails
