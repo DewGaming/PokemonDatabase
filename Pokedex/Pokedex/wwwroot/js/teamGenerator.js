@@ -67,17 +67,23 @@ $(window).on('resize', function() {
 });
 
 $('.generatorButton').on('click', function() {
-    var selectedGens = [];
+    var selectedGens = [], selectedEvolutions;
     $('.generationCheckbox input').each(function() {
         if($(this).is(':checked')){
             selectedGens.push(this.value);
         }
     });
 
+    $('.evolutionRadio input').each(function() {
+        if($(this).is(':checked')){
+            selectedEvolutions = this.value;
+        }
+    });
+
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'useAlternateForms': $('#useAlternateForm').is(':checked') }
+        data: { 'selectedGens': selectedGens, 'useAlternateForms': $('#useAlternateForm').is(':checked'), 'selectedEvolutions': selectedEvolutions }
     })
     .done(function(data) {
         pokemonList = data;

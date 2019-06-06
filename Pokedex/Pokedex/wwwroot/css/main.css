@@ -183,6 +183,10 @@ main {
   margin: 5px 0;
 }
 
+.generationOptionTitle {
+  margin-left: 5px;
+}
+
 .generatorDropdown {
   margin-top: -15px;
 }
@@ -191,8 +195,20 @@ main {
   height: 50px;
 }
 
-.generatorCheckboxTitle, .adminMenuTitle {
+.generatorOptionTitle, .adminMenuTitle {
   padding-left: 5px;
+}
+
+.teamGenerator:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu {
+  margin-top: 0px;
+}
+
+label {
+  margin-bottom: 0;
 }
 
 footer hr{

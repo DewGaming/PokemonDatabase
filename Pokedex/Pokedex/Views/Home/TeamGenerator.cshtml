@@ -8,22 +8,44 @@
     <script src="/js/teamGenerator.js"></script>
 }
 
-<div class="btn-group">
-    <button class="btn btn-primary dropdown-toggle generatorDropdown" data-toggle="dropdown">Generator Options</button>
+<div class="btn-group teamGenerator">
+    <span><button class="btn btn-primary generatorDropdown">Generator Options</button></span>
     <ul class="dropdown-menu">
-        <span class="generatorCheckboxTitle">Selected Generations</span>
+        <span class="generationOptionTitle">Selected Generations</span>
         @foreach(var gen in Model)
         {
-            <li class="dropdown-item generatorCheckbox generationCheckbox">
+            <li class="dropdown-item generatorOption generationCheckbox">
                 <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked />
-                <span class="generatorCheckboxTitle">Generation @gen.Id</span>
+                <label for="gen@(gen.Id)" class="generatorOptionTitle">Generation @gen.Id</label>
             </li>
         }
         <hr class="generationOptionSeparator">
-        <span class="generatorCheckboxTitle">Other Options</span>
-        <li class="dropdown-item generatorCheckbox altGenerationCheckbox">
+        <span class="generationOptionTitle">Selected Evolutions</span>
+        <li class="dropdown-item generatorOption evolutionRadio">
+            <input id="allEvolutions" type="radio" name="evolutionSelection" value="allEvolutions" checked />
+            <label for="allEvolutions" class="generatorRadio">All Evolutions</label>
+        </li>
+        <li class="dropdown-item generatorOption evolutionRadio">
+            <input id="noEvolutions" type="radio" name="evolutionSelection" value="noEvolutions" />
+            <label for="noEvolutions" class="generatorRadio">No Evolutions</label>
+        </li>
+        <li class="dropdown-item generatorOption evolutionRadio">
+            <input id="stage1Pokemon" type="radio" name="evolutionSelection" value="stage1Pokemon" />
+            <label for="stage1Pokemon" class="generatorRadio">Only Stage 1 Pokemon</label>
+        </li>
+        <li class="dropdown-item generatorOption evolutionRadio">
+            <input id="stage2Pokemon" type="radio" name="evolutionSelection" value="middleEvolution" />
+            <label for="stage2Pokemon" class="generatorRadio">Only Stage 2 Pokemon</label>
+        </li>
+        <li class="dropdown-item generatorOption evolutionRadio">
+            <input id="onlyFullyEvolved" type="radio" name="evolutionSelection" value="onlyFullyEvolved" />
+            <label for="onlyFullyEvolved" class="generatorRadio">Only Fully Evolved Pokemon</label>
+        </li>
+        <hr class="generationOptionSeparator">
+        <span class="generationOptionTitle">Other Options</span>
+        <li class="dropdown-item generatorOption altGenerationCheckbox">
             <input id="useAlternateForm" type="checkbox" value="useAlternateForm" />
-            <span class="generatorCheckboxTitle">Use Alternate Forms</span>
+            <label for="useAlternateForm" class="generatorOptionTitle">Use Alternate Forms</label>
         </li>
     </ul>
 </div>

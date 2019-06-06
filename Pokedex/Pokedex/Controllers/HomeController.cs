@@ -149,7 +149,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public List<Pokemon> GetPokemonTeam(List<string> selectedGens, bool useAlternateForms)
+        public List<Pokemon> GetPokemonTeam(List<string> selectedGens, bool useAlternateForms, string selectedEvolutions)
         {
             List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
             foreach(var item in selectedGens)
@@ -159,12 +159,10 @@ namespace Pokedex.Controllers
 
             Pokemon pokemon;
             List<Pokemon> model = new List<Pokemon>();
-            List<Pokemon> allPokemon = this._dataService.GetAllPokemon().ToList();
+            List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
+            List<PokemonFormDetail> allAltForms = this._dataService.GetAllAltForms();
+            List<Evolution> allEvolutions = this._dataService.GetEvolutions();
             Random rnd = new Random();
-            if (!useAlternateForms)
-            {
-                allPokemon = allPokemon.Where(x => x.Id.IndexOf('-') == -1).ToList();
-            }
 
             foreach(var gen in unselectedGens)
             {
@@ -174,6 +172,73 @@ namespace Pokedex.Controllers
             if (useAlternateForms && allPokemon.Count() == 0)
             {
                 allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') != -1).ToList();
+            }
+
+            if (selectedEvolutions == "noEvolutions")
+            {
+                List<Pokemon> newPokemon = new List<Pokemon>();
+                foreach(var p in allPokemon)
+                {
+                    if (!allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id || x.PreevolutionPokemonId == p.Id))
+                    {
+                        newPokemon.Add(p);
+                    }
+                }
+
+                allPokemon = newPokemon;
+            }
+            else if (selectedEvolutions == "stage1Pokemon")
+            {
+                List<Pokemon> newPokemon = new List<Pokemon>();
+                foreach(var p in allPokemon)
+                {
+                    if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                    {
+                        newPokemon.Add(p);
+                    }
+                }
+
+                allPokemon = newPokemon;
+            }
+            else if (selectedEvolutions == "middleEvolution")
+            {
+                List<Pokemon> newPokemon = new List<Pokemon>();
+                foreach(var p in allPokemon)
+                {
+                    if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                    {
+                        newPokemon.Add(p);
+                    }
+                }
+
+                allPokemon = newPokemon;
+            }
+            else if (selectedEvolutions == "onlyFullyEvolved")
+            {
+                List<Pokemon> newPokemon = new List<Pokemon>();
+                foreach(var p in allPokemon)
+                {
+                    if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                    {
+                        newPokemon.Add(p);
+                    }
+                }
+
+                allPokemon = newPokemon;
+            }
+
+            if (useAlternateForms)
+            {
+                List<Pokemon> altFormsList = new List<Pokemon>();
+                foreach(var p in allPokemon)
+                {
+                    if (allAltForms.Exists(x => x.OriginalPokemonId == p.Id))
+                    {
+                        altFormsList.AddRange(this._dataService.GetAltForms(p));
+                    }
+                }
+
+                allPokemon.AddRange(altFormsList);
             }
 
             if(allPokemon.Count() > 0)
