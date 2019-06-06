@@ -264,6 +264,50 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_egg_groups/{pokemonId}")]
+        public IActionResult EggGroups(string pokemonId)
+        {
+            PokemonEggGroupDetail eggGroupDetail = this._dataService.GetPokemonWithEggGroups(pokemonId);
+            PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
+            {
+                Id = eggGroupDetail.Id,
+                AllEggGroups = this._dataService.GetEggGroups(),
+                PokemonId = eggGroupDetail.PokemonId,
+                PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
+                SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_egg_groups/{pokemonId}")]
+        public IActionResult EggGroups(PokemonEggGroupDetail pokemonEggGroupDetail)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonEggGroupDetail eggGroupDetail = this._dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId);
+                PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
+                {
+                    Id = eggGroupDetail.Id,
+                    AllEggGroups = this._dataService.GetEggGroups(),
+                    PokemonId = eggGroupDetail.PokemonId,
+                    PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
+                    SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId
+                };
+
+                return this.View(model);
+            }
+
+            pokemonEggGroupDetail.Id = this._dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId).Id;
+
+            this._dataService.UpdatePokemonEggGroupDetail(pokemonEggGroupDetail);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_type/{id:int}")]
         public IActionResult Type(int id)
         {
