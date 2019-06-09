@@ -372,6 +372,22 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
+        public BaseStat GetPokemonBaseStats(string pokemonId)
+        {
+            return this._dataContext.BaseStats
+                .Include(x => x.Pokemon)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
+        public EVYield GetPokemonEVYields(string pokemonId)
+        {
+            return this._dataContext.EVYields
+                .Include(x => x.Pokemon)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
         public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
         {
             return this._dataContext.PokemonEggGroupDetails

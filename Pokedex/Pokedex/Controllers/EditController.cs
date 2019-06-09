@@ -205,8 +205,6 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            pokemonTypeDetail.Id = this._dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId).Id;
-
             if (pokemonTypeDetail.PrimaryTypeId == pokemonTypeDetail.SecondaryTypeId)
             {
                 pokemonTypeDetail.SecondaryTypeId = null;
@@ -256,8 +254,6 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            pokemonAbilityDetail.Id = this._dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId).Id;
-
             this._dataService.UpdatePokemonAbilityDetail(pokemonAbilityDetail);
 
             return this.RedirectToAction("Pokemon", "Admin");
@@ -300,9 +296,108 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            pokemonEggGroupDetail.Id = this._dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId).Id;
-
             this._dataService.UpdatePokemonEggGroupDetail(pokemonEggGroupDetail);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_base_stats/{pokemonId}")]
+        public IActionResult BaseStats(string pokemonId)
+        {
+            BaseStat model = this._dataService.GetPokemonBaseStats(pokemonId);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_base_stats/{pokemonId}")]
+        public IActionResult BaseStats(BaseStat baseStat)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                BaseStat model = this._dataService.GetPokemonBaseStats(baseStat.PokemonId);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateBaseStat(baseStat);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_ev_yields/{pokemonId}")]
+        public IActionResult EVYields(string pokemonId)
+        {
+            EVYield model = this._dataService.GetPokemonEVYields(pokemonId);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_ev_yields/{pokemonId}")]
+        public IActionResult EVYields(EVYield evYield)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                return this.View(model);
+            }
+            else if (evYield.Health > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "Health must be 3 or less.");
+                return this.View(model);
+            }
+            else if (evYield.Attack > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "Attack must be 3 or less.");
+                return this.View(model);
+            }
+            else if (evYield.Defense > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "Defense must be 3 or less.");
+                return this.View(model);
+            }
+            else if (evYield.SpecialAttack > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "Special Attack must be 3 or less.");
+                return this.View(model);
+            }
+            else if (evYield.SpecialDefense > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "Special Defense must be 3 or less.");
+                return this.View(model);
+            }
+            else if (evYield.Speed > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "Speed must be 3 or less.");
+                return this.View(model);
+            }
+            else if (evYield.EVTotal > 3)
+            {
+                EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+
+                this.ModelState.AddModelError("EVTotal", "EV Total must be 3 or less.");
+                return this.View(model);
+            }
+
+            this._dataService.UpdateEVYield(evYield);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
