@@ -111,6 +111,14 @@ hr.dropdown-line {
   color: #404040;
 }
 
+.reset-button:hover {
+  color: black;
+}
+
+.reset-button {
+  color: gray;
+}
+
 .search-bar {
   height: 30px;
   margin: 15px 0 10px 0;

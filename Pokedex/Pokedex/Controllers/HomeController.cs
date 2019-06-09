@@ -62,9 +62,25 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet()]
+        [HttpGet]
         [Route("search")]
         public IActionResult Search(string search, bool slowConnection)
+        {
+            TempData["SlowConnection"] = slowConnection;
+
+            if(slowConnection)
+            {
+                return this.RedirectToAction("SearchRedirect", "Home", new { search = search, slowConnection = slowConnection } );
+            }
+            else
+            {
+                return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
+            }
+        }
+
+        [AllowAnonymous]
+        [Route("search/{search}")]
+        public IActionResult SearchRedirect(string search, bool slowConnection)
         {
             this.ViewData["Search"] = search;
 
@@ -98,7 +114,7 @@ namespace Pokedex.Controllers
                 }
                 else if (model.Count() == 0)
                 {
-                    return this.Redirect(Request.Headers["Referer"].ToString());
+                    return this.RedirectToAction("AllPokemon", "Home");
                 }
                 else
                 {

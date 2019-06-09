@@ -102,7 +102,9 @@ else
 {
     @if(!@Model.SlowConnection)
     {
-        <a class="btn btn-primary pokemonListButton" href="@Url.Action("Index", "Home", new { search = ViewData["Search"], slowConnection = true })">View As Table<br/>Use For Slower Connections</a>
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("Search", "Home", new { search = ViewData["Search"], slowConnection = true })">View As Table Use For Slower Connections</a>
+        </p>
         <div>
             <div class="grid-container">
                 @foreach(var item in Model.AllPokemon)
@@ -128,7 +130,9 @@ else
     }
     else
     {
-        <a class="btn btn-primary pokemonListButton" href="@Url.Action("Index", "Home", new { search = ViewData["Search"] })">Retrun To Grid</a>
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("Search", "Home", new { search = ViewData["Search"] })">Retrun To Grid</a>
+        </p>
         <div>
             <table class="table">
                 <tr>
