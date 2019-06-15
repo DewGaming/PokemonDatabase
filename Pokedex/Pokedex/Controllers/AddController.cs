@@ -1,7 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 
@@ -13,9 +19,12 @@ namespace Pokedex.Controllers
     {
         private readonly DataService _dataService;
 
-        public AddController(DataContext dataContext)
+        private readonly AppConfig _appConfig;
+
+        public AddController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             // Instantiate an instance of the data service.
+            this._appConfig = appConfig.Value;
             this._dataService = new DataService(dataContext);
         }
 
@@ -119,7 +128,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_type")]
-        public IActionResult Type(Type type)
+        public IActionResult Type(DataAccess.Models.Type type)
         {
             if (!this.ModelState.IsValid)
             {
@@ -244,7 +253,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokemon")]
-        public IActionResult Pokemon(BasePokemonViewModel pokemon)
+        public async Task<IActionResult> Pokemon(BasePokemonViewModel pokemon, IFormFile upload)
         {
             int pokedexNumber;
             if (!this.ModelState.IsValid)
@@ -373,9 +382,30 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + pokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+            request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+            using (var requestStream = request.GetRequestStream())  
+            {  
+                await upload.CopyToAsync(requestStream);  
+            }
+
+            #if DEBUG
+            using (FileStream stream = new FileStream(_appConfig.LocalUrl + pokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')), FileMode.Create))
+            {
+                await upload.CopyToAsync(stream);
+            }
+            #endif
+
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            {
+                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
+
             this._dataService.AddPokemon(pokemon);
 
-            return this.RedirectToAction("AddTyping", "Admin", new { pokemonId = pokemon.Id });
+            return this.RedirectToAction("Typing", "Add", new { pokemonId = pokemon.Id });
         }
 
         [HttpGet]
@@ -409,7 +439,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonTyping(typing);
 
-            return this.RedirectToAction("AddAbilities", "Admin", new { pokemonId = typing.PokemonId });
+            return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
         }
 
         [HttpGet]
@@ -443,7 +473,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonAbilities(abilities);
 
-            return this.RedirectToAction("AddEggGroups", "Admin", new { pokemonId = abilities.PokemonId });
+            return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
         }
 
         [HttpGet]
@@ -477,7 +507,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonEggGroups(eggGroups);
 
-            return this.RedirectToAction("AddBaseStats", "Admin", new { pokemonId = eggGroups.PokemonId });
+            return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
         }
 
         [HttpGet]
@@ -509,7 +539,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonBaseStat(baseStat);
 
-            return this.RedirectToAction("AddEVYields", "Admin", new { pokemonId = baseStat.PokemonId });
+            return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
         }
 
         [HttpGet]
