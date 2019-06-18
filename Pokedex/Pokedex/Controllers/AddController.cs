@@ -29,27 +29,24 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_evolution")]
-        public IActionResult Evolution()
+        [Route("add_evolution/{pokemonId}")]
+        public IActionResult Evolution(string pokemonId)
         {
+            Pokemon evolutionPokemon = this._dataService.GetPokemonById(pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
             {
+                AllPokemon = this._dataService.GetAllPokemonWithoutForms().Where(x => x.Id != evolutionPokemon.Id).ToList(),
                 AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
+                EvolutionPokemon = evolutionPokemon,
+                EvolutionPokemonId = evolutionPokemon.Id,
             };
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
-            {
-                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
-            }
-
-            model.AllPokemon = pokemonList;
             
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_evolution")]
+        [Route("add_evolution/{pokemonId}")]
         public IActionResult Evolution(Evolution evolution)
         {
             if (!this.ModelState.IsValid)
@@ -451,14 +448,18 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_alternate_form")]
-        public IActionResult AltForm()
+        [Route("add_alternate_form/{pokemonId}")]
+        public IActionResult AltForm(string pokemonId)
         {
+            Pokemon originalPokemon = this._dataService.GetPokemonById(pokemonId);
+            List<Generation> generations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= originalPokemon.Generation.ReleaseDate).ToList();
+
             AlternateFormViewModel model = new AlternateFormViewModel()
             {
-                AllPokemon = this._dataService.GetAllPokemonWithoutForms(),
                 AllForms = this._dataService.GetForms(),
-                AllGenerations = this._dataService.GetGenerations(),
+                AllGenerations = generations,
+                OriginalPokemon = originalPokemon,
+                OriginalPokemonId = originalPokemon.Id,
             };
 
             return this.View(model);
@@ -466,17 +467,21 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_alternate_form")]
+        [Route("add_alternate_form/{pokemonId}")]
         public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile upload)
         {
             List<PokemonFormDetail> originalPokemonForms = this._dataService.GetPokemonForms(pokemon.OriginalPokemonId);
             if (!this.ModelState.IsValid)
             {
+                Pokemon originalPokemon = this._dataService.GetPokemonById(pokemon.OriginalPokemonId);
+                List<Generation> generations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= originalPokemon.Generation.ReleaseDate).ToList();
+
                 AlternateFormViewModel model = new AlternateFormViewModel()
                 {
-                    AllPokemon = this._dataService.GetAllPokemonWithoutForms(),
                     AllForms = this._dataService.GetForms(),
-                    AllGenerations = this._dataService.GetGenerations(),
+                    AllGenerations = generations,
+                    OriginalPokemon = originalPokemon,
+                    OriginalPokemonId = originalPokemon.Id,
                 };
 
                 return this.View(model);
@@ -486,11 +491,15 @@ namespace Pokedex.Controllers
             {
                 if (p.FormId == pokemon.FormId)
                 {
+                    Pokemon originalPokemon = this._dataService.GetPokemonById(pokemon.OriginalPokemonId);
+                    List<Generation> generations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= originalPokemon.Generation.ReleaseDate).ToList();
+
                     AlternateFormViewModel model = new AlternateFormViewModel()
                     {
-                        AllPokemon = this._dataService.GetAllPokemonWithoutForms(),
                         AllForms = this._dataService.GetForms(),
-                        AllGenerations = this._dataService.GetGenerations(),
+                        AllGenerations = generations,
+                        OriginalPokemon = originalPokemon,
+                        OriginalPokemonId = originalPokemon.Id,
                     };
     
                     this.ModelState.AddModelError("Alternate Form Name", "Original Pokemon already has an alternate form of this type.");

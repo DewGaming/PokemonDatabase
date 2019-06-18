@@ -4,7 +4,7 @@
     Layout = "_layout";
 }
 
-<h2>Add Pokemon</h2>
+<h2>Add Alternate Form For @Model.OriginalPokemon.Name</h2>
 
 <div class="form-horizontal">
 
@@ -14,17 +14,13 @@
         
         @Html.ValidationSummary()
 
+        @Html.HiddenFor(x => x.OriginalPokemonId)
+
         <div class="form-group">
             @Html.Label("Picture")
             <div class="col-md-8">
                 <input type="file" id="Picture" name="upload" />
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(x => x.OriginalPokemonId)
-            @Html.DropDownListFor(x => x.OriginalPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control" })
-            @Html.ValidationMessageFor(x => x.OriginalPokemonId)
         </div>
         
         <div class="form-group">

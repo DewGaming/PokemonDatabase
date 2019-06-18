@@ -6,8 +6,6 @@ namespace Pokedex.Models
 {
     public class AlternateFormViewModel
     {
-        public List<Pokemon> AllPokemon { get; set; }
-
         public List<Form> AllForms { get; set; }
 
         public List<Generation> AllGenerations { get; set; }
@@ -15,6 +13,7 @@ namespace Pokedex.Models
         [Display(Name = "Original Pokemon")]
         [Required]
         public string OriginalPokemonId { get; set; }
+        public Pokemon OriginalPokemon { get; set; }
 
         [Display(Name = "Alternate Form Name")]
         [Required]

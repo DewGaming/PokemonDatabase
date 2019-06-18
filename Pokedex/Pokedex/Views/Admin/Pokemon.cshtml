@@ -23,8 +23,6 @@
     @if(User.IsInRole("Owner"))
     {
         <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokemon</a>
-        <a class="btn btn-primary" href="@Url.Action("Evolution", "Add")" role="button">Add Evolution</a>
-        <a class="btn btn-primary" href="@Url.Action("AltForm", "Add")" role="button">Add Alternate Form</a>
     }
     @if(!@Model.SlowConnection)
     {
