@@ -7,6 +7,7 @@ namespace Pokedex.DataAccess.Models
     {
         public int Id { get; set; }
         [Required]
+        public int FormId { get; set; }
         public Form Form { get; set; }
         [Required]
         public string OriginalPokemonId { get; set; }

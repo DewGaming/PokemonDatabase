@@ -250,7 +250,7 @@ namespace Pokedex.Controllers
                 {
                     if (allAltForms.Exists(x => x.OriginalPokemonId == p.Id))
                     {
-                        altFormsList.AddRange(this._dataService.GetAltForms(p));
+                        altFormsList.AddRange(this._dataService.GetAltForms(p.Id));
                     }
                 }
 
@@ -296,7 +296,7 @@ namespace Pokedex.Controllers
             }
 
             Pokemon pokemon = this._dataService.GetPokemon(name);
-            List<Pokemon> altForms = this._dataService.GetAltForms(pokemon);
+            List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
             PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
             PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
             PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
