@@ -31,11 +31,15 @@ namespace Pokedex.Controllers
             List<PokemonFormDetail> altFormsList = this._dataService.GetAllAltForms();
             List<Evolution> evolutionList = this._dataService.GetEvolutions();
 
-            AllAdminPokemonViewModel model = new AllAdminPokemonViewModel(){
+            AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
                 AllPokemon = pokemonList,
                 AllAltForms = altFormsList,
                 AllEvolutions = evolutionList,
                 SlowConnection = slowConnection
+            };
+
+            DropdownViewModel model = new DropdownViewModel(){
+                AllPokemon = allPokemon,
             };
 
             return this.View(model);
