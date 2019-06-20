@@ -3,13 +3,64 @@
 <div class="btn-group">
     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
     <ul class="dropdown-menu dropdown-menu-right">
+        @if(!Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <span class="adminMenuTitle missingPart">Add To Pokemon</span>
+        }
+        @if(User.IsInRole("Owner") && !Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("Typing", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Typing</a></li>
+        }
+        @if(User.IsInRole("Owner") && !Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("Abilities", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Abilities</a></li>
+        }
+        @if(User.IsInRole("Owner") && !Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("EggGroups", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Egg Groups</a></li>
+        }
+        @if(User.IsInRole("Owner") && !Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("BaseStats", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Base Stats</a></li>
+        }
+        @if(User.IsInRole("Owner") && !Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Add", new { pokemonId = Model.Pokemon.Id }))">Add EV Yields</a></li>
+        }
+        @if(!Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
+            !Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <hr class="adminOptionSeparator">
+        }
         <span class="adminMenuTitle">Edit Pokemon</span>
         <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Edit", new { id = Model.Pokemon.Id }))">Edit Pokemon</a></li>
-        <li><a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Typing</a></li>
-        <li><a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Abilities</a></li>
-        <li><a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Egg Groups</a></li>
-        <li><a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Base Stats</a></li>
-        <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit EV Yields</a></li>
+        @if(Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("Typing", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Typing</a></li>
+        }
+        @if(Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Abilities</a></li>
+        }
+        @if(Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Egg Groups</a></li>
+        }
+        @if(Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Base Stats</a></li>
+        }
+        @if(Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit EV Yields</a></li>
+        }
         <hr class="adminOptionSeparator">
         <span class="adminMenuTitle">Add Relations</span>
         @if(!Model.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))

@@ -27,14 +27,15 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon(bool slowConnection)
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutForms();
-            List<PokemonFormDetail> altFormsList = this._dataService.GetAllAltForms();
-            List<Evolution> evolutionList = this._dataService.GetEvolutions();
-
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
-                AllPokemon = pokemonList,
-                AllAltForms = altFormsList,
-                AllEvolutions = evolutionList,
+                AllPokemon = this._dataService.GetAllPokemonWithoutForms(),
+                AllAltForms = this._dataService.GetAllAltForms(),
+                AllEvolutions = this._dataService.GetEvolutions(),
+                AllTypings = this._dataService.GetAllPokemonWithTypes(),
+                AllAbilities = this._dataService.GetAllPokemonWithAbilities(),
+                AllEggGroups = this._dataService.GetAllPokemonWithEggGroups(),
+                AllBaseStats = this._dataService.GetBaseStats(),
+                AllEVYields = this._dataService.GetEVYields(),
                 SlowConnection = slowConnection
             };
 

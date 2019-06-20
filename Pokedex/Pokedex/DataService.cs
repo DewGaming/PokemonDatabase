@@ -423,12 +423,26 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
+        public List<BaseStat> GetBaseStats()
+        {
+            return this._dataContext.BaseStats
+                .Include(x => x.Pokemon)
+                .ToList();
+        }
+
         public EVYield GetEVYield(string pokemonId)
         {
             return this._dataContext.EVYields
                 .Include(x => x.Pokemon)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
+        public List<EVYield> GetEVYields()
+        {
+            return this._dataContext.EVYields
+                .Include(x => x.Pokemon)
+                .ToList();
         }
 
         public List<TypeChart> GetTypeChart()

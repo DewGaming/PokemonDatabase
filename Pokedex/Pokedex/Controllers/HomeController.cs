@@ -296,6 +296,8 @@ namespace Pokedex.Controllers
             }
 
             Pokemon pokemon = this._dataService.GetPokemon(name);
+            BaseStat baseStat = this._dataService.GetBaseStat(pokemon.Id);
+            EVYield evYield = this._dataService.GetEVYield(pokemon.Id);
             List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
             PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
             PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
@@ -305,8 +307,8 @@ namespace Pokedex.Controllers
             model.Add(new PokemonViewModel()
             {
                 Pokemon = pokemon,
-                BaseStats = this._dataService.GetBaseStat(pokemon.Id),
-                EVYields = this._dataService.GetEVYield(pokemon.Id),
+                BaseStats = baseStat,
+                EVYields = evYield,
                 PrimaryType = pokemonTypes.PrimaryType,
                 SecondaryType = pokemonTypes.SecondaryType,
                 PrimaryAbility = pokemonAbilities.PrimaryAbility,
@@ -321,14 +323,16 @@ namespace Pokedex.Controllers
 
             foreach (var p in altForms)
             {
+                baseStat = this._dataService.GetBaseStat(p.Id);
+                evYield = this._dataService.GetEVYield(p.Id);
                 pokemonTypes = this._dataService.GetPokemonWithTypes(p.Id);
                 pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
                 pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(p.Id);
                 var pokemonModel = new PokemonViewModel()
                 {
                     Pokemon = p,
-                    BaseStats = this._dataService.GetBaseStat(p.Id),
-                    EVYields = this._dataService.GetEVYield(p.Id),
+                    BaseStats = baseStat,
+                    EVYields = evYield,
                     PrimaryType = pokemonTypes.PrimaryType,
                     SecondaryType = pokemonTypes.SecondaryType,
                     PrimaryAbility = pokemonAbilities.PrimaryAbility,
