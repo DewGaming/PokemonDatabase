@@ -26,7 +26,7 @@
                     }
                 </td>
                 <td>
-                    <a href="@(Url.Action("EggGroup", "Edit", new { id = item.Id }))">Edit</a>
+                    <a href="@(Url.Action("Classification", "Edit", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllPokemon.Exists(x => x.Classification.Id == item.Id)))
                     {
                         @('|')
