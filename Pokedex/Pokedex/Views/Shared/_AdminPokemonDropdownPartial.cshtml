@@ -3,11 +3,7 @@
 <div class="btn-group">
     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
     <ul class="dropdown-menu dropdown-menu-right">
-        @if(!Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
-            !Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
-            !Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
-            !Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id) ||
-            !Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if(!Model.Pokemon.IsComplete)
         {
             <span class="adminMenuTitle missingPart">Add To Pokemon</span>
         }

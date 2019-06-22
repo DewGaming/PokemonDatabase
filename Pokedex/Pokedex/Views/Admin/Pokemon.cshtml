@@ -55,11 +55,25 @@
                     {
                         Model.Pokemon = item;
                         <div class="@item.Name">
-                            <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                            @if(item.IsComplete)
+                            {
+                                <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                                    <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Id + ".png")"/>
+                                </a>
+                            }
+                            else
+                            {
                                 <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Id + ".png")"/>
-                            </a>
+                            }
                             <div>
-                                <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" class="pokemonName">@('#')@item.Id @item.Name.Replace('_', ' ')</a>
+                                @if(item.IsComplete)
+                                {
+                                    <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" class="pokemonName">@('#')@item.Id @item.Name.Replace('_', ' ')</a>
+                                }
+                                else
+                                {
+                                    <span>@('#')@item.Id @item.Name.Replace('_', ' ')</span>
+                                }
                                 <br>
                                 @await Html.PartialAsync("_AdminPokemonDropdownPartial", Model)
                             </div>
@@ -82,7 +96,16 @@
                         Model.Pokemon = item;
                         <tr>
                             <td>@item.Id</td>
-                            <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Name.Replace('_', ' ')</a></td>
+                            <td>
+                                @if(item.IsComplete)
+                                {
+                                    <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Name.Replace('_', ' ')</a>
+                                }
+                                else
+                                {
+                                    <span>@item.Name.Replace('_', ' ')</span>
+                                }
+                            </td>
                             <td>
                                 @await Html.PartialAsync("_AdminPokemonDropdownPartial", Model)
                             </td>

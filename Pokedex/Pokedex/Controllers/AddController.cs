@@ -21,6 +21,8 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig _appConfig;
 
+        private static bool _cameFromAdminPokemon = false;
+
         public AddController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             // Instantiate an instance of the data service.
@@ -572,6 +574,7 @@ namespace Pokedex.Controllers
         [Route("add_typing/{pokemonId}")]
         public IActionResult Typing(string pokemonId)
         {
+            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 AllTypes = this._dataService.GetTypes(),
@@ -599,13 +602,29 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonTyping(typing);
 
-            return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
+            if(_cameFromAdminPokemon)
+            {
+                _cameFromAdminPokemon = false;
+                if (this.CheckIfComplete(typing.PokemonId))
+                {
+                    Pokemon pokemon = this._dataService.GetPokemonById(typing.PokemonId);
+                    pokemon.IsComplete = true;
+                    this._dataService.UpdatePokemon(pokemon);
+                }
+
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
+            }
         }
 
         [HttpGet]
         [Route("add_abilities/{pokemonId}")]
         public IActionResult Abilities(string pokemonId)
         {
+            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
                 AllAbilities = this._dataService.GetAbilities(),
@@ -637,6 +656,18 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
             }
+            else if(_cameFromAdminPokemon)
+            {
+                _cameFromAdminPokemon = false;
+                if (this.CheckIfComplete(abilities.PokemonId))
+                {
+                    Pokemon pokemon = this._dataService.GetPokemonById(abilities.PokemonId);
+                    pokemon.IsComplete = true;
+                    this._dataService.UpdatePokemon(pokemon);
+                }
+
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
             else
             {
                 return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
@@ -647,6 +678,7 @@ namespace Pokedex.Controllers
         [Route("add_egg_groups/{pokemonId}")]
         public IActionResult EggGroups(string pokemonId)
         {
+            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
                 AllEggGroups = this._dataService.GetEggGroups(),
@@ -674,13 +706,29 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonEggGroups(eggGroups);
 
-            return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
+            if(_cameFromAdminPokemon)
+            {
+                _cameFromAdminPokemon = false;
+                if (this.CheckIfComplete(eggGroups.PokemonId))
+                {
+                    Pokemon pokemon = this._dataService.GetPokemonById(eggGroups.PokemonId);
+                    pokemon.IsComplete = true;
+                    this._dataService.UpdatePokemon(pokemon);
+                }
+
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
+            }
         }
 
         [HttpGet]
         [Route("add_base_stats/{pokemonId}")]
         public IActionResult BaseStats(string pokemonId)
         {
+            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
             BaseStat model = new BaseStat()
             {
                 PokemonId = pokemonId,
@@ -709,7 +757,21 @@ namespace Pokedex.Controllers
             if (baseStat.PokemonId.Contains('-'))
             {
                 Pokemon pokemon = this._dataService.GetPokemonById(baseStat.PokemonId);
+                pokemon.IsComplete = true;
+                this._dataService.UpdatePokemon(pokemon);
                 return this.RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
+            }
+            else if(_cameFromAdminPokemon)
+            {
+                _cameFromAdminPokemon = false;
+                if (this.CheckIfComplete(baseStat.PokemonId))
+                {
+                    Pokemon pokemon = this._dataService.GetPokemonById(baseStat.PokemonId);
+                    pokemon.IsComplete = true;
+                    this._dataService.UpdatePokemon(pokemon);
+                }
+
+                return this.RedirectToAction("Pokemon", "Admin");
             }
             else
             {
@@ -721,6 +783,7 @@ namespace Pokedex.Controllers
         [Route("add_ev_yields/{pokemonId}")]
         public IActionResult EVYields(string pokemonId)
         {
+            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
             EVYield model = new EVYield()
             {
                 PokemonId = pokemonId,
@@ -816,9 +879,36 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonEVYield(evYield);
 
-            Pokemon pokemon = this._dataService.GetPokemonById(evYield.PokemonId);
+            if(_cameFromAdminPokemon)
+            {
+                _cameFromAdminPokemon = false;
+                if (this.CheckIfComplete(evYield.PokemonId))
+                {
+                    Pokemon pokemon = this._dataService.GetPokemonById(evYield.PokemonId);
+                    pokemon.IsComplete = true;
+                    this._dataService.UpdatePokemon(pokemon);
+                }
 
-            return this.RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                Pokemon pokemon = this._dataService.GetPokemonById(evYield.PokemonId);
+
+                pokemon.IsComplete = true;
+                this._dataService.UpdatePokemon(pokemon);
+                
+                return this.RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
+            }
+        }
+
+        public bool CheckIfComplete(string pokemonId)
+        {
+            return this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
         }
     }
 }

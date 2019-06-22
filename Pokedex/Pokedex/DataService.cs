@@ -40,30 +40,6 @@ namespace Pokedex
             return this._dataContext.Abilities.OrderBy(x => x.Name).ToList();
         }
 
-        public List<Ability> GetPokemonAbilities(string pokemonId)
-        {
-            PokemonAbilityDetail abilityDetail = this._dataContext.PokemonAbilityDetails
-                                                    .Include(x => x.Pokemon)
-                                                    .Include(x => x.PrimaryAbility)
-                                                    .Include(x => x.SecondaryAbility)
-                                                    .Include(x => x.HiddenAbility)
-                                                    .ToList()
-                                                    .Find(x => x.Pokemon.Id == pokemonId);
-            List<Ability> abilities = new List<Ability>();
-            abilities.Add(this.GetAbility(abilityDetail.PrimaryAbility.Id));
-            if (abilityDetail.SecondaryAbility != null)
-            {
-                abilities.Add(this.GetAbility(abilityDetail.SecondaryAbility.Id));
-            }
-
-            if (abilityDetail.HiddenAbility != null)
-            {
-                abilities.Add(this.GetAbility(abilityDetail.HiddenAbility.Id));
-            }
-
-            return abilities;
-        }
-
         public Type GetType(int id)
         {
             return this._dataContext.Types
@@ -92,6 +68,7 @@ namespace Pokedex
                                                 .Include(x => x.Pokemon)
                                                 .Include(x => x.PrimaryType)
                                                 .Include(x => x.SecondaryType)
+                                                .Where(x => x.Pokemon.IsComplete == true)
                                                 .ToList()
                                                 .Find(x => x.Pokemon.Id == pokemonId);
             List<Type> types = new List<Type>();
@@ -127,6 +104,7 @@ namespace Pokedex
                                                         .Include(x => x.Pokemon)
                                                         .Include(x => x.PrimaryEggGroup)
                                                         .Include(x => x.SecondaryEggGroup)
+                                                        .Where(x => x.Pokemon.IsComplete == true)
                                                         .ToList()
                                                         .Find(x => x.Pokemon.Id == pokemonId);
 
@@ -150,16 +128,11 @@ namespace Pokedex
         public List<Evolution> GetPokemonEvolutions(string pokemonId)
         {
             List<Evolution> evolutions = this.GetEvolutions()
-                .Where(x => x.PreevolutionPokemon.Id == pokemonId)
+                .Where(x => x.PreevolutionPokemon.Id == pokemonId && x.PreevolutionPokemon.IsComplete == true && x.EvolutionPokemon.IsComplete == true)
                 .OrderBy(x => x.EvolutionPokemon.Id.Length)
                 .ThenBy(x => x.EvolutionPokemon.Id)
                 .ToList();
             return evolutions;
-        }
-
-        public Form GetForm(int id)
-        {
-            return this._dataContext.Forms.ToList().Find(x => x.Id == id);
         }
 
         public List<Form> GetForms()
@@ -173,7 +146,7 @@ namespace Pokedex
                 .Include(x => x.Form)
                 .Include(x => x.OriginalPokemon)
                 .Include(x => x.AltFormPokemon)
-                .Where(x => x.OriginalPokemon.Id == pokemonId)
+                .Where(x => x.OriginalPokemon.Id == pokemonId && x.OriginalPokemon.IsComplete == true && x.AltFormPokemon.IsComplete == true)
                 .OrderBy(x => x.AltFormPokemon.Id.Substring(x.AltFormPokemon.Id.IndexOf("-") + 1).Length)
                 .ThenBy(x => x.AltFormPokemon.Id.Substring(x.AltFormPokemon.Id.IndexOf("-") + 1))
                 .ToList();
@@ -244,11 +217,33 @@ namespace Pokedex
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.Id.Length)
                 .ThenBy(x => x.Id)
-                .Where(x => x.IsArchived == false)
+                .Where(x => x.IsArchived == false && x.IsComplete == true)
                 .ToList();
         }
 
         public List<Pokemon> GetAllPokemonWithoutForms()
+        {
+            List<Pokemon> pokemonList = this._dataContext.Pokemon
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Generation)
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
+                .OrderBy(x => x.Id.Length)
+                .ThenBy(x => x.Id)
+                .Where(x => x.IsArchived == false && x.IsComplete == true)
+                .ToList();
+            List<Pokemon> altFormList = pokemonList.Where(x => x.Id.Contains("-")).ToList();
+            pokemonList = pokemonList.Except(altFormList).ToList();
+
+            pokemonList = pokemonList.OrderBy(x => x.Id.Length).ThenBy(x => x.Id).ToList();
+
+            return pokemonList;
+        }
+
+        public List<Pokemon> GetAllPokemonWithoutFormsWithIncomplete()
         {
             List<Pokemon> pokemonList = this._dataContext.Pokemon
                 .Include(x => x.EggCycle)
@@ -329,11 +324,35 @@ namespace Pokedex
                 .Include(x => x.Pokemon)
                 .Include(x => x.PrimaryType)
                 .Include(x => x.SecondaryType)
+                .Where(x => x.Pokemon.IsComplete == true)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
+        {
+            List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails
+                                                        .Include(x => x.Pokemon)
+                                                            .Include("Pokemon.EggCycle")
+                                                            .Include("Pokemon.BaseHappiness")
+                                                            .Include("Pokemon.CaptureRate")
+                                                            .Include("Pokemon.ExperienceGrowth")
+                                                            .Include("Pokemon.Generation")
+                                                            .Include("Pokemon.Classification")
+                                                            .Include("Pokemon.GenderRatio")
+                                                        .Include(x => x.PrimaryType)
+                                                        .Include(x => x.SecondaryType)
+                                                        .Where(x => x.Pokemon.IsComplete == true)
+                                                        .ToList();
+            List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
+            pokemonList = pokemonList.Except(altFormList).ToList();
+
+            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
+
+            return pokemonList;
+        }
+
+        public List<PokemonTypeDetail> GetAllPokemonWithTypesAndIncomplete()
         {
             List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails
                                                         .Include(x => x.Pokemon)
@@ -372,6 +391,17 @@ namespace Pokedex
                 .Include(x => x.PrimaryAbility)
                 .Include(x => x.SecondaryAbility)
                 .Include(x => x.HiddenAbility)
+                .Where(x => x.Pokemon.IsComplete == true)
+                .ToList();
+        }
+
+        public List<PokemonAbilityDetail> GetAllPokemonWithAbilitiesAndIncomplete()
+        {
+            return this._dataContext.PokemonAbilityDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryAbility)
+                .Include(x => x.SecondaryAbility)
+                .Include(x => x.HiddenAbility)
                 .ToList();
         }
 
@@ -383,6 +413,25 @@ namespace Pokedex
                 .Include(x => x.SecondaryEggGroup)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
+        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
+        {
+            return this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .Where(x => x.Pokemon.IsComplete == true)
+                .ToList();
+        }
+
+        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroupsAndIncomplete()
+        {
+            return this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .ToList();
         }
 
         public BaseStat GetPokemonBaseStats(string pokemonId)
@@ -401,18 +450,12 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
-        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
-        {
-            return this._dataContext.PokemonEggGroupDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.PrimaryEggGroup)
-                .Include(x => x.SecondaryEggGroup)
-                .ToList();
-        }
-
         public List<Pokemon> GetAllPokemonWithClassifications()
         {
-            return this._dataContext.Pokemon.Include(x => x.Classification).ToList();
+            return this._dataContext.Pokemon
+                .Include(x => x.Classification)
+                .Where(x => x.IsComplete == true)
+                .ToList();
         }
 
         public BaseStat GetBaseStat(string pokemonId)
@@ -423,7 +466,7 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
-        public List<BaseStat> GetBaseStats()
+        public List<BaseStat> GetBaseStatsWithIncomplete()
         {
             return this._dataContext.BaseStats
                 .Include(x => x.Pokemon)
@@ -438,7 +481,7 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
-        public List<EVYield> GetEVYields()
+        public List<EVYield> GetEVYieldsWithIncomplete()
         {
             return this._dataContext.EVYields
                 .Include(x => x.Pokemon)

@@ -28,14 +28,14 @@ namespace Pokedex.Controllers
         public IActionResult Pokemon(bool slowConnection)
         {
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
-                AllPokemon = this._dataService.GetAllPokemonWithoutForms(),
+                AllPokemon = this._dataService.GetAllPokemonWithoutFormsWithIncomplete(),
                 AllAltForms = this._dataService.GetAllAltForms(),
                 AllEvolutions = this._dataService.GetEvolutions(),
-                AllTypings = this._dataService.GetAllPokemonWithTypes(),
-                AllAbilities = this._dataService.GetAllPokemonWithAbilities(),
-                AllEggGroups = this._dataService.GetAllPokemonWithEggGroups(),
-                AllBaseStats = this._dataService.GetBaseStats(),
-                AllEVYields = this._dataService.GetEVYields(),
+                AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
+                AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
                 SlowConnection = slowConnection
             };
 

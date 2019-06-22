@@ -16,6 +16,8 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Experience Yield"), Required]
         public int ExpYield { get; set; }
         [Required]
+        public bool IsComplete { get; set; }
+        [Required]
         public bool IsArchived { get; set; }
         [Display(Name = "Egg Cycle Count"), Required]
         public int? EggCycleId { get; set; }
