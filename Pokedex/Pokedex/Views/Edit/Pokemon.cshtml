@@ -14,6 +14,9 @@
         
         @Html.ValidationSummary()
 
+        @Html.HiddenFor(x => x.IsArchived)
+        @Html.HiddenFor(x => x.IsComplete)
+
         <div class="form-group">
             @Html.LabelFor(x => x.Pokemon.Id)
             @Html.EditorFor(x => x.Pokemon.Id, new { htmlAttributes = new { @class = "form-control" } })
