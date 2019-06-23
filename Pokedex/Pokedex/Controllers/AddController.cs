@@ -432,13 +432,6 @@ namespace Pokedex.Controllers
                 await upload.CopyToAsync(requestStream);  
             }
 
-            #if DEBUG
-            using (FileStream stream = new FileStream(_appConfig.LocalUrl + pokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')), FileMode.Create))
-            {
-                await upload.CopyToAsync(stream);
-            }
-            #endif
-
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
             {
                 Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
@@ -525,13 +518,6 @@ namespace Pokedex.Controllers
             {  
                 await upload.CopyToAsync(requestStream);  
             }
-
-            #if DEBUG
-            using (FileStream stream = new FileStream(_appConfig.LocalUrl + alternatePokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')), FileMode.Create))
-            {
-                await upload.CopyToAsync(stream);
-            }
-            #endif
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
             {

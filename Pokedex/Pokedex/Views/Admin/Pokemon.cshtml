@@ -58,12 +58,12 @@
                             @if(item.IsComplete)
                             {
                                 <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
-                                    <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Id + ".png")"/>
+                                    <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Id + ".png")"/>
                                 </a>
                             }
                             else
                             {
-                                <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content("/images/pokemon/" + @item.Id + ".png")"/>
+                                <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Id + ".png")"/>
                             }
                             <div>
                                 @if(item.IsComplete)

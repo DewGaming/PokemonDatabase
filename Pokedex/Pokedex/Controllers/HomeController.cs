@@ -21,8 +21,11 @@ namespace Pokedex.Controllers
     {
         private readonly DataService _dataService;
 
-        public HomeController(DataContext dataContext)
+        private readonly AppConfig _appConfig;
+
+        public HomeController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
+            this._appConfig = appConfig.Value;
             this._dataService = new DataService(dataContext);
         }
 
@@ -120,7 +123,8 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel(){
                         AllPokemon = model,
-                        SlowConnection = slowConnection
+                        SlowConnection = slowConnection,
+                        AppConfig = this._appConfig,
                     };
 
                     return this.View("AllPokemon", viewModel);
@@ -138,7 +142,8 @@ namespace Pokedex.Controllers
 
             AllPokemonTypeViewModel model = new AllPokemonTypeViewModel(){
                 AllPokemon = pokemonList,
-                SlowConnection = slowConnection
+                SlowConnection = slowConnection,
+                AppConfig = this._appConfig,
             };
 
             return this.View(model);
@@ -176,18 +181,12 @@ namespace Pokedex.Controllers
             Pokemon pokemon;
             List<Pokemon> model = new List<Pokemon>();
             List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
-            List<PokemonFormDetail> allAltForms = this._dataService.GetAllAltForms();
             List<Evolution> allEvolutions = this._dataService.GetEvolutions();
             Random rnd = new Random();
 
             foreach(var gen in unselectedGens)
             {
                 allPokemon = allPokemon.Except(allPokemon.Where(x => (x.GenerationId == gen.Id) || (x.GenerationId.IndexOf('-') > -1 && x.GenerationId.Substring(0, x.GenerationId.IndexOf('-')) == gen.Id)).ToList()).ToList();
-            }
-
-            if (useAlternateForms && allPokemon.Count() == 0)
-            {
-                allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') != -1).ToList();
             }
 
             if (selectedEvolutions == "noEvolutions")
@@ -245,6 +244,7 @@ namespace Pokedex.Controllers
 
             if (useAlternateForms)
             {
+                List<PokemonFormDetail> allAltForms = this._dataService.GetAllAltForms();
                 List<Pokemon> altFormsList = new List<Pokemon>();
                 foreach(var p in allPokemon)
                 {
@@ -319,6 +319,7 @@ namespace Pokedex.Controllers
                 PreEvolution = this._dataService.GetPreEvolution(pokemon.Id),
                 Evolutions = this._dataService.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this._dataService.GetTypeChartPokemon(pokemon.Id),
+                AppConfig = this._appConfig,
             });
 
             foreach (var p in altForms)
@@ -343,6 +344,7 @@ namespace Pokedex.Controllers
                     PreEvolution = this._dataService.GetPreEvolution(p.Id),
                     Evolutions = this._dataService.GetPokemonEvolutions(p.Id),
                     Effectiveness = this._dataService.GetTypeChartPokemon(p.Id),
+                    AppConfig = this._appConfig,
                 };
                 pokemonModel.Pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemonModel.Pokemon.Id) + ")";
 

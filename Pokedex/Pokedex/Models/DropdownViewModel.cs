@@ -7,5 +7,7 @@ namespace Pokedex.Models
         public AllAdminPokemonViewModel AllPokemon { get; set; }
 
         public Pokemon Pokemon { get; set; }
+
+        public AppConfig AppConfig { get; set; }
     }
 }

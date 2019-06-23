@@ -30,5 +30,7 @@ namespace Pokedex.Models
         public List<Evolution> Evolutions { get; set; }
 
         public TypeEffectivenessViewModel Effectiveness { get; set; }
+
+        public AppConfig AppConfig { get; set; }
     }
 }

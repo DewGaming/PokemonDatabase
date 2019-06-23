@@ -1,4 +1,4 @@
-@model Pokedex.DataAccess.Models.ShinyHunt
+@model Pokedex.Models.ContinueHuntViewModel
 @{
     Layout = "_Layout";
 }
@@ -15,14 +15,14 @@
     <script src="/js/editShinyHuntAttempts.js"></script>
 }
 
-@Html.HiddenFor(x => x.Id, new { id = "shinyHuntId" })
+@Html.HiddenFor(x => x.ShinyHunt.Id, new { id = "shinyHuntId" })
 
 <div class="tab-list">
-    <button class="tab active" onclick="openPage(event, '@Model.Pokemon.Name')">@Model.Pokemon.Name.Replace('_', ' ')</button>
+    <button class="tab active" onclick="openPage(event, '@Model.ShinyHunt.Pokemon.Name')">@Model.ShinyHunt.Pokemon.Name.Replace('_', ' ')</button>
 </div>
 <div class="tabcontent active">
     <div class="pokemonPicture shadowed">
-        <img width="327" title="@Model.Pokemon.Name" src="@Url.Content("/images/pokemon/" + @Model.Pokemon.Id + ".png")" />
+        <img width="327" title="@Model.ShinyHunt.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.ShinyHunt.Pokemon.Id + ".png")" />
     </div>
     <div class="input-lg-1"></div>
     <div class="pokemonData pokemonTables input-md-5 input-lg-4">
@@ -31,15 +31,15 @@
             <tbody>
                 <tr>
                     <th>Shiny Hunter</th>
-                    <td>@Model.User.Username</td>
+                    <td>@Model.ShinyHunt.User.Username</td>
                 </tr>
                 <tr>
                     <th>Technique Being Used</th>
-                    <td>@Model.ShinyHuntingTechnique.Name</td>
+                    <td>@Model.ShinyHunt.ShinyHuntingTechnique.Name</td>
                 </tr>
                 <tr>
                     <th>
-                        @if (Model.Generation.Games.IndexOf('/') > -1)
+                        @if (Model.ShinyHunt.Generation.Games.IndexOf('/') > -1)
                         {
                             @("Games Hunting In");
                         }
@@ -49,18 +49,18 @@
                         }
                     </th>
                     <td>
-                        @Model.Generation.Games
+                        @Model.ShinyHunt.Generation.Games
                     </td>
                 </tr>
                 <tr>
                     <th>Using Shiny Charm</th>
-                    <td>@(Model.HasShinyCharm ? "Yes" : "No")</td>
+                    <td>@(Model.ShinyHunt.HasShinyCharm ? "Yes" : "No")</td>
                 </tr>
                 <tr>
                     <th>Attempts</th>
                     <td>
                         <button class="attemptCounter subtractAttemptCount btn btn-primary">-</button>
-                        <input value="@Model.ShinyAttemptCount" class="attemptCount" onchange="this.style.width = ((this.value.length + 1) * 8) + 'px';" />
+                        <input value="@Model.ShinyHunt.ShinyAttemptCount" class="attemptCount" onchange="this.style.width = ((this.value.length + 1) * 8) + 'px';" />
                         <button class="attemptCounter addAttemptCount btn btn-primary">+</button>
                     </td>
                 </tr>

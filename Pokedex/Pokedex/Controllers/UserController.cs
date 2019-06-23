@@ -22,8 +22,11 @@ namespace Pokedex.Controllers
     {
         private readonly DataService _dataService;
 
-        public UserController(DataContext dataContext)
+        private readonly AppConfig _appConfig;
+
+        public UserController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
+            this._appConfig = appConfig.Value;
             this._dataService = new DataService(dataContext);
         }
 
@@ -78,7 +81,12 @@ namespace Pokedex.Controllers
         [Route("shiny_hunt/{id:int}")]
         public IActionResult ContinueHunt(int id)
         {
-            ShinyHunt model = this._dataService.GetShinyHunt(id);
+            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(id);
+
+            ContinueHuntViewModel model = new ContinueHuntViewModel(){
+                ShinyHunt = shinyHunt,
+                AppConfig = this._appConfig,
+            };
 
             return this.View(model);
         }

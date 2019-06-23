@@ -19,8 +19,11 @@ namespace Pokedex.Controllers
     {
         private readonly DataService _dataService;
 
-        public AdminController(DataContext dataContext)
+        private readonly AppConfig _appConfig;
+
+        public AdminController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
+            this._appConfig = appConfig.Value;
             this._dataService = new DataService(dataContext);
         }
 
@@ -41,6 +44,7 @@ namespace Pokedex.Controllers
 
             DropdownViewModel model = new DropdownViewModel(){
                 AllPokemon = allPokemon,
+                AppConfig = this._appConfig,
             };
 
             return this.View(model);
