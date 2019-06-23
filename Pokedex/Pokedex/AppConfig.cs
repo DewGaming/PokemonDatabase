@@ -10,7 +10,6 @@ namespace Pokedex
 
         public string FTPUrl { get; set; }
 
-        public string LocalUrl { get; set; }
 
         public string FTPUsername { get; set; }
 
