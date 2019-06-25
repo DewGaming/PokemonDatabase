@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 
@@ -13,9 +14,11 @@ namespace Pokedex.Controllers
     {
         private readonly DataService _dataService;
 
-        public EditController(DataContext dataContext)
+        private readonly AppConfig _appConfig;
+
+        public EditController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
-            // Instantiate an instance of the data service.
+            this._appConfig = appConfig.Value;
             this._dataService = new DataService(dataContext);
         }
 
@@ -78,68 +81,24 @@ namespace Pokedex.Controllers
         {
             BasePokemonViewModel model = new BasePokemonViewModel(){
                 Pokemon = this._dataService.GetPokemonById(id),
-                AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                AllClassifications = this._dataService.GetClassifications(),
-                AllCaptureRates = this._dataService.GetCaptureRates(),
-                AllEggCycles = this._dataService.GetEggCycles(),
-                AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
-                AllGenderRatios = new List<GenderRatioViewModel>(),
                 AllGenerations = this._dataService.GetGenerations(),
             };
-    
-            foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
-            {
-                GenderRatioViewModel viewModel = new GenderRatioViewModel() {
-                    Id = genderRatio.Id
-                };
-    
-                if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
-                {
-                    viewModel.GenderRatioString = "Genderless";
-                }
-                else if (genderRatio.FemaleRatio == 0)
-                {
-                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
-                }
-                else if (genderRatio.MaleRatio == 0)
-                {
-                    viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
-                }
-                else
-                {
-                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
-                }
-    
-                model.AllGenderRatios.Add(viewModel);
-            }
 
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_pokemon/{id}")]
-        public IActionResult Pokemon(Pokemon pokemon, string id)
-        {
-            if (!this.ModelState.IsValid)
+            if(!id.Contains('-'))
             {
-                BasePokemonViewModel model = new BasePokemonViewModel(){
-                    Pokemon = this._dataService.GetPokemonById(pokemon.Id),
-                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                    AllClassifications = this._dataService.GetClassifications(),
-                    AllCaptureRates = this._dataService.GetCaptureRates(),
-                    AllEggCycles = this._dataService.GetEggCycles(),
-                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
-                    AllGenderRatios = new List<GenderRatioViewModel>(),
-                    AllGenerations = this._dataService.GetGenerations(),
-                };
+                model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
+                model.AllClassifications = this._dataService.GetClassifications();
+                model.AllCaptureRates = this._dataService.GetCaptureRates();
+                model.AllEggCycles = this._dataService.GetEggCycles();
+                model.AllExperienceGrowths = this._dataService.GetExperienceGrowths();
+                model.AllGenderRatios = new List<GenderRatioViewModel>();
     
                 foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
                 {
                     GenderRatioViewModel viewModel = new GenderRatioViewModel() {
                         Id = genderRatio.Id
                     };
-    
+
                     if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                     {
                         viewModel.GenderRatioString = "Genderless";
@@ -156,8 +115,68 @@ namespace Pokedex.Controllers
                     {
                         viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
                     }
-    
+
                     model.AllGenderRatios.Add(viewModel);
+                }
+            }
+            else
+            {
+                model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon/{id}")]
+        public IActionResult Pokemon(Pokemon pokemon, string id)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    Pokemon = this._dataService.GetPokemonById(pokemon.Id),
+                    AllGenerations = this._dataService.GetGenerations(),
+                };
+    
+                if(!pokemon.Id.Contains('-'))
+                {
+                    model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
+                    model.AllClassifications = this._dataService.GetClassifications();
+                    model.AllCaptureRates = this._dataService.GetCaptureRates();
+                    model.AllEggCycles = this._dataService.GetEggCycles();
+                    model.AllExperienceGrowths = this._dataService.GetExperienceGrowths();
+                    model.AllGenderRatios = new List<GenderRatioViewModel>();
+
+                    foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+                    {
+                        GenderRatioViewModel viewModel = new GenderRatioViewModel() {
+                            Id = genderRatio.Id
+                        };
+
+                        if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
+                        {
+                            viewModel.GenderRatioString = "Genderless";
+                        }
+                        else if (genderRatio.FemaleRatio == 0)
+                        {
+                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                        }
+                        else if (genderRatio.MaleRatio == 0)
+                        {
+                            viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                        }
+                        else
+                        {
+                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                        }
+
+                        model.AllGenderRatios.Add(viewModel);
+                    }
+                }
+                else
+                {
+                    model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
                 }
 
                 return this.View(model);
@@ -165,7 +184,14 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemon(pokemon);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if (!pokemon.Id.Contains('-'))
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
+            }
         }
 
         [HttpGet]
@@ -212,7 +238,14 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemonTypeDetail(pokemonTypeDetail);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if(!pokemonTypeDetail.PokemonId.Contains('-'))
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonTypeDetail.PokemonId.Substring(0, pokemonTypeDetail.PokemonId.IndexOf('-')) });
+            }
         }
 
         [HttpGet]
@@ -256,7 +289,14 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemonAbilityDetail(pokemonAbilityDetail);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if(!pokemonAbilityDetail.PokemonId.Contains('-'))
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonAbilityDetail.PokemonId.Substring(0, pokemonAbilityDetail.PokemonId.IndexOf('-')) });
+            }
         }
 
         [HttpGet]
@@ -324,7 +364,14 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateBaseStat(baseStat);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if(!baseStat.PokemonId.Contains('-'))
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = baseStat.PokemonId.Substring(0, baseStat.PokemonId.IndexOf('-')) });
+            }
         }
 
         [HttpGet]
@@ -622,6 +669,70 @@ namespace Pokedex.Controllers
             this._dataService.UpdateEvolution(evolution);
 
             return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [Route("edit_alternate_forms/{pokemonId}")]
+        public IActionResult AltForms(string pokemonId)
+        {
+            List<Pokemon> altFormList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id.Contains(pokemonId + '-')).ToList();
+            foreach (var pokemon in altFormList)
+            {
+                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+            }
+
+            AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
+                AllPokemon = altFormList,
+                AllAltForms = this._dataService.GetAllAltForms(),
+                AllEvolutions = this._dataService.GetEvolutions(),
+                AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
+                AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
+            };
+
+            DropdownViewModel model = new DropdownViewModel(){
+                AllPokemon = allPokemon,
+                AppConfig = this._appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpGet]
+        [Route("edit_alternate_form/{pokemonId}")]
+        public IActionResult AltFormsForm(string pokemonId)
+        {
+            PokemonFormDetail pokemonForm = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+            AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
+            {
+                pokemonFormDetail = pokemonForm,
+                AllForms = this._dataService.GetForms(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_alternate_form/{pokemonId}")]
+        public IActionResult AltFormsForm(PokemonFormDetail pokemonFormDetail)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonFormDetail pokemonForm = this._dataService.GetPokemonFormDetailByAltFormId(pokemonFormDetail.AltFormPokemonId);
+                AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
+                {
+                    pokemonFormDetail = pokemonForm,
+                    AllForms = this._dataService.GetForms(),
+                };
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdatePokemonFormDetail(pokemonFormDetail);
+
+            return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
         }
     }
 }

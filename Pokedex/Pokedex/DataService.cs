@@ -221,6 +221,22 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<Pokemon> GetAllPokemonIncludeIncomplete()
+        {
+            return this._dataContext.Pokemon
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Generation)
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
+                .OrderBy(x => x.Id.Length)
+                .ThenBy(x => x.Id)
+                .Where(x => x.IsArchived == false)
+                .ToList();
+        }
+
         public List<Pokemon> GetAllPokemonWithoutForms()
         {
             List<Pokemon> pokemonList = this._dataContext.Pokemon
@@ -318,6 +334,15 @@ namespace Pokedex
             return pokemonFormList;
         }
 
+        public PokemonFormDetail GetPokemonFormDetailByAltFormId(string pokemonId)
+        {
+            return pokemon = this._dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.OriginalPokemon)
+                .ToList()
+                .Find(x => x.AltFormPokemonId == pokemonId);
+        }
+
         public PokemonTypeDetail GetPokemonWithTypes(string pokemonId)
         {
             return this._dataContext.PokemonTypeDetails
@@ -366,8 +391,6 @@ namespace Pokedex
                                                         .Include(x => x.PrimaryType)
                                                         .Include(x => x.SecondaryType)
                                                         .ToList();
-            List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
-            pokemonList = pokemonList.Except(altFormList).ToList();
 
             pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
 
@@ -860,9 +883,21 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdateEvolution(Evolution evolution)
+        {
+            this._dataContext.Evolutions.Update(evolution);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdatePokemon(Pokemon pokemon)
         {
             this._dataContext.Pokemon.Update(pokemon);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonFormDetail(PokemonFormDetail pokemonFormDetail)
+        {
+            this._dataContext.PokemonFormDetails.Update(pokemonFormDetail);
             this._dataContext.SaveChanges();
         }
 

@@ -1,0 +1,32 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.AlternateFormsFormViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Update Alternate Form's Form</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {      
+        @Html.AntiForgeryToken()
+          
+        @Html.HiddenFor(x => x.pokemonFormDetail.Id)
+        @Html.HiddenFor(x => x.pokemonFormDetail.OriginalPokemonId)
+        @Html.HiddenFor(x => x.pokemonFormDetail.AltFormPokemonId)
+
+        @Html.ValidationSummary()
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.pokemonFormDetail.FormId)
+            @Html.DropDownListFor(x => x.pokemonFormDetail.FormId, new SelectList(Model.AllForms, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.pokemonFormDetail.FormId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Save</button>
+        </p>
+    }
+
+</div>

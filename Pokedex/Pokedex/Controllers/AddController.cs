@@ -37,11 +37,18 @@ namespace Pokedex.Controllers
             Pokemon evolutionPokemon = this._dataService.GetPokemonById(pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
             {
-                AllPokemon = this._dataService.GetAllPokemonWithoutForms().Where(x => x.Id != evolutionPokemon.Id).ToList(),
                 AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
                 EvolutionPokemon = evolutionPokemon,
                 EvolutionPokemonId = evolutionPokemon.Id,
             };
+
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != pokemonId).ToList();
+            foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+            {
+                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+            }
+
+            model.AllPokemon = pokemonList;
             
             return this.View(model);
         }
