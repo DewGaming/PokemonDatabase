@@ -557,5 +557,71 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("Abilities", "Admin");
         }
+
+        [HttpGet]
+        [Route("edit_evolution/{pokemonId}")]
+        public IActionResult Evolution(string pokemonId)
+        {
+            Evolution preEvolution = this._dataService.GetEvolutions().Find(x => x.EvolutionPokemonId == pokemonId);
+            EvolutionViewModel model = new EvolutionViewModel()
+            {
+                AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
+                Id = preEvolution.Id,
+                EvolutionDetails = preEvolution.EvolutionDetails,
+                EvolutionMethodId = preEvolution.EvolutionMethodId,
+                EvolutionMethod = preEvolution.EvolutionMethod,
+                PreevolutionPokemon = preEvolution.PreevolutionPokemon,
+                PreevolutionPokemonId = preEvolution.PreevolutionPokemonId,
+                EvolutionPokemonId = preEvolution.EvolutionPokemonId,
+                EvolutionPokemon = preEvolution.EvolutionPokemon,
+            };
+
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != pokemonId).ToList();
+            foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+            {
+                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+            }
+
+            model.AllPokemon = pokemonList;
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_evolution/{pokemonId}")]
+        public IActionResult Evolution(EvolutionViewModel evolution)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Evolution preEvolution = this._dataService.GetEvolutions().Find(x => x.EvolutionPokemonId == evolution.EvolutionPokemonId);
+                EvolutionViewModel model = new EvolutionViewModel()
+                {
+                    AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
+                    Id = evolution.Id,
+                    EvolutionDetails = preEvolution.EvolutionDetails,
+                    EvolutionMethodId = preEvolution.EvolutionMethodId,
+                    EvolutionMethod = preEvolution.EvolutionMethod,
+                    PreevolutionPokemon = preEvolution.PreevolutionPokemon,
+                    PreevolutionPokemonId = preEvolution.PreevolutionPokemonId,
+                    EvolutionPokemonId = preEvolution.EvolutionPokemonId,
+                    EvolutionPokemon = preEvolution.EvolutionPokemon,
+                };
+
+                List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
+                foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+                {
+                    pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                }
+
+                model.AllPokemon = pokemonList;
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateEvolution(evolution);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
     }
 }

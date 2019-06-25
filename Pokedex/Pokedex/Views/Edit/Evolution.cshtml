@@ -1,0 +1,43 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.EvolutionViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Update Evolution</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.EvolutionPokemonId)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.PreevolutionPokemonId, "Pre-Evolution Of " + @Model.EvolutionPokemon.Name)
+            @Html.DropDownListFor(x => x.PreevolutionPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PreevolutionPokemonId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.EvolutionMethodId, "Method of Evolution")
+            @Html.DropDownListFor(x => x.EvolutionMethodId, new SelectList(Model.AllEvolutionMethods, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.EvolutionMethodId)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.EvolutionDetails, "Evolution Details (If Any)")
+            @Html.EditorFor(x => x.EvolutionDetails, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.EvolutionDetails)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Save</button>
+        </p>
+    }
+
+</div>

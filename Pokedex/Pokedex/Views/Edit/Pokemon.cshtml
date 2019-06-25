@@ -17,6 +17,9 @@
         @Html.HiddenFor(x => x.IsArchived)
         @Html.HiddenFor(x => x.IsComplete)
         @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Pokemon.IsArchived)
+        @Html.HiddenFor(x => x.Pokemon.IsComplete)
+        @Html.HiddenFor(x => x.Pokemon.Id)
         
         <div class="form-group">
             @Html.LabelFor(x => x.Pokemon.Name)
