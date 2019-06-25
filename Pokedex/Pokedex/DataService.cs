@@ -336,7 +336,7 @@ namespace Pokedex
 
         public PokemonFormDetail GetPokemonFormDetailByAltFormId(string pokemonId)
         {
-            return pokemon = this._dataContext.PokemonFormDetails
+            return this._dataContext.PokemonFormDetails
                 .Include(x => x.AltFormPokemon)
                 .Include(x => x.OriginalPokemon)
                 .ToList()
