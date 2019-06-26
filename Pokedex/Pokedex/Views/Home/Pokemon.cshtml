@@ -367,11 +367,11 @@
                                 <th>
                                     @if(@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                     {
-                                        <a href="@item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower()">@item.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
+                                        <a href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
                                     }
                                     else
                                     {
-                                        <a href="@item.PreEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower()">@item.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
+                                        <a href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
                                     }
                                 </th>
                                 <td>
@@ -401,11 +401,11 @@
                                     <th>
                                         @if(@evolution.EvolutionPokemon.Name.Contains(" ("))
                                         {
-                                            <a href="@evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower()">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
+                                            <a href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
                                         }
                                         else
                                         {
-                                            <a href="@evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower()">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
+                                            <a href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
                                         }
                                     </th>
                                     <td>
