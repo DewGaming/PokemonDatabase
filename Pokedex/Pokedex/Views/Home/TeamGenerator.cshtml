@@ -42,10 +42,24 @@
             <label for="onlyFullyEvolved" class="generatorRadio">Only Fully Evolved Pokemon</label>
         </li>
         <hr class="generationOptionSeparator">
+        <span class="generationOptionTitle">Selected Alternate Forms</span>
+        <li class="dropdown-item generatorOption alternateFormCheckbox">
+            <input id="Mega" type="checkbox" value="Mega" />
+            <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
+        </li>
+        <li class="dropdown-item generatorOption alternateFormCheckbox">
+            <input id="Alolan" type="checkbox" value="Alolan" />
+            <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
+        </li>
+        <li class="dropdown-item generatorOption alternateFormCheckbox">
+            <input id="Other" type="checkbox" value="Other" />
+            <label for="Other" class="generatorOptionTitle">Other Forms</label>
+        </li>
+        <hr class="generationOptionSeparator">
         <span class="generationOptionTitle">Other Options</span>
-        <li class="dropdown-item generatorOption altGenerationCheckbox">
-            <input id="useAlternateForm" type="checkbox" value="useAlternateForm" />
-            <label for="useAlternateForm" class="generatorOptionTitle">Use Alternate Forms</label>
+        <li class="dropdown-item generatorOption altFormBoolCheckbox">
+            <input id="altFormBool" type="checkbox" value="altFormBool" />
+            <label for="altFormBool" class="generatorOptionTitle">Only Show Alternate Forms</label>
         </li>
     </ul>
 </div>

@@ -67,10 +67,16 @@ $(window).on('resize', function() {
 });
 
 $('.generatorButton').on('click', function() {
-    var selectedGens = [], selectedEvolutions;
+    var selectedGens = [], selectedForms = [], selectedEvolutions;
     $('.generationCheckbox input').each(function() {
         if($(this).is(':checked')){
             selectedGens.push(this.value);
+        }
+    });
+
+    $('.alternateFormCheckbox input').each(function() {
+        if($(this).is(':checked')){
+            selectedForms.push(this.value);
         }
     });
 
@@ -83,7 +89,7 @@ $('.generatorButton').on('click', function() {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'useAlternateForms': $('#useAlternateForm').is(':checked'), 'selectedEvolutions': selectedEvolutions }
+        data: { 'selectedGens': selectedGens, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyAltForms':  $("#altFormBool").is(":checked") }
     })
     .done(function(data) {
         pokemonList = data;

@@ -122,7 +122,14 @@ namespace Pokedex
 
         public Evolution GetPreEvolution(string pokemonId)
         {
-            return this.GetEvolutions().Find(x => x.EvolutionPokemon.Id == pokemonId);
+            Evolution preEvolution =  this.GetEvolutions().Find(x => x.EvolutionPokemon.Id == pokemonId);
+
+            if (preEvolution != null && preEvolution.EvolutionPokemonId.Contains('-'))
+            {
+                preEvolution.EvolutionPokemon.Name += " (" + this.GetPokemonFormName(preEvolution.EvolutionPokemonId) + ")";
+            }
+
+            return preEvolution;
         }
 
         public List<Evolution> GetPokemonEvolutions(string pokemonId)
@@ -132,6 +139,15 @@ namespace Pokedex
                 .OrderBy(x => x.EvolutionPokemon.Id.Length)
                 .ThenBy(x => x.EvolutionPokemon.Id)
                 .ToList();
+
+            foreach(var e in evolutions)
+            {
+                if (e.EvolutionPokemonId.Contains('-'))
+                {
+                    e.EvolutionPokemon.Name += " (" + this.GetPokemonFormName(e.EvolutionPokemonId) + ")";
+                }
+            }
+            
             return evolutions;
         }
 
@@ -341,6 +357,24 @@ namespace Pokedex
                 .Include(x => x.OriginalPokemon)
                 .ToList()
                 .Find(x => x.AltFormPokemonId == pokemonId);
+        }
+
+        public List<PokemonFormDetail> GetPokemonByFormName(string formName)
+        {
+            return this._dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .Where(x => x.Form.Name == formName)
+                .ToList();
+        }
+
+        public List<PokemonFormDetail> GetPokemonFormDetails()
+        {
+            return this._dataContext.PokemonFormDetails
+                .Include(x => x.OriginalPokemon)
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .ToList();
         }
 
         public PokemonTypeDetail GetPokemonWithTypes(string pokemonId)

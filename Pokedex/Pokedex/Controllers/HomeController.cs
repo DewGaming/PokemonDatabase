@@ -170,7 +170,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public List<Pokemon> GetPokemonTeam(List<string> selectedGens, bool useAlternateForms, string selectedEvolutions)
+        public List<Pokemon> GetPokemonTeam(List<string> selectedGens, List<string> selectedForms, string selectedEvolutions, bool onlyAltForms)
         {
             List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
             foreach(var item in selectedGens)
@@ -180,7 +180,7 @@ namespace Pokedex.Controllers
 
             Pokemon pokemon;
             List<Pokemon> model = new List<Pokemon>();
-            List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
+            List<Pokemon> allPokemon = this._dataService.GetAllPokemon();
             List<Evolution> allEvolutions = this._dataService.GetEvolutions();
             Random rnd = new Random();
 
@@ -242,25 +242,74 @@ namespace Pokedex.Controllers
                 allPokemon = newPokemon;
             }
 
-            if (useAlternateForms)
+            if(selectedForms.Count() == 0)
             {
-                List<PokemonFormDetail> allAltForms = this._dataService.GetAllAltForms();
-                List<Pokemon> altFormsList = new List<Pokemon>();
-                foreach(var p in allPokemon)
+                List<PokemonFormDetail> pokemonFormList = this._dataService.GetPokemonFormDetails();
+
+                foreach(var p in pokemonFormList)
                 {
-                    if (allAltForms.Exists(x => x.OriginalPokemonId == p.Id))
+                    allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.AltFormPokemonId));
+                }
+            }
+            else
+            {
+                if (!selectedForms.Contains("Mega"))
+                {
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetPokemonByFormName("Mega Evolution");
+                    pokemonFormList.AddRange(this._dataService.GetPokemonByFormName("Mega X Evolution"));
+                    pokemonFormList.AddRange(this._dataService.GetPokemonByFormName("Mega Y Evolution"));
+
+                    foreach(var p in pokemonFormList)
                     {
-                        altFormsList.AddRange(this._dataService.GetAltForms(p.Id));
+                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.AltFormPokemonId));
                     }
                 }
 
-                allPokemon.AddRange(altFormsList);
+                if (!selectedForms.Contains("Alolan"))
+                {
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetPokemonByFormName("Alolan");
+
+                    foreach(var p in pokemonFormList)
+                    {
+                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.AltFormPokemonId));
+                    }
+                }
+
+                if (!selectedForms.Contains("Other"))
+                {
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetPokemonByFormName("Alolan");
+                    pokemonFormList.AddRange(this._dataService.GetPokemonByFormName("Mega Evolution"));
+                    pokemonFormList.AddRange(this._dataService.GetPokemonByFormName("Mega X Evolution"));
+                    pokemonFormList.AddRange(this._dataService.GetPokemonByFormName("Mega Y Evolution"));
+
+                    List<PokemonFormDetail> filteredFormList = this._dataService.GetPokemonFormDetails();
+
+                    foreach(var p in pokemonFormList)
+                    {
+                        filteredFormList.Remove(filteredFormList.FirstOrDefault(x => x.Id == p.Id));
+                    }
+
+                    foreach(var p in filteredFormList)
+                    {
+                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.AltFormPokemonId));
+                    }
+                }
+            }
+
+            if (onlyAltForms)
+            {
+                allPokemon = allPokemon.Where(x => x.Id.Contains('-')).ToList();
             }
 
             if(allPokemon.Count() > 0)
             {
                 for (var i = 0; i < 6; i++)
                 {
+                    if (model.Count() == allPokemon.Count())
+                    {
+                        break;
+                    }
+
                     pokemon = allPokemon[rnd.Next(allPokemon.Count)];
                     while (model.Contains(pokemon))
                     {
