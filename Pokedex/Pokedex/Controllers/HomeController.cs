@@ -89,11 +89,11 @@ namespace Pokedex.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                if (search.Contains("type null"))
+                if (search.Contains("type null", StringComparison.OrdinalIgnoreCase))
                 {
                     search = "Type: Null";
                 }
-                else if (search.Contains("nidoran"))
+                else if (search.Contains("nidoran", StringComparison.OrdinalIgnoreCase))
                 {
                     search = search.Replace(' ', '_');
                 }

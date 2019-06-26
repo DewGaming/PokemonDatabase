@@ -148,6 +148,11 @@ namespace Pokedex
                 }
             }
             
+            if (pokemonId == "677")
+            {
+                evolutions.Remove(evolutions[1]);
+            }
+
             return evolutions;
         }
 
