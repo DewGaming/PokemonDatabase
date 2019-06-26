@@ -124,9 +124,9 @@ namespace Pokedex
         {
             Evolution preEvolution =  this.GetEvolutions().Find(x => x.EvolutionPokemon.Id == pokemonId);
 
-            if (preEvolution != null && preEvolution.EvolutionPokemonId.Contains('-'))
+            if (preEvolution != null && preEvolution.PreevolutionPokemonId.Contains('-'))
             {
-                preEvolution.EvolutionPokemon.Name += " (" + this.GetPokemonFormName(preEvolution.EvolutionPokemonId) + ")";
+                preEvolution.PreevolutionPokemon.Name += " (" + this.GetPokemonFormName(preEvolution.PreevolutionPokemonId) + ")";
             }
 
             return preEvolution;
