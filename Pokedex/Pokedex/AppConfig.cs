@@ -1,5 +1,3 @@
-using System;
-
 namespace Pokedex
 {
     public class AppConfig
