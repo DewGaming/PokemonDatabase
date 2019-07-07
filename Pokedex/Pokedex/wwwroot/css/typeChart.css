@@ -153,16 +153,22 @@
  font-size: .75rem;
 }
 .type-fx-0 {
- background-color: #2e3436;
+ background-color:#2e3436
+}
+.type-fx-25 {
+ background-color:#7c0000
 }
 .type-fx-50 {
- background-color: #a40000;
+ background-color:#a40000
 }
 .type-fx-100 {
- background-color: #ffffff;
+ background-color:#3399ff
 }
 .type-fx-200 {
- background-color: #4e9a06;
+ background-color:#4e9a06
+}
+.type-fx-400 {
+ background-color:#73d216
 }
 .health.statBar {
   background-color: #FF0000;
@@ -187,6 +193,15 @@
 .speed.statBar {
   background-color: #F85888;
   border-color: #A13959;
+}
+.toggleTypingTable {
+  margin-top: 1rem;
+}
+.primaryList > label, .secondaryList > label {
+  margin-bottom: 7.5px;
+}
+.primaryList, .primaryList > select, .secondaryList, .secondarylist > select {
+  width: 7.5rem;
 }
 @media (min-width: 820px) {
  .type-cell,

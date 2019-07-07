@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
@@ -317,6 +312,44 @@ namespace Pokedex.Controllers
                     }
 
                     model.Add(pokemon);
+                }
+            }
+
+            return model;
+        }
+
+        [AllowAnonymous]
+        [Route("typing")]
+        public IActionResult Typing()
+        {
+            List<Pokedex.DataAccess.Models.Type> model = this._dataService.GetTypes();
+
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        [Route("get-typing-effectiveness")]
+        public List<TypingEffectivenessViewModel> GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
+        {
+            List<TypingEffectivenessViewModel> model = new List<TypingEffectivenessViewModel>();
+            List<Pokedex.DataAccess.Models.Type> typeList = this._dataService.GetTypes();
+            List<TypeChart> typeChart = this._dataService.GetTypeChartByTyping(primaryTypeId, secondaryTypeId);
+            
+            foreach(var t in typeList)
+            {
+                if (typeChart.Where(x => x.Attack.Id == t.Id).Count() > 0)
+                {
+                    decimal effectiveness = 1.0m;
+                    foreach(var tc in typeChart.Where(x => x.Attack.Id == t.Id))
+                    {
+                        effectiveness *= tc.Effective;
+                    }
+                    
+                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, Effectiveness = effectiveness });
+                }
+                else
+                {
+                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, Effectiveness = 1.0m });
                 }
             }
 

@@ -333,6 +333,18 @@ a {
   outline: none;
 }
 
+.typingSelectList {
+  width: 200px;
+}
+
+.flexDiv {
+  display: flex;
+}
+
+.primaryList {
+  margin-right: 10px;
+}
+
 @media (min-width: 768px) {
   .search-bar {
     margin: 0;

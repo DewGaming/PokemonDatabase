@@ -556,7 +556,21 @@ namespace Pokedex
                 .Include(x => x.Attack)
                 .Include(x => x.Defend)
                 .OrderBy(x => x.Attack.Id)
-                .ThenBy(x => x.Defend.Id).ToList();
+                .ThenBy(x => x.Defend.Id)
+                .ToList();
+
+            return typeChart;
+        }
+
+        public List<TypeChart> GetTypeChartByTyping(int ptypeId, int stypeId)
+        {
+            List<TypeChart> typeChart = this._dataContext.TypeCharts
+                .Include(x => x.Attack)
+                .Include(x => x.Defend)
+                .OrderBy(x => x.Attack.Id)
+                .ThenBy(x => x.Defend.Id)
+                .Where(x => x.Defend.Id == ptypeId || x.Defend.Id == stypeId)
+                .ToList();
 
             return typeChart;
         }

@@ -1,0 +1,68 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Type>
+@{
+    Layout = "_Layout";
+}
+
+@section styles
+{
+    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <style>
+        main {
+            max-width: 1220px !important;
+        }
+
+        .type-table tbody th {
+            padding-right: 1px;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/typing.js"></script>
+}
+
+<div class="flexDiv">
+    <div class="primaryList">
+        @Html.Label("Primary Type")
+        @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+    </div>
+    <div class="secondaryList">
+        @Html.Label("Secondary Type")
+        @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+    </div>
+</div>
+
+<div class="toggleTypingTable">
+    <table class="type-table">
+        <tbody>
+            <tr>
+                @for(var i = 0; i < (Model.Count() / 2); i++)
+                {
+                    <th>
+                        <span class="type-icon type-@Model.ElementAt(i).Name.ToLower() type-cell">@Model.ElementAt(i).Name</span>
+                    </th>
+                }
+            </tr>
+            <tr>
+                @for(var i = 0; i < (Model.Count() / 2); i++)
+                {
+                    <td id="@Model.ElementAt(i).Id" class="type-fx-cell"></td>
+                }
+            </tr>
+            <tr>
+                @for(var i = (Model.Count() / 2); i < Model.Count(); i++)
+                {
+                    <th>
+                        <span class="type-icon type-@Model.ElementAt(i).Name.ToLower() type-cell">@Model.ElementAt(i).Name</span>
+                    </th>
+                }
+            </tr>
+                @for(var i = (Model.Count() / 2); i < Model.Count(); i++)
+                {
+                    <td id="@Model.ElementAt(i).Id" class="type-fx-cell"></td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>
