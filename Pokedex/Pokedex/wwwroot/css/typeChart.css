@@ -104,6 +104,9 @@
 .quad-weak {
  background-color: #7c0000;
 }
+.typing-table {
+  margin: auto 0 !important;
+}
 .type-table {
  margin: 0 auto 1rem;
  border-spacing: 0;
