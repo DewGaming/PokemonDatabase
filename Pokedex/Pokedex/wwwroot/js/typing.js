@@ -26,58 +26,40 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
             })
             .done(function(data) {
                 typingList = data;
-
-                $(".type-fx-cell").empty();
-                $(".type-fx-0").each(function(index) {
-                    $(this).removeClass("type-fx-0")
-                });
-                $(".type-fx-25").each(function(index) {
-                    $(this).removeClass("type-fx-25")
-                });
-                $(".type-fx-50").each(function(index) {
-                    $(this).removeClass("type-fx-50")
-                });
-                $(".type-fx-100").each(function(index) {
-                    $(this).removeClass("type-fx-100")
-                });
-                $(".type-fx-200").each(function(index) {
-                    $(this).removeClass("type-fx-200")
-                });
-                $(".type-fx-400").each(function(index) {
-                    $(this).removeClass("type-fx-400")
+                
+                $(".type-icon").each(function(index) {
+                    $(this).remove()
                 });
 
                 $(data).each(function(input, typeChart)
                 {
+                    var appendTag = $("<td>");
+                    appendTag.addClass("type-icon type-" + typeChart.typeName.toLowerCase() + " type-cell");
+                    appendTag.text(typeChart.typeName);
+
                     if(typeChart.effectiveness == 0)
                     {
-                        $("#" + typeChart.typeId).text("0");
-                        $("#" + typeChart.typeId).addClass("type-fx-0");
+                        $(".typing-table-immune").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 0.25)
                     {
-                        $("#" + typeChart.typeId).text("¼");
-                        $("#" + typeChart.typeId).addClass("type-fx-25");
+                        $(".typing-table-very-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 0.5)
                     {
-                        $("#" + typeChart.typeId).text("½");
-                        $("#" + typeChart.typeId).addClass("type-fx-50");
+                        $(".typing-table-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 1)
                     {
-                        $("#" + typeChart.typeId).text("1");
-                        $("#" + typeChart.typeId).addClass("type-fx-100");
+                        $(".typing-table-neutral").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 2)
                     {
-                        $("#" + typeChart.typeId).text("2");
-                        $("#" + typeChart.typeId).addClass("type-fx-200");
+                        $(".typing-table-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 4)
                     {
-                        $("#" + typeChart.typeId).text("4");
-                        $("#" + typeChart.typeId).addClass("type-fx-400");
+                        $(".typing-table-very-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                 });
 

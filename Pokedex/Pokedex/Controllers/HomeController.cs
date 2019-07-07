@@ -345,11 +345,11 @@ namespace Pokedex.Controllers
                         effectiveness *= tc.Effective;
                     }
                     
-                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, Effectiveness = effectiveness });
+                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, TypeName = t.Name, Effectiveness = effectiveness });
                 }
                 else
                 {
-                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, Effectiveness = 1.0m });
+                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, TypeName = t.Name, Effectiveness = 1.0m });
                 }
             }
 
