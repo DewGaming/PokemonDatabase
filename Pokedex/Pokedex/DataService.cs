@@ -387,7 +387,6 @@ namespace Pokedex
                 .Include(x => x.Pokemon)
                 .Include(x => x.PrimaryType)
                 .Include(x => x.SecondaryType)
-                .Where(x => x.Pokemon.IsComplete == true)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
@@ -467,6 +466,17 @@ namespace Pokedex
         }
 
         public PokemonEggGroupDetail GetPokemonWithEggGroups(string pokemonId)
+        {
+            return this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .Where(x => x.Pokemon.IsComplete == true)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
+        public PokemonEggGroupDetail GetPokemonWithEggGroupsWithIncomplete(string pokemonId)
         {
             return this._dataContext.PokemonEggGroupDetails
                 .Include(x => x.Pokemon)
