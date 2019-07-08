@@ -43,11 +43,11 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
                     }
                     else if(typeChart.effectiveness == 0.25)
                     {
-                        $(".typing-table-very-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
+                        $(".typing-table-very-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 0.5)
                     {
-                        $(".typing-table-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
+                        $(".typing-table-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 1)
                     {
@@ -55,11 +55,11 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
                     }
                     else if(typeChart.effectiveness == 2)
                     {
-                        $(".typing-table-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
+                        $(".typing-table-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                     else if(typeChart.effectiveness == 4)
                     {
-                        $(".typing-table-very-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
+                        $(".typing-table-very-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
                     }
                 });
 
