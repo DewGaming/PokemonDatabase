@@ -571,19 +571,6 @@ namespace Pokedex
             return typeChart;
         }
 
-        public List<TypeChart> GetTypeChartByTyping(int ptypeId, int stypeId)
-        {
-            List<TypeChart> typeChart = this._dataContext.TypeCharts
-                .Include(x => x.Attack)
-                .Include(x => x.Defend)
-                .OrderBy(x => x.Attack.Id)
-                .ThenBy(x => x.Defend.Id)
-                .Where(x => x.Defend.Id == ptypeId || x.Defend.Id == stypeId)
-                .ToList();
-
-            return typeChart;
-        }
-
         public TypeEffectivenessViewModel GetTypeChartPokemon(string pokemonId)
         {
             List<Type> typeList = this.GetTypes();
@@ -595,6 +582,102 @@ namespace Pokedex
             List<string> immuneTo = new List<string>();
             List<TypeChart> typeChart;
             string effectiveValue, attackType;
+
+            foreach (var type in pokemonTypes)
+            {
+                typeChart = this._dataContext.TypeCharts
+                    .Include(x => x.Attack)
+                    .Include(x => x.Defend)
+                    .Where(x => x.Defend == type)
+                    .ToList();
+                foreach (var t in typeList)
+                {
+                    if (typeChart.Exists(x => x.Attack.Name == t.Name))
+                    {
+                        attackType = t.Name;
+                        effectiveValue = typeChart.Find(x => x.Attack.Name == attackType).Effective.ToString("0.####");
+                        if (effectiveValue == "0")
+                        {
+                            strongAgainst.Remove(attackType);
+                            weakAgainst.Remove(attackType);
+                            immuneTo.Add(attackType);
+                        }
+                        else if (effectiveValue == "0.5")
+                        {
+                            if (strongAgainst.Exists(x => x == attackType))
+                            {
+                                strongAgainst.Remove(attackType);
+                                superStrongAgainst.Add(attackType + " Quad");
+                            }
+                            else if (weakAgainst.Exists(x => x == attackType))
+                            {
+                                weakAgainst.Remove(attackType);
+                            }
+                            else
+                            {
+                                strongAgainst.Add(attackType);
+                            }
+                        }
+                        else if (effectiveValue == "2")
+                        {
+                            if (weakAgainst.Exists(x => x == attackType))
+                            {
+                                weakAgainst.Remove(attackType);
+                                superWeakAgainst.Add(attackType + " Quad");
+                            }
+                            else if (strongAgainst.Exists(x => x == attackType))
+                            {
+                                strongAgainst.Remove(attackType);
+                            }
+                            else
+                            {
+                                weakAgainst.Add(attackType);
+                            }
+                        }
+                    }
+                }
+            }
+
+            immuneTo.Sort();
+            strongAgainst.Sort();
+            superStrongAgainst.Sort();
+            weakAgainst.Sort();
+            superWeakAgainst.Sort();
+
+            List<string> strongAgainstList = superStrongAgainst;
+            strongAgainstList.AddRange(strongAgainst);
+
+            List<string> weakAgainstList = superWeakAgainst;
+            weakAgainstList.AddRange(weakAgainst);
+
+            TypeEffectivenessViewModel effectivenessChart = new TypeEffectivenessViewModel()
+            {
+                ImmuneTo = immuneTo,
+                StrongAgainst = strongAgainstList,
+                WeakAgainst = weakAgainstList,
+            };
+
+            return effectivenessChart;
+        }
+
+        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId)
+        {
+            List<Type> typeList = this.GetTypes();
+            List<Type> pokemonTypes = new List<Type>();
+            List<string> strongAgainst = new List<string>();
+            List<string> superStrongAgainst = new List<string>();
+            List<string> weakAgainst = new List<string>();
+            List<string> superWeakAgainst = new List<string>();
+            List<string> immuneTo = new List<string>();
+            List<TypeChart> typeChart;
+            string effectiveValue, attackType;
+
+            pokemonTypes.Add(this.GetType(primaryTypeId));
+
+            if(secondaryTypeId != 0)
+            {
+                pokemonTypes.Add(this.GetType(secondaryTypeId));
+            }
 
             foreach (var type in pokemonTypes)
             {

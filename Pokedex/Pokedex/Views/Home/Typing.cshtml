@@ -11,16 +11,20 @@
             max-width: 1220px !important;
         }
 
-        .typing-table > * > * > * {
-            border: 1px solid black;
-        }
-
         .typing-table tbody th {
             padding-right: 5px;
         }
 
         .flexDiv td {
             margin: 5px;
+        }
+
+        .quad-icon {
+            margin-left: 5px;
+        }
+
+        .pokemonTables {
+            padding: 1rem 0 0;
         }
     </style>
 }
@@ -30,78 +34,32 @@
     <script src="/js/typing.js"></script>
 }
 
-<div class="flexDiv">
-    <div class="primaryList">
-        @Html.Label("Primary Type")
-        @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+<div class="evaluator">
+    <div class="flexDiv">
+        <div class="primaryList">
+            @Html.Label("Primary Type")
+            @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+        </div>
+        <div class="secondaryList">
+            @Html.Label("Secondary Type")
+            @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+        </div>
     </div>
-    <div class="secondaryList">
-        @Html.Label("Secondary Type")
-        @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
-    </div>
-</div>
 
-<div class="toggleTypingTable">
-    <table class="typing-table">
-        <tr>
-            <th>
-                <span class="typing-table-very-weak">Very Weak Against</span>
-            </th>
-            <td>
-                <table>
-                    <tr class="flexDiv"></tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <span class="typing-table-weak">Weak Against</span>
-            </th>
-            <td>
-                <table>
-                    <tr class="flexDiv"></tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <span class="typing-table-neutral">Neutral Against</span>
-            </th>
-            <td>
-                <table>
-                    <tr class="flexDiv"></tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <span class="typing-table-strong">Strong Against</span>
-            </th>
-            <td>
-                <table>
-                    <tr class="flexDiv"></tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <span class="typing-table-very-strong">Very Strong Against</span>
-            </th>
-            <td>
-                <table>
-                    <tr class="flexDiv"></tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <span class="typing-table-immune">Immune To</span>
-            </th>
-            <td>
-                <table>
-                    <tr class="flexDiv"></tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <div class="effectivenessChart pokemonTables tableWithHeaders noRowBorders">
+        <div class="StrongAgainst">
+            <h2>Resistances</h2>
+            <table class="typing-table-strong typing-table"></table>
+        </div>
+        <div class="NotResistances">
+            <div class="WeakAgainst">
+               <h2>Weaknesses</h2>
+               <table class="typing-table-weak typing-table"></table>
+            </div>
+            <div class="ImmuneTo">
+                <h2>Immunities</h2>
+                <table class="typing-table-immune typing-table"></table>
+            </div>
+        </div>
+    </div>
 </div>

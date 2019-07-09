@@ -329,31 +329,9 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-typing-effectiveness")]
-        public List<TypingEffectivenessViewModel> GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
+        public TypeEffectivenessViewModel GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
         {
-            List<TypingEffectivenessViewModel> model = new List<TypingEffectivenessViewModel>();
-            List<Pokedex.DataAccess.Models.Type> typeList = this._dataService.GetTypes();
-            List<TypeChart> typeChart = this._dataService.GetTypeChartByTyping(primaryTypeId, secondaryTypeId);
-            
-            foreach(var t in typeList)
-            {
-                if (typeChart.Where(x => x.Attack.Id == t.Id).Count() > 0)
-                {
-                    decimal effectiveness = 1.0m;
-                    foreach(var tc in typeChart.Where(x => x.Attack.Id == t.Id))
-                    {
-                        effectiveness *= tc.Effective;
-                    }
-                    
-                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, TypeName = t.Name, Effectiveness = effectiveness });
-                }
-                else
-                {
-                    model.Add(new TypingEffectivenessViewModel(){ TypeId = t.Id, TypeName = t.Name, Effectiveness = 1.0m });
-                }
-            }
-
-            return model;
+            return this._dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId);
         }
 
         [AllowAnonymous]

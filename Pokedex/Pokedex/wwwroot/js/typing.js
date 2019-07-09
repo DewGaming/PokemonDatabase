@@ -1,6 +1,101 @@
 var primaryTypeID, secondaryTypeID, updateIDs = function(){
     primaryTypeID = $(".primaryList > select").val();
     secondaryTypeID = $(".secondaryList > select").val();
+}, fillTables = function(data)
+{
+   fillStrong(data);
+   fillWeak(data);
+   fillImmune(data); 
+}, fillStrong = function(data)
+{
+    $.each(data.strongAgainst, function(input, type){
+        var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
+        $(quadTag).addClass("pokemon-type quad-icon");
+
+        $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
+        $(iconTag).text(type);
+
+        if(~type.indexOf("Quad"))
+        {
+            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
+            $(iconTag).text(type.substr(0, type.indexOf(' ')));
+            $(quadTag).addClass("quad-resist");
+            $(quadTag).text("Quad Resist");
+        }
+
+        $(dataTag).append(iconTag);
+        if(~type.indexOf("Quad"))
+        {
+            $(dataTag).append(quadTag);
+        }
+
+        $(rowTag).append(dataTag);
+
+        $(".typing-table-strong").append(rowTag);
+    });
+}, fillWeak = function(data)
+{
+    $.each(data.weakAgainst, function(input, type){
+        var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
+        $(quadTag).addClass("pokemon-type quad-icon");
+
+        $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
+        $(iconTag).text(type);
+
+        if(~type.indexOf("Quad"))
+        {
+            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
+            $(iconTag).text(type.substr(0, type.indexOf(' ')));
+            $(quadTag).addClass("quad-resist");
+            $(quadTag).text("Quad Resist");
+        }
+
+        $(dataTag).append(iconTag);
+        if(~type.indexOf("Quad"))
+        {
+            $(dataTag).append(quadTag);
+        }
+
+        $(rowTag).append(dataTag);
+
+        $(".typing-table-weak").append(rowTag);
+    });
+}, fillImmune = function(data)
+{
+    if(data.immuneTo.length == 0)
+    {
+        $(".ImmuneTo").css("display", "none");
+    }
+    else
+    {
+        $.each(data.immuneTo, function(input, type){
+            var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
+            $(quadTag).addClass("pokemon-type quad-icon");
+    
+            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
+            $(iconTag).text(type);
+    
+            if(~type.indexOf("Quad"))
+            {
+                $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
+                $(iconTag).text(type.substr(0, type.indexOf(' ')));
+                $(quadTag).addClass("quad-resist");
+                $(quadTag).text("Quad Resist");
+            }
+    
+            $(dataTag).append(iconTag);
+            if(~type.indexOf("Quad"))
+            {
+                $(dataTag).append(quadTag);
+            }
+    
+            $(rowTag).append(dataTag);
+    
+            $(".typing-table-immune").append(rowTag);
+        });
+        
+        $(".ImmuneTo").css("display", "block");
+    }
 }, checkTypings = function(){
     if(primaryTypeID != $(".primaryList > select").val() || secondaryTypeID != $(".secondaryList > select").val())
     {
@@ -27,43 +122,13 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
             .done(function(data) {
                 typingList = data;
                 
-                $(".type-icon").each(function(index) {
-                    $(this).remove()
+                $(".typing-table").each(function(index) {
+                    $(this).children().remove()
                 });
 
-                $(data).each(function(input, typeChart)
-                {
-                    var appendTag = $("<td>");
-                    appendTag.addClass("type-icon type-" + typeChart.typeName.toLowerCase() + " type-cell");
-                    appendTag.text(typeChart.typeName);
+                fillTables(data);
 
-                    if(typeChart.effectiveness == 0)
-                    {
-                        $(".typing-table-immune").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
-                    }
-                    else if(typeChart.effectiveness == 0.25)
-                    {
-                        $(".typing-table-very-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
-                    }
-                    else if(typeChart.effectiveness == 0.5)
-                    {
-                        $(".typing-table-strong").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
-                    }
-                    else if(typeChart.effectiveness == 1)
-                    {
-                        $(".typing-table-neutral").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
-                    }
-                    else if(typeChart.effectiveness == 2)
-                    {
-                        $(".typing-table-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
-                    }
-                    else if(typeChart.effectiveness == 4)
-                    {
-                        $(".typing-table-very-weak").parent().parent().children('td').children('table').children('tbody').children('tr').append(appendTag);
-                    }
-                });
-
-                $(".toggleTypingTable").css("display", "block");
+                $(".effectivenessChart").css("display", "flex");
             })
             .fail( function() {
                 alert("Failed To Get Effectiveness Chart!");
@@ -71,7 +136,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
         }
         else
         {
-            $(".toggleTypingTable").css("display", "none");
+            $(".effectivenessChart").css("display", "none");
         }
     }
 }
