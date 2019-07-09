@@ -602,7 +602,7 @@ namespace Pokedex
                             weakAgainst.Remove(attackType);
                             immuneTo.Add(attackType);
                         }
-                        else if (effectiveValue == "0.5")
+                        else if (effectiveValue == "0.5" && immuneTo.Where(x => x == attackType).ToList().Count() == 0)
                         {
                             if (strongAgainst.Exists(x => x == attackType))
                             {
@@ -618,7 +618,7 @@ namespace Pokedex
                                 strongAgainst.Add(attackType);
                             }
                         }
-                        else if (effectiveValue == "2")
+                        else if (effectiveValue == "2" && immuneTo.Where(x => x == attackType).ToList().Count() == 0)
                         {
                             if (weakAgainst.Exists(x => x == attackType))
                             {
@@ -698,7 +698,7 @@ namespace Pokedex
                             weakAgainst.Remove(attackType);
                             immuneTo.Add(attackType);
                         }
-                        else if (effectiveValue == "0.5")
+                        else if (effectiveValue == "0.5" && immuneTo.Where(x => x == attackType).ToList().Count() == 0)
                         {
                             if (strongAgainst.Exists(x => x == attackType))
                             {
@@ -714,7 +714,7 @@ namespace Pokedex
                                 strongAgainst.Add(attackType);
                             }
                         }
-                        else if (effectiveValue == "2")
+                        else if (effectiveValue == "2" && immuneTo.Where(x => x == attackType).ToList().Count() == 0)
                         {
                             if (weakAgainst.Exists(x => x == attackType))
                             {

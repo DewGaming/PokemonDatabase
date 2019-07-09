@@ -8,31 +8,40 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
    fillImmune(data); 
 }, fillStrong = function(data)
 {
-    $.each(data.strongAgainst, function(input, type){
-        var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
-        $(quadTag).addClass("pokemon-type quad-icon");
+    if(data.strongAgainst.length == 0)
+    {
+        $(".StrongAgainst").css("display", "none");
+    }
+    else
+    {
+        $.each(data.strongAgainst, function(input, type){
+            var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
+            $(quadTag).addClass("pokemon-type quad-icon");
 
-        $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
-        $(iconTag).text(type);
+            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
+            $(iconTag).text(type);
 
-        if(~type.indexOf("Quad"))
-        {
-            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
-            $(iconTag).text(type.substr(0, type.indexOf(' ')));
-            $(quadTag).addClass("quad-resist");
-            $(quadTag).text("Quad Resist");
-        }
+            if(~type.indexOf("Quad"))
+            {
+                $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
+                $(iconTag).text(type.substr(0, type.indexOf(' ')));
+                $(quadTag).addClass("quad-resist");
+                $(quadTag).text("Quad Resist");
+            }
 
-        $(dataTag).append(iconTag);
-        if(~type.indexOf("Quad"))
-        {
-            $(dataTag).append(quadTag);
-        }
+            $(dataTag).append(iconTag);
+            if(~type.indexOf("Quad"))
+            {
+                $(dataTag).append(quadTag);
+            }
 
-        $(rowTag).append(dataTag);
+            $(rowTag).append(dataTag);
 
-        $(".typing-table-strong").append(rowTag);
-    });
+            $(".typing-table-strong").append(rowTag);
+        });
+        
+        $(".StrongAgainst").css("display", "block");
+    }
 }, fillWeak = function(data)
 {
     $.each(data.weakAgainst, function(input, type){
@@ -46,8 +55,8 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
         {
             $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
             $(iconTag).text(type.substr(0, type.indexOf(' ')));
-            $(quadTag).addClass("quad-resist");
-            $(quadTag).text("Quad Resist");
+            $(quadTag).addClass("quad-weak");
+            $(quadTag).text("Quad Weak");
         }
 
         $(dataTag).append(iconTag);
@@ -73,21 +82,8 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
             $(quadTag).addClass("pokemon-type quad-icon");
     
             $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
-            $(iconTag).text(type);
-    
-            if(~type.indexOf("Quad"))
-            {
-                $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
-                $(iconTag).text(type.substr(0, type.indexOf(' ')));
-                $(quadTag).addClass("quad-resist");
-                $(quadTag).text("Quad Resist");
-            }
-    
+            $(iconTag).text(type);    
             $(dataTag).append(iconTag);
-            if(~type.indexOf("Quad"))
-            {
-                $(dataTag).append(quadTag);
-            }
     
             $(rowTag).append(dataTag);
     
