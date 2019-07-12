@@ -135,12 +135,59 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
             $(".effectivenessChart").css("display", "none");
         }
     }
+}, fillList = function(data){
+    $.each(data, function(input, pokemon){
+        var trTag = $('<tr>');
+        var pokedexNumber = $('<td>');
+        var pokemonName = $('<td>');
+        $(trTag).addClass('pokemonData');
+        $(pokedexNumber).text(pokemon.pokemon.id);
+        $(pokemonName).text(pokemon.pokemon.name);
+        $(trTag).append(pokedexNumber).append(pokemonName);
+        $('.pokemonTable > tbody').append(trTag);
+    });
+}, grabPokemon = function(){
+    if(primaryTypeID != "")
+    {
+        $.ajax({
+            url: '/get-pokemon-by-typing/',
+            method: 'POST',
+            data: { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }
+        })
+        .done(function(data) {
+            if(data.length != 0)
+            {
+                typingList = data;
+                
+                $(".pokemonData").each(function(index) {
+                    $(this).remove()
+                });
+
+                fillList(data);
+
+                $(".pokemonList").css("display", "flex");
+            }
+            else
+            {
+                $(".pokemonList").css("display", "none");
+            }
+        })
+        .fail( function() {
+            alert("Failed To Get Effectiveness Chart!");
+        });
+    }
+    else
+    {
+        $(".pokemonList").css("display", "none");
+    }
 }
 
 $(function() {
     checkTypings();
+    grabPokemon();
 });
 
 $(".typingSelectList").on('change', function(){
     checkTypings();
+    grabPokemon();
 });

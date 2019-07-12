@@ -26,6 +26,14 @@
         .pokemonTables {
             padding: 1rem 0 0;
         }
+
+        .pokemonList {
+            margin-left: 100px;
+        }
+
+        .pokedexNumber {
+            padding-right: 15px;
+        }
     </style>
 }
 
@@ -34,32 +42,47 @@
     <script src="/js/typing.js"></script>
 }
 
-<div class="evaluator">
-    <div class="flexDiv">
-        <div class="primaryList">
-            @Html.Label("Primary Type")
-            @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+<div style="display: flex;">
+    <div class="evaluator">
+        <div class="flexDiv">
+            <div class="primaryList">
+                @Html.Label("Primary Type")
+                @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+            </div>
+            <div class="secondaryList">
+                @Html.Label("Secondary Type")
+                @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+            </div>
         </div>
-        <div class="secondaryList">
-            @Html.Label("Secondary Type")
-            @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+
+        <div class="effectivenessChart pokemonTables tableWithHeaders noRowBorders">
+            <div class="StrongAgainst">
+                <h2>Resistances</h2>
+                <table class="typing-table-strong typing-table"></table>
+            </div>
+            <div class="NotResistances">
+                <div class="WeakAgainst">
+                   <h2>Weaknesses</h2>
+                   <table class="typing-table-weak typing-table"></table>
+                </div>
+                <div class="ImmuneTo">
+                    <h2>Immunities</h2>
+                    <table class="typing-table-immune typing-table"></table>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="pokemonList">
+        <table class="pokemonTable">
+            <thead>
+                <tr class="tableHeaders">
+                    <th class="pokedexNumber" scope="col">Pokedex Number</th>
+                    <th class="pokemonName" scope="col">Pokemon Name</th>
+                </tr>
+            </thead>
+            <tbody>
 
-    <div class="effectivenessChart pokemonTables tableWithHeaders noRowBorders">
-        <div class="StrongAgainst">
-            <h2>Resistances</h2>
-            <table class="typing-table-strong typing-table"></table>
-        </div>
-        <div class="NotResistances">
-            <div class="WeakAgainst">
-               <h2>Weaknesses</h2>
-               <table class="typing-table-weak typing-table"></table>
-            </div>
-            <div class="ImmuneTo">
-                <h2>Immunities</h2>
-                <table class="typing-table-immune typing-table"></table>
-            </div>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>

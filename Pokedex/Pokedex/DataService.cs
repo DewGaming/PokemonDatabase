@@ -414,6 +414,31 @@ namespace Pokedex
             return pokemonList;
         }
 
+        public List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId)
+        {
+            List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails
+                                                        .Include(x => x.Pokemon)
+                                                        .Include(x => x.PrimaryType)
+                                                        .Include(x => x.SecondaryType)
+                                                        .Where(x => x.Pokemon.IsComplete == true)
+                                                        .ToList();
+            List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
+            pokemonList = pokemonList.Except(altFormList).ToList();
+
+            if (secondaryTypeId != 0)
+            {
+                pokemonList = pokemonList.Where(x => (x.PrimaryTypeId == primaryTypeId && x.SecondaryTypeId == secondaryTypeId) || (x.PrimaryTypeId == secondaryTypeId && x.SecondaryTypeId == primaryTypeId)).ToList();
+            }
+            else
+            {
+                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
+            }
+
+            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
+
+            return pokemonList;
+        }
+
         public List<PokemonTypeDetail> GetAllPokemonWithTypesAndIncomplete()
         {
             List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails

@@ -335,6 +335,15 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("get-pokemon-by-typing")]
+        public List<PokemonTypeDetail> GetPokemon(int primaryTypeId, int secondaryTypeId)
+        {
+            List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId);
+
+            return pokemonList;
+        }
+
+        [AllowAnonymous]
         [Route("{Name}")]
         public IActionResult Pokemon(string name)
         {
