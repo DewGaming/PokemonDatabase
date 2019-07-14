@@ -124,7 +124,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
 
                 fillTables(data);
 
-                $(".effectivenessChart").css("display", "block");
+                $(".effectivenessChart").css("display", "flex");
             })
             .fail( function() {
                 alert("Failed To Get Effectiveness Chart!");
