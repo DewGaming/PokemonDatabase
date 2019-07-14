@@ -11,14 +11,6 @@
             max-width: 1220px !important;
         }
 
-        .typing-table tbody th {
-            padding-right: 5px;
-        }
-
-        .flexDiv td {
-            margin: 5px;
-        }
-
         .quad-icon {
             margin-left: 5px;
         }
@@ -27,12 +19,12 @@
             padding: 1rem 0 0;
         }
 
-        .pokemonList {
-            margin-left: 100px;
+        .pokemonWithTyping {
+            margin-left: 25px;
         }
 
-        .pokedexNumber {
-            padding-right: 15px;
+        .pokemonList > div {
+            min-width: 216.75px;
         }
     </style>
 }
@@ -72,17 +64,8 @@
             </div>
         </div>
     </div>
-    <div class="pokemonList">
-        <table class="pokemonTable">
-            <thead>
-                <tr class="tableHeaders">
-                    <th class="pokedexNumber" scope="col">Pokedex Number</th>
-                    <th class="pokemonName" scope="col">Pokemon Name</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
+    <div class="pokemonWithTyping">
+        <h2>Pokemon With Typing</h2>
+        <div class="grid-container pokemonList"></div>
     </div>
 </div>

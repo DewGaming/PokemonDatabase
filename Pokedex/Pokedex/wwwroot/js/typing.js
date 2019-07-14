@@ -124,7 +124,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
 
                 fillTables(data);
 
-                $(".effectivenessChart").css("display", "flex");
+                $(".effectivenessChart").css("display", "block");
             })
             .fail( function() {
                 alert("Failed To Get Effectiveness Chart!");
@@ -137,14 +137,14 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
     }
 }, fillList = function(data){
     $.each(data, function(input, pokemon){
-        var trTag = $('<tr>');
-        var pokedexNumber = $('<td>');
-        var pokemonName = $('<td>');
-        $(trTag).addClass('pokemonData');
-        $(pokedexNumber).text(pokemon.pokemon.id);
-        $(pokemonName).text(pokemon.pokemon.name);
-        $(trTag).append(pokedexNumber).append(pokemonName);
-        $('.pokemonTable > tbody').append(trTag);
+        var pokemonDiv = $('<div>'), pokemonLink = $('<a>'), pokemonImage = $('<img>'), pokemonNameDiv = $('<div>'), pokemonName = $('<span>');
+        $(pokemonLink).attr('href', 'https://pokedex.dewgaming.a2hosted.com/' + pokemon.pokemon.name.replace(': ', '_').replace(' ', '_').toLowerCase());
+        $(pokemonImage).addClass('pokemonListPicture').attr('title', pokemon.pokemon.name.replace('_', ' ')).attr('src', 'https://pokedex.dewgaming.a2hosted.com/images/pokemon/' + pokemon.pokemon.id + '.png');
+        $(pokemonLink).append(pokemonImage);
+        $(pokemonName).addClass('pokemonName').text('#' + pokemon.pokemon.id + ' ' + pokemon.pokemon.name.replace('_', ' '));
+        $(pokemonNameDiv).append(pokemonName);
+        $(pokemonDiv).addClass(pokemon.pokemon.name).append(pokemonLink).append(pokemonNameDiv);
+        $('.pokemonList').append(pokemonDiv);
     });
 }, grabPokemon = function(){
     if(primaryTypeID != "")
@@ -157,19 +157,17 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
         .done(function(data) {
             if(data.length != 0)
             {
-                typingList = data;
+                pokemonList = data;
                 
-                $(".pokemonData").each(function(index) {
-                    $(this).remove()
-                });
+                $(".pokemonList").empty();
 
                 fillList(data);
 
-                $(".pokemonList").css("display", "flex");
+                $(".pokemonWithTyping").css("display", "block");
             }
             else
             {
-                $(".pokemonList").css("display", "none");
+                $(".pokemonWithTyping").css("display", "none");
             }
         })
         .fail( function() {
@@ -178,7 +176,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
     }
     else
     {
-        $(".pokemonList").css("display", "none");
+        $(".pokemonWithTyping").css("display", "none");
     }
 }
 
