@@ -18,6 +18,10 @@
         @Html.HiddenFor(x => x.Pokemon.IsComplete)
         @Html.HiddenFor(x => x.Pokemon.Id)
         
+        <p>
+            <a class="btn btn-primary" type="button" href="@(Url.Action("PokedexNumber", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Pokedex Number</a>
+        </p>
+
         @if(!Model.Pokemon.Id.Contains('-'))
         {
             <div class="form-group">

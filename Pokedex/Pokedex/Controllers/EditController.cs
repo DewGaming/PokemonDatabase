@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -192,6 +193,38 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
             }
+        }
+
+        [HttpGet]
+        [Route("edit_pokedex_number/{pokemonId}")]
+        public IActionResult PokedexNumber(string pokemonId)
+        {
+            Pokemon model = this._dataService.GetPokemonById(pokemonId);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("edit_pokedex_number/{pokemonId}")]
+        public IActionResult PokedexNumber(Pokemon pokemon, string pokemonId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Pokemon model = this._dataService.GetPokemonById(pokemonId);
+
+                return this.View(model);
+            }
+            else if (this._dataService.GetPokemonById(pokemon.Id) != null)
+            {
+                Pokemon model = this._dataService.GetPokemonById(pokemonId);
+
+                this.ModelState.AddModelError("Id", "Pokedex Number already exists.");
+                return this.View(model);
+            }
+
+            this.UpdatePokemon(pokemon, pokemonId);
+
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
@@ -733,6 +766,155 @@ namespace Pokedex.Controllers
             this._dataService.UpdatePokemonFormDetail(pokemonFormDetail);
 
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
+        }
+
+        public void UpdatePokemon(Pokemon newPokemon, string oldNumber)
+        {
+            PokemonTypeDetail typing = this._dataService.GetPokemonWithTypesNoIncludes(oldNumber);
+            PokemonAbilityDetail abilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(oldNumber);
+            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonWithEggGroupsNoIncludes(oldNumber);
+            BaseStat baseStats = this._dataService.GetPokemonBaseStatsNoIncludes(oldNumber);
+            EVYield evYields = this._dataService.GetEVYieldNoIncludes(oldNumber);
+            Evolution preEvolution = this._dataService.GetPreEvolutionNoEdit(oldNumber);
+            List<Evolution> evolutions = this._dataService.GetPokemonEvolutionsNoEdit(oldNumber);
+            List<PokemonFormDetail> altForms = this._dataService.GetPokemonFormDetailsForPokemon(oldNumber);
+
+            this._dataService.AddPokemon(newPokemon);
+
+            if (typing != null)
+            {
+                typing.PokemonId = newPokemon.Id;
+                this._dataService.UpdatePokemonTypeDetail(typing);
+            }
+
+            if (abilities != null)
+            {
+                abilities.PokemonId = newPokemon.Id;
+                this._dataService.UpdatePokemonAbilityDetail(abilities);
+            }
+
+            if (eggGroups != null)
+            {
+                eggGroups.PokemonId = newPokemon.Id;
+                this._dataService.UpdatePokemonEggGroupDetail(eggGroups);
+            }
+
+            if (baseStats != null)
+            {
+                baseStats.PokemonId = newPokemon.Id;
+                this._dataService.UpdateBaseStat(baseStats);
+            }
+
+            if (evYields != null)
+            {
+                evYields.PokemonId = newPokemon.Id;
+                this._dataService.UpdateEVYield(evYields);
+            }
+
+            if (preEvolution != null)
+            {
+                preEvolution.EvolutionPokemonId = newPokemon.Id;
+                this._dataService.UpdateEvolution(preEvolution);
+            }
+
+            if (evolutions.Count() > 0)
+            {
+                foreach(var e in evolutions)
+                {
+                    e.PreevolutionPokemonId = newPokemon.Id;
+                    this._dataService.UpdateEvolution(e);
+                }
+            }
+
+            if (altForms.Count() > 0)
+            {
+                foreach(var a in altForms)
+                {
+                    string altOldNumber = a.AltFormPokemonId;
+                    Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(a.AltFormPokemonId);
+                    pokemon.Id = newPokemon.Id + pokemon.Id.Substring(pokemon.Id.IndexOf('-'));
+                    this.UpdateAltForm(pokemon, altOldNumber, newPokemon.Id);
+                }
+            }
+
+            this._dataService.DeletePokemon(oldNumber);
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + oldNumber + ".png");
+            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+            request.Method = WebRequestMethods.Ftp.Rename;
+            request.RenameTo = newPokemon.Id + ".png";
+            request.GetResponse();
+        }
+
+        public void UpdateAltForm(Pokemon newPokemon, string oldNumber, string originalNumber)
+        {
+            PokemonTypeDetail typing = this._dataService.GetPokemonWithTypesNoIncludes(oldNumber);
+            PokemonAbilityDetail abilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(oldNumber);
+            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonWithEggGroupsNoIncludes(oldNumber);
+            BaseStat baseStats = this._dataService.GetPokemonBaseStatsNoIncludes(oldNumber);
+            EVYield evYields = this._dataService.GetEVYieldNoIncludes(oldNumber);
+            Evolution preEvolution = this._dataService.GetPreEvolutionNoEdit(oldNumber);
+            List<Evolution> evolutions = this._dataService.GetPokemonEvolutionsNoEdit(oldNumber);
+            PokemonFormDetail altFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(oldNumber);
+
+            this._dataService.AddPokemon(newPokemon);
+
+            if (typing != null)
+            {
+                typing.PokemonId = newPokemon.Id;
+                this._dataService.UpdatePokemonTypeDetail(typing);
+            }
+
+            if (abilities != null)
+            {
+                abilities.PokemonId = newPokemon.Id;
+                this._dataService.UpdatePokemonAbilityDetail(abilities);
+            }
+
+            if (eggGroups != null)
+            {
+                eggGroups.PokemonId = newPokemon.Id;
+                this._dataService.UpdatePokemonEggGroupDetail(eggGroups);
+            }
+
+            if (baseStats != null)
+            {
+                baseStats.PokemonId = newPokemon.Id;
+                this._dataService.UpdateBaseStat(baseStats);
+            }
+
+            if (evYields != null)
+            {
+                evYields.PokemonId = newPokemon.Id;
+                this._dataService.UpdateEVYield(evYields);
+            }
+
+            if (preEvolution != null)
+            {
+                preEvolution.EvolutionPokemonId = newPokemon.Id;
+                this._dataService.UpdateEvolution(preEvolution);
+            }
+
+            if (evolutions.Count() > 0)
+            {
+                foreach(var e in evolutions)
+                {
+                    e.PreevolutionPokemonId = newPokemon.Id;
+                    this._dataService.UpdateEvolution(e);
+                }
+            }
+
+            altFormDetail.AltFormPokemonId = newPokemon.Id;
+            altFormDetail.OriginalPokemonId = originalNumber;
+            this._dataService.UpdatePokemonFormDetail(altFormDetail);
+
+            this._dataService.DeletePokemon(oldNumber);
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + oldNumber + ".png");
+            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+            request.Method = WebRequestMethods.Ftp.Rename;
+            request.RenameTo = newPokemon.Id + ".png";
+            request.GetResponse();
         }
     }
 }
