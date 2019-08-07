@@ -192,6 +192,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_form")]
+        public IActionResult Form()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_form")]
+        public IActionResult Form(Form form)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddForm(form);
+
+            return this.RedirectToAction("Forms", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_ability")]
         public IActionResult Ability()
         {

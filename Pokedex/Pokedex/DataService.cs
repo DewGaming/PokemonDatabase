@@ -171,7 +171,9 @@ namespace Pokedex
 
         public List<Form> GetForms()
         {
-            return this._dataContext.Forms.ToList();
+            return this._dataContext.Forms
+                .OrderBy(x => x.Name)
+                .ToList();
         }
 
         public List<PokemonFormDetail> GetPokemonForms(string pokemonId)
@@ -1081,6 +1083,12 @@ namespace Pokedex
         public void AddClassification(Classification classification)
         {
             this._dataContext.Classifications.Add(classification);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddForm(Form form)
+        {
+            this._dataContext.Forms.Add(form);
             this._dataContext.SaveChanges();
         }
 

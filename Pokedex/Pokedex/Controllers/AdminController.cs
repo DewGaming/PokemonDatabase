@@ -80,6 +80,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("form")]
+        public IActionResult Forms()
+        {
+            FormViewModel model = new FormViewModel()
+            {
+                AllForms = this._dataService.GetForms(),
+                AllPokemon = this._dataService.GetPokemonFormDetails(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("egg_group")]
         public IActionResult EggGroups()
         {
