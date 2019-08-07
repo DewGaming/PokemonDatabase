@@ -42,31 +42,16 @@
   color: blue;
 }
 
-footer, .fixed-nav {
+.fixed-nav {
   width: 100%;
   position: fixed;
   z-index: 500;
-}
-
-footer {
-  background-color: white;
-  color: gray;
-  height: 30px;
-  bottom: 0;
 }
 
 .attemptCounter {
   padding: 0;
   height: 30px;
   width: 30px;
-}
-
-footer div {
-  margin-top: 2.5px;
-}
-
-footer hr {
-  margin: 0;
 }
 
 hr.dropdown-line {
@@ -217,10 +202,6 @@ main {
 
 label {
   margin-bottom: 0;
-}
-
-footer hr{
-  margin-top: 0;
 }
 
 img {
