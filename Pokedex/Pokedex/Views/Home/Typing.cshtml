@@ -1,6 +1,9 @@
 @model IEnumerable<Pokedex.DataAccess.Models.Type>
 @{
     Layout = "_Layout";
+    var primaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
+    var secondaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
+    secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
 }
 
 @section styles
@@ -15,8 +18,12 @@
             margin-left: 5px;
         }
 
+        .flexDiv {
+            padding: 0 0 1rem;
+        }
+
         .pokemonTables {
-            padding: 1rem 0 0;
+            padding: 0;
         }
 
         .pokemonList > div {
@@ -35,11 +42,11 @@
         <div class="flexDiv">
             <div class="primaryList">
                 @Html.Label("Primary Type")
-                @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+                @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
             </div>
             <div class="secondaryList">
                 @Html.Label("Secondary Type")
-                @Html.DropDownList("Primary Type", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control typingSelectList" })
+                @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
             </div>
         </div>
 

@@ -96,19 +96,27 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
     if(primaryTypeID != $(".primaryList > select").val() || secondaryTypeID != $(".secondaryList > select").val())
     {
         updateIDs();
-        if(primaryTypeID == "" && secondaryTypeID != "")
+        if(primaryTypeID == "0" && secondaryTypeID != "0")
         {
-            $(".primaryList > select").val(secondaryTypeID);
-            $(".secondaryList > select").val("");
+            if($(".secondaryList > select").val() == "100")
+            {
+                $(".primaryList > select").val("0");
+            }
+            else
+            {
+                $(".primaryList > select").val(secondaryTypeID);
+            }
+
+            $(".secondaryList > select").val("0");
             updateIDs();
         }
         else if(primaryTypeID == secondaryTypeID)
         {
-            $(".secondaryList > select").val("");
+            $(".secondaryList > select").val("0");
             updateIDs();
         }
 
-        if(primaryTypeID != "")
+        if(primaryTypeID != "0" && secondaryTypeID != "100")
         {
             $.ajax({
                 url: '/get-typing-effectiveness/',

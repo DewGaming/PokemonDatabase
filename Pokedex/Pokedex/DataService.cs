@@ -460,9 +460,13 @@ namespace Pokedex
             List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
             pokemonList = pokemonList.Except(altFormList).ToList();
 
-            if (secondaryTypeId != 0)
+            if (secondaryTypeId != 0 && secondaryTypeId != 100)
             {
                 pokemonList = pokemonList.Where(x => (x.PrimaryTypeId == primaryTypeId && x.SecondaryTypeId == secondaryTypeId) || (x.PrimaryTypeId == secondaryTypeId && x.SecondaryTypeId == primaryTypeId)).ToList();
+            }
+            else if (secondaryTypeId == 100)
+            {
+                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId).ToList();
             }
             else
             {
