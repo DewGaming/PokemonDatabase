@@ -393,31 +393,34 @@ namespace Pokedex.Controllers
 
             foreach (var p in altForms)
             {
-                baseStat = this._dataService.GetBaseStat(p.Id);
-                evYield = this._dataService.GetEVYield(p.Id);
-                pokemonTypes = this._dataService.GetPokemonWithTypes(p.Id);
-                pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
-                pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(p.Id);
-                var pokemonModel = new PokemonViewModel()
+                if (p.IsComplete)
                 {
-                    Pokemon = p,
-                    BaseStats = baseStat,
-                    EVYields = evYield,
-                    PrimaryType = pokemonTypes.PrimaryType,
-                    SecondaryType = pokemonTypes.SecondaryType,
-                    PrimaryAbility = pokemonAbilities.PrimaryAbility,
-                    SecondaryAbility = pokemonAbilities.SecondaryAbility,
-                    HiddenAbility = pokemonAbilities.HiddenAbility,
-                    PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
-                    SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
-                    PreEvolution = this._dataService.GetPreEvolution(p.Id),
-                    Evolutions = this._dataService.GetPokemonEvolutions(p.Id),
-                    Effectiveness = this._dataService.GetTypeChartPokemon(p.Id),
-                    AppConfig = this._appConfig,
-                };
-                pokemonModel.Pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemonModel.Pokemon.Id) + ")";
+                    baseStat = this._dataService.GetBaseStat(p.Id);
+                    evYield = this._dataService.GetEVYield(p.Id);
+                    pokemonTypes = this._dataService.GetPokemonWithTypes(p.Id);
+                    pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
+                    pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(p.Id);
+                    var pokemonModel = new PokemonViewModel()
+                    {
+                        Pokemon = p,
+                        BaseStats = baseStat,
+                        EVYields = evYield,
+                        PrimaryType = pokemonTypes.PrimaryType,
+                        SecondaryType = pokemonTypes.SecondaryType,
+                        PrimaryAbility = pokemonAbilities.PrimaryAbility,
+                        SecondaryAbility = pokemonAbilities.SecondaryAbility,
+                        HiddenAbility = pokemonAbilities.HiddenAbility,
+                        PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
+                        SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
+                        PreEvolution = this._dataService.GetPreEvolution(p.Id),
+                        Evolutions = this._dataService.GetPokemonEvolutions(p.Id),
+                        Effectiveness = this._dataService.GetTypeChartPokemon(p.Id),
+                        AppConfig = this._appConfig,
+                    };
+                    pokemonModel.Pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemonModel.Pokemon.Id) + ")";
 
-                model.Add(pokemonModel);
+                    model.Add(pokemonModel);
+                }
             }
 
             return this.View(model);
