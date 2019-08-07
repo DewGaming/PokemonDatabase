@@ -59,8 +59,11 @@
         }
         @if(Model.Pokemon.IsComplete)
         {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Add Relations</span>
+            @if(!Model.Pokemon.Id.Contains('-'))
+            {
+                <hr class="adminOptionSeparator">
+                <span class="adminMenuTitle">Add Relations</span>
+            }
             @if(!Model.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
             {
                 <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Pre-Evolution</a></li>
@@ -81,35 +84,6 @@
             @if(Model.AllPokemon.AllAltForms.Exists(x => x.OriginalPokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
             {
                 <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Alternate Forms</a></li>
-            }
-            <hr class="adminOptionSeparator">
-            @if(!Model.Pokemon.IsArchived)
-            {
-                <span class="adminMenuTitle">Archive</span>
-                <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Archive", new { pokemonId = Model.Pokemon.Id }))">Archive Pokemon</a></li>
-                @if(Model.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || Model.AllPokemon.AllEvolutions.Exists(x => x.PreevolutionPokemonId == Model.Pokemon.Id))
-                {
-                    <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Archive", new { pokemonId = Model.Pokemon.Id }))">Archive Evolution</a></li>
-                }
-            }
-            else
-            {
-                <span class="adminMenuTitle">Unarchive</span>
-                <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Unarchive", new { pokemonId = Model.Pokemon.Id }))">Unarchive Pokemon</a></li>
-                @if(Model.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || Model.AllPokemon.AllEvolutions.Exists(x => x.PreevolutionPokemonId == Model.Pokemon.Id))
-                {
-                    <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Unarchive", new { pokemonId = Model.Pokemon.Id }))">Unarchive Evolution</a></li>
-                }
-            }
-            @if(User.IsInRole("Owner"))
-            {
-                <hr class="adminOptionSeparator">
-                <span class="adminMenuTitle">Delete</span>
-                <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Delete", new { pokemonId = Model.Pokemon.Id }))">Delete Pokemon</a></li>
-                @if(Model.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || Model.AllPokemon.AllEvolutions.Exists(x => x.PreevolutionPokemonId == Model.Pokemon.Id))
-                {
-                    <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Delete", new { pokemonId = Model.Pokemon.Id }))">Delete Evolution</a></li>
-                }
             }
         }
     </ul>
