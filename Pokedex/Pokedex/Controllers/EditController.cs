@@ -707,7 +707,8 @@ namespace Pokedex.Controllers
         [Route("edit_alternate_forms/{pokemonId}")]
         public IActionResult AltForms(string pokemonId)
         {
-            List<Pokemon> altFormList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id.Contains(pokemonId + '-')).ToList();
+            Pokemon originalPokemon = this._dataService.GetPokemonById(pokemonId);
+            List<Pokemon> altFormList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Name == originalPokemon.Name && x.Id.Contains('-')).ToList();
             foreach (var pokemon in altFormList)
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
