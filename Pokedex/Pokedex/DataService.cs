@@ -207,6 +207,7 @@ namespace Pokedex
                 .Include(x => x.ExperienceGrowth)
                 .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
+                .Where(x => x.IsComplete)
                 .ToList()
                 .Find(x => x.Name == name);
         }
