@@ -112,6 +112,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_form/{id:int}")]
+        public IActionResult Form(int id)
+        {
+            Form model = this._dataService.GetForm(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_form/{id:int}")]
+        public IActionResult Form(Form form)
+        {
+            this._dataService.DeleteForm(form.Id);
+
+            return this.RedirectToAction("Forms", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_user/{id:int}")]
         public new IActionResult User(int id)
         {

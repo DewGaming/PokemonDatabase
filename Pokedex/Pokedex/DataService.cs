@@ -1380,6 +1380,13 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void DeleteForm(int id)
+        {
+            Form form = this.GetForm(id);
+            this._dataContext.Forms.Remove(form);
+            this._dataContext.SaveChanges();
+        }
+
         public void DeleteClassification(int id)
         {
             Classification classification = this.GetClassification(id);
