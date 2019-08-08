@@ -23,18 +23,6 @@ namespace Pokedex
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppConfig>(Configuration.GetSection("AppConfig"));
-            
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.AddSession(opts => 
-            {
-                opts.Cookie.IsEssential = true;
-            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -47,13 +35,17 @@ namespace Pokedex
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/access_denied";
-                    options.Cookie.Name = "UserAuth";
                 });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var cookiePolicyOptions = new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+            };
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,9 +59,8 @@ namespace Pokedex
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseCookiePolicy(cookiePolicyOptions);
             app.UseAuthentication();
-            app.UseSession();
 
             app.UseMvc(routes =>
             {
