@@ -147,8 +147,8 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
     var typing = data.allPokemonWithTypes, pokemon = data.allPokemon;
     for(i = 0; i < typing.length; i += 1){
         var pokemonDiv = $('<div>'), pokemonLink = $('<a>'), pokemonImage = $('<img>'), pokemonNameDiv = $('<div>'), pokemonName = $('<span>');
-        $(pokemonLink).attr('href', 'https://pokedex.dewgaming.a2hosted.com/' + typing[i].pokemon.name.replace(': ', '_').replace(' ', '_').toLowerCase());
-        $(pokemonImage).addClass('pokemonListPicture').attr('title', typing[i].pokemon.name.replace('_', ' ')).attr('src', 'https://pokedex.dewgaming.a2hosted.com/images/pokemon/' + typing[i].pokemon.id + '.png');
+        $(pokemonLink).attr('href', 'https://www.pokemondatabase.net/' + typing[i].pokemon.name.replace(': ', '_').replace(' ', '_').toLowerCase());
+        $(pokemonImage).addClass('pokemonListPicture').attr('title', typing[i].pokemon.name.replace('_', ' ')).attr('src', 'https://www.pokemondatabase.net/images/pokemon/' + typing[i].pokemon.id + '.png');
         $(pokemonLink).append(pokemonImage);
         $(pokemonName).addClass('pokemonName').text(pokemon[i].name.replace('_', ' '));
         $(pokemonNameDiv).append(pokemonName);
