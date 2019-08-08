@@ -561,6 +561,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_form/{id:int}")]
+        public IActionResult Form(int id)
+        {
+            Form model = this._dataService.GetForm(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_form/{id:int}")]
+        public IActionResult Form(Form form)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Form model = this._dataService.GetForm(form.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateForm(form);
+
+            return this.RedirectToAction("Forms", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_classification/{id:int}")]
         public IActionResult Classification(int id)
         {

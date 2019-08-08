@@ -176,6 +176,13 @@ namespace Pokedex
                 .ToList();
         }
 
+        public Form GetForm(int id)
+        {
+            return this._dataContext.Forms
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
         public Form GetFormByName(string formName)
         {
             return this._dataContext.Forms.ToList().Find(x => x.Name == formName);
@@ -1178,6 +1185,12 @@ namespace Pokedex
         public void UpdateEggGroup(EggGroup eggGroup)
         {
             this._dataContext.EggGroups.Update(eggGroup);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateForm(Form form)
+        {
+            this._dataContext.Forms.Update(form);
             this._dataContext.SaveChanges();
         }
 
