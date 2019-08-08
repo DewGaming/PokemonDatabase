@@ -144,16 +144,17 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
         }
     }
 }, fillList = function(data){
-    $.each(data, function(input, pokemon){
+    var typing = data.allPokemonWithTypes, pokemon = data.allPokemon;
+    for(i = 0; i < typing.length; i += 1){
         var pokemonDiv = $('<div>'), pokemonLink = $('<a>'), pokemonImage = $('<img>'), pokemonNameDiv = $('<div>'), pokemonName = $('<span>');
-        $(pokemonLink).attr('href', 'https://pokedex.dewgaming.a2hosted.com/' + pokemon.pokemon.name.replace(': ', '_').replace(' ', '_').toLowerCase());
-        $(pokemonImage).addClass('pokemonListPicture').attr('title', pokemon.pokemon.name.replace('_', ' ')).attr('src', 'https://pokedex.dewgaming.a2hosted.com/images/pokemon/' + pokemon.pokemon.id + '.png');
+        $(pokemonLink).attr('href', 'https://pokedex.dewgaming.a2hosted.com/' + typing[i].pokemon.name.replace(': ', '_').replace(' ', '_').toLowerCase());
+        $(pokemonImage).addClass('pokemonListPicture').attr('title', typing[i].pokemon.name.replace('_', ' ')).attr('src', 'https://pokedex.dewgaming.a2hosted.com/images/pokemon/' + typing[i].pokemon.id + '.png');
         $(pokemonLink).append(pokemonImage);
-        $(pokemonName).addClass('pokemonName').text('#' + pokemon.pokemon.id + ' ' + pokemon.pokemon.name.replace('_', ' '));
+        $(pokemonName).addClass('pokemonName').text(pokemon[i].name.replace('_', ' '));
         $(pokemonNameDiv).append(pokemonName);
-        $(pokemonDiv).addClass(pokemon.pokemon.name).append(pokemonLink).append(pokemonNameDiv);
+        $(pokemonDiv).addClass(typing[i].pokemon.name).append(pokemonLink).append(pokemonNameDiv);
         $('.pokemonList').append(pokemonDiv);
-    });
+    };
 }, grabPokemon = function(){
     if(primaryTypeID != "")
     {
@@ -163,9 +164,9 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
             data: { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }
         })
         .done(function(data) {
-            if(data.length != 0)
+            pokemonList = data.allPokemonWithTypes;
+            if(pokemonList.length != 0)
             {
-                pokemonList = data;
                 
                 $(".pokemonList").empty();
 

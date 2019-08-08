@@ -377,6 +377,21 @@ namespace Pokedex
                 .ToList();
         }
 
+        public Pokemon GetAltFormWithFormName(string pokemonId)
+        {
+            PokemonFormDetail pokemonForm =  this._dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .ToList()
+                .Find(x => x.AltFormPokemonId == pokemonId && x.AltFormPokemon.IsComplete);
+
+            Pokemon pokemon = pokemonForm.AltFormPokemon;
+
+            pokemon.Name += " (" + pokemonForm.Form.Name + ")";
+
+            return pokemon;
+        }
+
         public List<PokemonFormDetail> GetAllAltForms()
         {
             return this._dataContext.PokemonFormDetails
@@ -478,8 +493,6 @@ namespace Pokedex
                                                         .Include(x => x.SecondaryType)
                                                         .Where(x => x.Pokemon.IsComplete == true)
                                                         .ToList();
-            List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
-            pokemonList = pokemonList.Except(altFormList).ToList();
 
             if (secondaryTypeId != 0 && secondaryTypeId != 100)
             {
@@ -494,7 +507,7 @@ namespace Pokedex
                 pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
             }
 
-            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
+            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Name).ToList();
 
             return pokemonList;
         }

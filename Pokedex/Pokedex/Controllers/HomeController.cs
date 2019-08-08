@@ -480,11 +480,30 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-typing")]
-        public List<PokemonTypeDetail> GetPokemon(int primaryTypeId, int secondaryTypeId)
+        public TypingEvaluatorViewModel GetPokemon(int primaryTypeId, int secondaryTypeId)
         {
-            List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId);
+            List<PokemonTypeDetail> typingList = this._dataService.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId);
+            List<Pokemon> pokemonList = new List<Pokemon>();
 
-            return pokemonList;
+            foreach(var p in typingList)
+            {
+                if(p.PokemonId.Contains('-'))
+                {
+                    Pokemon pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
+                    pokemonList.Add(pokemon);
+                }
+                else
+                {
+                    pokemonList.Add(p.Pokemon);
+                }
+            }
+
+            TypingEvaluatorViewModel model = new TypingEvaluatorViewModel(){
+                AllPokemonWithTypes = typingList,
+                AllPokemon = pokemonList,
+            };
+
+            return model;
         }
 
         [AllowAnonymous]
