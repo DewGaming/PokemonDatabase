@@ -500,7 +500,7 @@ namespace Pokedex
             }
             else if (secondaryTypeId == 100)
             {
-                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId).ToList();
+                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId || x.SecondaryTypeId == primaryTypeId).ToList();
             }
             else
             {
