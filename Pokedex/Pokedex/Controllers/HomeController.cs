@@ -256,7 +256,7 @@ namespace Pokedex.Controllers
 
                 if (selectedForms.Contains("Mega"))
                 {  
-                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltForms().Where(x => x.Form.Name == "Mega Evolution" || x.Form.Name == "Mega X Evolution" || x.Form.Name == "Mega Y Evolution").ToList();
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Mega Evolution" || x.Form.Name == "Mega X Evolution" || x.Form.Name == "Mega Y Evolution").ToList();
 
                     List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -285,7 +285,7 @@ namespace Pokedex.Controllers
 
                 if (selectedForms.Contains("Alolan"))
                 {
-                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltForms().Where(x => x.Form.Name == "Alolan").ToList();
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Alolan").ToList();
 
                     List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -314,7 +314,7 @@ namespace Pokedex.Controllers
 
                 if (selectedForms.Contains("Galarian"))
                 {
-                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltForms().Where(x => x.Form.Name == "Galarian").ToList();
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Galarian").ToList();
 
                     List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -343,7 +343,7 @@ namespace Pokedex.Controllers
 
                 if (selectedForms.Contains("Other"))
                 {
-                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltForms();
+                    List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete();
 
                     List<Form> formsToRemove = this.GatherRemovableForms();
 

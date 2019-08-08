@@ -372,7 +372,7 @@ namespace Pokedex
 
         public List<PokemonFormDetail> GetAllAltForms()
         {
-            List<PokemonFormDetail> pokemonFormList = this._dataContext.PokemonFormDetails
+            return this._dataContext.PokemonFormDetails
                 .Include(x => x.AltFormPokemon)
                     .Include("AltFormPokemon.EggCycle")
                     .Include("AltFormPokemon.GenderRatio")
@@ -390,10 +390,12 @@ namespace Pokedex
                     .Include("OriginalPokemon.CaptureRate")
                     .Include("OriginalPokemon.BaseHappiness")
                 .Include(x => x.Form)
-                .Where(x => x.AltFormPokemon.IsComplete)
                 .ToList();
+        }
 
-            return pokemonFormList;
+        public List<PokemonFormDetail> GetAllAltFormsOnlyComplete()
+        {
+            return this.GetAllAltForms().Where(x => x.AltFormPokemon.IsComplete).ToList();
         }
 
         public PokemonFormDetail GetPokemonFormDetailByAltFormId(string pokemonId)
@@ -409,15 +411,6 @@ namespace Pokedex
         {
             return this._dataContext.PokemonFormDetails
                 .Where(x => x.OriginalPokemonId == pokemonId)
-                .ToList();
-        }
-
-        public List<PokemonFormDetail> GetPokemonByFormName(string formName)
-        {
-            return this._dataContext.PokemonFormDetails
-                .Include(x => x.AltFormPokemon)
-                .Include(x => x.Form)
-                .Where(x => x.Form.Name == formName)
                 .ToList();
         }
 
