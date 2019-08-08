@@ -31,7 +31,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveGeneration(generation.Id);
 
-            return this.RedirectToAction("Generations");
+            return this.RedirectToAction("Generations", "Admin");
         }
 
         [HttpGet]
@@ -50,7 +50,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveType(type.Id);
 
-            return this.RedirectToAction("Types");
+            return this.RedirectToAction("Types", "Admin");
         }
 
         [HttpGet]
@@ -69,7 +69,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveShinyHunt(type.Id);
 
-            return this.RedirectToAction("ShinyHunts");
+            return this.RedirectToAction("ShinyHunts", "Admin");
         }
 
         [HttpGet]
@@ -88,7 +88,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveEggGroup(eggGroup.Id);
 
-            return this.RedirectToAction("EggGroups");
+            return this.RedirectToAction("EggGroups", "Admin");
         }
 
         [HttpGet]
@@ -107,7 +107,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveClassification(classification.Id);
 
-            return this.RedirectToAction("Classifications");
+            return this.RedirectToAction("Classifications", "Admin");
         }
 
         [HttpGet]
@@ -126,7 +126,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveAbility(ability.Id);
 
-            return this.RedirectToAction("Abilities");
+            return this.RedirectToAction("Abilities", "Admin");
         }
 
         [HttpGet]
@@ -145,7 +145,7 @@ namespace Pokedex.Controllers
         {
             this._dataService.ArchiveShinyHuntingTechnique(shinyHuntingTechnique.Id);
 
-            return this.RedirectToAction("ShinyHuntingTechniques");
+            return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
     }
 }
