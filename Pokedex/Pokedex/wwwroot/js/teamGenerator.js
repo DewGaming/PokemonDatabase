@@ -50,7 +50,7 @@ var pokemonList, fillGeneratedTable = function() {
 
     for (var i = 0; i < 6; i++)
     {
-        $('.pokemon' + (i + 1)).append('<a href="/' + pokemonList[i].name.replace(": ", "_").replace(' ', '_').toLowerCase() + '/" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://pokedex.dewgaming.a2hosted.com/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
+        $('.pokemon' + (i + 1)).append('<a href="/' + originalNames[i].name.replace(": ", "_").replace(' ', '_').toLowerCase() + '/" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://pokedex.dewgaming.a2hosted.com/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
     }
 };
 
@@ -92,7 +92,8 @@ $('.generatorButton').on('click', function() {
         data: { 'selectedGens': selectedGens, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyAltForms':  $("#altFormBool").is(":checked") }
     })
     .done(function(data) {
-        pokemonList = data;
+        pokemonList = data.allPokemonChangedNames;
+        originalNames = data.allPokemonOriginalNames;
         fillGeneratedTable();
     })
     .fail( function() {
