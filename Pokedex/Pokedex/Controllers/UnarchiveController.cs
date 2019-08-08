@@ -54,6 +54,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("unarchive_form/{id:int}")]
+        public IActionResult Form(int id)
+        {
+            Form model = this._dataService.GetForm(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("unarchive_form/{id:int}")]
+        public IActionResult Form(Form form)
+        {
+            this._dataService.UnarchiveForm(form.Id);
+
+            return this.RedirectToAction("Forms", "Admin");
+        }
+
+        [HttpGet]
         [Route("unarchive_shiny_hunt/{id:int}")]
         public IActionResult ShinyHunt(int id)
         {

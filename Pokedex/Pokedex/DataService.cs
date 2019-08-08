@@ -1226,6 +1226,13 @@ namespace Pokedex
             this.UpdateShinyHunt(shinyHunt);
         }
 
+        public void ArchiveForm(int id)
+        {
+            Form form = this.GetForm(id);
+            form.IsArchived = true;
+            this.UpdateForm(form);
+        }
+
         public void ArchiveGeneration(string id)
         {
             Generation generation = this.GetGeneration(id);
@@ -1280,6 +1287,13 @@ namespace Pokedex
             Type type = this.GetType(id);
             type.IsArchived = false;
             this.UpdateType(type);
+        }
+
+        public void UnarchiveForm(int id)
+        {
+            Form form = this.GetForm(id);
+            form.IsArchived = false;
+            this.UpdateForm(form);
         }
 
         public void UnarchiveShinyHunt(int id)
