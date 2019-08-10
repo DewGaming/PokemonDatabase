@@ -1,6 +1,8 @@
 @model IEnumerable<Pokedex.DataAccess.Models.Type>
 @{
     Layout = "_Layout";
+    ViewBag.Title = "Typing Evaluator";
+    
     var primaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
     var secondaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
     secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
