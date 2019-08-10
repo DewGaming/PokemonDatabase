@@ -37,19 +37,13 @@
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
                 <tbody>
-                    <tr>
-                        <th>Pokedex Number</th>
-                        <td>
-                            @if (item.Pokemon.Id.IndexOf('-') > -1)
-                            {
-                                @item.Pokemon.Id.Substring(0, item.Pokemon.Id.IndexOf('-'))
-                            }
-                            else
-                            {
-                                @item.Pokemon.Id
-                            }
-                        </td>
-                    </tr>
+                    @if(!item.Pokemon.Id.Contains('-'))
+                    {
+                        <tr>
+                            <th>Pokedex Number</th>
+                            <td>@('#')@item.Pokemon.Id.PadLeft(3, '0')</td>
+                        </tr>
+                    }
                     <tr>
                         <th>Typing</th>
                         <td>
@@ -60,10 +54,13 @@
                             }
                         </td>
                     </tr>
-                    <tr>
-                        <th>Classification</th>
-                        <td>@item.Pokemon.Classification.Name</td>
-                    </tr>
+                    @if(!item.Pokemon.Id.Contains('-'))
+                    {
+                        <tr>
+                            <th>Classification</th>
+                            <td>@item.Pokemon.Classification.Name</td>
+                        </tr>
+                    }
                     <tr>
                         <th>Height</th>
                         <td>
@@ -200,10 +197,13 @@
                             }
                         </td>
                     </tr>
-                    <tr>
-                    </tr>
-                        <th>Catch Rate</th>
-                        <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
+                    @if(!item.Pokemon.Id.Contains('-'))
+                    {
+                        <tr>
+                            <th>Catch Rate</th>
+                            <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
+                        </tr>
+                    }
                     <tr>
                         <th>Experience Growth</th>
                         <td>@item.Pokemon.ExperienceGrowth.Name (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)</td>
@@ -212,68 +212,74 @@
                         <th>Experience Yield</th>
                         <td>@item.Pokemon.ExpYield</td>
                     </tr>
-                    <tr>
-                        <th>Base Happiness</th>
-                        <td>@item.Pokemon.BaseHappiness.Happiness</td>
-                    </tr>
+                    @if(!item.Pokemon.Id.Contains('-'))
+                    {
+                        <tr>
+                            <th>Base Happiness</th>
+                            <td>@item.Pokemon.BaseHappiness.Happiness</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
-        <div class="pokemonBreeding pokemonTables span-md-5 span-lg-4">
-            <h2>Breeding</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Gender Ratio</th>
-                        <td>
-                            @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
-                            {
-                                @("Genderless");
-                            }
-                            else
-                            {
-                                if (item.Pokemon.GenderRatio.FemaleRatio == 0)
+        @if(!item.Pokemon.Id.Contains('-'))
+        {
+            <div class="pokemonBreeding pokemonTables span-md-5 span-lg-4">
+                <h2>Breeding</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Gender Ratio</th>
+                            <td>
+                                @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
                                 {
-                                    <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
-                                }
-                                else if (item.Pokemon.GenderRatio.MaleRatio == 0)
-                                {
-                                    <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    @("Genderless");
                                 }
                                 else
                                 {
-                                    <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
-                                    <br>
-                                    <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    if (item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                    {
+                                        <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
+                                    }
+                                    else if (item.Pokemon.GenderRatio.MaleRatio == 0)
+                                    {
+                                        <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    }
+                                    else
+                                    {
+                                        <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
+                                        <br>
+                                        <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    }
                                 }
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        @if (item.SecondaryEggGroup != null)
-                        {
-                            <th>Egg Groups</th>
-                        }
-                        else
-                        {
-                            <th>Egg Group</th>
-                        }
-                        <td>
-                            @item.PrimaryEggGroup.Name
+                            </td>
+                        </tr>
+                        <tr>
                             @if (item.SecondaryEggGroup != null)
                             {
-                                <br>
-                                @item.SecondaryEggGroup.Name
+                                <th>Egg Groups</th>
                             }
-                        </td>
-                    </tr>
-                    <tr>
-                       <th>Egg Cycles</th>
-                       <td>@item.Pokemon.EggCycle.CycleCount (@(item.Pokemon.EggCycle.CycleCount * 257) Steps to Hatch)</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            else
+                            {
+                                <th>Egg Group</th>
+                            }
+                            <td>
+                                @item.PrimaryEggGroup.Name
+                                @if (item.SecondaryEggGroup != null)
+                                {
+                                    <br>
+                                    @item.SecondaryEggGroup.Name
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                           <th>Egg Cycles</th>
+                           <td>@item.Pokemon.EggCycle.CycleCount (@(item.Pokemon.EggCycle.CycleCount * 257) Steps to Hatch)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
         <div class="effectivenessChart pokemonTables tableWithHeaders noRowBorders">
             @if (item.Effectiveness.StrongAgainst.Count > 0)
             {
