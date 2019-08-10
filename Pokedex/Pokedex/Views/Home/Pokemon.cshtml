@@ -13,6 +13,7 @@
 @section scripts
 {
     <script src="/js/tabContent.js"></script>
+    <script src="/js/calculateCaptureRate.js"></script>
 }
 
 <div class="tab-list">
@@ -200,9 +201,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Catch Rate</th>
-                        <td>@item.Pokemon.CaptureRate.CatchRate (@Decimal.Round(item.Pokemon.CaptureRate.CatchRate * 100 / 765m, 1)% With A Pokeball At Full HP)</td>
                     </tr>
+                        <th>Catch Rate</th>
+                        <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
                     <tr>
                         <th>Experience Growth</th>
                         <td>@item.Pokemon.ExperienceGrowth.Name (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)</td>
