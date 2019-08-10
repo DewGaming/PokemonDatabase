@@ -1,6 +1,7 @@
 @model IEnumerable<Pokedex.Models.PokemonViewModel>
 @{
     Layout = "_Layout";
+    ViewBag.Title = @Model.First().Pokemon.Name.Replace('_', ' ');
 }
 
 @section styles

@@ -1,6 +1,11 @@
+@{
+  string defaultTitle = "Pokemon Database";
+	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle :  ViewBag.Title + " | " + defaultTitle;
+}
+
 <html>
 <head>
-    <title>Dew's Pokedex</title>
+    <title>@ViewBag.Title</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/main.css" rel="stylesheet" type="text/css">
     @RenderSection("styles", required: false)
@@ -8,7 +13,7 @@
 </head>
 <body>
     <nav class="fixed-nav navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokedex</a>
+      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokemon Database</a>
       <button class="navbar-toggler collapse-button" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
