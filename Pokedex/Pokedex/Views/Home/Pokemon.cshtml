@@ -8,6 +8,18 @@
 {
     <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <style>
+        .typing {
+            margin-top: .75rem;
+            text-align: center;
+        }
+
+        .typing div {
+          margin: 0 2.5px 5px;
+          width: 45%;
+          max-width: 150px;
+        }
+    </style>
 }
 
 @section scripts
@@ -32,7 +44,16 @@
 @foreach(var item in Model)
 {
     <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")">
-        <div class="pokemonPicture shadowed"><img title="@item.Pokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" /></div>
+        <div class="pokemonPicture shadowed">
+            <img title="@item.Pokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
+            <div class="typing">
+                <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                @if(@item.SecondaryType != null)
+                {
+                    <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                }
+            </div>
+        </div>
         <div class="pokemonData pokemonTables span-md-5 span-lg-4">
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
@@ -44,16 +65,6 @@
                             <td>@('#')@item.Pokemon.Id.PadLeft(3, '0')</td>
                         </tr>
                     }
-                    <tr>
-                        <th>Typing</th>
-                        <td>
-                            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                            @if (item.SecondaryType != null)
-                            {
-                                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                            }
-                        </td>
-                    </tr>
                     @if(!item.Pokemon.Id.Contains('-'))
                     {
                         <tr>
