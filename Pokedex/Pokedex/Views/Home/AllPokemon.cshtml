@@ -1,7 +1,7 @@
 @model Pokedex.Models.AllPokemonTypeViewModel;
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Pokedex";
+    ViewBag.Title = "Pokemon List";
 }
 
 @section styles
@@ -56,7 +56,7 @@
                                     <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
                                 </a>
                                 <div>
-                                    <span class="pokemonName">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</span>
+                                    <span class="pokemonName">@('#')@item.Pokemon.Id.PadLeft(3, '0') @item.Pokemon.Name.Replace('_', ' ')</span>
                                     <div class="typing">
                                         <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                                         @if(@item.SecondaryType != null)
@@ -82,7 +82,7 @@
                         @foreach(var item in Model.AllPokemon.Where(x => (x.Pokemon.Generation.Id == @gen) || (x.Pokemon.Generation.Id.IndexOf('-') > -1 && x.Pokemon.Generation.Id.Substring(0, x.Pokemon.Generation.Id.IndexOf('-')) == @gen)))
                         {
                             <tr>
-                                <td>@item.Pokemon.Id</td>
+                                <td>@item.Pokemon.Id.PadLeft(3, '0')</td>
                                 <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
                                 <td>
                                     <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
@@ -115,7 +115,7 @@ else
                             <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
                         </a>
                         <div>
-                            <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.Id @item.Pokemon.Name.Replace('_', ' ')</a>
+                            <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.Id.PadLeft(3, '0') @item.Pokemon.Name.Replace('_', ' ')</a>
                             <div class="typing">
                                 <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                                 @if(@item.SecondaryType != null)
@@ -144,7 +144,7 @@ else
                 @foreach(var item in Model.AllPokemon)
                 {
                     <tr>
-                        <td>@item.Pokemon.Id</td>
+                        <td>@item.Pokemon.Id.PadLeft(3, '0')</td>
                         <td><a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@item.Pokemon.Name.Replace('_', ' ')</a></td>
                         <td>
                             <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
