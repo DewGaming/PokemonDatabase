@@ -90,7 +90,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Abilities</th>
+                        <th>
+                            @if(item.SecondaryAbility == null && item.HiddenAbility == null)
+                            {
+                                @("Ability")
+                            }
+                            else
+                            {
+                                @("Abilities")
+                            }
+                        </th>
                         <td>
                             <span title="Description: @item.PrimaryAbility.Description">
                                 @item.PrimaryAbility.Name
