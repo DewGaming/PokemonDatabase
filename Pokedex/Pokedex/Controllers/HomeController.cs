@@ -188,20 +188,7 @@ namespace Pokedex.Controllers
                 allPokemon = allPokemon.Except(allPokemon.Where(x => (x.GenerationId == gen.Id) || (x.GenerationId.IndexOf('-') > -1 && x.GenerationId.Substring(0, x.GenerationId.IndexOf('-')) == gen.Id)).ToList()).ToList();
             }
 
-            if (selectedEvolutions == "noEvolutions")
-            {
-                List<Pokemon> newPokemon = new List<Pokemon>();
-                foreach(var p in allPokemon)
-                {
-                    if (!allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id || x.PreevolutionPokemonId == p.Id))
-                    {
-                        newPokemon.Add(p);
-                    }
-                }
-
-                allPokemon = newPokemon;
-            }
-            else if (selectedEvolutions == "stage1Pokemon")
+            if (selectedEvolutions == "stage1Pokemon")
             {
                 List<Pokemon> newPokemon = new List<Pokemon>();
                 foreach(var p in allPokemon)
@@ -232,7 +219,7 @@ namespace Pokedex.Controllers
                 List<Pokemon> newPokemon = new List<Pokemon>();
                 foreach(var p in allPokemon)
                 {
-                    if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                    if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
                     {
                         newPokemon.Add(p);
                     }
