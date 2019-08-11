@@ -11,12 +11,3 @@ $(document).ready(function() {
         });
     });
 });
-
-$('#search').on('input', function() {
-    var val = this.value;
-    if($('#pokemonList option').filter(function() {
-        return this.value.toUpperCase() === val.toUpperCase();        
-    }).length) {
-        $('.search-button').trigger("click");
-    }
-});
