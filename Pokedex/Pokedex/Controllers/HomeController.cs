@@ -106,9 +106,11 @@ namespace Pokedex.Controllers
                     .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
                     .ToList();
 
-                if (model.Count() == 1 || this._dataService.GetPokemon(search) != null)
+                Pokemon pokemonSearched = this._dataService.GetPokemon(search);
+
+                if (model.Count() == 1 || pokemonSearched != null)
                 {
-                    return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
+                    return this.RedirectToAction("Pokemon", "Home", new { Name = pokemonSearched.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
                 else if (model.Count() == 0)
                 {
