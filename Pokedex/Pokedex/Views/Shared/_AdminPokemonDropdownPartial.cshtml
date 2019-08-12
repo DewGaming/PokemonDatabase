@@ -59,7 +59,7 @@
         }
         @if(Model.Pokemon.IsComplete)
         {
-            @if(!Model.Pokemon.Id.Contains('-'))
+            @if(!Model.Pokemon.Id.Contains('-') || !Model.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
             {
                 <hr class="adminOptionSeparator">
                 <span class="adminMenuTitle">Add Relations</span>
