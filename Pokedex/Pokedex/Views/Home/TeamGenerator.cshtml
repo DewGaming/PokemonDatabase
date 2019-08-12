@@ -39,6 +39,20 @@
             <label for="onlyFullyEvolved" class="generatorRadio">Fully Evolved Pokemon</label>
         </li>
         <hr class="generationOptionSeparator">
+        <span class="generationOptionTitle">Selected Legendaries</span>
+        <li class="dropdown-item generatorOption legendaryCheckbox">
+            <input id="Legendary" type="checkbox" value="Legendary" checked />
+            <label for="Legendary" class="generatorOptionTitle">Legendaries</label>
+        </li>
+        <li class="dropdown-item generatorOption legendaryCheckbox">
+            <input id="Mythical" type="checkbox" value="Mythical" checked />
+            <label for="Mythical" class="generatorOptionTitle">Mythicals</label>
+        </li>
+        <li class="dropdown-item generatorOption legendaryCheckbox">
+            <input id="UltraBeast" type="checkbox" value="UltraBeast" checked />
+            <label for="UltraBeast" class="generatorOptionTitle">Ultra Beasts</label>
+        </li>
+        <hr class="generationOptionSeparator">
         <span class="generationOptionTitle">Selected Alternate Forms</span>
         <li class="dropdown-item generatorOption alternateFormCheckbox">
             <input id="Mega" type="checkbox" value="Mega" />
@@ -60,6 +74,10 @@
         </li>
         <hr class="generationOptionSeparator">
         <span class="generationOptionTitle">Other Options</span>
+        <li class="dropdown-item generatorOption legendaryBoolCheckbox">
+            <input id="legendaryBool" type="checkbox" value="legendaryBool" />
+            <label for="legendaryBool" class="generatorOptionTitle">Only Show Legendaries</label>
+        </li>
         <li class="dropdown-item generatorOption altFormBoolCheckbox">
             <input id="altFormBool" type="checkbox" value="altFormBool" />
             <label for="altFormBool" class="generatorOptionTitle">Only Show Alternate Forms</label>

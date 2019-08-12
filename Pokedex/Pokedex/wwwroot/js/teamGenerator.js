@@ -67,7 +67,7 @@ $(window).on('resize', function() {
 });
 
 $('.generatorButton').on('click', function() {
-    var selectedGens = [], selectedForms = [], selectedEvolutions;
+    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions;
     $('.generationCheckbox input').each(function() {
         if($(this).is(':checked')){
             selectedGens.push(this.value);
@@ -80,6 +80,12 @@ $('.generatorButton').on('click', function() {
         }
     });
 
+    $('.legendaryCheckbox input').each(function() {
+        if($(this).is(':checked')){
+            selectedLegendaries.push(this.value);
+        }
+    });
+
     $('.evolutionRadio input').each(function() {
         if($(this).is(':checked')){
             selectedEvolutions = this.value;
@@ -89,7 +95,7 @@ $('.generatorButton').on('click', function() {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyAltForms':  $("#altFormBool").is(":checked") }
+        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked") }
     })
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;

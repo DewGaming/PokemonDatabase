@@ -167,7 +167,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedForms, string selectedEvolutions, bool onlyAltForms)
+        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms)
         {
             List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
             foreach(var item in selectedGens)
@@ -230,16 +230,45 @@ namespace Pokedex.Controllers
                 allPokemon = newPokemon;
             }
 
-            if(selectedForms.Count() == 0)
+            if(selectedLegendaries.Count() == 0)
             {
-                List<PokemonFormDetail> pokemonFormList = this._dataService.GetPokemonFormDetails();
+                List<PokemonLegendaryDetail> legendaryList = this._dataService.GetAllPokemonWithLegendaryTypes();
 
-                foreach(var p in pokemonFormList)
+                foreach(var p in legendaryList)
                 {
-                    allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.AltFormPokemonId));
+                    allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.PokemonId));
                 }
             }
             else
+            {
+                if(!selectedLegendaries.Contains("Legendaries"))
+                {
+                    List<PokemonLegendaryDetail> legendaryList = this._dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Legendary").ToList();
+
+                    foreach(var l in legendaryList)
+                    {
+                        allPokemon.Remove(l.Pokemon);
+                    }
+                }
+            }
+
+            if(onlyLegendaries)
+            {
+                List<Pokemon> legendaryList = new List<Pokemon>();
+                List<PokemonLegendaryDetail> allLegendaries = this._dataService.GetAllPokemonWithLegendaryTypes();
+
+                foreach(var p in allLegendaries)
+                {
+                    if(allPokemon.Exists(x => x.Id == p.PokemonId))
+                    {
+                        legendaryList.Add(p.Pokemon);
+                    }
+                }
+
+                allPokemon = legendaryList;
+            }
+
+            if(selectedForms.Count() != 0)
             {
                 List<Pokemon> altForms = new List<Pokemon>();
 
