@@ -15,5 +15,7 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public string AltFormPokemonId { get; set; }
         public Pokemon AltFormPokemon { get; set; }
+        [Required]
+        public bool IsArchived { get; set; }
     }
 }

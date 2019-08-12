@@ -976,6 +976,42 @@ namespace Pokedex.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("set_legendary_type/{pokemonId}")]
+        public IActionResult PokemonLegendaryDetails(string pokemonId)
+        {
+            PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
+            {
+                AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
+                PokemonId = pokemonId,
+                Pokemon = this._dataService.GetPokemonById(pokemonId),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("set_legendary_type/{pokemonId}")]
+        public IActionResult PokemonLegendaryDetails(PokemonLegendaryViewModel pokemonLegendaryDetails)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
+                {
+                    AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
+                    PokemonId = pokemonLegendaryDetails.PokemonId,
+                    Pokemon = this._dataService.GetPokemonById(pokemonLegendaryDetails.PokemonId),
+                };
+
+                return this.View(model);
+            }
+
+            this._dataService.AddPokemonLegendaryDetails(pokemonLegendaryDetails);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
         public bool CheckIfComplete(string pokemonId)
         {
             return this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&

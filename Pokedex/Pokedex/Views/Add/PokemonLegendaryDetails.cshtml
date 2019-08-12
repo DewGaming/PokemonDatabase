@@ -1,0 +1,30 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonLegendaryViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Set @Model.Pokemon.Name As Legendary</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.PokemonId)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.LegendaryTypeId)
+            @Html.DropDownListFor(x => x.LegendaryTypeId, new SelectList(Model.AllLegendaryTypes, "Id", "Type"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.LegendaryTypeId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

@@ -775,6 +775,7 @@ namespace Pokedex.Controllers
                 AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
                 AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
                 AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
+                AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
             };
 
             DropdownViewModel model = new DropdownViewModel(){

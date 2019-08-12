@@ -1117,6 +1117,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddPokemonLegendaryDetails(PokemonLegendaryDetail pokemonLegendaryDetail)
+        {
+            this._dataContext.PokemonLegendaryDetails.Add(pokemonLegendaryDetail);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddPokemonAbilities(PokemonAbilityDetail abilities)
         {
             this._dataContext.PokemonAbilityDetails.Add(abilities);
