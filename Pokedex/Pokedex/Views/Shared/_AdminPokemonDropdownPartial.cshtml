@@ -86,7 +86,7 @@
                 <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Alternate Forms</a></li>
             }
         }
-        @if(!Model.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if(!Model.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
         {
             <hr class="adminOptionSeparator">
             <span class="adminMenuTitle">Other</span>
