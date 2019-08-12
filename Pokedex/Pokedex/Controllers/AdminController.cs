@@ -80,6 +80,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("legendary_type")]
+        public IActionResult LegendaryTypes()
+        {
+            LegendaryTypeViewModel model = new LegendaryTypeViewModel()
+            {
+                AllLegendaryTypes = this._dataService.GetLegendaryTypesWithArchive(),
+                AllPokemon = this._dataService.GetAllPokemonWithLegendaryTypes(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("form")]
         public IActionResult Forms()
         {

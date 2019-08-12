@@ -587,6 +587,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_legendary_type/{id:int}")]
+        public IActionResult LegendaryType(int id)
+        {
+            LegendaryType model = this._dataService.GetLegendaryType(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_legendary_type/{id:int}")]
+        public IActionResult LegendaryType(LegendaryType legendaryType)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                LegendaryType model = this._dataService.GetLegendaryType(legendaryType.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateLegendaryType(legendaryType);
+
+            return this.RedirectToAction("LegendaryTypes", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_classification/{id:int}")]
         public IActionResult Classification(int id)
         {

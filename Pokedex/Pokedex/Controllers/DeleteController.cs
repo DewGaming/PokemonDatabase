@@ -131,6 +131,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_legendary_type/{id:int}")]
+        public IActionResult LegendaryType(int id)
+        {
+            LegendaryType model = this._dataService.GetLegendaryType(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_legendary_type/{id:int}")]
+        public IActionResult LegendaryType(LegendaryType legendaryType)
+        {
+            this._dataService.DeleteLegendaryType(legendaryType.Id);
+
+            return this.RedirectToAction("LegendaryTypes", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_user/{id:int}")]
         public new IActionResult User(int id)
         {

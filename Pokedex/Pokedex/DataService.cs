@@ -39,6 +39,21 @@ namespace Pokedex
             return this._dataContext.Abilities.OrderBy(x => x.Name).ToList();
         }
 
+        public LegendaryType GetLegendaryType(int id)
+        {
+            return this._dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList().Find(x => x.Id == id);
+        }
+
+        public List<LegendaryType> GetLegendaryTypes()
+        {
+            return this._dataContext.LegendaryTypes.OrderBy(x => x.Type).Where(x => x.IsArchived == false).ToList();
+        }
+
+        public List<LegendaryType> GetLegendaryTypesWithArchive()
+        {
+            return this._dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList();
+        }
+
         public Type GetType(int id)
         {
             return this._dataContext.Types
@@ -560,6 +575,15 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<PokemonLegendaryDetail> GetAllPokemonWithLegendaryTypes()
+        {
+            return this._dataContext.PokemonLegendaryDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.LegendaryType)
+                .Where(x => x.Pokemon.IsComplete == true)
+                .ToList();
+        }
+
         public List<PokemonAbilityDetail> GetAllPokemonWithAbilitiesAndIncomplete()
         {
             return this._dataContext.PokemonAbilityDetails
@@ -1045,6 +1069,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddLegendaryType(LegendaryType legendaryType)
+        {
+            this._dataContext.LegendaryTypes.Add(legendaryType);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
         {
             this._dataContext.ShinyHuntingTechniques.Add(shinyHuntingTechnique);
@@ -1232,6 +1262,19 @@ namespace Pokedex
             this.UpdateUser(user);
         }
 
+        public void UpdateLegendaryType(LegendaryType legendaryType)
+        {
+            this._dataContext.LegendaryTypes.Update(legendaryType);
+            this._dataContext.SaveChanges();
+        }
+
+        public void ArchiveLegendaryType(int id)
+        {
+            LegendaryType legendaryType = this.GetLegendaryType(id);
+            legendaryType.IsArchived = true;
+            this.UpdateLegendaryType(legendaryType);
+        }
+
         public void ArchiveShinyHunt(int id)
         {
             ShinyHunt shinyHunt = this.GetShinyHunt(id);
@@ -1337,6 +1380,13 @@ namespace Pokedex
             this.UpdateClassification(classification);
         }
 
+        public void UnarchiveLegendaryType(int id)
+        {
+            LegendaryType legendaryType = this.GetLegendaryType(id);
+            legendaryType.IsArchived = false;
+            this.UpdateLegendaryType(legendaryType);
+        }
+
         public void UnarchiveShinyHuntingTechnique(int id)
         {
             ShinyHuntingTechnique shinyHuntingTechnique = this.GetShinyHuntingTechnique(id);
@@ -1383,6 +1433,13 @@ namespace Pokedex
         {
             User user = this.GetUserById(id);
             this._dataContext.Users.Remove(user);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteLegendaryType(int id)
+        {
+            LegendaryType legendaryType = this.GetLegendaryType(id);
+            this._dataContext.LegendaryTypes.Remove(legendaryType);
             this._dataContext.SaveChanges();
         }
 

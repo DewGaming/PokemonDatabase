@@ -166,5 +166,24 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
+
+        [HttpGet]
+        [Route("archive_legendary_type/{id:int}")]
+        public IActionResult LegendaryType(int id)
+        {
+            LegendaryType model = this._dataService.GetLegendaryType(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("archive_legendary_type/{id:int}")]
+        public IActionResult LegendaryType(LegendaryType legendaryType)
+        {
+            this._dataService.ArchiveLegendaryType(legendaryType.Id);
+
+            return this.RedirectToAction("LegendaryTypes", "Admin");
+        }
     }
 }

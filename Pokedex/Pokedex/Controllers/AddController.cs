@@ -150,6 +150,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_legendary_type")]
+        public IActionResult LegendaryType()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_legendary_type")]
+        public IActionResult LegendaryType(LegendaryType legendaryType)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddLegendaryType(legendaryType);
+
+            return this.RedirectToAction("LegendaryTypes", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_egg_group")]
         public IActionResult EggGroup()
         {
