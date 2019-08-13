@@ -245,13 +245,31 @@ namespace Pokedex.Controllers
             }
             else
             {
-                if(!selectedLegendaries.Contains("Legendaries"))
+                if(!selectedLegendaries.Contains("Legendary"))
                 {
                     List<PokemonLegendaryDetail> legendaryList = this._dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Legendary").ToList();
 
                     foreach(var l in legendaryList)
                     {
-                        allPokemon.Remove(l.Pokemon);
+                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
+                    }
+                }
+                if(!selectedLegendaries.Contains("Mythical"))
+                {
+                    List<PokemonLegendaryDetail> legendaryList = this._dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Mythical").ToList();
+
+                    foreach(var l in legendaryList)
+                    {
+                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
+                    }
+                }
+                if(!selectedLegendaries.Contains("UltraBeast"))
+                {
+                    List<PokemonLegendaryDetail> legendaryList = this._dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Ultra Beast").ToList();
+
+                    foreach(var l in legendaryList)
+                    {
+                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
                     }
                 }
             }
