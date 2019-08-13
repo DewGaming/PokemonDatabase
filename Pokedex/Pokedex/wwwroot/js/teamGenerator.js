@@ -52,34 +52,7 @@ var pokemonList, fillGeneratedTable = function() {
     {
         $('.pokemon' + (i + 1)).append('<a href="/' + originalNames[i].name.replace(": ", "_").replace(' ', '_').toLowerCase() + '/" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
     }
-};
-
-$(function() {
-    $(".altFormBoolCheckbox").hide();
-});
-
-$('.alternateFormCheckbox').on('click', function() {
-    var boxChecked = false;
-    $('.alternateFormCheckbox input').each(function() {
-        if ($(this).is(':checked'))
-        {
-            boxChecked = true;
-            return false;
-        }
-    });
-
-    if(!boxChecked && $('.altFormBoolCheckbox').is(':visible'))
-    {
-        $(".altFormBoolCheckbox").hide();
-        $("#altFormBool").prop('checked', false);
-    }
-    else
-    {
-        $(".altFormBoolCheckbox").show();
-    }
-});
-
-$('.legendaryCheckbox').on('click', function() {
+}, checkLegendaryChecks = function() {
     var boxChecked = false;
     $('.legendaryCheckbox input').each(function() {
         if ($(this).is(':checked'))
@@ -98,6 +71,38 @@ $('.legendaryCheckbox').on('click', function() {
     {
         $(".legendaryBoolCheckbox").show();
     }
+}, checkAltFormChecks = function() {
+    var boxChecked = false;
+    $('.alternateFormCheckbox input').each(function() {
+        if ($(this).is(':checked'))
+        {
+            boxChecked = true;
+            return false;
+        }
+    });
+
+    if(!boxChecked && $('.altFormBoolCheckbox').is(':visible'))
+    {
+        $(".altFormBoolCheckbox").hide();
+        $("#altFormBool").prop('checked', false);
+    }
+    else
+    {
+        $(".altFormBoolCheckbox").show();
+    }
+};
+
+$(function() {
+    checkAltFormChecks();
+    checkLegendaryChecks();
+});
+
+$('.alternateFormCheckbox').on('click', function() {
+    checkAltFormChecks();
+});
+
+$('.legendaryCheckbox').on('click', function() {
+    checkLegendaryChecks();
 });
 
 $(window).on('resize', function() {
