@@ -36,6 +36,7 @@
             min-width: 350px;
         }
     </style>
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.FirstOrDefault().AppConfig.WebUrl + "/images/pokemon/" + @Model.FirstOrDefault().Pokemon.Id + ".png")" />
 }
 
 @section scripts
@@ -47,19 +48,20 @@
 <div class="tab-list">
     @foreach(var button in Model)
     {
+        string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
         @if(button.Pokemon.Id.IndexOf('-') == -1)
         {
-            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")')">@button.Pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
         else
         {
-            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")')">@button.Pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
     }
 </div>
 @foreach(var item in Model)
 {
-    <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("(", "").Replace(")", "").Replace(" ", "")">
+    <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")">
         <div class="pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
             <div class="typing">

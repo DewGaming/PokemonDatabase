@@ -1,4 +1,4 @@
-function openPage(evt, pageName, parentName) {
+function openPage(evt, pageName, parentName, iconLink) {
   $('.tabcontent').each(function() {
     $(this).removeClass('active');
   })
@@ -12,5 +12,9 @@ function openPage(evt, pageName, parentName) {
   if ('#' + parentName != null)
   {
     $('#' + parentName).addClass('active');
+  }
+  if (iconLink != null)
+  {
+    $('.tabIcon').attr("href", iconLink);
   }
 }
