@@ -110,6 +110,10 @@ namespace Pokedex.Controllers
 
                 if (model.Count() == 1 || pokemonSearched != null)
                 {
+                    if (pokemonSearched == null)
+                    {
+                        pokemonSearched = model[0].Pokemon;
+                    }
                     return this.RedirectToAction("Pokemon", "Home", new { Name = pokemonSearched.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
                 else if (model.Count() == 0)
