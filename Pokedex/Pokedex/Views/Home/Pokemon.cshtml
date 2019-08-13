@@ -76,7 +76,14 @@
                 <tbody>
                     <tr>
                         <th>Pokedex Number</th>
-                        <td>@('#')@item.Pokemon.Id.PadLeft(3, '0')</td>
+                        @if(item.Pokemon.Id.Contains('-'))
+                        {
+                            <td>@('#')@item.Pokemon.Id.Substring(0, item.Pokemon.Id.IndexOf('-')).PadLeft(3, '0')</td>
+                        }
+                        else
+                        {
+                            <td>@('#')@item.Pokemon.Id.PadLeft(3, '0')</td>
+                        }
                     </tr>
                     <tr>
                         <th>Classification</th>
