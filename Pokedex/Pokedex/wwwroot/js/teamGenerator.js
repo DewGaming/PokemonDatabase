@@ -54,6 +54,52 @@ var pokemonList, fillGeneratedTable = function() {
     }
 };
 
+$(function() {
+    $(".altFormBoolCheckbox").hide();
+});
+
+$('.alternateFormCheckbox').on('click', function() {
+    var boxChecked = false;
+    $('.alternateFormCheckbox input').each(function() {
+        if ($(this).is(':checked'))
+        {
+            boxChecked = true;
+            return false;
+        }
+    });
+
+    if(!boxChecked && $('.altFormBoolCheckbox').is(':visible'))
+    {
+        $(".altFormBoolCheckbox").hide();
+        $("#altFormBool").prop('checked', false);
+    }
+    else
+    {
+        $(".altFormBoolCheckbox").show();
+    }
+});
+
+$('.legendaryCheckbox').on('click', function() {
+    var boxChecked = false;
+    $('.legendaryCheckbox input').each(function() {
+        if ($(this).is(':checked'))
+        {
+            boxChecked = true;
+            return false;
+        }
+    });
+
+    if(!boxChecked && $('.legendaryBoolCheckbox').is(':visible'))
+    {
+        $(".legendaryBoolCheckbox").hide();
+        $("#legendaryBool").prop('checked', false);
+    }
+    else
+    {
+        $(".legendaryBoolCheckbox").show();
+    }
+});
+
 $(window).on('resize', function() {
     if(
         ($('.teamGenerator tr').length == 2 && $(window).width() < 1000) ||

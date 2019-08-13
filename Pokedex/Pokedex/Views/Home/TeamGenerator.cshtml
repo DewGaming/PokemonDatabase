@@ -4,84 +4,98 @@
     ViewBag.Title = "Team Generator";
 }
 
+@section styles
+{
+    <style>
+        img {
+            max-width: 300px;
+            max-height: 300px;
+        }
+    </style>
+}
+
 @section scripts
 {
     <script src="/js/teamGenerator.js"></script>
 }
 
 <div class="btn-group teamGenerator">
-    <span><button class="btn btn-primary generatorDropdown">Generator Options</button></span>
-    <ul class="dropdown-menu">
-        <span class="generationOptionTitle">Selected Generations</span>
-        @foreach(var gen in Model)
-        {
-            <li class="dropdown-item generatorOption generationCheckbox">
-                <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked />
-                <label for="gen@(gen.Id)" class="generatorOptionTitle">Generation @gen.Id</label>
+    <span>
+        <button class="btn btn-primary generatorDropdown">Generator Options</button>
+    </span>
+    <ul class="generatorDropdownMenu dropdown-menu">
+        <section class="generatorSection">
+            <span class="generationOptionTitle">Generations</span>
+            @foreach(var gen in Model)
+            {
+                <li class="dropdown-item generatorOption generationCheckbox">
+                    <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked="checked" />
+                    <label for="gen@(gen.Id)" class="generatorOptionTitle">Generation @gen.Id</label>
+                </li>
+            }
+            <span class="generationOptionTitle">Evolutions</span>
+            <li class="dropdown-item generatorOption evolutionRadio">
+                <input id="allEvolutions" type="radio" name="evolutionSelection" value="allEvolutions" checked="checked" />
+                <label for="allEvolutions" class="generatorRadio">All Evolutions</label>
             </li>
-        }
-        <hr class="generationOptionSeparator">
-        <span class="generationOptionTitle">Selected Evolutions</span>
-        <li class="dropdown-item generatorOption evolutionRadio">
-            <input id="allEvolutions" type="radio" name="evolutionSelection" value="allEvolutions" checked />
-            <label for="allEvolutions" class="generatorRadio">All Evolutions</label>
-        </li>
-        <li class="dropdown-item generatorOption evolutionRadio">
-            <input id="stage1Pokemon" type="radio" name="evolutionSelection" value="stage1Pokemon" />
-            <label for="stage1Pokemon" class="generatorRadio">Pre-Evolved Pokemon</label>
-        </li>
-        <li class="dropdown-item generatorOption evolutionRadio">
-            <input id="stage2Pokemon" type="radio" name="evolutionSelection" value="middleEvolution" />
-            <label for="stage2Pokemon" class="generatorRadio">Middle-Stage Evolution Pokemon</label>
-        </li>
-        <li class="dropdown-item generatorOption evolutionRadio">
-            <input id="onlyFullyEvolved" type="radio" name="evolutionSelection" value="onlyFullyEvolved" />
-            <label for="onlyFullyEvolved" class="generatorRadio">Fully Evolved Pokemon</label>
-        </li>
-        <hr class="generationOptionSeparator">
-        <span class="generationOptionTitle">Selected Legendaries</span>
-        <li class="dropdown-item generatorOption legendaryCheckbox">
-            <input id="Legendary" type="checkbox" value="Legendary" checked />
-            <label for="Legendary" class="generatorOptionTitle">Legendaries</label>
-        </li>
-        <li class="dropdown-item generatorOption legendaryCheckbox">
-            <input id="Mythical" type="checkbox" value="Mythical" checked />
-            <label for="Mythical" class="generatorOptionTitle">Mythicals</label>
-        </li>
-        <li class="dropdown-item generatorOption legendaryCheckbox">
-            <input id="UltraBeast" type="checkbox" value="UltraBeast" checked />
-            <label for="UltraBeast" class="generatorOptionTitle">Ultra Beasts</label>
-        </li>
-        <hr class="generationOptionSeparator">
-        <span class="generationOptionTitle">Selected Alternate Forms</span>
-        <li class="dropdown-item generatorOption alternateFormCheckbox">
-            <input id="Mega" type="checkbox" value="Mega" />
-            <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
-        </li>
-        <li class="dropdown-item generatorOption alternateFormCheckbox">
-            <input id="Alolan" type="checkbox" value="Alolan" />
-            <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
-        </li>
-        <!--
-        <li class="dropdown-item generatorOption alternateFormCheckbox">
-            <input id="Galarian" type="checkbox" value="Galarian" />
-            <label for="Galarian" class="generatorOptionTitle">Galarian Forms</label>
-        </li>
-        -->
-        <li class="dropdown-item generatorOption alternateFormCheckbox">
-            <input id="Other" type="checkbox" value="Other" />
-            <label for="Other" class="generatorOptionTitle">Other Forms</label>
-        </li>
-        <hr class="generationOptionSeparator">
-        <span class="generationOptionTitle">Other Options</span>
-        <li class="dropdown-item generatorOption legendaryBoolCheckbox">
-            <input id="legendaryBool" type="checkbox" value="legendaryBool" />
-            <label for="legendaryBool" class="generatorOptionTitle">Only Show Legendaries</label>
-        </li>
-        <li class="dropdown-item generatorOption altFormBoolCheckbox">
-            <input id="altFormBool" type="checkbox" value="altFormBool" />
-            <label for="altFormBool" class="generatorOptionTitle">Only Show Alternate Forms</label>
-        </li>
+            <li class="dropdown-item generatorOption evolutionRadio">
+                <input id="stage1Pokemon" type="radio" name="evolutionSelection" value="stage1Pokemon" />
+                <label for="stage1Pokemon" class="generatorRadio">Pre-Evolved Pokemon</label>
+            </li>
+            <li class="dropdown-item generatorOption evolutionRadio">
+                <input id="stage2Pokemon" type="radio" name="evolutionSelection" value="middleEvolution" />
+                <label for="stage2Pokemon" class="generatorRadio">Middle-Stage Evolution Pokemon</label>
+            </li>
+            <li class="dropdown-item generatorOption evolutionRadio">
+                <input id="onlyFullyEvolved" type="radio" name="evolutionSelection" value="onlyFullyEvolved" />
+                <label for="onlyFullyEvolved" class="generatorRadio">Fully Evolved Pokemon</label>
+            </li>
+        </section>
+        <section class="generatorSection">
+            <span class="generationOptionTitle">Legendary Categories</span>
+            <li class="dropdown-item generatorOption legendaryCheckbox">
+                <input id="Legendary" type="checkbox" value="Legendary" checked="checked" />
+                <label for="Legendary" class="generatorOptionTitle">Legendaries</label>
+            </li>
+            <li class="dropdown-item generatorOption legendaryCheckbox">
+                <input id="Mythical" type="checkbox" value="Mythical" checked="checked" />
+                <label for="Mythical" class="generatorOptionTitle">Mythicals</label>
+            </li>
+            <li class="dropdown-item generatorOption legendaryCheckbox">
+                <input id="UltraBeast" type="checkbox" value="UltraBeast" checked="checked" />
+                <label for="UltraBeast" class="generatorOptionTitle">Ultra Beasts</label>
+            </li>
+            <span class="generationOptionTitle">Alternate Forms</span>
+            <li class="dropdown-item generatorOption alternateFormCheckbox">
+                <input id="Mega" type="checkbox" value="Mega" />
+                <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
+            </li>
+            <li class="dropdown-item generatorOption alternateFormCheckbox">
+                <input id="Alolan" type="checkbox" value="Alolan" />
+                <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
+            </li>
+            <!--
+            <li class="dropdown-item generatorOption alternateFormCheckbox">
+                <input id="Galarian" type="checkbox" value="Galarian" />
+                <label for="Galarian" class="generatorOptionTitle">Galarian Forms</label>
+            </li>
+            -->
+            <li class="dropdown-item generatorOption alternateFormCheckbox">
+                <input id="Other" type="checkbox" value="Other" />
+                <label for="Other" class="generatorOptionTitle">Other Forms</label>
+            </li>
+        </section>
+        <section class="generatorSection">
+            <span class="generationOptionTitle">Other Options</span>
+            <li class="dropdown-item generatorOption legendaryBoolCheckbox">
+                <input id="legendaryBool" type="checkbox" value="legendaryBool" />
+                <label for="legendaryBool" class="generatorOptionTitle">Only Show Legendaries</label>
+            </li>
+            <li class="dropdown-item generatorOption altFormBoolCheckbox">
+                <input id="altFormBool" type="checkbox" value="altFormBool" />
+                <label for="altFormBool" class="generatorOptionTitle">Only Show Alternate Forms</label>
+            </li>
+        </section>
     </ul>
 </div>
 
