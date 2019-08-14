@@ -28,7 +28,7 @@
             <span class="generationOptionTitle">Generations</span>
             @foreach(var gen in Model)
             {
-                <li class="dropdown-item generatorOption generationCheckbox">
+                <li class="dropdown-item generatorOption generationCheckbox gen@(gen.Id)Checkbox">
                     <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked="checked" />
                     <label for="gen@(gen.Id)" class="generatorOptionTitle">Generation @gen.Id</label>
                 </li>
@@ -61,7 +61,7 @@
                 <input id="Mythical" type="checkbox" value="Mythical" checked="checked" />
                 <label for="Mythical" class="generatorOptionTitle">Mythicals</label>
             </li>
-            <li class="dropdown-item generatorOption legendaryCheckbox">
+            <li class="dropdown-item generatorOption legendaryCheckbox ultraBeastCheckbox">
                 <input id="UltraBeast" type="checkbox" value="UltraBeast" checked="checked" />
                 <label for="UltraBeast" class="generatorOptionTitle">Ultra Beasts</label>
             </li>
@@ -70,16 +70,14 @@
                 <input id="Mega" type="checkbox" value="Mega" />
                 <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
             </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox">
+            <li class="dropdown-item generatorOption alternateFormCheckbox alolanFormCheckbox">
                 <input id="Alolan" type="checkbox" value="Alolan" />
                 <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
             </li>
-            <!--
-            <li class="dropdown-item generatorOption alternateFormCheckbox">
+            <li class="dropdown-item generatorOption alternateFormCheckbox galarianFormCheckbox">
                 <input id="Galarian" type="checkbox" value="Galarian" />
                 <label for="Galarian" class="generatorOptionTitle">Galarian Forms</label>
             </li>
-            -->
             <li class="dropdown-item generatorOption alternateFormCheckbox">
                 <input id="Other" type="checkbox" value="Other" />
                 <label for="Other" class="generatorOptionTitle">Other Forms</label>

@@ -121,6 +121,69 @@ var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function
     }
 
     return boxChecked;
+}, checkUltraBeasts = function() {
+    var boxChecked = false;
+    if ($('#gen7').is(':checked'))
+    {
+        boxChecked = true;
+    }
+
+    if(!boxChecked)
+    {
+        if ($('.ultraBeastCheckbox').is(':visible'))
+        {
+            $(".ultraBeastCheckbox").hide();
+            $("#UltraBeast").prop('checked', false);
+        }
+    }
+    else
+    {
+        $(".ultraBeastCheckbox").show();
+    }
+
+    return boxChecked;
+}, checkAlolanForms = function() {
+    var boxChecked = false;
+    if ($('#gen1').is(':checked'))
+    {
+        boxChecked = true;
+    }
+
+    if(!boxChecked)
+    {
+        if ($('.alolanFormCheckbox').is(':visible'))
+        {
+            $(".alolanFormCheckbox").hide();
+            $("#Alolan").prop('checked', false);
+        }
+    }
+    else
+    {
+        $(".alolanFormCheckbox").show();
+    }
+
+    return boxChecked;
+}, checkGalarianForms = function() {
+    var boxChecked = false;
+    if ($('#gen8').is(':checked'))
+    {
+        boxChecked = true;
+    }
+
+    if(!boxChecked)
+    {
+        if ($('.galarianFormCheckbox').is(':visible'))
+        {
+            $(".galarianFormCheckbox").hide();
+            $("#Galarian").prop('checked', false);
+        }
+    }
+    else
+    {
+        $(".galarianFormCheckbox").show();
+    }
+
+    return boxChecked;
 }, checkOtherOptions = function() {
     if (altCheck || legendCheck || megaCheck)
     {
@@ -130,12 +193,28 @@ var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function
     {
         $('.otherOptions').hide();
     }
+}, generatorMenuCheck = function() {
+    if($(window).width() < 768)
+    {
+        $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
+    }
+    else
+    {
+        $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
+    }
 };
+
+$(function() {
+    generatorMenuCheck();
+});
 
 $('.generatorDropdown').on('mouseover', function() {
     altCheck = checkAltFormChecks();
     legendCheck = checkLegendaryChecks();
     megaCheck = checkMegaCheck();
+    checkAlolanForms();
+    checkUltraBeasts();
+    checkGalarianForms();
     checkOtherOptions();
 });
 
@@ -154,15 +233,26 @@ $('.megaCheckbox').on('click', function() {
     checkOtherOptions();
 });
 
+$('.gen1Checkbox').on('click', function() {
+    checkAlolanForms();
+    altCheck = checkAltFormChecks();
+    checkOtherOptions();
+});
+
+$('.gen7Checkbox').on('click', function() {
+    checkUltraBeasts();
+    legendCheck = checkLegendaryChecks();
+    checkOtherOptions();
+});
+
+$('.gen8Checkbox').on('click', function() {
+    checkGalarianForms();
+    altCheck = checkAltFormChecks();
+    checkOtherOptions();
+});
+
 $(window).on('resize', function() {
-    if($(window).width() < 768)
-    {
-        $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
-    }
-    else
-    {
-        $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
-    }
+    generatorMenuCheck();
 
     if(
         ($('.teamGenerator tr').length == 2 && $(window).width() < 1000) ||
