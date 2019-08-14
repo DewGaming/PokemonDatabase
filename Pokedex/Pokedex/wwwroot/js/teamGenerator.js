@@ -1,4 +1,4 @@
-var pokemonList, fillGeneratedTable = function() {
+var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function() {
     $('.teamGeneratorTable tbody').remove();
     $('.teamGeneratorTable').append($('<tbody>'));
 
@@ -74,6 +74,8 @@ var pokemonList, fillGeneratedTable = function() {
     {
         $(".legendaryBoolCheckbox").show();
     }
+
+    return boxChecked;
 }, checkAltFormChecks = function() {
     var boxChecked = false;
     $('.alternateFormCheckbox input').each(function() {
@@ -96,6 +98,8 @@ var pokemonList, fillGeneratedTable = function() {
     {
         $(".altFormBoolCheckbox").show();
     }
+
+    return boxChecked;
 }, checkMegaCheck = function() {
     var boxChecked = false;
     if ($('#Mega').is(':checked'))
@@ -115,24 +119,39 @@ var pokemonList, fillGeneratedTable = function() {
     {
         $(".multipleMegaBoolCheckbox").show();
     }
+
+    return boxChecked;
+}, checkOtherOptions = function() {
+    if (altCheck || legendCheck || megaCheck)
+    {
+        $('.otherOptions').show();
+    }
+    else
+    {
+        $('.otherOptions').hide();
+    }
 };
 
 $('.generatorDropdown').on('mouseover', function() {
-    checkAltFormChecks();
-    checkLegendaryChecks();
-    checkMegaCheck();
+    altCheck = checkAltFormChecks();
+    legendCheck = checkLegendaryChecks();
+    megaCheck = checkMegaCheck();
+    checkOtherOptions();
 });
 
 $('.alternateFormCheckbox').on('click', function() {
-    checkAltFormChecks();
+    altCheck = checkAltFormChecks();
+    checkOtherOptions();
 });
 
 $('.legendaryCheckbox').on('click', function() {
-    checkLegendaryChecks();
+    legendCheck = checkLegendaryChecks();
+    checkOtherOptions();
 });
 
 $('.megaCheckbox').on('click', function() {
-    checkMegaCheck();
+    megaCheck = checkMegaCheck();
+    checkOtherOptions();
 });
 
 $(window).on('resize', function() {
