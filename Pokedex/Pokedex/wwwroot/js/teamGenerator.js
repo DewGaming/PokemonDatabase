@@ -48,7 +48,7 @@ var pokemonList, fillGeneratedTable = function() {
         }
     }
 
-    for (var i = 0; i < 6; i++)
+    for (var i = 0; i < originalNames.length; i++)
     {
         $('.pokemon' + (i + 1)).append('<a href="/' + originalNames[i].name.replace(": ", "_").replace(' ', '_').toLowerCase() + '/" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
     }
@@ -62,10 +62,13 @@ var pokemonList, fillGeneratedTable = function() {
         }
     });
 
-    if(!boxChecked && $('.legendaryBoolCheckbox').is(':visible'))
+    if(!boxChecked)
     {
-        $(".legendaryBoolCheckbox").hide();
-        $("#legendaryBool").prop('checked', false);
+        if($('.legendaryBoolCheckbox').is(':visible'))
+        {
+            $(".legendaryBoolCheckbox").hide();
+            $("#legendaryBool").prop('checked', false);
+        }
     }
     else
     {
@@ -81,20 +84,43 @@ var pokemonList, fillGeneratedTable = function() {
         }
     });
 
-    if(!boxChecked && $('.altFormBoolCheckbox').is(':visible'))
+    if(!boxChecked)
     {
-        $(".altFormBoolCheckbox").hide();
-        $("#altFormBool").prop('checked', false);
+        if ($('.altFormBoolCheckbox').is(':visible'))
+        {
+            $(".altFormBoolCheckbox").hide();
+            $("#altFormBool").prop('checked', false);
+        }
     }
     else
     {
         $(".altFormBoolCheckbox").show();
     }
+}, checkMegaCheck = function() {
+    var boxChecked = false;
+    if ($('#Mega').is(':checked'))
+    {
+        boxChecked = true;
+    }
+
+    if(!boxChecked)
+    {
+        if ($('.multipleMegaBoolCheckbox').is(':visible'))
+        {
+            $(".multipleMegaBoolCheckbox").hide();
+            $("#multipleMegaBool").prop('checked', false);
+        }
+    }
+    else
+    {
+        $(".multipleMegaBoolCheckbox").show();
+    }
 };
 
-$(function() {
+$('.generatorDropdown').on('mouseover', function() {
     checkAltFormChecks();
     checkLegendaryChecks();
+    checkMegaCheck();
 });
 
 $('.alternateFormCheckbox').on('click', function() {
@@ -103,6 +129,10 @@ $('.alternateFormCheckbox').on('click', function() {
 
 $('.legendaryCheckbox').on('click', function() {
     checkLegendaryChecks();
+});
+
+$('.megaCheckbox').on('click', function() {
+    checkMegaCheck();
 });
 
 $(window).on('resize', function() {
@@ -146,7 +176,7 @@ $('.generatorButton').on('click', function() {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked") }
+        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked") }
     })
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;

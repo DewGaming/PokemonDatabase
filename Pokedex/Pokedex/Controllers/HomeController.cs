@@ -171,7 +171,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms)
+        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas)
         {
             List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
             foreach(var item in selectedGens)
@@ -427,10 +427,22 @@ namespace Pokedex.Controllers
 
             if(allPokemon.Count() > 0)
             {
+                List<Pokemon> megaList = new List<Pokemon>();
+                List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
+                foreach(var p in altFormList.Where(x => x.Form.Name == "Mega Evolution"
+                                                     || x.Form.Name == "Mega X Evolution"
+                                                     || x.Form.Name == "Mega Y Evolution").ToList())
+                {
+                    if(allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
+                    {
+                        megaList.Add(p.AltFormPokemon);
+                    }
+                }
+                
                 allPokemon = this.RemoveExtraPokemonForms(allPokemon);
                 for (var i = 0; i < 6; i++)
                 {
-                    if (pokemonList.Count() == allPokemon.Count())
+                    if (pokemonList.Count() >= allPokemon.Count())
                     {
                         break;
                     }
@@ -439,6 +451,17 @@ namespace Pokedex.Controllers
                     while (pokemonList.Contains(pokemon))
                     {
                         pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                    }
+
+                    if (megaList.Exists(x => x.Id == pokemon.Id) && !multipleMegas)
+                    {
+                        foreach(var p in megaList)
+                        {
+                            if (allPokemon.Exists(x => x.Id == p.Id))
+                            {
+                                allPokemon.Remove(allPokemon.Find(x => x.Id == p.Id));
+                            }
+                        }
                     }
 
                     pokemonList.Add(pokemon);
