@@ -155,6 +155,15 @@ $('.megaCheckbox').on('click', function() {
 });
 
 $(window).on('resize', function() {
+    if($(window).width() < 768)
+    {
+        $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
+    }
+    else
+    {
+        $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
+    }
+
     if(
         ($('.teamGenerator tr').length == 2 && $(window).width() < 1000) ||
         ($('.teamGenerator tr').length == 3 && $(window).width() >= 1000) ||
