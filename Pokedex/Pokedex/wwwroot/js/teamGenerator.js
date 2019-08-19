@@ -91,12 +91,15 @@ var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function
         if ($('.altFormBoolCheckbox').is(':visible'))
         {
             $(".altFormBoolCheckbox").hide();
+            $(".oneAltFormBoolCheckbox").hide();
+            $("#oneAltFormBool").prop('checked', false);
             $("#altFormBool").prop('checked', false);
         }
     }
     else
     {
         $(".altFormBoolCheckbox").show();
+        $(".oneAltFormBoolCheckbox").show();
     }
 
     return boxChecked;
@@ -294,7 +297,7 @@ $('.generatorButton').on('click', function() {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked") }
+        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'oneAltForm':  $("#oneAltFormBool").is(":checked") }
     })
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;

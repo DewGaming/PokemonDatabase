@@ -171,7 +171,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas)
+        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm)
         {
             List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
             foreach(var item in selectedGens)
@@ -456,6 +456,21 @@ namespace Pokedex.Controllers
                     if (megaList.Exists(x => x.Id == pokemon.Id) && !multipleMegas)
                     {
                         foreach(var p in megaList)
+                        {
+                            if (allPokemon.Exists(x => x.Id == p.Id))
+                            {
+                                allPokemon.Remove(allPokemon.Find(x => x.Id == p.Id));
+                            }
+                        }
+                    }
+
+                    if (oneAltForm && pokemon.Id.Contains('-'))
+                    {
+                        List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')));
+
+                        altForms.Remove(altForms.Find(x => x.Id == pokemon.Id));
+
+                        foreach(var p in altForms)
                         {
                             if (allPokemon.Exists(x => x.Id == p.Id))
                             {
