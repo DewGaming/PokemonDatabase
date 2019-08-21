@@ -85,12 +85,12 @@
             {
                 <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Alternate Forms</a></li>
             }
-        }
-        @if(!Model.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
-        {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Other</span>
-            <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
+            @if(!Model.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+            {
+                <hr class="adminOptionSeparator">
+                <span class="adminMenuTitle">Other</span>
+                <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
+            }
         }
     </ul>
 </div>
