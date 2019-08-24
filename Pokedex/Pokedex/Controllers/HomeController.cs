@@ -585,7 +585,7 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("{Name}")]
+        [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
             if (name.Contains("type_null"))
