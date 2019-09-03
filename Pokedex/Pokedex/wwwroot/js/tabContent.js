@@ -19,3 +19,90 @@ function openPage(evt, pageName, parentName, iconLink, pokemonName) {
     $('.pageTitle').text(pokemonName + " | Pokemon Database");
   }
 }
+
+function openGeneration(generationId) {
+  $('.tab').each(function() {
+    $(this).removeClass('active');
+  });
+
+  $('.pokemonList').removeClass('active');
+  $('.pokemonList > .grid-container').empty();
+
+  $.ajax({
+    url: '/get-pokemon-by-generation/',
+    method: 'POST',
+    data: { 'generationId': generationId }
+  })
+  .done(function(data) {
+    pokemonList = data;
+    for(var i = 0; i < data[0].length; i++)
+    {
+      var pokemonName = data[0][i].pokemon.name.replace('_', ' ');
+
+      pokemonDiv = $('<div>');
+      pokemonDiv.addClass(data[0][i].pokemon.name);
+
+      pokemonLink = $('<a>');
+      pokemonLink.attr('href', data[1][i])
+
+      pokemonImage = $('<img>');
+      pokemonImage.addClass('pokemonlistPicture')
+                     .attr('title', pokemonName)
+                     .attr('src', data[2][i]);
+
+      pokemonLink.append(pokemonImage);
+      pokemonDiv.append(pokemonLink);
+
+      pokemonDescription = $('<div>');
+      pokemonDescription.addClass('description');
+
+      pokemonNameSpan = $('<span>');
+      pokemonNameSpan.addClass('pokemonName')
+                     .text('#' + data[0][i].pokemon.id.slice(-3) + ' ' + pokemonName);
+
+      pokemonTyping = $('<div>');
+      pokemonTyping.addClass('typing');
+
+      pokemonPrimaryType = $('<div>');
+      pokemonPrimaryType.addClass('pokemon-type type-icon type-' + data[0][i].primaryType.name.toLowerCase())
+                        .text(data[0][i].primaryType.name)
+
+      pokemonTyping.append(pokemonPrimaryType);
+
+      if(data[0][i].secondaryType != null)
+      {
+        pokemonSeconaryType = $('<div>');
+        pokemonSeconaryType.addClass('pokemon-type type-icon type-' + data[0][i].secondaryType.name.toLowerCase())
+                          .text(data[0][i].secondaryType.name)
+
+        pokemonTyping.append(pokemonSeconaryType);
+      }
+
+      pokemonDescription.append(pokemonNameSpan);
+      pokemonDescription.append(pokemonTyping);
+
+      pokemonDiv.append(pokemonDescription);
+
+      $('.pokemonList > .grid-container').append(pokemonDiv);
+    }
+
+    $('.tab#Generation' + generationId).addClass('active');    
+    $('.pokemonList').addClass('active');
+  })
+  .fail( function() {
+    alert("Failed To Get Pokemon Table!");
+  });
+  
+  //<div class="@item.Pokemon.Name">
+  //    <div>
+  //        <div class="typing">
+  //            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+  //            @if(@item.SecondaryType != null)
+  //            {
+  //                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+  //            }
+  //        </div>
+  //    </div>
+  //</div>
+
+}
