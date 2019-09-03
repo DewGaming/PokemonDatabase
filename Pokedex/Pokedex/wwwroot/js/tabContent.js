@@ -1,4 +1,4 @@
-function openPage(evt, pageName, parentName, iconLink) {
+function openPage(evt, pageName, parentName, iconLink, pokemonName) {
   $('.tabcontent').each(function() {
     $(this).removeClass('active');
   })
@@ -16,5 +16,6 @@ function openPage(evt, pageName, parentName, iconLink) {
   if (iconLink != null)
   {
     $('.tabIcon').attr("href", iconLink);
+    $('.pageTitle').text(pokemonName + " | Pokemon Database");
   }
 }

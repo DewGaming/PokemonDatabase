@@ -51,11 +51,11 @@
         string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
         @if(button.Pokemon.Id.IndexOf('-') == -1)
         {
-            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink')">@button.Pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
         else
         {
-            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink')">@button.Pokemon.Name.Replace('_', ' ')</button>
+            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')')">@button.Pokemon.Name.Replace('_', ' ')</button>
         }
     }
 </div>
