@@ -166,27 +166,6 @@ var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function
     }
 
     return boxChecked;
-}, checkGalarianForms = function() {
-    var boxChecked = false;
-    if ($('#gen8').is(':checked'))
-    {
-        boxChecked = true;
-    }
-
-    if(!boxChecked)
-    {
-        if ($('.galarianFormCheckbox').is(':visible'))
-        {
-            $(".galarianFormCheckbox").hide();
-            $("#Galarian").prop('checked', false);
-        }
-    }
-    else
-    {
-        $(".galarianFormCheckbox").show();
-    }
-
-    return boxChecked;
 }, checkOtherOptions = function() {
     if (altCheck || legendCheck || megaCheck)
     {
@@ -217,7 +196,6 @@ $('.generatorDropdown').on('mouseover', function() {
     megaCheck = checkMegaCheck();
     checkAlolanForms();
     checkUltraBeasts();
-    checkGalarianForms();
     checkOtherOptions();
 });
 
@@ -245,12 +223,6 @@ $('.gen1Checkbox').on('click', function() {
 $('.gen7Checkbox').on('click', function() {
     checkUltraBeasts();
     legendCheck = checkLegendaryChecks();
-    checkOtherOptions();
-});
-
-$('.gen8Checkbox').on('click', function() {
-    checkGalarianForms();
-    altCheck = checkAltFormChecks();
     checkOtherOptions();
 });
 
