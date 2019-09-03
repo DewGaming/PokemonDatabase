@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+
 using Pokedex.DataAccess.Models;
+
 using Pokedex.Models;
 
 namespace Pokedex.Controllers
@@ -167,6 +171,27 @@ namespace Pokedex.Controllers
             }
 
             return this.View(model);
+        }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-by-generation")]
+        public ArrayList GetPokemonByGeneration(string generationId)
+        {
+            ArrayList model = new ArrayList();
+            List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypes().Where(x => x.Pokemon.GenerationId == generationId || x.Pokemon.GenerationId.Contains(generationId + '-')).ToList();
+            List<string> pokemonURLs = new List<string>();
+            List<string> pokemonPictureURLs = new List<string>();
+            foreach (var p in pokemonList)
+            {
+                pokemonURLs.Add(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }));
+                pokemonPictureURLs.Add(this.Url.Content(this._appConfig.WebUrl + "/images/pokemon/" + @p.PokemonId + ".png"));
+            }
+
+            model.Add(pokemonList);
+            model.Add(pokemonURLs);
+            model.Add(pokemonPictureURLs);
+
+            return model;
         }
 
         [AllowAnonymous]
