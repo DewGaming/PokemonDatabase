@@ -1,0 +1,29 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Suggestion>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="suggestionTable">
+    @if(Model.ToList().Count() > 0)
+    {
+        <table class="table">
+            <tr>
+                <th scope="col">Suggestion</th>
+                <th scope="col">Suggested By</th>
+                <th scope="col">Completed</th>
+            </tr>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Commentor</td>
+                    <td>@(item.IsCompleted ? "True" : "False")</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div class="noUsers">There are no suggestions at all!</div>
+    }
+</div>

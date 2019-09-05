@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,22 @@ namespace Pokedex.Controllers
             List<User> model = this._dataService.GetUsers();
 
             return this.View(model);
+        }
+
+        [Route("incomplete-suggestions")]
+        public IActionResult IncompleteSuggestions()
+        {
+            List<Suggestion> model = this._dataService.GetSuggestions().Where(x => !x.IsCompleted).ToList();
+
+            return this.View("Suggestions", model);
+        }
+
+        [Route("completed-suggestions")]
+        public IActionResult CompletedSuggestions()
+        {
+            List<Suggestion> model = this._dataService.GetSuggestions().Where(x => x.IsCompleted).ToList();
+
+            return this.View("Suggestions", model);
         }
     }
 }

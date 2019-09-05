@@ -1045,6 +1045,17 @@ namespace Pokedex
             return this._dataContext.Users.ToList();
         }
 
+        public List<Suggestion> GetSuggestions()
+        {
+            return this._dataContext.Suggestions.ToList();
+        }
+
+        public void AddSuggestion(Suggestion suggestion)
+        {
+            this._dataContext.Suggestions.Add(suggestion);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddUser(User user)
         {
             this._dataContext.Users.Add(user);
@@ -1162,6 +1173,12 @@ namespace Pokedex
         public void UpdateUser(User user)
         {
             this._dataContext.Users.Update(user);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateSuggestion(Suggestion suggestion)
+        {
+            this._dataContext.Suggestions.Update(suggestion);
             this._dataContext.SaveChanges();
         }
 

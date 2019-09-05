@@ -235,10 +235,37 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("about")]
-        public IActionResult About()
+        [HttpGet]
+        [Route("suggestion")]
+        public IActionResult Suggestion()
         {
-            return this.View();
+            Suggestion model = new Suggestion()
+            {
+                Commentor = "Anonymous",
+            };
+            return this.View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("suggestion")]
+        public IActionResult Suggestion(Suggestion suggestion)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Suggestion model = new Suggestion()
+                {
+                    Commentor = "Anonymous",
+                };
+                return this.View(model);
+            }
+
+            if (User.Identity.Name != null)
+            {
+                suggestion.Commentor = User.Identity.Name;
+            }
+
+            return this.RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous]
