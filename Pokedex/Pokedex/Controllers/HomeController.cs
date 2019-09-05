@@ -66,23 +66,14 @@ namespace Pokedex.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("search")]
-        public IActionResult Search(string search, bool slowConnection)
+        public IActionResult Search(string search)
         {
-            TempData["SlowConnection"] = slowConnection;
-
-            if(slowConnection)
-            {
-                return this.RedirectToAction("SearchRedirect", "Home", new { search = search, slowConnection = slowConnection } );
-            }
-            else
-            {
-                return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
-            }
+            return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
         }
 
         [AllowAnonymous]
         [Route("search/{search}")]
-        public IActionResult SearchRedirect(string search, bool slowConnection)
+        public IActionResult SearchRedirect(string search)
         {
             this.ViewData["Search"] = search;
 
@@ -128,7 +119,6 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel(){
                         AllPokemon = model,
-                        SlowConnection = slowConnection,
                         AppConfig = this._appConfig,
                     };
 
@@ -141,13 +131,12 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("pokemon")]
-        public IActionResult AllPokemon(bool slowConnection)
+        public IActionResult AllPokemon()
         {
             List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypes();
 
             AllPokemonTypeViewModel model = new AllPokemonTypeViewModel(){
                 AllPokemon = pokemonList,
-                SlowConnection = slowConnection,
                 AppConfig = this._appConfig,
             };
 

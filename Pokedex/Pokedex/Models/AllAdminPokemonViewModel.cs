@@ -22,7 +22,5 @@ namespace Pokedex.Models
         public List<Evolution> AllEvolutions { get; set; }
 
         public List<PokemonLegendaryDetail> AllLegendaryDetails { get; set; }
-
-        public bool SlowConnection { get; set; }
     }
 }

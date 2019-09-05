@@ -25,7 +25,7 @@ namespace Pokedex.Controllers
         }
 
         [Route("pokemon")]
-        public IActionResult Pokemon(bool slowConnection)
+        public IActionResult Pokemon()
         {
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
                 AllPokemon = this._dataService.GetAllPokemonWithoutFormsWithIncomplete(),
@@ -37,7 +37,6 @@ namespace Pokedex.Controllers
                 AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
                 AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
                 AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
-                SlowConnection = slowConnection
             };
 
             DropdownViewModel model = new DropdownViewModel(){

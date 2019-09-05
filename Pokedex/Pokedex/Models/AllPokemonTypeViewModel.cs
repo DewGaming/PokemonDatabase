@@ -8,7 +8,5 @@ namespace Pokedex.Models
         public List<PokemonTypeDetail> AllPokemon { get; set; }
 
         public AppConfig AppConfig { get; set; }
-
-        public bool SlowConnection { get; set; }
     }
 }
