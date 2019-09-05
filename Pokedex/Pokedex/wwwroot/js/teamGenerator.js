@@ -232,8 +232,8 @@ $(window).on('resize', function() {
     if(
         ($('.teamGenerator tr').length == 2 && $(window).width() < 1000) ||
         ($('.teamGenerator tr').length == 3 && $(window).width() >= 1000) ||
-        ($('.teamGenerator tr').length == 3 && $(window).width() < 751) ||
-        ($('.teamGenerator tr').length == 6 && $(window).width() >= 751)
+        ($('.teamGenerator tr').length == 3 && $(window).width() < 768) ||
+        ($('.teamGenerator tr').length == 6 && $(window).width() >= 768)
     )
     {
         fillGeneratedTable();
