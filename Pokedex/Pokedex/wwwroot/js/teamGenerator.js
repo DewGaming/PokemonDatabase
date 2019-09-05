@@ -1,4 +1,4 @@
-var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function() {
+var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, fillGeneratedTable = function() {
     $('.teamGeneratorTable tbody').remove();
     $('.teamGeneratorTable').append($('<tbody>'));
 
@@ -50,7 +50,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, fillGeneratedTable = function
 
     for (var i = 0; i < originalNames.length; i++)
     {
-        $('.pokemon' + (i + 1)).append('<a href="/' + originalNames[i].name.replace(": ", "_").replace(' ', '_').toLowerCase() + '/" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
+        $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
     }
 }, checkLegendaryChecks = function() {
     var boxChecked = false;
@@ -274,6 +274,7 @@ $('.generatorButton').on('click', function() {
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;
         originalNames = data.allPokemonOriginalNames;
+        pokemonURLs = data.pokemonURLs;
         fillGeneratedTable();
     })
     .fail( function() {

@@ -509,6 +509,12 @@ namespace Pokedex.Controllers
                     model.AllPokemonOriginalNames.Add(this._dataService.GetPokemonById(p.Id));
                 }
 
+                model.PokemonURLs = new List<string>();
+                foreach(var p in model.AllPokemonOriginalNames)
+                {
+                    model.PokemonURLs.Add(this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }));
+                }
+
                 return model;
             }
             else
