@@ -1,4 +1,4 @@
-@model Pokedex.Models.DropdownViewModel;
+@model List<string>;
 @{
     Layout = "_Layout";
 }
@@ -26,49 +26,11 @@
     }
 </p>
 <div class="tab-list">
-    @foreach(var id in Model.AllPokemon.AllPokemon.Select(x => x.Generation.Id).Distinct())
+    @foreach(var id in Model)
     {
-        @if (id.IndexOf('-') == -1)
-        {
-            <button class="tab" onclick="openPage(event, 'Generation@(id)')">Generation @id</button>
-        }
+        <button class="tab" id="Generation@(id)" onclick="openAdminGeneration('@id')">Generation @id</button>
     }
 </div>
-@foreach(var gen in Model.AllPokemon.AllPokemon.Select(x => x.Generation.Id).Distinct())
-{
-    @if(@gen.IndexOf('-') == -1)
-    {
-        <div class="tabcontent generation" id="Generation@(gen)">
-            <div class="grid-container">
-                @foreach(var item in Model.AllPokemon.AllPokemon.Where(x => (x.Generation.Id == @gen) || (x.Generation.Id.IndexOf('-') > -1 && x.Generation.Id.Substring(0, x.Generation.Id.IndexOf('-')) == @gen)))
-                {
-                    Model.Pokemon = item;
-                    <div class="@item.Name">
-                        @if(item.IsComplete)
-                        {
-                            <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
-                                <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Id + ".png")"/>
-                            </a>
-                        }
-                        else
-                        {
-                            <img class="pokemonListPicture" title="@item.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Id + ".png")"/>
-                        }
-                        <div>
-                            @if(item.IsComplete)
-                            {
-                                <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" class="pokemonName">@('#')@item.Id @item.Name.Replace('_', ' ')</a>
-                            }
-                            else
-                            {
-                                <span>@('#')@item.Id @item.Name.Replace('_', ' ')</span>
-                            }
-                            <br>
-                            @await Html.PartialAsync("_AdminPokemonDropdownPartial", Model)
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    }
-}
+<div class="tabcontent generation pokemonlist">
+    <div class="grid-container"></div>
+</div>

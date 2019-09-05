@@ -37,8 +37,18 @@ function openGeneration(generationId) {
   }
 }
 
+function openAdminGeneration(generationId) {
+  if(!$('.active').is($('#Generation' + generationId)))
+  {
+    $('.tab').each(function() {
+      $(this).removeClass('active');
+    });
 
+    $('.pokemonList').removeClass('active');
+    $('.pokemonList > .grid-container').empty();
+    $('.tab#Generation' + generationId).addClass('active');
 
+    $('.grid-container').load('get-pokemon-by-generation-admin/' + generationId, function (){
       $('.pokemonList').addClass('active');
     });
   }

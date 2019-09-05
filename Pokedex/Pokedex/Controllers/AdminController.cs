@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,25 +25,46 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [Route("get-pokemon-by-generation-admin/{generationId}")]
+        public IActionResult GetPokemonByGenerationAdmin(string generationId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
+                    AllAltForms = this._dataService.GetAllAltForms(),
+                    AllEvolutions = this._dataService.GetEvolutions(),
+                    AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                    AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                    AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                    AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
+                    AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
+                    AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
+                };
+
+                DropdownViewModel dropdownViewModel = new DropdownViewModel(){
+                    AllPokemon = allPokemon,
+                    AppConfig = this._appConfig,
+                };
+
+                AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
+                {
+                    PokemonList = this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Where(x => x.GenerationId == generationId || x.GenerationId.Contains(generationId + '-')).ToList(),
+                    DropdownViewModel = dropdownViewModel,
+                    AppConfig = _appConfig,
+                };
+
+                return this.PartialView("_FillAdminGenerationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Error");
+            }
+        }
+
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
-                AllPokemon = this._dataService.GetAllPokemonWithoutFormsWithIncomplete(),
-                AllAltForms = this._dataService.GetAllAltForms(),
-                AllEvolutions = this._dataService.GetEvolutions(),
-                AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
-                AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
-                AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
-                AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
-                AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
-                AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
-            };
-
-            DropdownViewModel model = new DropdownViewModel(){
-                AllPokemon = allPokemon,
-                AppConfig = this._appConfig,
-            };
+            List<string> model = this._dataService.GetGenerations().Select(x => x.Id).Where(x => x.IndexOf('-') < 0).OrderBy(x => x).ToList();
 
             return this.View(model);
         }
