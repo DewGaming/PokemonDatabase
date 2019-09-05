@@ -168,33 +168,23 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("get-pokemon-by-generation")]
-        public ArrayList GetPokemonByGeneration(string generationId)
+        [Route("get-pokemon-by-generation/{generationId}")]
+        public IActionResult GetPokemonByGeneration(string generationId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                ArrayList model = new ArrayList();
-                List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypes().Where(x => x.Pokemon.GenerationId == generationId || x.Pokemon.GenerationId.Contains(generationId + '-')).ToList();
-                List<string> pokemonURLs = new List<string>();
-                List<string> pokemonPictureURLs = new List<string>();
-                foreach (var p in pokemonList)
+                GenerationTableViewModel model = new GenerationTableViewModel()
                 {
-                    pokemonURLs.Add(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }));
-                    pokemonPictureURLs.Add(this.Url.Content(this._appConfig.WebUrl + "/images/pokemon/" + @p.PokemonId + ".png"));
-                }
+                    PokemonList = this._dataService.GetAllPokemonWithTypes().Where(x => x.Pokemon.GenerationId == generationId || x.Pokemon.GenerationId.Contains(generationId + '-')).ToList(),
+                    AppConfig = _appConfig,
+                };
 
-                model.Add(pokemonList);
-                model.Add(pokemonURLs);
-                model.Add(pokemonPictureURLs);
-
-                return model;
+                return this.PartialView("_FillGenerationTable", model);
             }
             else
             {
-                this.RedirectToAction("Error");
+                return this.RedirectToAction("Error");
             }
-
-            return null;
         }
 
         [AllowAnonymous]

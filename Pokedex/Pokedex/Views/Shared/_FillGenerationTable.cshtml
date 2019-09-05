@@ -1,0 +1,20 @@
+@model Pokedex.Models.GenerationTableViewModel;
+
+@foreach(var p in Model.PokemonList)
+{
+    <div class="@p.Pokemon.Name">
+        <a href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+            <img class="pokemonlistPicture" title="@p.Pokemon.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.PokemonId + ".png")">
+        </a>
+        <div class="description">
+            <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokemonId.PadLeft(3) @p.Pokemon.Name.Replace(' ', '_')</a>
+            <div class="typing">
+                <div class="pokemon-type type-icon type-@p.PrimaryType.Name.ToLower()">@p.PrimaryType.Name</div>
+                @if(p.SecondaryType != null)
+                {
+                    <div class="pokemon-type type-icon type-@p.SecondaryType.Name.ToLower()">@p.SecondaryType.Name</div>
+                }
+            </div>
+        </div>
+    </div>
+}
