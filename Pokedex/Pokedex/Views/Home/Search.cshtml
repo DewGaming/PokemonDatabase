@@ -1,0 +1,44 @@
+@model Pokedex.Models.AllPokemonTypeViewModel;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Search Results";
+}
+
+@section styles
+{
+    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <style>
+        main {
+            max-width: 1220px !important;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/tabContent.js"></script>
+}
+
+<div>
+    <div class="grid-container">
+        @foreach(var item in Model.AllPokemon)
+        {
+            <div class="@item.Pokemon.Name">
+                <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                    <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
+                </a>
+                <div>
+                    <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.Id.PadLeft(3, '0') @item.Pokemon.Name.Replace('_', ' ')</a>
+                    <div class="typing">
+                        <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                        @if(@item.SecondaryType != null)
+                        {
+                            <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

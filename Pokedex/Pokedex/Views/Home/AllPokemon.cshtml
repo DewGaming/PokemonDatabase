@@ -1,4 +1,4 @@
-@model Pokedex.Models.AllPokemonTypeViewModel;
+@model List<string>;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Pokemon List";
@@ -20,43 +20,12 @@
     <script src="/js/tabContent.js"></script>
 }
 
-@if(ViewData["Search"] == null)
-{
-    <div class="tab-list">
-        @foreach(var id in Model.AllPokemon.Select(x => x.Pokemon.Generation.Id).Distinct())
-        {
-            @if (id.IndexOf('-') == -1)
-            {
-                <button class="tab" id="Generation@(id)" onclick="openGeneration('@id')">Generation @id</button>
-            }
-        }
-    </div>
-    <div class="tabcontent generation pokemonList">
-        <div class="grid-container"></div>
-    </div>
-}
-else
-{
-    <div>
-        <div class="grid-container">
-            @foreach(var item in Model.AllPokemon)
-            {
-                <div class="@item.Pokemon.Name">
-                    <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
-                        <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")"/>
-                    </a>
-                    <div>
-                        <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.Id.PadLeft(3, '0') @item.Pokemon.Name.Replace('_', ' ')</a>
-                        <div class="typing">
-                            <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                            @if(@item.SecondaryType != null)
-                            {
-                                <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-}
+<div class="tab-list">
+    @foreach(var id in Model)
+    {
+        <button class="tab" id="Generation@(id)" onclick="openGeneration('@id')">Generation @id</button>
+    }
+</div>
+<div class="tabcontent generation pokemonList">
+    <div class="grid-container"></div>
+</div>

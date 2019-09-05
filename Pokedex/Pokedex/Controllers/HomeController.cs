@@ -131,7 +131,7 @@ namespace Pokedex.Controllers
                         AppConfig = this._appConfig,
                     };
 
-                    return this.View("AllPokemon", viewModel);
+                    return this.View("Search", viewModel);
                 }
             }
 
