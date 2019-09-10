@@ -28,20 +28,21 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("incomplete-suggestions")]
-        public IActionResult IncompleteSuggestions()
+        [Route("suggestions")]
+        public IActionResult Suggestions()
         {
-            List<Suggestion> model = this._dataService.GetSuggestions().Where(x => !x.IsCompleted).ToList();
+            List<Suggestion> model = this._dataService.GetSuggestions();
 
             return this.View("Suggestions", model);
         }
 
-        [Route("completed-suggestions")]
-        public IActionResult CompletedSuggestions()
+        [HttpGet]
+        [Route("complete_suggestion/{id:int}")]
+        public IActionResult CompleteSuggestion(int id)
         {
-            List<Suggestion> model = this._dataService.GetSuggestions().Where(x => x.IsCompleted).ToList();
+            Suggestion model = this._dataService.GetSuggestion(id);
 
-            return this.View("Suggestions", model);
+            return this.View(model);
         }
     }
 }

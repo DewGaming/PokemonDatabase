@@ -19,8 +19,7 @@
                 @if(User.IsInRole("Owner"))
                 {
                     <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
-                    <a class="dropdown-item" href="@Url.Action("IncompleteSuggestions", "Owner")">Incomplete Suggestions</a>
-                    <a class="dropdown-item" href="@Url.Action("CompletedSuggestions", "Owner")">Completed Suggestions</a>
+                    <a class="dropdown-item" href="@Url.Action("Suggestions", "Owner")">Suggestions</a>
                     <div class="dropdown-divider"></div>
                 }
                 <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>

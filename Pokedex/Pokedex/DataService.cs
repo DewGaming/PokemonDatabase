@@ -1050,6 +1050,11 @@ namespace Pokedex
             return this._dataContext.Suggestions.ToList();
         }
 
+        public Suggestion GetSuggestion(int id)
+        {
+            return this._dataContext.Suggestions.ToList().Find(x => x.Id == id);
+        }
+
         public void AddSuggestion(Suggestion suggestion)
         {
             this._dataContext.Suggestions.Add(suggestion);
