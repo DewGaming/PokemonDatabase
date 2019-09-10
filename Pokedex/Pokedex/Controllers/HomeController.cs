@@ -269,6 +269,13 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("about")]
+        public IActionResult About()
+        {
+            return this.View();
+        }
+
+        [AllowAnonymous]
         [Route("error")]
         public IActionResult Error()
         {
