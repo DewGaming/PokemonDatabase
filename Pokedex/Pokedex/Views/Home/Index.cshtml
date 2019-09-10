@@ -1,5 +1,14 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Update>
 @{
     Layout = "_Layout";
 }
 
-<h5>Welcome to the Pokemon Database!</h5>
+<h4>Welcome to the Pokemon Database!</h4>
+<br>
+<div class="updates">
+    <h5>Site Updates</h5>
+    @foreach(var item in Model)
+    {
+        <p><b>@item.DateCreated.ToString("MMMM dd, yyyy")</b>: @item.Name</p>
+    }
+</div>

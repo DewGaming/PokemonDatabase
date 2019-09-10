@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,6 +56,30 @@ namespace Pokedex.Controllers
             this._dataService.UpdateSuggestion(suggestion);
 
             return this.RedirectToAction("Suggestions", "Owner");
+        }
+
+        [HttpGet]
+        [Route("add_update")]
+        public IActionResult Update()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_update")]
+        public IActionResult Update(Update update)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            update.DateCreated = DateTime.Today;
+
+            this._dataService.AddUpdate(update);
+
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

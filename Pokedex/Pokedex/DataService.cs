@@ -71,6 +71,16 @@ namespace Pokedex
             return this._dataContext.Types.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
+        public List<Update> GetUpdates()
+        {
+            return this._dataContext.Updates.ToList();
+        }
+
+        public List<Update> GetUpdates(int count)
+        {
+            return this._dataContext.Updates.OrderByDescending(x => x.Id).Take(count).ToList();
+        }
+
         public List<Type> GetTypeChartTypes()
         {
             return this._dataContext.Types.Where(x => x.IsArchived == false).ToList();
@@ -1058,6 +1068,12 @@ namespace Pokedex
         public void AddSuggestion(Suggestion suggestion)
         {
             this._dataContext.Suggestions.Add(suggestion);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddUpdate(Update update)
+        {
+            this._dataContext.Updates.Add(update);
             this._dataContext.SaveChanges();
         }
 
