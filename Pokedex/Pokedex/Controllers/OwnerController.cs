@@ -44,5 +44,17 @@ namespace Pokedex.Controllers
 
             return this.View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("complete_suggestion/{id:int}")]
+        public IActionResult CompleteSuggestion(Suggestion suggestion)
+        {
+            suggestion.IsCompleted = true;
+
+            this._dataService.UpdateSuggestion(suggestion);
+
+            return this.RedirectToAction("Suggestions", "Owner");
+        }
     }
 }

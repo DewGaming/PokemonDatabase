@@ -265,6 +265,8 @@ namespace Pokedex.Controllers
                 suggestion.Commentor = User.Identity.Name;
             }
 
+            this._dataService.AddSuggestion(suggestion);
+
             return this.RedirectToAction("Index", "Home");
         }
 
