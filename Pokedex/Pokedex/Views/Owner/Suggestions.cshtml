@@ -47,7 +47,7 @@
     }
 </div>
 <div class="tabcontent" id="completed">
-    @if(Model.Where(x => !x.IsCompleted).ToList().Count() > 0)
+    @if(Model.Where(x => x.IsCompleted).ToList().Count() > 0)
     {
         <table class="table">
             <tr>
