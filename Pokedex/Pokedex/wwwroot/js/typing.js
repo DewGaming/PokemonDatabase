@@ -26,7 +26,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
                 $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
                 $(iconTag).text(type.substr(0, type.indexOf(' ')));
                 $(quadTag).addClass("quad-resist");
-                $(quadTag).text("Quad Resist");
+                $(quadTag).text("Quad");
             }
 
             $(dataTag).append(iconTag);
@@ -56,7 +56,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function(){
             $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
             $(iconTag).text(type.substr(0, type.indexOf(' ')));
             $(quadTag).addClass("quad-weak");
-            $(quadTag).text("Quad Weak");
+            $(quadTag).text("Quad");
         }
 
         $(dataTag).append(iconTag);

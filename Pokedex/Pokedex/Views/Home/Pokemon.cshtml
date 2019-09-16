@@ -185,7 +185,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="effectivenessChart pokemonTables tableWithHeaders noRowBorders">
+        <div class="pokemonInfo effectivenessChart pokemonTables tableWithHeaders noRowBorders">
             @if (item.Effectiveness.StrongAgainst.Count > 0)
             {
                 <div class="StrongAgainst">
@@ -199,7 +199,7 @@
                                     {
                                         <td>
                                             <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
-                                            <div class="pokemon-type quad-icon quad-resist">Quad Resist</div>
+                                            <div class="pokemon-type quad-icon quad-resist">Quad</div>
                                         </td>
                                     }
                                     else
@@ -213,6 +213,7 @@
                         </tbody>
                     </table>
                 </div>
+                style = "";
             }
             else
             {
@@ -232,7 +233,7 @@
                                         {
                                             <td>
                                                 <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
-                                                <div class="pokemon-type quad-icon quad-weak">Quad Weak</div>
+                                                <div class="pokemon-type quad-icon quad-weak">Quad</div>
                                             </td>
                                         }
                                         else
