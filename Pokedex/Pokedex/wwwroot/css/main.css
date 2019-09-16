@@ -1,8 +1,6 @@
 .pokemonListPicture {
   max-width: 150px;
   max-height: 150px;
-  width: auto;
-  height: auto;
   margin: 5px;
 }
 
@@ -223,8 +221,8 @@ label {
 
 img {
   border: 0;
-  max-width: 325px;
-  max-height: 325px;
+  max-width: 318px;
+  max-height: 318px;
   width: auto;
   height: auto;
 }

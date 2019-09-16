@@ -28,12 +28,14 @@
             margin: 0;
         }
 
-        .pokemonTraining {
-            min-width: 325px;
+        .pokemonInfo {
+            width: 350px;
         }
 
-        .pokemonBreedingAndEvos {
-            min-width: 350px;
+        .pokemonPicture img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.FirstOrDefault().AppConfig.WebUrl + "/images/pokemon/" + @Model.FirstOrDefault().Pokemon.Id + ".png")" />
@@ -62,7 +64,7 @@
 @foreach(var item in Model)
 {
     <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")">
-        <div class="pokemonPicture pokemonTables shadowed">
+        <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
             <div class="typing">
                 <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
@@ -72,7 +74,7 @@
                 }
             </div>
         </div>
-        <div class="pokemonData pokemonTables">
+        <div class="pokemonInfo pokemonData pokemonTables">
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
                 <tbody>
@@ -265,7 +267,7 @@
                 }
             </div>
         </div>
-        <div class="pokemonTraining pokemonTables span-sm-5 span-md-5 span-lg-4">
+        <div class="pokemonInfo pokemonTraining pokemonTables span-sm-5 span-md-5 span-lg-4">
             <h2>Training</h2>
             <table>
                 <tbody>
@@ -327,7 +329,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="pokemonStats pokemonTables">
+        <div class="pokemonInfo pokemonStats pokemonTables">
             <h2>Base Stats</h2>
             <table class="baseStatTable">
                 <tbody>
@@ -370,7 +372,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="pokemonBreedingAndEvos pokemonTables span-sm-5 span-md-5 span-lg-4">
+        <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables span-sm-5 span-md-5 span-lg-4">
             <div class="pokemonBreeding">
                 <h2>Breeding</h2>
                 <table>
