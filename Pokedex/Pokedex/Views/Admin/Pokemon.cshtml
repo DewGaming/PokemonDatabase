@@ -5,17 +5,12 @@
 
 @section styles
 {
-    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
-    <style>
-        main {
-            max-width: 1220px !important;
-        }
-    </style>
+    <link href="/css/generationLookup.css" rel="stylesheet" type="text/css" />
 }
 
 @section scripts
 {
-    <script src="/js/tabContent.js" type="text/javascript"></script>
+    <script src="/js/generationLookup.js" type="text/javascript"></script>
 }
 
 <p class="adminButtons">
@@ -24,12 +19,12 @@
         <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokemon</a>
     }
 </p>
-<div class="tab-list">
+<div class="generationList">
     @foreach(var id in Model)
     {
-        <button class="tab" id="Generation@(id)" onclick="openAdminGeneration('@id')">Generation @id</button>
+        <button id="Generation@(id)" onclick="openAdminGeneration('@id')">Generation @id</button>
     }
 </div>
-<div class="tabcontent generation pokemonlist">
+<div class="generation pokemonlist">
     <div class="grid-container"></div>
 </div>
