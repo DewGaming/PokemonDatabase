@@ -29,7 +29,7 @@
         }
 
         .pokemonInfo {
-            width: 350px;
+            width: 24.5rem;
         }
 
         .pokemonPicture img {
@@ -51,19 +51,12 @@
     @foreach(var button in Model)
     {
         string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
-        @if(button.Pokemon.Id.IndexOf('-') == -1)
-        {
-            <button class="tab active" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')')">@button.Pokemon.Name.Replace('_', ' ')</button>
-        }
-        else
-        {
-            <button class="tab" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")', null, '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')')">@button.Pokemon.Name.Replace('_', ' ')</button>
-        }
+        <button class="tab@(@button.Form == null ? " active" : "")" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', null, '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')')">@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")</button>
     }
 </div>
 @foreach(var item in Model)
 {
-    <div class="tabcontent@(@item.Pokemon.Id.IndexOf('-') == -1 ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")">
+    <div class="tabcontent@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
             <div class="typing">
