@@ -6,26 +6,21 @@
 
 @section styles
 {
-    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+    <link href="/css/generationLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <style>
-        main {
-            max-width: 1220px !important;
-        }
-    </style>
 }
 
 @section scripts
 {
-    <script src="/js/tabContent.js"></script>
+    <script src="/js/generationLookup.js"></script>
 }
 
-<div class="tab-list">
+<div class="genertionList">
     @foreach(var id in Model)
     {
-        <button class="tab" id="Generation@(id)" onclick="openGeneration('@id')">Generation @id</button>
+        <button id="Generation@(id)" onclick="openGeneration('@id')">Generation @id</button>
     }
 </div>
-<div class="tabcontent generation pokemonList">
+<div class="generation pokemonList">
     <div class="grid-container"></div>
 </div>
