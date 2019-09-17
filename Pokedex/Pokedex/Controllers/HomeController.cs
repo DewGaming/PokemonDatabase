@@ -161,6 +161,7 @@ namespace Pokedex.Controllers
             }
 
             Pokemon pokemon = this._dataService.GetPokemon(name);
+            Form form;
             BaseStat baseStat = this._dataService.GetBaseStat(pokemon.Id);
             EVYield evYield = this._dataService.GetEVYield(pokemon.Id);
             List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
@@ -191,6 +192,7 @@ namespace Pokedex.Controllers
             {
                 if (p.IsComplete)
                 {
+                    form = this._dataService.GetFormByAltFormId(p.Id);
                     baseStat = this._dataService.GetBaseStat(p.Id);
                     evYield = this._dataService.GetEVYield(p.Id);
                     pokemonTypes = this._dataService.GetPokemonWithTypes(p.Id);
@@ -199,6 +201,7 @@ namespace Pokedex.Controllers
                     var pokemonModel = new PokemonViewModel()
                     {
                         Pokemon = p,
+                        Form = form,
                         BaseStats = baseStat,
                         EVYields = evYield,
                         PrimaryType = pokemonTypes.PrimaryType,
@@ -213,7 +216,6 @@ namespace Pokedex.Controllers
                         Effectiveness = this._dataService.GetTypeChartPokemon(p.Id),
                         AppConfig = this._appConfig,
                     };
-                    pokemonModel.Pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemonModel.Pokemon.Id) + ")";
 
                     model.Add(pokemonModel);
                 }

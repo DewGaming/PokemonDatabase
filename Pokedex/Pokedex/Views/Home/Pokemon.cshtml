@@ -7,25 +7,15 @@
 
 @section styles
 {
-    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <style>
-        .typing {
-            padding-top: .75rem;
-            text-align: center;
-        }
-
         .typing div {
-          margin: 0 2.5px 5px;
-          width: 47.5%;
+          width: 25%;
         }
 
         .WeakAgainst {
             margin-right: 10px;
-        }
-
-        .typing {
-            margin: 0;
         }
 
         .pokemonInfo {
@@ -43,34 +33,39 @@
 
 @section scripts
 {
-    <script src="/js/tabContent.js"></script>
+    <script src="/js/pageLookup.js"></script>
     <script src="/js/calculateCaptureRate.js"></script>
 }
 
-<div class="tab-list">
-    @foreach(var button in Model)
-    {
-        string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
-        <button class="tab@(@button.Form == null ? " active" : "")" onclick="openPage(event, '@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', null, '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')')">@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")</button>
-    }
-</div>
 @foreach(var item in Model)
 {
-    <div class="tabcontent@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
+    <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
-            <img title="@item.Pokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
-            <div class="typing">
-                <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                @if(@item.SecondaryType != null)
-                {
-                    <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                }
-            </div>
+            <img title="@item.Pokemon.Name.Replace('_', ' ')@(@item.Form != null ? " (" + @item.Form.Name + ")" : "")" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
+            @if(Model.Count() > 1)
+            {
+                <div class="differentForms">
+                    <h2>Different Forms</h2>
+                    <div class="formButtons">
+                        @foreach(var button in Model.Where(x => x.Pokemon.Id != item.Pokemon.Id))
+                        {
+                            string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
+                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")')">
+                                <img class="lightshadowed" title="@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")" src="@Url.Content(@button.AppConfig.WebUrl + "/images/pokemon/" + @button.Pokemon.Id + ".png")" />
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
         </div>
         <div class="pokemonInfo pokemonData pokemonTables">
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
                 <tbody>
+                    <tr>
+                        <th>Pokemon Name</th>
+                        <td>@item.Pokemon.Name</td>
+                    </tr>
                     <tr>
                         <th>Pokedex Number</th>
                         @if(item.Pokemon.Id.Contains('-'))
@@ -82,6 +77,13 @@
                             <td>@('#')@item.Pokemon.Id.PadLeft(3, '0')</td>
                         }
                     </tr>
+                    @if(@item.Form != null)
+                    {
+                        <tr>
+                            <th>Form</th>
+                            <td>@item.Form.Name</td>
+                        </tr>
+                    }
                     <tr>
                         <th>Classification</th>
                         <td>@item.Pokemon.Classification.Name</td>
@@ -178,61 +180,36 @@
                 </tbody>
             </table>
         </div>
-        <div class="pokemonInfo effectivenessChart pokemonTables tableWithHeaders noRowBorders">
-            @if (item.Effectiveness.StrongAgainst.Count > 0)
-            {
-                <div class="StrongAgainst">
-                    <h2>Resistances</h2>
-                    <table class="StrongAgainstTable">
-                        <tbody>
-                            @foreach(string s in item.Effectiveness.StrongAgainst)
-                            {
-                                <tr>
-                                    @if (@s.IndexOf(" Quad") > -1)
-                                    {
-                                        <td>
-                                            <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
-                                            <div class="pokemon-type quad-icon quad-resist">Quad</div>
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                style = "";
-            }
-            else
-            {
-                style = "display: flex;";
-            }
-            <div style="@style" class="nonResistances">
-                @if (item.Effectiveness.WeakAgainst.Count > 0)
+        <div>
+            <div class="typing pokemonTables">
+                <h2>Typing</h2>
+                <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                @if(@item.SecondaryType != null)
                 {
-                    <div class="WeakAgainst">
-                        <h2>Weaknesses</h2>
-                        <table class="WeakAgainstTable">
+                    <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                }
+            </div>
+            <div class="pokemonInfo effectivenessChart pokemonTables tableWithHeaders noRowBorders">
+                @if (item.Effectiveness.StrongAgainst.Count > 0)
+                {
+                    <div class="StrongAgainst">
+                        <h2>Resistances</h2>
+                        <table class="StrongAgainstTable">
                             <tbody>
-                                @foreach(string w in item.Effectiveness.WeakAgainst)
+                                @foreach(string s in item.Effectiveness.StrongAgainst)
                                 {
                                     <tr>
-                                        @if (@w.IndexOf(" Quad") > -1)
+                                        @if (@s.IndexOf(" Quad") > -1)
                                         {
                                             <td>
-                                                <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
-                                                <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                                                <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
+                                                <div class="pokemon-type quad-icon quad-resist">Quad</div>
                                             </td>
                                         }
                                         else
                                         {
                                             <td>
-                                                <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                                <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
                                             </td>
                                         }
                                     </tr>
@@ -240,25 +217,60 @@
                             </tbody>
                         </table>
                     </div>
+                    style = "";
                 }
-                @if (item.Effectiveness.ImmuneTo.Count > 0)
+                else
                 {
-                    <div class="ImmuneTo">
-                        <h2>Immunities</h2>
-                        <table class="ImmuneToTable">
-                            <tbody>
-                                @foreach(string i in item.Effectiveness.ImmuneTo)
-                                {
-                                    <tr>
-                                        <td>
-                                            <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                    style = "display: flex;";
                 }
+                <div style="@style" class="nonResistances">
+                    @if (item.Effectiveness.WeakAgainst.Count > 0)
+                    {
+                        <div class="WeakAgainst">
+                            <h2>Weaknesses</h2>
+                            <table class="WeakAgainstTable">
+                                <tbody>
+                                    @foreach(string w in item.Effectiveness.WeakAgainst)
+                                    {
+                                        <tr>
+                                            @if (@w.IndexOf(" Quad") > -1)
+                                            {
+                                                <td>
+                                                    <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
+                                                    <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    @if (item.Effectiveness.ImmuneTo.Count > 0)
+                    {
+                        <div class="ImmuneTo">
+                            <h2>Immunities</h2>
+                            <table class="ImmuneToTable">
+                                <tbody>
+                                    @foreach(string i in item.Effectiveness.ImmuneTo)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
         <div class="pokemonInfo pokemonTraining pokemonTables span-sm-5 span-md-5 span-lg-4">

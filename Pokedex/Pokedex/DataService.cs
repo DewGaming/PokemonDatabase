@@ -454,6 +454,17 @@ namespace Pokedex
                 .Find(x => x.AltFormPokemonId == pokemonId);
         }
 
+        public Form GetFormByAltFormId(string pokemonId)
+        {
+            PokemonFormDetail details = this._dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .ToList()
+                .Find(x => x.AltFormPokemonId == pokemonId);
+
+            return details.Form;
+        }
+
         public List<PokemonFormDetail> GetPokemonFormDetailsForPokemon(string pokemonId)
         {
             return this._dataContext.PokemonFormDetails

@@ -7,6 +7,8 @@ namespace Pokedex.Models
     {
         public Pokemon Pokemon { get; set; }
 
+        public Form Form { get; set; }
+
         public BaseStat BaseStats { get; set; }
 
         public EVYield EVYields { get; set; }

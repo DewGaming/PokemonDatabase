@@ -140,6 +140,32 @@ main {
           filter: drop-shadow(2px 2px 2px #222); 
 }
 
+.lightshadowed {
+  -webkit-filter: drop-shadow(.5px .5px .5px #222) !important;
+          filter: drop-shadow(.5px .5px .5px #222) !important;
+}
+
+.differentForms {
+    padding-top: 5px;
+}
+
+.differentForms .formButtons {
+    width: 318px;
+}
+
+.differentForms button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.differentForms img {
+    opacity: .8;
+    width: 2.5rem;
+}
+
 .table tbody tr:first-of-type * {
   border-top-width: 0px;
   padding-bottom: 10px;

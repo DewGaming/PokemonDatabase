@@ -19,12 +19,6 @@
   font-size: 1rem;
 }
 
-.break {
-  width: 0px; 
-  height: 0px; 
-  overflow: hidden;
-}
-
 /* Style the buttons that are used to open the tab content */
 .tab-list button {
   list-style: none;

@@ -1,3 +1,13 @@
+function lookupPokemon(pageName, iconLink, pokemonName) {
+  $('.active').each(function() {
+    $(this).removeClass('active');
+  })
+
+  $('#' + pageName).addClass('active');
+  $('.tabIcon').attr("href", iconLink);
+  $('.pageTitle').text(pokemonName + " | Pokemon Database");
+}
+
 function lookupGeneration(generationId) {
   if(!$('.active').is($('#Generation' + generationId)))
   {
