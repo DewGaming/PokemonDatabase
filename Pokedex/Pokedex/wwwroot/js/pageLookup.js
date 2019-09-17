@@ -1,4 +1,4 @@
-function openGeneration(generationId) {
+function lookupGeneration(generationId) {
   if(!$('.active').is($('#Generation' + generationId)))
   {
     $('button').each(function() {
@@ -15,7 +15,7 @@ function openGeneration(generationId) {
   }
 }
 
-function openAdminGeneration(generationId) {
+function lookupAdminGeneration(generationId) {
   if(!$('.active').is($('#Generation' + generationId)))
   {
     $('button').each(function() {

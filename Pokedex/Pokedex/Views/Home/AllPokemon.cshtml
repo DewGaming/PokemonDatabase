@@ -6,19 +6,19 @@
 
 @section styles
 {
-    <link href="/css/generationLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
 }
 
 @section scripts
 {
-    <script src="/js/generationLookup.js"></script>
+    <script src="/js/pageLookup.js"></script>
 }
 
 <div class="generationList">
     @foreach(var id in Model)
     {
-        <button id="Generation@(id)" onclick="openGeneration('@id')">Generation @id</button>
+        <button id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
     }
 </div>
 <div class="generation pokemonList">
