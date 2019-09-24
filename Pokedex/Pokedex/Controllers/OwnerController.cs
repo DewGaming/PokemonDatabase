@@ -29,33 +29,33 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("suggestions")]
-        public IActionResult Suggestions()
+        [Route("comments")]
+        public IActionResult Comments()
         {
-            List<Suggestion> model = this._dataService.GetSuggestions();
+            List<Comment> model = this._dataService.GetComments();
 
-            return this.View("Suggestions", model);
+            return this.View("Comments", model);
         }
 
         [HttpGet]
-        [Route("complete_suggestion/{id:int}")]
-        public IActionResult CompleteSuggestion(int id)
+        [Route("complete_comment/{id:int}")]
+        public IActionResult CompleteComment(int id)
         {
-            Suggestion model = this._dataService.GetSuggestion(id);
+            Comment model = this._dataService.GetComment(id);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("complete_suggestion/{id:int}")]
-        public IActionResult CompleteSuggestion(Suggestion suggestion)
+        [Route("complete_comment/{id:int}")]
+        public IActionResult CompleteComment(Comment comment)
         {
-            suggestion.IsCompleted = true;
+            comment.IsCompleted = true;
 
-            this._dataService.UpdateSuggestion(suggestion);
+            this._dataService.UpdateComment(comment);
 
-            return this.RedirectToAction("Suggestions", "Owner");
+            return this.RedirectToAction("Comments", "Owner");
         }
 
         [HttpGet]

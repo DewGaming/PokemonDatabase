@@ -119,8 +119,13 @@
                         <th>Height</th>
                         <td>
                             @{
-                                var feet = (int)(@item.Pokemon.Height / 0.3048m);
-                                var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m) - (feet * 12), 0);
+                                var feet = 0;
+                                var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m), 0);
+                                while(inches >= 12)
+                                {
+                                    feet++;
+                                    inches -= 12;
+                                }
                             }
                             @feet@("'")@inches.ToString("D2")@('"') (@item.Pokemon.Height.ToString("0.####") m)
                         </td>

@@ -1117,19 +1117,21 @@ namespace Pokedex
             return this._dataContext.Users.ToList();
         }
 
-        public List<Suggestion> GetSuggestions()
+        public List<Comment> GetComments()
         {
-            return this._dataContext.Suggestions.ToList();
+            return this._dataContext.Comments
+                .Include(x => x.Commentor)
+                .ToList();
         }
 
-        public Suggestion GetSuggestion(int id)
+        public Comment GetComment(int id)
         {
-            return this._dataContext.Suggestions.ToList().Find(x => x.Id == id);
+            return this._dataContext.Comments.ToList().Find(x => x.Id == id);
         }
 
-        public void AddSuggestion(Suggestion suggestion)
+        public void AddComment(Comment comment)
         {
-            this._dataContext.Suggestions.Add(suggestion);
+            this._dataContext.Comments.Add(comment);
             this._dataContext.SaveChanges();
         }
 
@@ -1259,9 +1261,9 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
-        public void UpdateSuggestion(Suggestion suggestion)
+        public void UpdateComment(Comment comment)
         {
-            this._dataContext.Suggestions.Update(suggestion);
+            this._dataContext.Comments.Update(comment);
             this._dataContext.SaveChanges();
         }
 

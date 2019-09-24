@@ -241,36 +241,43 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("suggestion")]
-        public IActionResult Suggestion()
+        [Route("comment")]
+        public IActionResult Comment()
         {
-            Suggestion model = new Suggestion()
+            CommentViewModel model = new CommentViewModel()
             {
-                Commentor = "Anonymous",
+                TypeOfComment = new List<string>(new string[] { "Bug", "Suggestion" }),
+                Page = new List<string>(new string[] { "Home Page", "Shiny Hunt Page", "Pokemon List", "Search Page", "Pokemon Page" }),
             };
             return this.View(model);
         }
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("suggestion")]
-        public IActionResult Suggestion(Suggestion suggestion)
+        [Route("comment")]
+        public IActionResult Comment(Comment comment)
         {
             if (!this.ModelState.IsValid)
             {
-                Suggestion model = new Suggestion()
+                CommentViewModel model = new CommentViewModel()
                 {
-                    Commentor = "Anonymous",
+                    TypeOfComment = new List<string>(new string[] { "Bug", "Suggestion" }),
+                    Page = new List<string>(new string[] { "Home Page", "Shiny Hunt Page", "Pokemon List", "Search Page", "Pokemon Page" }),
                 };
                 return this.View(model);
             }
 
-            if (User.Identity.Name != null)
+            if (comment.CommentedPage != "Pokemon Page" && comment.PokemonName != null)
             {
-                suggestion.Commentor = User.Identity.Name;
+                comment.PokemonName = null;
             }
 
-            this._dataService.AddSuggestion(suggestion);
+            if (User.Identity.Name != null)
+            {
+                comment.CommentorId = this._dataService.GetUserWithUsername(User.Identity.Name).Id;
+            }
+
+            this._dataService.AddComment(comment);
 
             return this.RedirectToAction("Index", "Home");
         }

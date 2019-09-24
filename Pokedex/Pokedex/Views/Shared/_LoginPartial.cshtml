@@ -6,7 +6,6 @@
         <a class="nav-link dropdown-toggle" href="" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
         <div class="dropdown-menu" aria-labelledby="userDropdown">
             <a class="dropdown-item" href="@Url.Action("ShinyHuntingCounter", "User")">Shiny Hunting Counter</a>
-            <a class="dropdown-item" href="@Url.Action("Suggestion", "Home")">Leave a Suggestion</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
             <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
@@ -20,7 +19,7 @@
                 @if(User.IsInRole("Owner"))
                 {
                     <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
-                    <a class="dropdown-item" href="@Url.Action("Suggestions", "Owner")">Suggestions</a>
+                    <a class="dropdown-item" href="@Url.Action("Comments", "Owner")">Comments</a>
                     <a class="dropdown-item" href="@Url.Action("Update", "Owner")">Update</a>
                     <div class="dropdown-divider"></div>
                 }
