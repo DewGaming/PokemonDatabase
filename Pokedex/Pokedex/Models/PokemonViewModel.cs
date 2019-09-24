@@ -33,6 +33,8 @@ namespace Pokedex.Models
 
         public TypeEffectivenessViewModel Effectiveness { get; set; }
 
+        public List<Pokemon> SurroundingPokemon { get; set; }
+
         public AppConfig AppConfig { get; set; }
     }
 }

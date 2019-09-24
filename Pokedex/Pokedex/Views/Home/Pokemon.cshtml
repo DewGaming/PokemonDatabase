@@ -17,16 +17,6 @@
         .WeakAgainst {
             margin-right: 10px;
         }
-
-        .pokemonInfo {
-            width: 24.5rem;
-        }
-
-        .pokemonPicture img {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
     </style>
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.FirstOrDefault().AppConfig.WebUrl + "/images/pokemon/" + @Model.FirstOrDefault().Pokemon.Id + ".png")" />
 }
@@ -36,6 +26,41 @@
     <script src="/js/pageLookup.js"></script>
     <script src="/js/calculateCaptureRate.js"></script>
 }
+
+<table class="surroundingPokemon pokemonPicture">
+    <tr>
+        <td class="previousPokemon">
+            <table>
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">← @Model.First().SurroundingPokemon[0].Name.Replace('_', ' ')</a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">
+                            <img title="@Model.First().SurroundingPokemon[0].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[0].Id + ".png")" />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="nextPokemon">
+            <table>
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">
+                            <img title="@Model.First().SurroundingPokemon[1].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[1].Id + ".png")" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">→ @Model.First().SurroundingPokemon[1].Name.Replace('_', ' ')</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<hr>
 
 @foreach(var item in Model)
 {
@@ -64,7 +89,16 @@
                 <tbody>
                     <tr>
                         <th>Pokemon Name</th>
-                        <td>@item.Pokemon.Name</td>
+                        <td>
+                            @if(item.Form != null)
+                            {
+                                @(item.Pokemon.Name + " (" + item.Form.Name + ")")
+                            }
+                            else
+                            {
+                                @(item.Pokemon.Name)
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <th>Pokedex Number</th>
@@ -77,13 +111,6 @@
                             <td>@('#')@item.Pokemon.Id.PadLeft(3, '0')</td>
                         }
                     </tr>
-                    @if(@item.Form != null)
-                    {
-                        <tr>
-                            <th>Form</th>
-                            <td>@item.Form.Name</td>
-                        </tr>
-                    }
                     <tr>
                         <th>Classification</th>
                         <td>@item.Pokemon.Classification.Name</td>
@@ -273,7 +300,7 @@
                 </div>
             </div>
         </div>
-        <div class="pokemonInfo pokemonTraining pokemonTables span-sm-5 span-md-5 span-lg-4">
+        <div class="pokemonInfo pokemonTraining pokemonTables">
             <h2>Training</h2>
             <table>
                 <tbody>
@@ -378,7 +405,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables span-sm-5 span-md-5 span-lg-4">
+        <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
             <div class="pokemonBreeding">
                 <h2>Breeding</h2>
                 <table>
@@ -441,6 +468,7 @@
                                         @item.PreEvolution.EvolutionMethod.Name
                                         @if (@item.PreEvolution.EvolutionDetails != null)
                                         {
+                                            <br>
                                             @(" (" + @item.PreEvolution.EvolutionDetails + ")");
                                         }
                                     </td>

@@ -168,6 +168,7 @@ namespace Pokedex.Controllers
             PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
             PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
             PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
+            List<Pokemon> surroundingPokemon = this._dataService.GetSurroundingPokemon(pokemon.Id);
 
             List<PokemonViewModel> model = new List<PokemonViewModel>();
             model.Add(new PokemonViewModel()
@@ -185,6 +186,7 @@ namespace Pokedex.Controllers
                 PreEvolution = this._dataService.GetPreEvolution(pokemon.Id),
                 Evolutions = this._dataService.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this._dataService.GetTypeChartPokemon(pokemon.Id),
+                SurroundingPokemon = surroundingPokemon,
                 AppConfig = this._appConfig,
             });
 
