@@ -81,5 +81,22 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("Index", "Home");
         }
+
+        [Route("complete_pokemon/{pokemonId}")]
+        public IActionResult CompletePokemon(string pokemonId)
+        {
+            // Ensuring that the pokemon really has all of these added.
+            bool PokemonIsComplete = this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this._dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
+
+            Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(pokemonId);
+            pokemon.IsComplete = true;
+            this._dataService.UpdatePokemon(pokemon);    
+            
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
     }
 }

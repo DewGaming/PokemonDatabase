@@ -54,6 +54,11 @@ namespace Pokedex
             return this._dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList();
         }
 
+        public PokemonLegendaryDetail GetLegendaryDetail(string pokemonId)
+        {
+            return this._dataContext.PokemonLegendaryDetails.ToList().Find(x => x.PokemonId == pokemonId);
+        }
+
         public Type GetType(int id)
         {
             return this._dataContext.Types
@@ -623,6 +628,52 @@ namespace Pokedex
                 .Include(x => x.SecondaryEggGroup)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
+        public List<Pokemon> GetSurroundingPokemon(string pokemonId)
+        {
+            List<Pokemon> surroundingPokemon = new List<Pokemon>();
+            List<string> pokemonIds = this.GetPokemonIds();
+            string previousId, nextId;
+            int index = pokemonIds.FindIndex(x => x == pokemonId);
+
+            if(pokemonIds[index] == pokemonIds.First())
+            {
+                previousId = pokemonIds.Last();
+            }
+            else
+            {
+                previousId = pokemonIds[index - 1];
+            }
+
+            if(pokemonIds[index] == pokemonIds.Last())
+            {
+                nextId = pokemonIds.First();
+            }
+            else
+            {
+                nextId = pokemonIds[index + 1];
+            }
+
+            surroundingPokemon.Add(this.GetPokemonByIdNoIncludes(previousId));
+            surroundingPokemon.Add(this.GetPokemonByIdNoIncludes(nextId));
+
+            return surroundingPokemon;
+        }
+
+        public List<string> GetPokemonIds()
+        {
+            List<string> ids = new List<string>();
+
+            foreach(var p in this.GetAllPokemon())
+            {
+                if(p.Id.IndexOf('-') == -1)
+                {
+                    ids.Add(p.Id);
+                }
+            }
+
+            return ids;
         }
 
         public PokemonEggGroupDetail GetPokemonWithEggGroupsNoIncludes(string pokemonId)

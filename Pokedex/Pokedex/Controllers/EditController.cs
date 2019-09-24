@@ -835,6 +835,7 @@ namespace Pokedex.Controllers
             Evolution preEvolution = this._dataService.GetPreEvolutionNoEdit(oldNumber);
             List<Evolution> evolutions = this._dataService.GetPokemonEvolutionsNoEdit(oldNumber);
             List<PokemonFormDetail> altForms = this._dataService.GetPokemonFormDetailsForPokemon(oldNumber);
+            PokemonLegendaryDetail legendaryDetail = this._dataService.GetLegendaryDetail(oldNumber);
 
             this._dataService.AddPokemon(newPokemon);
 
@@ -892,6 +893,11 @@ namespace Pokedex.Controllers
                     pokemon.Id = newPokemon.Id + pokemon.Id.Substring(pokemon.Id.IndexOf('-'));
                     this.UpdateAltForm(pokemon, altOldNumber, newPokemon.Id);
                 }
+            }
+
+            if (legendaryDetail != null)
+            {
+                
             }
 
             this._dataService.DeletePokemon(oldNumber);

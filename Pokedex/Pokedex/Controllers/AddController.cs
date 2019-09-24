@@ -650,13 +650,6 @@ namespace Pokedex.Controllers
 
             if(_cameFromAdminPokemon || _cameFromAdminAltForms)
             {
-                if (this.CheckIfComplete(typing.PokemonId))
-                {
-                    Pokemon pokemon = this._dataService.GetPokemonById(typing.PokemonId);
-                    pokemon.IsComplete = true;
-                    this._dataService.UpdatePokemon(pokemon);
-                }
-
                 if (_cameFromAdminPokemon)
                 {
                     _cameFromAdminPokemon = false;
@@ -711,13 +704,6 @@ namespace Pokedex.Controllers
 
             if(_cameFromAdminPokemon || _cameFromAdminAltForms)
             {
-                if (this.CheckIfComplete(abilities.PokemonId))
-                {
-                    Pokemon pokemon = this._dataService.GetPokemonById(abilities.PokemonId);
-                    pokemon.IsComplete = true;
-                    this._dataService.UpdatePokemon(pokemon);
-                }
-
                 if (_cameFromAdminPokemon)
                 {
                     _cameFromAdminPokemon = false;
@@ -775,13 +761,6 @@ namespace Pokedex.Controllers
             if(_cameFromAdminPokemon)
             {
                 _cameFromAdminPokemon = false;
-                if (this.CheckIfComplete(eggGroups.PokemonId))
-                {
-                    Pokemon pokemon = this._dataService.GetPokemonById(eggGroups.PokemonId);
-                    pokemon.IsComplete = true;
-                    this._dataService.UpdatePokemon(pokemon);
-                }
-
                 return this.RedirectToAction("Pokemon", "Admin");
             }
             else
@@ -831,13 +810,6 @@ namespace Pokedex.Controllers
             }
             else if(_cameFromAdminPokemon || _cameFromAdminAltForms)
             {
-                if (this.CheckIfComplete(baseStat.PokemonId))
-                {
-                    Pokemon pokemon = this._dataService.GetPokemonById(baseStat.PokemonId);
-                    pokemon.IsComplete = true;
-                    this._dataService.UpdatePokemon(pokemon);
-                }
-
                 if (_cameFromAdminPokemon)
                 {
                     _cameFromAdminPokemon = false;
@@ -959,13 +931,6 @@ namespace Pokedex.Controllers
             if(_cameFromAdminPokemon)
             {
                 _cameFromAdminPokemon = false;
-                if (this.CheckIfComplete(evYield.PokemonId))
-                {
-                    Pokemon pokemon = this._dataService.GetPokemonById(evYield.PokemonId);
-                    pokemon.IsComplete = true;
-                    this._dataService.UpdatePokemon(pokemon);
-                }
-
                 return this.RedirectToAction("Pokemon", "Admin");
             }
             else
@@ -1013,15 +978,6 @@ namespace Pokedex.Controllers
             this._dataService.AddPokemonLegendaryDetails(pokemonLegendaryDetails);
 
             return this.RedirectToAction("Pokemon", "Admin");
-        }
-
-        public bool CheckIfComplete(string pokemonId)
-        {
-            return this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
         }
     }
 }
