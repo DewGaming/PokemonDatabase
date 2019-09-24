@@ -37,7 +37,7 @@
                     </td>
                     <td>
                         <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">
-                            <img title="@Model.First().SurroundingPokemon[0].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[0].Id + ".png")" />
+                            <img class="lightshadowed" title="@Model.First().SurroundingPokemon[0].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[0].Id + ".png")" />
                         </a>
                     </td>
                 </tr>
@@ -48,7 +48,7 @@
                 <tr>
                     <td>
                         <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">
-                            <img title="@Model.First().SurroundingPokemon[1].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[1].Id + ".png")" />
+                            <img class="lightshadowed" title="@Model.First().SurroundingPokemon[1].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[1].Id + ".png")" />
                         </a>
                     </td>
                     <td>
