@@ -4,6 +4,15 @@
     Layout = "_layout";
 }
 
+@section styles
+{
+    <style>
+        .radioButton {
+            margin: 5px 0;
+        }
+    </style>
+}
+
 <div class="form-horizontal">
 
     @using (Html.BeginForm())
@@ -16,8 +25,10 @@
             @Html.LabelFor(x => x.CommentType, "What type of comment is this?")
             @foreach(var c in Model.TypeOfComment)
             {
-                @Html.LabelFor(x => x.CommentType, c)
-                @Html.RadioButtonFor(x => x.CommentType, c)
+                <div class="radioButton col-md-8">
+                    @Html.RadioButtonFor(x => x.CommentType, c, new { @id = c.Replace(" ", "") })
+                    @Html.Label(c.Replace(" ", ""), c)
+                </div>
             }
         </div>
 
@@ -25,14 +36,19 @@
             @Html.LabelFor(x => x.CommentedPage, "What page are you commenting on?")
             @foreach(var p in Model.Page)
             {
-                @Html.LabelFor(x => x.CommentedPage, p)
-                @Html.RadioButtonFor(x => x.CommentedPage, p)
+                <div class="radioButton">
+                    <div class="col-md-8">
+                        @Html.RadioButtonFor(x => x.CommentedPage, p, new { @id = p.Replace(" ", "") })
+                        @Html.Label(p.Replace(" ", ""), p)
+                    </div>
+                    @if(p == "Pokemon Page")
+                    {
+                        <div class="col-md-3">
+                            @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    }
+                </div>
             }
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(x => x.PokemonName, "If comment is on a pokemon, which Pokemon?")
-            @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @class = "form-control" } })
         </div>
 
         <div class="form-group">

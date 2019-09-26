@@ -7,10 +7,6 @@
             </div>
             <div style="margin-top: -1px;" class="form-group mb-2">
                 <button type="submit" class="btn btn-secondary search-button" role="button">Search</button>
-                @if(ViewData["Search"] != null)
-                {
-                    <a href="@(Url.Action("AllPokemon", "Home"))" class="btn btn-outline-secondary reset-button" role="button">Reset</a>
-                }
             </div>
         }
     </li>

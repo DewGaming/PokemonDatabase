@@ -246,8 +246,18 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                TypeOfComment = new List<string>(new string[] { "Bug", "Suggestion" }),
-                Page = new List<string>(new string[] { "Home Page", "Shiny Hunt Page", "Pokemon List", "Search Page", "Pokemon Page" }),
+                TypeOfComment = new List<string>(new string[] { "Bug",
+                                                                "Critique",
+                                                                "Feature" }),
+                Page = new List<string>(new string[] { "Home Page",
+                                                       "Pokemon List",
+                                                       "Pokemon Page",
+                                                       "Search Page",
+                                                       "Type Chart Page",
+                                                       "Typing Evaluator Page",
+                                                       "Team Generator Page",
+                                                       "Shiny Hunt Page",
+                                                       "New Page" }),
             };
             return this.View(model);
         }
@@ -261,8 +271,18 @@ namespace Pokedex.Controllers
             {
                 CommentViewModel model = new CommentViewModel()
                 {
-                    TypeOfComment = new List<string>(new string[] { "Bug", "Suggestion" }),
-                    Page = new List<string>(new string[] { "Home Page", "Shiny Hunt Page", "Pokemon List", "Search Page", "Pokemon Page" }),
+                    TypeOfComment = new List<string>(new string[] { "Bug",
+                                                                    "Critique",
+                                                                    "Feature" }),
+                    Page = new List<string>(new string[] { "Home Page",
+                                                           "Pokemon List",
+                                                           "Pokemon Page",
+                                                           "Search Page",
+                                                           "Type Chart Page",
+                                                           "Typing Evaluator Page",
+                                                           "Team Generator Page",
+                                                           "Shiny Hunt Page",
+                                                           "New Page" }),
                 };
                 return this.View(model);
             }
