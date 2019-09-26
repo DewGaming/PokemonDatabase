@@ -244,12 +244,5 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ContinueHunt", "User", new { id = newHunt.Id });
         }
-
-        [AllowAnonymous]
-        [Route("error")]
-        public IActionResult Error()
-        {
-            return this.View();
-        }
     }
 }

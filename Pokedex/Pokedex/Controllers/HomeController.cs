@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-
+using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -37,17 +37,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("search")]
+        [Route("redirectToSearch")]
         public IActionResult Search(string search)
         {
-            if(search == null)
-            {
-                return this.RedirectToAction("AllPokemon", "Home");
-            }
-            else
-            {
-                return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
-            }
+            search = HttpUtility.UrlDecode(search);
+            return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
         }
 
         [AllowAnonymous]
@@ -105,7 +99,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            return this.RedirectToAction("Error");
+            return this.RedirectToAction("AllPokemon", "Home");
         }
 
         [AllowAnonymous]
@@ -263,7 +257,7 @@ namespace Pokedex.Controllers
                                                        "Type Chart Page",
                                                        "Typing Evaluator Page",
                                                        "Team Generator Page",
-                                                       "Shiny Hunt Page",
+                                                       "Shiny Hunt Page (Need to login to see)",
                                                        "New Page" }),
             };
             return this.View(model);
