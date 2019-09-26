@@ -281,7 +281,7 @@ namespace Pokedex.Controllers
                                                            "Type Chart Page",
                                                            "Typing Evaluator Page",
                                                            "Team Generator Page",
-                                                           "Shiny Hunt Page",
+                                                           "Shiny Hunt Page (Need to login to see)",
                                                            "New Page" }),
                 };
                 return this.View(model);
