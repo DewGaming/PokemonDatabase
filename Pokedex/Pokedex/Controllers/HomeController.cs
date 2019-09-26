@@ -37,10 +37,12 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("redirectToSearch")]
+        [Route("search")]
         public IActionResult Search(string search)
         {
-            if(search == null)
+            search = HttpUtility.UrlDecode(search);
+            search = string.IsNullOrEmpty(search) ? "" : search.Replace("/", "").Replace("\\", "");
+            if(string.IsNullOrEmpty(search))
             {
                 return this.RedirectToAction("AllPokemon", "Home");
             }
@@ -55,10 +57,10 @@ namespace Pokedex.Controllers
         public IActionResult SearchRedirect(string search)
         {
             search = HttpUtility.UrlDecode(search);
-            this.ViewData["Search"] = search;
 
             if (!string.IsNullOrEmpty(search))
             {
+                this.ViewData["Search"] = search;
                 if (search.Contains("type null", StringComparison.OrdinalIgnoreCase))
                 {
                     search = "Type: Null";
@@ -76,10 +78,9 @@ namespace Pokedex.Controllers
                     search = search.Remove(search.Length - 2, 2) + "-o";
                 }
 
-                List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes();
-                model = model
-                    .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
-                    .ToList();
+                List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes()
+                                                                 .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
+                                                                 .ToList();
 
                 Pokemon pokemonSearched = this._dataService.GetPokemon(search);
 
