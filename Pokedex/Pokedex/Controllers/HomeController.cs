@@ -41,7 +41,14 @@ namespace Pokedex.Controllers
         public IActionResult Search(string search)
         {
             search = HttpUtility.UrlDecode(search);
-            return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
+            if(search == null)
+            {
+                return this.RedirectToAction("AllPokemon", "Home");
+            }
+            else
+            {
+                return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
+            }
         }
 
         [AllowAnonymous]
