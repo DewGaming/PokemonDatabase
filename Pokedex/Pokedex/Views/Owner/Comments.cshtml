@@ -60,7 +60,7 @@
                     <td>
                         @if(item.CommentedPage != null)
                         {
-                            @if(@item.PokemonName != "")
+                            @if(@item.PokemonName != null)
                             {
                                 @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
                             }
@@ -90,6 +90,7 @@
                 <th scope="col">Commented By</th>
                 <th scope="col">Comment Type</th>
                 <th scope="col">Commented Page</th>
+                <th scope="col">Actions</th>
             </tr>
             @foreach(var item in Model.Where(x => x.IsCompleted))
             {
@@ -118,7 +119,7 @@
                     <td>
                         @if(item.CommentedPage != null)
                         {
-                            @if(@item.PokemonName != "")
+                            @if(@item.PokemonName != null)
                             {
                                 @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
                             }
@@ -132,6 +133,8 @@
                             @("No Page Selected")
                         }
                     </td>
+                    
+                    <td><a class="btn btn-primary" href="@Url.Action("Comment", "Delete", new { id = @item.Id })">Remove Comment</a></td>
                 </tr>
             }
         </table>

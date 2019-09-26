@@ -168,6 +168,25 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("Users", "Owner");
         }
+        
+        [HttpGet]
+        [Route("delete_comment/{id:int}")]
+        public IActionResult Comment(int id)
+        {
+            Comment model = this._dataService.GetComment(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_comment/{id:int}")]
+        public IActionResult Comment(Comment comment)
+        {
+            this._dataService.DeleteComment(comment.Id);
+
+            return this.RedirectToAction("Comments", "Owner");
+        }
 
         [HttpGet]
         [Route("delete_egg_group/{id:int}")]

@@ -1551,6 +1551,13 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void DeleteComment(int id)
+        {
+            Comment comment = this.GetComment(id);
+            this._dataContext.Comments.Remove(comment);
+            this._dataContext.SaveChanges();
+        }
+
         public void DeleteEggGroup(int id)
         {
             EggGroup eggGroup = this.GetEggGroup(id);
