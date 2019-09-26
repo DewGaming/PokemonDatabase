@@ -40,7 +40,6 @@ namespace Pokedex.Controllers
         [Route("redirectToSearch")]
         public IActionResult Search(string search)
         {
-            search = HttpUtility.UrlDecode(search);
             if(search == null)
             {
                 return this.RedirectToAction("AllPokemon", "Home");
@@ -55,6 +54,7 @@ namespace Pokedex.Controllers
         [Route("search/{search}")]
         public IActionResult SearchRedirect(string search)
         {
+            search = HttpUtility.UrlDecode(search);
             this.ViewData["Search"] = search;
 
             if (!string.IsNullOrEmpty(search))
