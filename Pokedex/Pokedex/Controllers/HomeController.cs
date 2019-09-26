@@ -40,7 +40,14 @@ namespace Pokedex.Controllers
         [Route("search")]
         public IActionResult Search(string search)
         {
-            return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
+            if(search == null)
+            {
+                return this.RedirectToAction("AllPokemon", "Home");
+            }
+            else
+            {
+                return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
+            }
         }
 
         [AllowAnonymous]
