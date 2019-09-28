@@ -1,0 +1,25 @@
+.typing div {
+    width: 25%;
+  }
+
+  .WeakAgainst {
+      margin-right: 10px;
+  }
+  
+  @media (min-width: 768px){
+    .container {
+      max-width: 762px !important;
+    }
+  }
+  
+  @media (min-width: 953px){
+    .container {
+      max-width: 80% !important;
+    }
+  }
+  
+  @media (min-width: 1149px){
+    .container {
+      max-width: 1138px !important;
+    }
+  }

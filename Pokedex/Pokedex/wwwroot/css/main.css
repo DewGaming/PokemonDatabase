@@ -59,9 +59,15 @@
 }
 
 .fixed-nav {
+  top: 0;
   width: 100%;
-  position: fixed;
   z-index: 500;
+  position: sticky;
+}
+
+.nav-scroll {
+  max-height: 296px;
+  overflow-y: scroll;
 }
 
 .attemptCounter {
@@ -126,17 +132,13 @@ hr.dropdown-line {
   margin: 15px 0 10px 0;
 }
 
-.fixed-nav {
-  top: 0;
-}
-
 .statData {
   width: 150px;
 }
 
 main {
   padding: 0 5px !important;
-  margin: 80px 0 40px;
+  margin: 0 0 40px;
 }
 
 .shadowed img {
