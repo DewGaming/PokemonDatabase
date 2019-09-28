@@ -4,6 +4,10 @@
   margin: 5px;
 }
 
+.accountOptionHeader {
+    margin-left: 10px;
+}
+
 #search {
   width: 10rem;
 }
@@ -143,6 +147,10 @@ main {
 .lightshadowed {
   -webkit-filter: drop-shadow(.5px .5px .5px #222) !important;
           filter: drop-shadow(.5px .5px .5px #222) !important;
+}
+
+.accountDropdown .dropdown-item {
+  padding: 0 1.5rem !important;
 }
 
 .differentForms {

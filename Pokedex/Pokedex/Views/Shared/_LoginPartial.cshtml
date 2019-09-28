@@ -2,10 +2,10 @@
 
 @if(User.Identity.IsAuthenticated)
 {
-    <li class="nav-item dropdown">
+    <li class="nav-item dropdown accountDropdown">
         <a class="nav-link dropdown-toggle" href="" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
         <div class="dropdown-menu" aria-labelledby="userDropdown">
-            <span>General Options</span>
+            <span class="accountOptionHeader">General Options</span>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="@Url.Action("ShinyHuntingCounter", "User")">Shiny Hunting Counter</a>
             <div class="dropdown-divider"></div>
@@ -13,14 +13,14 @@
             {
                 @if(User.IsInRole("Owner"))
                 {
-                    <span>Owner Options</span>
+                    <span class="accountOptionHeader">Owner Options</span>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
                     <a class="dropdown-item" href="@Url.Action("Comments", "Owner")">Comments</a>
                     <a class="dropdown-item" href="@Url.Action("Update", "Owner")">Update</a>
                     <div class="dropdown-divider"></div>
                 }
-                <span>Admin Options</span>
+                <span class="accountOptionHeader">Admin Options</span>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
                 <a class="dropdown-item" href="@Url.Action("Classifications", "Admin")">Classifications</a>
@@ -34,7 +34,7 @@
                 <a class="dropdown-item" href="@Url.Action("Types", "Admin")">Types</a>
                 <div class="dropdown-divider"></div>
             }
-            <span>Account Options</span>
+            <span class="accountOptionHeader">Account Options</span>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
             <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
