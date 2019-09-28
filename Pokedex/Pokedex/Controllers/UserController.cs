@@ -130,11 +130,14 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [Route("update_pokemon_list/{generationId}")]
-        public List<Pokemon> UpdatePokemonList(string generationId)
+        public UpdatePokemonListViewModel UpdatePokemonList(string generationId)
         {
             Generation gen = this._dataService.GetGeneration(generationId);
-            List<Pokemon> pokemon = this._dataService.GetAllPokemon().Where(x => x.Generation.ReleaseDate <= gen.ReleaseDate && !x.Id.Contains('-')).ToList();
-            return pokemon;
+            UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel(){
+                PokemonList = this._dataService.GetAllPokemon().Where(x => x.Generation.ReleaseDate <= gen.ReleaseDate && !x.Id.Contains('-')).ToList(),
+                Generation = gen,
+            };
+            return pokemonList;
         }
 
         [HttpGet]

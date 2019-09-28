@@ -12,3 +12,19 @@
 .shinyCharmCheckBox.hidden {
     display: none;
 }
+
+.shinyCharmCheckBox input {
+    width: auto;
+}
+
+.shinyHuntLabel {
+    width: 25%;
+}
+
+.shinyHuntOption {
+    width: 66.666666666%;
+}
+
+.shinyHuntButton {
+    margin-left: -17.5px;
+}

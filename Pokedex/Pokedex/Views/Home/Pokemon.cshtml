@@ -438,7 +438,7 @@
                            <td>
                                @item.Pokemon.EggCycle.CycleCount Cycles
                                <br>
-                               (@(item.Pokemon.EggCycle.CycleCount * 257) Steps to Hatch)
+                               (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
                             </td>
                         </tr>
                     </tbody>
@@ -508,6 +508,7 @@
                                             @evolution.EvolutionMethod.Name
                                             @if (@evolution.EvolutionDetails != null)
                                             {
+                                                <br>
                                                 @(" (" + @evolution.EvolutionDetails + ")");
                                             }
                                         </td>
