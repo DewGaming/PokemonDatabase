@@ -262,11 +262,13 @@ namespace Pokedex.Controllers
                                                        "Pokemon List",
                                                        "Pokemon Page",
                                                        "Search Page",
+                                                       "Comment Page",
                                                        "Type Chart Page",
                                                        "Typing Evaluator Page",
                                                        "Team Generator Page",
                                                        "Shiny Hunt Page (Need to login to see)",
-                                                       "New Page" }),
+                                                       "New Page",
+                                                       "Other" }),
             };
             return this.View(model);
         }
@@ -287,11 +289,13 @@ namespace Pokedex.Controllers
                                                            "Pokemon List",
                                                            "Pokemon Page",
                                                            "Search Page",
+                                                           "Comment Page",
                                                            "Type Chart Page",
                                                            "Typing Evaluator Page",
                                                            "Team Generator Page",
                                                            "Shiny Hunt Page (Need to login to see)",
-                                                           "New Page" }),
+                                                           "New Page",
+                                                           "Other" }),
                 };
                 return this.View(model);
             }

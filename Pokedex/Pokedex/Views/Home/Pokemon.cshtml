@@ -44,7 +44,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">→ @Model.First().SurroundingPokemon[1].Name.Replace('_', ' ')</a>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">@Model.First().SurroundingPokemon[1].Name.Replace('_', ' ') →</a>
                     </td>
                 </tr>
             </table>

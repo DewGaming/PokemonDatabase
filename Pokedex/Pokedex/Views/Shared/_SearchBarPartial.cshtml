@@ -3,7 +3,7 @@
         @using (Html.BeginForm("Search", "Home", FormMethod.Get, new { @class = "form-inline" } ))
         {
             <div style="margin-right: 7.5px;" class="form-group mb-2">
-                @Html.Editor("search", new { htmlAttributes = new { @class = "form-control", @list = "pokemonList", @autocomplete = "off" }, @Value = @ViewData["Search"] })
+                @Html.Editor("search", new { htmlAttributes = new { @class = "form-control", @autocomplete = "off" }, @Value = @ViewData["Search"] })
             </div>
             <div style="margin-top: -1px;" class="form-group mb-2">
                 <button type="submit" class="btn btn-secondary search-button" role="button">Search</button>
