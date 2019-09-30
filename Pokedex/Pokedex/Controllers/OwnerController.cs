@@ -41,17 +41,20 @@ namespace Pokedex.Controllers
         [Route("complete_comment/{id:int}")]
         public IActionResult CompleteComment(int id)
         {
-            Comment model = this._dataService.GetComment(id);
+            Comment comment = this._dataService.GetComment(id);
+            comment.IsCompleted = true;
 
-            return this.View(model);
+            this._dataService.UpdateComment(comment);
+
+            return this.RedirectToAction("Comments", "Owner");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("complete_comment/{id:int}")]
-        public IActionResult CompleteComment(Comment comment)
+        [HttpGet]
+        [Route("undo_completion/{id:int}")]
+        public IActionResult UndoComment(int id)
         {
-            comment.IsCompleted = true;
+            Comment comment = this._dataService.GetComment(id);
+            comment.IsCompleted = false;
 
             this._dataService.UpdateComment(comment);
 

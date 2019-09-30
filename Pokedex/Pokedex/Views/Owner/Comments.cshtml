@@ -27,51 +27,37 @@
     {
         <table class="table">
             <tr>
-                <th style="width: 25rem;" scope="col">Comment</th>
-                <th scope="col">Commented By</th>
-                <th scope="col">Comment Type</th>
-                <th scope="col">Commented Page</th>
+                <th class="col-md-9" scope="col">Comment</th>
                 <th scope="col">Actions</th>
             </tr>
             @foreach(var item in Model.Where(x => !x.IsCompleted))
             {
                 <tr>
-                    <td>@item.Name</td>
                     <td>
+                        @(@item.CommentType + " for ")
+                        @if(@item.PokemonName != null)
+                        {
+                            @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
+                        }
+                        else
+                        {
+                            @item.CommentedPage
+                        }
                         @if(item.Commentor != null)
                         {
-                            @item.Commentor.Username
+                            @(" by " + @item.Commentor.Username)
                         }
-                        else
-                        {
-                            @("Anonymous")
-                        }
-                    </td>
-                    <td>
-                        @if(item.CommentType != null)
-                        {
-                            @item.CommentType
-                        }
-                        else
-                        {
-                            @("No Type Selected")
-                        }
-                    </td>
-                    <td>
-                        @if(item.CommentedPage != null)
-                        {
-                            @if(@item.PokemonName != null)
-                            {
-                                @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
-                            }
-                            else
-                            {
-                                @item.CommentedPage
-                            }
-                        }
+                        <br>
+                        <br>
+                        @item.Name
                     </td>
                     
-                    <td><a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a></td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
+                        <br>
+                        <br>
+                        <a class="btn btn-primary" href="@Url.Action("Comment", "Delete", new { id = @item.Id })">Remove Comment</a>
+                    </td>
                 </tr>
             }
         </table>
@@ -86,55 +72,37 @@
     {
         <table class="table">
             <tr>
-                <th style="width: 25rem;" scope="col">Comment</th>
-                <th scope="col">Commented By</th>
-                <th scope="col">Comment Type</th>
-                <th scope="col">Commented Page</th>
+                <th class="col-md-9" scope="col">Comment</th>
                 <th scope="col">Actions</th>
             </tr>
             @foreach(var item in Model.Where(x => x.IsCompleted))
             {
                 <tr>
-                    <td>@item.Name</td>
                     <td>
+                        @(@item.CommentType + " for ")
+                        @if(@item.PokemonName != null)
+                        {
+                            @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
+                        }
+                        else
+                        {
+                            @item.CommentedPage
+                        }
                         @if(item.Commentor != null)
                         {
-                            @item.Commentor.Username
+                            @(" by " + @item.Commentor.Username)
                         }
-                        else
-                        {
-                            @("Anonymous")
-                        }
-                    </td>
-                    <td>
-                        @if(item.CommentType != null)
-                        {
-                            @item.CommentType
-                        }
-                        else
-                        {
-                            @("No Type Selected")
-                        }
-                    </td>
-                    <td>
-                        @if(item.CommentedPage != null)
-                        {
-                            @if(@item.PokemonName != null)
-                            {
-                                @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
-                            }
-                            else
-                            {
-                                @item.CommentedPage
-                            }
-                        }
-                        else
-                        {
-                            @("No Page Selected")
-                        }
+                        <br>
+                        <br>
+                        @item.Name
                     </td>
                     
-                    <td><a class="btn btn-primary" href="@Url.Action("Comment", "Delete", new { id = @item.Id })">Remove Comment</a></td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("UndoComment", "Owner", new { id = @item.Id })">Undo Completion</a>
+                        <br>
+                        <br>
+                        <a class="btn btn-primary" href="@Url.Action("Comment", "Delete", new { id = @item.Id })">Remove Comment</a>
+                    </td>
                 </tr>
             }
         </table>

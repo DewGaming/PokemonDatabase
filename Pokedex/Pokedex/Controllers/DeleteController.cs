@@ -173,16 +173,7 @@ namespace Pokedex.Controllers
         [Route("delete_comment/{id:int}")]
         public IActionResult Comment(int id)
         {
-            Comment model = this._dataService.GetComment(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_comment/{id:int}")]
-        public IActionResult Comment(Comment comment)
-        {
+            Comment comment = this._dataService.GetComment(id);
             this._dataService.DeleteComment(comment.Id);
 
             return this.RedirectToAction("Comments", "Owner");
