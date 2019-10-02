@@ -285,25 +285,26 @@ img {
   float: right;
 }
 
-.surroundingPokemon {
+.surroundingPokemon, .evolutionPokemon {
   width: 100%;
 }
 
-.surroundingPokemon a, .surroundingPokemon a:hover {
+.surroundingPokemon a, .evolutionPokemon a, .surroundingPokemon a:hover, .evolutionPokemon a:hover {
   color: grey !important;
   text-decoration: none;
 }
 
-.surroundingPokemon img {
+.surroundingPokemon img, .evolutionPokemon img {
   margin: 0 -10px;
+  width: 2.5rem;
 }
 
 .surroundingPokemon td {
   border: none;
 }
 
-.surroundingPokemon img {
-  width: 2.5rem;
+.evolutionLink {
+  margin-left: 20px;
 }
 
 h2 {
