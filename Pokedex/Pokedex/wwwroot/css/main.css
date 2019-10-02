@@ -303,8 +303,8 @@ img {
   border: none;
 }
 
-.evolutionLink {
-  margin-left: 20px;
+.evolutionPokemon a {
+  padding: 0 10px
 }
 
 h2 {
