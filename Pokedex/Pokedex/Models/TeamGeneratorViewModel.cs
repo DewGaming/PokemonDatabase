@@ -9,6 +9,8 @@ namespace Pokedex.Models
 
         public List<Pokemon> AllPokemonOriginalNames { get; set; }
 
+        public List<Ability> PokemonAbilities { get; set; }
+
         public List<string> PokemonURLs { get; set; }
     }
 }

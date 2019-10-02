@@ -86,7 +86,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm)
+        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm, bool randomAbility)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -100,6 +100,7 @@ namespace Pokedex.Controllers
                 TeamGeneratorViewModel model = new TeamGeneratorViewModel(){
                     AllPokemonChangedNames = new List<Pokemon>(),
                     AllPokemonOriginalNames = new List<Pokemon>(),
+                    PokemonAbilities = new List<Ability>(),
                 };
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
@@ -410,6 +411,23 @@ namespace Pokedex.Controllers
                 foreach(var p in model.AllPokemonOriginalNames)
                 {
                     model.PokemonURLs.Add(this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }));
+                }
+
+                foreach(var p in model.AllPokemonOriginalNames)
+                {
+                    pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                    List<Ability> abilities = new List<Ability>();
+                    PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
+                    abilities.Add(pokemonAbilities.PrimaryAbility);
+                    if(pokemonAbilities.SecondaryAbility != null)
+                    {
+                        abilities.Add(pokemonAbilities.SecondaryAbility);
+                    }
+                    if(pokemonAbilities.HiddenAbility != null)
+                    {
+                        abilities.Add(pokemonAbilities.HiddenAbility);
+                    }
+                    model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
                 }
 
                 return model;

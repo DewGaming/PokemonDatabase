@@ -11,6 +11,10 @@
             max-width: 300px;
             max-height: 300px;
         }
+
+        .pokemonAbility {
+            margin: 10px 0;
+        }
     </style>
 }
 
@@ -87,6 +91,10 @@
         </section>
         <section class="generatorSection otherOptions">
             <span class="generationOptionTitle">Other Options</span>
+            <li class="dropdown-item generatorOption randomAbilityCheckbox">
+                <input id="randomAbilityBool" type="checkbox" value="randomAbilityBool" />
+                <label for="randomAbilityBool" class="generatorOptionTitle">Show Random Ability</label>
+            </li>
             <li class="dropdown-item generatorOption legendaryBoolCheckbox">
                 <input id="legendaryBool" type="checkbox" value="legendaryBool" />
                 <label for="legendaryBool" class="generatorOptionTitle">Only Show Legendaries</label>
