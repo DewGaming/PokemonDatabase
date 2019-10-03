@@ -233,7 +233,7 @@ main {
   margin-top: -15px;
 }
 
-.generatorDropdown, .generatorButton {
+.generatorDropdown, .generatorButton, .exportTeamButton {
   height: 50px;
 }
 
@@ -397,8 +397,8 @@ h2 {
   text-align: center;
 }
 
-.generatorButton {
-  margin-bottom: 15px;
+.generatorButton, .exportTeamButton {
+  margin: 0 5px 15px 0;
 }
 
 a {

@@ -57,6 +57,9 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
             $('.pokemon' + (i + 1)).append('<div class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
         }
     }
+
+    $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
+    refreshExportEvent();
 }, checkLegendaryChecks = function() {
     var boxChecked = false;
     $('.legendaryCheckbox input').each(function() {
@@ -180,10 +183,43 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
     {
         $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
     }
+}, refreshExportEvent = function() {
+    $('.exportTeamButton').off();
+
+    $('.exportTeamButton').on('click', function() {
+        var pokemonStringList = [], abilityStringList = [];
+        pokemonList.forEach(function(item) {
+            pokemonStringList.push(item.name);
+        });
+
+        if(randomAbilityBool)
+        {
+            abilityList.forEach(function(item) {
+                abilityStringList.push(item.name);
+            });
+        }
+
+        $.ajax({
+            url: '/export-pokemon-team/',
+            method: 'POST',
+            data: { 'pokemonList': pokemonStringList, 'abilityList': abilityStringList, 'exportAbilities':  randomAbilityBool }
+        })
+        .done(function(data) {
+            alert("Copy This For Pokemon Showdown" + ((altCheck || megaCheck) ? "\n(May have to fix some names for alternate forms)" : "") + ": \n\n" + data);
+        })
+        .fail(function(jqXHR) {
+            alert(jqXHR.statusText);
+        });
+    });
 };
 
 $(function() {
     generatorMenuCheck();
+    altCheck = checkAltFormChecks();
+    legendCheck = checkLegendaryChecks();
+    megaCheck = checkMegaCheck();
+    checkAlolanForms();
+    checkUltraBeasts();
 });
 
 $('.generatorDropdown').on('mouseover', function() {
@@ -232,6 +268,7 @@ $(window).on('resize', function() {
 
 $('.generatorButton').on('click', function() {
     var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions;
+    $('.exportTeamButton').remove();
     $('.generationCheckbox input').each(function() {
         if($(this).is(':checked')){
             selectedGens.push(this.value);

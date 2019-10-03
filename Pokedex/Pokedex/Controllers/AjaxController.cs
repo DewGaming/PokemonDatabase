@@ -85,6 +85,38 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("export-pokemon-team")]
+        public string ExportPokemonTeam(List<string> pokemonList, List<string> abilityList, bool exportAbilities)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                string pokemonTeam = string.Empty;
+
+                for(var i = 0; i < pokemonList.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                        pokemonTeam += "\n";
+                    }
+
+                    pokemonTeam += pokemonList[i] + "\n";
+                    if(exportAbilities)
+                    {
+                        pokemonTeam += "Ability: " + abilityList[i] + "\n";
+                    }
+                }
+
+                return pokemonTeam;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("get-pokemon-team")]
         public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm, bool randomAbility)
         {
