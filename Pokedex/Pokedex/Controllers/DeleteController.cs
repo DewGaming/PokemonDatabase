@@ -199,6 +199,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_form_item/{id:int}")]
+        public IActionResult FormItem(int id)
+        {
+            FormItem model = this._dataService.GetFormItem(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_form_item/{id:int}")]
+        public IActionResult FormItem(FormItem formItem)
+        {
+            this._dataService.DeleteFormItem(formItem.Id);
+
+            return this.RedirectToAction("FormItems", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_classification/{id:int}")]
         public IActionResult Classification(int id)
         {

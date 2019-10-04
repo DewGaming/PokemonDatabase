@@ -93,6 +93,14 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("form_items")]
+        public IActionResult FormItems()
+        {
+            List<FormItem> model = this._dataService.GetFormItems().OrderBy(x => x.Name).ToList();
+
+            return this.View(model);
+        }
+
         [Route("ability")]
         public IActionResult Abilities()
         {

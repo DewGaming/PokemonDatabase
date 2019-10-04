@@ -1,0 +1,39 @@
+@model List<Pokedex.DataAccess.Models.FormItem>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="formItemTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("FormItem", "Add")" role="button">Add Form Item</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Form Item</th>
+            <th scope="col">Pokemon Id</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.PokemonId
+                </td>
+                <td>
+                    <a href="@(Url.Action("FormItem", "Edit", new { id = item.Id }))">Edit</a>
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("FormItem", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

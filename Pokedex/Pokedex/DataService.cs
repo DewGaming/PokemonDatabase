@@ -76,6 +76,25 @@ namespace Pokedex
             return this._dataContext.Types.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
+        public FormItem GetFormItem(int id)
+        {
+            return this._dataContext.FormItems
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public FormItem GetFormItemByPokemonId(string id)
+        {
+            return this._dataContext.FormItems
+                .ToList()
+                .Find(x => x.PokemonId == id);
+        }
+
+        public List<FormItem> GetFormItems()
+        {
+            return this._dataContext.FormItems.OrderBy(x => x.Name).ToList();
+        }
+
         public List<Update> GetUpdates()
         {
             return this._dataContext.Updates.ToList();
@@ -1153,6 +1172,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddFormItem(FormItem formItem)
+        {
+            this._dataContext.FormItems.Add(formItem);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddEvolution(Evolution evolution)
         {
             this._dataContext.Evolutions.Add(evolution);
@@ -1300,6 +1325,12 @@ namespace Pokedex
         public void UpdateEvolution(Evolution evolution)
         {
             this._dataContext.Evolutions.Update(evolution);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateFormItem(FormItem formItem)
+        {
+            this._dataContext.FormItems.Update(formItem);
             this._dataContext.SaveChanges();
         }
 
@@ -1562,6 +1593,13 @@ namespace Pokedex
         {
             EggGroup eggGroup = this.GetEggGroup(id);
             this._dataContext.EggGroups.Remove(eggGroup);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteFormItem(int id)
+        {
+            FormItem formItem = this.GetFormItem(id);
+            this._dataContext.FormItems.Remove(formItem);
             this._dataContext.SaveChanges();
         }
 
