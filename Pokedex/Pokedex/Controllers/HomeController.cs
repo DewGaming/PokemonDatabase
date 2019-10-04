@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -312,7 +314,63 @@ namespace Pokedex.Controllers
 
             this._dataService.AddComment(comment);
 
+            this.EmailComment(comment);
+
             return this.RedirectToAction("Index", "Home");
+        }
+
+        [Route("email-comment")]
+        public void EmailComment(Comment comment)
+        {
+            try
+            {
+                // Receiver email address.
+                string receiverEmailId = "pokemondatabase2019@gmail.com";
+                // Will appear as the sender's name in the email
+                string senderName = "Pokemon Database";
+                // Sender email address. This needs to be a real email address that can be used for the SMTP username.
+                string senderEmailId = "pokemondatabase2019@gmail.com";
+                // Password for sender email. This is used for the SMTP password.
+                string password = "P0kemonDatabase.";
+                MailAddress fromAddress = new MailAddress(senderEmailId, senderName);
+                MailAddress toAddress = new MailAddress(receiverEmailId);
+                string subject = "New Comment for Pokemon Database";
+                string body = comment.CommentType + " for ";
+                if(comment.PokemonName != null)
+                {
+                    body += comment.CommentedPage + " (" + comment.PokemonName + ")";
+                }
+                else
+                {
+                    body += comment.CommentedPage;
+                }
+
+                if(comment.CommentorId != null)
+                {
+                    body += " by " + this._dataService.GetUserById((int)comment.CommentorId).Username;
+                }
+                
+                body += ": " + comment.Name;
+                //SMTP server
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                // Sets the username and password
+                smtp.Credentials = new NetworkCredential(senderEmailId, password);
+
+                MailMessage message = new MailMessage(fromAddress, toAddress);
+                message.Subject = subject;
+                message.Body = body;
+
+                smtp.Send(message);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Email could not be sent. " + ((ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message));
+            }
         }
 
         [AllowAnonymous]
