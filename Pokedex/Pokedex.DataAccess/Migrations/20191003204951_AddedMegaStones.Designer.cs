@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20191003204951_AddedMegaStones")]
+    partial class AddedMegaStones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,26 +282,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.ToTable("Forms");
                 });
 
-            modelBuilder.Entity("Pokedex.DataAccess.Models.FormItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.Property<string>("PokemonId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PokemonId");
-
-                    b.ToTable("FormItems");
-                });
-
             modelBuilder.Entity("Pokedex.DataAccess.Models.GenderRatio", b =>
                 {
                     b.Property<int>("Id")
@@ -359,6 +341,26 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LegendaryTypes");
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.MegaStone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("PokemonId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PokemonId");
+
+                    b.ToTable("MegaStones");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.Pokemon", b =>
@@ -729,7 +731,7 @@ namespace Pokedex.DataAccess.Migrations
                         .HasForeignKey("PokemonId");
                 });
 
-            modelBuilder.Entity("Pokedex.DataAccess.Models.FormItem", b =>
+            modelBuilder.Entity("Pokedex.DataAccess.Models.MegaStone", b =>
                 {
                     b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
                         .WithMany()
