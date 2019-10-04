@@ -162,7 +162,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamGeneratorViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm, bool randomAbility)
+        public TeamRandomizerViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm, bool randomAbility)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -173,7 +173,7 @@ namespace Pokedex.Controllers
                 }
 
                 Pokemon pokemon;
-                TeamGeneratorViewModel model = new TeamGeneratorViewModel(){
+                TeamRandomizerViewModel model = new TeamRandomizerViewModel(){
                     AllPokemonChangedNames = new List<Pokemon>(),
                     AllPokemonOriginalNames = new List<Pokemon>(),
                     PokemonAbilities = new List<Ability>(),

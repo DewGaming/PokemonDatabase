@@ -1,19 +1,19 @@
 var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, randomAbilityBool, fillGeneratedTable = function() {
-    $('.teamGeneratorTable tbody').remove();
-    $('.teamGeneratorTable').append($('<tbody>'));
+    $('.teamRandomizerTable tbody').remove();
+    $('.teamRandomizerTable').append($('<tbody>'));
     randomAbilityBool = $("#randomAbilityBool").is(":checked");
 
     if($(window).width() >= 1000)
     {
         for (var i = 0; i < 2; i++) {
-            $('.teamGenerator tbody').append($('<tr>'));
+            $('.teamRandomizer tbody').append($('<tr>'));
         }
 
         for (var i = 0; i < 3; i++) {
-            $('.teamGenerator tr:nth-child(1)').append($('<td>', {
+            $('.teamRandomizer tr:nth-child(1)').append($('<td>', {
                 class: "generatorPicture shadowed pokemon" + (i + 1)
             }));
-            $('.teamGenerator tr:nth-child(2)').append($('<td>', {
+            $('.teamRandomizer tr:nth-child(2)').append($('<td>', {
                 class: "generatorPicture shadowed pokemon" + (i + 4)
             }));
         }
@@ -21,17 +21,17 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
     else if($(window).width() >= 768)
     {
         for (var i = 0; i < 3; i++) {
-            $('.teamGenerator tbody').append($('<tr>'));
+            $('.teamRandomizer tbody').append($('<tr>'));
         }
 
         for (var i = 0; i < 2; i++) {
-            $('.teamGenerator tr:nth-child(1)').append($('<td>', {
+            $('.teamRandomizer tr:nth-child(1)').append($('<td>', {
                 class: "generatorPicture shadowed pokemon" + (i + 1)
             }));
-            $('.teamGenerator tr:nth-child(2)').append($('<td>', {
+            $('.teamRandomizer tr:nth-child(2)').append($('<td>', {
                 class: "generatorPicture shadowed pokemon" + (i + 3)
             }));
-            $('.teamGenerator tr:nth-child(3)').append($('<td>', {
+            $('.teamRandomizer tr:nth-child(3)').append($('<td>', {
                 class: "generatorPicture shadowed pokemon" + (i + 5)
             }));
         }
@@ -39,11 +39,11 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
     else
     {
         for (var i = 0; i < 6; i++) {
-            $('.teamGenerator tbody').append($('<tr>'));
+            $('.teamRandomizer tbody').append($('<tr>'));
         }
 
         for (var i = 0; i < 6; i++) {
-            $('.teamGenerator tr:nth-child(' + (i + 1) + ')').append($('<td>', {
+            $('.teamRandomizer tr:nth-child(' + (i + 1) + ')').append($('<td>', {
                 class: "generatorPicture shadowed pokemon" + (i + 1)
             }));
         }
@@ -258,10 +258,10 @@ $(window).on('resize', function() {
     generatorMenuCheck();
 
     if(
-        ($('.teamGenerator tr').length == 2 && $(window).width() < 1000) ||
-        ($('.teamGenerator tr').length == 3 && $(window).width() >= 1000) ||
-        ($('.teamGenerator tr').length == 3 && $(window).width() < 768) ||
-        ($('.teamGenerator tr').length == 6 && $(window).width() >= 768)
+        ($('.teamRandomizer tr').length == 2 && $(window).width() < 1000) ||
+        ($('.teamRandomizer tr').length == 3 && $(window).width() >= 1000) ||
+        ($('.teamRandomizer tr').length == 3 && $(window).width() < 768) ||
+        ($('.teamRandomizer tr').length == 6 && $(window).width() >= 768)
     )
     {
         fillGeneratedTable();

@@ -123,8 +123,8 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("team_generator")]
-        public IActionResult TeamGenerator()
+        [Route("team_randomizer")]
+        public IActionResult TeamRandomizer()
         {
             List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
             List<Generation> generations = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
@@ -267,7 +267,7 @@ namespace Pokedex.Controllers
                                                        "Comment Page",
                                                        "Type Chart Page",
                                                        "Typing Evaluator Page",
-                                                       "Team Generator Page",
+                                                       "Team Randomizer Page",
                                                        "Shiny Hunt Page (Need to login to see)",
                                                        "New Page",
                                                        "Other" }),
@@ -294,7 +294,7 @@ namespace Pokedex.Controllers
                                                            "Comment Page",
                                                            "Type Chart Page",
                                                            "Typing Evaluator Page",
-                                                           "Team Generator Page",
+                                                           "Team Randomizer Page",
                                                            "Shiny Hunt Page (Need to login to see)",
                                                            "New Page",
                                                            "Other" }),

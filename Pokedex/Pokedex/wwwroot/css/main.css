@@ -217,7 +217,7 @@ main {
   border-top-width: 1px;
 }
 
-.teamGeneratorTable td {
+.teamRandomizerTable td {
   border-width: 0;
 }
 
@@ -241,7 +241,7 @@ main {
   padding-left: 5px;
 }
 
-.teamGenerator:hover .dropdown-menu {
+.teamRandomizer:hover .dropdown-menu {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -393,7 +393,7 @@ h2 {
   color: #ff6bce;
 }
 
-.teamGenerator .generatorPicture {
+.teamRandomizer .generatorPicture {
   text-align: center;
 }
 

@@ -3,7 +3,7 @@ using Pokedex.DataAccess.Models;
 
 namespace Pokedex.Models
 {
-    public class TeamGeneratorViewModel
+    public class TeamRandomizerViewModel
     {
         public List<Pokemon> AllPokemonChangedNames { get; set; }
 
