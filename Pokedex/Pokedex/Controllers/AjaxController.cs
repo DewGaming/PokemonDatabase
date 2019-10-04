@@ -86,20 +86,29 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("export-pokemon-team")]
-        public string ExportPokemonTeam(List<string> pokemonList, List<string> abilityList, bool exportAbilities)
+        public string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                string pokemonTeam = string.Empty;
+                string pokemonTeam = string.Empty, pokemonName = string.Empty, pokemonForm = string.Empty;
+                Pokemon pokemon;
 
-                for(var i = 0; i < pokemonList.Count; i++)
+                for(var i = 0; i < pokemonIdList.Count; i++)
                 {
                     if (i != 0)
                     {
                         pokemonTeam += "\n";
                     }
 
-                    pokemonTeam += pokemonList[i] + "\n";
+                    pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);
+                    pokemonName = pokemon.Name;
+                    if(pokemon.Id.Contains('-'))
+                    {
+                        pokemonForm = this.GetFormDetails(pokemon.Id, necrozmaOriginalId);
+                        pokemonName += "-" + pokemonForm;
+                    }
+
+                    pokemonTeam += pokemonName + "\n";
                     if(exportAbilities)
                     {
                         pokemonTeam += "Ability: " + abilityList[i] + "\n";
@@ -114,6 +123,41 @@ namespace Pokedex.Controllers
             }
 
             return null;
+        }
+
+        [AllowAnonymous]
+        [Route("get-form-item")]
+        public string GetFormDetails(string pokemonId, string necrozmaOriginalId)
+        {
+            string formDetails = string.Empty, itemName = string.Empty;
+            PokemonFormDetail pokemonFormDetail;
+
+            if(pokemonId == "800-3")
+            {
+                pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(necrozmaOriginalId);
+            }
+            else
+            {
+                pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+            }
+            formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
+            
+            FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
+            if(formItem != null)
+            {
+                itemName = formItem.Name;
+            }
+            else if(formDetails.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
+            {
+                itemName = "[Insert Mega Stone Here]";
+            }
+
+            if(!string.IsNullOrEmpty(itemName))
+            {
+                formDetails += " @ " + itemName;
+            }
+
+            return formDetails;
         }
 
         [AllowAnonymous]
@@ -246,7 +290,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Mega"))
                     {  
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Mega Evolution" || x.Form.Name == "Mega X Evolution" || x.Form.Name == "Mega Y Evolution").ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Id == 9 || x.Form.Id == 10 || x.Form.Id == 11).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -275,7 +319,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Alolan"))
                     {
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Alolan").ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Id == 21).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -304,7 +348,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Galarian"))
                     {
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Galarian").ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Id == 1001).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -368,20 +412,22 @@ namespace Pokedex.Controllers
                     }
 
                     allPokemon.AddRange(altForms);
+
+                    allPokemon = this.RemoveExtraPokemonForms(allPokemon);
                 }
 
                 if (onlyAltForms)
                 {
                     allPokemon = allPokemon.Where(x => x.Id.Contains('-')).ToList();
                 }
-
-                if(allPokemon.Count() > 0)
+                
+                if (!multipleMegas)
                 {
                     List<Pokemon> megaList = new List<Pokemon>();
                     List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
-                    foreach(var p in altFormList.Where(x => x.Form.Name == "Mega Evolution"
-                                                         || x.Form.Name == "Mega X Evolution"
-                                                         || x.Form.Name == "Mega Y Evolution").ToList())
+                    foreach(var p in altFormList.Where(x => x.Form.Id == 9
+                                                         || x.Form.Id == 10
+                                                         || x.Form.Id == 11).ToList())
                     {
                         if(allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
                         {
@@ -389,7 +435,21 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    allPokemon = this.RemoveExtraPokemonForms(allPokemon);
+                    if(megaList.Count > 0)
+                    {
+                        Pokemon mega = megaList[rnd.Next(megaList.Count)];
+                        foreach(var p in megaList.Where(x => x.Id != mega.Id))
+                        {
+                            if (allPokemon.Exists(x => x.Id == p.Id))
+                            {
+                                allPokemon.Remove(allPokemon.Find(x => x.Id == p.Id));
+                            }
+                        }
+                    }
+                }
+
+                if(allPokemon.Count() > 0)
+                {
                     for (var i = 0; i < 6; i++)
                     {
                         if (pokemonList.Count() >= allPokemon.Count())
@@ -403,22 +463,25 @@ namespace Pokedex.Controllers
                             pokemon = allPokemon[rnd.Next(allPokemon.Count)];
                         }
 
-                        if (megaList.Exists(x => x.Id == pokemon.Id) && !multipleMegas)
+                        if (oneAltForm)
                         {
-                            foreach(var p in megaList)
+                            string originalPokemonId;
+                            if (pokemon.Id.Contains('-'))
                             {
-                                if (allPokemon.Exists(x => x.Id == p.Id))
-                                {
-                                    allPokemon.Remove(allPokemon.Find(x => x.Id == p.Id));
-                                }
+                                originalPokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-'));
                             }
-                        }
+                            else
+                            {
+                                originalPokemonId = pokemon.Id;
+                            }
 
-                        if (oneAltForm && pokemon.Id.Contains('-'))
-                        {
-                            List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')));
+                            List<Pokemon> altForms = this._dataService.GetAltForms(originalPokemonId);
 
-                            altForms.Remove(altForms.Find(x => x.Id == pokemon.Id));
+                            if (pokemon.Id.Contains('-'))
+                            {
+                                altForms.Remove(altForms.Find(x => x.Id == pokemon.Id));
+                                altForms.Add(this._dataService.GetPokemonById(originalPokemonId));
+                            }
 
                             foreach(var p in altForms)
                             {
@@ -478,22 +541,22 @@ namespace Pokedex.Controllers
         {
             List<Form> forms = new List<Form>();
 
-            forms.Add(this._dataService.GetFormByName("Mega Evolution"));
-            forms.Add(this._dataService.GetFormByName("Mega X Evolution"));
-            forms.Add(this._dataService.GetFormByName("Mega Y Evolution"));
-            forms.Add(this._dataService.GetFormByName("Alolan"));
-            forms.Add(this._dataService.GetFormByName("Galarian"));
-            forms.Add(this._dataService.GetFormByName("Rainy"));
-            forms.Add(this._dataService.GetFormByName("Snowy"));
-            forms.Add(this._dataService.GetFormByName("Sunny"));
-            forms.Add(this._dataService.GetFormByName("Zen Mode"));
-            forms.Add(this._dataService.GetFormByName("Pirouette Forme"));
-            forms.Add(this._dataService.GetFormByName("Blue-Striped Form"));
-            forms.Add(this._dataService.GetFormByName("Female"));
-            forms.Add(this._dataService.GetFormByName("Blade Forme"));
-            forms.Add(this._dataService.GetFormByName("Event"));
-            forms.Add(this._dataService.GetFormByName("School Form"));
-            forms.Add(this._dataService.GetFormByName("Core"));
+           forms.Add(this._dataService.GetForm(9));
+           forms.Add(this._dataService.GetForm(10));
+           forms.Add(this._dataService.GetForm(11));
+           forms.Add(this._dataService.GetForm(21));
+           forms.Add(this._dataService.GetForm(1001));
+           forms.Add(this._dataService.GetForm(34));
+           forms.Add(this._dataService.GetForm(35));
+           forms.Add(this._dataService.GetForm(33));
+           forms.Add(this._dataService.GetForm(47));
+           forms.Add(this._dataService.GetForm(13));
+           forms.Add(this._dataService.GetForm(46));
+           forms.Add(this._dataService.GetForm(45));
+           forms.Add(this._dataService.GetForm(44));
+           forms.Add(this._dataService.GetForm(26));
+           forms.Add(this._dataService.GetForm(29));
+           forms.Add(this._dataService.GetForm(22));
 
             return forms;
         }

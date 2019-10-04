@@ -186,10 +186,12 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
 }, refreshExportEvent = function() {
     $('.exportTeamButton').off();
 
+    var necrozmaOriginalId = '800-' + Math.floor(Math.random() * 2 + 1);
+
     $('.exportTeamButton').on('click', function() {
         var pokemonStringList = [], abilityStringList = [];
         pokemonList.forEach(function(item) {
-            pokemonStringList.push(item.name);
+            pokemonStringList.push(item.id);
         });
 
         if(randomAbilityBool)
@@ -202,10 +204,10 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
         $.ajax({
             url: '/export-pokemon-team/',
             method: 'POST',
-            data: { 'pokemonList': pokemonStringList, 'abilityList': abilityStringList, 'exportAbilities':  randomAbilityBool }
+            data: { 'pokemonIdList': pokemonStringList, 'abilityList': abilityStringList, 'exportAbilities':  randomAbilityBool, 'necrozmaOriginalId': necrozmaOriginalId }
         })
         .done(function(data) {
-            alert("Copy This For Pokemon Showdown" + ((altCheck || megaCheck) ? "\n(May have to fix some names for alternate forms)" : "") + ": \n\n" + data);
+            alert("Copy This For Pokemon Showdown: \n\n=== Export from pokemondatabase.net ===\n\n" + data);
         })
         .fail(function(jqXHR) {
             alert(jqXHR.statusText);
