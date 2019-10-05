@@ -528,6 +528,11 @@ namespace Pokedex.Controllers
                         abilities.Add(pokemonAbilities.HiddenAbility);
                     }
 
+                    if(p.Id == "744")
+                    {
+                        abilities.Add(this._dataService.GetAbility(174));
+                    }
+
                     if(p.Id == "718" || p.Id == "718-1")
                     {
                         model.PokemonAbilities.Add(abilities[0]);
