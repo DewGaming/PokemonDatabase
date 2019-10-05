@@ -1,4 +1,6 @@
-var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, randomAbilityBool, fillGeneratedTable = function() {
+var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, randomAbilityBool, randomZygarde = '718' + ((Math.floor(Math.random() * 2 + 1) == 1) ? '' : '-1')
+, randomNecrozma = '800-' + Math.floor(Math.random() * 2 + 1)
+, fillGeneratedTable = function() {
     $('.teamRandomizerTable tbody').remove();
     $('.teamRandomizerTable').append($('<tbody>'));
     randomAbilityBool = $("#randomAbilityBool").is(":checked");
@@ -54,7 +56,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
         $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
         if (randomAbilityBool)
         {
-            $('.pokemon' + (i + 1)).append('<div class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
+            $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
         }
     }
 
@@ -186,13 +188,39 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
 }, refreshExportEvent = function() {
     $('.exportTeamButton').off();
 
-    var necrozmaOriginalId = '800-' + Math.floor(Math.random() * 2 + 1);
+    var necrozmaOriginalId, zygardeOriginalId;
 
     $('.exportTeamButton').on('click', function() {
         var pokemonStringList = [], abilityStringList = [];
         pokemonList.forEach(function(item) {
             pokemonStringList.push(item.id);
         });
+
+        if(pokemonStringList.indexOf("800-1") > -1 && pokemonStringList.indexOf("800-2") == -1)
+        {
+            necrozmaOriginalId = "800-2";
+        }
+        else if(pokemonStringList.indexOf("800-1") == -1 && pokemonStringList.indexOf("800-2") > -1)
+        {
+            necrozmaOriginalId = "800-1";
+        }
+        else
+        {
+            necrozmaOriginalId = randomNecrozma;
+        }
+
+        if(pokemonStringList.indexOf("718") > -1 && pokemonStringList.indexOf("718-1") == -1)
+        {
+            zygardeOriginalId = "718-1";
+        }
+        else if(pokemonStringList.indexOf("718") == -1 && pokemonStringList.indexOf("718-1") > -1)
+        {
+            zygardeOriginalId = "718";
+        }
+        else
+        {
+            zygardeOriginalId = randomZygarde;
+        }
 
         if(randomAbilityBool)
         {
@@ -204,7 +232,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
         $.ajax({
             url: '/export-pokemon-team/',
             method: 'POST',
-            data: { 'pokemonIdList': pokemonStringList, 'abilityList': abilityStringList, 'exportAbilities':  randomAbilityBool, 'necrozmaOriginalId': necrozmaOriginalId }
+            data: { 'pokemonIdList': pokemonStringList, 'abilityList': abilityStringList, 'exportAbilities':  randomAbilityBool, 'necrozmaOriginalId': necrozmaOriginalId, 'zygardeOriginalId': zygardeOriginalId }
         })
         .done(function(data) {
             alert("Copy This For Pokemon Showdown: \n\n=== Export from pokemondatabase.net ===\n\n" + data);
@@ -298,7 +326,7 @@ $('.generatorButton').on('click', function() {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'oneAltForm':  $("#oneAltFormBool").is(":checked"), 'randomAbility':  randomAbilityBool }
+        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'onePokemonForm':  $("#onePokemonFormBool").is(":checked"), 'randomAbility':  randomAbilityBool }
     })
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;

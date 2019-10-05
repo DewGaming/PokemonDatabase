@@ -86,7 +86,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("export-pokemon-team")]
-        public string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId)
+        public string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -102,16 +102,16 @@ namespace Pokedex.Controllers
 
                     pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);
                     pokemonName = pokemon.Name;
-                    if(pokemon.Id.Contains('-'))
+                    if(pokemon.Id.Contains('-') && !(pokemonIdList[i] == "718-2" && zygardeOriginalId == "718"))
                     {
-                        pokemonForm = this.GetFormDetails(pokemon.Id, necrozmaOriginalId);
+                        pokemonForm = this.GetFormDetails(pokemon.Id, necrozmaOriginalId, zygardeOriginalId);
                         pokemonName += "-" + pokemonForm;
                     }
 
                     pokemonTeam += pokemonName + "\n";
                     if(exportAbilities)
                     {
-                        pokemonTeam += "Ability: " + abilityList[i] + "\n";
+                        pokemonTeam += "Ability: " + ((pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34).Name : abilityList[i]) + "\n";
                     }
                 }
 
@@ -127,7 +127,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-form-item")]
-        public string GetFormDetails(string pokemonId, string necrozmaOriginalId)
+        public string GetFormDetails(string pokemonId, string necrozmaOriginalId, string zygardeOriginalId)
         {
             string formDetails = string.Empty, itemName = string.Empty;
             PokemonFormDetail pokemonFormDetail;
@@ -136,10 +136,15 @@ namespace Pokedex.Controllers
             {
                 pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(necrozmaOriginalId);
             }
+            else if (pokemonId == "718-2")
+            {
+                pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(zygardeOriginalId);
+            }
             else
             {
                 pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
             }
+
             formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
             
             FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
@@ -162,7 +167,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool oneAltForm, bool randomAbility)
+        public TeamRandomizerViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool onePokemonForm, bool randomAbility)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -463,7 +468,7 @@ namespace Pokedex.Controllers
                             pokemon = allPokemon[rnd.Next(allPokemon.Count)];
                         }
 
-                        if (oneAltForm)
+                        if (onePokemonForm)
                         {
                             string originalPokemonId;
                             if (pokemon.Id.Contains('-'))
@@ -510,7 +515,6 @@ namespace Pokedex.Controllers
 
                 foreach(var p in model.AllPokemonOriginalNames)
                 {
-                    pokemon = allPokemon[rnd.Next(allPokemon.Count)];
                     List<Ability> abilities = new List<Ability>();
                     PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
                     abilities.Add(pokemonAbilities.PrimaryAbility);
@@ -518,11 +522,20 @@ namespace Pokedex.Controllers
                     {
                         abilities.Add(pokemonAbilities.SecondaryAbility);
                     }
+
                     if(pokemonAbilities.HiddenAbility != null)
                     {
                         abilities.Add(pokemonAbilities.HiddenAbility);
                     }
-                    model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+
+                    if(p.Id == "718" || p.Id == "718-1")
+                    {
+                        model.PokemonAbilities.Add(abilities[0]);
+                    }
+                    else
+                    {
+                        model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                    }
                 }
 
                 return model;
