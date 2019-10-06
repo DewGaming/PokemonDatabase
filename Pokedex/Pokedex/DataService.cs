@@ -599,6 +599,7 @@ namespace Pokedex
                 .Include(x => x.PrimaryAbility)
                 .Include(x => x.SecondaryAbility)
                 .Include(x => x.HiddenAbility)
+                .Include(x => x.SpecialEventAbility)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
         }

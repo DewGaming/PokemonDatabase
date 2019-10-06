@@ -23,6 +23,8 @@ namespace Pokedex.Models
 
         public Ability HiddenAbility { get; set; }
 
+        public Ability SpecialEventAbility { get; set; }
+
         public EggGroup PrimaryEggGroup { get; set; }
 
         public EggGroup SecondaryEggGroup { get; set; }

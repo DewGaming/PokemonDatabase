@@ -192,6 +192,7 @@ namespace Pokedex.Controllers
                 PrimaryAbility = pokemonAbilities.PrimaryAbility,
                 SecondaryAbility = pokemonAbilities.SecondaryAbility,
                 HiddenAbility = pokemonAbilities.HiddenAbility,
+                SpecialEventAbility = pokemonAbilities.SpecialEventAbility,
                 PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
                 SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
                 PreEvolution = this._dataService.GetPreEvolution(pokemon.Id),

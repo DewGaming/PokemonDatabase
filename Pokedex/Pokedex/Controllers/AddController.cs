@@ -741,9 +741,59 @@ namespace Pokedex.Controllers
             else if (abilities.PokemonId.Contains('-'))
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
-            }else
+            }
+            else
             {
                 return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
+            }
+        }
+
+        [HttpGet]
+        [Route("add_special_event_ability/{pokemonId}")]
+        public IActionResult SpecialEventAbility(string pokemonId)
+        {
+            _cameFromAdminAltForms = Request.Headers["Referer"].ToString().Contains("admin/edit_alternate_forms");
+
+            SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
+            {
+                AllAbilities = this._dataService.GetAbilities(),
+                PokemonId = pokemonId,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_special_event_ability/{pokemonId}")]
+        public IActionResult SpecialEventAbility(SpecialEventAbilityViewModel ability)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
+                {
+                    AllAbilities = this._dataService.GetAbilities(),
+                    PokemonId = ability.PokemonId,
+                };
+
+                return this.View(model);
+            }
+
+            PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(ability.PokemonId);
+
+            pokemonAbilities.SpecialEventAbilityId = ability.AbilityId;
+
+            this._dataService.UpdatePokemonAbilityDetail(pokemonAbilities);
+
+            if (_cameFromAdminAltForms)
+            {
+                _cameFromAdminAltForms = false;
+                PokemonFormDetail pokemon = this._dataService.GetPokemonFormDetailByAltFormId(ability.PokemonId);
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.OriginalPokemonId });
+            }
+            else
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
             }
         }
 

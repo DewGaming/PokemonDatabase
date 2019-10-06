@@ -158,6 +158,13 @@
                                     @item.HiddenAbility.Name (Hidden)
                                 </span>
                             }
+                            @if (@item.SpecialEventAbility != null)
+                            {
+                                <br>
+                                <span title="Description: @item.SpecialEventAbility.Description">
+                                    @item.SpecialEventAbility.Name (Special Ability)
+                                </span>
+                            }
                         </td>
                     </tr>
                     <tr>
