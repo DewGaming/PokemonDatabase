@@ -50,5 +50,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Update> Updates { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<FormItem> FormItems { get; set; }
+        public DbSet<PokemonTeam> PokemonTeams { get; set; }
     }
 }
