@@ -1,0 +1,88 @@
+@model Pokedex.Models.PokemonTeamsViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
+</p>
+
+<div>
+    @if (Model.AllPokemonTeams.ToList().Count > 0)
+    {
+        <table class="table pokemonTeam">
+            <tbody>
+                <tr>
+                    <th scope="col">Team Name</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var team in Model.AllPokemonTeams)
+                            {
+                                if (team.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Pokemon</th>
+                </tr>
+                @foreach(var teams in Model.AllPokemonTeams)
+                {
+                    <tr>
+                        <td>@teams.PokemonTeamName</td>
+                        <td>@teams.Generation.Games</td>
+                        <td>
+                            <table class="pokemonTeamPokemon">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.FirstPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                <img class="lightshadowed" title="@teams.FirstPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FirstPokemon.Pokemon.Id + ".png")" />
+                                            </a>
+                                            @if(@teams.SecondPokemon != null)
+                                            {
+                                                <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.SecondPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@teams.SecondPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.SecondPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            @if(@teams.ThirdPokemon != null)
+                                            {
+                                                <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.ThirdPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@teams.ThirdPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.ThirdPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            @if(@teams.FourthPokemon != null)
+                                            {
+                                                <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.FourthPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@teams.FourthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FourthPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            @if(@teams.FifthPokemon != null)
+                                            {
+                                                <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.FifthPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@teams.FifthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FifthPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            @if(@teams.SixthPokemon != null)
+                                            {
+                                                <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.SixthPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@teams.SixthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.SixthPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonTeams">No teams have been created yet.</div>
+    }
+</div>

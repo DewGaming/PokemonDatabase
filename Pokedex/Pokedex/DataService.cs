@@ -386,6 +386,83 @@ namespace Pokedex
             return pokemonList;
         }
 
+        public List<PokemonTeam> GetAllPokemonTeams(string username)
+        {
+            return this._dataContext.PokemonTeams
+                .Include(x => x.Generation)
+                .Include(x => x.FirstPokemon)
+                    .Include("FirstPokemon.Ability")
+                    .Include("FirstPokemon.PokemonTeamEV")
+                    .Include("FirstPokemon.PokemonTeamIV")
+                .Include(x => x.SecondPokemon)
+                    .Include("SecondPokemon.Ability")
+                    .Include("SecondPokemon.PokemonTeamEV")
+                    .Include("SecondPokemon.PokemonTeamIV")
+                .Include(x => x.ThirdPokemon)
+                    .Include("ThirdPokemon.Ability")
+                    .Include("ThirdPokemon.PokemonTeamEV")
+                    .Include("ThirdPokemon.PokemonTeamIV")
+                .Include(x => x.FourthPokemon)
+                    .Include("FourthPokemon.Ability")
+                    .Include("FourthPokemon.PokemonTeamEV")
+                    .Include("FourthPokemon.PokemonTeamIV")
+                .Include(x => x.FifthPokemon)
+                    .Include("FifthPokemon.Ability")
+                    .Include("FifthPokemon.PokemonTeamEV")
+                    .Include("FifthPokemon.PokemonTeamIV")
+                .Include(x => x.SixthPokemon)
+                    .Include("SixthPokemon.Ability")
+                    .Include("SixthPokemon.PokemonTeamEV")
+                    .Include("SixthPokemon.PokemonTeamIV")
+                .Include(x => x.User)
+                .Where(x => x.User.Username == username).ToList();
+        }
+
+        public PokemonTeam GetPokemonTeam(int id)
+        {
+            return this._dataContext.PokemonTeams
+                .Include(x => x.Generation)
+                .Include(x => x.FirstPokemon)
+                    .Include("FirstPokemon.PokemonTypeDetail")
+                        .Include("PokemonTypeDetail.Type")
+                    .Include("FirstPokemon.Ability")
+                    .Include("FirstPokemon.PokemonTeamEV")
+                    .Include("FirstPokemon.PokemonTeamIV")
+                .Include(x => x.SecondPokemon)
+                    .Include("SecondPokemon.PokemonTypeDetail")
+                        .Include("PokemonTypeDetail.Type")
+                    .Include("SecondPokemon.Ability")
+                    .Include("SecondPokemon.PokemonTeamEV")
+                    .Include("SecondPokemon.PokemonTeamIV")
+                .Include(x => x.ThirdPokemon)
+                    .Include("ThirdPokemon.PokemonTypeDetail")
+                        .Include("PokemonTypeDetail.Type")
+                    .Include("ThirdPokemon.Ability")
+                    .Include("ThirdPokemon.PokemonTeamEV")
+                    .Include("ThirdPokemon.PokemonTeamIV")
+                .Include(x => x.FourthPokemon)
+                    .Include("FourthPokemon.PokemonTypeDetail")
+                        .Include("PokemonTypeDetail.Type")
+                    .Include("FourthPokemon.Ability")
+                    .Include("FourthPokemon.PokemonTeamEV")
+                    .Include("FourthPokemon.PokemonTeamIV")
+                .Include(x => x.FifthPokemon)
+                    .Include("FifthPokemon.PokemonTypeDetail")
+                        .Include("PokemonTypeDetail.Type")
+                    .Include("FifthPokemon.Ability")
+                    .Include("FifthPokemon.PokemonTeamEV")
+                    .Include("FifthPokemon.PokemonTeamIV")
+                .Include(x => x.SixthPokemon)
+                    .Include("SixthPokemon.PokemonTypeDetail")
+                        .Include("PokemonTypeDetail.Type")
+                    .Include("SixthPokemon.Ability")
+                    .Include("SixthPokemon.PokemonTeamEV")
+                    .Include("SixthPokemon.PokemonTeamIV")
+                .Include(x => x.User)
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
         public List<Pokemon> GetAltForms(string pokemonId)
         {
             List<PokemonFormDetail> pokemonFormList = this._dataContext.PokemonFormDetails
