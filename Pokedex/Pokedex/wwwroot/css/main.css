@@ -173,7 +173,6 @@ main {
 
 .differentForms img {
     opacity: .8;
-    width: 2.5rem;
 }
 
 .table tbody tr:first-of-type * {
@@ -294,9 +293,12 @@ img {
   text-decoration: none;
 }
 
+.lightshadowed {
+  width: 2.5rem;
+}
+
 .surroundingPokemon img, .evolutionPokemon img {
   margin: 0 -10px;
-  width: 2.5rem;
 }
 
 .surroundingPokemon td {
