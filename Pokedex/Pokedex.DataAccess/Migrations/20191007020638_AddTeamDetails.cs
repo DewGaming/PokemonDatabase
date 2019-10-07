@@ -31,51 +31,58 @@ namespace Pokedex.DataAccess.Migrations
                 name: "FK_PokemonTeams_Pokemon_ThirdPokemonId",
                 table: "PokemonTeams");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ThirdPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
+            migrationBuilder.DropIndex(
+                name: "IX_PokemonTeams_FifthPokemonId",
+                table: "PokemonTeams");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "SixthPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
+            migrationBuilder.DropIndex(
+                name: "IX_PokemonTeams_FirstPokemonId",
+                table: "PokemonTeams");
 
-            migrationBuilder.AlterColumn<int>(
+            migrationBuilder.DropIndex(
+                name: "IX_PokemonTeams_FourthPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropIndex(
+                name: "IX_PokemonTeams_SecondPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropIndex(
+                name: "IX_PokemonTeams_SixthPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropIndex(
+                name: "IX_PokemonTeams_ThirdPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropColumn(
+                name: "FifthPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropColumn(
+                name: "FirstPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropColumn(
+                name: "FourthPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropColumn(
                 name: "SecondPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
+                table: "PokemonTeams");
+
+            migrationBuilder.DropColumn(
+                name: "SixthPokemonId",
+                table: "PokemonTeams");
+
+            migrationBuilder.DropColumn(
+                name: "ThirdPokemonId",
+                table: "PokemonTeams");
 
             migrationBuilder.AlterColumn<string>(
                 name: "PokemonTeamName",
                 table: "PokemonTeams",
                 nullable: false,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<int>(
-                name: "FourthPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<int>(
-                name: "FirstPokemonId",
-                table: "PokemonTeams",
-                nullable: false,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<int>(
-                name: "FifthPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
                 oldClrType: typeof(string),
                 oldNullable: true);
 
@@ -195,82 +202,10 @@ namespace Pokedex.DataAccess.Migrations
                 name: "IX_PokemonTeamDetails_PokemonTypeDetailId",
                 table: "PokemonTeamDetails",
                 column: "PokemonTypeDetailId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_FifthPokemonId",
-                table: "PokemonTeams",
-                column: "FifthPokemonId",
-                principalTable: "PokemonTeamDetails",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_FirstPokemonId",
-                table: "PokemonTeams",
-                column: "FirstPokemonId",
-                principalTable: "PokemonTeamDetails",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_FourthPokemonId",
-                table: "PokemonTeams",
-                column: "FourthPokemonId",
-                principalTable: "PokemonTeamDetails",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_SecondPokemonId",
-                table: "PokemonTeams",
-                column: "SecondPokemonId",
-                principalTable: "PokemonTeamDetails",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_SixthPokemonId",
-                table: "PokemonTeams",
-                column: "SixthPokemonId",
-                principalTable: "PokemonTeamDetails",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_ThirdPokemonId",
-                table: "PokemonTeams",
-                column: "ThirdPokemonId",
-                principalTable: "PokemonTeamDetails",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_FifthPokemonId",
-                table: "PokemonTeams");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_FirstPokemonId",
-                table: "PokemonTeams");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_FourthPokemonId",
-                table: "PokemonTeams");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_SecondPokemonId",
-                table: "PokemonTeams");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_SixthPokemonId",
-                table: "PokemonTeams");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PokemonTeams_PokemonTeamDetails_ThirdPokemonId",
-                table: "PokemonTeams");
-
             migrationBuilder.DropTable(
                 name: "PokemonTeamDetails");
 
@@ -285,51 +220,71 @@ namespace Pokedex.DataAccess.Migrations
                 table: "PokemonTeams");
 
             migrationBuilder.AlterColumn<string>(
-                name: "ThirdPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "SixthPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "SecondPokemonId",
-                table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
                 name: "PokemonTeamName",
                 table: "PokemonTeams",
                 nullable: true,
                 oldClrType: typeof(string));
 
-            migrationBuilder.AlterColumn<string>(
-                name: "FourthPokemonId",
+            migrationBuilder.AddColumn<string>(
+                name: "FifthPokemonId",
                 table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldNullable: true);
+                nullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AddColumn<string>(
                 name: "FirstPokemonId",
                 table: "PokemonTeams",
                 nullable: false,
-                oldClrType: typeof(int));
+                defaultValue: "");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "FifthPokemonId",
+            migrationBuilder.AddColumn<string>(
+                name: "FourthPokemonId",
                 table: "PokemonTeams",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldNullable: true);
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "SecondPokemonId",
+                table: "PokemonTeams",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "SixthPokemonId",
+                table: "PokemonTeams",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "ThirdPokemonId",
+                table: "PokemonTeams",
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokemonTeams_FifthPokemonId",
+                table: "PokemonTeams",
+                column: "FifthPokemonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokemonTeams_FirstPokemonId",
+                table: "PokemonTeams",
+                column: "FirstPokemonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokemonTeams_FourthPokemonId",
+                table: "PokemonTeams",
+                column: "FourthPokemonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokemonTeams_SecondPokemonId",
+                table: "PokemonTeams",
+                column: "SecondPokemonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokemonTeams_SixthPokemonId",
+                table: "PokemonTeams",
+                column: "SixthPokemonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PokemonTeams_ThirdPokemonId",
+                table: "PokemonTeams",
+                column: "ThirdPokemonId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_PokemonTeams_Pokemon_FifthPokemonId",

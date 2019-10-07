@@ -10,7 +10,7 @@ using Pokedex.DataAccess.Models;
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191007015906_AddTeamDetails")]
+    [Migration("20191007020638_AddTeamDetails")]
     partial class AddTeamDetails
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -536,13 +536,6 @@ namespace Pokedex.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("FifthPokemonId");
-
-                    b.Property<int?>("FirstPokemonId")
-                        .IsRequired();
-
-                    b.Property<int?>("FourthPokemonId");
-
                     b.Property<bool>("FromTeamRandomizer");
 
                     b.Property<string>("GenerationId")
@@ -551,30 +544,12 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<string>("PokemonTeamName")
                         .IsRequired();
 
-                    b.Property<int?>("SecondPokemonId");
-
-                    b.Property<int?>("SixthPokemonId");
-
-                    b.Property<int?>("ThirdPokemonId");
-
                     b.Property<int?>("UserId")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FifthPokemonId");
-
-                    b.HasIndex("FirstPokemonId");
-
-                    b.HasIndex("FourthPokemonId");
-
                     b.HasIndex("GenerationId");
-
-                    b.HasIndex("SecondPokemonId");
-
-                    b.HasIndex("SixthPokemonId");
-
-                    b.HasIndex("ThirdPokemonId");
 
                     b.HasIndex("UserId");
 
@@ -994,35 +969,10 @@ namespace Pokedex.DataAccess.Migrations
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonTeam", b =>
                 {
-                    b.HasOne("Pokedex.DataAccess.Models.PokemonTeamDetail", "FifthPokemon")
-                        .WithMany()
-                        .HasForeignKey("FifthPokemonId");
-
-                    b.HasOne("Pokedex.DataAccess.Models.PokemonTeamDetail", "FirstPokemon")
-                        .WithMany()
-                        .HasForeignKey("FirstPokemonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Pokedex.DataAccess.Models.PokemonTeamDetail", "FourthPokemon")
-                        .WithMany()
-                        .HasForeignKey("FourthPokemonId");
-
                     b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
                         .WithMany()
                         .HasForeignKey("GenerationId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Pokedex.DataAccess.Models.PokemonTeamDetail", "SecondPokemon")
-                        .WithMany()
-                        .HasForeignKey("SecondPokemonId");
-
-                    b.HasOne("Pokedex.DataAccess.Models.PokemonTeamDetail", "SixthPokemon")
-                        .WithMany()
-                        .HasForeignKey("SixthPokemonId");
-
-                    b.HasOne("Pokedex.DataAccess.Models.PokemonTeamDetail", "ThirdPokemon")
-                        .WithMany()
-                        .HasForeignKey("ThirdPokemonId");
 
                     b.HasOne("Pokedex.DataAccess.Models.User", "User")
                         .WithMany()
