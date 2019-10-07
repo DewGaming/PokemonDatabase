@@ -37,14 +37,28 @@
                             <table class="pokemonTeamPokemon">
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.FirstPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
-                                                <img class="lightshadowed" title="@teams.FirstPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FirstPokemon.Pokemon.Id + ".png")" />
-                                            </a>
+                                        <td>@if(@teams.FirstPokemon != null)
+                                            {
+                                                <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.FirstPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@teams.FirstPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FirstPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { name = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
+                                                </a>
+                                            }
                                             @if(@teams.SecondPokemon != null)
                                             {
                                                 <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.SecondPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@teams.SecondPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.SecondPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { name = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
                                                 </a>
                                             }
                                             @if(@teams.ThirdPokemon != null)
@@ -53,10 +67,22 @@
                                                     <img class="lightshadowed" title="@teams.ThirdPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.ThirdPokemon.Pokemon.Id + ".png")" />
                                                 </a>
                                             }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { name = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
+                                                </a>
+                                            }
                                             @if(@teams.FourthPokemon != null)
                                             {
                                                 <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.FourthPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@teams.FourthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FourthPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { name = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
                                                 </a>
                                             }
                                             @if(@teams.FifthPokemon != null)
@@ -65,10 +91,22 @@
                                                     <img class="lightshadowed" title="@teams.FifthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.FifthPokemon.Pokemon.Id + ".png")" />
                                                 </a>
                                             }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { name = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
+                                                </a>
+                                            }
                                             @if(@teams.SixthPokemon != null)
                                             {
                                                 <a href="@Url.Action("EditPokemon", "PokemonTeam", new { name = @teams.SixthPokemon.Pokemon.Name.Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@teams.SixthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @teams.SixthPokemon.Pokemon.Id + ".png")" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { name = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
                                                 </a>
                                             }
                                         </td>

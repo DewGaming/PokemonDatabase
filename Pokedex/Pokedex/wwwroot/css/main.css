@@ -297,6 +297,11 @@ img {
   width: 2.5rem;
 }
 
+.addButton {
+  width: 1.5rem;
+  margin-top: -15px;
+}
+
 .surroundingPokemon img, .evolutionPokemon img {
   margin: 0 -10px;
 }

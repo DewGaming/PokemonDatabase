@@ -1305,6 +1305,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddPokemonTeam(PokemonTeam pokemonTeam)
+        {
+            this._dataContext.PokemonTeams.Add(pokemonTeam);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddPokemonFormDetails(PokemonFormDetail pokemonFormDetail)
         {
             this._dataContext.PokemonFormDetails.Add(pokemonFormDetail);
