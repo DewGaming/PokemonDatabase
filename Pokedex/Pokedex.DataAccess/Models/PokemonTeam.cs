@@ -19,7 +19,6 @@ namespace Pokedex.DataAccess.Models
 
         public User User { get; set; }
 
-        [Required]
         public int? FirstPokemonId { get; set; }
         public PokemonTeamDetail FirstPokemon { get; set; }
 
