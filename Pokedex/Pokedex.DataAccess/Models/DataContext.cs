@@ -51,5 +51,8 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Comment> Comments { get; set; }
         public DbSet<FormItem> FormItems { get; set; }
         public DbSet<PokemonTeam> PokemonTeams { get; set; }
+        public DbSet<PokemonTeamDetail> PokemonTeamDetails { get; set; }
+        public DbSet<PokemonTeamEV> PokemonTeamEVs { get; set; }
+        public DbSet<PokemonTeamIV> PokemonTeamIVs { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
@@ -18,7 +19,7 @@ namespace Pokedex.DataAccess.Models
         public Int16 SpecialDefense { get; set; }
         [Required]
         public Int16 Speed { get; set; }
-        [Required]
+        [Required, NotMapped]
         public Int16 StatTotal { get { return (Int16)(Health + Attack + Defense + SpecialAttack + SpecialDefense + Speed); } }
         public string PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
