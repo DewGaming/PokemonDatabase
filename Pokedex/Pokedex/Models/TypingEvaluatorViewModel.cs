@@ -8,5 +8,7 @@ namespace Pokedex.Models
         public List<PokemonTypeDetail> AllPokemonWithTypes { get; set; }
 
         public List<Pokemon> AllPokemon { get; set; }
+
+        public AppConfig AppConfig { get; set; }
     }
 }

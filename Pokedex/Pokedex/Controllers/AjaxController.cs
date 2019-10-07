@@ -642,6 +642,7 @@ namespace Pokedex.Controllers
                 TypingEvaluatorViewModel model = new TypingEvaluatorViewModel(){
                     AllPokemonWithTypes = typingList,
                     AllPokemon = pokemonList,
+                    AppConfig = _appConfig,
                 };
 
                 return model;
