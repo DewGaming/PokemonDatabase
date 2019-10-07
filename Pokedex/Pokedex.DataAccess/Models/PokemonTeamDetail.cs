@@ -19,11 +19,6 @@ namespace Pokedex.DataAccess.Models
         public Pokemon Pokemon { get; set; }
 
         [Required]
-        public int? PokemonTypeDetailId { get; set; }
-
-        public PokemonTypeDetail PokemonTypeDetail { get; set; }
-
-        [Required]
         public int? AbilityId { get; set; }
 
         public Ability Ability { get; set; }
