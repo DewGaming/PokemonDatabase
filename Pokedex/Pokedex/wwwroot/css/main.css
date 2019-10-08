@@ -297,6 +297,14 @@ img {
   width: 2.5rem;
 }
 
+.pokemonTeamPokemon {
+  width: 4rem;
+}
+
+.teamButton {
+  margin-bottom: 10px;
+}
+
 .addNextButton {
   margin-left: 5px;
 }

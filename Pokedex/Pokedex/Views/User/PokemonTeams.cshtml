@@ -18,8 +18,8 @@
         <table class="table pokemonTeam">
             <tbody>
                 <tr>
-                    <th scope="col">Team Name</th>
-                    <th scope="col">
+                    <th class="col-md-2" scope="col">Team Name</th>
+                    <th class="col-md-2" scope="col">
                         Game@{
                             foreach(var team in Model.AllPokemonTeams)
                             {
@@ -31,8 +31,8 @@
                             }
                         }
                     </th>
-                    <th scope="col">Pokemon</th>
-                    <th scope="col">Actions</th>
+                    <th class="col-md-5" scope="col">Pokemon</th>
+                    <th class="col-md-3" scope="col">Actions</th>
                 </tr>
                 @foreach(var teams in Model.AllPokemonTeams)
                 {
@@ -131,11 +131,13 @@
                             </table>
                         </td>
                         <td>
-                            <a class="btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("EditTeam", "PokemonTeam", new { teamId = @teams.Id })">Edit Team</a>
+                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("EditTeam", "PokemonTeam", new { teamId = @teams.Id })">Edit Team</a>
                             @if(@teams.FirstPokemon != null)
                             {
-                                <button id="@teams.Id" class="pokemonTeamButton btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
+                                <button id="@teams.Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
                             }
+                            <br>
+                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { teamId = @teams.Id })">Delete Team</a>
                         </td>
                     </tr>
                 }
