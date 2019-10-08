@@ -131,30 +131,7 @@ namespace Pokedex.Controllers
 
             int pokemonTeamDetailId = this._dataService.AddPokemonTeamDetail(pokemonTeamDetail);
 
-            if(pokemonTeam.FirstPokemonId == null)
-            {
-                pokemonTeam.FirstPokemonId = pokemonTeamDetailId;
-            }
-            else if(pokemonTeam.SecondPokemonId == null)
-            {
-                pokemonTeam.SecondPokemonId = pokemonTeamDetailId;
-            }
-            else if(pokemonTeam.ThirdPokemonId == null)
-            {
-                pokemonTeam.ThirdPokemonId = pokemonTeamDetailId;
-            }
-            else if(pokemonTeam.FourthPokemonId == null)
-            {
-                pokemonTeam.FourthPokemonId = pokemonTeamDetailId;
-            }
-            else if(pokemonTeam.FifthPokemonId == null)
-            {
-                pokemonTeam.FifthPokemonId = pokemonTeamDetailId;
-            }
-            else if(pokemonTeam.SixthPokemonId == null)
-            {
-                pokemonTeam.SixthPokemonId = pokemonTeamDetailId;
-            }
+            pokemonTeam.InsertPokemon(this._dataService.GetPokemonTeamDetail(pokemonTeamDetailId));
 
             this._dataService.UpdatePokemonTeam(pokemonTeam);
 

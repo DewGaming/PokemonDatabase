@@ -67,6 +67,42 @@ namespace Pokedex.DataAccess.Models
             }
         }
 
+        public List<int> GrabPokemonTeamDetailIds()
+        {
+            List<int> pokemonTeamDetailIds = new List<int>();
+            if(this.FirstPokemonId != null)
+            {
+                pokemonTeamDetailIds.Add((int)this.FirstPokemonId);
+            }
+
+            if(this.SecondPokemonId != null)
+            {
+                pokemonTeamDetailIds.Add((int)this.SecondPokemonId);
+            }
+
+            if(this.ThirdPokemonId != null)
+            {
+                pokemonTeamDetailIds.Add((int)this.ThirdPokemonId);
+            }
+
+            if(this.FourthPokemonId != null)
+            {
+                pokemonTeamDetailIds.Add((int)this.FourthPokemonId);
+            }
+
+            if(this.FifthPokemonId != null)
+            {
+                pokemonTeamDetailIds.Add((int)this.FifthPokemonId);
+            }
+
+            if(this.SixthPokemonId != null)
+            {
+                pokemonTeamDetailIds.Add((int)this.SixthPokemonId);
+            }
+
+            return pokemonTeamDetailIds;
+        }
+
         [NotMapped]
         public List<PokemonTeamDetail> GrabPokemonTeamDetails
         {
