@@ -602,6 +602,22 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("get-pokemon-abilities")]
+        public List<Ability> GetPokemonAbilities(string pokemonId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return this._dataService.GetAbilitiesForPokemon(pokemonId);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("get-typing-effectiveness")]
         public TypeEffectivenessViewModel GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
         {

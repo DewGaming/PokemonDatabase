@@ -391,26 +391,32 @@ namespace Pokedex
             return this._dataContext.PokemonTeams
                 .Include(x => x.Generation)
                 .Include(x => x.FirstPokemon)
+                    .Include("FirstPokemon.Pokemon")
                     .Include("FirstPokemon.Ability")
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
                 .Include(x => x.SecondPokemon)
+                    .Include("SecondPokemon.Pokemon")
                     .Include("SecondPokemon.Ability")
                     .Include("SecondPokemon.PokemonTeamEV")
                     .Include("SecondPokemon.PokemonTeamIV")
                 .Include(x => x.ThirdPokemon)
+                    .Include("ThirdPokemon.Pokemon")
                     .Include("ThirdPokemon.Ability")
                     .Include("ThirdPokemon.PokemonTeamEV")
                     .Include("ThirdPokemon.PokemonTeamIV")
                 .Include(x => x.FourthPokemon)
+                    .Include("FourthPokemon.Pokemon")
                     .Include("FourthPokemon.Ability")
                     .Include("FourthPokemon.PokemonTeamEV")
                     .Include("FourthPokemon.PokemonTeamIV")
                 .Include(x => x.FifthPokemon)
+                    .Include("FifthPokemon.Pokemon")
                     .Include("FifthPokemon.Ability")
                     .Include("FifthPokemon.PokemonTeamEV")
                     .Include("FifthPokemon.PokemonTeamIV")
                 .Include(x => x.SixthPokemon)
+                    .Include("SixthPokemon.Pokemon")
                     .Include("SixthPokemon.Ability")
                     .Include("SixthPokemon.PokemonTeamEV")
                     .Include("SixthPokemon.PokemonTeamIV")
@@ -423,38 +429,32 @@ namespace Pokedex
             return this._dataContext.PokemonTeams
                 .Include(x => x.Generation)
                 .Include(x => x.FirstPokemon)
-                    .Include("FirstPokemon.PokemonTypeDetail")
-                        .Include("PokemonTypeDetail.Type")
+                    .Include("FirstPokemon.Pokemon")
                     .Include("FirstPokemon.Ability")
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
                 .Include(x => x.SecondPokemon)
-                    .Include("SecondPokemon.PokemonTypeDetail")
-                        .Include("PokemonTypeDetail.Type")
+                    .Include("SecondPokemon.Pokemon")
                     .Include("SecondPokemon.Ability")
                     .Include("SecondPokemon.PokemonTeamEV")
                     .Include("SecondPokemon.PokemonTeamIV")
                 .Include(x => x.ThirdPokemon)
-                    .Include("ThirdPokemon.PokemonTypeDetail")
-                        .Include("PokemonTypeDetail.Type")
+                    .Include("ThirdPokemon.Pokemon")
                     .Include("ThirdPokemon.Ability")
                     .Include("ThirdPokemon.PokemonTeamEV")
                     .Include("ThirdPokemon.PokemonTeamIV")
                 .Include(x => x.FourthPokemon)
-                    .Include("FourthPokemon.PokemonTypeDetail")
-                        .Include("PokemonTypeDetail.Type")
+                    .Include("FourthPokemon.Pokemon")
                     .Include("FourthPokemon.Ability")
                     .Include("FourthPokemon.PokemonTeamEV")
                     .Include("FourthPokemon.PokemonTeamIV")
                 .Include(x => x.FifthPokemon)
-                    .Include("FifthPokemon.PokemonTypeDetail")
-                        .Include("PokemonTypeDetail.Type")
+                    .Include("FifthPokemon.Pokemon")
                     .Include("FifthPokemon.Ability")
                     .Include("FifthPokemon.PokemonTeamEV")
                     .Include("FifthPokemon.PokemonTeamIV")
                 .Include(x => x.SixthPokemon)
-                    .Include("SixthPokemon.PokemonTypeDetail")
-                        .Include("PokemonTypeDetail.Type")
+                    .Include("SixthPokemon.Pokemon")
                     .Include("SixthPokemon.Ability")
                     .Include("SixthPokemon.PokemonTeamEV")
                     .Include("SixthPokemon.PokemonTeamIV")
@@ -679,6 +679,36 @@ namespace Pokedex
                 .Include(x => x.SpecialEventAbility)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
+        }
+
+        public List<Ability> GetAbilitiesForPokemon(string pokemonId)
+        {
+            List<Ability> abilityList = new List<Ability>();
+            PokemonAbilityDetail pokemonAbilityDetail = this._dataContext.PokemonAbilityDetails.Include(x => x.Pokemon)
+                .Include(x => x.PrimaryAbility)
+                .Include(x => x.SecondaryAbility)
+                .Include(x => x.HiddenAbility)
+                .Include(x => x.SpecialEventAbility)
+                .ToList()
+                .Find(x => x.Pokemon.Id == pokemonId);
+
+            abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
+            if(pokemonAbilityDetail.SecondaryAbility != null)
+            {
+                abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
+            }
+
+            if(pokemonAbilityDetail.HiddenAbility != null)
+            {
+                abilityList.Add(pokemonAbilityDetail.HiddenAbility);
+            }
+
+            if(pokemonAbilityDetail.SpecialEventAbility != null)
+            {
+                abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
+            }
+
+            return abilityList;
         }
 
         public PokemonAbilityDetail GetPokemonWithAbilitiesNoIncludes(string pokemonId)
@@ -1311,6 +1341,13 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public int AddPokemonTeamDetail(PokemonTeamDetail pokemonTeamDetail)
+        {
+            this._dataContext.PokemonTeamDetails.Add(pokemonTeamDetail);
+            this._dataContext.SaveChanges();
+            return pokemonTeamDetail.Id;
+        }
+
         public void AddPokemonFormDetails(PokemonFormDetail pokemonFormDetail)
         {
             this._dataContext.PokemonFormDetails.Add(pokemonFormDetail);
@@ -1386,6 +1423,12 @@ namespace Pokedex
         public void UpdatePokemonAbilityDetail(PokemonAbilityDetail pokemonAbilityDetail)
         {
             this._dataContext.PokemonAbilityDetails.Update(pokemonAbilityDetail);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonTeam(PokemonTeam pokemonTeam)
+        {
+            this._dataContext.PokemonTeams.Update(pokemonTeam);
             this._dataContext.SaveChanges();
         }
 
