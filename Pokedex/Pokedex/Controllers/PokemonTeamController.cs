@@ -69,9 +69,19 @@ namespace Pokedex.Controllers
             }
             else
             {
-                List<Pokemon> pokemonList = this._dataService.GetAllPokemon()
+                List<Pokemon> pokemonList = new List<Pokemon>();
+                if(pokemonTeam.Generation != null)
+                {
+                    pokemonList = this._dataService.GetAllPokemon()
                     .Where(x => x.Generation.ReleaseDate <= pokemonTeam.Generation.ReleaseDate &&
                            x.Id != "800-3" && x.Id != "718-2").ToList();
+                }
+                else
+                {
+                    pokemonList = this._dataService.GetAllPokemon()
+                    .Where(x => x.Id != "800-3" && x.Id != "718-2").ToList();
+                }
+
                 foreach(var p in pokemonList.Where(x => x.Id.Contains('-')).ToList())
                 {
                     p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";

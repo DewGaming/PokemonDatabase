@@ -38,7 +38,16 @@
                 {
                     <tr>
                         <td>@teams.PokemonTeamName</td>
-                        <td>@teams.Generation.Games</td>
+                        <td>
+                            @if(@teams.Generation != null)
+                            {
+                                @teams.Generation.Games
+                            }
+                            else
+                            {
+                                @("No Game Selected");
+                            }
+                        </td>
                         <td>
                             <table class="pokemonTeamPokemonTable">
                                 <tbody>
