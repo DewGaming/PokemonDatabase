@@ -543,6 +543,57 @@ namespace Pokedex.Controllers
                     }
                 }
 
+                string zygardeOriginalId, necrozmaOriginalId;
+
+                List<string> pokemonIds = new List<string>();
+                foreach(var p in model.AllPokemonOriginalNames)
+                {
+                    pokemonIds.Add(p.Id);
+                }
+
+                List<string> abilityNames = new List<string>();
+                foreach(var a in model.PokemonAbilities)
+                {
+                    abilityNames.Add(a.Name);
+                }
+
+                List<string> list = new List<string>(){ "1", "2" };
+                    
+                if(pokemonIds.IndexOf("800-1") > -1 && pokemonIds.IndexOf("800-2") == -1)
+                {
+                    necrozmaOriginalId = "800-2";
+                }
+                else if(pokemonIds.IndexOf("800-1") == -1 && pokemonIds.IndexOf("800-2") > -1)
+                {
+                    necrozmaOriginalId = "800-1";
+                }
+                else
+                {
+                    necrozmaOriginalId = "800-" + list[rnd.Next(list.Count)];
+                }
+
+                if(pokemonIds.IndexOf("718") > -1 && pokemonIds.IndexOf("718-1") == -1)
+                {
+                    zygardeOriginalId = "718-1";
+                }
+                else if(pokemonIds.IndexOf("718") == -1 && pokemonIds.IndexOf("718-1") > -1)
+                {
+                    zygardeOriginalId = "718";
+                }
+                else
+                {
+                    if(list[rnd.Next(list.Count)] == "1")
+                    {
+                        zygardeOriginalId = "718";
+                    }
+                    else
+                    {
+                        zygardeOriginalId = "718-1";
+                    }
+                }
+
+                model.ExportString = this.ExportPokemonTeam(pokemonIds, abilityNames, randomAbility, necrozmaOriginalId, zygardeOriginalId);
+
                 return model;
             }
             else
@@ -572,7 +623,6 @@ namespace Pokedex.Controllers
            forms.Add(this._dataService.GetForm(46));
            forms.Add(this._dataService.GetForm(45));
            forms.Add(this._dataService.GetForm(44));
-           forms.Add(this._dataService.GetForm(26));
            forms.Add(this._dataService.GetForm(29));
            forms.Add(this._dataService.GetForm(22));
 

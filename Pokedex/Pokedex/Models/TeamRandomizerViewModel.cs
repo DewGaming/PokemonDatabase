@@ -12,5 +12,7 @@ namespace Pokedex.Models
         public List<Ability> PokemonAbilities { get; set; }
 
         public List<string> PokemonURLs { get; set; }
+
+        public string ExportString { get; set; }
     }
 }

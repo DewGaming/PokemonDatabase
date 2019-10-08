@@ -1,9 +1,7 @@
-var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, randomAbilityBool, randomZygarde = '718' + ((Math.floor(Math.random() * 2 + 1) == 1) ? '' : '-1')
-, randomNecrozma = '800-' + Math.floor(Math.random() * 2 + 1)
+var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exportString
 , fillGeneratedTable = function() {
     $('.teamRandomizerTable tbody').remove();
     $('.teamRandomizerTable').append($('<tbody>'));
-    randomAbilityBool = $("#randomAbilityBool").is(":checked");
 
     if($(window).width() >= 1000)
     {
@@ -188,58 +186,15 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, ran
 }, refreshExportEvent = function() {
     $('.exportTeamButton').off();
 
-    var necrozmaOriginalId, zygardeOriginalId;
-
     $('.exportTeamButton').on('click', function() {
-        var pokemonStringList = [], abilityStringList = [];
-        pokemonList.forEach(function(item) {
-            pokemonStringList.push(item.id);
-        });
+        var temp = $("<textarea>");
+        $("body").append(temp);
+        $(temp).text(exportString);
+        $(temp).select();
+        document.execCommand("copy");
+        $(temp).remove();
 
-        if(pokemonStringList.indexOf("800-1") > -1 && pokemonStringList.indexOf("800-2") == -1)
-        {
-            necrozmaOriginalId = "800-2";
-        }
-        else if(pokemonStringList.indexOf("800-1") == -1 && pokemonStringList.indexOf("800-2") > -1)
-        {
-            necrozmaOriginalId = "800-1";
-        }
-        else
-        {
-            necrozmaOriginalId = randomNecrozma;
-        }
-
-        if(pokemonStringList.indexOf("718") > -1 && pokemonStringList.indexOf("718-1") == -1)
-        {
-            zygardeOriginalId = "718-1";
-        }
-        else if(pokemonStringList.indexOf("718") == -1 && pokemonStringList.indexOf("718-1") > -1)
-        {
-            zygardeOriginalId = "718";
-        }
-        else
-        {
-            zygardeOriginalId = randomZygarde;
-        }
-
-        if(randomAbilityBool)
-        {
-            abilityList.forEach(function(item) {
-                abilityStringList.push(item.name);
-            });
-        }
-
-        $.ajax({
-            url: '/export-pokemon-team/',
-            method: 'POST',
-            data: { 'pokemonIdList': pokemonStringList, 'abilityList': abilityStringList, 'exportAbilities':  randomAbilityBool, 'necrozmaOriginalId': necrozmaOriginalId, 'zygardeOriginalId': zygardeOriginalId }
-        })
-        .done(function(data) {
-            alert("Copy This For Pokemon Showdown: \n\n=== Export from pokemondatabase.net ===\n\n" + data);
-        })
-        .fail(function(jqXHR) {
-            alert(jqXHR.statusText);
-        });
+        alert("Team has been copied to your clipboard!");
     });
 };
 
@@ -326,13 +281,14 @@ $('.generatorButton').on('click', function() {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'onePokemonForm':  $("#onePokemonFormBool").is(":checked"), 'randomAbility':  randomAbilityBool }
+        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'onePokemonForm':  $("#onePokemonFormBool").is(":checked"), 'randomAbility':  $("#randomAbilityBool").is(":checked") }
     })
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;
         originalNames = data.allPokemonOriginalNames;
         pokemonURLs = data.pokemonURLs;
-        abilityList = data.pokemonAbilities
+        abilityList = data.pokemonAbilities;
+        exportString = data.exportString;
         fillGeneratedTable();
     })
     .fail( function() {
