@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
@@ -62,6 +64,46 @@ namespace Pokedex.DataAccess.Models
             else if(this.SixthPokemonId == null)
             {
                 this.SixthPokemonId = pokemon.Id;
+            }
+        }
+
+        [NotMapped]
+        public List<PokemonTeamDetail> GrabPokemonTeamDetails
+        {
+            get
+            {
+                List<PokemonTeamDetail> pokemonTeamDetails = new List<PokemonTeamDetail>();
+                if(this.FirstPokemonId != null)
+                {
+                    pokemonTeamDetails.Add(this.FirstPokemon);
+                }
+
+                if(this.SecondPokemonId != null)
+                {
+                    pokemonTeamDetails.Add(this.SecondPokemon);
+                }
+
+                if(this.ThirdPokemonId != null)
+                {
+                    pokemonTeamDetails.Add(this.ThirdPokemon);
+                }
+
+                if(this.FourthPokemonId != null)
+                {
+                    pokemonTeamDetails.Add(this.FourthPokemon);
+                }
+
+                if(this.FifthPokemonId != null)
+                {
+                    pokemonTeamDetails.Add(this.FifthPokemon);
+                }
+
+                if(this.SixthPokemonId != null)
+                {
+                    pokemonTeamDetails.Add(this.SixthPokemon);
+                }
+
+                return pokemonTeamDetails;
             }
         }
     }

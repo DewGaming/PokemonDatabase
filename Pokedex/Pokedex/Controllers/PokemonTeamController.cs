@@ -160,5 +160,36 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
+
+        [HttpGet]
+        [Route("delete_team/{teamId:int}")]
+        public IActionResult DeleteTeam(int teamId)
+        {
+            PokemonTeam pokemonTeam = this._dataService.GetPokemonTeam(teamId);
+
+            PokemonTeamViewModel model = new PokemonTeamViewModel(){
+                Id = pokemonTeam.Id,
+                PokemonTeamName = pokemonTeam.PokemonTeamName,
+                FirstPokemon = pokemonTeam.FirstPokemon,
+                SecondPokemon = pokemonTeam.SecondPokemon,
+                ThirdPokemon = pokemonTeam.ThirdPokemon,
+                FourthPokemon = pokemonTeam.FourthPokemon,
+                FifthPokemon = pokemonTeam.FifthPokemon,
+                SixthPokemon = pokemonTeam.SixthPokemon,
+                AppConfig = this._appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_team/{teamId:int}")]
+        public IActionResult DeleteTeam(PokemonTeam pokemonTeam)
+        {
+            this._dataService.DeletePokemonTeam(pokemonTeam.Id);
+
+            return this.RedirectToAction("PokemonTeams", "User");
+        }
     }
 }

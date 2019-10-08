@@ -463,6 +463,20 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public PokemonTeam GetPokemonTeamNoIncludes(int id)
+        {
+            return this._dataContext.PokemonTeams
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public PokemonTeamDetail GetPokemonTeamDetail(int id)
+        {
+            return this._dataContext.PokemonTeamDetails
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
         public List<Pokemon> GetAltForms(string pokemonId)
         {
             List<PokemonFormDetail> pokemonFormList = this._dataContext.PokemonFormDetails
@@ -1735,6 +1749,26 @@ namespace Pokedex
         {
             Form form = this.GetForm(id);
             this._dataContext.Forms.Remove(form);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonTeam(int id)
+        {
+            PokemonTeam pokemonTeam = this.GetPokemonTeamNoIncludes(id);
+            List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
+            this._dataContext.PokemonTeams.Remove(pokemonTeam);
+            foreach(var p in pokemonTeamDetailIds)
+            {
+                this._dataContext.PokemonTeamDetails.Remove(this.GetPokemonTeamDetail(p));
+            }
+
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonTeamDetail(int id)
+        {
+            PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetail(id);
+            this._dataContext.PokemonTeamDetails.Remove(pokemonTeamDetail);
             this._dataContext.SaveChanges();
         }
 
