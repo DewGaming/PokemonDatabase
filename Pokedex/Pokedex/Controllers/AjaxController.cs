@@ -137,6 +137,68 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("save-pokemon-team")]
+        public string SavePokemonTeam(string pokemonTeamName, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                if(this._dataService.GetUserWithUsername(this.User.Identity.Name) != null)
+                {
+                    PokemonTeam pokemonTeam= new PokemonTeam(){
+                        PokemonTeamName = pokemonTeamName,
+                        UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                    };
+
+                    Pokemon pokemon;
+                    Ability ability;
+                    PokemonTeamDetail pokemonTeamDetail;
+
+                    for(var i = 0; i < pokemonIdList.Count; i++)
+                    {
+                        if(pokemonIdList[i] == "718-2")
+                        {
+                            pokemon = this._dataService.GetPokemonById(zygardeOriginalId);
+                        }
+                        else if(pokemonIdList[i] == "800-3")
+                        {
+                            pokemon = this._dataService.GetPokemonById(necrozmaOriginalId);
+                        }
+                        else
+                        {
+                            pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);   
+                        }
+
+                        ability = (pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34) : this._dataService.GetAbility(abilityIdList[i]);
+
+                        pokemonTeamDetail = new PokemonTeamDetail()
+                        {
+                            PokemonId = pokemon.Id,
+                            AbilityId = ability.Id,
+                        };
+
+                        this._dataService.AddPokemonTeamDetail(pokemonTeamDetail);
+
+                        pokemonTeam.InsertPokemon(pokemonTeamDetail);
+                    }
+
+                    this._dataService.AddPokemonTeam(pokemonTeam);
+
+                    return "Team \"" + pokemonTeam.PokemonTeamName + "\" has been added successfully!";
+                }
+                else
+                {
+                    return "You must be logged in to save a team.";
+                }
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("get-pokemon-list")]
         public List<Pokemon> GetPokemonList()
@@ -668,22 +730,21 @@ namespace Pokedex.Controllers
         {
             List<Form> forms = new List<Form>();
 
-           forms.Add(this._dataService.GetForm(9));
-           forms.Add(this._dataService.GetForm(10));
-           forms.Add(this._dataService.GetForm(11));
-           forms.Add(this._dataService.GetForm(21));
-           forms.Add(this._dataService.GetForm(1001));
-           forms.Add(this._dataService.GetForm(34));
-           forms.Add(this._dataService.GetForm(35));
-           forms.Add(this._dataService.GetForm(33));
-           forms.Add(this._dataService.GetForm(47));
-           forms.Add(this._dataService.GetForm(13));
-           forms.Add(this._dataService.GetForm(46));
-           forms.Add(this._dataService.GetForm(45));
-           forms.Add(this._dataService.GetForm(44));
-           forms.Add(this._dataService.GetForm(26));
-           forms.Add(this._dataService.GetForm(29));
-           forms.Add(this._dataService.GetForm(22));
+            forms.Add(this._dataService.GetForm(9));
+            forms.Add(this._dataService.GetForm(10));
+            forms.Add(this._dataService.GetForm(11));
+            forms.Add(this._dataService.GetForm(21));
+            forms.Add(this._dataService.GetForm(1001));
+            forms.Add(this._dataService.GetForm(34));
+            forms.Add(this._dataService.GetForm(35));
+            forms.Add(this._dataService.GetForm(33));
+            forms.Add(this._dataService.GetForm(47));
+            forms.Add(this._dataService.GetForm(13));
+            forms.Add(this._dataService.GetForm(46));
+            forms.Add(this._dataService.GetForm(45));
+            forms.Add(this._dataService.GetForm(44));
+            forms.Add(this._dataService.GetForm(29));
+            forms.Add(this._dataService.GetForm(22));
 
             return forms;
         }

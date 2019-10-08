@@ -36,5 +36,33 @@ namespace Pokedex.DataAccess.Models
 
         public int? SixthPokemonId { get; set; }
         public PokemonTeamDetail SixthPokemon { get; set; }
+
+        public void InsertPokemon(PokemonTeamDetail pokemon)
+        {
+            if(this.FirstPokemonId == null)
+            {
+                this.FirstPokemonId = pokemon.Id;
+            }
+            else if(this.SecondPokemonId == null)
+            {
+                this.SecondPokemonId = pokemon.Id;
+            }
+            else if(this.ThirdPokemonId == null)
+            {
+                this.ThirdPokemonId = pokemon.Id;
+            }
+            else if(this.FourthPokemonId == null)
+            {
+                this.FourthPokemonId = pokemon.Id;
+            }
+            else if(this.FifthPokemonId == null)
+            {
+                this.FifthPokemonId = pokemon.Id;
+            }
+            else if(this.SixthPokemonId == null)
+            {
+                this.SixthPokemonId = pokemon.Id;
+            }
+        }
     }
 }
