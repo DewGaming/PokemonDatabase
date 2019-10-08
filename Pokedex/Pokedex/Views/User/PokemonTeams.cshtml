@@ -3,6 +3,11 @@
     Layout = "_Layout";
 }
 
+@section scripts
+{
+    <script src="/js/pokemonTeam.js"></script>
+}
+
 <p>
     <a class="btn btn-primary" href="@Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
 </p>
@@ -118,7 +123,10 @@
                         </td>
                         <td>
                             <a class="btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("EditTeam", "PokemonTeam", new { teamId = @teams.Id })">Edit Team</a>
-                            <button class="btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
+                            @if(@teams.FirstPokemon != null)
+                            {
+                                <button id="@teams.Id" class="pokemonTeamButton btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
+                            }
                         </td>
                     </tr>
                 }

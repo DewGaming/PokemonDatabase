@@ -28,6 +28,115 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("export-user-pokemon-team")]
+        public string ExportUserPokemonTeam(int pokemonTeamId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonTeam pokemonTeam = this._dataService.GetPokemonTeam(pokemonTeamId);
+                string pokemonTeamString = "=== " + pokemonTeam.PokemonTeamName + " ===\n\n";
+                pokemonTeamString += this.FillUserPokemonTeam(pokemonTeam.FirstPokemon);
+                if(pokemonTeam.SecondPokemon != null)
+                {
+                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.SecondPokemon);
+                }
+
+                if(pokemonTeam.ThirdPokemon != null)
+                {
+                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.ThirdPokemon);
+                }
+
+                if(pokemonTeam.FourthPokemon != null)
+                {
+                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.FourthPokemon);
+                }
+
+                if(pokemonTeam.FifthPokemon != null)
+                {
+                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.FifthPokemon);
+                }
+
+                if(pokemonTeam.SixthPokemon != null)
+                {
+                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.SixthPokemon);
+                }
+
+                return pokemonTeamString;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("fill-user-pokemon-team")]
+        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail)
+        {
+            Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
+            string pokemonName;
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+            {
+                pokemonName = pokemonTeamDetail.Nickname + " (" + pokemon.Name + ")";
+            }
+            else
+            {
+                pokemonName = pokemon.Name;
+            }
+
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender))
+            {
+                pokemonName += " (" + pokemonTeamDetail.Gender.Substring(0,1) + ")";
+            }
+
+            if(pokemon.Id.Contains('-'))
+            {
+                string pokemonForm = this.GetUserFormDetails(pokemon.Id);
+                pokemonName += "-" + pokemonForm;
+            }
+
+            string pokemonTeamString = pokemonName;
+            pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
+            if(pokemonTeamDetail.IsShiny)
+            {
+                pokemonTeamString += "\nShiny: Yes";
+            }
+
+            return pokemonTeamString;
+        }
+
+        [AllowAnonymous]
+        [Route("get-user-form-item")]
+        public string GetUserFormDetails(string pokemonId)
+        {
+            string formDetails = string.Empty, itemName = string.Empty;
+            PokemonFormDetail pokemonFormDetail;
+
+             pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+
+            formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
+            
+            FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
+            if(formItem != null)
+            {
+                itemName = formItem.Name;
+            }
+            else if(formDetails.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
+            {
+                itemName = "[Insert Mega Stone Here]";
+            }
+
+            if(!string.IsNullOrEmpty(itemName))
+            {
+                formDetails += " @ " + itemName;
+            }
+
+            return formDetails;
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("get-pokemon-list")]
         public List<Pokemon> GetPokemonList()
