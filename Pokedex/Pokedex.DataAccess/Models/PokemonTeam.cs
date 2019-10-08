@@ -36,8 +36,5 @@ namespace Pokedex.DataAccess.Models
 
         public int? SixthPokemonId { get; set; }
         public PokemonTeamDetail SixthPokemon { get; set; }
-
-        [Required]
-        public bool FromTeamRandomizer { get; set; }
     }
 }
