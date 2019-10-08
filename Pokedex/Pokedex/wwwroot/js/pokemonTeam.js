@@ -1,14 +1,52 @@
-$('.pokemonTeamButton').on("click", function() {
-    var pokemonTeamId = $(this).attr('id')
+var pokemonTeams, exportString;
+$(document).ready(function() {
     $.ajax({
-        url: '/export-user-pokemon-team/',
-        method: 'POST',
-        data: { 'pokemonTeamId': pokemonTeamId }
+        url: '/grab-all-user-pokemon-teams/',
+        method: 'POST'
     })
     .done(function(data) {
-        alert("Copy This For Pokemon Showdown: \n\n" + data);
+        pokemonTeams = data;
     })
     .fail(function(jqXHR) {
         alert(jqXHR.statusText);
     });
+})
+
+$('.pokemonTeamButton').on("click", function() {
+    var buttonId = $(this).attr('id')
+    $.each(pokemonTeams, function(index, item) {
+        if(item.teamId == buttonId)
+        {
+            exportString = item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+        }
+    });
+
+    var temp = $("<textarea>");
+    $("body").append(temp);
+    $(temp).text(exportString);
+    $(temp).select();
+    document.execCommand("copy");
+    $(temp).remove();
+
+    alert("Teams have been copied to your clipboard!");
+});
+
+$('.pokemonTeamsButton').on("click", function() {
+    exportString = "";
+    $.each(pokemonTeams, function(index, item) {
+        if(index != 0)
+        {
+            exportString += "\n\n";
+        }
+        exportString += item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+    });
+
+    var temp = $("<textarea>");
+    $("body").append(temp);
+    $(temp).text(exportString);
+    $(temp).select();
+    document.execCommand("copy");
+    $(temp).remove();
+
+    alert("Teams have been copied to your clipboard!");
 });

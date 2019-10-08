@@ -28,40 +28,50 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("export-user-pokemon-team")]
-        public string ExportUserPokemonTeam(int pokemonTeamId)
+        [Route("grab-all-user-pokemon-teams")]
+        public List<ExportPokemonViewModel> ExportAllUserPokemonTeams(int pokemonTeamId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                PokemonTeam pokemonTeam = this._dataService.GetPokemonTeam(pokemonTeamId);
-                string pokemonTeamString = "=== " + pokemonTeam.PokemonTeamName + " ===\n\n";
-                pokemonTeamString += this.FillUserPokemonTeam(pokemonTeam.FirstPokemon);
-                if(pokemonTeam.SecondPokemon != null)
+                List<PokemonTeam> pokemonTeams = this._dataService.GetAllPokemonTeams(User.Identity.Name);
+                List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
+                foreach(var team in pokemonTeams)
                 {
-                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.SecondPokemon);
+                    ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel(){
+                        ExportString = "=== " + team.PokemonTeamName + " ===\n\n",
+                        TeamId = team.Id,
+                    };
+
+                    pokemonTeam.ExportString += this.FillUserPokemonTeam(team.FirstPokemon);
+                    if(team.SecondPokemon != null)
+                    {
+                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SecondPokemon);
+                    }
+
+                    if(team.ThirdPokemon != null)
+                    {
+                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.ThirdPokemon);
+                    }
+
+                    if(team.FourthPokemon != null)
+                    {
+                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FourthPokemon);
+                    }
+
+                    if(team.FifthPokemon != null)
+                    {
+                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FifthPokemon);
+                    }
+
+                    if(team.SixthPokemon != null)
+                    {
+                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SixthPokemon);
+                    }
+
+                    exportList.Add(pokemonTeam);
                 }
 
-                if(pokemonTeam.ThirdPokemon != null)
-                {
-                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.ThirdPokemon);
-                }
-
-                if(pokemonTeam.FourthPokemon != null)
-                {
-                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.FourthPokemon);
-                }
-
-                if(pokemonTeam.FifthPokemon != null)
-                {
-                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.FifthPokemon);
-                }
-
-                if(pokemonTeam.SixthPokemon != null)
-                {
-                    pokemonTeamString += "\n\n" + this.FillUserPokemonTeam(pokemonTeam.SixthPokemon);
-                }
-
-                return pokemonTeamString;
+                return exportList;
             }
             else
             {

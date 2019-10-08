@@ -10,6 +10,7 @@
 
 <p>
     <a class="btn btn-primary" href="@Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
+    <button class="pokemonTeamsButton btn btn-primary">Export All Teams</button>
 </p>
 
 <div>
@@ -71,13 +72,11 @@
                             </table>
                         </td>
                         <td>
-                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("EditTeam", "PokemonTeam", new { teamId = @teams.Id })">Edit Team</a>
+                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { teamId = @teams.Id })">Delete Team</a>
                             @if(@teams.FirstPokemon != null)
                             {
                                 <button id="@teams.Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
                             }
-                            <br>
-                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { teamId = @teams.Id })">Delete Team</a>
                         </td>
                     </tr>
                 }
