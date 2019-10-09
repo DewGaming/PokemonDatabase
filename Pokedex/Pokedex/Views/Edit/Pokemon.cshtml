@@ -36,6 +36,12 @@
         }
 
         <div class="form-group">
+            @Html.LabelFor(x => x.Pokemon.ClassificationId)
+            @Html.DropDownListFor(x => x.Pokemon.ClassificationId, new SelectList(Model.AllClassifications, "Id", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Pokemon.ClassificationId)
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(x => x.Pokemon.GenerationId)
             @Html.DropDownListFor(x => x.Pokemon.GenerationId, new SelectList(Model.AllGenerations, "Id", "Games"), new { @class = "form-control" })
             @Html.ValidationMessageFor(x => x.Pokemon.GenerationId)
@@ -72,12 +78,6 @@
                 @Html.DropDownListFor(x => x.Pokemon.GenderRatioId, new SelectList(Model.AllGenderRatios, "Id", "GenderRatioString"), new { @class = "form-control" })
                 @Html.ValidationMessageFor(x => x.Pokemon.GenderRatioId)
             </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.Pokemon.ClassificationId)
-                @Html.DropDownListFor(x => x.Pokemon.ClassificationId, new SelectList(Model.AllClassifications, "Id", "Name"), new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.Pokemon.ClassificationId)
-            </div>
             
             <div class="form-group">
                 @Html.LabelFor(x => x.Pokemon.ExperienceGrowthId)
@@ -101,7 +101,6 @@
         {
             @Html.HiddenFor(x => x.Pokemon.EggCycleId)
             @Html.HiddenFor(x => x.Pokemon.GenderRatioId)
-            @Html.HiddenFor(x => x.Pokemon.ClassificationId)
             @Html.HiddenFor(x => x.Pokemon.ExperienceGrowthId)
             @Html.HiddenFor(x => x.Pokemon.CaptureRateId)
             @Html.HiddenFor(x => x.Pokemon.BaseHappinessId)

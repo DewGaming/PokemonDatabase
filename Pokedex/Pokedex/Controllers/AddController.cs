@@ -531,6 +531,7 @@ namespace Pokedex.Controllers
             AlternateFormViewModel model = new AlternateFormViewModel()
             {
                 AllForms = this._dataService.GetForms(),
+                AllClassifications = this._dataService.GetClassifications(),
                 AllGenerations = generations,
                 OriginalPokemon = originalPokemon,
                 OriginalPokemonId = originalPokemon.Id,
@@ -553,6 +554,7 @@ namespace Pokedex.Controllers
                 AlternateFormViewModel model = new AlternateFormViewModel()
                 {
                     AllForms = this._dataService.GetForms(),
+                    AllClassifications = this._dataService.GetClassifications(),
                     AllGenerations = generations,
                     OriginalPokemon = originalPokemon,
                     OriginalPokemonId = originalPokemon.Id,
@@ -571,6 +573,7 @@ namespace Pokedex.Controllers
                     AlternateFormViewModel model = new AlternateFormViewModel()
                     {
                         AllForms = this._dataService.GetForms(),
+                        AllClassifications = this._dataService.GetClassifications(),
                         AllGenerations = generations,
                         OriginalPokemon = originalPokemon,
                         OriginalPokemonId = originalPokemon.Id,
@@ -588,6 +591,7 @@ namespace Pokedex.Controllers
             alternatePokemon.Weight = pokemon.Weight;
             alternatePokemon.ExpYield = pokemon.ExpYield;
             alternatePokemon.GenerationId = pokemon.GenerationId;
+            alternatePokemon.ClassificationId = pokemon.ClassificationId;
             alternatePokemon.IsComplete = false;
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + alternatePokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));

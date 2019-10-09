@@ -86,12 +86,12 @@ namespace Pokedex.Controllers
             BasePokemonViewModel model = new BasePokemonViewModel(){
                 Pokemon = this._dataService.GetPokemonById(id),
                 AllGenerations = this._dataService.GetGenerations(),
+                AllClassifications = this._dataService.GetClassifications(),
             };
 
             if(!id.Contains('-'))
             {
                 model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
-                model.AllClassifications = this._dataService.GetClassifications();
                 model.AllCaptureRates = this._dataService.GetCaptureRates();
                 model.AllEggCycles = this._dataService.GetEggCycles();
                 model.AllExperienceGrowths = this._dataService.GetExperienceGrowths();

@@ -10,10 +10,16 @@ namespace Pokedex.Models
 
         public List<Generation> AllGenerations { get; set; }
 
+        public List<Classification> AllClassifications { get; set; }
+
         [Display(Name = "Original Pokemon")]
         [Required]
         public string OriginalPokemonId { get; set; }
         public Pokemon OriginalPokemon { get; set; }
+
+        [Display(Name = "Classification")]
+        [Required]
+        public int ClassificationId { get; set; }
 
         [Display(Name = "Alternate Form Name")]
         [Required]
