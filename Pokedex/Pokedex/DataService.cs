@@ -485,6 +485,38 @@ namespace Pokedex
         public PokemonTeamDetail GetPokemonTeamDetail(int id)
         {
             return this._dataContext.PokemonTeamDetails
+                .Include(x => x.Pokemon)
+                    .Include("Pokemon.EggCycle")
+                    .Include("Pokemon.GenderRatio")
+                    .Include("Pokemon.Classification")
+                    .Include("Pokemon.Generation")
+                    .Include("Pokemon.ExperienceGrowth")
+                    .Include("Pokemon.CaptureRate")
+                    .Include("Pokemon.BaseHappiness")
+                .Include(x => x.Ability)
+                .Include(x => x.PokemonTeamEV)
+                .Include(x => x.PokemonTeamIV)
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public PokemonTeamDetail GetPokemonTeamDetailNoIncludes(int id)
+        {
+            return this._dataContext.PokemonTeamDetails
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public PokemonTeamEV GetPokemonTeamEV(int id)
+        {
+            return this._dataContext.PokemonTeamEVs
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public PokemonTeamIV GetPokemonTeamIV(int id)
+        {
+            return this._dataContext.PokemonTeamIVs
                 .ToList()
                 .Find(x => x.Id == id);
         }
@@ -1381,6 +1413,13 @@ namespace Pokedex
             return pokemonTeamEV.Id;
         }
 
+        public int AddPokemonTeamIV(PokemonTeamIV pokemonTeamIV)
+        {
+            this._dataContext.PokemonTeamIVs.Add(pokemonTeamIV);
+            this._dataContext.SaveChanges();
+            return pokemonTeamIV.Id;
+        }
+
         public void AddPokemonFormDetails(PokemonFormDetail pokemonFormDetail)
         {
             this._dataContext.PokemonFormDetails.Add(pokemonFormDetail);
@@ -1486,6 +1525,12 @@ namespace Pokedex
         public void UpdatePokemonTeamEV(PokemonTeamEV pokemonTeamEVs)
         {
             this._dataContext.PokemonTeamEVs.Update(pokemonTeamEVs);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonTeamIV(PokemonTeamIV pokemonTeamIVs)
+        {
+            this._dataContext.PokemonTeamIVs.Update(pokemonTeamIVs);
             this._dataContext.SaveChanges();
         }
 
@@ -1790,16 +1835,106 @@ namespace Pokedex
             this._dataContext.PokemonTeams.Remove(pokemonTeam);
             foreach(var p in pokemonTeamDetailIds)
             {
-                this._dataContext.PokemonTeamDetails.Remove(this.GetPokemonTeamDetail(p));
+                this.DeletePokemonTeamDetail(p);
             }
 
             this._dataContext.SaveChanges();
         }
 
+        public void RemovePokemonFromTeam(PokemonTeam team, PokemonTeamDetail teamDetail)
+        {
+            if(team.FirstPokemonId == teamDetail.Id)
+            {
+                team.FirstPokemonId = null;
+            }
+            else if (team.SecondPokemonId == teamDetail.Id)
+            {
+                team.SecondPokemonId = null;
+            }
+            else if (team.ThirdPokemonId == teamDetail.Id)
+            {
+                team.ThirdPokemonId = null;
+            }
+            else if (team.FourthPokemonId == teamDetail.Id)
+            {
+                team.FourthPokemonId = null;
+            }
+            else if (team.FifthPokemonId == teamDetail.Id)
+            {
+                team.FifthPokemonId = null;
+            }
+            else if (team.SixthPokemonId == teamDetail.Id)
+            {
+                team.SixthPokemonId = null;
+            }
+
+            team = this.ShiftPokemonTeam(team);
+            this.UpdatePokemonTeam(team);
+        }
+
+        public PokemonTeam ShiftPokemonTeam(PokemonTeam pokemonTeam)
+        {
+            if(pokemonTeam.FirstPokemonId == null && pokemonTeam.SecondPokemonId != null)
+            {
+                pokemonTeam.FirstPokemonId = pokemonTeam.SecondPokemonId;
+                pokemonTeam.SecondPokemonId = null;
+            }
+
+            if(pokemonTeam.SecondPokemonId == null && pokemonTeam.ThirdPokemonId != null)
+            {
+                pokemonTeam.SecondPokemonId = pokemonTeam.ThirdPokemonId;
+                pokemonTeam.ThirdPokemonId = null;
+            }
+
+            if(pokemonTeam.ThirdPokemonId == null && pokemonTeam.FourthPokemonId != null)
+            {
+                pokemonTeam.ThirdPokemonId = pokemonTeam.FourthPokemonId;
+                pokemonTeam.FourthPokemonId = null;
+            }
+
+            if(pokemonTeam.FourthPokemonId == null && pokemonTeam.FifthPokemonId != null)
+            {
+                pokemonTeam.FourthPokemonId = pokemonTeam.FifthPokemonId;
+                pokemonTeam.FifthPokemonId = null;
+            }
+
+            if(pokemonTeam.FifthPokemonId == null && pokemonTeam.SixthPokemonId != null)
+            {
+                pokemonTeam.FifthPokemonId = pokemonTeam.SixthPokemonId;
+                pokemonTeam.SixthPokemonId = null;
+            }
+
+            return pokemonTeam;
+        }
+
         public void DeletePokemonTeamDetail(int id)
         {
-            PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetail(id);
+            PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetailNoIncludes(id);
+            PokemonTeam pokemonTeam = this.GetPokemonTeamFromPokemonNoIncludes(pokemonTeamDetail.Id);
+            if(pokemonTeam != null)
+            {
+                this.RemovePokemonFromTeam(pokemonTeam, pokemonTeamDetail);
+            }
+
+            int evId = (int)pokemonTeamDetail.PokemonTeamEVId;
+            int ivId = (int)pokemonTeamDetail.PokemonTeamIVId;
             this._dataContext.PokemonTeamDetails.Remove(pokemonTeamDetail);
+            this.DeletePokemonTeamEV(evId);
+            this.DeletePokemonTeamIV(ivId);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonTeamEV(int id)
+        {
+            PokemonTeamEV pokemonTeamDetailEV = this.GetPokemonTeamEV(id);
+            this._dataContext.PokemonTeamEVs.Remove(pokemonTeamDetailEV);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonTeamIV(int id)
+        {
+            PokemonTeamIV pokemonTeamDetailIV = this.GetPokemonTeamIV(id);
+            this._dataContext.PokemonTeamIVs.Remove(pokemonTeamDetailIV);
             this._dataContext.SaveChanges();
         }
 

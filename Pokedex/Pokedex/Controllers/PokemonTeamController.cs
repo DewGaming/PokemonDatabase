@@ -281,9 +281,27 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("PokemonTeams", "User");
         }
 
+        [HttpGet]
+        [Route("delete_team_pokemon/{pokemonId:int}")]
+        public IActionResult DeletePokemon(int pokemonId)
+        {
+            PokemonTeamDetail pokemonTeamDetail = this._dataService.GetPokemonTeamDetail(pokemonId);
 
+            PokemonTeamDetailViewModel model = new PokemonTeamDetailViewModel(){
+                Id = pokemonTeamDetail.Id,
+                Pokemon = pokemonTeamDetail.Pokemon,
+                AppConfig = this._appConfig,
+            };
 
+            return this.View(model);
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_team_pokemon/{pokemonId:int}")]
+        public IActionResult DeletePokemon(PokemonTeamDetail pokemonTeamDetail)
+        {
+            this._dataService.DeletePokemonTeamDetail(pokemonTeamDetail.Id);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
