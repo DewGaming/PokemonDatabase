@@ -1,0 +1,108 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonTeamEVViewModel
+@{
+    Layout = "_layout";
+}
+
+@section styles
+{
+    <style>
+        .slider {
+            padding: 0;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script>
+        $(function() {
+            $('#healthVal').text($('.healthSlider').val());
+            $('#attackVal').text($('.attackSlider').val());
+            $('#defenseVal').text($('.defenseSlider').val());
+            $('#specialAttackVal').text($('.specialAttackSlider').val());
+            $('#specialDefenseVal').text($('.specialDefenseSlider').val());
+            $('#speedVal').text($('.speedSlider').val());
+        });
+
+        $('.healthSlider').on('input', function() {
+            $('#healthVal').text($(this).val());
+        });
+        
+        $('.attackSlider').on('input', function() {
+            $('#attackVal').text($(this).val());
+        });
+        
+        $('.defenseSlider').on('input', function() {
+            $('#defenseVal').text($(this).val());
+        });
+        
+        $('.specialAttackSlider').on('input', function() {
+            $('#specialAttackVal').text($(this).val());
+        });
+        
+        $('.specialDefenseSlider').on('input', function() {
+            $('#specialDefenseVal').text($(this).val());
+        });
+        
+        $('.speedSlider').on('input', function() {
+            $('#speedVal').text($(this).val());
+        });
+    </script>
+}
+
+<h2>Add EVs</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.PokemonId)
+
+        <div class="form-group">
+            <label class="col-md-2" for="Health">Health: <span id="healthVal"></span></label>
+            <input class="healthSlider slider col-md-7" data-val-required="The Health field is required." id="Health" name="Health" type="range" min="0" max="252" step="4" value="0">
+            @Html.ValidationMessageFor(x => x.Health)
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2" for="Attack">Attack: <span id="attackVal"></span></label>
+            <input class="attackSlider slider slider col-md-7" data-val-required="The Attack field is required." id="Attack" name="Attack" type="range" min="0" max="252" step="4" value="0">
+            @Html.ValidationMessageFor(x => x.Attack)
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2" for="Defense">Defense: <span id="defenseVal"></span></label>
+            <input class="defenseSlider slider col-md-7" data-val-required="The Defense field is required." id="Defense" name="Defense" type="range" min="0" max="252" step="4" value="0">
+            @Html.ValidationMessageFor(x => x.Defense)
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2" for="SpecialAttack">Special Attack: <span id="specialAttackVal"></span></label>
+            <input class="specialAttackSlider slider col-md-7" data-val-required="The Special Attack field is required." id="SpecialAttack" name="SpecialAttack" type="range" min="0" max="252" step="4" value="0">
+            @Html.ValidationMessageFor(x => x.SpecialAttack)
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2" for="SpecialDefense">Special Defense: <span id="specialDefenseVal"></span></label>
+            <input class="specialDefenseSlider slider col-md-7" data-val-required="The Special Defense field is required." id="SpecialDefense" name="SpecialDefense" type="range" min="0" max="252" step="4" value="0">
+            @Html.ValidationMessageFor(x => x.SpecialDefense)
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2" for="Speed">Speed: <span id="speedVal"></span></label>
+            <input class="speedSlider slider col-md-7" data-val-required="The Speed field is required." id="Speed" name="Speed" type="range" min="0" max="252" step="4" value="0">
+            @Html.ValidationMessageFor(x => x.Speed)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

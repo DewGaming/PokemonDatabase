@@ -181,6 +181,21 @@ main {
   font-size: 1rem;
 }
 
+.pokemonTeamGroup {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    padding-bottom: 0 !important;
+}
+
+.pokemonTeamDropdown {
+  border-top-width: 1px !important;
+}
+
+.pokemonTeamDropdown li {
+  padding-bottom: 0 !important;
+}
+
 .pokemonTables {
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
@@ -298,7 +313,7 @@ img {
 }
 
 .pokemonTeamPokemon {
-  width: 4rem;
+  width: 3rem;
 }
 
 .teamButton {

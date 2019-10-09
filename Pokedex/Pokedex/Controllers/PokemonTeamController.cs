@@ -168,5 +168,211 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
+
+        [HttpGet]
+        [Route("add_ev/{pokemonId:int}")]
+        public IActionResult AddEV(int pokemonId)
+        {
+            PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                PokemonId = pokemonId,
+            };
+            
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("add_ev/{pokemonId:int}")]
+        public IActionResult AddEV(PokemonTeamEVViewModel pokemonTeamEV)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+            
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Health > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Health must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Attack > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Attack must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Defense > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Defense must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.SpecialAttack > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Special Attack must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.SpecialDefense > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Special Defense must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Speed > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Speed must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.EVTotal == 0)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "You need to add some EVs to continue.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.EVTotal > 510)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Total EVs max at 510.");
+                return this.View(model);
+            }
+
+            int pokemonTeamEVId = this._dataService.AddPokemonTeamEV(pokemonTeamEV);
+
+            PokemonTeamDetail pokemon = this._dataService.GetPokemonTeamDetail(pokemonTeamEV.PokemonId);
+            pokemon.PokemonTeamEVId = pokemonTeamEVId;
+            this._dataService.UpdatePokemonTeamDetail(pokemon);
+
+            return this.RedirectToAction("PokemonTeams", "User");
+        }
+
+        [HttpGet]
+        [Route("update_ev/{pokemonId:int}")]
+        public IActionResult EditEV(int pokemonId)
+        {
+            PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                PokemonId = pokemonId,
+            };
+            
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("update_ev/{pokemonId:int}")]
+        public IActionResult EditEV(PokemonTeamEVViewModel pokemonTeamEV)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+            
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Health > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Health must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Attack > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Attack must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Defense > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Defense must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.SpecialAttack > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Special Attack must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.SpecialDefense > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Special Defense must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.Speed > 252)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Speed must be 252 or less.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.EVTotal == 0)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "You need to add some EVs to continue.");
+                return this.View(model);
+            }
+            else if (pokemonTeamEV.EVTotal > 510)
+            {
+                PokemonTeamEVViewModel model = new PokemonTeamEVViewModel(){
+                    PokemonId = pokemonTeamEV.PokemonId,
+                };
+
+                this.ModelState.AddModelError("EVTotal", "Total EVs max at 510.");
+                return this.View(model);
+            }
+
+            this._dataService.UpdatePokemonTeamEV(pokemonTeamEV);
+
+            return this.RedirectToAction("PokemonTeams", "User");
+        }
     }
 }

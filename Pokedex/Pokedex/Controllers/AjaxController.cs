@@ -113,8 +113,74 @@ namespace Pokedex.Controllers
             {
                 pokemonTeamString += "\nShiny: Yes";
             }
+            
+            if(pokemonTeamDetail.PokemonTeamEV != null)
+            {
+                pokemonTeamString += this.FillEVs(pokemonTeamDetail.PokemonTeamEV);
+            }
 
             return pokemonTeamString;
+        }
+
+        private string FillEVs(PokemonTeamEV evs)
+        {
+            string evString = "\nEVs: ";
+            if(evs.Health > 0)
+            {
+                evString += evs.Health.ToString() + " HP";
+            }
+
+            if(evs.Attack > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.Attack.ToString() + " Atk";
+            }
+
+            if(evs.Defense > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.Defense.ToString() + " Def";
+            }
+
+            if(evs.SpecialAttack > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.SpecialAttack.ToString() + " SpA";
+            }
+
+            if(evs.SpecialDefense > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.SpecialDefense.ToString() + " SpD";
+            }
+
+            if(evs.Speed > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.Speed.ToString() + " Spe";
+            }
+
+            return evString;
         }
 
         [AllowAnonymous]

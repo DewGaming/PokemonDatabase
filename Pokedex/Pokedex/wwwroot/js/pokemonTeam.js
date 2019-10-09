@@ -21,12 +21,16 @@ $('.pokemonTeamButton').on("click", function() {
         }
     });
 
+    console.clear();
+
     var temp = $("<textarea>");
     $("body").append(temp);
     $(temp).text(exportString);
     $(temp).select();
     document.execCommand("copy");
     $(temp).remove();
+
+    console.log(exportString);
 
     alert("Teams have been copied to your clipboard!");
 });
@@ -41,12 +45,16 @@ $('.pokemonTeamsButton').on("click", function() {
         exportString += item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
     });
 
+    console.clear();
+
     var temp = $("<textarea>");
     $("body").append(temp);
     $(temp).text(exportString);
     $(temp).select();
     document.execCommand("copy");
     $(temp).remove();
+
+    console.log(exportString);
 
     alert("Teams have been copied to your clipboard!");
 });

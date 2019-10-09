@@ -470,6 +470,18 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public PokemonTeam GetPokemonTeamFromPokemonNoIncludes(int id)
+        {
+            return this._dataContext.PokemonTeams
+                .ToList()
+                .Find(x => x.FirstPokemonId == id ||
+                           x.SecondPokemonId == id ||
+                           x.ThirdPokemonId == id ||
+                           x.FourthPokemonId == id ||
+                           x.FifthPokemonId == id ||
+                           x.SixthPokemonId == id);
+        }
+
         public PokemonTeamDetail GetPokemonTeamDetail(int id)
         {
             return this._dataContext.PokemonTeamDetails
@@ -1362,6 +1374,13 @@ namespace Pokedex
             return pokemonTeamDetail.Id;
         }
 
+        public int AddPokemonTeamEV(PokemonTeamEV pokemonTeamEV)
+        {
+            this._dataContext.PokemonTeamEVs.Add(pokemonTeamEV);
+            this._dataContext.SaveChanges();
+            return pokemonTeamEV.Id;
+        }
+
         public void AddPokemonFormDetails(PokemonFormDetail pokemonFormDetail)
         {
             this._dataContext.PokemonFormDetails.Add(pokemonFormDetail);
@@ -1446,6 +1465,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdatePokemonTeamDetail(PokemonTeamDetail pokemonTeamDetail)
+        {
+            this._dataContext.PokemonTeamDetails.Update(pokemonTeamDetail);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdatePokemonEggGroupDetail(PokemonEggGroupDetail pokemonEggGroupDetail)
         {
             this._dataContext.PokemonEggGroupDetails.Update(pokemonEggGroupDetail);
@@ -1455,6 +1480,12 @@ namespace Pokedex
         public void UpdateBaseStat(BaseStat baseStats)
         {
             this._dataContext.BaseStats.Update(baseStats);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonTeamEV(PokemonTeamEV pokemonTeamEVs)
+        {
+            this._dataContext.PokemonTeamEVs.Update(pokemonTeamEVs);
             this._dataContext.SaveChanges();
         }
 
