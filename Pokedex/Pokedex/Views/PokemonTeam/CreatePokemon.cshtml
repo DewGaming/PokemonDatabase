@@ -20,32 +20,32 @@
         @Html.ValidationSummary()
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonId, "Pokemon")
-            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control" })
+            @Html.LabelFor(x => x.PokemonId, "Pokemon", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonId)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Nickname)
-            @Html.EditorFor(x => x.Nickname, new { @class = "form-control" })
+            @Html.LabelFor(x => x.Nickname, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @class = "form-control col-md-8" }})
             @Html.ValidationMessageFor(x => x.Nickname)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Gender)
-            @Html.DropDownListFor(x => x.Gender, new SelectList(Model.Genders), "", new { @class = "form-control" })
+            @Html.LabelFor(x => x.Gender, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.Gender, new SelectList(Model.Genders), "", new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.Gender)
         </div>
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.IsShiny, "Is Pokemon Shiny")
-            @Html.CheckBoxFor(x => x.IsShiny, new { @class = "form-control" })
+        <div class="form-group row isShinyBool">
+            @Html.LabelFor(x => x.IsShiny, "Is Pokemon Shiny", new { @class = "col-md-2" })
+            @Html.CheckBoxFor(x => x.IsShiny, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.IsShiny)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.AbilityId, "Ability")
-            @Html.DropDownListFor(x => x.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control" })
+            @Html.LabelFor(x => x.AbilityId, "Ability", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.AbilityId)
         </div>
 

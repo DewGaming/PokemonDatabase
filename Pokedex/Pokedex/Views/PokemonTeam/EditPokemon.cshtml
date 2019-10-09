@@ -24,32 +24,32 @@
         @Html.HiddenFor(x => x.PokemonTeamDetail.PokemonTeamIVId);
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.PokemonId, "Pokemon")
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control" })
+            @Html.LabelFor(x => x.PokemonTeamDetail.PokemonId, "Pokemon", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PokemonTeamDetail.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.PokemonId)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.Nickname)
-            @Html.EditorFor(x => x.PokemonTeamDetail.Nickname, new { @class = "form-control" })
+            @Html.LabelFor(x => x.PokemonTeamDetail.Nickname, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.PokemonTeamDetail.Nickname, new { htmlAttributes = new { @class = "form-control col-md-8" }})
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.Nickname)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.Gender)
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.Gender, new SelectList(Model.Genders), "", new { @class = "form-control" })
+            @Html.LabelFor(x => x.PokemonTeamDetail.Gender, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PokemonTeamDetail.Gender, new SelectList(Model.Genders), "", new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.Gender)
         </div>
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.IsShiny, "Is Pokemon Shiny")
-            @Html.CheckBoxFor(x => x.PokemonTeamDetail.IsShiny, new { @class = "form-control" })
+        <div class="form-group row isShinyBool">
+            @Html.LabelFor(x => x.PokemonTeamDetail.IsShiny, "Is Pokemon Shiny", new { @class = "col-md-2" })
+            @Html.CheckBoxFor(x => x.PokemonTeamDetail.IsShiny, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.IsShiny)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.AbilityId, "Ability")
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control" })
+            @Html.LabelFor(x => x.PokemonTeamDetail.AbilityId, "Ability", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PokemonTeamDetail.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.AbilityId)
         </div>
 
