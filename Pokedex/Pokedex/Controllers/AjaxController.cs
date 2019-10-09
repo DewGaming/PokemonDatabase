@@ -37,38 +37,41 @@ namespace Pokedex.Controllers
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
                 foreach(var team in pokemonTeams)
                 {
-                    ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel(){
-                        ExportString = "=== " + team.PokemonTeamName + " ===\n\n",
-                        TeamId = team.Id,
-                    };
-
-                    pokemonTeam.ExportString += this.FillUserPokemonTeam(team.FirstPokemon);
-                    if(team.SecondPokemon != null)
+                    if(team.FirstPokemon != null)
                     {
-                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SecondPokemon);
-                    }
+                        ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel(){
+                            ExportString = "=== " + team.PokemonTeamName + " ===\n\n",
+                            TeamId = team.Id,
+                        };
 
-                    if(team.ThirdPokemon != null)
-                    {
-                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.ThirdPokemon);
-                    }
+                        pokemonTeam.ExportString += this.FillUserPokemonTeam(team.FirstPokemon);
+                        if(team.SecondPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SecondPokemon);
+                        }
 
-                    if(team.FourthPokemon != null)
-                    {
-                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FourthPokemon);
-                    }
+                        if(team.ThirdPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.ThirdPokemon);
+                        }
 
-                    if(team.FifthPokemon != null)
-                    {
-                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FifthPokemon);
-                    }
+                        if(team.FourthPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FourthPokemon);
+                        }
 
-                    if(team.SixthPokemon != null)
-                    {
-                        pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SixthPokemon);
-                    }
+                        if(team.FifthPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FifthPokemon);
+                        }
 
-                    exportList.Add(pokemonTeam);
+                        if(team.SixthPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SixthPokemon);
+                        }
+
+                        exportList.Add(pokemonTeam);
+                    }
                 }
 
                 return exportList;
@@ -118,13 +121,18 @@ namespace Pokedex.Controllers
             {
                 pokemonTeamString += this.FillEVs(pokemonTeamDetail.PokemonTeamEV);
             }
+            
+            if(pokemonTeamDetail.PokemonTeamIV != null)
+            {
+                pokemonTeamString += this.FillIVs(pokemonTeamDetail.PokemonTeamIV);
+            }
 
             return pokemonTeamString;
         }
 
         private string FillEVs(PokemonTeamEV evs)
         {
-            string evString = "\nEVs: ";
+            string evString = string.Empty;
             if(evs.Health > 0)
             {
                 evString += evs.Health.ToString() + " HP";
@@ -180,7 +188,78 @@ namespace Pokedex.Controllers
                 evString += evs.Speed.ToString() + " Spe";
             }
 
+            if(!string.IsNullOrEmpty(evString))
+            {
+                evString = "\nEVs: " + evString;
+            }
+
             return evString;
+        }
+
+        private string FillIVs(PokemonTeamIV ivs)
+        {
+            string ivString = string.Empty;
+            if(ivs.Health < 31)
+            {
+                ivString += ivs.Health.ToString() + " HP";
+            }
+
+            if(ivs.Attack < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.Attack.ToString() + " Atk";
+            }
+
+            if(ivs.Defense < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.Defense.ToString() + " Def";
+            }
+
+            if(ivs.SpecialAttack < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.SpecialAttack.ToString() + " SpA";
+            }
+
+            if(ivs.SpecialDefense < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.SpecialDefense.ToString() + " SpD";
+            }
+
+            if(ivs.Speed < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.Speed.ToString() + " Spe";
+            }
+
+            if(!string.IsNullOrEmpty(ivString))
+            {
+                ivString = "\nIVs: " + ivString;
+            }
+
+            return ivString;
         }
 
         [AllowAnonymous]

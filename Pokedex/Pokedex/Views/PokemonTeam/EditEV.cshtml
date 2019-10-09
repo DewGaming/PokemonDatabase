@@ -17,12 +17,18 @@
 {
     <script>
         $(function() {
-            $('#healthVal').text($('.healthSlider').val());
-            $('#attackVal').text($('.attackSlider').val());
-            $('#defenseVal').text($('.defenseSlider').val());
-            $('#specialAttackVal').text($('.specialAttackSlider').val());
-            $('#specialDefenseVal').text($('.specialDefenseSlider').val());
-            $('#speedVal').text($('.speedSlider').val());
+            $('#healthVal').text(@Model.Health);
+            $('#attackVal').text(@Model.Attack);
+            $('#defenseVal').text(@Model.Defense);
+            $('#specialAttackVal').text(@Model.SpecialAttack);
+            $('#specialDefenseVal').text(@Model.SpecialDefense);
+            $('#speedVal').text(@Model.Speed);
+            $('.healthSlider').val(@Model.Health);
+            $('.attackSlider').val(@Model.Attack);
+            $('.defenseSlider').val(@Model.Defense);
+            $('.specialAttackSlider').val(@Model.SpecialAttack);
+            $('.specialDefenseSlider').val(@Model.SpecialDefense);
+            $('.speedSlider').val(@Model.Speed);
         });
 
         $('.healthSlider').on('input', function() {
@@ -51,7 +57,7 @@
     </script>
 }
 
-<h2>Add EVs</h2>
+<h2>Update EVs</h2>
 
 <div class="form-horizontal">
 
@@ -101,7 +107,7 @@
         </div>
 
         <p>
-            <button type="submit" class="btn btn-primary" role="button">Add</button>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
         </p>
     }
 

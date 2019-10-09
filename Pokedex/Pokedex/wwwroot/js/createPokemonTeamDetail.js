@@ -6,10 +6,6 @@ $('#PokemonId').on('change', function(){
     })
     .done(function(data) {
         $('#AbilityId').empty();
-        if(data.length > 1)
-        {
-            $('#AbilityId').append($('<option>').val('').text(''));
-        }
         $.each(data, function(index, item) {
             $('#AbilityId').append($('<option>').val(item.id).text(item.name));
         });
