@@ -144,6 +144,92 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("update_pokemon/{pokemonId:int}")]
+        public IActionResult EditPokemon(int pokemonId)
+        {
+            PokemonTeamDetail pokemonTeamDetail = this._dataService.GetPokemonTeamDetail(pokemonId);
+            PokemonTeam pokemonTeam = this._dataService.GetPokemonTeamFromPokemon(pokemonTeamDetail.Id);
+            List<Pokemon> pokemonList = new List<Pokemon>();
+            if(pokemonTeam.Generation != null)
+            {
+                pokemonList = this._dataService.GetAllPokemon()
+                .Where(x => x.Generation.ReleaseDate <= pokemonTeam.Generation.ReleaseDate &&
+                       x.Id != "800-3" && x.Id != "718-2").ToList();
+            }
+            else
+            {
+                pokemonList = this._dataService.GetAllPokemon()
+                .Where(x => x.Id != "800-3" && x.Id != "718-2").ToList();
+            }
+
+            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')).ToList())
+            {
+                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+            }
+
+            foreach(var p in pokemonList.Where(x => x.Name.Contains('_')))
+            {
+                p.Name = p.Name.Replace('_', ' ');
+            }
+
+            pokemonList = pokemonList.OrderBy(x => x.Name).ToList();
+            UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel(){
+                PokemonTeamDetail = pokemonTeamDetail,
+                AllPokemon = pokemonList,
+                AllAbilities = this._dataService.GetAbilities(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("update_pokemon/{pokemonId:int}")]
+        public IActionResult EditPokemon(PokemonTeamDetail pokemonTeamDetail)
+        {
+            PokemonTeam pokemonTeam = this._dataService.GetPokemonTeamFromPokemon(pokemonTeamDetail.Id);
+            if (!this.ModelState.IsValid)
+            {
+                List<Pokemon> pokemonList = new List<Pokemon>();
+                if(pokemonTeam.Generation != null)
+                {
+                    pokemonList = this._dataService.GetAllPokemon()
+                    .Where(x => x.Generation.ReleaseDate <= pokemonTeam.Generation.ReleaseDate &&
+                           x.Id != "800-3" && x.Id != "718-2").ToList();
+                }
+                else
+                {
+                    pokemonList = this._dataService.GetAllPokemon()
+                    .Where(x => x.Id != "800-3" && x.Id != "718-2").ToList();
+                }
+
+                UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel(){
+                    PokemonTeamDetail = pokemonTeamDetail,
+                    AllPokemon = pokemonList,
+                    AllAbilities = this._dataService.GetAbilities(),
+                };
+
+                return this.View(model);
+            }
+
+
+            Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
+
+            if(pokemon.GenderRatioId == 10)
+            {
+                pokemonTeamDetail.Gender = null;
+            }
+            else if(string.IsNullOrEmpty(pokemonTeamDetail.Gender))
+            {
+                List<string> Genders = new List<string>(){ "Male", "Female" };
+                pokemonTeamDetail.Gender = Genders[rnd.Next(Genders.Count)];
+            }
+
+            this._dataService.UpdatePokemonTeamDetail(pokemonTeamDetail);
+
+            return this.RedirectToAction("PokemonTeams", "User");
+        }
+
+        [HttpGet]
         [Route("delete_team/{teamId:int}")]
         public IActionResult DeleteTeam(int teamId)
         {

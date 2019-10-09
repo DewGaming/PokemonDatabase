@@ -470,6 +470,50 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public PokemonTeam GetPokemonTeamFromPokemon(int id)
+        {
+            return this._dataContext.PokemonTeams
+                .Include(x => x.Generation)
+                .Include(x => x.FirstPokemon)
+                    .Include("FirstPokemon.Pokemon")
+                    .Include("FirstPokemon.Ability")
+                    .Include("FirstPokemon.PokemonTeamEV")
+                    .Include("FirstPokemon.PokemonTeamIV")
+                .Include(x => x.SecondPokemon)
+                    .Include("SecondPokemon.Pokemon")
+                    .Include("SecondPokemon.Ability")
+                    .Include("SecondPokemon.PokemonTeamEV")
+                    .Include("SecondPokemon.PokemonTeamIV")
+                .Include(x => x.ThirdPokemon)
+                    .Include("ThirdPokemon.Pokemon")
+                    .Include("ThirdPokemon.Ability")
+                    .Include("ThirdPokemon.PokemonTeamEV")
+                    .Include("ThirdPokemon.PokemonTeamIV")
+                .Include(x => x.FourthPokemon)
+                    .Include("FourthPokemon.Pokemon")
+                    .Include("FourthPokemon.Ability")
+                    .Include("FourthPokemon.PokemonTeamEV")
+                    .Include("FourthPokemon.PokemonTeamIV")
+                .Include(x => x.FifthPokemon)
+                    .Include("FifthPokemon.Pokemon")
+                    .Include("FifthPokemon.Ability")
+                    .Include("FifthPokemon.PokemonTeamEV")
+                    .Include("FifthPokemon.PokemonTeamIV")
+                .Include(x => x.SixthPokemon)
+                    .Include("SixthPokemon.Pokemon")
+                    .Include("SixthPokemon.Ability")
+                    .Include("SixthPokemon.PokemonTeamEV")
+                    .Include("SixthPokemon.PokemonTeamIV")
+                .Include(x => x.User)
+                .ToList()
+                .Find(x => x.FirstPokemonId == id ||
+                           x.SecondPokemonId == id ||
+                           x.ThirdPokemonId == id ||
+                           x.FourthPokemonId == id ||
+                           x.FifthPokemonId == id ||
+                           x.SixthPokemonId == id);
+        }
+
         public PokemonTeam GetPokemonTeamFromPokemonNoIncludes(int id)
         {
             return this._dataContext.PokemonTeams
