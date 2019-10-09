@@ -270,6 +270,7 @@ namespace Pokedex.Controllers
                                                        "Typing Evaluator Page",
                                                        "Team Randomizer Page",
                                                        "Shiny Hunt Page (Need to login to see)",
+                                                       "Team Creator Page (Need to login to see)",
                                                        "New Page",
                                                        "Other" }),
             };
@@ -297,6 +298,7 @@ namespace Pokedex.Controllers
                                                            "Typing Evaluator Page",
                                                            "Team Randomizer Page",
                                                            "Shiny Hunt Page (Need to login to see)",
+                                                           "Team Creator Page (Need to login to see)",
                                                            "New Page",
                                                            "Other" }),
                 };

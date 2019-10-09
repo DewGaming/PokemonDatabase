@@ -28,6 +28,332 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("grab-all-user-pokemon-teams")]
+        public List<ExportPokemonViewModel> ExportAllUserPokemonTeams(int pokemonTeamId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonTeam> pokemonTeams = this._dataService.GetAllPokemonTeams(User.Identity.Name);
+                List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
+                foreach(var team in pokemonTeams)
+                {
+                    if(team.FirstPokemon != null)
+                    {
+                        ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel(){
+                            ExportString = "=== " + team.PokemonTeamName + " ===\n\n",
+                            TeamId = team.Id,
+                        };
+
+                        pokemonTeam.ExportString += this.FillUserPokemonTeam(team.FirstPokemon);
+                        if(team.SecondPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SecondPokemon);
+                        }
+
+                        if(team.ThirdPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.ThirdPokemon);
+                        }
+
+                        if(team.FourthPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FourthPokemon);
+                        }
+
+                        if(team.FifthPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FifthPokemon);
+                        }
+
+                        if(team.SixthPokemon != null)
+                        {
+                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SixthPokemon);
+                        }
+
+                        exportList.Add(pokemonTeam);
+                    }
+                }
+
+                return exportList;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("fill-user-pokemon-team")]
+        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail)
+        {
+            Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
+            string pokemonName;
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+            {
+                pokemonName = pokemonTeamDetail.Nickname + " (" + pokemon.Name + ")";
+            }
+            else
+            {
+                pokemonName = pokemon.Name;
+            }
+
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender))
+            {
+                pokemonName += " (" + pokemonTeamDetail.Gender.Substring(0,1) + ")";
+            }
+
+            if(pokemon.Id.Contains('-'))
+            {
+                string pokemonForm = this.GetUserFormDetails(pokemon.Id);
+                pokemonName += "-" + pokemonForm;
+            }
+
+            string pokemonTeamString = pokemonName;
+            pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
+            if(pokemonTeamDetail.IsShiny)
+            {
+                pokemonTeamString += "\nShiny: Yes";
+            }
+            
+            if(pokemonTeamDetail.PokemonTeamEV != null)
+            {
+                pokemonTeamString += this.FillEVs(pokemonTeamDetail.PokemonTeamEV);
+            }
+            
+            if(pokemonTeamDetail.PokemonTeamIV != null)
+            {
+                pokemonTeamString += this.FillIVs(pokemonTeamDetail.PokemonTeamIV);
+            }
+
+            return pokemonTeamString;
+        }
+
+        private string FillEVs(PokemonTeamEV evs)
+        {
+            string evString = string.Empty;
+            if(evs.Health > 0)
+            {
+                evString += evs.Health.ToString() + " HP";
+            }
+
+            if(evs.Attack > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.Attack.ToString() + " Atk";
+            }
+
+            if(evs.Defense > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.Defense.ToString() + " Def";
+            }
+
+            if(evs.SpecialAttack > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.SpecialAttack.ToString() + " SpA";
+            }
+
+            if(evs.SpecialDefense > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.SpecialDefense.ToString() + " SpD";
+            }
+
+            if(evs.Speed > 0)
+            {
+                if(!string.IsNullOrEmpty(evString))
+                {
+                    evString += " / ";
+                }
+                
+                evString += evs.Speed.ToString() + " Spe";
+            }
+
+            if(!string.IsNullOrEmpty(evString))
+            {
+                evString = "\nEVs: " + evString;
+            }
+
+            return evString;
+        }
+
+        private string FillIVs(PokemonTeamIV ivs)
+        {
+            string ivString = string.Empty;
+            if(ivs.Health < 31)
+            {
+                ivString += ivs.Health.ToString() + " HP";
+            }
+
+            if(ivs.Attack < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.Attack.ToString() + " Atk";
+            }
+
+            if(ivs.Defense < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.Defense.ToString() + " Def";
+            }
+
+            if(ivs.SpecialAttack < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.SpecialAttack.ToString() + " SpA";
+            }
+
+            if(ivs.SpecialDefense < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.SpecialDefense.ToString() + " SpD";
+            }
+
+            if(ivs.Speed < 31)
+            {
+                if(!string.IsNullOrEmpty(ivString))
+                {
+                    ivString += " / ";
+                }
+                
+                ivString += ivs.Speed.ToString() + " Spe";
+            }
+
+            if(!string.IsNullOrEmpty(ivString))
+            {
+                ivString = "\nIVs: " + ivString;
+            }
+
+            return ivString;
+        }
+
+        [AllowAnonymous]
+        [Route("get-user-form-item")]
+        public string GetUserFormDetails(string pokemonId)
+        {
+            string formDetails = string.Empty, itemName = string.Empty;
+            PokemonFormDetail pokemonFormDetail;
+
+             pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+
+            formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
+            
+            FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
+            if(formItem != null)
+            {
+                itemName = formItem.Name;
+            }
+            else if(formDetails.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
+            {
+                itemName = "[Insert Mega Stone Here]";
+            }
+
+            if(!string.IsNullOrEmpty(itemName))
+            {
+                formDetails += " @ " + itemName;
+            }
+
+            return formDetails;
+        }
+
+        [AllowAnonymous]
+        [Route("save-pokemon-team")]
+        public string SavePokemonTeam(string pokemonTeamName, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                if(this._dataService.GetUserWithUsername(this.User.Identity.Name) != null)
+                {
+                    PokemonTeam pokemonTeam= new PokemonTeam(){
+                        PokemonTeamName = pokemonTeamName,
+                        UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                    };
+
+                    Pokemon pokemon;
+                    Ability ability;
+                    PokemonTeamDetail pokemonTeamDetail;
+
+                    for(var i = 0; i < pokemonIdList.Count; i++)
+                    {
+                        if(pokemonIdList[i] == "718-2")
+                        {
+                            pokemon = this._dataService.GetPokemonById(zygardeOriginalId);
+                        }
+                        else if(pokemonIdList[i] == "800-3")
+                        {
+                            pokemon = this._dataService.GetPokemonById(necrozmaOriginalId);
+                        }
+                        else
+                        {
+                            pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);   
+                        }
+
+                        ability = (pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34) : this._dataService.GetAbility(abilityIdList[i]);
+
+                        pokemonTeamDetail = new PokemonTeamDetail()
+                        {
+                            PokemonId = pokemon.Id,
+                            AbilityId = ability.Id,
+                        };
+
+                        this._dataService.AddPokemonTeamDetail(pokemonTeamDetail);
+
+                        pokemonTeam.InsertPokemon(pokemonTeamDetail);
+                    }
+
+                    this._dataService.AddPokemonTeam(pokemonTeam);
+
+                    return "Team \"" + pokemonTeam.PokemonTeamName + "\" has been added successfully!";
+                }
+                else
+                {
+                    return "You must be logged in to save a team.";
+                }
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("get-pokemon-list")]
         public List<Pokemon> GetPokemonList()
@@ -610,21 +936,21 @@ namespace Pokedex.Controllers
         {
             List<Form> forms = new List<Form>();
 
-           forms.Add(this._dataService.GetForm(9));
-           forms.Add(this._dataService.GetForm(10));
-           forms.Add(this._dataService.GetForm(11));
-           forms.Add(this._dataService.GetForm(21));
-           forms.Add(this._dataService.GetForm(1001));
-           forms.Add(this._dataService.GetForm(34));
-           forms.Add(this._dataService.GetForm(35));
-           forms.Add(this._dataService.GetForm(33));
-           forms.Add(this._dataService.GetForm(47));
-           forms.Add(this._dataService.GetForm(13));
-           forms.Add(this._dataService.GetForm(46));
-           forms.Add(this._dataService.GetForm(45));
-           forms.Add(this._dataService.GetForm(44));
-           forms.Add(this._dataService.GetForm(29));
-           forms.Add(this._dataService.GetForm(22));
+            forms.Add(this._dataService.GetForm(9));
+            forms.Add(this._dataService.GetForm(10));
+            forms.Add(this._dataService.GetForm(11));
+            forms.Add(this._dataService.GetForm(21));
+            forms.Add(this._dataService.GetForm(1001));
+            forms.Add(this._dataService.GetForm(34));
+            forms.Add(this._dataService.GetForm(35));
+            forms.Add(this._dataService.GetForm(33));
+            forms.Add(this._dataService.GetForm(47));
+            forms.Add(this._dataService.GetForm(13));
+            forms.Add(this._dataService.GetForm(46));
+            forms.Add(this._dataService.GetForm(45));
+            forms.Add(this._dataService.GetForm(44));
+            forms.Add(this._dataService.GetForm(29));
+            forms.Add(this._dataService.GetForm(22));
 
             return forms;
         }
@@ -649,6 +975,22 @@ namespace Pokedex.Controllers
             }
 
             return pokemonList;
+        }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-abilities")]
+        public List<Ability> GetPokemonAbilities(string pokemonId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return this._dataService.GetAbilitiesForPokemon(pokemonId);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
         }
 
         [AllowAnonymous]

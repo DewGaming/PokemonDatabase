@@ -247,5 +247,16 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ContinueHunt", "User", new { id = newHunt.Id });
         }
+
+        [Route("pokemon_teams")]
+        public IActionResult PokemonTeams()
+        {
+            PokemonTeamsViewModel model = new PokemonTeamsViewModel(){
+                AllPokemonTeams = this._dataService.GetAllPokemonTeams(this.User.Identity.Name),
+                AppConfig = _appConfig,
+            };
+
+            return this.View(model);
+        }
     }
 }

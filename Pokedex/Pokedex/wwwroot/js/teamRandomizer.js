@@ -1,5 +1,6 @@
 var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exportString
 , fillGeneratedTable = function() {
+    removeEventButtons();
     $('.teamRandomizerTable tbody').remove();
     $('.teamRandomizerTable').append($('<tbody>'));
 
@@ -59,7 +60,8 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
     }
 
     $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
-    refreshExportEvent();
+    $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.exportTeamButton');
+    refreshEvents();
 }, checkLegendaryChecks = function() {
     var boxChecked = false;
     $('.legendaryCheckbox input').each(function() {
@@ -183,6 +185,12 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
     {
         $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
     }
+}, removeEventButtons = function() {
+    $('.exportTeamButton').remove();
+    $('.saveTeamButton').remove();
+}, refreshEvents = function() {
+    refreshExportEvent();
+    refreshSaveEvent();
 }, refreshExportEvent = function() {
     $('.exportTeamButton').off();
 
@@ -195,6 +203,63 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         $(temp).remove();
 
         alert("Team has been copied to your clipboard!");
+    });
+}, refreshSaveEvent = function() {
+    $('.saveTeamButton').off();
+
+    var necrozmaOriginalId, zygardeOriginalId;
+
+    $('.saveTeamButton').on('click', function() {
+        var pokemonStringList = [], abilityIdList = [];
+        var teamName = prompt("Please Enter Team Name");
+        pokemonList.forEach(function(item) {
+            pokemonStringList.push(item.id);
+        });
+
+        if(pokemonStringList.indexOf("800-1") > -1 && pokemonStringList.indexOf("800-2") == -1)
+        {
+            necrozmaOriginalId = "800-2";
+        }
+        else if(pokemonStringList.indexOf("800-1") == -1 && pokemonStringList.indexOf("800-2") > -1)
+        {
+            necrozmaOriginalId = "800-1";
+        }
+        else
+        {
+            necrozmaOriginalId = randomNecrozma;
+        }
+
+        if(pokemonStringList.indexOf("718") > -1 && pokemonStringList.indexOf("718-1") == -1)
+        {
+            zygardeOriginalId = "718-1";
+        }
+        else if(pokemonStringList.indexOf("718") == -1 && pokemonStringList.indexOf("718-1") > -1)
+        {
+            zygardeOriginalId = "718";
+        }
+        else
+        {
+            zygardeOriginalId = randomZygarde;
+        }
+
+        if(randomAbilityBool)
+        {
+            abilityList.forEach(function(item) {
+                abilityIdList.push(item.id);
+            });
+        }
+
+        $.ajax({
+            url: '/save-pokemon-team/',
+            method: 'POST',
+            data: { 'pokemonTeamName': teamName, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities':  randomAbilityBool, 'necrozmaOriginalId': necrozmaOriginalId, 'zygardeOriginalId': zygardeOriginalId }
+        })
+        .done(function(data) {
+            alert(data);
+        })
+        .fail(function(jqXHR) {
+            alert(jqXHR.statusText);
+        });
     });
 };
 
@@ -253,7 +318,6 @@ $(window).on('resize', function() {
 
 $('.generatorButton').on('click', function() {
     var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions;
-    $('.exportTeamButton').remove();
     $('.generationCheckbox input').each(function() {
         if($(this).is(':checked')){
             selectedGens.push(this.value);

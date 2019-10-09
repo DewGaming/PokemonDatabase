@@ -28,7 +28,7 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public byte Speed { get; set; }
 
-        [Required, Display(Name = "Total EVs"), NotMapped]
+        [Display(Name = "Total EVs"), NotMapped]
         public Int16 EVTotal { get { return (Int16)(Health + Attack + Defense + SpecialAttack + SpecialDefense + Speed); } }
     }
 }

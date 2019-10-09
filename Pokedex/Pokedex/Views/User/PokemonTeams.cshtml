@@ -1,0 +1,98 @@
+@model Pokedex.Models.PokemonTeamsViewModel;
+@{
+    Layout = "_Layout";
+}
+
+@section scripts
+{
+    <script src="/js/pokemonTeam.js"></script>
+}
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
+    <button class="pokemonTeamsButton btn btn-primary">Export All Teams</button>
+</p>
+
+<div>
+    @if (Model.AllPokemonTeams.ToList().Count > 0)
+    {
+        <table class="table pokemonTeam">
+            <tbody>
+                <tr>
+                    <th class="col-md-2" scope="col">Team Name</th>
+                    <th class="col-md-2" scope="col">
+                        Game@{
+                            foreach(var team in Model.AllPokemonTeams)
+                            {
+                                if (team.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th class="col-md-5" scope="col">Pokemon</th>
+                    <th class="col-md-3" scope="col">Actions</th>
+                </tr>
+                @foreach(var teams in Model.AllPokemonTeams)
+                {
+                    <tr>
+                        <td>@teams.PokemonTeamName</td>
+                        <td>
+                            @if(@teams.Generation != null)
+                            {
+                                @teams.Generation.Games
+                            }
+                            else
+                            {
+                                @("No Game Selected");
+                            }
+                        </td>
+                        <td>
+                            <table class="pokemonTeamPokemonTable">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @foreach(var p in @teams.GrabPokemonTeamDetails)
+                                            {
+                                                <div class="pokemonTeamGroup">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <img class="lightshadowed pokemonTeamPokemon" title="@p.Pokemon.Name.Replace('_', ' ')@((@p.Nickname != null) ? " (" + @p.Nickname + ")" : "")")" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Pokemon.Id + ".png")" />
+                                                    </a>
+                                                    <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { evId = p.PokemonTeamEVId }))">Edit EVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { ivId = p.PokemonTeamIVId }))">Edit IVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonId = p.Id }))">Edit Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonId = p.Id }))">Delete Pokemon</a></li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                            @if(@teams.GrabPokemonTeamDetails.Count < 6)
+                                            {
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { teamId = @teams.Id })">
+                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>
+                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { teamId = @teams.Id })">Delete Team</a>
+                            @if(@teams.FirstPokemon != null)
+                            {
+                                <button id="@teams.Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonTeams">No teams have been created yet.</div>
+    }
+</div>

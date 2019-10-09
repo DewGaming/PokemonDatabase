@@ -1,0 +1,57 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.CreateTeamPokemonViewModel
+@{
+    Layout = "_layout";
+}
+
+@section scripts
+{
+    <script src="/js/createPokemonTeamDetail.js"></script>
+}
+
+<h2>Add Pokemon</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.PokemonId, "Pokemon", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.PokemonId)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Nickname, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @class = "form-control col-md-8" }})
+            @Html.ValidationMessageFor(x => x.Nickname)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Gender, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.Gender, new SelectList(Model.Genders), "", new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.Gender)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.IsShiny, "Is Pokemon Shiny", new { @class = "col-md-2" })
+            @Html.CheckBoxFor(x => x.IsShiny, new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.IsShiny)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.AbilityId, "Ability", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.AbilityId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>
