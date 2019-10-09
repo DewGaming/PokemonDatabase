@@ -1445,6 +1445,10 @@ namespace Pokedex
 
         public int AddPokemonTeamDetail(PokemonTeamDetail pokemonTeamDetail)
         {
+            int pokemonTeamEVId = this.AddPokemonTeamEV(new PokemonTeamEV());
+            int pokemonTeamIVId = this.AddPokemonTeamIV(new PokemonTeamIV());
+            pokemonTeamDetail.PokemonTeamEVId = pokemonTeamEVId;
+            pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIVId;   
             this._dataContext.PokemonTeamDetails.Add(pokemonTeamDetail);
             this._dataContext.SaveChanges();
             return pokemonTeamDetail.Id;
@@ -1877,12 +1881,12 @@ namespace Pokedex
             PokemonTeam pokemonTeam = this.GetPokemonTeamNoIncludes(id);
             List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
             this._dataContext.PokemonTeams.Remove(pokemonTeam);
+            this._dataContext.SaveChanges();
+
             foreach(var p in pokemonTeamDetailIds)
             {
                 this.DeletePokemonTeamDetail(p);
             }
-
-            this._dataContext.SaveChanges();
         }
 
         public void RemovePokemonFromTeam(PokemonTeam team, PokemonTeamDetail teamDetail)
@@ -1963,9 +1967,9 @@ namespace Pokedex
             int evId = (int)pokemonTeamDetail.PokemonTeamEVId;
             int ivId = (int)pokemonTeamDetail.PokemonTeamIVId;
             this._dataContext.PokemonTeamDetails.Remove(pokemonTeamDetail);
+            this._dataContext.SaveChanges();
             this.DeletePokemonTeamEV(evId);
             this.DeletePokemonTeamIV(ivId);
-            this._dataContext.SaveChanges();
         }
 
         public void DeletePokemonTeamEV(int id)

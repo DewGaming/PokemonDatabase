@@ -123,16 +123,7 @@ namespace Pokedex.Controllers
             if(pokemon.GenderRatioId == 10)
             {
                 pokemonTeamDetail.Gender = null;
-            }
-            else if(string.IsNullOrEmpty(pokemonTeamDetail.Gender))
-            {
-                pokemonTeamDetail.Gender = pokemonTeamDetail.Genders[rnd.Next(pokemonTeamDetail.Genders.Count)];
-            }
-
-            int pokemonTeamEVId = this._dataService.AddPokemonTeamEV(new PokemonTeamEV());
-            int pokemonTeamIVId = this._dataService.AddPokemonTeamIV(new PokemonTeamIV());
-            pokemonTeamDetail.PokemonTeamEVId = pokemonTeamEVId;
-            pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIVId;    
+            } 
 
             int pokemonTeamDetailId = this._dataService.AddPokemonTeamDetail(pokemonTeamDetail);
 
@@ -217,11 +208,6 @@ namespace Pokedex.Controllers
             if(pokemon.GenderRatioId == 10)
             {
                 pokemonTeamDetail.Gender = null;
-            }
-            else if(string.IsNullOrEmpty(pokemonTeamDetail.Gender))
-            {
-                List<string> Genders = new List<string>(){ "Male", "Female" };
-                pokemonTeamDetail.Gender = Genders[rnd.Next(Genders.Count)];
             }
 
             this._dataService.UpdatePokemonTeamDetail(pokemonTeamDetail);

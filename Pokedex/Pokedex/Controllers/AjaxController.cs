@@ -89,14 +89,29 @@ namespace Pokedex.Controllers
         public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail)
         {
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
+            List<string> pokemonForm = new List<string>();
             string pokemonName;
+            if(pokemon.Id.Contains('-'))
+            {
+                pokemonForm = this.GetUserFormDetails(pokemon.Id);
+            }
+
             if(!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
             {
-                pokemonName = pokemonTeamDetail.Nickname + " (" + pokemon.Name + ")";
+                pokemonName = pokemonTeamDetail.Nickname + " (" + pokemon.Name;
+                if(pokemon.Id.Contains('-'))
+                {
+                    pokemonName += "-" + pokemonForm[0];
+                }
+                pokemonName += ")";
             }
             else
             {
                 pokemonName = pokemon.Name;
+                if(pokemon.Id.Contains('-'))
+                {
+                    pokemonName += "-" + pokemonForm[0];
+                }
             }
 
             if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender))
@@ -104,10 +119,9 @@ namespace Pokedex.Controllers
                 pokemonName += " (" + pokemonTeamDetail.Gender.Substring(0,1) + ")";
             }
 
-            if(pokemon.Id.Contains('-'))
+            if(pokemonForm.Count == 2)
             {
-                string pokemonForm = this.GetUserFormDetails(pokemon.Id);
-                pokemonName += "-" + pokemonForm;
+                pokemonName += pokemonForm[1];
             }
 
             string pokemonTeamString = pokemonName;
@@ -264,36 +278,40 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-user-form-item")]
-        public string GetUserFormDetails(string pokemonId)
+        public List<string> GetUserFormDetails(string pokemonId)
         {
-            string formDetails = string.Empty, itemName = string.Empty;
+            string form = string.Empty, itemName = string.Empty;
+            List<string> formDetails = new List<string>();
             PokemonFormDetail pokemonFormDetail;
 
              pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
 
-            formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
+            form += pokemonFormDetail.Form.Name.Replace(' ', '-');
             
             FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
             if(formItem != null)
             {
                 itemName = formItem.Name;
             }
-            else if(formDetails.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
+            else if(form.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
             {
                 itemName = "[Insert Mega Stone Here]";
             }
 
             if(!string.IsNullOrEmpty(itemName))
             {
-                formDetails += " @ " + itemName;
+                itemName = " @ " + itemName;
             }
+
+            formDetails.Add(form);
+            formDetails.Add(itemName);
 
             return formDetails;
         }
 
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(string pokemonTeamName, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
+        public string SavePokemonTeam(string pokemonTeamName, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -310,18 +328,7 @@ namespace Pokedex.Controllers
 
                     for(var i = 0; i < pokemonIdList.Count; i++)
                     {
-                        if(pokemonIdList[i] == "718-2")
-                        {
-                            pokemon = this._dataService.GetPokemonById(zygardeOriginalId);
-                        }
-                        else if(pokemonIdList[i] == "800-3")
-                        {
-                            pokemon = this._dataService.GetPokemonById(necrozmaOriginalId);
-                        }
-                        else
-                        {
-                            pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);   
-                        }
+                        pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);
 
                         ability = (pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34) : this._dataService.GetAbility(abilityIdList[i]);
 

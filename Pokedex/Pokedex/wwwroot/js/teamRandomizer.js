@@ -207,40 +207,12 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
 }, refreshSaveEvent = function() {
     $('.saveTeamButton').off();
 
-    var necrozmaOriginalId, zygardeOriginalId;
-
     $('.saveTeamButton').on('click', function() {
         var pokemonStringList = [], abilityIdList = [];
         var teamName = prompt("Please Enter Team Name");
         pokemonList.forEach(function(item) {
             pokemonStringList.push(item.id);
         });
-
-        if(pokemonStringList.indexOf("800-1") > -1 && pokemonStringList.indexOf("800-2") == -1)
-        {
-            necrozmaOriginalId = "800-2";
-        }
-        else if(pokemonStringList.indexOf("800-1") == -1 && pokemonStringList.indexOf("800-2") > -1)
-        {
-            necrozmaOriginalId = "800-1";
-        }
-        else
-        {
-            necrozmaOriginalId = randomNecrozma;
-        }
-
-        if(pokemonStringList.indexOf("718") > -1 && pokemonStringList.indexOf("718-1") == -1)
-        {
-            zygardeOriginalId = "718-1";
-        }
-        else if(pokemonStringList.indexOf("718") == -1 && pokemonStringList.indexOf("718-1") > -1)
-        {
-            zygardeOriginalId = "718";
-        }
-        else
-        {
-            zygardeOriginalId = randomZygarde;
-        }
 
         if(randomAbilityBool)
         {
@@ -252,7 +224,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         $.ajax({
             url: '/save-pokemon-team/',
             method: 'POST',
-            data: { 'pokemonTeamName': teamName, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities':  randomAbilityBool, 'necrozmaOriginalId': necrozmaOriginalId, 'zygardeOriginalId': zygardeOriginalId }
+            data: { 'pokemonTeamName': teamName, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities':  $("#randomAbilityBool").is(":checked") }
         })
         .done(function(data) {
             alert(data);
