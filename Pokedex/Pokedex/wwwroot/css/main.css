@@ -237,6 +237,8 @@ main {
 
 .generationOptionSeparator, .adminOptionSeparator {
   margin: 5px 0;
+  border-top-width: 1px !important;
+  padding: 0 !important;
 }
 
 .generationOptionTitle {

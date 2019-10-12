@@ -62,9 +62,13 @@
                                                         <img class="lightshadowed pokemonTeamPokemon" title="@p.Pokemon.Name.Replace('_', ' ')@((@p.Nickname != null) ? " (" + @p.Nickname + ")" : "")")" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Pokemon.Id + ".png")" />
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { evId = p.PokemonTeamEVId }))">Edit EVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { ivId = p.PokemonTeamIVId }))">Edit IVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonId = p.Id }))">Edit Pokemon</a></li>
+                                                        <span class="adminMenuTitle">View</span>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(' ', '_').ToLower() }))" target="_blank">View Pokemon</a></li>
+                                                        <hr class="adminOptionSeparator">
+                                                        <span class="adminMenuTitle">Update</span>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonId = p.Id }))">Update Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { evId = p.PokemonTeamEVId }))">Update EVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { ivId = p.PokemonTeamIVId }))">Update IVs</a></li>
                                                         <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonId = p.Id }))">Delete Pokemon</a></li>
                                                     </ul>
                                                 </div>
