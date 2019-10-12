@@ -1448,7 +1448,7 @@ namespace Pokedex
             int pokemonTeamEVId = this.AddPokemonTeamEV(new PokemonTeamEV());
             int pokemonTeamIVId = this.AddPokemonTeamIV(new PokemonTeamIV()
             {
-                HP = 31,
+                Health = 31,
                 Attack = 31,
                 Defense = 31,
                 SpecialAttack = 31,
