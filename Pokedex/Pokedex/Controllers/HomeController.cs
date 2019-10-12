@@ -327,47 +327,49 @@ namespace Pokedex.Controllers
         {
             try
             {
-                // Receiver email address.
-                string receiverEmailId = "pokemondatabase2019@gmail.com";
-                // Will appear as the sender's name in the email
-                string senderName = "Pokemon Database";
-                // Sender email address. This needs to be a real email address that can be used for the SMTP username.
-                string senderEmailId = "pokemondatabase2019@gmail.com";
-                // Password for sender email. This is used for the SMTP password.
-                string password = "P0kemonDatabase.";
-                MailAddress fromAddress = new MailAddress(senderEmailId, senderName);
-                MailAddress toAddress = new MailAddress(receiverEmailId);
-                string subject = "New Comment for Pokemon Database";
-                string body = comment.CommentType + " for ";
-                if(comment.PokemonName != null)
+                if(comment.CommentorId != 1 || comment.CommentorId == null)
                 {
-                    body += comment.CommentedPage + " (" + comment.PokemonName + ")";
-                }
-                else
-                {
-                    body += comment.CommentedPage;
-                }
+                    MailAddress fromAddress = new MailAddress("pokemondatabase2019@gmail.com", "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress("pokemondatabase2019@gmail.com", "Pokemon Database Email");
+                    const string fromPassword = "P0kemonDatabase.";
+                    const string subject = "New Comment for Pokemon Database";
+                    string body = comment.CommentType;
+                    if(comment.CommentedPage != null)
+                    {
+                        body += " for " + comment.CommentedPage;
+                    }
 
-                if(comment.CommentorId != null)
-                {
-                    body += " by " + this._dataService.GetUserById((int)comment.CommentorId).Username;
+                    if(comment.PokemonName != null)
+                    {
+                        body += " (" + comment.PokemonName + ")";
+                    }
+
+                    if(comment.CommentorId != null)
+                    {
+                        body += " by " + this._dataService.GetUserById((int)comment.CommentorId).Username;
+                    }
+
+                    body += ": " + comment.Name;
+
+                    SmtpClient smtp = new SmtpClient()
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                    };
+
+                    using (var message = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = subject,
+                        Body = body,
+                    })
+                    {
+                        smtp.Send(message);
+                    }
                 }
-                
-                body += ": " + comment.Name;
-                //SMTP server
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = "smtp.gmail.com";
-                smtp.Port = 587;
-                smtp.EnableSsl = true;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                // Sets the username and password
-                smtp.Credentials = new NetworkCredential(senderEmailId, password);
-
-                MailMessage message = new MailMessage(fromAddress, toAddress);
-                message.Subject = subject;
-                message.Body = body;
-
-                smtp.Send(message);
 
             }
             catch (Exception ex)

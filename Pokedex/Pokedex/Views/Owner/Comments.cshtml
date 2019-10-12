@@ -34,15 +34,16 @@
             {
                 <tr>
                     <td>
-                        @(@item.CommentType + " for ")
+                        @item.CommentType
+                        @if(@item.CommentedPage != null)
+                        {
+                             @(" for " + @item.CommentedPage)
+                        }
                         @if(@item.PokemonName != null)
                         {
-                            @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
+                            @(" (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
                         }
-                        else
-                        {
-                            @item.CommentedPage
-                        }
+                        
                         @if(item.Commentor != null)
                         {
                             @(" by " + @item.Commentor.Username)
