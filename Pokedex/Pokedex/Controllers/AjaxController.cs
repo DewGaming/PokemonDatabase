@@ -27,6 +27,53 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [HttpPost]
+        [Route("add-hunt-attempt/{huntId:int}")]
+        public int AddShinyCounter(int huntId)
+        {
+            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
+            hunt.ShinyAttemptCount++;
+            this._dataService.UpdateShinyHunt(hunt);
+            return hunt.ShinyAttemptCount;
+        }
+
+        [HttpPost]
+        [Route("subtract-hunt-attempt/{huntId:int}")]
+        public int SubtractShinyCounter(int huntId)
+        {
+            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
+            if (hunt.ShinyAttemptCount > 0)
+            {
+                hunt.ShinyAttemptCount--;
+                this._dataService.UpdateShinyHunt(hunt);
+            }
+            else
+            {
+                hunt.ShinyAttemptCount = 0;
+            }
+
+            return hunt.ShinyAttemptCount;
+        }
+
+        [HttpPost]
+        [Route("update-hunt-attempt/{huntId:int}/{attemptCount:int}")]
+        public int UpdateShinyCounter(int huntId, int attemptCount)
+        {
+            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
+            if (attemptCount > 0)
+            {
+                hunt.ShinyAttemptCount = attemptCount;
+                this._dataService.UpdateShinyHunt(hunt);
+            }
+            else
+            {
+                hunt.ShinyAttemptCount = 0;
+                this._dataService.UpdateShinyHunt(hunt);
+            }
+
+            return hunt.ShinyAttemptCount;
+        }
+
         [AllowAnonymous]
         [Route("grab-all-user-pokemon-teams")]
         public List<ExportPokemonViewModel> ExportAllUserPokemonTeams(int pokemonTeamId)
@@ -276,9 +323,7 @@ namespace Pokedex.Controllers
             return ivString;
         }
 
-        [AllowAnonymous]
-        [Route("get-user-form-item")]
-        public List<string> GetUserFormDetails(string pokemonId)
+        private List<string> GetUserFormDetails(string pokemonId)
         {
             string form = string.Empty, itemName = string.Empty;
             List<string> formDetails = new List<string>();
@@ -417,9 +462,7 @@ namespace Pokedex.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [Route("export-pokemon-team")]
-        public string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
+        private string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -458,9 +501,7 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
-        [Route("get-form-item")]
-        public string GetFormDetails(string pokemonId, string necrozmaOriginalId, string zygardeOriginalId)
+        private string GetFormDetails(string pokemonId, string necrozmaOriginalId, string zygardeOriginalId)
         {
             string formDetails = string.Empty, itemName = string.Empty;
             PokemonFormDetail pokemonFormDetail;
@@ -937,9 +978,7 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
-        [Route("gather-removable-forms")]
-        public List<Form> GatherRemovableForms()
+        private List<Form> GatherRemovableForms()
         {
             List<Form> forms = new List<Form>();
 
@@ -962,9 +1001,7 @@ namespace Pokedex.Controllers
             return forms;
         }
 
-        [AllowAnonymous]
-        [Route("remove-extra-pokemon-forms")]
-        public List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
+        private List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
         {
             Random rnd = new Random();
             List<Pokemon> pumpkabooCount = pokemonList.Where(x => x.Id.StartsWith("710")).ToList();

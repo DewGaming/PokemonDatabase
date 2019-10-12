@@ -851,7 +851,7 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
         }
 
-        public void UpdatePokemon(Pokemon newPokemon, string oldNumber)
+        private void UpdatePokemon(Pokemon newPokemon, string oldNumber)
         {
             PokemonTypeDetail typing = this._dataService.GetPokemonWithTypesNoIncludes(oldNumber);
             PokemonAbilityDetail abilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(oldNumber);
@@ -935,7 +935,7 @@ namespace Pokedex.Controllers
             request.GetResponse();
         }
 
-        public void UpdateAltForm(Pokemon newPokemon, string oldNumber, string originalNumber)
+        private void UpdateAltForm(Pokemon newPokemon, string oldNumber, string originalNumber)
         {
             PokemonTypeDetail typing = this._dataService.GetPokemonWithTypesNoIncludes(oldNumber);
             PokemonAbilityDetail abilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(oldNumber);

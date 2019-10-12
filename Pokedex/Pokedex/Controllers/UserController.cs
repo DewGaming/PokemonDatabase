@@ -179,53 +179,6 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
-        [HttpPost]
-        [Route("add-hunt-attempt/{huntId:int}")]
-        public int AddShinyCounter(int huntId)
-        {
-            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            hunt.ShinyAttemptCount++;
-            this._dataService.UpdateShinyHunt(hunt);
-            return hunt.ShinyAttemptCount;
-        }
-
-        [HttpPost]
-        [Route("subtract-hunt-attempt/{huntId:int}")]
-        public int SubtractShinyCounter(int huntId)
-        {
-            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            if (hunt.ShinyAttemptCount > 0)
-            {
-                hunt.ShinyAttemptCount--;
-                this._dataService.UpdateShinyHunt(hunt);
-            }
-            else
-            {
-                hunt.ShinyAttemptCount = 0;
-            }
-
-            return hunt.ShinyAttemptCount;
-        }
-
-        [HttpPost]
-        [Route("update-hunt-attempt/{huntId:int}/{attemptCount:int}")]
-        public int UpdateShinyCounter(int huntId, int attemptCount)
-        {
-            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            if (attemptCount > 0)
-            {
-                hunt.ShinyAttemptCount = attemptCount;
-                this._dataService.UpdateShinyHunt(hunt);
-            }
-            else
-            {
-                hunt.ShinyAttemptCount = 0;
-                this._dataService.UpdateShinyHunt(hunt);
-            }
-
-            return hunt.ShinyAttemptCount;
-        }
-
         [Route("retry-hunt/{huntId:int}")]
         public IActionResult RetryHunt(int huntId)
         {

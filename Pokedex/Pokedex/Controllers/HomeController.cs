@@ -322,8 +322,7 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
-        [Route("email-comment")]
-        public void EmailComment(Comment comment)
+        private void EmailComment(Comment comment)
         {
             try
             {
