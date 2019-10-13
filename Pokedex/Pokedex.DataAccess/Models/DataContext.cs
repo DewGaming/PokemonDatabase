@@ -47,7 +47,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<ShinyHunt> ShinyHunts { get; set; }
         public DbSet<PokemonLegendaryDetail> PokemonLegendaryDetails { get; set; }
         public DbSet<LegendaryType> LegendaryTypes { get; set; }
-        public DbSet<Update> Updates { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<FormItem> FormItems { get; set; }
         public DbSet<PokemonTeam> PokemonTeams { get; set; }

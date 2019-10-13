@@ -61,30 +61,6 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Comments", "Owner");
         }
 
-        [HttpGet]
-        [Route("add_update")]
-        public IActionResult Update()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_update")]
-        public IActionResult Update(Update update)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            update.DateCreated = DateTime.Today;
-
-            this._dataService.AddUpdate(update);
-
-            return this.RedirectToAction("Index", "Home");
-        }
-
         [Route("complete_pokemon/{pokemonId}")]
         public IActionResult CompletePokemon(string pokemonId)
         {

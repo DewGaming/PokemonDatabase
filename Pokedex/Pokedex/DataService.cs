@@ -95,16 +95,6 @@ namespace Pokedex
             return this._dataContext.FormItems.OrderBy(x => x.Name).ToList();
         }
 
-        public List<Update> GetUpdates()
-        {
-            return this._dataContext.Updates.ToList();
-        }
-
-        public List<Update> GetUpdates(int count)
-        {
-            return this._dataContext.Updates.OrderByDescending(x => x.Id).Take(count).ToList();
-        }
-
         public List<Type> GetTypeChartTypes()
         {
             return this._dataContext.Types.Where(x => x.IsArchived == false).ToList();
@@ -473,37 +463,12 @@ namespace Pokedex
         public PokemonTeam GetPokemonTeamFromPokemon(int id)
         {
             return this._dataContext.PokemonTeams
-                .Include(x => x.Generation)
                 .Include(x => x.FirstPokemon)
-                    .Include("FirstPokemon.Pokemon")
-                    .Include("FirstPokemon.Ability")
-                    .Include("FirstPokemon.PokemonTeamEV")
-                    .Include("FirstPokemon.PokemonTeamIV")
                 .Include(x => x.SecondPokemon)
-                    .Include("SecondPokemon.Pokemon")
-                    .Include("SecondPokemon.Ability")
-                    .Include("SecondPokemon.PokemonTeamEV")
-                    .Include("SecondPokemon.PokemonTeamIV")
                 .Include(x => x.ThirdPokemon)
-                    .Include("ThirdPokemon.Pokemon")
-                    .Include("ThirdPokemon.Ability")
-                    .Include("ThirdPokemon.PokemonTeamEV")
-                    .Include("ThirdPokemon.PokemonTeamIV")
                 .Include(x => x.FourthPokemon)
-                    .Include("FourthPokemon.Pokemon")
-                    .Include("FourthPokemon.Ability")
-                    .Include("FourthPokemon.PokemonTeamEV")
-                    .Include("FourthPokemon.PokemonTeamIV")
                 .Include(x => x.FifthPokemon)
-                    .Include("FifthPokemon.Pokemon")
-                    .Include("FifthPokemon.Ability")
-                    .Include("FifthPokemon.PokemonTeamEV")
-                    .Include("FifthPokemon.PokemonTeamIV")
                 .Include(x => x.SixthPokemon)
-                    .Include("SixthPokemon.Pokemon")
-                    .Include("SixthPokemon.Ability")
-                    .Include("SixthPokemon.PokemonTeamEV")
-                    .Include("SixthPokemon.PokemonTeamIV")
                 .Include(x => x.User)
                 .ToList()
                 .Find(x => x.FirstPokemonId == id ||
@@ -1362,12 +1327,6 @@ namespace Pokedex
         public void AddComment(Comment comment)
         {
             this._dataContext.Comments.Add(comment);
-            this._dataContext.SaveChanges();
-        }
-
-        public void AddUpdate(Update update)
-        {
-            this._dataContext.Updates.Add(update);
             this._dataContext.SaveChanges();
         }
 

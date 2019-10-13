@@ -33,8 +33,7 @@ namespace Pokedex.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            List<Update> model = this._dataService.GetUpdates(5);
-            return this.View(model);
+            return this.View();
         }
 
         [AllowAnonymous]
