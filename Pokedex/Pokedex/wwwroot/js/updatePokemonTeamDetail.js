@@ -1,4 +1,4 @@
-var grabAbilities = function() {
+var abilityId = 0, grabAbilities = function() {
     $.ajax({
         url: '/get-pokemon-abilities/',
         method: "POST",
@@ -9,6 +9,10 @@ var grabAbilities = function() {
         $.each(data, function(index, item) {
             $('#PokemonTeamDetail_AbilityId').append($('<option>').val(item.id).text(item.name));
         });
+        if(abilityId != 0)
+        {
+            $('#PokemonTeamDetail_AbilityId').val(abilityId);
+        }
     })
     .fail(function() {
         alert("Failed to grab abilities!");
@@ -16,9 +20,11 @@ var grabAbilities = function() {
 }
 
 $(document).ready(function() {
+    abilityId = $('#PokemonTeamDetail_AbilityId').val();
     grabAbilities();
 });
 
 $('#PokemonTeamDetail_PokemonId').on('change', function(){
+    abilityId = 0;
     grabAbilities();
 });
