@@ -81,40 +81,26 @@ namespace Pokedex.Controllers
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonTeam> pokemonTeams = this._dataService.GetAllPokemonTeams(User.Identity.Name);
+                List<PokemonTeamDetail> pokemonList;
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
                 foreach(var team in pokemonTeams)
                 {
-                    if(team.FirstPokemon != null)
+                    pokemonList = team.GrabPokemonTeamDetails;
+                    if(pokemonList.Count() > 0)
                     {
                         ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel(){
                             ExportString = "=== " + team.PokemonTeamName + " ===\n\n",
                             TeamId = team.Id,
                         };
 
-                        pokemonTeam.ExportString += this.FillUserPokemonTeam(team.FirstPokemon);
-                        if(team.SecondPokemon != null)
+                        for(var i = 0; i < pokemonList.Count(); i++)
                         {
-                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SecondPokemon);
-                        }
+                            if(i != 0)
+                            {
+                                pokemonTeam.ExportString += "\n\n";
+                            }
 
-                        if(team.ThirdPokemon != null)
-                        {
-                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.ThirdPokemon);
-                        }
-
-                        if(team.FourthPokemon != null)
-                        {
-                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FourthPokemon);
-                        }
-
-                        if(team.FifthPokemon != null)
-                        {
-                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.FifthPokemon);
-                        }
-
-                        if(team.SixthPokemon != null)
-                        {
-                            pokemonTeam.ExportString += "\n\n" + this.FillUserPokemonTeam(team.SixthPokemon);
+                            pokemonTeam.ExportString += this.FillUserPokemonTeam(pokemonList[i]);
                         }
 
                         exportList.Add(pokemonTeam);

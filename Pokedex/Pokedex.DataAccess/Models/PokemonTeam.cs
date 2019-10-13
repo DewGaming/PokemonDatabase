@@ -113,30 +113,54 @@ namespace Pokedex.DataAccess.Models
                 {
                     pokemonTeamDetails.Add(this.FirstPokemon);
                 }
+                else
+                {
+                    return pokemonTeamDetails;
+                }
 
                 if(this.SecondPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.SecondPokemon);
+                }
+                else
+                {
+                    return pokemonTeamDetails;
                 }
 
                 if(this.ThirdPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.ThirdPokemon);
                 }
+                else
+                {
+                    return pokemonTeamDetails;
+                }
 
                 if(this.FourthPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.FourthPokemon);
+                }
+                else
+                {
+                    return pokemonTeamDetails;
                 }
 
                 if(this.FifthPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.FifthPokemon);
                 }
+                else
+                {
+                    return pokemonTeamDetails;
+                }
 
                 if(this.SixthPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.SixthPokemon);
+                }
+                else
+                {
+                    return pokemonTeamDetails;
                 }
 
                 return pokemonTeamDetails;

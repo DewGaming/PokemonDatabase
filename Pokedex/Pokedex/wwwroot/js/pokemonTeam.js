@@ -8,53 +8,62 @@ $(document).ready(function() {
         pokemonTeams = data;
     })
     .fail(function(jqXHR) {
-        alert(jqXHR.statusText);
+        if(jqXHR.statusText != "error")
+        {
+            alert(jqXHR.statusText);
+        }
     });
 })
 
 $('.pokemonTeamButton').on("click", function() {
     var buttonId = $(this).attr('id')
-    $.each(pokemonTeams, function(index, item) {
-        if(item.teamId == buttonId)
-        {
-            exportString = item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
-        }
-    });
+    if(typeof(pokemonTeams) !== "undefined")
+    {
+        $.each(pokemonTeams, function(index, item) {
+            if(item.teamId == buttonId)
+            {
+                exportString = item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+            }
+        });
 
-    console.clear();
+        console.clear();
 
-    var temp = $("<textarea>");
-    $("body").append(temp);
-    $(temp).text(exportString);
-    $(temp).select();
-    document.execCommand("copy");
-    $(temp).remove();
+        var temp = $("<textarea>");
+        $("body").append(temp);
+        $(temp).text(exportString);
+        $(temp).select();
+        document.execCommand("copy");
+        $(temp).remove();
 
-    console.log(exportString);
+        console.log(exportString);
 
-    alert("Teams have been copied to your clipboard!");
+        alert("Teams have been copied to your clipboard!");
+    }
 });
 
 $('.pokemonTeamsButton').on("click", function() {
-    exportString = "";
-    $.each(pokemonTeams, function(index, item) {
-        if(index != 0)
-        {
-            exportString += "\n\n";
-        }
-        exportString += item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
-    });
+    if(typeof(pokemonTeams) !== "undefined")
+    {
+        exportString = "";
+        $.each(pokemonTeams, function(index, item) {
+            if(index != 0)
+            {
+                exportString += "\n\n";
+            }
+            exportString += item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+        });
 
-    console.clear();
+        console.clear();
 
-    var temp = $("<textarea>");
-    $("body").append(temp);
-    $(temp).text(exportString);
-    $(temp).select();
-    document.execCommand("copy");
-    $(temp).remove();
+        var temp = $("<textarea>");
+        $("body").append(temp);
+        $(temp).text(exportString);
+        $(temp).select();
+        document.execCommand("copy");
+        $(temp).remove();
 
-    console.log(exportString);
+        console.log(exportString);
 
-    alert("Teams have been copied to your clipboard!");
+        alert("Teams have been copied to your clipboard!");
+    }
 });
