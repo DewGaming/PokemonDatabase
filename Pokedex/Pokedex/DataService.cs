@@ -479,6 +479,20 @@ namespace Pokedex
                            x.SixthPokemonId == id);
         }
 
+        public PokemonTeam GetPokemonTeamFromPokemonEV(int id)
+        {
+            return this.GetPokemonTeamFromPokemonNoIncludes(this._dataContext.PokemonTeamDetails
+                .ToList()
+                .Find(x => x.PokemonTeamEVId == id).Id);
+        }
+
+        public PokemonTeam GetPokemonTeamFromPokemonIV(int id)
+        {
+            return this.GetPokemonTeamFromPokemonNoIncludes(this._dataContext.PokemonTeamDetails
+                .ToList()
+                .Find(x => x.PokemonTeamIVId == id).Id);
+        }
+
         public PokemonTeam GetPokemonTeamFromPokemonNoIncludes(int id)
         {
             return this._dataContext.PokemonTeams
