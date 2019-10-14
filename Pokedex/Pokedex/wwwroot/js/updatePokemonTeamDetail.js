@@ -28,11 +28,11 @@ var abilityId = 0, gender = "", grabAbilities = function() {
         $.each(data, function(index, item) {
             $('#PokemonTeamDetail_Gender').append($('<option>').text(item));
         });
-        if(gender != "")
+        if(gender != "Empty")
         {
             $('#PokemonTeamDetail_Gender').val(gender);
         }
-        if($.inArray("", data) && data.length == 1)
+        if($.inArray("None", data) !== -1 && data.length == 1)
         {
             $('#PokemonTeamDetail_Gender').parent().hide();
         }
@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 $('#PokemonTeamDetail_PokemonId').on('change', function(){
     abilityId = 0;
-    gender = "";
+    gender = "Empty";
     refreshGenders();
     grabAbilities();
 });

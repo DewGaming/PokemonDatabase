@@ -1661,13 +1661,6 @@ namespace Pokedex
             this.UpdateLegendaryType(legendaryType);
         }
 
-        public void ArchiveShinyHunt(int id)
-        {
-            ShinyHunt shinyHunt = this.GetShinyHunt(id);
-            shinyHunt.IsArchived = true;
-            this.UpdateShinyHunt(shinyHunt);
-        }
-
         public void ArchiveForm(int id)
         {
             Form form = this.GetForm(id);
@@ -1736,13 +1729,6 @@ namespace Pokedex
             Form form = this.GetForm(id);
             form.IsArchived = false;
             this.UpdateForm(form);
-        }
-
-        public void UnarchiveShinyHunt(int id)
-        {
-            ShinyHunt shinyHunt = this.GetShinyHunt(id);
-            shinyHunt.IsArchived = false;
-            this.UpdateShinyHunt(shinyHunt);
         }
 
         public void UnarchiveAbility(int id)
