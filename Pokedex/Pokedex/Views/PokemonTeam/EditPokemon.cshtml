@@ -38,7 +38,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.PokemonTeamDetail.Gender, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.Gender, new SelectList(Model.Genders), "", new { @class = "form-control col-md-8" })
+            @Html.DropDownListFor(x => x.PokemonTeamDetail.Gender, Enumerable.Empty<SelectListItem>(), "", new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.Gender)
         </div>
 

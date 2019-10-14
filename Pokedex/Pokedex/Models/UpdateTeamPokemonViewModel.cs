@@ -11,13 +11,5 @@ namespace Pokedex.Models
         public List<Pokemon> AllPokemon { get; set; }
 
         public List<Ability> AllAbilities { get; set; }
-
-        public List<string> Genders
-        {
-            get
-            {
-                return new List<string>(){ "Male", "Female" };
-            }
-        }
     }
 }
