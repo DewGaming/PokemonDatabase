@@ -123,7 +123,7 @@ namespace Pokedex.Controllers
         {
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
             List<string> pokemonForm = new List<string>();
-            string pokemonName;
+            string pokemonName = string.Empty;
             if(pokemon.Id.Contains('-'))
             {
                 pokemonForm = this.GetUserFormDetails(pokemon.Id);
@@ -131,20 +131,18 @@ namespace Pokedex.Controllers
 
             if(!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
             {
-                pokemonName = pokemonTeamDetail.Nickname + " (" + pokemon.Name;
-                if(pokemon.Id.Contains('-'))
-                {
-                    pokemonName += "-" + pokemonForm[0];
-                }
-                pokemonName += ")";
+                pokemonName = pokemonTeamDetail.Nickname + " (";
             }
-            else
+            
+            pokemonName += pokemon.Name;
+            if(pokemon.Id.Contains('-'))
             {
-                pokemonName = pokemon.Name;
-                if(pokemon.Id.Contains('-'))
-                {
-                    pokemonName += "-" + pokemonForm[0];
-                }
+                pokemonName += "-" + ((pokemon.Id == "678-1") ? "F" : pokemonForm[0]);
+            }
+
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+            {
+                pokemonName += ")";
             }
 
             if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender))
@@ -1009,11 +1007,53 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-abilities")]
-        public List<Ability> GetPokemonAbilities(string pokemonId)
+        public List<Ability> GetPokemonAbilities(string pokemonId, string gender)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this._dataService.GetAbilitiesForPokemon(pokemonId);
+                List<Ability> pokemonAbilities = this._dataService.GetAbilitiesForPokemon(((pokemonId == "678" && gender == "Female") ? "678-1" : pokemonId));
+                return pokemonAbilities;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-genders")]
+        public List<string> GetPokemonGenders(string pokemonId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<string> genders = new List<string>();
+                GenderRatio genderRatio = this._dataService.GetPokemonById(pokemonId).GenderRatio;
+                if(genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0)
+                {
+                    genders.Add("None");
+                }
+                else if(genderRatio.MaleRatio == 0)
+                {
+                    genders.Add("Female");
+                }
+                else if(genderRatio.FemaleRatio == 0)
+                {
+                    genders.Add("Male");
+                }
+                else
+                {
+                    if(pokemonId != "678")
+                    {
+                        genders.Add("");
+                    }
+
+                    genders.Add("Male");
+                    genders.Add("Female");
+                }
+
+                return genders;
             }
             else
             {

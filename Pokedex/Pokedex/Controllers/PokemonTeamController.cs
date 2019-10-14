@@ -96,6 +96,11 @@ namespace Pokedex.Controllers
 
             PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
 
+            if(pokemonTeamDetail.PokemonId == "678" && pokemonTeamDetail.Gender == "Female")
+            {
+                pokemonTeamDetail.PokemonId = "678-1";
+            }
+
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
 
             if(pokemon.GenderRatioId == 10)
@@ -125,6 +130,11 @@ namespace Pokedex.Controllers
             {
                 PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
                 PokemonTeamDetail pokemonTeamDetail = this._dataService.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
+                if(pokemonTeamDetail.PokemonId == "678-1")
+                {
+                    pokemonTeamDetail.PokemonId = "678";
+                }
+                
                 List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);
                 UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel(){
                     PokemonTeamDetail = pokemonTeamDetail,
@@ -154,6 +164,10 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            if(pokemonTeamDetail.PokemonId == "678" && pokemonTeamDetail.Gender == "Female")
+            {
+                pokemonTeamDetail.PokemonId = "678-1";
+            }
 
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
 

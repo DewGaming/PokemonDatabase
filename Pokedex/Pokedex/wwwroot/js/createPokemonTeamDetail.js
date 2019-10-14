@@ -1,8 +1,8 @@
-$('#PokemonId').on('change', function(){
+var grabAbilities = function() {
     $.ajax({
         url: '/get-pokemon-abilities/',
         method: "POST",
-        data: { 'pokemonId': $(this).val() }
+        data: { 'pokemonId': $('#PokemonId').val(), "gender": $('#Gender').val() }
     })
     .done(function(data) {
         $('#AbilityId').empty();
@@ -13,4 +13,43 @@ $('#PokemonId').on('change', function(){
     .fail(function() {
         alert("Failed to grab abilities!");
     });
+}, refreshGenders = function() {
+    $.ajax({
+        url: '/get-pokemon-genders/',
+        method: "POST",
+        data: { 'pokemonId': $('#PokemonId').val() }
+    })
+    .done(function(data) {
+        $('#Gender').empty();
+        $.each(data, function(index, item) {
+            $('#Gender').append($('<option>').text(item));
+        });
+        if($.inArray("None", data) !== -1 && data.length == 1)
+        {
+            $('#Gender').parent().hide();
+        }
+        else
+        {
+            $('#Gender').parent().show();
+        }
+    })
+    .fail(function() {
+        alert("Failed to grab genders!");
+    });
+}
+
+$(document).ready(function() {
+    $('#Gender').parent().hide();
+});
+
+$('#PokemonId').on('change', function(){
+    refreshGenders();
+    grabAbilities();
+});
+
+$('#Gender').on('change', function(){
+    if($('#PokemonId').val() == "678")
+    {
+        grabAbilities();
+    }
 });
