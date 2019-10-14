@@ -2,11 +2,16 @@
   "dependencies": {
     "kpy": "^1.9.0",
     "npx": "^10.2.0",
+    "rimraf": "^3.0.0",
     "uglifycss": "0.0.29",
     "uglifyjs-folder": "^1.5.1"
   },
   "scripts": {
+    "build": "npm run clean-build-folders && npm run build-app && npm run copy-to-dist && npm run minify && echo Done!",
     "database-update": "dotnet ef database update -p ..\\Pokedex.DataAccess\\Pokedex.DataAccess.csproj",
+    "remove-pokedex-build": "rimraf bin && rimraf obj",
+    "remove-pokedex-data-access-folder": "rimraf ../Pokedex.DataAccess/bin && rimraf ../Pokedex.DataAccess/obj",
+    "clean-build-folders": "npm run remove-pokedex-build && npm run remove-pokedex-data-access-folder",
     "build-app": "dotnet publish --configuration Release",
     "copy-to-dist": "npx kpy bin/Release/netcoreapp2.1/publish/ ** !package.json !package-lock.json .dist",
     "minify-main-css": "npx uglifycss .dist/wwwroot/css/main.css --output .dist/wwwroot/css/main.css",
@@ -17,7 +22,6 @@
     "minify-typeChart-css": "npx uglifycss .dist/wwwroot/css/typeChart.css --output .dist/wwwroot/css/typeChart.css",
     "minify-css": "npm run minify-main-css && npm run minify-pageLookup-css && npm run minify-tabContent-css && npm run minify-typeChart-css && npm run minify-shinyHunt-css && npm run minify-pokemonPage-css",
     "minify-js": "npx uglifyjs-folder .dist/wwwroot/js/ -p \"*.js,!*.min.js\" -x .js -c -m -eo .dist/wwwroot/js/",
-    "minify": "npm run minify-css & npm run minify-js",
-    "build": "npm run build-app && npm run copy-to-dist && npm run minify && echo Done!"
+    "minify": "npm run minify-css & npm run minify-js"
   }
 }
