@@ -19,7 +19,7 @@
     "minify-pokemonPage-css": "npx uglifycss .dist/wwwroot/css/pokemonPage.css --output .dist/wwwroot/css/pokemonPage.css",
     "minify-shinyHunt-css": "npx uglifycss .dist/wwwroot/css/shinyHunt.css --output .dist/wwwroot/css/shinyHunt.css",
     "minify-typeChart-css": "npx uglifycss .dist/wwwroot/css/typeChart.css --output .dist/wwwroot/css/typeChart.css",
-    "minify-css": "npm run minify-main-css && npm run minify-pageLookup-css && npm run minify-tabContent-css && npm run minify-typeChart-css && npm run minify-shinyHunt-css && npm run minify-pokemonPage-css",
+    "minify-css": "npm run minify-main-css && npm run minify-pageLookup-css && npm run minify-typeChart-css && npm run minify-shinyHunt-css && npm run minify-pokemonPage-css",
     "minify-js": "npx uglifyjs-folder .dist/wwwroot/js/ -p \"*.js,!*.min.js\" -x .js -c -m -eo .dist/wwwroot/js/",
     "minify": "npm run minify-css & npm run minify-js"
   }
