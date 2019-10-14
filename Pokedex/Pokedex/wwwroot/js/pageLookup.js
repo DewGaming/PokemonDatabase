@@ -1,3 +1,12 @@
+function lookupPage(pageName) {
+  $('.active').each(function() {
+    $(this).removeClass('active');
+  })
+
+  $('.' + pageName).addClass('active');
+  $('#' + pageName).addClass('active');
+}
+
 function lookupPokemon(pageName, iconLink, pokemonName) {
   $('.active').each(function() {
     $(this).removeClass('active');

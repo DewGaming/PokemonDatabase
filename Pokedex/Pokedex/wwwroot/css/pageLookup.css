@@ -18,6 +18,10 @@
   text-align: right;
 }
 
+.page table th {
+  text-align: left;
+}
+
 .page th, td {
   border-width: 1px 0;
   border-style: solid;
@@ -25,7 +29,7 @@
   padding: 4px 10px;
 }
 
-.generationList {
+.pageButtons {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -34,7 +38,7 @@
   border-bottom: 1px solid #dbdbdb;
 }
 
-.generationList button {
+.pageButtons button {
   list-style: none;
   -webkit-box-flex: 1;
       -ms-flex: 1 1 0px;
@@ -52,15 +56,15 @@
   transition: color .2s, background-color .2s;
 }
 
-.generationList button:hover {
+.pageButtons button:hover {
   background-color: #ddd;
 }
 
-.generationList button:focus {
+.pageButtons button:focus {
   outline-width: 0;
 }
 
-.generationList button.active {
+.pageButtons button.active {
   background-color: #fff;
   border-bottom-color: #fff;
   color: #404040;

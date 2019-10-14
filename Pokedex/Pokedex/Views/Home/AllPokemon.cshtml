@@ -15,7 +15,7 @@
     <script src="/js/pageLookup.js"></script>
 }
 
-<div class="generationList">
+<div class="pageButtons">
     @foreach(var id in Model)
     {
         <button id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>

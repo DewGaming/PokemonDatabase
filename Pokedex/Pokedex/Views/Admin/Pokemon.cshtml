@@ -19,7 +19,7 @@
         <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokemon</a>
     }
 </p>
-<div class="generationList">
+<div class="pageButtons">
     @foreach(var id in Model)
     {
         <button id="Generation@(id)" onclick="lookupAdminGeneration('@id')">Generation @id</button>

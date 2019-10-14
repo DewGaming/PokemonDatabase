@@ -1,11 +1,42 @@
 @model IEnumerable<Pokedex.DataAccess.Models.Comment>;
 @{
     Layout = "_Layout";
+    List<string> commentTypes = new List<string>() { "Bug", "Critique", "Feature" };
+    string GrabCommentCount(string pageName)
+    {
+        string commentTotalString = string.Empty;
+        if(Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
+        {
+            commentTotalString = " (" + Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString() + " Comment";
+            if(Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
+            {
+                commentTotalString += "s";
+            }
+            commentTotalString += ")";
+        }
+
+        return commentTotalString;
+    }
+    string GrabCompleteCommentCount()
+    {
+        string commentTotalString = string.Empty;
+        if(Model.Where(x => x.IsCompleted).ToList().Count() > 0)
+        {
+            commentTotalString = " (" + Model.Where(x => x.IsCompleted).ToList().Count().ToString() + " Comment";
+            if(Model.Where(x => x.IsCompleted).ToList().Count() > 1)
+            {
+                commentTotalString += "s";
+            }
+            commentTotalString += ")";
+        }
+
+        return commentTotalString;
+    }
 }
 
 @section styles
 {
-    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <style>
         .tabcontent th {
             text-align: left !important;
@@ -15,57 +46,63 @@
 
 @section scripts
 {
-    <script src="/js/tabContent.js"></script>
+    <script src="/js/pageLookup.js"></script>
 }
 
-<div class="tab-list">
-    <button class="tab active" onclick="openPage(event, 'incomplete')">Incompleted Comments</button>
-    <button class="tab" onclick="openPage(event, 'completed')">Completed Comments</button>
-</div>
-<div class="tabcontent active" id="incomplete">
-    @if(@Model.Where(x => !x.IsCompleted).ToList().Count() > 0)
+<div class="pageButtons">
+    @foreach(var type in commentTypes)
     {
-        <table class="table">
-            <tr>
-                <th class="col-md-9" scope="col">Comment</th>
-                <th scope="col">Actions</th>
-            </tr>
-            @foreach(var item in Model.Where(x => !x.IsCompleted))
-            {
+        <button class="@(type.ToLower())" onclick="lookupPage('@(type.ToLower())')">@(type)s@(GrabCommentCount(@type))</button>
+    }
+    <button class="completedComments" onclick="lookupPage('completedComments')">Completed@(GrabCompleteCommentCount())</button>
+</div>
+@foreach(var type in commentTypes)
+{
+    <div class="page" id="@(type.ToLower())">
+        @if(@Model.Where(x => !x.IsCompleted && x.CommentType == @type).ToList().Count() > 0)
+        {
+            <table class="table">
                 <tr>
-                    <td>
-                        @item.CommentType
-                        @if(@item.CommentedPage != null)
-                        {
-                             @(" for " + @item.CommentedPage)
-                        }
-                        @if(@item.PokemonName != null)
-                        {
-                            @(" (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
-                        }
-                        
-                        @if(item.Commentor != null)
-                        {
-                            @(" by " + @item.Commentor.Username)
-                        }
-                        <br>
-                        <br>
-                        @item.Name
-                    </td>
-                    
-                    <td>
-                        <a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
-                    </td>
+                    <th class="col-md-9" scope="col">Comment</th>
+                    <th scope="col">Actions</th>
                 </tr>
-            }
-        </table>
-    }
-    else
-    {
-        <div class="noUsers">There are no comments at all!</div>
-    }
-</div>
-<div class="tabcontent" id="completed">
+                @foreach(var item in Model.Where(x => !x.IsCompleted && x.CommentType == @type))
+                {
+                    <tr>
+                        <td>
+                            @item.CommentType
+                            @if(@item.CommentedPage != null)
+                            {
+                                 @(" for " + @item.CommentedPage)
+                            }
+                            @if(@item.PokemonName != null)
+                            {
+                                @(" (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
+                            }
+
+                            @if(item.Commentor != null)
+                            {
+                                @(" by " + @item.Commentor.Username)
+                            }
+                            <br>
+                            <br>
+                            @item.Name
+                        </td>
+
+                        <td>
+                            <a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <div class="noUsers">There are no comments at all!</div>
+        }
+    </div>
+}
+<div class="page" id="completedComments">
     @if(Model.Where(x => x.IsCompleted).ToList().Count() > 0)
     {
         <table class="table">
