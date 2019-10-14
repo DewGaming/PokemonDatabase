@@ -2,6 +2,8 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Pokemon Teams";
+    int teamCount = 0;
+    int pokemonCount;
 }
 
 @section scripts
@@ -36,14 +38,16 @@
                     <th class="col-md-5" scope="col">Pokemon</th>
                     <th class="col-md-3" scope="col">Actions</th>
                 </tr>
-                @foreach(var teams in Model.AllPokemonTeams)
+                @for(var i = 0; i < Model.AllPokemonTeams.Count; i++)
                 {
+                    teamCount++;
+                    pokemonCount = 0;
                     <tr>
-                        <td>@teams.PokemonTeamName</td>
+                        <td>@Model.AllPokemonTeams[i].PokemonTeamName</td>
                         <td>
-                            @if(@teams.Generation != null)
+                            @if(@Model.AllPokemonTeams[i].Generation != null)
                             {
-                                @teams.Generation.Games
+                                @Model.AllPokemonTeams[i].Generation.Games
                             }
                             else
                             {
@@ -55,8 +59,9 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            @foreach(var p in @teams.GrabPokemonTeamDetails)
+                                            @foreach(var p in @Model.AllPokemonTeams[i].GrabPokemonTeamDetails)
                                             {
+                                                pokemonCount++;
                                                 <div class="pokemonTeamGroup">
                                                     <a class="dropdown-toggle" data-toggle="dropdown">
                                                         <img class="lightshadowed pokemonTeamPokemon" title="@p.Pokemon.Name.Replace('_', ' ')@((@p.Nickname != null) ? " (" + @p.Nickname + ")" : "")")" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Pokemon.Id + ".png")" />
@@ -66,16 +71,16 @@
                                                         <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(' ', '_').ToLower() }))" target="_blank">View Pokemon</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Update</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonId = p.Id }))">Update Pokemon</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { evId = p.PokemonTeamEVId }))">Update EVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { ivId = p.PokemonTeamIVId }))">Update IVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonId = p.Id }))">Delete Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update EVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update IVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokemon</a></li>
                                                     </ul>
                                                 </div>
                                             }
-                                            @if(@teams.GrabPokemonTeamDetails.Count < 6)
+                                            @if(@Model.AllPokemonTeams[i].GrabPokemonTeamDetails.Count < 6)
                                             {
-                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { teamId = @teams.Id })">
+                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
                                                     <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/general/addButton.png")" />
                                                 </a>
                                             }
@@ -85,10 +90,10 @@
                             </table>
                         </td>
                         <td>
-                            <a class="teamButton btn btn-primary" title="Edit @teams.PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { teamId = @teams.Id })">Delete Team</a>
-                            @if(@teams.FirstPokemon != null)
+                            <a class="teamButton btn btn-primary" title="Edit @Model.AllPokemonTeams[i].PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
+                            @if(@Model.AllPokemonTeams[i].FirstPokemon != null)
                             {
-                                <button id="@teams.Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @teams.PokemonTeamName">Export Team</button>
+                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
                             }
                         </td>
                     </tr>
