@@ -173,7 +173,7 @@ namespace Pokedex.Controllers
 
             if (shinyHunt != null)
             {
-                this._dataService.ArchiveShinyHunt(shinyHunt.Id);
+                this._dataService.DeleteShinyHunt(shinyHunt.Id);
             }
 
             return this.RedirectToAction("ShinyHuntingCounter");

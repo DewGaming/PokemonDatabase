@@ -173,14 +173,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("shiny_hunt")]
-        public IActionResult ShinyHunts()
-        {
-            List<ShinyHunt> model = this._dataService.GetShinyHuntersWithArchive();
-
-            return this.View(model);
-        }
-
         [Route("error")]
         public IActionResult Error()
         {

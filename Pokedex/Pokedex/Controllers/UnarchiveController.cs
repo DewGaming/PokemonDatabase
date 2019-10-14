@@ -74,25 +74,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("unarchive_shiny_hunt/{id:int}")]
-        public IActionResult ShinyHunt(int id)
-        {
-            ShinyHunt model = this._dataService.GetShinyHunt(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("unarchive_shiny_hunt/{id:int}")]
-        public IActionResult ShinyHunt(ShinyHunt shinyHunt)
-        {
-            this._dataService.UnarchiveShinyHunt(shinyHunt.Id);
-
-            return this.RedirectToAction("ShinyHunts", "Admin");
-        }
-
-        [HttpGet]
         [Route("unarchive_classification/{id:int}")]
         public IActionResult Classification(int id)
         {
