@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Pokedex.DataAccess.Models;
@@ -22,7 +23,7 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
-        public Ability GetAbilityDescription(string name)
+        public Ability GetAbilityByName(string name)
         {
             return this._dataContext.Abilities
                 .ToList()
@@ -263,6 +264,12 @@ namespace Pokedex
                 .Where(x => x.IsComplete)
                 .ToList()
                 .Find(x => x.Name == name);
+        }
+
+        public Pokemon GetPokemonFromNameAndFormName(string pokemonName, string formName)
+        {
+            List<PokemonFormDetail> pokemon = this.GetPokemonFormDetails().Where(x => x.Form.Name == formName).ToList();
+            return pokemon.Find(x => x.AltFormPokemon.Name == pokemonName).AltFormPokemon;
         }
 
         public Pokemon GetPokemonById(string id)
@@ -1230,6 +1237,11 @@ namespace Pokedex
             return this._dataContext.Natures.ToList().Find(x => x.Id == id);
         }
 
+        public Nature GetNatureByName(string name)
+        {
+            return this._dataContext.Natures.ToList().Find(x => x.Name == name);
+        }
+
         public List<Nature> GetNatures()
         {
             return this._dataContext.Natures.OrderBy(x => x.Name).ToList();
@@ -1343,6 +1355,11 @@ namespace Pokedex
         public BattleItem GetBattleItem(int id)
         {
             return this._dataContext.BattleItems.ToList().Find(x => x.Id == id);
+        }
+
+        public BattleItem GetBattleItemByName(string name)
+        {
+            return this._dataContext.BattleItems.ToList().Find(x => x.Name == name);
         }
 
         public Generation GetGenerationByPokemon(string id)
@@ -1463,18 +1480,18 @@ namespace Pokedex
 
         public int AddPokemonTeamDetail(PokemonTeamDetail pokemonTeamDetail)
         {
-            int pokemonTeamEVId = this.AddPokemonTeamEV(new PokemonTeamEV());
-            int pokemonTeamIVId = this.AddPokemonTeamIV(new PokemonTeamIV()
+            if(pokemonTeamDetail.PokemonTeamEVId == null)
             {
-                Health = 31,
-                Attack = 31,
-                Defense = 31,
-                SpecialAttack = 31,
-                SpecialDefense = 31,
-                Speed = 31
-            });
-            pokemonTeamDetail.PokemonTeamEVId = pokemonTeamEVId;
-            pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIVId;   
+                int pokemonTeamEVId = this.AddPokemonTeamEV(new PokemonTeamEV());
+                pokemonTeamDetail.PokemonTeamEVId = pokemonTeamEVId;
+            }
+            
+            if(pokemonTeamDetail.PokemonTeamIVId == null)
+            {
+                int pokemonTeamIVId = this.AddPokemonTeamIV(new PokemonTeamIV());
+                pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIVId;
+            }
+            
             this._dataContext.PokemonTeamDetails.Add(pokemonTeamDetail);
             this._dataContext.SaveChanges();
             return pokemonTeamDetail.Id;
@@ -2042,6 +2059,28 @@ namespace Pokedex
             ShinyHunt shinyHunt = this.GetShinyHunt(id);
             this._dataContext.ShinyHunts.Remove(shinyHunt);
             this._dataContext.SaveChanges();
+        }
+
+        public string FormatPokemonName(string pokemonName)
+        {
+            if (pokemonName.Contains("type_null"))
+            {
+                pokemonName = "Type: Null";
+            }
+            else if (!pokemonName.Contains("nidoran"))
+            {
+                pokemonName = pokemonName.Replace('_', ' ');
+            }
+
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            pokemonName = textInfo.ToTitleCase(pokemonName);
+
+            if (pokemonName.Length > 1 && pokemonName.Substring(pokemonName.Length - 2, 2) == "-O")
+            {
+                pokemonName = pokemonName.Remove(pokemonName.Length - 2, 2) + "-o";
+            }
+
+            return pokemonName;
         }
     }
 }

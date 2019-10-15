@@ -4,6 +4,15 @@ namespace Pokedex.DataAccess.Models
 {
     public class PokemonTeamIV
     {
+        public PokemonTeamIV()
+        {
+            Health = 31;
+            Attack = 31;
+            Defense = 31;
+            SpecialAttack = 31;
+            SpecialDefense = 31;
+            Speed = 31;
+        }
         public int Id { get; set; }
 
         [Required]

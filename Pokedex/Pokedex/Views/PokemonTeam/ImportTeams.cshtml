@@ -1,0 +1,27 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@{
+    Layout = "_layout";
+    ViewBag.Title = "Import Teams";
+}
+
+<h2>Import Teams</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        <div class="form-group">
+            @Html.Label("importedTeams", "Paste Teams from Pokemon Showdown Here:")
+            @Html.TextArea("importedTeams", null, new { @class = "form-control" })
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Import</button>
+        </p>
+    }
+
+</div>

@@ -479,6 +479,8 @@ namespace Pokedex.Controllers
                     {
                         pokemonTeam += "Ability: " + ((pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34).Name : abilityList[i]) + "\n";
                     }
+
+                    pokemonTeam += "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
                 }
 
                 return pokemonTeam;

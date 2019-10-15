@@ -62,7 +62,7 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
-                search = this.FormatPokemonName(search);
+                search = this._dataService.FormatPokemonName(search);
 
                 List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes()
                                                                  .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
@@ -138,7 +138,7 @@ namespace Pokedex.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
-            name = this.FormatPokemonName(name);
+            name = this._dataService.FormatPokemonName(name);
 
             Pokemon pokemon = this._dataService.GetPokemon(name);
             Form form;
@@ -276,7 +276,7 @@ namespace Pokedex.Controllers
 
             if (!string.IsNullOrEmpty(comment.PokemonName))
             {
-                Pokemon pokemon = this._dataService.GetPokemon(this.FormatPokemonName(comment.PokemonName));
+                Pokemon pokemon = this._dataService.GetPokemon(this._dataService.FormatPokemonName(comment.PokemonName));
                 if (pokemon == null)
                 {
                     comment.PokemonName = null;
@@ -312,28 +312,6 @@ namespace Pokedex.Controllers
         public IActionResult Error()
         {
             return this.View();
-        }
-
-        private string FormatPokemonName(string pokemonName)
-        {
-            if (pokemonName.Contains("type_null"))
-            {
-                pokemonName = "Type: Null";
-            }
-            else if (!pokemonName.Contains("nidoran"))
-            {
-                pokemonName = pokemonName.Replace('_', ' ');
-            }
-
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            pokemonName = textInfo.ToTitleCase(pokemonName);
-
-            if (pokemonName.Length > 1 && pokemonName.Substring(pokemonName.Length - 2, 2) == "-O")
-            {
-                pokemonName = pokemonName.Remove(pokemonName.Length - 2, 2) + "-o";
-            }
-
-            return pokemonName;
         }
 
         private void EmailComment(Comment comment)
