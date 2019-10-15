@@ -56,6 +56,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_nature/{id:int}")]
+        public IActionResult Nature(int id)
+        {
+            Nature model = this._dataService.GetNature(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_nature/{id:int}")]
+        public IActionResult Nature(Nature nature)
+        {
+            this._dataService.DeleteNature(nature.Id);
+
+            return this.RedirectToAction("Natures", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_battle_item/{id:int}")]
         public IActionResult BattleItem(int id)
         {

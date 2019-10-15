@@ -668,6 +668,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_nature/{id:int}")]
+        public IActionResult Nature(int id)
+        {
+            Nature model = this._dataService.GetNature(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_nature/{id:int}")]
+        public IActionResult Nature(Nature nature)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Nature model = this._dataService.GetNature(nature.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateNature(nature);
+
+            return this.RedirectToAction("Natures", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_legendary_type/{id:int}")]
         public IActionResult LegendaryType(int id)
         {

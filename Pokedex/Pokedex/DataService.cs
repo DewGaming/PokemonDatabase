@@ -386,36 +386,42 @@ namespace Pokedex
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
                     .Include("FirstPokemon.BattleItem")
+                    .Include("FirstPokemon.Nature")
                 .Include(x => x.SecondPokemon)
                     .Include("SecondPokemon.Pokemon")
                     .Include("SecondPokemon.Ability")
                     .Include("SecondPokemon.PokemonTeamEV")
                     .Include("SecondPokemon.PokemonTeamIV")
                     .Include("SecondPokemon.BattleItem")
+                    .Include("SecondPokemon.Nature")
                 .Include(x => x.ThirdPokemon)
                     .Include("ThirdPokemon.Pokemon")
                     .Include("ThirdPokemon.Ability")
                     .Include("ThirdPokemon.PokemonTeamEV")
                     .Include("ThirdPokemon.PokemonTeamIV")
                     .Include("ThirdPokemon.BattleItem")
+                    .Include("ThirdPokemon.Nature")
                 .Include(x => x.FourthPokemon)
                     .Include("FourthPokemon.Pokemon")
                     .Include("FourthPokemon.Ability")
                     .Include("FourthPokemon.PokemonTeamEV")
                     .Include("FourthPokemon.PokemonTeamIV")
                     .Include("FourthPokemon.BattleItem")
+                    .Include("FourthPokemon.Nature")
                 .Include(x => x.FifthPokemon)
                     .Include("FifthPokemon.Pokemon")
                     .Include("FifthPokemon.Ability")
                     .Include("FifthPokemon.PokemonTeamEV")
                     .Include("FifthPokemon.PokemonTeamIV")
                     .Include("FifthPokemon.BattleItem")
+                    .Include("FifthPokemon.Nature")
                 .Include(x => x.SixthPokemon)
                     .Include("SixthPokemon.Pokemon")
                     .Include("SixthPokemon.Ability")
                     .Include("SixthPokemon.PokemonTeamEV")
                     .Include("SixthPokemon.PokemonTeamIV")
                     .Include("SixthPokemon.BattleItem")
+                    .Include("SixthPokemon.Nature")
                 .Include(x => x.User)
                 .Where(x => x.User.Username == username).ToList();
         }
@@ -525,6 +531,8 @@ namespace Pokedex
                 .Include(x => x.Ability)
                 .Include(x => x.PokemonTeamEV)
                 .Include(x => x.PokemonTeamIV)
+                .Include(x => x.BattleItem)
+                .Include(x => x.Nature)
                 .ToList()
                 .Find(x => x.Id == id);
         }
@@ -1217,6 +1225,16 @@ namespace Pokedex
             return this._dataContext.Classifications.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
         }
 
+        public Nature GetNature(int id)
+        {
+            return this._dataContext.Natures.ToList().Find(x => x.Id == id);
+        }
+
+        public List<Nature> GetNatures()
+        {
+            return this._dataContext.Natures.OrderBy(x => x.Name).ToList();
+        }
+
         public List<Classification> GetClassificationsWithArchive()
         {
             return this._dataContext.Classifications.OrderBy(x => x.Name).ToList();
@@ -1524,6 +1542,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddNature(Nature nature)
+        {
+            this._dataContext.Natures.Add(nature);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddForm(Form form)
         {
             this._dataContext.Forms.Add(form);
@@ -1668,17 +1692,16 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
-        public void UpdateClassification(Classification classification)
+        public void UpdateClassification(Classification nature)
         {
-            this._dataContext.Classifications.Update(classification);
+            this._dataContext.Classifications.Update(nature);
             this._dataContext.SaveChanges();
         }
 
-        public void ArchiveUser(int id)
+        public void UpdateNature(Nature classification)
         {
-            User user = this.GetUserById(id);
-            user.IsArchived = true;
-            this.UpdateUser(user);
+            this._dataContext.Natures.Update(classification);
+            this._dataContext.SaveChanges();
         }
 
         public void UpdateLegendaryType(LegendaryType legendaryType)
@@ -1997,6 +2020,13 @@ namespace Pokedex
         {
             Classification classification = this.GetClassification(id);
             this._dataContext.Classifications.Remove(classification);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteNature(int id)
+        {
+            Nature nature = this.GetNature(id);
+            this._dataContext.Natures.Remove(nature);
             this._dataContext.SaveChanges();
         }
 

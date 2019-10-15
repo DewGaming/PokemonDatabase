@@ -48,7 +48,7 @@ var abilityId = 0, gender = "", battleItem = "", grabAbilities = function() {
     $.ajax({
         url: '/get-pokemon-battle-items/',
         method: "POST",
-        data: { 'pokemonId': $('#PokemonTeamDetail_PokemonId').val(), 'generationId': $('#PokemonTeamDetail_GenerationId').val() }
+        data: { 'pokemonId': $('#PokemonTeamDetail_PokemonId').val(), 'generationId': $('#GenerationId').val() }
     })
     .done(function(data) {
         if(data.length != 0)

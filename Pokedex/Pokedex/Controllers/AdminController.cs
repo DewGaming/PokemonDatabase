@@ -161,6 +161,14 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("nature")]
+        public IActionResult Natures()
+        {
+            List<Nature> model = this._dataService.GetNatures();
+
+            return this.View(model);
+        }
+
         [Route("shiny_hunting_technique")]
         public IActionResult ShinyHuntingTechniques()
         {

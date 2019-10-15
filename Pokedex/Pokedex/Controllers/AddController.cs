@@ -241,6 +241,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_nature")]
+        public IActionResult Nature()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_nature")]
+        public IActionResult Nature(Nature nature)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddNature(nature);
+
+            return this.RedirectToAction("Natures", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_form")]
         public IActionResult Form()
         {

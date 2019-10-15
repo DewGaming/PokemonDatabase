@@ -170,6 +170,11 @@ namespace Pokedex.Controllers
             {
                 pokemonTeamString += this.FillEVs(pokemonTeamDetail.PokemonTeamEV);
             }
+
+            if(pokemonTeamDetail.Nature != null)
+            {
+                pokemonTeamString += "\n" + pokemonTeamDetail.Nature.Name + " Nature";
+            }
             
             if(pokemonTeamDetail.PokemonTeamIV != null)
             {
