@@ -18,9 +18,9 @@
 
         @Html.ValidationSummary()
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.pokemonFormDetail.FormId)
-            @Html.DropDownListFor(x => x.pokemonFormDetail.FormId, new SelectList(Model.AllForms, "Id", "Name"), new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.pokemonFormDetail.FormId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.pokemonFormDetail.FormId, new SelectList(Model.AllForms, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.pokemonFormDetail.FormId)
         </div>
 

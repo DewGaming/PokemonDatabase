@@ -16,9 +16,9 @@
 
         @Html.HiddenFor(x => x.PokemonId)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.AbilityId, "Special Event Ability")
-            @Html.DropDownListFor(x => x.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.AbilityId, "Special Event Ability", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.AbilityId)
         </div>
 

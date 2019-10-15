@@ -16,9 +16,9 @@
 
         @Html.HiddenFor(x => x.PokemonId)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.LegendaryTypeId)
-            @Html.DropDownListFor(x => x.LegendaryTypeId, new SelectList(Model.AllLegendaryTypes, "Id", "Type"), new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.LegendaryTypeId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.LegendaryTypeId, new SelectList(Model.AllLegendaryTypes, "Id", "Type"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.LegendaryTypeId)
         </div>
 

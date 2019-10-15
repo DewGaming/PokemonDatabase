@@ -16,15 +16,15 @@
         
         @Html.ValidationSummary()
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.IsAdmin)
-            @Html.EditorFor(x => x.IsAdmin, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.IsAdmin, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.IsAdmin, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.IsAdmin)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.IsOwner)
-            @Html.EditorFor(x => x.IsOwner, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.IsOwner, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.IsOwner, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.IsOwner)
         </div>
 

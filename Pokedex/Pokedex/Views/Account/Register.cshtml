@@ -9,19 +9,19 @@
 
     @using (Html.BeginForm())
     {
-        <div class="form-group">
-            @Html.LabelFor(x => x.Username)
-            @Html.EditorFor(x => x.Username, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Username, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Username, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Username)
         </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.Password)
-            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Password, new { @class = "col-md-2" })
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.Password)
         </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.PasswordConfirm)
-            @Html.PasswordFor(x => x.PasswordConfirm, new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.PasswordConfirm, new { @class = "col-md-2" })
+            @Html.PasswordFor(x => x.PasswordConfirm, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PasswordConfirm)
         </div>
 

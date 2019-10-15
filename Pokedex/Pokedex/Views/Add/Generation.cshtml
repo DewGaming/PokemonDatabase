@@ -14,33 +14,33 @@
         
         @Html.ValidationSummary()
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.Id)
-            @Html.EditorFor(x => x.Id, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Id, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Id, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Id)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.Region)
-            @Html.EditorFor(x => x.Region, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Region, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Region, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Region)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.Games)
-            @Html.EditorFor(x => x.Games, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Games, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Games, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Games)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.Abbreviation)
-            @Html.EditorFor(x => x.Abbreviation, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Abbreviation, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Abbreviation, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Abbreviation)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.ReleaseDate)
-            @Html.EditorFor(x => x.ReleaseDate, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.ReleaseDate, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.ReleaseDate, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.ReleaseDate)
         </div>
 

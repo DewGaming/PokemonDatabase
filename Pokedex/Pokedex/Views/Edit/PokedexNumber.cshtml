@@ -28,9 +28,9 @@
         @Html.HiddenFor(x => x.CaptureRateId)
         @Html.HiddenFor(x => x.BaseHappinessId)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.Id, "New Pokedex Number")
-            @Html.EditorFor(x => x.Id, new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Id, "New Pokedex Number", new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Id, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Id)
         </div>
             

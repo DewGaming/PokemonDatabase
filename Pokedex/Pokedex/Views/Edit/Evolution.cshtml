@@ -17,21 +17,21 @@
         @Html.HiddenFor(x => x.Id)
         @Html.HiddenFor(x => x.EvolutionPokemonId)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.PreevolutionPokemonId, "Pre-Evolution Of " + @Model.EvolutionPokemon.Name)
-            @Html.DropDownListFor(x => x.PreevolutionPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.PreevolutionPokemonId, "Pre-Evolution Of " + @Model.EvolutionPokemon.Name, new { @class = "col-md-3" })
+            @Html.DropDownListFor(x => x.PreevolutionPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PreevolutionPokemonId)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.EvolutionMethodId, "Method of Evolution")
-            @Html.DropDownListFor(x => x.EvolutionMethodId, new SelectList(Model.AllEvolutionMethods, "Id", "Name"), new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.EvolutionMethodId, "Method of Evolution", new { @class = "col-md-3" })
+            @Html.DropDownListFor(x => x.EvolutionMethodId, new SelectList(Model.AllEvolutionMethods, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.EvolutionMethodId)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.EvolutionDetails, "Evolution Details (If Any)")
-            @Html.EditorFor(x => x.EvolutionDetails, new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.EvolutionDetails, "Evolution Details (If Any)", new { @class = "col-md-3" })
+            @Html.EditorFor(x => x.EvolutionDetails, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.EvolutionDetails)
         </div>
 

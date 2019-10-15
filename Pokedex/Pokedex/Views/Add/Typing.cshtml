@@ -16,15 +16,15 @@
 
         @Html.HiddenFor(x => x.PokemonId)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.PrimaryTypeId)
-            @Html.DropDownListFor(x => x.PrimaryTypeId, new SelectList(Model.AllTypes, "Id", "Name"), new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.PrimaryTypeId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PrimaryTypeId, new SelectList(Model.AllTypes, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PrimaryTypeId)
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.SecondaryTypeId)
-            @Html.DropDownListFor(x => x.SecondaryTypeId, new SelectList(Model.AllTypes, "Id", "Name"), string.Empty, new { @class = "form-control" })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.SecondaryTypeId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.SecondaryTypeId, new SelectList(Model.AllTypes, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.SecondaryTypeId)
         </div>
 
