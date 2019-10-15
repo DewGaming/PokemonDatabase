@@ -62,22 +62,7 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
-                if (search.Contains("type null", StringComparison.OrdinalIgnoreCase))
-                {
-                    search = "Type: Null";
-                }
-                else if (search.Contains("nidoran", StringComparison.OrdinalIgnoreCase))
-                {
-                    search = search.Replace(' ', '_');
-                }
-
-                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-                search = textInfo.ToTitleCase(search);
-
-                if (search.Contains("-O") && search.Substring(search.Length - 2, 2) == "-O")
-                {
-                    search = search.Remove(search.Length - 2, 2) + "-o";
-                }
+                search = this.FormatPokemonName(search);
 
                 List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes()
                                                                  .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
@@ -153,22 +138,7 @@ namespace Pokedex.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
-            if (name.Contains("type_null"))
-            {
-                name = "Type: Null";
-            }
-            else if (!name.Contains("nidoran"))
-            {
-                name = name.Replace('_', ' ');
-            }
-
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            name = textInfo.ToTitleCase(name);
-
-            if (name.Substring(name.Length - 2, 2) == "-O")
-            {
-                name = name.Remove(name.Length - 2, 2) + "-o";
-            }
+            name = this.FormatPokemonName(name);
 
             Pokemon pokemon = this._dataService.GetPokemon(name);
             Form form;
@@ -319,6 +289,28 @@ namespace Pokedex.Controllers
             this.EmailComment(comment);
 
             return this.RedirectToAction("Index", "Home");
+        }
+
+        private string FormatPokemonName(string pokemonName)
+        {
+            if (pokemonName.Contains("type_null"))
+            {
+                pokemonName = "Type: Null";
+            }
+            else if (!pokemonName.Contains("nidoran"))
+            {
+                pokemonName = pokemonName.Replace('_', ' ');
+            }
+
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            pokemonName = textInfo.ToTitleCase(pokemonName);
+
+            if (pokemonName.Length > 1 && pokemonName.Substring(pokemonName.Length - 2, 2) == "-O")
+            {
+                pokemonName = pokemonName.Remove(pokemonName.Length - 2, 2) + "-o";
+            }
+
+            return pokemonName;
         }
 
         private void EmailComment(Comment comment)
