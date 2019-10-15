@@ -291,6 +291,20 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
+        [Route("about")]
+        public IActionResult About()
+        {
+            return this.View();
+        }
+
+        [AllowAnonymous]
+        [Route("error")]
+        public IActionResult Error()
+        {
+            return this.View();
+        }
+
         private string FormatPokemonName(string pokemonName)
         {
             if (pokemonName.Contains("type_null"))
@@ -366,20 +380,6 @@ namespace Pokedex.Controllers
             {
                 Console.WriteLine("Email could not be sent. " + ((ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message));
             }
-        }
-
-        [AllowAnonymous]
-        [Route("about")]
-        public IActionResult About()
-        {
-            return this.View();
-        }
-
-        [AllowAnonymous]
-        [Route("error")]
-        public IActionResult Error()
-        {
-            return this.View();
         }
     }
 }
