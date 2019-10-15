@@ -285,6 +285,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_battle_item")]
+        public IActionResult BattleItem()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_battle_item")]
+        public IActionResult BattleItem(BattleItem battleItem)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddBattleItem(battleItem);
+
+            return this.RedirectToAction("BattleItems", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_pokemon")]
         public IActionResult Pokemon()
         {

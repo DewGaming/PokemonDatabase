@@ -1,0 +1,37 @@
+@model Pokedex.Models.BattleItemViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="battleItemTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("BattleItem", "Add")" role="button">Add Battle Item</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th class="col-md-2" scope="col">Name</th>
+            <th class="col-md-8" scope="col">Description</th>
+            <th class="col-md-2" scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllBattleItems)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="@(Url.Action("BattleItem", "Edit", new { id = item.Id }))">Edit</a>
+                    @if(User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("BattleItem", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

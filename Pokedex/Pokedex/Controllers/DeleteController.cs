@@ -56,6 +56,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_battle_item/{id:int}")]
+        public IActionResult BattleItem(int id)
+        {
+            BattleItem model = this._dataService.GetBattleItem(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_battle_item/{id:int}")]
+        public IActionResult BattleItem(BattleItem battleItem)
+        {
+            this._dataService.DeleteBattleItem(battleItem.Id);
+
+            return this.RedirectToAction("BattleItems", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_shiny_hunting_technique/{id:int}")]
         public IActionResult ShinyHuntingTechnique(int id)
         {

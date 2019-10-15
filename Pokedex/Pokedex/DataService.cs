@@ -1250,6 +1250,11 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<BattleItem> GetBattleItems()
+        {
+            return this._dataContext.BattleItems.OrderBy(x => x.Name).ToList();
+        }
+
         public List<ShinyHunt> GetShinyHuntersWithArchive()
         {
             return this._dataContext.ShinyHunts
@@ -1304,6 +1309,11 @@ namespace Pokedex
         public Generation GetGeneration(string id)
         {
             return this._dataContext.Generations.ToList().Find(x => x.Id == id);
+        }
+
+        public BattleItem GetBattleItem(int id)
+        {
+            return this._dataContext.BattleItems.ToList().Find(x => x.Id == id);
         }
 
         public Generation GetGenerationByPokemon(string id)
@@ -1401,6 +1411,12 @@ namespace Pokedex
         public void AddAbility(Ability ability)
         {
             this._dataContext.Abilities.Add(ability);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddBattleItem(BattleItem battleItem)
+        {
+            this._dataContext.BattleItems.Add(battleItem);
             this._dataContext.SaveChanges();
         }
 
@@ -1623,6 +1639,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdateBattleItem(BattleItem battleItem)
+        {
+            this._dataContext.BattleItems.Update(battleItem);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdateAbility(Ability ability)
         {
             this._dataContext.Abilities.Update(ability);
@@ -1791,6 +1813,13 @@ namespace Pokedex
         {
             Type type = this.GetType(id);
             this._dataContext.Types.Remove(type);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteBattleItem(int id)
+        {
+            BattleItem battleItem = this.GetBattleItem(id);
+            this._dataContext.BattleItems.Remove(battleItem);
             this._dataContext.SaveChanges();
         }
 

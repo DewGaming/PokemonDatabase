@@ -173,6 +173,17 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("battle_item")]
+        public IActionResult BattleItems()
+        {
+            BattleItemViewModel model = new BattleItemViewModel()
+            {
+                AllBattleItems = this._dataService.GetBattleItems(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("error")]
         public IActionResult Error()
         {

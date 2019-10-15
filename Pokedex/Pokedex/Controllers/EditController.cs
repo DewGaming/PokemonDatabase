@@ -80,6 +80,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_battle_item/{id:int}")]
+        public IActionResult BattleItem(int id)
+        {
+            BattleItem model = this._dataService.GetBattleItem(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_battle_item/{id:int}")]
+        public IActionResult BattleItem(BattleItem battleItem)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                BattleItem model = this._dataService.GetBattleItem(battleItem.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateBattleItem(battleItem);
+
+            return this.RedirectToAction("BattleItems", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_pokemon/{id}")]
         public IActionResult Pokemon(string id)
         {
