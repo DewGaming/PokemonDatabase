@@ -27,6 +27,10 @@ namespace Pokedex.DataAccess.Models
         
         public BattleItem BattleItem { get; set; }
 
+        public int? NatureId { get; set; }
+
+        public Nature Nature { get; set; }
+
         public int? PokemonTeamEVId { get; set; }
 
         public PokemonTeamEV PokemonTeamEV { get; set; }
