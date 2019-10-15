@@ -274,9 +274,18 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            if (comment.CommentedPage != "Pokemon Page" && comment.PokemonName != null)
+            if (!string.IsNullOrEmpty(comment.PokemonName))
             {
-                comment.PokemonName = null;
+                Pokemon pokemon = this._dataService.GetPokemon(this.FormatPokemonName(comment.PokemonName));
+                if (pokemon == null)
+                {
+                    comment.PokemonName = null;
+                }
+            }
+            
+            if(!string.IsNullOrEmpty(comment.PokemonName) && comment.CommentedPage != "Pokemon Page")
+            {
+                comment.CommentedPage = "Pokemon Page";
             }
 
             if (User.Identity.Name != null)
