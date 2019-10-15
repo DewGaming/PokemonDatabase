@@ -181,65 +181,59 @@ namespace Pokedex.Controllers
 
         private string FillEVs(PokemonTeamEV evs)
         {
-            string evString = string.Empty;
+            string evString = "\nEVs: ";
             if(evs.Health > 0)
             {
-                evString += evs.Health.ToString() + " HP";
+                evString += evs.Health.ToString() + " HP / ";
+            }
+            else
+            {
+                evString += "1 HP / ";
             }
 
             if(evs.Attack > 0)
             {
-                if(!string.IsNullOrEmpty(evString))
-                {
-                    evString += " / ";
-                }
-                
-                evString += evs.Attack.ToString() + " Atk";
+                evString += evs.Attack.ToString() + " Atk / ";
+            }
+            else
+            {
+                evString += "1 Atk / ";
             }
 
             if(evs.Defense > 0)
             {
-                if(!string.IsNullOrEmpty(evString))
-                {
-                    evString += " / ";
-                }
-                
-                evString += evs.Defense.ToString() + " Def";
+                evString += evs.Defense.ToString() + " Def / ";
+            }
+            else
+            {
+                evString += "1 Def / ";
             }
 
             if(evs.SpecialAttack > 0)
             {
-                if(!string.IsNullOrEmpty(evString))
-                {
-                    evString += " / ";
-                }
-                
-                evString += evs.SpecialAttack.ToString() + " SpA";
+                evString += evs.SpecialAttack.ToString() + " SpA / ";
+            }
+            else
+            {
+                evString += "1 SpA / ";
             }
 
             if(evs.SpecialDefense > 0)
             {
-                if(!string.IsNullOrEmpty(evString))
-                {
-                    evString += " / ";
-                }
-                
-                evString += evs.SpecialDefense.ToString() + " SpD";
+                evString += evs.SpecialDefense.ToString() + " SpD / ";
+            }
+            else
+            {
+                evString += "1 SpD / ";
             }
 
             if(evs.Speed > 0)
             {
-                if(!string.IsNullOrEmpty(evString))
-                {
-                    evString += " / ";
-                }
-                
                 evString += evs.Speed.ToString() + " Spe";
             }
-
-            if(!string.IsNullOrEmpty(evString))
+            else
             {
-                evString = "\nEVs: " + evString;
+                evString += "1 Spe";
             }
 
             return evString;

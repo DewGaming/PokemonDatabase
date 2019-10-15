@@ -176,9 +176,16 @@ namespace Pokedex.Controllers
         [Route("battle_item")]
         public IActionResult BattleItems()
         {
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+            {
+                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+            }
+
             BattleItemViewModel model = new BattleItemViewModel()
             {
                 AllBattleItems = this._dataService.GetBattleItems(),
+                AllPokemon = pokemonList,
             };
 
             return this.View(model);
