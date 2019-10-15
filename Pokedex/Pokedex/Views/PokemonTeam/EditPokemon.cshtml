@@ -23,6 +23,7 @@
         @Html.HiddenFor(x => x.PokemonTeamDetail.Id);
         @Html.HiddenFor(x => x.PokemonTeamDetail.PokemonTeamEVId);
         @Html.HiddenFor(x => x.PokemonTeamDetail.PokemonTeamIVId);
+        @Html.HiddenFor(x => x.GenerationId);
 
         <div class="form-group row">
             @Html.LabelFor(x => x.PokemonTeamDetail.PokemonId, "Pokemon", new { @class = "col-md-2" })
@@ -52,6 +53,12 @@
             @Html.LabelFor(x => x.PokemonTeamDetail.AbilityId, "Ability", new { @class = "col-md-2" })
             @Html.DropDownListFor(x => x.PokemonTeamDetail.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.AbilityId)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.PokemonTeamDetail.BattleItemId, "Held Item", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.PokemonTeamDetail.BattleItemId, new SelectList(Model.AllBattleItems, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.PokemonTeamDetail.BattleItemId)
         </div>
 
         <p>

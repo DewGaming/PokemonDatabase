@@ -4,6 +4,10 @@
   margin: 5px;
 }
 
+.addPokemonImage {
+  padding-left: 0;
+}
+
 .accountOptionHeader {
     margin-left: 10px;
 }

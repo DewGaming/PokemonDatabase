@@ -154,6 +154,10 @@ namespace Pokedex.Controllers
             {
                 pokemonName += pokemonForm[1];
             }
+            else if(pokemonTeamDetail.BattleItemId != null)
+            {
+                pokemonName += " @ " + pokemonTeamDetail.BattleItem.Name;
+            }
 
             string pokemonTeamString = pokemonName;
             pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
@@ -333,7 +337,10 @@ namespace Pokedex.Controllers
             }
 
             formDetails.Add(form);
-            formDetails.Add(itemName);
+            if(!string.IsNullOrEmpty(itemName))
+            {
+                formDetails.Add(itemName);
+            }
 
             return formDetails;
         }
@@ -1013,6 +1020,53 @@ namespace Pokedex.Controllers
             {
                 List<Ability> pokemonAbilities = this._dataService.GetAbilitiesForPokemon(((pokemonId == "678" && gender == "Female") ? "678-1" : pokemonId));
                 return pokemonAbilities;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-battle-items")]
+        public List<BattleItem> GetPokemonBattleItems(string pokemonId, string generationId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<BattleItem> battleItems = new List<BattleItem>();
+                List<FormItem> formItems = this._dataService.GetFormItems().Where(x => x.PokemonId == pokemonId).ToList();
+                if(formItems.Count() == 0)
+                {
+                    Generation generation = this._dataService.GetGeneration(generationId);
+                    List<BattleItem> allBattleItems = this._dataService.GetBattleItems();
+                    battleItems.AddRange(allBattleItems.Where(x => !x.OnlyInThisGeneration && x.PokemonId == null).ToList());
+                    if(generation != null)
+                    {
+                        battleItems = battleItems.Where(x => x.Generation.ReleaseDate <= generation.ReleaseDate).ToList();
+                        if(allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList().Count() > 0)
+                        {
+                            battleItems.AddRange(allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList());
+                        }
+
+                        if(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.ReleaseDate <= generation.ReleaseDate).ToList().Count() > 0)
+                        {
+                            battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.ReleaseDate <= generation.ReleaseDate).ToList());
+                        }
+                    }
+                    else
+                    {
+                        if(allBattleItems.Where(x => x.PokemonId == pokemonId).ToList().Count() > 0)
+                        {
+                            battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId).ToList());
+                        }
+                    }
+
+                    battleItems = battleItems.OrderBy(x => x.Name).ToList();
+                }
+                
+                return battleItems;
             }
             else
             {

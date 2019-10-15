@@ -73,7 +73,7 @@ namespace Pokedex.Controllers
                 List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel(){
                     AllPokemon = pokemonList,
-                    AllAbilities = this._dataService.GetAbilities(),
+                    GenerationId = pokemonTeam.GenerationId,
                 };
 
                 return this.View(model);
@@ -88,7 +88,7 @@ namespace Pokedex.Controllers
             {
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel(){
                     AllPokemon = this.FillPokemonList(_pokemonTeams[pokemonTeamId - 1]),
-                    AllAbilities = this._dataService.GetAbilities(),
+                    GenerationId = pokemonTeamDetail.GenerationId,
                 };
 
                 return this.View(model);
@@ -140,6 +140,8 @@ namespace Pokedex.Controllers
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = pokemonList,
                     AllAbilities = this._dataService.GetAbilities(),
+                    AllBattleItems = this._dataService.GetBattleItems(),
+                    GenerationId = pokemonTeam.GenerationId,
                 };
 
                 return this.View(model);
@@ -159,6 +161,8 @@ namespace Pokedex.Controllers
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = pokemonList,
                     AllAbilities = this._dataService.GetAbilities(),
+                    AllBattleItems = this._dataService.GetBattleItems().OrderBy(x => x.Name).ToList(),
+                    GenerationId = pokemonTeam.GenerationId,
                 };
 
                 return this.View(model);
