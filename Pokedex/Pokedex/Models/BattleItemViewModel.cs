@@ -3,8 +3,12 @@ using Pokedex.DataAccess.Models;
 
 namespace Pokedex.Models
 {
-    public class BattleItemViewModel
+    public class BattleItemViewModel : BattleItem
     {
         public List<BattleItem> AllBattleItems { get; set; }
+
+        public List<Generation> AllGenerations { get; set; }
+
+        public List<Pokemon> AllPokemon { get; set; }
     }
 }

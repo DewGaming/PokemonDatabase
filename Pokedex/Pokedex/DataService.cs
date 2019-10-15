@@ -1252,7 +1252,12 @@ namespace Pokedex
 
         public List<BattleItem> GetBattleItems()
         {
-            return this._dataContext.BattleItems.OrderBy(x => x.Name).ToList();
+            return this._dataContext.BattleItems
+                .Include(x => x.Generation)
+                .Include(x => x.Pokemon)
+                .OrderBy(x => x.Generation.ReleaseDate)
+                .ThenBy(x => x.Name)
+                .ToList();
         }
 
         public List<ShinyHunt> GetShinyHuntersWithArchive()

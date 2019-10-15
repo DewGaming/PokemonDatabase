@@ -12,9 +12,24 @@
     }
     <table class="table">
         <tr>
-            <th class="col-md-2" scope="col">Name</th>
-            <th class="col-md-8" scope="col">Description</th>
-            <th class="col-md-2" scope="col">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">
+                        Game@{
+                            foreach(var item in Model.AllBattleItems)
+                            {
+                                if (item.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+            @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
+            {
+                <th scope="col">Specific Pokemon</th>
+            }
+            <th scope="col">Actions</th>
         </tr>
         @foreach(var item in Model.AllBattleItems)
         {
@@ -22,7 +37,20 @@
                 <td>
                     @item.Name
                 </td>
-                <td>@item.Description</td>
+                <td>@if(item.OnlyInThisGeneration)
+                    {
+                        @("Only In ")
+                    }
+                    @item.Generation.Games
+                </td>
+                @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0 && item.PokemonId != null)
+                {
+                    <td>@item.Pokemon.Name.Replace('_', ' ')</td>
+                }
+                else
+                {
+                    <td></td>
+                }
                 <td>
                     <a href="@(Url.Action("BattleItem", "Edit", new { id = item.Id }))">Edit</a>
                     @if(User.IsInRole("Owner"))

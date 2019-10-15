@@ -288,7 +288,18 @@ namespace Pokedex.Controllers
         [Route("add_battle_item")]
         public IActionResult BattleItem()
         {
-            return this.View();
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+            {
+                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+            }
+
+            BattleItemViewModel model = new BattleItemViewModel(){
+                AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= new DateTime(2000, 10, 15)).ToList(),
+                AllPokemon = pokemonList,
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]

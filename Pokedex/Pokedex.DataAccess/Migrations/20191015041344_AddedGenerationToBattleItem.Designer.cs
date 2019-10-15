@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20191015041344_AddedGenerationToBattleItem")]
+    partial class AddedGenerationToBattleItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,22 +90,19 @@ namespace Pokedex.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("GenerationId")
-                        .IsRequired();
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<string>("GenerationId");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20);
 
-                    b.Property<bool>("OnlyInThisGeneration");
-
-                    b.Property<string>("PokemonId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GenerationId");
-
-                    b.HasIndex("PokemonId");
 
                     b.ToTable("BattleItems");
                 });
@@ -843,12 +842,7 @@ namespace Pokedex.DataAccess.Migrations
                 {
                     b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
                         .WithMany()
-                        .HasForeignKey("GenerationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
-                        .WithMany()
-                        .HasForeignKey("PokemonId");
+                        .HasForeignKey("GenerationId");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.Comment", b =>

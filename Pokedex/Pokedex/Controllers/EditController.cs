@@ -83,7 +83,20 @@ namespace Pokedex.Controllers
         [Route("edit_battle_item/{id:int}")]
         public IActionResult BattleItem(int id)
         {
-            BattleItem model = this._dataService.GetBattleItem(id);
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+            {
+                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+            }
+
+            BattleItem battleItem = this._dataService.GetBattleItem(id);
+            BattleItemViewModel model = new BattleItemViewModel(){
+                Id = battleItem.Id,
+                Name = battleItem.Name,
+                GenerationId = battleItem.GenerationId,
+                AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= new System.DateTime(2000, 10, 15)).ToList(),
+                AllPokemon = pokemonList,
+            };
 
             return this.View(model);
         }
@@ -95,7 +108,20 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                BattleItem model = this._dataService.GetBattleItem(battleItem.Id);
+                List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+                foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+                {
+                    p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+                }
+
+                BattleItem item = this._dataService.GetBattleItem(battleItem.Id);
+                BattleItemViewModel model = new BattleItemViewModel(){
+                    Id = item.Id,
+                    Name = item.Name,
+                    GenerationId = item.GenerationId,
+                    AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= new System.DateTime(2000, 10, 15)).ToList(),
+                    AllPokemon = pokemonList,
+                };
 
                 return this.View(model);
             }
