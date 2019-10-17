@@ -69,6 +69,16 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("complete_pokemon/pokemonId")]
+        public IActionResult CompletePokemon(string pokemonId)
+        {
+            Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
+            pokemon.IsComplete = true;
+            this._dataService.UpdatePokemon(pokemon);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
         [Route("generation")]
         public IActionResult Generations()
         {
@@ -197,12 +207,6 @@ namespace Pokedex.Controllers
             };
 
             return this.View(model);
-        }
-
-        [Route("error")]
-        public IActionResult Error()
-        {
-            return this.View();
         }
     }
 }

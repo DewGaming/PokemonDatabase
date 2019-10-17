@@ -963,7 +963,6 @@ namespace Pokedex.Controllers
         [Route("add_ev_yields/{pokemonId}")]
         public IActionResult EVYields(string pokemonId)
         {
-            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
             EVYield model = new EVYield()
             {
                 PokemonId = pokemonId,
@@ -1059,20 +1058,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonEVYield(evYield);
 
-            if(_cameFromAdminPokemon)
-            {
-                _cameFromAdminPokemon = false;
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                Pokemon pokemon = this._dataService.GetPokemonById(evYield.PokemonId);
-
-                pokemon.IsComplete = true;
-                this._dataService.UpdatePokemon(pokemon);
-                
-                return this.RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]

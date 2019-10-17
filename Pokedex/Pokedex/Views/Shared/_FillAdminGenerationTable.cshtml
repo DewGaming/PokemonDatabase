@@ -91,6 +91,18 @@
                     {
                         <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = p.Id }))">Edit EV Yields</a></li>
                     }
+                    @if(User.IsInRole("Owner") && 
+                        Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == p.Id) &&
+                        Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == p.Id) &&
+                        Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == p.Id) &&
+                        Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == p.Id) &&
+                        Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == p.Id) &&
+                        !p.IsComplete)
+                    {
+                        <hr class="adminOptionSeparator">
+                        <span class="adminMenuTitle">Complete Pokemon</span>
+                        <li><a class="dropdown-item" href="@(Url.Action("CompletePokemon", "Admin", new { pokemonId = p.Id }))">Mark as Complete</a></li>
+                    }
                     @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
                     {
                         <hr class="adminOptionSeparator">
