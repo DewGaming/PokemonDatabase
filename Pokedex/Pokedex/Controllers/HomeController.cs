@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 using Pokedex.DataAccess.Models;
@@ -22,17 +22,21 @@ namespace Pokedex.Controllers
         private readonly DataService _dataService;
 
         private readonly AppConfig _appConfig;
+        
+        private readonly IConfiguration _config;
 
-        public HomeController(IOptions<AppConfig> appConfig, DataContext dataContext)
+        public HomeController(IOptions<AppConfig> appConfig, DataContext dataContext, IConfiguration config)
         {
             this._appConfig = appConfig.Value;
             this._dataService = new DataService(dataContext);
+            this._config = config;
         }
 
         [AllowAnonymous]
         [Route("")]
         public IActionResult Index()
         {
+            var pokemonDatabase = _config["PokemonDatabase"];
             return this.View();
         }
 
