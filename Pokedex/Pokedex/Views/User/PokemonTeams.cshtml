@@ -28,7 +28,7 @@
                         Game@{
                             foreach(var team in Model.AllPokemonTeams)
                             {
-                                if (team.Generation.Games.Contains('/'))
+                                if (team.Generation != null && team.Generation.Games.Contains('/'))
                                 {
                                     @("(s)");
                                     break;
