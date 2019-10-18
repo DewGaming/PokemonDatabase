@@ -314,6 +314,10 @@ img {
   text-decoration: none;
 }
 
+.hide {
+  display: none;
+}
+
 .lightshadowed {
   width: 2.5rem;
   margin: .2rem 0;
