@@ -24,18 +24,21 @@
             <tbody>
                 <tr>
                     <th class="col-md-2" scope="col">Team Name</th>
-                    <th class="col-md-2" scope="col">
-                        Game@{
-                            foreach(var team in Model.AllPokemonTeams)
-                            {
-                                if (team.Generation != null && team.Generation.Games.Contains('/'))
+                    @if(Model.AllPokemonTeams.Where(x => x.Generation != null).Count() > 0)
+                    {
+                        <th class="col-md-2" scope="col">
+                            Game@{
+                                foreach(var team in Model.AllPokemonTeams)
                                 {
-                                    @("(s)");
-                                    break;
+                                    if (team.Generation != null && team.Generation.Games.Contains('/'))
+                                    {
+                                        @("(s)");
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    </th>
+                        </th>
+                    }
                     <th class="col-md-5" scope="col">Pokemon</th>
                     <th class="col-md-3" scope="col">Actions</th>
                 </tr>
@@ -45,16 +48,19 @@
                     pokemonCount = 0;
                     <tr>
                         <td>@Model.AllPokemonTeams[i].PokemonTeamName</td>
-                        <td>
-                            @if(@Model.AllPokemonTeams[i].Generation != null)
-                            {
-                                @Model.AllPokemonTeams[i].Generation.Games
-                            }
-                            else
-                            {
-                                @("No Game Selected");
-                            }
-                        </td>
+                        @if(Model.AllPokemonTeams.Where(x => x.Generation != null).Count() > 0)
+                        {
+                            <td>
+                                @if(@Model.AllPokemonTeams[i].Generation != null)
+                                {
+                                    @Model.AllPokemonTeams[i].Generation.Games
+                                }
+                                else
+                                {
+                                    @("No Game Selected");
+                                }
+                            </td>
+                        }
                         <td>
                             <table class="pokemonTeamPokemonTable">
                                 <tbody>
