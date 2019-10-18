@@ -12,6 +12,10 @@
     margin-left: 10px;
 }
 
+.teamButtons {
+  margin-bottom: .25rem;
+}
+
 #search {
   width: 10rem;
 }

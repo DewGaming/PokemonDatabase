@@ -18,6 +18,27 @@ namespace Pokedex.Controllers
     [Route("")]
     public class HomeController : Controller
     {
+        private readonly List<string> _commentTypes = new List<string>(){
+            "Bug",
+            "Critique",
+            "Feature",
+        };
+
+        private readonly List<string> _pageTypes = new List<string>(){
+            "Home Page",
+            "Pokemon List",
+            "Pokemon Page",
+            "Search Page",
+            "Comment Page",
+            "Type Chart Page",
+            "Typing Evaluator Page",
+            "Team Randomizer Page",
+            "Shiny Hunt Page (Need to login to see)",
+            "Team Creator Page (Need to login to see)",
+            "New Page",
+            "Other",
+        };
+        
         private readonly DataService _dataService;
 
         private readonly AppConfig _appConfig;
@@ -226,21 +247,8 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                TypeOfComment = new List<string>(new string[] { "Bug",
-                                                                "Critique",
-                                                                "Feature" }),
-                Page = new List<string>(new string[] { "Home Page",
-                                                       "Pokemon List",
-                                                       "Pokemon Page",
-                                                       "Search Page",
-                                                       "Comment Page",
-                                                       "Type Chart Page",
-                                                       "Typing Evaluator Page",
-                                                       "Team Randomizer Page",
-                                                       "Shiny Hunt Page (Need to login to see)",
-                                                       "Team Creator Page (Need to login to see)",
-                                                       "New Page",
-                                                       "Other" }),
+                TypeOfComment = _commentTypes,
+                Page = _pageTypes,
             };
             return this.View(model);
         }
@@ -254,21 +262,8 @@ namespace Pokedex.Controllers
             {
                 CommentViewModel model = new CommentViewModel()
                 {
-                    TypeOfComment = new List<string>(new string[] { "Bug",
-                                                                    "Critique",
-                                                                    "Feature" }),
-                    Page = new List<string>(new string[] { "Home Page",
-                                                           "Pokemon List",
-                                                           "Pokemon Page",
-                                                           "Search Page",
-                                                           "Comment Page",
-                                                           "Type Chart Page",
-                                                           "Typing Evaluator Page",
-                                                           "Team Randomizer Page",
-                                                           "Shiny Hunt Page (Need to login to see)",
-                                                           "Team Creator Page (Need to login to see)",
-                                                           "New Page",
-                                                           "Other" }),
+                    TypeOfComment = _commentTypes,
+                    Page = _pageTypes,
                 };
                 return this.View(model);
             }
