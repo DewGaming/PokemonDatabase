@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +33,19 @@ namespace Pokedex
 
             services.Configure<AppConfig>(Configuration.GetSection("AppConfig"));
 
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"))
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+            services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+            
+            services.AddDbContext<MyKeysContext>(options =>
+            {
+                options.UseSqlServer(this.Configuration.GetConnectionString("MyKeysConnection"));
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            })
+            .AddDataProtection()
+            .PersistKeysToDbContext<MyKeysContext>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -76,5 +89,14 @@ namespace Pokedex
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+    }
+
+    class MyKeysContext : DbContext, IDataProtectionKeyContext
+    {
+        public MyKeysContext(DbContextOptions<MyKeysContext> options)
+            : base(options)
+        { }
+
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     }
 }
