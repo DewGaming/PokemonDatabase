@@ -386,7 +386,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokemon")]
-        public async Task<IActionResult> Pokemon(BasePokemonViewModel pokemon, IFormFile upload)
+        public async Task<IActionResult> Pokemon(BasePokemonViewModel newPokemon, IFormFile upload)
         {
             int pokedexNumber;
             if (!this.ModelState.IsValid)
@@ -430,7 +430,7 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            else if (!int.TryParse(pokemon.Id, out pokedexNumber))
+            else if (!int.TryParse(newPokemon.Id, out pokedexNumber))
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
@@ -472,7 +472,7 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
                 return this.View(model);
             }
-            else if (pokemon.Id.Contains('-'))
+            else if (newPokemon.Id.Contains('-'))
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
@@ -514,7 +514,7 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Pokedex Number", "Pokedex Number cannot contain a \"-\" in it.");
                 return this.View(model);
             }
-            else if (this._dataService.GetAllPokemon().Exists(x => x.Id == pokemon.Id))
+            else if (this._dataService.GetAllPokemon().Exists(x => x.Id == newPokemon.Id))
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
@@ -557,7 +557,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + pokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -571,9 +571,9 @@ namespace Pokedex.Controllers
                 Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
 
-            this._dataService.AddPokemon(pokemon);
+            this._dataService.AddPokemon(newPokemon);
 
-            return this.RedirectToAction("Typing", "Add", new { pokemonId = pokemon.Id });
+            return this.RedirectToAction("Typing", "Add", new { pokemonId = newPokemon.Id });
         }
 
         [HttpGet]
