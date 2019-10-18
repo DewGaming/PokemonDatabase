@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "npm run clean-build-folders && npm run build-app && npm run copy-to-dist && npm run minify && echo Done!",
-    "database-update": "dotnet ef database update -p ..\\Pokedex.DataAccess\\Pokedex.DataAccess.csproj",
+    "database-update": "dotnet ef database update -p ..\\Pokedex.DataAccess\\Pokedex.DataAccess.csproj -c DataContext",
     "remove-pokedex-build": "rimraf bin && rimraf obj",
     "remove-pokedex-data-access-folder": "rimraf ../Pokedex.DataAccess/bin && rimraf ../Pokedex.DataAccess/obj",
     "clean-build-folders": "rimraf .dist && npm run remove-pokedex-build && npm run remove-pokedex-data-access-folder",

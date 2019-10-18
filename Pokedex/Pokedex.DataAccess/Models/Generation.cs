@@ -19,7 +19,5 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Release Date")]
         [Required]
         public DateTime ReleaseDate { get; set; }
-        [Required]
-        public bool IsArchived { get; set; }
     }
 }

@@ -45,23 +45,11 @@ namespace Pokedex.Controllers
             }
 
             User existingUser = this._dataService.GetUserWithUsername(registerViewModel.Username);
-            if (existingUser != null && !existingUser.IsArchived)
+            if (existingUser != null)
             {
                 this.ModelState.AddModelError("Error", "An account already exists with that username.");
 
                 return this.View();
-            }
-            else if (existingUser != null && existingUser.IsArchived)
-            {
-                User updateUser = this.CompareUsers(existingUser, registerViewModel);
-
-                existingUser.IsArchived = false;
-
-                existingUser.IsAdmin = false;
-
-                this._dataService.UpdateUser(updateUser);
-
-                return this.RedirectToAction("Login", "Account");
             }
 
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
@@ -117,7 +105,7 @@ namespace Pokedex.Controllers
 
             User user = this._dataService.GetUserWithUsername(loginViewModel.Username);
 
-            if (user == null || user.IsArchived)
+            if (user == null)
             {
                 // Set username not registered error message.
                 this.ModelState.AddModelError("Error", "An account does not exist with that username.");

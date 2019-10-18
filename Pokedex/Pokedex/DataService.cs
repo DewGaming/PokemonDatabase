@@ -32,11 +32,6 @@ namespace Pokedex
 
         public List<Ability> GetAbilities()
         {
-            return this._dataContext.Abilities.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
-        }
-
-        public List<Ability> GetAbilitiesWithArchive()
-        {
             return this._dataContext.Abilities.OrderBy(x => x.Name).ToList();
         }
 
@@ -46,11 +41,6 @@ namespace Pokedex
         }
 
         public List<LegendaryType> GetLegendaryTypes()
-        {
-            return this._dataContext.LegendaryTypes.OrderBy(x => x.Type).Where(x => x.IsArchived == false).ToList();
-        }
-
-        public List<LegendaryType> GetLegendaryTypesWithArchive()
         {
             return this._dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList();
         }
@@ -67,14 +57,9 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
-        public List<Type> GetTypesWithArchive()
-        {
-            return this._dataContext.Types.OrderBy(x => x.Name).ToList();
-        }
-
         public List<Type> GetTypes()
         {
-            return this._dataContext.Types.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.Types.OrderBy(x => x.Name).ToList();
         }
 
         public FormItem GetFormItem(int id)
@@ -98,7 +83,7 @@ namespace Pokedex
 
         public List<Type> GetTypeChartTypes()
         {
-            return this._dataContext.Types.Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.Types.ToList();
         }
 
         public List<Type> GetPokemonTypes(string pokemonId)
@@ -128,11 +113,6 @@ namespace Pokedex
         }
 
         public List<EggGroup> GetEggGroups()
-        {
-            return this._dataContext.EggGroups.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
-        }
-
-        public List<EggGroup> GetEggGroupsWithArchive()
         {
             return this._dataContext.EggGroups.OrderBy(x => x.Name).ToList();
         }
@@ -319,7 +299,7 @@ namespace Pokedex
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.Id.Length)
                 .ThenBy(x => x.Id)
-                .Where(x => x.IsArchived == false && x.IsComplete == true)
+                .Where(x => x.IsComplete == true)
                 .ToList();
         }
 
@@ -335,7 +315,6 @@ namespace Pokedex
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.Id.Length)
                 .ThenBy(x => x.Id)
-                .Where(x => x.IsArchived == false)
                 .ToList();
         }
 
@@ -351,7 +330,7 @@ namespace Pokedex
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.Id.Length)
                 .ThenBy(x => x.Id)
-                .Where(x => x.IsArchived == false && x.IsComplete == true)
+                .Where(x => x.IsComplete == true)
                 .ToList();
             List<Pokemon> altFormList = pokemonList.Where(x => x.Id.Contains("-")).ToList();
             pokemonList = pokemonList.Except(altFormList).ToList();
@@ -373,7 +352,6 @@ namespace Pokedex
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.Id.Length)
                 .ThenBy(x => x.Id)
-                .Where(x => x.IsArchived == false)
                 .ToList();
             List<Pokemon> altFormList = pokemonList.Where(x => x.Id.Contains("-")).ToList();
             pokemonList = pokemonList.Except(altFormList).ToList();
@@ -1209,7 +1187,7 @@ namespace Pokedex
 
         public List<BaseHappiness> GetBaseHappinesses()
         {
-            return this._dataContext.BaseHappiness.OrderBy(x => x.Happiness).Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.BaseHappiness.OrderBy(x => x.Happiness).ToList();
         }
 
         public ShinyHuntingTechnique GetShinyHuntingTechnique(int id)
@@ -1219,7 +1197,7 @@ namespace Pokedex
 
         public List<ShinyHuntingTechnique> GetShinyHuntingTechniques()
         {
-            return this._dataContext.ShinyHuntingTechniques.Where(x => !x.IsArchived).ToList();
+            return this._dataContext.ShinyHuntingTechniques.ToList();
         }
 
         public Classification GetClassification(int id)
@@ -1229,7 +1207,7 @@ namespace Pokedex
 
         public List<Classification> GetClassifications()
         {
-            return this._dataContext.Classifications.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.Classifications.OrderBy(x => x.Name).ToList();
         }
 
         public Nature GetNature(int id)
@@ -1245,11 +1223,6 @@ namespace Pokedex
         public List<Nature> GetNatures()
         {
             return this._dataContext.Natures.OrderBy(x => x.Name).ToList();
-        }
-
-        public List<Classification> GetClassificationsWithArchive()
-        {
-            return this._dataContext.Classifications.OrderBy(x => x.Name).ToList();
         }
 
         public ShinyHunt GetShinyHunt(int id)
@@ -1269,7 +1242,7 @@ namespace Pokedex
                 .Include(x => x.Pokemon)
                 .Include(x => x.Generation)
                 .Include(x => x.ShinyHuntingTechnique)
-                .Where(x => x.User.Username == username && !x.IsArchived)
+                .Where(x => x.User.Username == username)
                 .OrderBy(x => x.User.Username)
                 .ToList();
         }
@@ -1281,7 +1254,6 @@ namespace Pokedex
                 .Include(x => x.Pokemon)
                 .Include(x => x.Generation)
                 .Include(x => x.ShinyHuntingTechnique)
-                .Where(x => !x.IsArchived)
                 .OrderBy(x => x.User.Username)
                 .ToList();
         }
@@ -1296,40 +1268,24 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<ShinyHunt> GetShinyHuntersWithArchive()
-        {
-            return this._dataContext.ShinyHunts
-                .Include(x => x.User)
-                .Include(x => x.Pokemon)
-                .Include(x => x.ShinyHuntingTechnique)
-                .Include(x => x.Generation)
-                .OrderBy(x => x.User.Username)
-                .ToList();
-        }
-
-        public List<ShinyHuntingTechnique> GetShinyHuntingTechniquesWithArchive()
-        {
-            return this._dataContext.ShinyHuntingTechniques.OrderBy(x => x.Name).ToList();
-        }
-
         public List<CaptureRate> GetCaptureRates()
         {
-            return this._dataContext.CaptureRates.OrderBy(x => x.CatchRate).Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.CaptureRates.OrderBy(x => x.CatchRate).ToList();
         }
 
         public List<EggCycle> GetEggCycles()
         {
-            return this._dataContext.EggCycles.OrderBy(x => x.CycleCount).Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.EggCycles.OrderBy(x => x.CycleCount).ToList();
         }
 
         public List<ExperienceGrowth> GetExperienceGrowths()
         {
-            return this._dataContext.ExperienceGrowths.OrderBy(x => x.Name).Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.ExperienceGrowths.OrderBy(x => x.Name).ToList();
         }
 
         public List<GenderRatio> GetGenderRatios()
         {
-            return this._dataContext.GenderRatios.Where(x => x.IsArchived == false).ToList();
+            return this._dataContext.GenderRatios.ToList();
         }
 
         public List<EvolutionMethod> GetEvolutionMethods()
@@ -1338,11 +1294,6 @@ namespace Pokedex
         }
 
         public List<Generation> GetGenerations()
-        {
-            return this._dataContext.Generations.Where(x => x.IsArchived == false).ToList();
-        }
-
-        public List<Generation> GetGenerationsWithArchive()
         {
             return this._dataContext.Generations.ToList();
         }
@@ -1725,125 +1676,6 @@ namespace Pokedex
         {
             this._dataContext.LegendaryTypes.Update(legendaryType);
             this._dataContext.SaveChanges();
-        }
-
-        public void ArchiveLegendaryType(int id)
-        {
-            LegendaryType legendaryType = this.GetLegendaryType(id);
-            legendaryType.IsArchived = true;
-            this.UpdateLegendaryType(legendaryType);
-        }
-
-        public void ArchiveForm(int id)
-        {
-            Form form = this.GetForm(id);
-            form.IsArchived = true;
-            this.UpdateForm(form);
-        }
-
-        public void ArchiveGeneration(string id)
-        {
-            Generation generation = this.GetGeneration(id);
-            generation.IsArchived = true;
-            this.UpdateGeneration(generation);
-        }
-
-        public void ArchiveType(int id)
-        {
-            Type type = this.GetType(id);
-            type.IsArchived = true;
-            this.UpdateType(type);
-        }
-
-        public void ArchiveEggGroup(int id)
-        {
-            EggGroup eggGroup = this.GetEggGroup(id);
-            eggGroup.IsArchived = true;
-            this.UpdateEggGroup(eggGroup);
-        }
-
-        public void ArchiveAbility(int id)
-        {
-            Ability ability = this.GetAbility(id);
-            ability.IsArchived = true;
-            this.UpdateAbility(ability);
-        }
-
-        public void ArchiveShinyHuntingTechnique(int id)
-        {
-            ShinyHuntingTechnique shinyHuntingTechnique = this.GetShinyHuntingTechnique(id);
-            shinyHuntingTechnique.IsArchived = true;
-            this.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
-        }
-
-        public void ArchiveClassification(int id)
-        {
-            Classification classification = this.GetClassification(id);
-            classification.IsArchived = true;
-            this.UpdateClassification(classification);
-        }
-
-        public void UnarchiveGeneration(string id)
-        {
-            Generation generation = this.GetGeneration(id);
-            generation.IsArchived = false;
-            this.UpdateGeneration(generation);
-        }
-
-        public void UnarchiveType(int id)
-        {
-            Type type = this.GetType(id);
-            type.IsArchived = false;
-            this.UpdateType(type);
-        }
-
-        public void UnarchiveForm(int id)
-        {
-            Form form = this.GetForm(id);
-            form.IsArchived = false;
-            this.UpdateForm(form);
-        }
-
-        public void UnarchiveAbility(int id)
-        {
-            Ability ability = this.GetAbility(id);
-            ability.IsArchived = false;
-            this.UpdateAbility(ability);
-        }
-
-        public void UnarchiveEggGroup(int id)
-        {
-            EggGroup eggGroup = this.GetEggGroup(id);
-            eggGroup.IsArchived = false;
-            this.UpdateEggGroup(eggGroup);
-        }
-
-        public void UnarchiveClassification(int id)
-        {
-            Classification classification = this.GetClassification(id);
-            classification.IsArchived = false;
-            this.UpdateClassification(classification);
-        }
-
-        public void UnarchiveLegendaryType(int id)
-        {
-            LegendaryType legendaryType = this.GetLegendaryType(id);
-            legendaryType.IsArchived = false;
-            this.UpdateLegendaryType(legendaryType);
-        }
-
-        public void UnarchiveShinyHuntingTechnique(int id)
-        {
-            ShinyHuntingTechnique shinyHuntingTechnique = this.GetShinyHuntingTechnique(id);
-            shinyHuntingTechnique.IsArchived = false;
-            this.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
-        }
-
-        public void UnarchiveUser(int id)
-        {
-            User user = this.GetUserById(id);
-            user.IsArchived = false;
-            this.UpdateUser(user);
         }
 
         public void DeletePokemon(string id)

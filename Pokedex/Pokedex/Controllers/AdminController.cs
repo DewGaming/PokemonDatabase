@@ -84,7 +84,7 @@ namespace Pokedex.Controllers
         {
             GenerationViewModel model = new GenerationViewModel()
             {
-                AllGenerations = this._dataService.GetGenerationsWithArchive(),
+                AllGenerations = this._dataService.GetGenerations(),
                 AllPokemon = this._dataService.GetAllPokemon(),
             };
 
@@ -96,7 +96,7 @@ namespace Pokedex.Controllers
         {
             TypeViewModel model = new TypeViewModel()
             {
-                AllTypes = this._dataService.GetTypesWithArchive(),
+                AllTypes = this._dataService.GetTypes(),
                 AllPokemon = this._dataService.GetAllPokemonWithTypes(),
             };
 
@@ -116,7 +116,7 @@ namespace Pokedex.Controllers
         {
             AbilityViewModel model = new AbilityViewModel()
             {
-                AllAbilities = this._dataService.GetAbilitiesWithArchive(),
+                AllAbilities = this._dataService.GetAbilities(),
                 AllPokemon = this._dataService.GetAllPokemonWithAbilities(),
             };
 
@@ -128,7 +128,7 @@ namespace Pokedex.Controllers
         {
             LegendaryTypeViewModel model = new LegendaryTypeViewModel()
             {
-                AllLegendaryTypes = this._dataService.GetLegendaryTypesWithArchive(),
+                AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
                 AllPokemon = this._dataService.GetAllPokemonWithLegendaryTypes(),
             };
 
@@ -152,7 +152,7 @@ namespace Pokedex.Controllers
         {
             EggGroupViewModel model = new EggGroupViewModel()
             {
-                AllEggGroups = this._dataService.GetEggGroupsWithArchive(),
+                AllEggGroups = this._dataService.GetEggGroups(),
                 AllPokemon = this._dataService.GetAllPokemonWithEggGroups(),
             };
 
@@ -164,7 +164,7 @@ namespace Pokedex.Controllers
         {
             ClassificationViewModel model = new ClassificationViewModel()
             {
-                AllClassifications = this._dataService.GetClassificationsWithArchive(),
+                AllClassifications = this._dataService.GetClassifications(),
                 AllPokemon = this._dataService.GetAllPokemonWithClassifications(),
             };
 
@@ -185,7 +185,7 @@ namespace Pokedex.Controllers
             ShinyHuntViewModel model = new ShinyHuntViewModel()
             {
                 AllShinyHunters = this._dataService.GetShinyHunters(),
-                AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniquesWithArchive(),
+                AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
             };
 
             return this.View(model);

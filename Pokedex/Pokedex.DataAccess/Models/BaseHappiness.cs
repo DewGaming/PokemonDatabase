@@ -7,7 +7,5 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
         [Required]
         public byte Happiness { get; set; }
-        [Required]
-        public bool IsArchived { get; set; }
     }
 }

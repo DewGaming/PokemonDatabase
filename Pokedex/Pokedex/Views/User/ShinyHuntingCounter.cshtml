@@ -22,7 +22,7 @@
     <button class="huntsFailed" onclick="lookupPage('huntsFailed')">Hunts Failed</button>
 </div>
 <div class="page active" id="huntsInProgress">
-    @if (Model.Where(x => !x.HuntComplete && !x.IsArchived).ToList().Count > 0)
+    @if (Model.Where(x => !x.HuntComplete).ToList().Count > 0)
     {
         <table class="table pokemonHunt huntInProgressTable">
             <tbody>
@@ -92,7 +92,7 @@
     }
 </div>
 <div class="page" id="huntsCompleted">
-    @if(Model.Where(x => x.HuntComplete & x.IsPokemonCaught && !x.IsArchived).ToList().Count > 0)
+    @if(Model.Where(x => x.HuntComplete & x.IsPokemonCaught).ToList().Count > 0)
     {
         <table class="table pokemonHunt huntCompleteTable">
             <tbody>
@@ -155,7 +155,7 @@
     }
 </div>
 <div class="page" id="huntsFailed">
-    @if(Model.Where(x => x.HuntComplete && !x.IsPokemonCaught && !x.IsArchived).ToList().Count > 0)
+    @if(Model.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList().Count > 0)
     {
         <table class="table pokemonHunt huntFailedTable">
             <tbody>

@@ -14,18 +14,9 @@
             @foreach(var item in Model)
             {
                 <tr>
-                    <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsArchived ? " (Archived)" : item.IsAdmin ? " (Admin)" : "")</td>
+                    <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsAdmin ? " (Admin)" : "")</td>
                     <td>
                         <a href="@Url.Action("User", "Edit", new { id = item.Id })">Edit</a>
-                        |
-                        @if(item.IsArchived == false)
-                        {
-                            <a href="@Url.Action("User", "Archive", new { id = item.Id })">Archive</a>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("User", "Unarchive", new { id = item.Id })">Unarchive</a>
-                        }
                         @if(!item.IsOwner)
                         {
                             @("|")

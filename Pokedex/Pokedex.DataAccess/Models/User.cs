@@ -21,8 +21,5 @@ namespace Pokedex.DataAccess.Models
         [Required]
         [Display(Name = "Is Admin")]
         public bool IsAdmin { get; set; }
-
-        [Required]
-        public bool IsArchived { get; set; }
     }
 }

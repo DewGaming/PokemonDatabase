@@ -12,7 +12,5 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public string PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
-        [Required]
-        public bool IsArchived { get; set; }
     }
 }

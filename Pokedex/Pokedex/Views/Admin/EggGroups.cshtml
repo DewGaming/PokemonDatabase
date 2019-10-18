@@ -20,29 +20,13 @@
             <tr>
                 <td>
                     @item.Name
-                    @if(item.IsArchived == true)
-                    {
-                        @("(Archived)")
-                    }
                 </td>
                 <td>
                     <a href="@(Url.Action("EggGroup", "Edit", new { id = item.Id }))">Edit</a>
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
                     {
                         @('|')
-                        @if(!item.IsArchived)
-                        {
-                            <a href="@(Url.Action("EggGroup", "Archive", new { id = item.Id }))">Archive</a>
-                        }
-                        else
-                        {
-                            <a href="@(Url.Action("EggGroup", "Unarchive", new { id = item.Id }))">Unarchive</a>
-                        }
-                        @if(User.IsInRole("Owner"))
-                        {
-                            @('|')
-                            <a href="@(Url.Action("EggGroup", "Delete", new { id = item.Id }))">Delete</a>
-                        }
+                        <a href="@(Url.Action("EggGroup", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

@@ -9,7 +9,5 @@ namespace Pokedex.DataAccess.Models
         public string Name { get; set; }
         [Display(Name = "Description of Technique"), Required]
         public string Technique { get; set; }
-        [Required]
-        public bool IsArchived { get; set; }
     }
 }

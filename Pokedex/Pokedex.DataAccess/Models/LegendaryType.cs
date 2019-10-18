@@ -9,7 +9,5 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
         [StringLength(20), Display(Name = "Legendary Name"), Required]
         public string Type { get; set; }
-        [Required]
-        public bool IsArchived { get; set; }
     }
 }
