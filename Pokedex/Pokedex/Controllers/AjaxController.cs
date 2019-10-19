@@ -463,7 +463,7 @@ namespace Pokedex.Controllers
                 {
                     if (i != 0)
                     {
-                        pokemonTeam += "\n";
+                        pokemonTeam += "\n\n";
                     }
 
                     pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);
@@ -474,10 +474,10 @@ namespace Pokedex.Controllers
                         pokemonName += "-" + pokemonForm;
                     }
 
-                    pokemonTeam += pokemonName + "\n";
+                    pokemonTeam += pokemonName;
                     if(exportAbilities)
                     {
-                        pokemonTeam += "Ability: " + ((pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34).Name : abilityList[i]) + "\n";
+                        pokemonTeam += "\nAbility: " + ((pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34).Name : abilityList[i]);
                     }
 
                     pokemonTeam += "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
