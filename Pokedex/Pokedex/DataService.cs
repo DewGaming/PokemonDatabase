@@ -528,6 +528,25 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public List<PokemonTeamDetail> GetPokemonTeamDetails()
+        {
+            return this._dataContext.PokemonTeamDetails
+                .Include(x => x.Pokemon)
+                    .Include("Pokemon.EggCycle")
+                    .Include("Pokemon.GenderRatio")
+                    .Include("Pokemon.Classification")
+                    .Include("Pokemon.Generation")
+                    .Include("Pokemon.ExperienceGrowth")
+                    .Include("Pokemon.CaptureRate")
+                    .Include("Pokemon.BaseHappiness")
+                .Include(x => x.Ability)
+                .Include(x => x.PokemonTeamEV)
+                .Include(x => x.PokemonTeamIV)
+                .Include(x => x.BattleItem)
+                .Include(x => x.Nature)
+                .ToList();
+        }
+
         public PokemonTeamDetail GetPokemonTeamDetailNoIncludes(int id)
         {
             return this._dataContext.PokemonTeamDetails
@@ -824,6 +843,14 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<PokemonLegendaryDetail> GetAllPokemonWithLegendaryTypesAndIncomplete()
+        {
+            return this._dataContext.PokemonLegendaryDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.LegendaryType)
+                .ToList();
+        }
+
         public List<PokemonAbilityDetail> GetAllPokemonWithAbilitiesAndIncomplete()
         {
             return this._dataContext.PokemonAbilityDetails
@@ -954,6 +981,13 @@ namespace Pokedex
             return this._dataContext.Pokemon
                 .Include(x => x.Classification)
                 .Where(x => x.IsComplete == true)
+                .ToList();
+        }
+
+        public List<Pokemon> GetAllPokemonWithClassificationsAndIncomplete()
+        {
+            return this._dataContext.Pokemon
+                .Include(x => x.Classification)
                 .ToList();
         }
 

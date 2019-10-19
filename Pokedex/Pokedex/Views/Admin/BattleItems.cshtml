@@ -53,7 +53,7 @@
                 }
                 <td>
                     <a href="@(Url.Action("BattleItem", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(User.IsInRole("Owner"))
+                    @if(User.IsInRole("Owner") && Model.AllPokemonTeamDetails.Where(x => x.BattleItemId == item.Id).Count() == 0)
                     {
                         @('|')
                         <a href="@(Url.Action("BattleItem", "Delete", new { id = item.Id }))">Delete</a>

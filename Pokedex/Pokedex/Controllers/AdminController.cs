@@ -97,7 +97,7 @@ namespace Pokedex.Controllers
             TypeViewModel model = new TypeViewModel()
             {
                 AllTypes = this._dataService.GetTypes(),
-                AllPokemon = this._dataService.GetAllPokemonWithTypes(),
+                AllPokemon = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
             };
 
             return this.View(model);
@@ -117,7 +117,7 @@ namespace Pokedex.Controllers
             AbilityViewModel model = new AbilityViewModel()
             {
                 AllAbilities = this._dataService.GetAbilities(),
-                AllPokemon = this._dataService.GetAllPokemonWithAbilities(),
+                AllPokemon = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
             };
 
             return this.View(model);
@@ -129,7 +129,7 @@ namespace Pokedex.Controllers
             LegendaryTypeViewModel model = new LegendaryTypeViewModel()
             {
                 AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
-                AllPokemon = this._dataService.GetAllPokemonWithLegendaryTypes(),
+                AllPokemon = this._dataService.GetAllPokemonWithLegendaryTypesAndIncomplete(),
             };
 
             return this.View(model);
@@ -153,7 +153,7 @@ namespace Pokedex.Controllers
             EggGroupViewModel model = new EggGroupViewModel()
             {
                 AllEggGroups = this._dataService.GetEggGroups(),
-                AllPokemon = this._dataService.GetAllPokemonWithEggGroups(),
+                AllPokemon = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
             };
 
             return this.View(model);
@@ -165,7 +165,7 @@ namespace Pokedex.Controllers
             ClassificationViewModel model = new ClassificationViewModel()
             {
                 AllClassifications = this._dataService.GetClassifications(),
-                AllPokemon = this._dataService.GetAllPokemonWithClassifications(),
+                AllPokemon = this._dataService.GetAllPokemonWithClassificationsAndIncomplete(),
             };
 
             return this.View(model);
@@ -203,6 +203,7 @@ namespace Pokedex.Controllers
             BattleItemViewModel model = new BattleItemViewModel()
             {
                 AllBattleItems = this._dataService.GetBattleItems(),
+                AllPokemonTeamDetails = this._dataService.GetPokemonTeamDetails(),
                 AllPokemon = pokemonList,
             };
 
