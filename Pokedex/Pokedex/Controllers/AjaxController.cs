@@ -879,33 +879,36 @@ namespace Pokedex.Controllers
                     model.PokemonURLs.Add(this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }));
                 }
 
-                foreach(var p in model.AllPokemonOriginalNames)
+                if(randomAbility)
                 {
-                    List<Ability> abilities = new List<Ability>();
-                    PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
-                    abilities.Add(pokemonAbilities.PrimaryAbility);
-                    if(pokemonAbilities.SecondaryAbility != null)
+                    foreach(var p in model.AllPokemonOriginalNames)
                     {
-                        abilities.Add(pokemonAbilities.SecondaryAbility);
-                    }
+                        List<Ability> abilities = new List<Ability>();
+                        PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
+                        abilities.Add(pokemonAbilities.PrimaryAbility);
+                        if(pokemonAbilities.SecondaryAbility != null)
+                        {
+                            abilities.Add(pokemonAbilities.SecondaryAbility);
+                        }
 
-                    if(pokemonAbilities.HiddenAbility != null)
-                    {
-                        abilities.Add(pokemonAbilities.HiddenAbility);
-                    }
+                        if(pokemonAbilities.HiddenAbility != null)
+                        {
+                            abilities.Add(pokemonAbilities.HiddenAbility);
+                        }
 
-                    if(p.Id == "744")
-                    {
-                        abilities.Add(this._dataService.GetAbility(174));
-                    }
+                        if(p.Id == "744")
+                        {
+                            abilities.Add(this._dataService.GetAbility(174));
+                        }
 
-                    if(p.Id == "718" || p.Id == "718-1")
-                    {
-                        model.PokemonAbilities.Add(abilities[0]);
-                    }
-                    else
-                    {
-                        model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                        if(p.Id == "718" || p.Id == "718-1")
+                        {
+                            model.PokemonAbilities.Add(abilities[0]);
+                        }
+                        else
+                        {
+                            model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                        }
                     }
                 }
 

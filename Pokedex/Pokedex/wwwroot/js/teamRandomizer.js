@@ -53,7 +53,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
     for (var i = 0; i < originalNames.length; i++)
     {
         $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
-        if (randomAbilityBool)
+        if ($(randomAbilityBool).is(':checked'))
         {
             $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
         }
