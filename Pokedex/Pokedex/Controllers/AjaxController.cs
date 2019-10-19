@@ -352,6 +352,11 @@ namespace Pokedex.Controllers
             {
                 if(this._dataService.GetUserWithUsername(this.User.Identity.Name) != null)
                 {
+                    if(string.IsNullOrEmpty(pokemonTeamName))
+                    {
+                        pokemonTeamName = "Save from Team Randomizer";
+                    }
+
                     PokemonTeam pokemonTeam= new PokemonTeam(){
                         PokemonTeamName = pokemonTeamName,
                         UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
@@ -365,7 +370,14 @@ namespace Pokedex.Controllers
                     {
                         pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);
 
-                        ability = (pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34) : this._dataService.GetAbility(abilityIdList[i]);
+                        if(exportAbilities)
+                        {
+                            ability = (pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34) : this._dataService.GetAbility(abilityIdList[i]);
+                        }
+                        else
+                        {
+                            ability = this._dataService.GetAbilitiesForPokemon(pokemon.Id)[0];
+                        }
 
                         pokemonTeamDetail = new PokemonTeamDetail()
                         {
