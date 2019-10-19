@@ -179,26 +179,16 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
-        [Route("retry-hunt/{huntId:int}")]
+        [Route("retry_hunt/{huntId:int}")]
         public IActionResult RetryHunt(int huntId)
         {
             ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
-            hunt.HuntRetried = true;
+            hunt.IsPokemonCaught = false;
+            hunt.HuntComplete = false;
 
             this._dataService.UpdateShinyHunt(hunt);
 
-            ShinyHunt newHunt = new ShinyHunt()
-            {
-                PokemonId = hunt.PokemonId,
-                ShinyHuntingTechniqueId = hunt.ShinyHuntingTechniqueId,
-                GenerationId = hunt.GenerationId,
-                UserId = hunt.UserId,
-                HasShinyCharm = hunt.HasShinyCharm
-            };
-
-            this._dataService.AddShinyHunt(newHunt);
-
-            return this.RedirectToAction("ContinueHunt", "User", new { id = newHunt.Id });
+            return this.RedirectToAction("ContinueHunt", "User", new { id = huntId });
         }
 
         [Route("pokemon_teams")]

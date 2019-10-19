@@ -16,9 +16,9 @@
 
         @Html.HiddenFor(x => x.ShinyHuntId)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.HuntSuccessful):
-            @Html.CheckBoxFor(x => x.HuntSuccessful, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group row">
+            @Html.LabelFor(x => x.HuntSuccessful, "Was Hunt Successful:", new { @class = "col-md-2" })
+            @Html.CheckBoxFor(x => x.HuntSuccessful, new { htmlAttributes = new { @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.HuntSuccessful)
         </div>
 

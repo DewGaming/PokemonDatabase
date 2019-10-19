@@ -1267,7 +1267,8 @@ namespace Pokedex
 
         public ShinyHunt GetShinyHunt(int id)
         {
-            return this._dataContext.ShinyHunts.Include(x => x.User)
+            return this._dataContext.ShinyHunts
+                .Include(x => x.User)
                 .Include(x => x.Pokemon)
                 .Include(x => x.Generation)
                 .Include(x => x.ShinyHuntingTechnique)
@@ -1283,7 +1284,6 @@ namespace Pokedex
                 .Include(x => x.Generation)
                 .Include(x => x.ShinyHuntingTechnique)
                 .Where(x => x.User.Username == username)
-                .OrderBy(x => x.User.Username)
                 .ToList();
         }
 

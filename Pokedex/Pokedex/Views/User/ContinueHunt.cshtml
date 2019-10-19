@@ -6,7 +6,6 @@
 
 @section styles
 {
-    <link href="/css/tabContent.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/shinyHunt.css" rel="stylesheet" type="text/css" />
 }
@@ -18,18 +17,18 @@
 
 @Html.HiddenFor(x => x.ShinyHunt.Id, new { id = "shinyHuntId" })
 
-<div class="tab-list">
-    <button class="tab active" onclick="openPage(event, '@Model.ShinyHunt.Pokemon.Name')">@Model.ShinyHunt.Pokemon.Name.Replace('_', ' ')</button>
-</div>
-<div class="tabcontent active">
+<div class="shinyHunt">
     <div class="pokemonPicture shadowed">
         <img width="327" title="@Model.ShinyHunt.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.ShinyHunt.Pokemon.Id + ".png")" />
     </div>
-    <div class="input-lg-1"></div>
     <div class="pokemonData pokemonTables input-md-5 input-lg-4">
         <h2>Pokemon Data</h2>
         <table class="pokedexNumber">
             <tbody>
+                <tr>
+                    <th>Pokemon</th>
+                    <td>@Model.ShinyHunt.Pokemon.Name</td>
+                </tr>
                 <tr>
                     <th>Shiny Hunter</th>
                     <td>@Model.ShinyHunt.User.Username</td>
@@ -69,7 +68,7 @@
         </table>
         <div style="margin-top: 20px;">
             <a class="btn btn-primary" href="@Url.Action("ShinyHuntingCounter", "User")" role="button">Pause Shiny Hunt</a>
-            <a class="btn btn-success" href="@Url.Action("EndShinyHunt", "User")" role="button">Finish Shiny Hunt</a>
+            <a class="btn btn-success" href="@Url.Action("EndShinyHunt", "User", new { id = @Model.ShinyHunt.Id })" role="button">Finish Shiny Hunt</a>
         </div>
     </div>
 </div>

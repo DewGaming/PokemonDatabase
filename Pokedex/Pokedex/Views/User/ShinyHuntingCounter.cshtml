@@ -13,6 +13,7 @@
 {
     <script src="/js/pageLookup.js"></script>
 }
+
 <p>
     <a class="btn btn-primary" href="@Url.Action("BeginShinyHunt", "User")" role="button">Begin Shiny Hunt</a>
 </p>
@@ -205,11 +206,8 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            @if (!hunts.HuntRetried)
-                            {
-                                <a href="@Url.Action("RetryHunt", "User", new { huntId = @hunts.Id })">Retry Hunt</a>
-                                @("|")
-                            }
+                            <a href="@Url.Action("RetryHunt", "User", new { huntId = @hunts.Id })">Retry Hunt</a>
+                            @("|")
                             <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
                         </td>
                     </tr>
