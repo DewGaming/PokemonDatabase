@@ -25,7 +25,5 @@ namespace Pokedex.DataAccess.Models
         public bool IsPokemonCaught { get; set; }
         [Required]
         public bool HuntComplete { get; set; }
-        [Required]
-        public bool HuntRetried { get; set; }
     }
 }
