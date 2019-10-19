@@ -414,6 +414,77 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("PokemonTeams", "User");
         }
 
+        [HttpGet]
+        [Route("edit_team/{pokemonTeamId:int}")]
+        public IActionResult EditTeam(int pokemonTeamId)
+        {
+            this.UpdatePokemonTeamList();
+            
+            List<Generation> allGenerations = this._dataService.GetGenerations();
+            PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
+            Generation generation = this._dataService.GetLatestGeneration(pokemonTeam.Id);
+
+            UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
+                Id = pokemonTeam.Id,
+                PokemonTeamName = pokemonTeam.PokemonTeamName,
+                UserId = pokemonTeam.UserId,
+            };
+
+            if(generation != null)
+            {
+                model.AllGenerations = allGenerations.Where(x => x.ReleaseDate >= generation.ReleaseDate).ToList();
+            }
+            else
+            {
+                model.AllGenerations = allGenerations;
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("edit_team/{pokemonTeamId:int}")]
+        public IActionResult EditTeam(PokemonTeam newPokemonTeam)
+        {
+            PokemonTeam originalPokemonTeam = this._dataService.GetPokemonTeamNoIncludes(newPokemonTeam.Id);
+            if (!this.ModelState.IsValid)
+            {
+                List<Generation> allGenerations = this._dataService.GetGenerations();
+                Generation generation = this._dataService.GetLatestGeneration(newPokemonTeam.Id);
+
+                UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
+                    Id = originalPokemonTeam.Id,
+                    PokemonTeamName = originalPokemonTeam.PokemonTeamName,
+                    UserId = originalPokemonTeam.UserId,
+                };
+
+                if(generation != null)
+                {
+                    model.AllGenerations = allGenerations.Where(x => x.ReleaseDate >= generation.ReleaseDate).ToList();
+                }
+                else
+                {
+                    model.AllGenerations = allGenerations;
+                }
+
+                return this.View(model);
+            }
+
+            if(originalPokemonTeam.PokemonTeamName != newPokemonTeam.PokemonTeamName)
+            {
+                originalPokemonTeam.PokemonTeamName = newPokemonTeam.PokemonTeamName;
+            }
+
+            if(originalPokemonTeam.GenerationId != newPokemonTeam.GenerationId)
+            {
+                originalPokemonTeam.GenerationId = newPokemonTeam.GenerationId;
+            }
+
+            this._dataService.UpdatePokemonTeam(originalPokemonTeam);
+
+            return this.RedirectToAction("PokemonTeams", "User");
+        }
+
         private void UpdatePokemonTeamList()
         {
             _pokemonTeams = this._dataService.GetAllPokemonTeams(User.Identity.Name);
@@ -449,7 +520,16 @@ namespace Pokedex.Controllers
             if(teamName.IndexOf("===") != -1)
             {
                 teamName += "===";
-                int teamNameStart = teamName.IndexOf("] ") + 2;
+                int teamNameStart = teamName.IndexOf("] ");
+                if(teamNameStart == -1)
+                {
+                    teamNameStart = 4;
+                }
+                else
+                {
+                    teamNameStart += 2;
+                }
+
                 int teamNameTo = teamName.LastIndexOf(" ===");
                 teamName = teamName.Substring(teamNameStart, teamNameTo - teamNameStart);
                 pokemonString = "\r\n" + importedTeam.Split("===\r\n")[1];

@@ -417,31 +417,37 @@ namespace Pokedex
                 .Include(x => x.Generation)
                 .Include(x => x.FirstPokemon)
                     .Include("FirstPokemon.Pokemon")
+                        .Include("FirstPokemon.Pokemon.Generation")
                     .Include("FirstPokemon.Ability")
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
                 .Include(x => x.SecondPokemon)
                     .Include("SecondPokemon.Pokemon")
+                        .Include("SecondPokemon.Pokemon.Generation")
                     .Include("SecondPokemon.Ability")
                     .Include("SecondPokemon.PokemonTeamEV")
                     .Include("SecondPokemon.PokemonTeamIV")
                 .Include(x => x.ThirdPokemon)
                     .Include("ThirdPokemon.Pokemon")
+                        .Include("ThirdPokemon.Pokemon.Generation")
                     .Include("ThirdPokemon.Ability")
                     .Include("ThirdPokemon.PokemonTeamEV")
                     .Include("ThirdPokemon.PokemonTeamIV")
                 .Include(x => x.FourthPokemon)
                     .Include("FourthPokemon.Pokemon")
+                        .Include("FourthPokemon.Pokemon.Generation")
                     .Include("FourthPokemon.Ability")
                     .Include("FourthPokemon.PokemonTeamEV")
                     .Include("FourthPokemon.PokemonTeamIV")
                 .Include(x => x.FifthPokemon)
                     .Include("FifthPokemon.Pokemon")
+                        .Include("FifthPokemon.Pokemon.Generation")
                     .Include("FifthPokemon.Ability")
                     .Include("FifthPokemon.PokemonTeamEV")
                     .Include("FifthPokemon.PokemonTeamIV")
                 .Include(x => x.SixthPokemon)
                     .Include("SixthPokemon.Pokemon")
+                        .Include("SixthPokemon.Pokemon.Generation")
                     .Include("SixthPokemon.Ability")
                     .Include("SixthPokemon.PokemonTeamEV")
                     .Include("SixthPokemon.PokemonTeamIV")
@@ -1296,6 +1302,58 @@ namespace Pokedex
         public List<Generation> GetGenerations()
         {
             return this._dataContext.Generations.ToList();
+        }
+
+        public Generation GetLatestGeneration(int pokemonTeamId)
+        {
+            PokemonTeam pokemonTeam = this.GetPokemonTeam(pokemonTeamId);
+            Generation latestGeneration = null;
+            if(pokemonTeam.FirstPokemonId != null)
+            {
+                latestGeneration = pokemonTeam.FirstPokemon.Pokemon.Generation;
+            }
+
+            if(pokemonTeam.SecondPokemonId != null)
+            {
+                if(pokemonTeam.SecondPokemon.Pokemon.Generation.ReleaseDate > latestGeneration.ReleaseDate)
+                {
+                    latestGeneration = pokemonTeam.SecondPokemon.Pokemon.Generation;
+                }
+            }
+
+            if(pokemonTeam.ThirdPokemonId != null)
+            {
+                if(pokemonTeam.ThirdPokemon.Pokemon.Generation.ReleaseDate > latestGeneration.ReleaseDate)
+                {
+                    latestGeneration = pokemonTeam.ThirdPokemon.Pokemon.Generation;
+                }
+            }
+
+            if(pokemonTeam.FourthPokemonId != null)
+            {
+                if(pokemonTeam.FourthPokemon.Pokemon.Generation.ReleaseDate > latestGeneration.ReleaseDate)
+                {
+                    latestGeneration = pokemonTeam.FourthPokemon.Pokemon.Generation;
+                }
+            }
+
+            if(pokemonTeam.FifthPokemonId != null)
+            {
+                if(pokemonTeam.FifthPokemon.Pokemon.Generation.ReleaseDate > latestGeneration.ReleaseDate)
+                {
+                    latestGeneration = pokemonTeam.FifthPokemon.Pokemon.Generation;
+                }
+            }
+
+            if(pokemonTeam.SixthPokemonId != null)
+            {
+                if(pokemonTeam.SixthPokemon.Pokemon.Generation.ReleaseDate > latestGeneration.ReleaseDate)
+                {
+                    latestGeneration = pokemonTeam.SixthPokemon.Pokemon.Generation;
+                }
+            }
+            
+            return latestGeneration;
         }
 
         public Generation GetGeneration(string id)

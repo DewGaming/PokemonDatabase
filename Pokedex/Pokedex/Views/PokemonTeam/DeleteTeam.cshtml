@@ -15,11 +15,6 @@
         
         @Html.HiddenFor(x => x.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(x => x.PokemonTeamName):
-            @Html.DisplayFor(x => x.PokemonTeamName, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-
         <div class="pokemonList">
             @if(@Model.FirstPokemon != null)
             {

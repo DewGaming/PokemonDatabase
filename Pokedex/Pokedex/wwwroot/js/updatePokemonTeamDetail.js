@@ -1,4 +1,4 @@
-var abilityId = 0, gender = "", battleItem = "", grabAbilities = function() {
+var abilityId = 0, gender = "Empty", battleItem = "Empty", grabAbilities = function() {
     $.ajax({
         url: '/get-pokemon-abilities/',
         method: "POST",
@@ -77,7 +77,10 @@ var abilityId = 0, gender = "", battleItem = "", grabAbilities = function() {
 $(document).ready(function() {
     abilityId = $('#PokemonTeamDetail_AbilityId').val();
     gender = $('#PokemonTeamDetail_Gender').val();
-    battleItem = $('#PokemonTeamDetail_BattleItemId option[value=' + $('#PokemonTeamDetail_BattleItemId').val() + ']').text()
+    if($('#PokemonTeamDetail_BattleItemId').val().length != 0)
+    {
+        battleItem = $('#PokemonTeamDetail_BattleItemId option[value=' + $('#PokemonTeamDetail_BattleItemId').val() + ']').text();
+    }
     refreshGenders();
     grabAbilities();
     refreshHeldItems();

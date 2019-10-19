@@ -1,0 +1,38 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.UpdatePokemonTeamViewModel
+@{
+    Layout = "_layout";
+    ViewBag.Title = "Update Team";
+}
+
+<h2>Update Pokemon Team</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.UserId)
+        
+        <div class="form-group">
+            @Html.LabelFor(x => x.PokemonTeamName)
+            @Html.EditorFor(x => x.PokemonTeamName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(x => x.PokemonTeamName)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.GenerationId)
+            @Html.DropDownListFor(x => x.GenerationId, new SelectList(Model.AllGenerations, "Id", "Games"), "", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.GenerationId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
+        </p>
+    }
+
+</div>
