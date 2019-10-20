@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 
 namespace Pokedex.Controllers
 {
@@ -15,10 +14,13 @@ namespace Pokedex.Controllers
     {
         private readonly DataService _dataService;
 
-        public OwnerController(DataContext dataContext)
+        private readonly AppConfig _appConfig;
+
+        public OwnerController(DataContext dataContext, IOptions<AppConfig> appConfig)
         {
             // Instantiate an instance of the data service.
             this._dataService = new DataService(dataContext);
+            this._appConfig = appConfig.Value;
         }
 
         [Route("users")]
@@ -37,7 +39,6 @@ namespace Pokedex.Controllers
             return this.View("Comments", model);
         }
 
-        [HttpGet]
         [Route("complete_comment/{id:int}")]
         public IActionResult CompleteComment(int id)
         {
@@ -49,7 +50,6 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Comments", "Owner");
         }
 
-        [HttpGet]
         [Route("undo_completion/{id:int}")]
         public IActionResult UndoComment(int id)
         {
@@ -76,6 +76,25 @@ namespace Pokedex.Controllers
             this._dataService.UpdatePokemon(pokemon);    
             
             return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [Route("shiny_hunting_counter/{id:int}")]
+        public IActionResult ShinyHuntingCounter(int id)
+        {
+            List<ShinyHunt> model = this._dataService.GetShinyHunterById(id);
+
+            return this.View(model);
+        }
+
+        [Route("pokemon_teams/{id:int}")]
+        public IActionResult PokemonTeams(int id)
+        {
+            PokemonTeamsViewModel model = new PokemonTeamsViewModel(){
+                AllPokemonTeams = this._dataService.GetPokemonTeamsByUserId(id),
+                AppConfig = _appConfig,
+            };
+
+            return this.View(model);
         }
     }
 }

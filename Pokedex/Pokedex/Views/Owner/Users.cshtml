@@ -17,6 +17,10 @@
                     <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsAdmin ? " (Admin)" : "")</td>
                     <td>
                         <a href="@Url.Action("User", "Edit", new { id = item.Id })">Edit</a>
+                        @("|")
+                        <a href="@Url.Action("ShinyHuntingCounter", "Owner", new { id = item.Id })">View @(item.Username + "'")s Shiny Hunts</a>
+                        @("|")
+                        <a href="@Url.Action("PokemonTeams", "Owner", new { id = item.Id })">View @(item.Username + "'")s Pokemon Teams</a>
                         @if(!item.IsOwner)
                         {
                             @("|")

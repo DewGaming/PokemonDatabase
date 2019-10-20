@@ -1,0 +1,78 @@
+@model Pokedex.Models.PokemonTeamsViewModel;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Pokemon Teams";
+}
+
+@section scripts
+{
+    <script src="/js/pokemonTeam.js"></script>
+}
+
+<div>
+    @if (Model.AllPokemonTeams.ToList().Count > 0)
+    {
+        <table class="table pokemonTeam">
+            <tbody>
+                <tr>
+                    <th class="col-md-2" scope="col">Team Name</th>
+                    @if(Model.AllPokemonTeams.Where(x => x.Generation != null).Count() > 0)
+                    {
+                        <th class="col-md-2" scope="col">
+                            Game@{
+                                foreach(var team in Model.AllPokemonTeams)
+                                {
+                                    if (team.Generation != null && team.Generation.Games.Contains('/'))
+                                    {
+                                        @("(s)");
+                                        break;
+                                    }
+                                }
+                            }
+                        </th>
+                    }
+                    <th class="col-md-5" scope="col">Pokemon</th>
+                </tr>
+                @foreach(var pt in Model.AllPokemonTeams)
+                {
+                    <tr>
+                        <td>@pt.PokemonTeamName</td>
+                        @if(Model.AllPokemonTeams.Where(x => x.Generation != null).Count() > 0)
+                        {
+                            <td>
+                                @if(@pt.Generation != null)
+                                {
+                                    @pt.Generation.Games
+                                }
+                                else
+                                {
+                                    @("No Game Selected");
+                                }
+                            </td>
+                        }
+                        <td>
+                            <table class="pokemonTeamPokemonTable">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @foreach(var p in @pt.GrabPokemonTeamDetails)
+                                            {
+                                                <div class="pokemonTeamGroup">
+                                                    <img class="lightshadowed pokemonTeamPokemon" title="@p.Pokemon.Name.Replace('_', ' ')@((@p.Nickname != null) ? " (" + @p.Nickname + ")" : "")@((@p.BattleItemId != null) ? " (Holding " + @p.BattleItem.Name + ")" : "")" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Pokemon.Id + ".png")" />
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonTeams">No teams have been created yet.</div>
+    }
+</div>

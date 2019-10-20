@@ -1,0 +1,201 @@
+@model IEnumerable<Pokedex.DataAccess.Models.ShinyHunt>
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Shiny Hunts";
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/pageLookup.js"></script>
+}
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("BeginShinyHunt", "User")" role="button">Begin Shiny Hunt</a>
+</p>
+<div class="pageButtons">
+    <button class="huntsInProgress active" onclick="lookupPage('huntsInProgress')">Hunts In Progress</button>
+    <button class="huntsCompleted" onclick="lookupPage('huntsCompleted')">Hunts Completed</button>
+    <button class="huntsFailed" onclick="lookupPage('huntsFailed')">Hunts Failed</button>
+</div>
+<div class="page active" id="huntsInProgress">
+    @if (Model.Where(x => !x.HuntComplete).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntInProgressTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Technique</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
+                    <th scope="col">Number of Attempts</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => !x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
+                        <td>@hunts.ShinyAttemptCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No pokemon are being hunted right now.</div>
+    }
+</div>
+<div class="page" id="huntsCompleted">
+    @if(Model.Where(x => x.HuntComplete & x.IsPokemonCaught).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntCompleteTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Technique</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
+                    <th scope="col">Number of Attempts</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
+                        <td>@hunts.ShinyAttemptCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No hunts have been completed.</div>
+    }
+</div>
+<div class="page" id="huntsFailed">
+    @if(Model.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList().Count > 0)
+    {
+        <table class="table pokemonHunt huntFailedTable">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon</th>
+                    <th scope="col">
+                        Game@{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.Games.Contains('/'))
+                                {
+                                    @("(s)");
+                                    break;
+                                }
+                            }
+                        }
+                    </th>
+                    <th scope="col">Technique</th>
+                    @{
+                        foreach(var hunt in Model)
+                        {
+                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            {
+                                <th scope="col">Used Shiny Charm</th>
+                                break;
+                            }
+                        }
+                    }
+                    <th scope="col">Number of Attempts</th>
+                </tr>
+                @foreach(var hunts in Model.Where(x => !x.IsPokemonCaught && x.HuntComplete))
+                {
+                    <tr>
+                        <td>@hunts.Pokemon.Name</td>
+                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.ShinyHuntingTechnique.Name</td>
+                        @{
+                            foreach(var hunt in Model)
+                            {
+                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                {
+                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
+                                    break;
+                                }
+                            }
+                        }
+                        <td>@hunts.ShinyAttemptCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="noPokemonHunting">No hunts have been failed.</div>
+    }
+</div>

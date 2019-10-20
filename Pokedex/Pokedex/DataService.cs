@@ -456,6 +456,33 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public List<PokemonTeam> GetPokemonTeamsByUserId(int id)
+        {
+            return this._dataContext.PokemonTeams
+                .Include(x => x.Generation)
+                .Include(x => x.FirstPokemon)
+                    .Include("FirstPokemon.Pokemon")
+                        .Include("FirstPokemon.Pokemon.Generation")
+                .Include(x => x.SecondPokemon)
+                    .Include("SecondPokemon.Pokemon")
+                        .Include("SecondPokemon.Pokemon.Generation")
+                .Include(x => x.ThirdPokemon)
+                    .Include("ThirdPokemon.Pokemon")
+                        .Include("ThirdPokemon.Pokemon.Generation")
+                .Include(x => x.FourthPokemon)
+                    .Include("FourthPokemon.Pokemon")
+                        .Include("FourthPokemon.Pokemon.Generation")
+                .Include(x => x.FifthPokemon)
+                    .Include("FifthPokemon.Pokemon")
+                        .Include("FifthPokemon.Pokemon.Generation")
+                .Include(x => x.SixthPokemon)
+                    .Include("SixthPokemon.Pokemon")
+                        .Include("SixthPokemon.Pokemon.Generation")
+                .Include(x => x.User)
+                .Where(x => x.User.Id == id)
+                .ToList();
+        }
+
         public PokemonTeam GetPokemonTeamNoIncludes(int id)
         {
             return this._dataContext.PokemonTeams
@@ -1284,6 +1311,17 @@ namespace Pokedex
                 .Include(x => x.Generation)
                 .Include(x => x.ShinyHuntingTechnique)
                 .Where(x => x.User.Username == username)
+                .ToList();
+        }
+
+        public List<ShinyHunt> GetShinyHunterById(int id)
+        {
+            return this._dataContext.ShinyHunts
+                .Include(x => x.User)
+                .Include(x => x.Pokemon)
+                .Include(x => x.Generation)
+                .Include(x => x.ShinyHuntingTechnique)
+                .Where(x => x.User.Id == id)
                 .ToList();
         }
 
