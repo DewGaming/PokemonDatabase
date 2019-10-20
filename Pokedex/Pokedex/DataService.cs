@@ -1773,13 +1773,6 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
-        public void DeleteUser(int id)
-        {
-            User user = this.GetUserById(id);
-            this._dataContext.Users.Remove(user);
-            this._dataContext.SaveChanges();
-        }
-
         public void DeleteLegendaryType(int id)
         {
             LegendaryType legendaryType = this.GetLegendaryType(id);

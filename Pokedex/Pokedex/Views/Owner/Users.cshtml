@@ -21,11 +21,6 @@
                         <a href="@Url.Action("ShinyHuntingCounter", "Owner", new { id = item.Id })">View @(item.Username + "'")s Shiny Hunts</a>
                         @("|")
                         <a href="@Url.Action("PokemonTeams", "Owner", new { id = item.Id })">View @(item.Username + "'")s Pokemon Teams</a>
-                        @if(!item.IsOwner)
-                        {
-                            @("|")
-                            <a href="@Url.Action("User", "Delete", new { id = item.Id })">Delete</a>
-                        }
                     </td>
                 </tr>
             }

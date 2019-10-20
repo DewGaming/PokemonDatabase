@@ -187,25 +187,6 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("LegendaryTypes", "Admin");
         }
-
-        [HttpGet]
-        [Route("delete_user/{id:int}")]
-        public new IActionResult User(int id)
-        {
-            User model = this._dataService.GetUserById(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_user/{id:int}")]
-        public new IActionResult User(User user)
-        {
-            this._dataService.DeleteUser(user.Id);
-
-            return this.RedirectToAction("Users", "Owner");
-        }
         
         [HttpGet]
         [Route("delete_comment/{id:int}")]
