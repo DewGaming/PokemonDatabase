@@ -934,10 +934,7 @@ namespace Pokedex.Controllers
 
             if (baseStat.PokemonId.Contains('-'))
             {
-                Pokemon pokemon = this._dataService.GetPokemonById(baseStat.PokemonId);
-                pokemon.IsComplete = true;
-                this._dataService.UpdatePokemon(pokemon);
-                return this.RedirectToAction("Pokemon", "Home", new { Name = pokemon.Name.Replace(' ', '_').ToLower() });
+                return this.RedirectToAction("Pokemon", "Admin");
             }
             else if(_cameFromAdminPokemon || _cameFromAdminAltForms)
             {
