@@ -13,5 +13,9 @@ namespace Pokedex
         public string FTPUsername { get; set; }
 
         public string FTPPassword { get; set; }
+
+        public string EmailAddress { get; set; }
+
+        public string EmailAddressPassword { get; set; }
     }
 }

@@ -314,10 +314,8 @@ namespace Pokedex.Controllers
             {
                 if(comment.CommentorId != 1 || comment.CommentorId == null)
                 {
-                    MailAddress fromAddress = new MailAddress("pokemondatabase2019@gmail.com", "Pokemon Database Website");
-                    MailAddress toAddress = new MailAddress("pokemondatabase2019@gmail.com", "Pokemon Database Email");
-                    const string fromPassword = "P0kemonDatabase.";
-                    const string subject = "New Comment for Pokemon Database";
+                    MailAddress fromAddress = new MailAddress(_appConfig.EmailAddress, "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress(_appConfig.EmailAddress, "Pokemon Database Email");
                     string body = comment.CommentType;
                     if(comment.CommentedPage != null)
                     {
@@ -343,12 +341,12 @@ namespace Pokedex.Controllers
                         EnableSsl = true,
                         DeliveryMethod = SmtpDeliveryMethod.Network,
                         UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                        Credentials = new NetworkCredential(fromAddress.Address, _appConfig.EmailAddressPassword),
                     };
 
                     using (var message = new MailMessage(fromAddress, toAddress)
                     {
-                        Subject = subject,
+                        Subject = "New Comment for Pokemon Database",
                         Body = body,
                     })
                     {
