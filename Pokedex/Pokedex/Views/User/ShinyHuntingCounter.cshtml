@@ -2,6 +2,7 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Shiny Hunts";
+    int huntCount;
 }
 
 @section styles
@@ -25,6 +26,7 @@
 <div class="page active" id="huntsInProgress">
     @if (Model.InProgressHunts.Count > 0)
     {
+        huntCount = 0;
         <table class="table pokemonHunt huntInProgressTable">
             <tbody>
                 <tr>
@@ -57,6 +59,7 @@
                 </tr>
                 @foreach(var hunts in Model.InProgressHunts)
                 {
+                    huntCount++;
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Generation.Games</td>
@@ -73,9 +76,9 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("ContinueHunt", "User", new { id = @hunts.Id })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
+                            <a href="@Url.Action("ContinueHunt", "User", new { huntId = @huntCount })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
                             |
-                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
+                            <a href="@Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="InProgress" })">Delete Hunt</a>
                         </td>
                     </tr>
                 }
@@ -90,6 +93,7 @@
 <div class="page" id="huntsCompleted">
     @if(Model.CompletedHunts.Count > 0)
     {
+        huntCount = 0;
         <table class="table pokemonHunt huntCompleteTable">
             <tbody>
                 <tr>
@@ -122,6 +126,7 @@
                 </tr>
                 @foreach(var hunts in Model.CompletedHunts)
                 {
+                    huntCount++;
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Generation.Games</td>
@@ -138,7 +143,7 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
+                            <a href="@Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Completed" })">Delete Hunt</a>
                         </td>
                     </tr>
                 }
@@ -153,6 +158,7 @@
 <div class="page" id="huntsFailed">
     @if(Model.FailedHunts.Count > 0)
     {
+        huntCount = 0;
         <table class="table pokemonHunt huntFailedTable">
             <tbody>
                 <tr>
@@ -185,6 +191,7 @@
                 </tr>
                 @foreach(var hunts in Model.FailedHunts)
                 {
+                    huntCount++;
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Generation.Games</td>
@@ -201,9 +208,9 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("RetryHunt", "User", new { huntId = @hunts.Id })">Retry Hunt</a>
+                            <a href="@Url.Action("RetryHunt", "User", new { huntId = @huntCount })">Retry Hunt</a>
                             @("|")
-                            <a href="@Url.Action("RemoveHunt", "User", new { id = @hunts.Id })">Delete Hunt</a>
+                            <a href="@Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Failed" })">Delete Hunt</a>
                         </td>
                     </tr>
                 }

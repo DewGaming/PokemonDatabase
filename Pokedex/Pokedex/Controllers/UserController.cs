@@ -16,6 +16,8 @@ namespace Pokedex.Controllers
     [Route("")]
     public class UserController : Controller
     {
+        private static List<ShinyHunt> _shinyHunts;
+
         private readonly DataService _dataService;
 
         private readonly AppConfig _appConfig;
@@ -80,14 +82,16 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("shiny_hunt/{id:int}")]
-        public IActionResult ContinueHunt(int id)
+        [Route("shiny_hunt/{huntId:int}")]
+        public IActionResult ContinueHunt(int huntId)
         {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(id);
+            this.UpdateShinyHuntList();
+            ShinyHunt shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
 
             ContinueHuntViewModel model = new ContinueHuntViewModel(){
                 ShinyHunt = shinyHunt,
                 AppConfig = this._appConfig,
+                HuntIndex = huntId,
             };
 
             return this.View(model);
@@ -137,7 +141,8 @@ namespace Pokedex.Controllers
         [Route("complete_shiny_hunt/{huntId:int}")]
         public IActionResult CompleteShinyHunt(int huntId)
         {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(huntId);
+            this.UpdateShinyHuntList();
+            ShinyHunt shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
             shinyHunt.HuntComplete = true;
             shinyHunt.IsPokemonCaught = true;
 
@@ -149,7 +154,8 @@ namespace Pokedex.Controllers
         [Route("give_up_shiny_hunt/{huntId:int}")]
         public IActionResult GiveUpShinyHunt(int huntId)
         {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(huntId);
+            this.UpdateShinyHuntList();
+            ShinyHunt shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
             shinyHunt.HuntComplete = true;
             shinyHunt.IsPokemonCaught = false;
 
@@ -158,10 +164,23 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
-        [Route("remove_hunt/{id:int}")]
-        public IActionResult RemoveHunt(int id)
+        [Route("remove_hunt/{huntProgress}/{huntId:int}")]
+        public IActionResult RemoveHunt(string huntProgress, int huntId)
         {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(id);
+            this.UpdateShinyHuntList();
+            ShinyHunt shinyHunt = null;
+            if(huntProgress == "InProgress")
+            {
+                shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
+            }
+            else if(huntProgress == "Completed")
+            {
+                shinyHunt = _shinyHunts.Where(x => x.HuntComplete && x.IsPokemonCaught).ToList()[huntId - 1];
+            }
+            else if(huntProgress == "Failed")
+            {
+                shinyHunt = _shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList()[huntId - 1];
+            }
 
             if (shinyHunt != null)
             {
@@ -174,13 +193,14 @@ namespace Pokedex.Controllers
         [Route("retry_hunt/{huntId:int}")]
         public IActionResult RetryHunt(int huntId)
         {
-            ShinyHunt hunt = this._dataService.GetShinyHunt(huntId);
+            this.UpdateShinyHuntList();
+            ShinyHunt hunt = _shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList()[huntId - 1];
             hunt.IsPokemonCaught = false;
             hunt.HuntComplete = false;
 
             this._dataService.UpdateShinyHunt(hunt);
 
-            return this.RedirectToAction("ContinueHunt", "User", new { id = huntId });
+            return this.RedirectToAction("ShinyHuntingCounter", "User");
         }
 
         [Route("pokemon_teams")]
@@ -192,6 +212,11 @@ namespace Pokedex.Controllers
             };
 
             return this.View(model);
+        }
+
+        private void UpdateShinyHuntList()
+        {
+            _shinyHunts = this._dataService.GetShinyHunter(User.Identity.Name);
         }
     }
 }

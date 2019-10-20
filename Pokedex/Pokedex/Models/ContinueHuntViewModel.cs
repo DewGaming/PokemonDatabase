@@ -7,5 +7,7 @@ namespace Pokedex.Models
         public ShinyHunt ShinyHunt { get; set; }
 
         public AppConfig AppConfig { get; set; }
+
+        public int HuntIndex { get; set; }
     }
 }
