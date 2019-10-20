@@ -70,7 +70,13 @@ namespace Pokedex.Controllers
         [Route("shiny_hunting_counter")]
         public IActionResult ShinyHuntingCounter()
         {
-            List<ShinyHunt> model = this._dataService.GetShinyHunter(this.User.Identity.Name);
+            List<ShinyHunt> shinyHunts = this._dataService.GetShinyHunter(this.User.Identity.Name);
+            ShinyHuntingViewModel model = new ShinyHuntingViewModel(){
+                InProgressHunts = shinyHunts.Where(x => !x.HuntComplete).ToList(),
+                CompletedHunts = shinyHunts.Where(x => x.HuntComplete && x.IsPokemonCaught).ToList(),
+                FailedHunts = shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList(),
+            };
+
             return this.View(model);
         }
 
@@ -140,26 +146,24 @@ namespace Pokedex.Controllers
             return pokemonList;
         }
 
-        [HttpGet]
-        [Route("end_shiny_hunt/{id:int}")]
-        public IActionResult EndShinyHunt(int id)
+        [Route("complete_shiny_hunt/{huntId:int}")]
+        public IActionResult CompleteShinyHunt(int huntId)
         {
-            EndShinyHuntViewModel model = new EndShinyHuntViewModel()
-            {
-                ShinyHuntId = id,
-            };
+            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(huntId);
+            shinyHunt.HuntComplete = true;
+            shinyHunt.IsPokemonCaught = true;
 
-            return this.View(model);
+            this._dataService.UpdateShinyHunt(shinyHunt);
+
+            return this.RedirectToAction("ShinyHuntingCounter");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("end_shiny_hunt/{id:int}")]
-        public IActionResult EndShinyHunt(EndShinyHuntViewModel endShinyHuntViewModel)
+        [Route("give_up_shiny_hunt/{huntId:int}")]
+        public IActionResult GiveUpShinyHunt(int huntId)
         {
-            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(endShinyHuntViewModel.ShinyHuntId);
+            ShinyHunt shinyHunt = this._dataService.GetShinyHunt(huntId);
             shinyHunt.HuntComplete = true;
-            shinyHunt.IsPokemonCaught = endShinyHuntViewModel.HuntSuccessful;
+            shinyHunt.IsPokemonCaught = false;
 
             this._dataService.UpdateShinyHunt(shinyHunt);
 
