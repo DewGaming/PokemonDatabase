@@ -1,3 +1,33 @@
+var updateTechniqueDescription = function() {
+    $.ajax({
+        url: '/get-shiny-hunting-technique/',
+        method: 'POST',
+        data: { 'id': $('#ShinyHuntingTechniqueId').val() }
+    })
+    .done(function(data) {
+        $('.techniqueDescription').remove();
+    
+        var $mainDiv = $('<div>').addClass('form-group row techniqueDescription');
+        var $label = $('<label>').addClass('shinyHuntingTechinqueDescription col-md-3').attr('for', 'shinyHuntingTechinque').text("Technique Description:");
+        var $input = $('<div>').addClass('col-md-8').attr({id: 'from', name: 'from'}).text(data.technique);
+
+        $($mainDiv).append($label);
+        $($mainDiv).append($input);
+        $($('#ShinyHuntingTechniqueId').parent()).after($mainDiv);
+    })
+    .fail(function() {
+        alert("Failed to grab technique!");
+    });
+};
+
+$(document).ready(function() {
+    updateTechniqueDescription();
+});
+
+$('#ShinyHuntingTechniqueId').on('change', function() {
+    updateTechniqueDescription();
+});
+
 $('.generationDropDown').on('change', function() {
     $('.generationDropDown option[value=""]').remove();
     var generationId = this.value;

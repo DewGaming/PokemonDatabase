@@ -7,9 +7,6 @@ namespace Pokedex.DataAccess.Models
     {
         [StringLength(4)]
         public string Id { get; set; }
-        [StringLength(6)]
-        [Required]
-        public string Region { get; set; }
         [StringLength(50)]
         [Required]
         public string Games { get; set; }

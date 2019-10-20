@@ -273,13 +273,6 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
-        public Pokemon GetPokemonNoIncludes(string name)
-        {
-            return this._dataContext.Pokemon
-                .ToList()
-                .Find(x => x.Name == name);
-        }
-
         public Pokemon GetPokemonNoIncludesById(string id)
         {
             return this._dataContext.Pokemon
@@ -509,20 +502,6 @@ namespace Pokedex
                            x.SixthPokemonId == id);
         }
 
-        public PokemonTeam GetPokemonTeamFromPokemonEV(int id)
-        {
-            return this.GetPokemonTeamFromPokemonNoIncludes(this._dataContext.PokemonTeamDetails
-                .ToList()
-                .Find(x => x.PokemonTeamEVId == id).Id);
-        }
-
-        public PokemonTeam GetPokemonTeamFromPokemonIV(int id)
-        {
-            return this.GetPokemonTeamFromPokemonNoIncludes(this._dataContext.PokemonTeamDetails
-                .ToList()
-                .Find(x => x.PokemonTeamIVId == id).Id);
-        }
-
         public PokemonTeam GetPokemonTeamFromPokemonNoIncludes(int id)
         {
             return this._dataContext.PokemonTeams
@@ -623,16 +602,6 @@ namespace Pokedex
             }
 
             return pokemonList;
-        }
-
-        public List<PokemonFormDetail> GetAltFormDetails(string pokemonId, string formName)
-        {
-            return this._dataContext.PokemonFormDetails
-                .Include(x => x.AltFormPokemon)
-                .Include(x => x.OriginalPokemon)
-                .Include(x => x.Form)
-                .Where(x => x.OriginalPokemonId == pokemonId && x.AltFormPokemon.IsComplete && x.Form.Name == formName)
-                .ToList();
         }
 
         public Pokemon GetAltFormWithFormName(string pokemonId)
@@ -850,17 +819,6 @@ namespace Pokedex
                 .Find(x => x.PokemonId == pokemonId);
         }
 
-        public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
-        {
-            return this._dataContext.PokemonAbilityDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.PrimaryAbility)
-                .Include(x => x.SecondaryAbility)
-                .Include(x => x.HiddenAbility)
-                .Where(x => x.Pokemon.IsComplete == true)
-                .ToList();
-        }
-
         public List<PokemonLegendaryDetail> GetAllPokemonWithLegendaryTypes()
         {
             return this._dataContext.PokemonLegendaryDetails
@@ -951,26 +909,6 @@ namespace Pokedex
                 .Find(x => x.PokemonId == pokemonId);
         }
 
-        public PokemonEggGroupDetail GetPokemonWithEggGroupsWithIncomplete(string pokemonId)
-        {
-            return this._dataContext.PokemonEggGroupDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.PrimaryEggGroup)
-                .Include(x => x.SecondaryEggGroup)
-                .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
-        }
-
-        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroups()
-        {
-            return this._dataContext.PokemonEggGroupDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.PrimaryEggGroup)
-                .Include(x => x.SecondaryEggGroup)
-                .Where(x => x.Pokemon.IsComplete == true)
-                .ToList();
-        }
-
         public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroupsAndIncomplete()
         {
             return this._dataContext.PokemonEggGroupDetails
@@ -1001,14 +939,6 @@ namespace Pokedex
                 .Include(x => x.Pokemon)
                 .ToList()
                 .Find(x => x.Pokemon.Id == pokemonId);
-        }
-
-        public List<Pokemon> GetAllPokemonWithClassifications()
-        {
-            return this._dataContext.Pokemon
-                .Include(x => x.Classification)
-                .Where(x => x.IsComplete == true)
-                .ToList();
         }
 
         public List<Pokemon> GetAllPokemonWithClassificationsAndIncomplete()

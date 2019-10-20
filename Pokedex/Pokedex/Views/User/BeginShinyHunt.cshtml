@@ -26,25 +26,25 @@
         @Html.HiddenFor(x => x.UserId)
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.ShinyHuntingTechniqueId, "Hunt Technique Used:", new { @class = "shinyHuntLabel"})
-            @Html.DropDownListFor(x => x.ShinyHuntingTechniqueId, new SelectList(Model.AllShinyHuntingTechniques, "Id", "Name"), new { @class = "form-control shinyHuntOption" })
+            @Html.LabelFor(x => x.ShinyHuntingTechniqueId, "Hunt Technique Used:", new { @class = "col-md-3"})
+            @Html.DropDownListFor(x => x.ShinyHuntingTechniqueId, new SelectList(Model.AllShinyHuntingTechniques, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.ShinyHuntingTechniqueId)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.GenerationId, "Game(s) Hunting In:", new { @class = "shinyHuntLabel"})
-            @Html.DropDownListFor(x => x.GenerationId, new SelectList(Model.AllGenerations, "Id", "Games"), "", new { @class = "form-control generationDropDown shinyHuntOption" })
+            @Html.LabelFor(x => x.GenerationId, "Game(s) Hunting In:", new { @class = "col-md-3"})
+            @Html.DropDownListFor(x => x.GenerationId, new SelectList(Model.AllGenerations, "Id", "Games"), "", new { @class = "form-control generationDropDown col-md-8" })
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonId, "Pokemon Being Hunted:", new { @class = "shinyHuntLabel"})
-            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control pokemonDropDown shinyHuntOption" })
+            @Html.LabelFor(x => x.PokemonId, "Pokemon Being Hunted:", new { @class = "col-md-3"})
+            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control pokemonDropDown col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonId)
         </div>
 
         <div class="form-group row shinyCharmCheckBox hidden">
-            @Html.LabelFor(x => x.HasShinyCharm, "Using Shiny Charm:", new { @class = "shinyHuntLabel"})
-            @Html.CheckBoxFor(x => x.HasShinyCharm, new { @class = "form-control shinyHuntOption" })
+            @Html.LabelFor(x => x.HasShinyCharm, "Using Shiny Charm:", new { @class = "col-md-3"})
+            @Html.CheckBoxFor(x => x.HasShinyCharm, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.HasShinyCharm)
         </div>
 

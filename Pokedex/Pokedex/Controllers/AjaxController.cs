@@ -27,6 +27,51 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [Route("get-pokemon-by-generation-admin/{generationId}")]
+        public IActionResult GetPokemonByGenerationAdmin(string generationId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
+                    AllAltForms = this._dataService.GetAllAltForms(),
+                    AllEvolutions = this._dataService.GetEvolutions(),
+                    AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                    AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                    AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                    AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
+                    AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
+                    AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
+                };
+
+                DropdownViewModel dropdownViewModel = new DropdownViewModel(){
+                    AllPokemon = allPokemon,
+                    AppConfig = this._appConfig,
+                };
+
+                AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
+                {
+                    PokemonList = this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Where(x => x.GenerationId == generationId || x.GenerationId.Contains(generationId + '-')).ToList(),
+                    DropdownViewModel = dropdownViewModel,
+                    AppConfig = _appConfig,
+                };
+
+                return this.PartialView("_FillAdminGenerationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Error");
+            }
+        }
+
+        [HttpPost]
+        [Route("get-shiny-hunting-technique")]
+        public ShinyHuntingTechnique GetShinyHuntTechnique(int id)
+        {
+            ShinyHuntingTechnique technique = this._dataService.GetShinyHuntingTechnique(id);
+            
+            return technique;
+        }
+
         [HttpPost]
         [Route("add-hunt-attempt/{huntId:int}")]
         public int AddShinyCounter(int huntId)
@@ -88,7 +133,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("grab-all-user-pokemon-teams")]
-        public List<ExportPokemonViewModel> ExportAllUserPokemonTeams(int pokemonTeamId)
+        public List<ExportPokemonViewModel> ExportAllUserPokemonTeams()
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {

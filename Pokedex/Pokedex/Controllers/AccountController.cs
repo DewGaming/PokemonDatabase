@@ -171,22 +171,5 @@ namespace Pokedex.Controllers
         {
             return this.RedirectToAction("Index", "Home");
         }
-
-        private User CompareUsers(User existingUser, RegisterViewModel newUser)
-        {
-            PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
-            string passwordHash = passwordHasher.HashPassword(null, newUser.Password);
-            if (existingUser.Username != newUser.Username)
-            {
-                existingUser.Username = newUser.Username;
-            }
-
-            if (existingUser.PasswordHash != passwordHash)
-            {
-                existingUser.PasswordHash = passwordHash;
-            }
-
-            return existingUser;
-        }
     }
 }
