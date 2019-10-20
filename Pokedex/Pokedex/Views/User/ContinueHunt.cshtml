@@ -52,10 +52,14 @@
                         @Model.ShinyHunt.Generation.Games
                     </td>
                 </tr>
-                <tr>
-                    <th>Using Shiny Charm</th>
-                    <td>@(Model.ShinyHunt.HasShinyCharm ? "Yes" : "No")</td>
-                </tr>
+                @if (Model.ShinyHunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                {
+                    <tr>
+                        <th>Using Shiny Charm</th>
+                        <td>@(Model.ShinyHunt.HasShinyCharm ? "Yes" : "No")</td>
+                    </tr>
+                }
+                
                 <tr>
                     <th>Attempts</th>
                     <td>
