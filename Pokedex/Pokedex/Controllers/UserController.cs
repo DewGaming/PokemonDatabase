@@ -134,18 +134,6 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
-        [HttpPost]
-        [Route("update_pokemon_list/{generationId}")]
-        public UpdatePokemonListViewModel UpdatePokemonList(string generationId)
-        {
-            Generation gen = this._dataService.GetGeneration(generationId);
-            UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel(){
-                PokemonList = this._dataService.GetAllPokemon().Where(x => x.Generation.ReleaseDate <= gen.ReleaseDate && !x.Id.Contains('-')).ToList(),
-                Generation = gen,
-            };
-            return pokemonList;
-        }
-
         [Route("complete_shiny_hunt/{huntId:int}")]
         public IActionResult CompleteShinyHunt(int huntId)
         {

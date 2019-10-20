@@ -5,7 +5,7 @@ $('.generationDropDown').on('change', function() {
     var gen5Date = new Date('October 7, 2012');
     
     $.ajax({
-        url: '/update_pokemon_list/' + generationId,
+        url: '/update-pokemon-list/' + generationId,
         method: "POST"
     })
     .done(function(data) {
