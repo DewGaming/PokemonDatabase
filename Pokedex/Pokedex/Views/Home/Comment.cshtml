@@ -27,8 +27,8 @@
             @foreach(var c in Model.TypeOfComment)
             {
                 <div class="radioButton col-md-8">
-                    @Html.RadioButtonFor(x => x.CommentType, c, new { @id = c.Replace(" ", "") })
-                    @Html.Label(c.Replace(" ", ""), c)
+                    @Html.RadioButtonFor(x => x.CommentType, c, new { @id = c.Replace(" ", "").Replace("(", "").Replace(")", "") })
+                    @Html.Label(c.Replace(" ", "").Replace("(", "").Replace(")", ""), c)
                 </div>
             }
         </div>
@@ -39,8 +39,8 @@
             {
                 <div class="radioButton">
                     <div class="col-md-8">
-                        @Html.RadioButtonFor(x => x.CommentedPage, p, new { @id = p.Replace(" ", "") })
-                        @Html.Label(p.Replace(" ", ""), p)
+                        @Html.RadioButtonFor(x => x.CommentedPage, p, new { @id = p.Replace(" ", "").Replace("(", "").Replace(")", "") })
+                        @Html.Label(p.Replace(" ", "").Replace("(", "").Replace(")", ""), p)
                     </div>
                     @if(p == "Pokemon Page")
                     {
