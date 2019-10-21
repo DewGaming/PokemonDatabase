@@ -22,6 +22,7 @@ namespace Pokedex.Controllers
             "Bug",
             "Critique",
             "Feature",
+            "Other",
         };
 
         private readonly List<string> _pageTypes = new List<string>(){
