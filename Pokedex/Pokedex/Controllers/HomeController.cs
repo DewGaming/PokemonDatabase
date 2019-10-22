@@ -249,7 +249,6 @@ namespace Pokedex.Controllers
                 AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
                 {
                     PokemonList = new List<Pokemon>(),
-                    FormList = new List<Form>(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = _appConfig,
                 };
@@ -257,7 +256,6 @@ namespace Pokedex.Controllers
                 foreach(var p in pokemonList)
                 {
                     adminDropdown.PokemonList.Add(p.Pokemon);
-                    adminDropdown.FormList.Add(p.Form);
                 }
 
                 model.AdminDropdown = adminDropdown;

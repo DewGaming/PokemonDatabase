@@ -3,12 +3,10 @@ using Pokedex.DataAccess.Models;
 
 namespace Pokedex.Models
 {
-    public class AdminGenerationTableViewModel
+    public class AdminPokemonViewModel
     {
-        public List<Pokemon> PokemonList { get; set; }
-
         public DropdownViewModel DropdownViewModel { get; set; }
 
-        public AppConfig AppConfig { get; set; }
+        public Pokemon Pokemon { get; set; }
     }
 }
