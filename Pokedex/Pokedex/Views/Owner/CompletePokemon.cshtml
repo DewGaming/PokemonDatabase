@@ -1,0 +1,320 @@
+@model Pokedex.Models.PokemonViewModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = @Model.Pokemon.Name.Replace('_', ' ');
+}
+
+@section styles
+{
+    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.Pokemon.Id + ".png")" />
+}
+
+@section scripts
+{
+    <script src="/js/calculateCaptureRate.js"></script>
+}
+
+<p class="adminButtons">
+    @using (Html.BeginForm())
+    {      
+        <button type="submit" class="btn btn-primary" role="button">Complete Pokemon</button>
+        <a target="_blank" class="btn btn-primary" href="@Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id.Substring(0, Model.Pokemon.Id.IndexOf('-')) })" role="button">Edit Pokemon</a>
+    }
+</p>
+
+<hr>
+
+<div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
+    <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
+        <img title="@Model.Pokemon.Name.Replace('_', ' ')@(@Model.Form != null ? " (" + @Model.Form.Name + ")" : "")" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.Pokemon.Id + ".png")" />
+    </div>
+    <div class="pokemonInfo pokemonData pokemonTables">
+        <h2>Pokemon Data</h2>
+        <table class="pokedexNumber">
+            <tbody>
+                <tr>
+                    <th>Pokemon Name</th>
+                    <td>
+                        @if(Model.Form != null)
+                        {
+                            @(Model.Pokemon.Name + " (" + Model.Form.Name + ")")
+                        }
+                        else
+                        {
+                            @(Model.Pokemon.Name)
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Pokedex Number</th>
+                    @if(Model.Pokemon.Id.Contains('-'))
+                    {
+                        <td>@('#')@Model.Pokemon.Id.Substring(0, Model.Pokemon.Id.IndexOf('-')).PadLeft(3, '0')</td>
+                    }
+                    else
+                    {
+                        <td>@('#')@Model.Pokemon.Id.PadLeft(3, '0')</td>
+                    }
+                </tr>
+                <tr>
+                    <th>Classification</th>
+                    <td>@Model.Pokemon.Classification.Name</td>
+                </tr>
+                <tr>
+                    <th>Height</th>
+                    <td>
+                        @{
+                            var feet = 0;
+                            var inches = (int)Math.Round((@Model.Pokemon.Height / 0.0254m), 0);
+                            while(inches >= 12)
+                            {
+                                feet++;
+                                inches -= 12;
+                            }
+                        }
+                        @feet@("'")@inches.ToString("D2")@('"') (@Model.Pokemon.Height.ToString("0.####") m)
+                    </td>
+                </tr>
+                <tr>
+                    <th>Weight</th>
+                    <td>
+                        @(Math.Round(@Model.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####")) lbs
+                        (@Model.Pokemon.Weight.ToString("0.####") kg)
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @if(Model.SecondaryAbility == null && Model.HiddenAbility == null)
+                        {
+                            @("Ability")
+                        }
+                        else
+                        {
+                            @("Abilities")
+                        }
+                    </th>
+                    <td>
+                        <span title="Description: @Model.PrimaryAbility.Description">
+                            @Model.PrimaryAbility.Name
+                        </span>
+                        @if (@Model.SecondaryAbility != null)
+                        {
+                            <br>
+                            <span title="Description: @Model.SecondaryAbility.Description">
+                                @Model.SecondaryAbility.Name
+                            </span>
+                        }
+                        @if (@Model.HiddenAbility != null)
+                        {
+                            <br>
+                            <span title="Description: @Model.HiddenAbility.Description">
+                                @Model.HiddenAbility.Name (Hidden)
+                            </span>
+                        }
+                        @if (@Model.SpecialEventAbility != null)
+                        {
+                            <br>
+                            <span title="Description: @Model.SpecialEventAbility.Description">
+                                @Model.SpecialEventAbility.Name (Special Ability)
+                            </span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gender Ratio</th>
+                    <td>
+                        @if (Model.Pokemon.GenderRatio.MaleRatio == 0 && Model.Pokemon.GenderRatio.FemaleRatio == 0)
+                        {
+                            @("Genderless");
+                        }
+                        else
+                        {
+                            if (Model.Pokemon.GenderRatio.FemaleRatio == 0)
+                            {
+                                <span class="maleRatio">@Model.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
+                            }
+                            else if (Model.Pokemon.GenderRatio.MaleRatio == 0)
+                            {
+                                <span class="femaleRatio">@Model.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                            }
+                            else
+                            {
+                                <span class="maleRatio">@Model.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
+                                @("/")
+                                <span class="femaleRatio">@Model.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                            }
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        @if (Model.Pokemon.Generation.Games.IndexOf('/') > -1)
+                        {
+                            @("Games of Origin");
+                        }
+                        else
+                        {
+                            @("Game of Origin");
+                        }
+                    </th>
+                    <td>
+                        @Model.Pokemon.Generation.Games
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <div class="pokemonInfo typing pokemonTables">
+            <h2>Typing</h2>
+            <div class="pokemon-type type-icon type-@Model.PrimaryType.Name.ToLower()">@Model.PrimaryType.Name</div>
+            @if(@Model.SecondaryType != null)
+            {
+                <div class="pokemon-type type-icon type-@Model.SecondaryType.Name.ToLower()">@Model.SecondaryType.Name</div>
+            }
+        </div>
+    </div>
+    <div class="pokemonInfo pokemonTraining pokemonTables">
+        <h2>Training</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>EV Yield</th>
+                    <td>
+                        @if (Model.EVYields.Health != 0)
+                        {
+                            @Model.EVYields.Health@(" Health");
+                            <br>
+                        }
+                        @if (Model.EVYields.Attack != 0)
+                        {
+                            @Model.EVYields.Attack@(" Attack");
+                            <br>
+                        }
+                        @if (Model.EVYields.Defense != 0)
+                        {
+                            @Model.EVYields.Defense@(" Defense");
+                            <br>
+                        }
+                        @if (Model.EVYields.SpecialAttack != 0)
+                        {
+                            @Model.EVYields.SpecialAttack@(" Sp. Attack");
+                            <br>
+                        }
+                        @if (Model.EVYields.SpecialDefense != 0)
+                        {
+                            @Model.EVYields.SpecialDefense@(" Sp. Defense");
+                            <br>
+                        }
+                        @if (Model.EVYields.Speed != 0)
+                        {
+                            @Model.EVYields.Speed@(" Speed");
+                            <br>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Catch Rate</th>
+                    <td class="catchRate" id=@Model.Pokemon.CaptureRate.CatchRate></td>
+                </tr>
+                <tr>
+                    <th>Experience Growth</th>
+                    <td>
+                        @Model.Pokemon.ExperienceGrowth.Name
+                        <br>
+                        (@Model.Pokemon.ExperienceGrowth.ExpPointTotal XP)
+                    </td>
+                </tr>
+                <tr>
+                    <th>Experience Yield</th>
+                    <td>@Model.Pokemon.ExpYield</td>
+                </tr>
+                <tr>
+                    <th>Base Happiness</th>
+                    <td>@Model.Pokemon.BaseHappiness.Happiness</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pokemonInfo pokemonStats pokemonTables">
+        <h2>Base Stats</h2>
+        <table class="baseStatTable">
+            <tbody>
+                <tr>
+                    <th class="Health" scope="col">Health</th>
+                    <td class="statData"><div class="health statBar" style="width: @(@Model.BaseStats.Health * 100 / 255m)%;"></div></td>
+                    <td class="Health">@Model.BaseStats.Health</td>
+                </tr>
+                <tr>
+                    <th class="Attack" scope="col">Attack</th>
+                    <td class="statData"><div class="attack statBar" style="width: @(@Model.BaseStats.Attack * 100 / 255m)%;"></div></td>
+                    <td class="Attack">@Model.BaseStats.Attack</td>
+                </tr>
+                <tr>
+                    <th class="Defense" scope="col">Defense</th>
+                    <td class="statData"><div class="defense statBar" style="width: @(@Model.BaseStats.Defense * 100 / 255m)%;"></div></td>
+                    <td class="Defense">@Model.BaseStats.Defense</td>
+                </tr>
+                <tr>
+                    <th class="SpecialAttack" scope="col">Sp. Attack</th>
+                    <td class="statData"><div class="specialAttack statBar" style="width: @(@Model.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
+                    <td class="SpecialAttack">@Model.BaseStats.SpecialAttack</td>
+                </tr>
+                <tr>
+                    <th class="SpecialDefense" scope="col">Sp. Defense</th>
+                    <td class="statData"><div class="specialDefense statBar" style="width: @(@Model.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
+                    <td class="SpecialDefense">@Model.BaseStats.SpecialDefense</td>
+                </tr>
+                <tr>
+                    <th class="Speed" scope="col">Speed</th>
+                    <td class="statData"><div class="speed statBar" style="width: @(@Model.BaseStats.Speed * 100 / 255m)%;"></div></td>
+                    <td class="Speed">@Model.BaseStats.Speed</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="baseStatTotal" scope="col">Total</th>
+                    <td colspan="2" class="baseStatTotal"><b>@Model.BaseStats.StatTotal</b></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
+        <div class="pokemonBreeding">
+            <h2>Breeding</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        @if (Model.SecondaryEggGroup != null)
+                        {
+                            <th>Egg Groups</th>
+                        }
+                        else
+                        {
+                            <th>Egg Group</th>
+                        }
+                        <td>
+                            @Model.PrimaryEggGroup.Name
+                            @if (Model.SecondaryEggGroup != null)
+                            {
+                                <br>
+                                @Model.SecondaryEggGroup.Name
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                       <th>Egg Cycles</th>
+                       <td>
+                           @Model.Pokemon.EggCycle.CycleCount Cycles
+                           <br>
+                           (@(Model.Pokemon.EggCycle.CycleCount * 257)-@(Model.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

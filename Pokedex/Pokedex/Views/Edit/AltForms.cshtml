@@ -1,6 +1,7 @@
 @model Pokedex.Models.DropdownViewModel;
 @{
     Layout = "_Layout";
+    bool everythingAdded;
 }
 
 @section styles
@@ -20,6 +21,7 @@
     <div class="grid-container">
         @foreach(var item in Model.AllPokemon.AllPokemon)
         {
+            everythingAdded = Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == item.Id);
             Model.Pokemon = item;
             <div class="@item.Name @(item.IsComplete ? "" : "incomplete")">
                 @if(item.IsComplete)
@@ -45,7 +47,7 @@
                     <div class="btn-group">
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
                         <ul class="dropdown-menu dropdown-menu-right">
-                            @if(!Model.Pokemon.IsComplete)
+                            @if(!everythingAdded)
                             {
                                 <span class="adminMenuTitle">Add To Pokemon</span>
                             }
@@ -69,7 +71,7 @@
                             {
                                 <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Add", new { pokemonId = Model.Pokemon.Id }))">Add EV Yields</a></li>
                             }
-                            @if(!Model.Pokemon.IsComplete)
+                            @if(!everythingAdded)
                             {
                                 <hr class="adminOptionSeparator">
                             }
@@ -98,6 +100,12 @@
                             @if(Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
                             {
                                 <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit EV Yields</a></li>
+                            }
+                            @if(everythingAdded && !Model.Pokemon.IsComplete && User.IsInRole("Owner"))
+                            {
+                                <hr class="adminOptionSeparator">
+                                <span class="adminMenuTitle">Complete Pokemon</span>
+                                <li><a class="dropdown-item" href="@(Url.Action("CompletePokemon", "Owner", new { pokemonId = Model.Pokemon.Id }))">Review</a></li>
                             }
                             @if(Model.Pokemon.IsComplete)
                             {

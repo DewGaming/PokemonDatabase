@@ -61,6 +61,7 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Comments", "Owner");
         }
 
+        [HttpGet]
         [Route("complete_pokemon/{pokemonId}")]
         public IActionResult CompletePokemon(string pokemonId)
         {
@@ -71,11 +72,61 @@ namespace Pokedex.Controllers
                    this._dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
                    this._dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
 
-            Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(pokemonId);
+            Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
+
+            if(PokemonIsComplete && !pokemon.IsComplete)
+            {
+                BaseStat baseStat = this._dataService.GetBaseStat(pokemon.Id);
+                EVYield evYield = this._dataService.GetEVYield(pokemon.Id);
+                List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
+                PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
+                PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
+                PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
+
+                PokemonViewModel model = new PokemonViewModel()
+                {
+                    Pokemon = pokemon,
+                    BaseStats = baseStat,
+                    EVYields = evYield,
+                    PrimaryType = pokemonTypes.PrimaryType,
+                    SecondaryType = pokemonTypes.SecondaryType,
+                    PrimaryAbility = pokemonAbilities.PrimaryAbility,
+                    SecondaryAbility = pokemonAbilities.SecondaryAbility,
+                    HiddenAbility = pokemonAbilities.HiddenAbility,
+                    PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
+                    SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
+                    AppConfig = this._appConfig,
+                };
+
+                if(pokemonId.Contains('-'))
+                {
+                    model.Form = this._dataService.GetFormByAltFormId(pokemonId);
+                }
+
+                return this.View(model);
+            }
+            else
+            {
+                return this.RedirectToAction("Pokemon", "Admin");   
+            }
+        }
+
+        [HttpPost]
+        [Route("complete_pokemon/{pokemonId}")]
+        public IActionResult CompletePokemon(Pokemon pokemon, string pokemonId)
+        {
+            pokemon = this._dataService.GetPokemonById(pokemonId);
             pokemon.IsComplete = true;
-            this._dataService.UpdatePokemon(pokemon);    
-            
-            return this.RedirectToAction("Pokemon", "Admin");
+            this._dataService.UpdatePokemon(pokemon);
+
+            if (!pokemon.Id.Contains('-'))
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
+            }
         }
 
         [Route("shiny_hunting_counter/{id:int}")]
