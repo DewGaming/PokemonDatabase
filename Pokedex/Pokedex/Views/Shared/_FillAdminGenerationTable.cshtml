@@ -20,7 +20,7 @@
         <div class="description">
             @if(p.IsComplete)
             {
-                <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Id.PadLeft(3) @p.Name.Replace(' ', '_')</a>
+                <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Id.PadLeft(3, '0') @p.Name.Replace(' ', '_')</a>
             }
             else
             {
