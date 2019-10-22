@@ -34,7 +34,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.ReleaseDate, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.ReleaseDate, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+            @Html.TextBoxFor(x => x.ReleaseDate, new { @class = "form-control col-md-8", @type = "date" })
             @Html.ValidationMessageFor(x => x.ReleaseDate)
         </div>
 
