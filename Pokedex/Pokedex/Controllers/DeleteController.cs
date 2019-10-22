@@ -16,6 +16,14 @@ namespace Pokedex.Controllers
             // Instantiate an instance of the data service.
             this._dataService = new DataService(dataContext);
         }
+        
+        [Route("delete_reviewed_pokemon/{id:int}")]
+        public IActionResult ReviewedPokemon(int id)
+        {
+            this._dataService.DeleteReviewedPokemon(id);
+
+            return this.RedirectToAction("ReviewedPokemon", "Owner");
+        }
 
         [HttpGet]
         [Route("delete_generation/{id}")]

@@ -62,8 +62,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("complete_pokemon/{pokemonId}")]
-        public IActionResult CompletePokemon(string pokemonId)
+        [Route("review_pokemon/{pokemonId}")]
+        public IActionResult ReviewPokemon(string pokemonId)
         {
             // Ensuring that the pokemon really has all of these added.
             bool PokemonIsComplete = this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
@@ -112,21 +112,37 @@ namespace Pokedex.Controllers
         }
 
         [HttpPost]
-        [Route("complete_pokemon/{pokemonId}")]
-        public IActionResult CompletePokemon(Pokemon pokemon, string pokemonId)
+        [Route("review_pokemon/{pokemonId}")]
+        public IActionResult ReviewPokemon(Pokemon pokemon, string pokemonId)
         {
-            pokemon = this._dataService.GetPokemonById(pokemonId);
-            pokemon.IsComplete = true;
-            this._dataService.UpdatePokemon(pokemon);
+            ReviewedPokemon reviewedPokemon = this._dataService.GetReviewedPokemonByPokemonId(pokemonId);
+            this._dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemonId });
 
-            if (!pokemon.Id.Contains('-'))
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [Route("reviewed_pokemon")]
+        public IActionResult ReviewedPokemon()
+        {
+            List<ReviewedPokemon> model = this._dataService.GetAllReviewedPokemon();
+
+            return this.View(model);
+        }
+
+        [Route("complete_reviewed_pokemon")]
+        public IActionResult CompleteReviewedPokemon()
+        {
+            List<ReviewedPokemon> reviewedPokemonList = this._dataService.GetAllReviewedPokemon();
+            Pokemon pokemon;
+            foreach(var r in reviewedPokemonList)
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                pokemon = this._dataService.GetPokemonByIdNoIncludes(r.PokemonId);
+                pokemon.IsComplete = true;
+                this._dataService.UpdatePokemon(pokemon);
+                this._dataService.DeleteReviewedPokemon(r.Id);
             }
-            else
-            {
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
-            }
+
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [Route("shiny_hunting_counter/{id:int}")]

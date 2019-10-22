@@ -87,9 +87,16 @@ namespace Pokedex.Controllers
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
                     PokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => !x.IsComplete).ToList(),
+                    ReviewedPokemon = new List<ReviewedPokemon>(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = _appConfig,
                 };
+
+                foreach(var r in this._dataService.GetAllReviewedPokemon())
+                {
+                    model.PokemonList.Remove(model.PokemonList.Find(x => x.Id == r.PokemonId));
+                    model.ReviewedPokemon.Add(r);
+                }
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }

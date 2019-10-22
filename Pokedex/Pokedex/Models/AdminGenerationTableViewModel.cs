@@ -7,6 +7,8 @@ namespace Pokedex.Models
     {
         public List<Pokemon> PokemonList { get; set; }
 
+        public List<ReviewedPokemon> ReviewedPokemon { get; set; }
+
         public DropdownViewModel DropdownViewModel { get; set; }
 
         public AppConfig AppConfig { get; set; }

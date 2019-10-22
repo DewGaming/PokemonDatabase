@@ -10,7 +10,8 @@
         {
             @if(everythingAdded)
             {
-                <li><a class="dropdown-item" href="@(Url.Action("CompletePokemon", "Owner", new { pokemonId = Model.Pokemon.Id }))">Complete Pokemon</a></li>
+                <span class="adminMenuTitle">Review Pokemon</span>
+                <li><a class="dropdown-item" href="@(Url.Action("ReviewPokemon", "Owner", new { pokemonId = Model.Pokemon.Id }))">Review Info</a></li>
             }
             else
             {
@@ -66,18 +67,6 @@
         @if(Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
         {
             <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit EV Yields</a></li>
-        }
-        @if(User.IsInRole("Owner") && 
-            Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id) &&
-            Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id) &&
-            Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) &&
-            Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id) &&
-            Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id) &&
-            !Model.Pokemon.IsComplete)
-        {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Complete Pokemon</span>
-            <li><a class="dropdown-item" href="@(Url.Action("CompletePokemon", "Admin", new { pokemonId = Model.Pokemon.Id }))">Mark as Complete</a></li>
         }
         @if(Model.Pokemon.IsComplete)
         {

@@ -1297,6 +1297,21 @@ namespace Pokedex
             return this._dataContext.GenderRatios.ToList();
         }
 
+        public List<ReviewedPokemon> GetAllReviewedPokemon()
+        {
+            return this._dataContext.ReviewedPokemons.ToList();
+        }
+
+        public ReviewedPokemon GetReviewedPokemon(int id)
+        {
+            return this._dataContext.ReviewedPokemons.ToList().Find(x => x.Id == id);
+        }
+
+        public ReviewedPokemon GetReviewedPokemonByPokemonId(string id)
+        {
+            return this._dataContext.ReviewedPokemons.ToList().Find(x => x.PokemonId == id);
+        }
+
         public List<EvolutionMethod> GetEvolutionMethods()
         {
             return this._dataContext.EvolutionMethods.OrderBy(x => x.Name).ToList();
@@ -1457,6 +1472,12 @@ namespace Pokedex
         public void AddShinyHunt(ShinyHunt shinyHunt)
         {
             this._dataContext.ShinyHunts.Add(shinyHunt);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddReviewedPokemon(ReviewedPokemon reviewedPokemon)
+        {
+            this._dataContext.ReviewedPokemons.Add(reviewedPokemon);
             this._dataContext.SaveChanges();
         }
 
@@ -1806,6 +1827,13 @@ namespace Pokedex
         {
             Form form = this.GetForm(id);
             this._dataContext.Forms.Remove(form);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteReviewedPokemon(int id)
+        {
+            ReviewedPokemon reviewedPokemon = this.GetReviewedPokemon(id);
+            this._dataContext.ReviewedPokemons.Remove(reviewedPokemon);
             this._dataContext.SaveChanges();
         }
 
