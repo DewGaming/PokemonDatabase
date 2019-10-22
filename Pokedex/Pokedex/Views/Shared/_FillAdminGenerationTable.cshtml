@@ -129,7 +129,7 @@
                     {
                         <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = p.Id }))">Edit Alternate Forms</a></li>
                     }
-                    @if((Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId != p.Id) || Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == p.Id && x.SpecialEventAbilityId == null)) && !p.Id.Contains('-'))
+                    @if((!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId != p.Id) || Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == p.Id && x.SpecialEventAbilityId == null)) && !p.Id.Contains('-'))
                     {
                         <hr class="adminOptionSeparator">
                         <span class="adminMenuTitle">Other</span>
