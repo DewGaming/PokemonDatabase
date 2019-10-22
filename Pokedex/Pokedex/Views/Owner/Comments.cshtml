@@ -1,7 +1,7 @@
 @model IEnumerable<Pokedex.DataAccess.Models.Comment>;
 @{
     Layout = "_Layout";
-    List<string> commentTypes = new List<string>() { "Bug", "Critique", "Feature" };
+    List<string> commentTypes = new List<string>() { "Bug", "Critique", "Feature", "Other" };
     string GrabCommentCount(string pageName)
     {
         string commentTotalString = string.Empty;
@@ -47,9 +47,9 @@
 <div class="pageButtons">
     @foreach(var type in commentTypes)
     {
-        <button class="@(type.ToLower())" onclick="lookupPage('@(type.ToLower())')">@(type)s@(GrabCommentCount(@type))</button>
+        <button class="@(type.ToLower())" onclick="lookupPage('@(type.ToLower())')">@(type)s<br>@(GrabCommentCount(@type))</button>
     }
-    <button class="completedComments" onclick="lookupPage('completedComments')">Completed@(GrabCompleteCommentCount())</button>
+    <button class="completedComments" onclick="lookupPage('completedComments')">Completed<br>@(GrabCompleteCommentCount())</button>
 </div>
 @foreach(var type in commentTypes)
 {
