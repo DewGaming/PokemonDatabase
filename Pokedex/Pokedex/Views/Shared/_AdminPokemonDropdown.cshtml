@@ -79,43 +79,46 @@
             <span class="adminMenuTitle">Complete Pokemon</span>
             <li><a class="dropdown-item" href="@(Url.Action("CompletePokemon", "Admin", new { pokemonId = Model.Pokemon.Id }))">Mark as Complete</a></li>
         }
-        @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || !Model.Pokemon.Id.Contains('-'))
+        @if(Model.Pokemon.IsComplete)
         {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Add Relations</span>
-        }
-        @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
-        {
-            <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Pre-Evolution</a></li>
-        }
-        @if(!Model.Pokemon.Id.Contains('-'))
-        {
-            <li><a class="dropdown-item" href="@(Url.Action("AltForm", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Alternate Form</a></li>
-        }
-        @if(Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || (Model.DropdownViewModel.AllPokemon.AllAltForms.Exists(x => x.OriginalPokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-')))
-        {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Edit Relations</span>
-        }
-        @if(Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
-        {
-            <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Pre-Evolution</a></li>
-        }
-        @if(Model.DropdownViewModel.AllPokemon.AllAltForms.Exists(x => x.OriginalPokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
-        {
-            <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Alternate Forms</a></li>
-        }
-        @if((!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId != Model.Pokemon.Id) || Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null)) && !Model.Pokemon.Id.Contains('-'))
-        {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Other</span>
-            @if(Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null) && !Model.Pokemon.Id.Contains('-'))
+            @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || !Model.Pokemon.Id.Contains('-'))
             {
-                <li><a class="dropdown-item" href="@(Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Special Event Ability</a></li>
+                <hr class="adminOptionSeparator">
+                <span class="adminMenuTitle">Add Relations</span>
             }
-            @if(!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+            @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
             {
-                <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
+                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Pre-Evolution</a></li>
+            }
+            @if(!Model.Pokemon.Id.Contains('-'))
+            {
+                <li><a class="dropdown-item" href="@(Url.Action("AltForm", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Alternate Form</a></li>
+            }
+            @if(Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || (Model.DropdownViewModel.AllPokemon.AllAltForms.Exists(x => x.OriginalPokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-')))
+            {
+                <hr class="adminOptionSeparator">
+                <span class="adminMenuTitle">Edit Relations</span>
+            }
+            @if(Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
+            {
+                <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Pre-Evolution</a></li>
+            }
+            @if(Model.DropdownViewModel.AllPokemon.AllAltForms.Exists(x => x.OriginalPokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+            {
+                <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Alternate Forms</a></li>
+            }
+            @if((!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) || Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null)) && !Model.Pokemon.Id.Contains('-'))
+            {
+                <hr class="adminOptionSeparator">
+                <span class="adminMenuTitle">Other</span>
+                @if(Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null) && !Model.Pokemon.Id.Contains('-'))
+                {
+                    <li><a class="dropdown-item" href="@(Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Special Event Ability</a></li>
+                }
+                @if(!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+                {
+                    <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
+                }
             }
         }
     </ul>
