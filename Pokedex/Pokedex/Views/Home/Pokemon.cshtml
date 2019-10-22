@@ -1,7 +1,7 @@
-@model IEnumerable<Pokedex.Models.PokemonViewModel>
+@model Pokedex.Models.AdminPokemonViewModel
 @{
     Layout = "_Layout";
-    ViewBag.Title = @Model.First().Pokemon.Name.Replace('_', ' ');
+    ViewBag.Title = @Model.PokemonList.First().Pokemon.Name.Replace('_', ' ');
     string style = "";
 }
 
@@ -10,7 +10,15 @@
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
-    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.FirstOrDefault().AppConfig.WebUrl + "/images/pokemon/" + @Model.FirstOrDefault().Pokemon.Id + ".png")" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl + "/images/pokemon/" + @Model.PokemonList.FirstOrDefault().Pokemon.Id + ".png")" />
+    @if(User.IsInRole("Owner"))
+    {
+        <style>
+            .btn-group {
+                margin: -10px 0 10px;
+            }
+        </style>
+    }
 }
 
 @section scripts
@@ -25,11 +33,11 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">← @Model.First().SurroundingPokemon[0].Name.Replace('_', ' ')</a>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name.Replace('_', ' ')</a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">
-                            <img class="lightshadowed" title="@Model.First().SurroundingPokemon[0].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[0].Id + ".png")" />
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">
+                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name.Replace('_', ' ')" src="@Url.Content(@Model.PokemonList.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.PokemonList.First().SurroundingPokemon[0].Id + ".png")" />
                         </a>
                     </td>
                 </tr>
@@ -39,12 +47,12 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">
-                            <img class="lightshadowed" title="@Model.First().SurroundingPokemon[1].Name.Replace('_', ' ')" src="@Url.Content(@Model.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.First().SurroundingPokemon[1].Id + ".png")" />
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">
+                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name.Replace('_', ' ')" src="@Url.Content(@Model.PokemonList.First().AppConfig.WebUrl + "/images/pokemon/" + @Model.PokemonList.First().SurroundingPokemon[1].Id + ".png")" />
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">@Model.First().SurroundingPokemon[1].Name.Replace('_', ' ') →</a>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name.Replace('_', ' ') →</a>
                     </td>
                 </tr>
             </table>
@@ -54,17 +62,17 @@
 
 <hr>
 
-@foreach(var item in Model)
+@foreach(var item in Model.PokemonList)
 {
     <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name.Replace('_', ' ')@(@item.Form != null ? " (" + @item.Form.Name + ")" : "")" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
-            @if(Model.Count() > 1)
+            @if(Model.PokemonList.Count() > 1)
             {
                 <div class="differentForms">
                     <h2>Different Forms</h2>
                     <div class="formButtons">
-                        @foreach(var button in Model.Where(x => x.Pokemon.Id != item.Pokemon.Id))
+                        @foreach(var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                         {
                             string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
                             <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', '@iconLink', '@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")')">
@@ -76,6 +84,10 @@
             }
         </div>
         <div class="pokemonInfo pokemonData pokemonTables">
+            @if(User.IsInRole("Owner"))
+            {
+                @Html.Partial("_FillAdminPokemonTable", Model.AdminDropdown, new ViewDataDictionary(this.ViewData) { { "PokemonId", item.Pokemon.Id } })
+            }
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
                 <tbody>

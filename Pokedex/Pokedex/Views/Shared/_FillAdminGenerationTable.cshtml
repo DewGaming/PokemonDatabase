@@ -103,10 +103,13 @@
                         <span class="adminMenuTitle">Complete Pokemon</span>
                         <li><a class="dropdown-item" href="@(Url.Action("CompletePokemon", "Admin", new { pokemonId = p.Id }))">Mark as Complete</a></li>
                     }
-                    @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                    @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == p.Id) || !p.Id.Contains('-'))
                     {
                         <hr class="adminOptionSeparator">
                         <span class="adminMenuTitle">Add Relations</span>
+                    }
+                    @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                    {
                         <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Add", new { pokemonId = p.Id }))">Add Pre-Evolution</a></li>
                     }
                     @if(!p.Id.Contains('-'))

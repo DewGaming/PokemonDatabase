@@ -171,8 +171,8 @@ namespace Pokedex.Controllers
             PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
             List<Pokemon> surroundingPokemon = this._dataService.GetSurroundingPokemon(pokemon.Id);
 
-            List<PokemonViewModel> model = new List<PokemonViewModel>();
-            model.Add(new PokemonViewModel()
+            List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
+            pokemonList.Add(new PokemonViewModel()
             {
                 Pokemon = pokemon,
                 BaseStats = baseStat,
@@ -221,8 +221,46 @@ namespace Pokedex.Controllers
                         AppConfig = this._appConfig,
                     };
 
-                    model.Add(pokemonModel);
+                    pokemonList.Add(pokemonModel);
                 }
+            }
+
+            AdminPokemonViewModel model = new AdminPokemonViewModel()
+            {
+                PokemonList = pokemonList,
+            };
+
+            if(User.IsInRole("Owner"))
+            {
+                AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
+                    AllAltForms = this._dataService.GetAllAltForms(),
+                    AllEvolutions = this._dataService.GetEvolutions(),
+                    AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                    AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                    AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                    AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
+                    AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
+                    AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
+                };
+                DropdownViewModel dropdownViewModel = new DropdownViewModel(){
+                    AllPokemon = allPokemon,
+                    AppConfig = this._appConfig,
+                };
+                AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
+                {
+                    PokemonList = new List<Pokemon>(),
+                    FormList = new List<Form>(),
+                    DropdownViewModel = dropdownViewModel,
+                    AppConfig = _appConfig,
+                };
+
+                foreach(var p in pokemonList)
+                {
+                    adminDropdown.PokemonList.Add(p.Pokemon);
+                    adminDropdown.FormList.Add(p.Form);
+                }
+
+                model.AdminDropdown = adminDropdown;
             }
 
             return this.View(model);
