@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Pokedex.Models
 {
-    public class AdminPokemonViewModel
+    public class AdminPokemonDropdownViewModel
     {
         public List<PokemonViewModel> PokemonList { get; set; }
 

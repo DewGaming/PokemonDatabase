@@ -18,6 +18,40 @@ function lookupPokemon(pageName, iconLink, pokemonName) {
   $('.pageTitle').text(pokemonName + " | Pokemon Database");
 }
 
+function lookupIncompletePokemon() {
+  $('button').each(function() {
+    $(this).removeClass('active');
+  });
+
+  $('.pokemonList').removeClass('active');
+  $('.pokemonList > .grid-container').empty();
+
+  $('.grid-container').load('/get-incomplete-pokemon-admin/', function (){
+    $.each($('.grid-container .pokemonName'), function(index, item)
+    {
+      if($(item).text().includes('_'))
+      {
+        $(item).text($(item).text().replace('_', ' '));
+      }
+    });
+
+    $('.pokemonList').addClass('active');
+  });
+  
+  $('.pageButtons').hide();
+  $('.incompletePokemon').hide();
+  $('.allPokemon').show();
+};
+
+function lookupAllPokemon() {
+  $('.pokemonList > .grid-container').empty();
+  $('.pokemonList').removeClass('active');
+  
+  $('.pageButtons').show();
+  $('.incompletePokemon').show();
+  $('.allPokemon').hide();
+};
+
 function lookupGeneration(generationId) {
   if(!$('.active').is($('#Generation' + generationId)))
   {

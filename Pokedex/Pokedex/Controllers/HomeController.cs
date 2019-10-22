@@ -225,7 +225,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            AdminPokemonViewModel model = new AdminPokemonViewModel()
+            AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
             {
                 PokemonList = pokemonList,
             };

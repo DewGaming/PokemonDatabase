@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
@@ -31,16 +31,6 @@ namespace Pokedex.Controllers
             List<string> model = this._dataService.GetGenerations().Select(x => x.Id).Where(x => x.IndexOf('-') < 0).OrderBy(x => x).ToList();
 
             return this.View(model);
-        }
-
-        [Route("complete_pokemon/pokemonId")]
-        public IActionResult CompletePokemon(string pokemonId)
-        {
-            Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
-            pokemon.IsComplete = true;
-            this._dataService.UpdatePokemon(pokemon);
-
-            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [Route("generation")]

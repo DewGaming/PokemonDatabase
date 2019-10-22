@@ -63,6 +63,42 @@ namespace Pokedex.Controllers
             }
         }
 
+        [Route("get-incomplete-pokemon-admin/")]
+        public IActionResult GetPokemonByGenerationAdmin()
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
+                    AllAltForms = this._dataService.GetAllAltForms(),
+                    AllEvolutions = this._dataService.GetEvolutions(),
+                    AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                    AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                    AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                    AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
+                    AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
+                    AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
+                };
+
+                DropdownViewModel dropdownViewModel = new DropdownViewModel(){
+                    AllPokemon = allPokemon,
+                    AppConfig = this._appConfig,
+                };
+
+                AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
+                {
+                    PokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => !x.IsComplete).ToList(),
+                    DropdownViewModel = dropdownViewModel,
+                    AppConfig = _appConfig,
+                };
+
+                return this.PartialView("_FillAdminGenerationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+        }
+
         [HttpPost]
         [Route("get-shiny-hunting-technique")]
         public ShinyHuntingTechnique GetShinyHuntTechnique(int id)

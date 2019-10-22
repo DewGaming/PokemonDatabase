@@ -11,12 +11,19 @@
 @section scripts
 {
     <script src="/js/pageLookup.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function() {
+            $('.allPokemon').hide();
+        });
+    </script>
 }
 
 <p class="adminButtons">
     @if(User.IsInRole("Owner"))
     {
         <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokemon</a>
+        <button class="btn btn-primary incompletePokemon" onclick="lookupIncompletePokemon()">View Incomplete Pokemon</button>
+        <button class="btn btn-primary allPokemon" onclick="lookupAllPokemon()">View All Pokemon</button>
     }
 </p>
 <div class="pageButtons">
