@@ -59,7 +59,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Error");
+                return this.RedirectToAction("Index", "Home");
             }
         }
 
