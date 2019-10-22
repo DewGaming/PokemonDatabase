@@ -16,19 +16,19 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Id, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Id, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+            @Html.EditorFor(x => x.Id, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Id)
         </div>
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Games, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Games, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+            @Html.EditorFor(x => x.Games, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Games)
         </div>
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Abbreviation, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Abbreviation, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+            @Html.EditorFor(x => x.Abbreviation, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Abbreviation)
         </div>
 

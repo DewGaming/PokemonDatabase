@@ -45,7 +45,7 @@
                     @if(p == "Pokemon Page")
                     {
                         <div class="col-md-3">
-                            @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
                         </div>
                     }
                 </div>
@@ -54,7 +54,7 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.Name)
-            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
         </div>
 
         <p>

@@ -16,7 +16,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Type, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Type, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+            @Html.EditorFor(x => x.Type, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Type)
         </div>
 

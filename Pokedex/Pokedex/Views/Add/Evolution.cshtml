@@ -30,7 +30,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.EvolutionDetails, "Evolution Details (If Any)", new { @class = "col-md-3" })
-            @Html.EditorFor(x => x.EvolutionDetails, new { htmlAttributes = new { @class = "form-control col-md-8" } })
+            @Html.EditorFor(x => x.EvolutionDetails, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.EvolutionDetails)
         </div>
 
