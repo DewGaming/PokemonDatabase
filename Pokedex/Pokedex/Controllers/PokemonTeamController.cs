@@ -32,7 +32,7 @@ namespace Pokedex.Controllers
         public IActionResult CreateTeam()
         {
             CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel(){
-                AllGenerations = this._dataService.GetGenerations(),
+                AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
                 UserId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
             };
             
@@ -46,7 +46,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel(){
-                    AllGenerations = this._dataService.GetGenerations(),
+                    AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
                     UserId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
                 };
             
