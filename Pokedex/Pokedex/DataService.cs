@@ -354,7 +354,7 @@ namespace Pokedex
             return pokemonList;
         }
 
-        public List<PokemonTeam> GetAllPokemonTeams(string username)
+        public List<PokemonTeam> GetPokemonTeams()
         {
             return this._dataContext.PokemonTeams
                 .Include(x => x.Generation)
@@ -401,77 +401,22 @@ namespace Pokedex
                     .Include("SixthPokemon.BattleItem")
                     .Include("SixthPokemon.Nature")
                 .Include(x => x.User)
-                .Where(x => x.User.Username == username).ToList();
+                .ToList();
+        }
+
+        public List<PokemonTeam> GetAllPokemonTeams(string username)
+        {
+            return this.GetPokemonTeams().Where(x => x.User.Username == username).ToList();
         }
 
         public PokemonTeam GetPokemonTeam(int id)
         {
-            return this._dataContext.PokemonTeams
-                .Include(x => x.Generation)
-                .Include(x => x.FirstPokemon)
-                    .Include("FirstPokemon.Pokemon")
-                        .Include("FirstPokemon.Pokemon.Generation")
-                    .Include("FirstPokemon.Ability")
-                    .Include("FirstPokemon.PokemonTeamEV")
-                    .Include("FirstPokemon.PokemonTeamIV")
-                .Include(x => x.SecondPokemon)
-                    .Include("SecondPokemon.Pokemon")
-                        .Include("SecondPokemon.Pokemon.Generation")
-                    .Include("SecondPokemon.Ability")
-                    .Include("SecondPokemon.PokemonTeamEV")
-                    .Include("SecondPokemon.PokemonTeamIV")
-                .Include(x => x.ThirdPokemon)
-                    .Include("ThirdPokemon.Pokemon")
-                        .Include("ThirdPokemon.Pokemon.Generation")
-                    .Include("ThirdPokemon.Ability")
-                    .Include("ThirdPokemon.PokemonTeamEV")
-                    .Include("ThirdPokemon.PokemonTeamIV")
-                .Include(x => x.FourthPokemon)
-                    .Include("FourthPokemon.Pokemon")
-                        .Include("FourthPokemon.Pokemon.Generation")
-                    .Include("FourthPokemon.Ability")
-                    .Include("FourthPokemon.PokemonTeamEV")
-                    .Include("FourthPokemon.PokemonTeamIV")
-                .Include(x => x.FifthPokemon)
-                    .Include("FifthPokemon.Pokemon")
-                        .Include("FifthPokemon.Pokemon.Generation")
-                    .Include("FifthPokemon.Ability")
-                    .Include("FifthPokemon.PokemonTeamEV")
-                    .Include("FifthPokemon.PokemonTeamIV")
-                .Include(x => x.SixthPokemon)
-                    .Include("SixthPokemon.Pokemon")
-                        .Include("SixthPokemon.Pokemon.Generation")
-                    .Include("SixthPokemon.Ability")
-                    .Include("SixthPokemon.PokemonTeamEV")
-                    .Include("SixthPokemon.PokemonTeamIV")
-                .Include(x => x.User)
-                .ToList()
-                .Find(x => x.Id == id);
+            return this.GetPokemonTeams().Find(x => x.Id == id);
         }
 
         public List<PokemonTeam> GetPokemonTeamsByUserId(int id)
         {
-            return this._dataContext.PokemonTeams
-                .Include(x => x.Generation)
-                .Include(x => x.FirstPokemon)
-                    .Include("FirstPokemon.Pokemon")
-                        .Include("FirstPokemon.Pokemon.Generation")
-                .Include(x => x.SecondPokemon)
-                    .Include("SecondPokemon.Pokemon")
-                        .Include("SecondPokemon.Pokemon.Generation")
-                .Include(x => x.ThirdPokemon)
-                    .Include("ThirdPokemon.Pokemon")
-                        .Include("ThirdPokemon.Pokemon.Generation")
-                .Include(x => x.FourthPokemon)
-                    .Include("FourthPokemon.Pokemon")
-                        .Include("FourthPokemon.Pokemon.Generation")
-                .Include(x => x.FifthPokemon)
-                    .Include("FifthPokemon.Pokemon")
-                        .Include("FifthPokemon.Pokemon.Generation")
-                .Include(x => x.SixthPokemon)
-                    .Include("SixthPokemon.Pokemon")
-                        .Include("SixthPokemon.Pokemon.Generation")
-                .Include(x => x.User)
+            return this.GetPokemonTeams()
                 .Where(x => x.User.Id == id)
                 .ToList();
         }
