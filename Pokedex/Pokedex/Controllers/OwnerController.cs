@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -26,7 +26,7 @@ namespace Pokedex.Controllers
         [Route("users")]
         public IActionResult Users()
         {
-            List<User> model = this._dataService.GetUsers();
+            List<User> model = this._dataService.GetUsers().Where(x => !x.IsOwner).ToList();
 
             return this.View(model);
         }
