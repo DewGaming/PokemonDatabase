@@ -508,7 +508,7 @@
                                             @if(@evolution.EvolutionPokemon.Name.Contains(" ("))
                                             {
                                                 <a href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">
-                                                    <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace('_', ' ')" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @evolution.EvolutionPokemon.Id + ".png")" />
+                                                    <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @evolution.EvolutionPokemon.Id + ".png")" />
                                                 </a>
                                                 <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</a>
                                             }

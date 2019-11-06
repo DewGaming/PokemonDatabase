@@ -11,13 +11,15 @@
 <div class="reviewedPokemonTable">
     <table class="table">
         <tr>
-            <th scope="col">Pokemon Id</th>
+            <th scope="col">Pokedex Number</th>
+            <th scope="col">Pokemon Name</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach(var item in Model)
         {
             <tr>
-                <td>@item.PokemonId</td>
+                <td>@item.Pokemon.PokedexNumber</td>
+                <td>@item.Pokemon.Name</td>
                 <td><a href="@(Url.Action("ReviewedPokemon", "Delete", new { id = item.Id }))">Delete</a></td>
             </tr>
         }

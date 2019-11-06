@@ -76,9 +76,6 @@ namespace Pokedex.Controllers
 
             if(PokemonIsComplete && !pokemon.IsComplete)
             {
-                BaseStat baseStat = this._dataService.GetBaseStat(pokemon.Id);
-                EVYield evYield = this._dataService.GetEVYield(pokemon.Id);
-                List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
                 PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
                 PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
                 PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
@@ -86,8 +83,8 @@ namespace Pokedex.Controllers
                 PokemonViewModel model = new PokemonViewModel()
                 {
                     Pokemon = pokemon,
-                    BaseStats = baseStat,
-                    EVYields = evYield,
+                    BaseStats = this._dataService.GetBaseStat(pokemon.Id),
+                    EVYields = this._dataService.GetEVYield(pokemon.Id),
                     PrimaryType = pokemonTypes.PrimaryType,
                     SecondaryType = pokemonTypes.SecondaryType,
                     PrimaryAbility = pokemonAbilities.PrimaryAbility,
@@ -95,12 +92,15 @@ namespace Pokedex.Controllers
                     HiddenAbility = pokemonAbilities.HiddenAbility,
                     PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
                     SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
+                    PreEvolution = this._dataService.GetPreEvolution(pokemon.Id),
+                    Evolutions = this._dataService.GetPokemonEvolutions(pokemon.Id),
+                    Effectiveness = this._dataService.GetTypeChartPokemon(pokemon.Id),
                     AppConfig = this._appConfig,
                 };
 
                 if(pokemonId.Contains('-'))
                 {
-                    model.Form = this._dataService.GetFormByAltFormId(pokemonId);
+                    model.OriginalPokemon = this._dataService.GetOriginalPokemonByAltFormId(pokemon.Id);
                 }
 
                 return this.View(model);

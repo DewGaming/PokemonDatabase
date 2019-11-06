@@ -92,7 +92,6 @@ namespace Pokedex
                                                 .Include(x => x.Pokemon)
                                                 .Include(x => x.PrimaryType)
                                                 .Include(x => x.SecondaryType)
-                                                .Where(x => x.Pokemon.IsComplete == true)
                                                 .ToList()
                                                 .Find(x => x.Pokemon.Id == pokemonId);
             List<Type> types = new List<Type>();
@@ -606,6 +605,16 @@ namespace Pokedex
                 .Include(x => x.Form)
                 .ToList()
                 .Find(x => x.AltFormPokemonId == pokemonId);
+        }
+
+        public Pokemon GetOriginalPokemonByAltFormId(string pokemonId)
+        {
+            return this._dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.OriginalPokemon)
+                .Include(x => x.Form)
+                .ToList()
+                .Find(x => x.AltFormPokemonId == pokemonId).OriginalPokemon;
         }
 
         public Form GetFormByAltFormId(string pokemonId)
@@ -1250,7 +1259,9 @@ namespace Pokedex
 
         public List<ReviewedPokemon> GetAllReviewedPokemon()
         {
-            return this._dataContext.ReviewedPokemons.ToList();
+            return this._dataContext.ReviewedPokemons
+                .Include(x => x.Pokemon)
+                .ToList();
         }
 
         public ReviewedPokemon GetReviewedPokemon(int id)

@@ -37,6 +37,8 @@ namespace Pokedex.Models
 
         public List<Pokemon> SurroundingPokemon { get; set; }
 
+        public Pokemon OriginalPokemon { get; set; }
+
         public AppConfig AppConfig { get; set; }
     }
 }
