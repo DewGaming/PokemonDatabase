@@ -50,14 +50,7 @@
                 </tr>
                 <tr>
                     <th>Pokedex Number</th>
-                    @if(Model.Pokemon.Id.Contains('-'))
-                    {
-                        <td>@('#')@Model.Pokemon.Id.Substring(0, Model.Pokemon.Id.IndexOf('-')).PadLeft(3, '0')</td>
-                    }
-                    else
-                    {
-                        <td>@('#')@Model.Pokemon.Id.PadLeft(3, '0')</td>
-                    }
+                    <td>@('#')@Model.Pokemon.PokedexNumber.PadLeft(3, '0')</td>
                 </tr>
                 <tr>
                     <th>Classification</th>

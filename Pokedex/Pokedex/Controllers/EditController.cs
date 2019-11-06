@@ -237,6 +237,57 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
+            else if (this._dataService.GetPokemonByPokedexNumber(pokemon.PokedexNumber) != null)
+            {
+                BasePokemonViewModel model = new BasePokemonViewModel(){
+                    Pokemon = this._dataService.GetPokemonById(pokemon.Id),
+                    AllGenerations = this._dataService.GetGenerations(),
+                };
+    
+                if(!pokemon.Id.Contains('-'))
+                {
+                    model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
+                    model.AllClassifications = this._dataService.GetClassifications();
+                    model.AllCaptureRates = this._dataService.GetCaptureRates();
+                    model.AllEggCycles = this._dataService.GetEggCycles();
+                    model.AllExperienceGrowths = this._dataService.GetExperienceGrowths();
+                    model.AllGenderRatios = new List<GenderRatioViewModel>();
+
+                    foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+                    {
+                        GenderRatioViewModel viewModel = new GenderRatioViewModel() {
+                            Id = genderRatio.Id
+                        };
+
+                        if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
+                        {
+                            viewModel.GenderRatioString = "Genderless";
+                        }
+                        else if (genderRatio.FemaleRatio == 0)
+                        {
+                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                        }
+                        else if (genderRatio.MaleRatio == 0)
+                        {
+                            viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                        }
+                        else
+                        {
+                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                        }
+
+                        model.AllGenderRatios.Add(viewModel);
+                    }
+                }
+                else
+                {
+                    model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                }
+
+                this.ModelState.AddModelError("PokedexNumber", "A pokemon with a this pokedex number already exists.");
+
+                return this.View(model);
+            }
 
             this._dataService.UpdatePokemon(pokemon);
 
@@ -248,38 +299,6 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
             }
-        }
-
-        [HttpGet]
-        [Route("edit_pokedex_number/{pokemonId}")]
-        public IActionResult PokedexNumber(string pokemonId)
-        {
-            Pokemon model = this._dataService.GetPokemonById(pokemonId);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [Route("edit_pokedex_number/{pokemonId}")]
-        public IActionResult PokedexNumber(Pokemon pokemon, string pokemonId)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Pokemon model = this._dataService.GetPokemonById(pokemonId);
-
-                return this.View(model);
-            }
-            else if (this._dataService.GetPokemonById(pokemon.Id) != null)
-            {
-                Pokemon model = this._dataService.GetPokemonById(pokemonId);
-
-                this.ModelState.AddModelError("Id", "Pokedex Number already exists.");
-                return this.View(model);
-            }
-
-            this.UpdatePokemon(pokemon, pokemonId);
-
-            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
@@ -927,90 +946,6 @@ namespace Pokedex.Controllers
             this._dataService.UpdatePokemonFormDetail(pokemonFormDetail);
 
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
-        }
-
-        private void UpdatePokemon(Pokemon newPokemon, string oldNumber)
-        {
-            PokemonTypeDetail typing = this._dataService.GetPokemonWithTypesNoIncludes(oldNumber);
-            PokemonAbilityDetail abilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(oldNumber);
-            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonWithEggGroupsNoIncludes(oldNumber);
-            BaseStat baseStats = this._dataService.GetPokemonBaseStatsNoIncludes(oldNumber);
-            EVYield evYields = this._dataService.GetEVYieldNoIncludes(oldNumber);
-            Evolution preEvolution = this._dataService.GetPreEvolutionNoEdit(oldNumber);
-            List<Evolution> evolutions = this._dataService.GetPokemonEvolutionsNoEdit(oldNumber);
-            List<PokemonFormDetail> altForms = this._dataService.GetPokemonFormDetailsForPokemon(oldNumber);
-            PokemonLegendaryDetail legendaryDetail = this._dataService.GetLegendaryDetail(oldNumber);
-
-            this._dataService.AddPokemon(newPokemon);
-
-            if (typing != null)
-            {
-                typing.PokemonId = newPokemon.Id;
-                this._dataService.UpdatePokemonTypeDetail(typing);
-            }
-
-            if (abilities != null)
-            {
-                abilities.PokemonId = newPokemon.Id;
-                this._dataService.UpdatePokemonAbilityDetail(abilities);
-            }
-
-            if (eggGroups != null)
-            {
-                eggGroups.PokemonId = newPokemon.Id;
-                this._dataService.UpdatePokemonEggGroupDetail(eggGroups);
-            }
-
-            if (baseStats != null)
-            {
-                baseStats.PokemonId = newPokemon.Id;
-                this._dataService.UpdateBaseStat(baseStats);
-            }
-
-            if (evYields != null)
-            {
-                evYields.PokemonId = newPokemon.Id;
-                this._dataService.UpdateEVYield(evYields);
-            }
-
-            if (preEvolution != null)
-            {
-                preEvolution.EvolutionPokemonId = newPokemon.Id;
-                this._dataService.UpdateEvolution(preEvolution);
-            }
-
-            if (evolutions.Count() > 0)
-            {
-                foreach(var e in evolutions)
-                {
-                    e.PreevolutionPokemonId = newPokemon.Id;
-                    this._dataService.UpdateEvolution(e);
-                }
-            }
-
-            if (altForms.Count() > 0)
-            {
-                foreach(var a in altForms)
-                {
-                    string altOldNumber = a.AltFormPokemonId;
-                    Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(a.AltFormPokemonId);
-                    pokemon.Id = newPokemon.Id + pokemon.Id.Substring(pokemon.Id.IndexOf('-'));
-                    this.UpdateAltForm(pokemon, altOldNumber, newPokemon.Id);
-                }
-            }
-
-            if (legendaryDetail != null)
-            {
-                
-            }
-
-            this._dataService.DeletePokemon(oldNumber);
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + oldNumber + ".png");
-            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-            request.Method = WebRequestMethods.Ftp.Rename;
-            request.RenameTo = newPokemon.Id + ".png";
-            request.GetResponse();
         }
 
         private void UpdateAltForm(Pokemon newPokemon, string oldNumber, string originalNumber)

@@ -46,7 +46,7 @@ namespace Pokedex.Controllers
                 EvolutionPokemonId = evolutionPokemon.Id,
             };
 
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != pokemonId).ToList();
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
             foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
@@ -70,7 +70,7 @@ namespace Pokedex.Controllers
                     EvolutionPokemon = evolution.EvolutionPokemon,
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
                 };
-                List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
+                List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
                 foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
                 {
                     pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
@@ -430,7 +430,7 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            else if (!int.TryParse(newPokemon.Id, out pokedexNumber))
+            else if (!int.TryParse(newPokemon.PokedexNumber, out pokedexNumber))
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
@@ -472,7 +472,7 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Pokedex Number", "Pokedex Number must be a number.");
                 return this.View(model);
             }
-            else if (newPokemon.Id.Contains('-'))
+            else if (newPokemon.PokedexNumber.Contains('-'))
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
@@ -514,7 +514,7 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Pokedex Number", "Pokedex Number cannot contain a \"-\" in it.");
                 return this.View(model);
             }
-            else if (this._dataService.GetAllPokemon().Exists(x => x.Id == newPokemon.Id))
+            else if (this._dataService.GetPokemonByPokedexNumber(newPokemon.PokedexNumber) != null)
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
@@ -556,6 +556,8 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
                 return this.View(model);
             }
+
+            newPokemon.Id = (this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Count() + 1).ToString();
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
             request.Method = WebRequestMethods.Ftp.UploadFile;
@@ -642,6 +644,7 @@ namespace Pokedex.Controllers
             Pokemon alternatePokemon = this._dataService.GetPokemonNoIncludesById(pokemon.OriginalPokemonId);
 
             alternatePokemon.Id = pokemon.OriginalPokemonId + '-' + (originalPokemonForms.Count() + 1);
+            alternatePokemon.PokedexNumber = this._dataService.GetPokemonByIdNoIncludes(pokemon.OriginalPokemonId).PokedexNumber;
             alternatePokemon.Height = pokemon.Height;
             alternatePokemon.Weight = pokemon.Weight;
             alternatePokemon.ExpYield = pokemon.ExpYield;

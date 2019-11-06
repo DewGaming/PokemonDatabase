@@ -4,8 +4,10 @@ namespace Pokedex.DataAccess.Models
 {
     public class Pokemon   
     {
-        [Display(Name = "Pokedex Number"), StringLength(6)]
+        [StringLength(6)]
         public string Id { get; set; }
+        [Display(Name = "Pokedex Number"), StringLength(6)]
+        public string PokedexNumber { get; set; }
         [Display(Name = "Pokemon Name"), StringLength(25), Required]
         public string Name { get; set; }
         [Required]

@@ -16,10 +16,6 @@
 
         @Html.HiddenFor(x => x.Pokemon.IsComplete)
         @Html.HiddenFor(x => x.Pokemon.Id)
-        
-        <p>
-            <a class="btn btn-primary" type="button" href="@(Url.Action("PokedexNumber", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Pokedex Number</a>
-        </p>
 
         @if(!Model.Pokemon.Id.Contains('-'))
         {
@@ -28,10 +24,17 @@
                 @Html.EditorFor(x => x.Pokemon.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
                 @Html.ValidationMessageFor(x => x.Pokemon.Name)
             </div>
+            
+            <div class="form-group row">
+                @Html.LabelFor(x => x.Pokemon.PokedexNumber, new { @class = "col-md-2" })
+                @Html.EditorFor(x => x.Pokemon.PokedexNumber, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+                @Html.ValidationMessageFor(x => x.Pokemon.PokedexNumber)
+            </div>
         }
         else
         {
             @Html.HiddenFor(x => x.Pokemon.Name)
+            @Html.HiddenFor(x => x.PokedexNumber)
         }
 
         <div class="form-group row">

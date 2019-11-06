@@ -123,7 +123,6 @@ namespace Pokedex
                                                         .Include(x => x.Pokemon)
                                                         .Include(x => x.PrimaryEggGroup)
                                                         .Include(x => x.SecondaryEggGroup)
-                                                        .Where(x => x.Pokemon.IsComplete == true)
                                                         .ToList()
                                                         .Find(x => x.Pokemon.Id == pokemonId);
 
@@ -244,6 +243,13 @@ namespace Pokedex
                 .Where(x => x.IsComplete)
                 .ToList()
                 .Find(x => x.Name == name);
+        }
+
+        public Pokemon GetPokemonByPokedexNumber(string pokedexNumber)
+        {
+            return this._dataContext.Pokemon
+                .ToList()
+                .Find(x => x.PokedexNumber == pokedexNumber);
         }
 
         public Pokemon GetPokemonFromNameAndFormName(string pokemonName, string formName)
