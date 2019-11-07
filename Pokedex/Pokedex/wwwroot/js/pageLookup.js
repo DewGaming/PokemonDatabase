@@ -77,6 +77,27 @@ function lookupGeneration(generationId) {
   }
 }
 
+function lookupAvailableGeneration(generationId) {
+  if(!$('.active').is($('#Generation' + generationId)))
+  {
+    $('button').each(function() {
+      $(this).removeClass('active');
+    });
+
+    $('.pokemonCount').remove();
+
+    $('.pokemonList').removeClass('active');
+    $('.pokemonList > .grid-container').empty();
+    $('button#Generation' + generationId).addClass('active');
+
+    $('.grid-container').load('/get-available-pokemon-by-generation/' + generationId, function (){
+      $('.pokemonList').prepend($('<p>').addClass('pokemonCount').text('Count: ' + $('.grid-container').children().length));
+
+      $('.pokemonList').addClass('active');
+    });
+  }
+}
+
 function lookupAdminGeneration(generationId) {
   if(!$('.active').is($('#Generation' + generationId)))
   {

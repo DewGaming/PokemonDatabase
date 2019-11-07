@@ -94,18 +94,16 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Alternate Forms</a></li>
         }
-        @if((!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) || Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null)) && !Model.Pokemon.Id.Contains('-'))
+        <hr class="adminOptionSeparator">
+        <span class="adminMenuTitle">Other</span>
+        <li><a target="_blank" class="dropdown-item" href="@(Url.Action("PokemonGameDetails", "Admin", new { pokemonId = Model.Pokemon.Id }))">Edit Games Available In</a></li>
+        @if(Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null) && !Model.Pokemon.Id.Contains('-'))
         {
-            <hr class="adminOptionSeparator">
-            <span class="adminMenuTitle">Other</span>
-            @if(Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null) && !Model.Pokemon.Id.Contains('-'))
-            {
-                <li><a class="dropdown-item" href="@(Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Special Event Ability</a></li>
-            }
-            @if(!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
-            {
-                <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
-            }
+            <li><a class="dropdown-item" href="@(Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Special Event Ability</a></li>
+        }
+        @if(!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+        {
+            <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
         }
     </ul>
 </div>

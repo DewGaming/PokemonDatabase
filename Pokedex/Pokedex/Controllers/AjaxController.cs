@@ -564,6 +564,34 @@ namespace Pokedex.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [Route("get-available-pokemon-by-generation/{generationId}")]
+        public IActionResult GetAvailablePokemonByGeneration(string generationId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(generationId);
+                List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypesWithIncompleteAndForms();
+                pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.PokemonId)).ToList();
+                foreach(var p in pokemonList.Where(x => x.Pokemon.Id.Contains('-')))
+                {
+                    p.Pokemon.Name = p.Pokemon.Name + " (" + this._dataService.GetFormByAltFormId(p.PokemonId).Name + ")";
+                }
+
+                GenerationTableViewModel model = new GenerationTableViewModel()
+                {
+                    PokemonList = pokemonList,
+                    AppConfig = _appConfig,
+                };
+
+                return this.PartialView("_FillAvailableGenerationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Home", "Index");
+            }
+        }
+
         private string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")

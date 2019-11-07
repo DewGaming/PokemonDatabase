@@ -1,0 +1,47 @@
+@model Pokedex.Models.PokemonGameViewModel;
+@using Pokedex.DataAccess.Models;
+@{
+    Layout = "_Layout";
+    PokemonGameDetail pokemonGameDetail;
+}
+
+<h5>Games @Model.Pokemon.Name is Available</h5>
+
+<div class="availableGameTable">
+    <table class="table">
+        <tr>
+            <th scope="col">Games</th>
+            <th scope="col">Available</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllGenerations)
+        {
+            pokemonGameDetail = Model.PokemonGameDetails.Find(x => x.GenerationId == item.Id);
+            <tr>
+                <td>
+                    @item.Games
+                </td>
+                <td>
+                    @if(pokemonGameDetail != null)
+                    {
+                        @("Available");
+                    }
+                    else
+                    {
+                        @("Unavailable");
+                    }
+                </td>
+                <td>
+                    @if(pokemonGameDetail == null)
+                    {
+                        <a href="@(Url.Action("PokemonGameDetail", "Add", new { pokemonId = Model.Pokemon.Id, generationId = item.Id }))">Add</a>
+                    }
+                    else
+                    {
+                        <a href="@(Url.Action("PokemonGameDetail", "Delete", new { id = pokemonGameDetail.Id }))">Remove</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

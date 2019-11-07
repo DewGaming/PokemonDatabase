@@ -253,6 +253,31 @@ namespace Pokedex
             return formDetail.Form.Name;
         }
 
+        public PokemonGameDetail GetPokemonGameDetail(int id)
+        {
+            return this._dataContext.PokemonGameDetails
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public List<PokemonGameDetail> GetPokemonGameDetails(string pokemonId)
+        {
+            return this._dataContext.PokemonGameDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.Generation)
+                .Where(x => x.PokemonId == pokemonId)
+                .ToList();
+        }
+
+        public List<PokemonGameDetail> GetPokemonGameDetailsByGeneration(string generationId)
+        {
+            return this._dataContext.PokemonGameDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.Generation)
+                .Where(x => x.GenerationId == generationId)
+                .ToList();
+        }
+
         public Pokemon GetPokemon(string name)
         {
             return this._dataContext.Pokemon
@@ -704,6 +729,26 @@ namespace Pokedex
             pokemonList = pokemonList.Except(altFormList).ToList();
 
             pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
+
+            return pokemonList;
+        }
+
+        public List<PokemonTypeDetail> GetAllPokemonWithTypesWithIncompleteAndForms()
+        {
+            List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails
+                                                        .Include(x => x.Pokemon)
+                                                            .Include("Pokemon.EggCycle")
+                                                            .Include("Pokemon.BaseHappiness")
+                                                            .Include("Pokemon.CaptureRate")
+                                                            .Include("Pokemon.ExperienceGrowth")
+                                                            .Include("Pokemon.Generation")
+                                                            .Include("Pokemon.Classification")
+                                                            .Include("Pokemon.GenderRatio")
+                                                        .Include(x => x.PrimaryType)
+                                                        .Include(x => x.SecondaryType)
+                                                        .ToList();
+
+            pokemonList = pokemonList.OrderBy(x => System.Convert.ToInt32(x.Pokemon.PokedexNumber)).ToList();
 
             return pokemonList;
         }
@@ -1419,6 +1464,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddPokemonGameDetail(PokemonGameDetail pokemonGameDetail)
+        {
+            this._dataContext.PokemonGameDetails.Add(pokemonGameDetail);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddGeneration(Generation generation)
         {
             this._dataContext.Generations.Add(generation);
@@ -1757,6 +1808,13 @@ namespace Pokedex
         {
             Generation generation = this.GetGeneration(id);
             this._dataContext.Generations.Remove(generation);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonGameDetail(int id)
+        {
+            PokemonGameDetail pokemonGameDetail = this.GetPokemonGameDetail(id);
+            this._dataContext.PokemonGameDetails.Remove(pokemonGameDetail);
             this._dataContext.SaveChanges();
         }
 

@@ -1,0 +1,26 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Generation>;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Available Pokemon List";
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/pageLookup.js"></script>
+}
+
+<div class="pageButtons">
+    @foreach(var p in Model)
+    {
+        <button id="Generation@(p.Id)" onclick="lookupAvailableGeneration('@p.Id')">@p.Abbreviation</button>
+    }
+</div>
+<div class="page generation pokemonList">
+    <div class="grid-container"></div>
+</div>

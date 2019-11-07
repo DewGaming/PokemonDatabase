@@ -575,6 +575,12 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemon(newPokemon);
 
+            this._dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            {
+                PokemonId = newPokemon.Id,
+                GenerationId = newPokemon.GenerationId,
+            });
+
             return this.RedirectToAction("Typing", "Add", new { pokemonId = newPokemon.Id });
         }
 
@@ -696,6 +702,18 @@ namespace Pokedex.Controllers
             this._dataService.AddPokemonFormDetails(alternateForm);
 
             return this.RedirectToAction("Typing", "Add", new { pokemonId = alternatePokemon.Id });
+        }
+
+        [Route("add_game_availability/{pokemonId}/{generationId}")]
+        public IActionResult PokemonGameDetail(string pokemonId, string generationId)
+        {
+            this._dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            {
+                PokemonId = pokemonId,
+                GenerationId = generationId,
+            });
+
+            return this.RedirectToAction("PokemonGameDetails", "Admin", new { pokemonId = pokemonId });
         }
 
         [HttpGet]
