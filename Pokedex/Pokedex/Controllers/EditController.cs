@@ -834,7 +834,7 @@ namespace Pokedex.Controllers
                 EvolutionPokemon = preEvolution.EvolutionPokemon,
             };
 
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != pokemonId).ToList();
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
             foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";

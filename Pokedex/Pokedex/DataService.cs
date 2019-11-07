@@ -180,6 +180,30 @@ namespace Pokedex
             return evolutions;
         }
 
+        public List<Evolution> GetPokemonEvolutionsIncludeIncomplete(string pokemonId)
+        {
+            List<Evolution> evolutions = this.GetEvolutions()
+                .Where(x => x.PreevolutionPokemon.Id == pokemonId)
+                .OrderBy(x => x.EvolutionPokemon.Id.Length)
+                .ThenBy(x => x.EvolutionPokemon.Id)
+                .ToList();
+
+            foreach(var e in evolutions)
+            {
+                if (e.EvolutionPokemonId.Contains('-'))
+                {
+                    e.EvolutionPokemon.Name += " (" + this.GetPokemonFormName(e.EvolutionPokemonId) + ")";
+                }
+            }
+            
+            if (pokemonId == "677")
+            {
+                evolutions.Remove(evolutions[1]);
+            }
+
+            return evolutions;
+        }
+
         public List<Evolution> GetPokemonEvolutionsNoEdit(string pokemonId)
         {
             return this._dataContext.Evolutions

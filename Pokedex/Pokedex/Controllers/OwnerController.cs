@@ -93,7 +93,7 @@ namespace Pokedex.Controllers
                     PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
                     SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
                     PreEvolution = this._dataService.GetPreEvolution(pokemon.Id),
-                    Evolutions = this._dataService.GetPokemonEvolutions(pokemon.Id),
+                    Evolutions = this._dataService.GetPokemonEvolutionsIncludeIncomplete(pokemon.Id),
                     Effectiveness = this._dataService.GetTypeChartPokemon(pokemon.Id),
                     AppConfig = this._appConfig,
                 };

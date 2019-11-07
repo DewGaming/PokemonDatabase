@@ -351,7 +351,7 @@ img {
   border: none;
 }
 
-.evolutionPokemon a {
+.evolutionPokemon a, .evolutionPokemon span {
   padding: 0 10px
 }
 
