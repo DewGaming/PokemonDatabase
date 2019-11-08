@@ -167,8 +167,9 @@ namespace Pokedex.Controllers
         public UpdatePokemonListViewModel UpdatePokemonList(string generationId)
         {
             Generation gen = this._dataService.GetGeneration(generationId);
+            List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(generationId);
             UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel(){
-                PokemonList = this._dataService.GetAllPokemon().Where(x => x.Generation.ReleaseDate <= gen.ReleaseDate && !x.Id.Contains('-')).ToList(),
+                PokemonList = this._dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id) && !x.Id.Contains('-')).ToList(),
                 Generation = gen,
             };
             return pokemonList;

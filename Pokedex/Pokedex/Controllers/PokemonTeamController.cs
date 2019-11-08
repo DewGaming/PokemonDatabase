@@ -32,7 +32,7 @@ namespace Pokedex.Controllers
         public IActionResult CreateTeam()
         {
             CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel(){
-                AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
+                AllGenerations = this._dataService.GetGenerations().ToList(),
                 UserId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
             };
             
@@ -495,7 +495,8 @@ namespace Pokedex.Controllers
             List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != "800-3" && x.Id != "718-2" && x.Id != "678-1").ToList();
             if(pokemonTeam.Generation != null)
             {
-                pokemonList = pokemonList.Where(x => x.Generation.ReleaseDate <= pokemonTeam.Generation.ReleaseDate).ToList();
+                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(pokemonTeam.GenerationId);
+                pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
 
             foreach(var p in pokemonList.Where(x => x.Name.Contains('_')))
