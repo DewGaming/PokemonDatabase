@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -290,6 +292,59 @@ namespace Pokedex.Controllers
             }
 
             this._dataService.UpdatePokemon(pokemon);
+
+            if (!pokemon.Id.Contains('-'))
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
+            }
+        }
+
+        [HttpGet]
+        [Route("edit_pokemon_image/{id}")]
+        public IActionResult PokemonImage(string id)
+        {
+            Pokemon model = this._dataService.GetPokemonById(id);
+
+            if(id.Contains('-'))
+            {
+                model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_image/{id}")]
+        public async Task<IActionResult> PokemonImage(Pokemon pokemon, string id, IFormFile upload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Pokemon model = this._dataService.GetPokemonById(id);
+
+                if(id.Contains('-'))
+                {
+                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                }
+            }
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+            request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+            using (var requestStream = request.GetRequestStream())  
+            {  
+                await upload.CopyToAsync(requestStream);  
+            }
+
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            {
+                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
 
             if (!pokemon.Id.Contains('-'))
             {

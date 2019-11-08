@@ -1,0 +1,29 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.DataAccess.Models.Pokemon
+@{
+    Layout = "_layout";
+}
+
+<h2>Update @Model.Name's Image</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            <label for="Picture" class="col-md-2">Picture</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="file" accept="image/png" id="Picture" name="upload" />
+            </div>
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
+        </p>
+    }
+
+</div>
