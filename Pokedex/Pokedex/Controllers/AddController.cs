@@ -380,6 +380,9 @@ namespace Pokedex.Controllers
                 model.AllGenderRatios.Add(viewModel);
             }
 
+            model.PokedexNumber = (this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Count() + 1).ToString();
+            model.GenerationId = this._dataService.GetGenerations().Last().Id;
+
             return this.View(model);
         }
 
@@ -559,18 +562,42 @@ namespace Pokedex.Controllers
 
             newPokemon.Id = (this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Count() + 1).ToString();
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-
-            using (var requestStream = request.GetRequestStream())  
-            {  
-                await upload.CopyToAsync(requestStream);  
-            }
-
-            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            if(upload != null)
             {
-                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                using (var requestStream = request.GetRequestStream())  
+                {  
+                    await upload.CopyToAsync(requestStream);  
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                {
+                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
+            }
+            else
+            {
+                WebClient request = new WebClient();
+                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                byte[] file = request.DownloadData(_appConfig.WebUrl + "/images/general/tempPhoto.png");
+                
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + ".png");
+                ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+                ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                using (var requestStream = ftpRequest.GetRequestStream())
+                {
+                    requestStream.Write(file, 0, file.Length);
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse())
+                {
+                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
             }
 
             this._dataService.AddPokemon(newPokemon);
@@ -599,6 +626,8 @@ namespace Pokedex.Controllers
                 OriginalPokemon = originalPokemon,
                 OriginalPokemonId = originalPokemon.Id,
             };
+
+            model.GenerationId = this._dataService.GetGenerations().Last().Id;
 
             return this.View(model);
         }
@@ -658,18 +687,42 @@ namespace Pokedex.Controllers
             alternatePokemon.ClassificationId = pokemon.ClassificationId;
             alternatePokemon.IsComplete = false;
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + alternatePokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-
-            using (var requestStream = request.GetRequestStream())  
-            {  
-                await upload.CopyToAsync(requestStream);  
-            }
-
-            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            if(upload != null)
             {
-                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + alternatePokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                using (var requestStream = request.GetRequestStream())  
+                {  
+                    await upload.CopyToAsync(requestStream);  
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                {
+                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
+            }
+            else
+            {
+                WebClient request = new WebClient();
+                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                byte[] file = request.DownloadData(_appConfig.WebUrl + "/images/general/tempPhoto.png");
+                
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + alternatePokemon.Id.ToString() + ".png");
+                ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+                ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                using (var requestStream = ftpRequest.GetRequestStream())
+                {
+                    requestStream.Write(file, 0, file.Length);
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse())
+                {
+                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
             }
 
             this._dataService.AddPokemon(alternatePokemon);
@@ -700,6 +753,12 @@ namespace Pokedex.Controllers
                 FormId = pokemon.FormId,
             };
             this._dataService.AddPokemonFormDetails(alternateForm);
+
+            this._dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            {
+                PokemonId = alternatePokemon.Id,
+                GenerationId = alternatePokemon.GenerationId,
+            });
 
             return this.RedirectToAction("Typing", "Add", new { pokemonId = alternatePokemon.Id });
         }
