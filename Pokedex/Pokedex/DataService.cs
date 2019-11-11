@@ -344,8 +344,8 @@ namespace Pokedex
                 .Include(x => x.ExperienceGrowth)
                 .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
-                .OrderBy(x => x.Id.Length)
-                .ThenBy(x => x.Id)
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ThenBy(x => x.Id.Length)
                 .Where(x => x.IsComplete == true)
                 .ToList();
         }
@@ -360,8 +360,8 @@ namespace Pokedex
                 .Include(x => x.ExperienceGrowth)
                 .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
-                .OrderBy(x => x.Id.Length)
-                .ThenBy(x => x.Id)
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ThenBy(x => x.Id.Length)
                 .ToList();
         }
 
@@ -375,14 +375,17 @@ namespace Pokedex
                 .Include(x => x.ExperienceGrowth)
                 .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
-                .OrderBy(x => x.Id.Length)
-                .ThenBy(x => x.Id)
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ThenBy(x => x.Id.Length)
                 .Where(x => x.IsComplete == true)
                 .ToList();
             List<Pokemon> altFormList = pokemonList.Where(x => x.Id.Contains("-")).ToList();
             pokemonList = pokemonList.Except(altFormList).ToList();
 
-            pokemonList = pokemonList.OrderBy(x => x.Id.Length).ThenBy(x => x.Id).ToList();
+            pokemonList = pokemonList
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ThenBy(x => x.Id.Length)
+                .ToList();
 
             return pokemonList;
         }
@@ -397,13 +400,16 @@ namespace Pokedex
                 .Include(x => x.ExperienceGrowth)
                 .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
-                .OrderBy(x => x.Id.Length)
-                .ThenBy(x => x.Id)
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ThenBy(x => x.Id.Length)
                 .ToList();
             List<Pokemon> altFormList = pokemonList.Where(x => x.Id.Contains("-")).ToList();
             pokemonList = pokemonList.Except(altFormList).ToList();
 
-            pokemonList = pokemonList.OrderBy(x => x.Id.Length).ThenBy(x => x.Id).ToList();
+            pokemonList = pokemonList
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ThenBy(x => x.Id.Length)
+                .ToList();
 
             return pokemonList;
         }

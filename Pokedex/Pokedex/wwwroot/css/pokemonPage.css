@@ -6,19 +6,19 @@
       margin-right: 10px;
   }
   
-  @media (min-width: 768px){
+  @media (min-width: 783px){
     .container {
       max-width: 762px !important;
     }
   }
   
-  @media (min-width: 953px){
+  @media (min-width: 900px){
     .container {
-      max-width: 80% !important;
+      max-width: 85% !important;
     }
   }
   
-  @media (min-width: 1149px){
+  @media (min-width: 1159px){
     .container {
       max-width: 1138px !important;
     }
