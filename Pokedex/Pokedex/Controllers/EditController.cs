@@ -239,7 +239,7 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            else if (this._dataService.GetPokemonByPokedexNumber(pokemon.PokedexNumber) != null)
+            else if (this._dataService.GetPokemonByPokedexNumber(pokemon.PokedexNumber) != null && this._dataService.GetPokemonById(pokemon.Id).PokedexNumber != pokemon.PokedexNumber)
             {
                 BasePokemonViewModel model = new BasePokemonViewModel(){
                     Pokemon = this._dataService.GetPokemonById(pokemon.Id),
