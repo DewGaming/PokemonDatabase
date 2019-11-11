@@ -330,9 +330,35 @@ namespace Pokedex.Controllers
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
+                
+                return this.View(model);
+            }
+            else if (upload == null)
+            {
+                Pokemon model = this._dataService.GetPokemonById(id);
+
+                if(id.Contains('-'))
+                {
+                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                }
+                
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if (!upload.FileName.Contains(".png"))
+            {
+                Pokemon model = this._dataService.GetPokemonById(id);
+
+                if(id.Contains('-'))
+                {
+                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                }
+                
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 

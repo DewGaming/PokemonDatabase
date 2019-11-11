@@ -14,6 +14,21 @@
         
         @Html.ValidationSummary()
 
+        @Html.HiddenFor(x => x.IsComplete)
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Name)
+        @Html.HiddenFor(x => x.PokedexNumber)
+        @Html.HiddenFor(x => x.ClassificationId)
+        @Html.HiddenFor(x => x.GenerationId)
+        @Html.HiddenFor(x => x.Height)
+        @Html.HiddenFor(x => x.Weight)
+        @Html.HiddenFor(x => x.ExpYield)
+        @Html.HiddenFor(x => x.EggCycleId)
+        @Html.HiddenFor(x => x.GenderRatioId)
+        @Html.HiddenFor(x => x.ExperienceGrowthId)
+        @Html.HiddenFor(x => x.CaptureRateId)
+        @Html.HiddenFor(x => x.BaseHappinessId)
+
         <div class="form-group row">
             <label for="Picture" class="col-md-2">Picture</label>
             <div class="col-md-8 addPokemonImage">
