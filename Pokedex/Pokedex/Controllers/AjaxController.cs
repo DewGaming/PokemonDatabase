@@ -572,16 +572,16 @@ namespace Pokedex.Controllers
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(generationId);
-                List<PokemonTypeDetail> pokemonList = this._dataService.GetAllPokemonWithTypesWithIncompleteAndForms();
-                pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.PokemonId)).ToList();
-                foreach(var p in pokemonList.Where(x => x.Pokemon.Id.Contains('-')))
+                List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete();
+                pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
+                foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
                 {
-                    p.Pokemon.Name = p.Pokemon.Name + " (" + this._dataService.GetFormByAltFormId(p.PokemonId).Name + ")";
+                    p.Name = p.Name + " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
                 }
 
                 GenerationTableViewModel model = new GenerationTableViewModel()
                 {
-                    PokemonList = pokemonList,
+                    PokemonNoTypeList = pokemonList,
                     AppConfig = _appConfig,
                 };
 

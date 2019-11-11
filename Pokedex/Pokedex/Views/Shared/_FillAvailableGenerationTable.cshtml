@@ -1,18 +1,29 @@
 @model Pokedex.Models.GenerationTableViewModel;
 
-@foreach(var p in Model.PokemonList)
+@foreach(var p in Model.PokemonNoTypeList)
 {
-    <div class="@p.Pokemon.Name">
-        <img class="pokemonlistPicture" title="@p.Pokemon.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.PokemonId + ".png")">
+    <div class="@p.Name">
+        @if(p.IsComplete)
+        {
+            @if(p.Id.Contains('-'))
+            {
+                <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                    <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                    <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+                </a>
+            }
+        }
+        else
+        {
+            <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+        }
         <div class="description">
-            <span class="pokemonName">#@p.Pokemon.PokedexNumber.PadLeft(3, '0') @p.Pokemon.Name.Replace('_', ' ')</span>
-            <div class="typing">
-                <div class="pokemon-type type-icon type-@p.PrimaryType.Name.ToLower()">@p.PrimaryType.Name</div>
-                @if(p.SecondaryType != null)
-                {
-                    <div class="pokemon-type type-icon type-@p.SecondaryType.Name.ToLower()">@p.SecondaryType.Name</div>
-                }
-            </div>
+            <span class="pokemonName">#@p.PokedexNumber.PadLeft(3, '0') @p.Name.Replace('_', ' ')</span>
         </div>
     </div>
 }
