@@ -21,7 +21,6 @@
     @using (Html.BeginForm())
     {      
         <button type="submit" class="btn btn-primary" role="button">Finish Review</button>
-        <a target="_blank" class="btn btn-primary" href="@Url.Action("AltForms", "Edit", new { pokemonId = Model.Pokemon.Id.Substring(0, Model.Pokemon.Id.IndexOf('-')) })" role="button">Edit Pokemon</a>
     }
 </p>
 
