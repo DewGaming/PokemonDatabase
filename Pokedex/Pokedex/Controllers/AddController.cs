@@ -679,7 +679,7 @@ namespace Pokedex.Controllers
         [Route("add_alternate_form/{pokemonId}")]
         public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile upload)
         {
-            List<PokemonFormDetail> originalPokemonForms = this._dataService.GetPokemonForms(pokemon.OriginalPokemonId);
+            List<PokemonFormDetail> originalPokemonForms = this._dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
             if (!this.ModelState.IsValid)
             {
                 Pokemon originalPokemon = this._dataService.GetPokemonById(pokemon.OriginalPokemonId);

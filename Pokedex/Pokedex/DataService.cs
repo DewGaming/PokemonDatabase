@@ -242,6 +242,18 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<PokemonFormDetail> GetPokemonFormsWithIncomplete(string pokemonId)
+        {
+            return this._dataContext.PokemonFormDetails
+                .Include(x => x.Form)
+                .Include(x => x.OriginalPokemon)
+                .Include(x => x.AltFormPokemon)
+                .Where(x => x.OriginalPokemon.Id == pokemonId)
+                .OrderBy(x => x.AltFormPokemon.Id.Substring(x.AltFormPokemon.Id.IndexOf("-") + 1).Length)
+                .ThenBy(x => x.AltFormPokemon.Id.Substring(x.AltFormPokemon.Id.IndexOf("-") + 1))
+                .ToList();
+        }
+
         public string GetPokemonFormName(string pokemonId)
         {
             PokemonFormDetail formDetail = this._dataContext.PokemonFormDetails
