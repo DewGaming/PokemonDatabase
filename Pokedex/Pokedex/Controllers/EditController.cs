@@ -293,14 +293,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemon(pokemon);
 
-            if (!pokemon.Id.Contains('-'))
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
