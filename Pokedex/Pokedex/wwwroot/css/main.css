@@ -461,6 +461,10 @@ a {
   background-color: rgba(255, 0, 0, 0.8) !important;
 }
 
+.review {
+  background-color: rgba(0, 255, 0, 0.8) !important;
+}
+
 .flexDiv {
   display: -webkit-box;
   display: -ms-flexbox;

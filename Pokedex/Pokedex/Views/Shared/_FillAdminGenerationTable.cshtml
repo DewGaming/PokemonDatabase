@@ -4,21 +4,24 @@
     {
         DropdownViewModel = Model.DropdownViewModel,
     };
+
+    bool everythingAdded;
 }
 
 @foreach(var p in Model.PokemonList)
 {
     adminPokemon.Pokemon = p;
-    <div class="@p.Name @(p.IsComplete ? "" : "incomplete")">
+    everythingAdded = Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == p.Id);
+    <div class="@p.Name @(p.IsComplete ? "" : everythingAdded && p.ExpYield != 0 ? "review" : "incomplete")">
         @if(p.IsComplete)
         {
             <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+                <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
             </a>
         }
         else
         {
-            <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+            <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
         }
         <div class="description">
             @if(p.IsComplete)

@@ -8,14 +8,14 @@
     <ul class="dropdown-menu dropdown-menu-right">
         @if(!Model.Pokemon.IsComplete)
         {
-            @if(everythingAdded)
+            @if(!everythingAdded)
+            {
+                <span class="adminMenuTitle">Add To Pokemon</span>
+            }
+            else if (Model.Pokemon.ExpYield != 0)
             {
                 <span class="adminMenuTitle">Review Pokemon</span>
                 <li><a class="dropdown-item" href="@(Url.Action("ReviewPokemon", "Owner", new { pokemonId = Model.Pokemon.Id }))">Review Info</a></li>
-            }
-            else
-            {
-                <span class="adminMenuTitle">Add To Pokemon</span>
             }
         }
         @if(User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id))
@@ -38,7 +38,7 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Add", new { pokemonId = Model.Pokemon.Id }))">Add EV Yields</a></li>
         }
-        @if(!Model.Pokemon.IsComplete)
+        @if(!Model.Pokemon.IsComplete && everythingAdded && Model.Pokemon.ExpYield != 0)
         {
             <hr class="adminOptionSeparator">
         }
