@@ -7,7 +7,7 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
         [StringLength(20), Required]
         public string Name { get; set; }
-        [StringLength(150), Required]
+        [StringLength(300), Required]
         public string Description { get; set; }
     }
 }
