@@ -113,6 +113,30 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("evolution_methods")]
+        public IActionResult EvolutionMethods()
+        {
+            EvolutionMethodViewModel model = new EvolutionMethodViewModel()
+            {
+                AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
+                AllEvolutions = this._dataService.GetEvolutions(),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("base_happinesses")]
+        public IActionResult BaseHappinesses()
+        {
+            BaseHappinessViewModel model = new BaseHappinessViewModel()
+            {
+                AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
+                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("classification")]
         public IActionResult Classifications()
         {

@@ -1,0 +1,35 @@
+@model Pokedex.Models.EvolutionMethodViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="evolutionMethodTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("EvolutionMethod", "Add")" role="button">Add Evolution Method</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllEvolutionMethods)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="@(Url.Action("EvolutionMethod", "Edit", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllEvolutions.Exists(x => x.EvolutionMethodId == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("EvolutionMethod", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

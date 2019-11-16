@@ -92,6 +92,44 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_base_happiness/{id:int}")]
+        public IActionResult BaseHappiness(int id)
+        {
+            BaseHappiness model = this._dataService.GetBaseHappiness(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_base_happiness/{id:int}")]
+        public IActionResult BaseHappiness(BaseHappiness baseHappiness)
+        {
+            this._dataService.DeleteBaseHappiness(baseHappiness.Id);
+
+            return this.RedirectToAction("BaseHappinesses", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_evolution_method/{id:int}")]
+        public IActionResult EvolutionMethod(int id)
+        {
+            EvolutionMethod model = this._dataService.GetEvolutionMethod(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_evolution_method/{id:int}")]
+        public IActionResult EvolutionMethod(EvolutionMethod evolutionMethod)
+        {
+            this._dataService.DeleteEvolutionMethod(evolutionMethod.Id);
+
+            return this.RedirectToAction("EvolutionMethods", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_battle_item/{id:int}")]
         public IActionResult BattleItem(int id)
         {

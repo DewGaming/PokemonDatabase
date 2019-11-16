@@ -1,0 +1,28 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.DataAccess.Models.BaseHappiness
+@{
+    Layout = "_layout";
+}
+
+<h2>Add Base Happiness</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Happiness, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Happiness, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Happiness)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

@@ -285,6 +285,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_evolution_method")]
+        public IActionResult EvolutionMethod()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_evolution_method")]
+        public IActionResult EvolutionMethod(EvolutionMethod evolutionMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddEvolutionMethod(evolutionMethod);
+
+            return this.RedirectToAction("EvolutionMethods", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_ability")]
         public IActionResult Ability()
         {
@@ -304,6 +326,28 @@ namespace Pokedex.Controllers
             this._dataService.AddAbility(ability);
 
             return this.RedirectToAction("Abilities", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_base_happiness")]
+        public IActionResult BaseHappiness()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_base_happiness")]
+        public IActionResult BaseHappiness(BaseHappiness baseHappiness)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddBaseHappiness(baseHappiness);
+
+            return this.RedirectToAction("BaseHappinesses", "Admin");
         }
 
         [HttpGet]

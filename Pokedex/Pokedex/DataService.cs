@@ -1230,6 +1230,11 @@ namespace Pokedex
             return effectivenessChart;
         }
 
+        public BaseHappiness GetBaseHappiness(int id)
+        {
+            return this._dataContext.BaseHappiness.ToList().Find(x => x.Id == id);
+        }
+
         public List<BaseHappiness> GetBaseHappinesses()
         {
             return this._dataContext.BaseHappiness.OrderBy(x => x.Happiness).ToList();
@@ -1366,6 +1371,11 @@ namespace Pokedex
             return this._dataContext.EvolutionMethods.OrderBy(x => x.Name).ToList();
         }
 
+        public EvolutionMethod GetEvolutionMethod(int id)
+        {
+            return this._dataContext.EvolutionMethods.ToList().Find(x => x.Id == id);
+        }
+
         public List<Generation> GetGenerations()
         {
             return this._dataContext.Generations.ToList();
@@ -1485,6 +1495,18 @@ namespace Pokedex
         public void AddPokemonGameDetail(PokemonGameDetail pokemonGameDetail)
         {
             this._dataContext.PokemonGameDetails.Add(pokemonGameDetail);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddEvolutionMethod(EvolutionMethod evolutionMethod)
+        {
+            this._dataContext.EvolutionMethods.Add(evolutionMethod);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddBaseHappiness(BaseHappiness baseHappiness)
+        {
+            this._dataContext.BaseHappiness.Add(baseHappiness);
             this._dataContext.SaveChanges();
         }
 
@@ -1677,6 +1699,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdateEvolutionMethod(EvolutionMethod evolutionMethod)
+        {
+            this._dataContext.EvolutionMethods.Update(evolutionMethod);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdatePokemonAbilityDetail(PokemonAbilityDetail pokemonAbilityDetail)
         {
             this._dataContext.PokemonAbilityDetails.Update(pokemonAbilityDetail);
@@ -1704,6 +1732,12 @@ namespace Pokedex
         public void UpdateBaseStat(BaseStat baseStats)
         {
             this._dataContext.BaseStats.Update(baseStats);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateBaseHappiness(BaseHappiness baseHappiness)
+        {
+            this._dataContext.BaseHappiness.Update(baseHappiness);
             this._dataContext.SaveChanges();
         }
 
@@ -1885,10 +1919,24 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void DeleteEvolutionMethod(int id)
+        {
+            EvolutionMethod evolutionMethod = this.GetEvolutionMethod(id);
+            this._dataContext.EvolutionMethods.Remove(evolutionMethod);
+            this._dataContext.SaveChanges();
+        }
+
         public void DeleteForm(int id)
         {
             Form form = this.GetForm(id);
             this._dataContext.Forms.Remove(form);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteBaseHappiness(int id)
+        {
+            BaseHappiness baseHappiness = this.GetBaseHappiness(id);
+            this._dataContext.BaseHappiness.Remove(baseHappiness);
             this._dataContext.SaveChanges();
         }
 

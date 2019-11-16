@@ -1,0 +1,35 @@
+@model Pokedex.Models.BaseHappinessViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="baseHappinessTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("BaseHappiness", "Add")" role="button">Add Base Happiness</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Happiness</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllBaseHappinesses)
+        {
+            <tr>
+                <td>
+                    @item.Happiness
+                </td>
+                <td>
+                    <a href="@(Url.Action("BaseHappiness", "Edit", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.BaseHappinessId == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("BaseHappiness", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

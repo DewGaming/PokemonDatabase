@@ -761,6 +761,58 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_evolution_method/{id:int}")]
+        public IActionResult EvolutionMethod(int id)
+        {
+            EvolutionMethod model = this._dataService.GetEvolutionMethod(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_evolution_method/{id:int}")]
+        public IActionResult EvolutionMethod(EvolutionMethod evolutionMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                EvolutionMethod model = this._dataService.GetEvolutionMethod(evolutionMethod.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateEvolutionMethod(evolutionMethod);
+
+            return this.RedirectToAction("EvolutionMethods", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_base_happiness/{id:int}")]
+        public IActionResult BaseHappiness(int id)
+        {
+            BaseHappiness model = this._dataService.GetBaseHappiness(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_base_happiness/{id:int}")]
+        public IActionResult BaseHappiness(BaseHappiness baseHappiness)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                BaseHappiness model = this._dataService.GetBaseHappiness(baseHappiness.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateBaseHappiness(baseHappiness);
+
+            return this.RedirectToAction("BaseHappinesses", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_nature/{id:int}")]
         public IActionResult Nature(int id)
         {
