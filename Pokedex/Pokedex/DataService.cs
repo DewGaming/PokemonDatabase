@@ -1358,6 +1358,7 @@ namespace Pokedex
         {
             return this._dataContext.ReviewedPokemons
                 .Include(x => x.Pokemon)
+                .OrderBy(x => System.Convert.ToInt32(x.Pokemon.PokedexNumber))
                 .ToList();
         }
 
