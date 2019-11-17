@@ -1,13 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
     public class CaptureRate   
     {
         public int Id { get; set; }
-        [Required]
+        [Required, Display(Name = "Catch Rate")]
         public Int16 CatchRate { get; set; }
     }
 }

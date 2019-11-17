@@ -307,6 +307,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_capture_rate")]
+        public IActionResult CaptureRate()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_capture_rate")]
+        public IActionResult CaptureRate(CaptureRate captureRate)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddCaptureRate(captureRate);
+
+            return this.RedirectToAction("CaptureRates", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_ability")]
         public IActionResult Ability()
         {

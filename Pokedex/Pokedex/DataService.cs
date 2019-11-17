@@ -1329,6 +1329,11 @@ namespace Pokedex
                 .ToList();
         }
 
+        public CaptureRate GetCaptureRate(int id)
+        {
+            return this._dataContext.CaptureRates.ToList().Find(x => x.Id == id);
+        }
+
         public List<CaptureRate> GetCaptureRates()
         {
             return this._dataContext.CaptureRates.OrderBy(x => x.CatchRate).ToList();
@@ -1501,6 +1506,12 @@ namespace Pokedex
         public void AddEvolutionMethod(EvolutionMethod evolutionMethod)
         {
             this._dataContext.EvolutionMethods.Add(evolutionMethod);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddCaptureRate(CaptureRate captureRate)
+        {
+            this._dataContext.CaptureRates.Add(captureRate);
             this._dataContext.SaveChanges();
         }
 
@@ -1771,6 +1782,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdateCaptureRate(CaptureRate captureRate)
+        {
+            this._dataContext.CaptureRates.Update(captureRate);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdatePokemon(Pokemon pokemon)
         {
             this._dataContext.Pokemon.Update(pokemon);
@@ -1895,6 +1912,13 @@ namespace Pokedex
         {
             LegendaryType legendaryType = this.GetLegendaryType(id);
             this._dataContext.LegendaryTypes.Remove(legendaryType);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteCaptureRate(int id)
+        {
+            CaptureRate captureRate = this.GetCaptureRate(id);
+            this._dataContext.CaptureRates.Remove(captureRate);
             this._dataContext.SaveChanges();
         }
 

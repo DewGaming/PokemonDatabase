@@ -1,0 +1,35 @@
+@model Pokedex.Models.CaptureRateViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="captureRateTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("CaptureRate", "Add")" role="button">Add Capture Rate</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Catch Rate</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllCaptureRates)
+        {
+            <tr>
+                <td>
+                    @item.CatchRate
+                </td>
+                <td>
+                    <a href="@(Url.Action("CaptureRate", "Edit", new { id = item.Id }))">Edit</a>
+                    @if(User.IsInRole("Owner") && !(Model.AllPokemon.Exists(x => x.CaptureRate.Id == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("CaptureRate", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

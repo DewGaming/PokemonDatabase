@@ -92,6 +92,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_capture_rate/{id:int}")]
+        public IActionResult CaptureRate(int id)
+        {
+            CaptureRate model = this._dataService.GetCaptureRate(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_capture_rate/{id:int}")]
+        public IActionResult CaptureRate(CaptureRate captureRate)
+        {
+            this._dataService.DeleteCaptureRate(captureRate.Id);
+
+            return this.RedirectToAction("CaptureRates", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_base_happiness/{id:int}")]
         public IActionResult BaseHappiness(int id)
         {

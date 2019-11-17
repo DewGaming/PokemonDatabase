@@ -125,6 +125,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("capture_rates")]
+        public IActionResult CaptureRates()
+        {
+            CaptureRateViewModel model = new CaptureRateViewModel()
+            {
+                AllCaptureRates = this._dataService.GetCaptureRates(),
+                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("base_happinesses")]
         public IActionResult BaseHappinesses()
         {

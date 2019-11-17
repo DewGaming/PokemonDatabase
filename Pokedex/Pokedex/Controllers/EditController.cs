@@ -787,6 +787,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_capture_rate/{id:int}")]
+        public IActionResult CaptureRate(int id)
+        {
+            CaptureRate model = this._dataService.GetCaptureRate(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_capture_rate/{id:int}")]
+        public IActionResult CaptureRate(CaptureRate captureRate)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                CaptureRate model = this._dataService.GetCaptureRate(captureRate.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateCaptureRate(captureRate);
+
+            return this.RedirectToAction("CaptureRates", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_base_happiness/{id:int}")]
         public IActionResult BaseHappiness(int id)
         {
