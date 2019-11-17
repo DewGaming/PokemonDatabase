@@ -365,14 +365,7 @@ namespace Pokedex.Controllers
                 System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
 
-            if (!pokemon.Id.Contains('-'))
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-')) });
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
@@ -419,14 +412,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemonTypeDetail(pokemonTypeDetail);
 
-            if(!pokemonTypeDetail.PokemonId.Contains('-'))
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonTypeDetail.PokemonId.Substring(0, pokemonTypeDetail.PokemonId.IndexOf('-')) });
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
@@ -470,14 +456,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemonAbilityDetail(pokemonAbilityDetail);
 
-            if(!pokemonAbilityDetail.PokemonId.Contains('-'))
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonAbilityDetail.PokemonId.Substring(0, pokemonAbilityDetail.PokemonId.IndexOf('-')) });
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
@@ -545,14 +524,7 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdateBaseStat(baseStat);
 
-            if(!baseStat.PokemonId.Contains('-'))
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = baseStat.PokemonId.Substring(0, baseStat.PokemonId.IndexOf('-')) });
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]

@@ -1124,20 +1124,6 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("Pokemon", "Admin");
             }
-            else if(_cameFromAdminPokemon || _cameFromAdminAltForms)
-            {
-                if (_cameFromAdminPokemon)
-                {
-                    _cameFromAdminPokemon = false;
-                    return this.RedirectToAction("Pokemon", "Admin");
-                }
-                else
-                {
-                    _cameFromAdminAltForms = false;
-                    PokemonFormDetail pokemon = this._dataService.GetPokemonFormDetailByAltFormId(baseStat.PokemonId);
-                    return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.OriginalPokemonId });
-                }
-            }
             else
             {
                 return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
