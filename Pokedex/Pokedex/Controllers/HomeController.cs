@@ -121,7 +121,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutForms();
             List<string> model = pokemonList.Select(x => x.Generation.Id).Distinct().Where(x => x.IndexOf('-') < 0).OrderBy(x => x).ToList();
 
             return this.View(model);
