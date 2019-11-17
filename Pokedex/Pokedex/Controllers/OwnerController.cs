@@ -145,6 +145,16 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
+        [Route("complete_pokemon/{pokemonId}")]
+        public IActionResult CompletePokemon(string pokemonId)
+        {
+            Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(pokemonId);
+            pokemon.IsComplete = true;
+            this._dataService.UpdatePokemon(pokemon);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
         [Route("shiny_hunting_counter/{id:int}")]
         public IActionResult ShinyHuntingCounter(int id)
         {
