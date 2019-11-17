@@ -67,7 +67,7 @@
 @foreach(var item in Model.PokemonList)
 {
     adminPokemon.Pokemon = item.Pokemon;
-    <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
+    <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace(".","").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name.Replace('_', ' ')@(@item.Form != null ? " (" + @item.Form.Name + ")" : "")" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
             @if(Model.PokemonList.Count() > 1)
@@ -78,7 +78,7 @@
                         @foreach(var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                         {
                             string iconLink = Url.Content(button.AppConfig.WebUrl + "/images/pokemon/" + button.Pokemon.Id + ".png");
-                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', '@iconLink', '@button.Pokemon.Name.Replace('_', ' ').Replace("'", "&apos;")@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")')">
+                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace(".", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', '@iconLink', '@button.Pokemon.Name.Replace('_', ' ').Replace("'", "&apos;")@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")')">
                                 <img class="lightshadowed" title="@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")" src="@Url.Content(@button.AppConfig.WebUrl + "/images/pokemon/" + @button.Pokemon.Id + ".png")" />
                             </button>
                         }
