@@ -143,41 +143,39 @@ namespace Pokedex.Controllers
                 AllClassifications = this._dataService.GetClassifications(),
             };
 
-            if(!id.Contains('-'))
-            {
-                model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
-                model.AllCaptureRates = this._dataService.GetCaptureRates();
-                model.AllEggCycles = this._dataService.GetEggCycles();
-                model.AllExperienceGrowths = this._dataService.GetExperienceGrowths();
-                model.AllGenderRatios = new List<GenderRatioViewModel>();
+            model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
+            model.AllCaptureRates = this._dataService.GetCaptureRates();
+            model.AllEggCycles = this._dataService.GetEggCycles();
+            model.AllExperienceGrowths = this._dataService.GetExperienceGrowths();
+            model.AllGenderRatios = new List<GenderRatioViewModel>();
     
-                foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+            foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+            {
+                GenderRatioViewModel viewModel = new GenderRatioViewModel() {
+                    Id = genderRatio.Id
+                };
+
+                if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                 {
-                    GenderRatioViewModel viewModel = new GenderRatioViewModel() {
-                        Id = genderRatio.Id
-                    };
-
-                    if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
-                    {
-                        viewModel.GenderRatioString = "Genderless";
-                    }
-                    else if (genderRatio.FemaleRatio == 0)
-                    {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
-                    }
-                    else if (genderRatio.MaleRatio == 0)
-                    {
-                        viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
-                    }
-                    else
-                    {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
-                    }
-
-                    model.AllGenderRatios.Add(viewModel);
+                    viewModel.GenderRatioString = "Genderless";
                 }
+                else if (genderRatio.FemaleRatio == 0)
+                {
+                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                }
+                else if (genderRatio.MaleRatio == 0)
+                {
+                    viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                }
+                else
+                {
+                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                }
+
+                model.AllGenderRatios.Add(viewModel);
             }
-            else
+            
+            if(id.Contains('-'))
             {
                 model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
             }
