@@ -746,7 +746,7 @@ namespace Pokedex
             List<PokemonTypeDetail> altFormList = pokemonList.Where(x => x.Pokemon.Id.Contains("-")).ToList();
             pokemonList = pokemonList.Except(altFormList).ToList();
 
-            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Id.Length).ThenBy(x => x.Pokemon.Id).ToList();
+            pokemonList = pokemonList.OrderBy(x => System.Convert.ToInt32(x.Pokemon.PokedexNumber)).ThenBy(x => x.PokemonId.Length).ToList();
 
             return pokemonList;
         }
