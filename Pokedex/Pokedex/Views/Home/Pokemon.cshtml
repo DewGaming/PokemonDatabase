@@ -1,8 +1,10 @@
+@using Pokedex.Models
 @model Pokedex.Models.AdminPokemonDropdownViewModel
 @{
+    AdminPokemonViewModel adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
     Layout = "_Layout";
-    ViewBag.Title = @Model.PokemonList.First().Pokemon.Name.Replace('_', ' ');
     string style = "";
+    ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name.Replace('_', ' ');
 }
 
 @section styles
@@ -64,6 +66,7 @@
 
 @foreach(var item in Model.PokemonList)
 {
+    adminPokemon.Pokemon = item.Pokemon;
     <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name.Replace('_', ' ')@(@item.Form != null ? " (" + @item.Form.Name + ")" : "")" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
@@ -86,7 +89,7 @@
         <div class="pokemonInfo pokemonData pokemonTables">
             @if(User.IsInRole("Owner"))
             {
-                @Html.Partial("_FillAdminPokemonTable", Model.AdminDropdown, new ViewDataDictionary(this.ViewData) { { "PokemonId", item.Pokemon.Id } })
+                @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
             }
             <h2>Pokemon Data</h2>
             <table class="pokedexNumber">
