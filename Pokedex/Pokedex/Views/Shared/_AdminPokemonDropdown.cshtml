@@ -56,7 +56,7 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("Abilities", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Abilities</a></li>
         }
-        @if(Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+        @if(Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(Url.Action("EggGroups", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Egg Groups</a></li>
         }
@@ -64,7 +64,7 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("BaseStats", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Base Stats</a></li>
         }
-        @if(Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+        @if(Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit EV Yields</a></li>
         }
@@ -98,11 +98,11 @@
         <span class="adminMenuTitle">Other</span>
         <li><a class="dropdown-item" href="@(Url.Action("PokemonImage", "Edit", new { id = Model.Pokemon.Id }))">Update Image</a></li>
         <li><a class="dropdown-item" href="@(Url.Action("PokemonGameDetails", "Admin", new { pokemonId = Model.Pokemon.Id }))">Edit Games Available In</a></li>
-        @if(Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null) && !Model.Pokemon.Id.Contains('-'))
+        @if(Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null))
         {
             <li><a class="dropdown-item" href="@(Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Special Event Ability</a></li>
         }
-        @if(!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id) && !Model.Pokemon.Id.Contains('-'))
+        @if(!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
         }
