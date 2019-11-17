@@ -12,6 +12,8 @@ function lookupPokemon(pageName, iconLink, pokemonName) {
     $(this).removeClass('active');
   })
 
+  pokemonName = pokemonName.replace("&apos;", "\'");
+
   $('#' + pageName.replace('%', '\\%')).addClass('active');
   
   $('.tabIcon').attr("href", iconLink);
