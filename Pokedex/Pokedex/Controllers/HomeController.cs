@@ -156,6 +156,15 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("egg_group_evaluator")]
+        public IActionResult EggGroupEvaluator()
+        {
+            List<Pokedex.DataAccess.Models.EggGroup> model = this._dataService.GetEggGroups();
+
+            return View(model);
+        }
+
+        [AllowAnonymous]
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {

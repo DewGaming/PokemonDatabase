@@ -1,0 +1,49 @@
+@model IEnumerable<Pokedex.DataAccess.Models.EggGroup>
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Egg Group Evaluator";
+    
+    var primaryItems = Model.Prepend(new Pokedex.DataAccess.Models.EggGroup { Id = 0, Name = "" });
+    var secondaryItems = Model.Prepend(new Pokedex.DataAccess.Models.EggGroup { Id = 0, Name = "" });
+}
+
+@section styles
+{
+    <style>
+        .flexDiv {
+            padding: 0 0 1rem;
+        }
+
+        .pokemonTables {
+            padding: 0;
+        }
+
+        .pokemonList > div {
+            min-width: 216.75px;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/eggGroupEvaluator.js"></script>
+}
+
+<div>
+    <div class="evaluator">
+        <div class="flexDiv">
+            <div class="primaryList">
+                @Html.Label("Primary Egg Group")
+                @Html.DropDownList("Primary Egg Group", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control eggGroupSelectList" })
+            </div>
+            <div class="secondaryList">
+                @Html.Label("Secondary Egg Group")
+                @Html.DropDownList("Secondary Egg Group", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control eggGroupSelectList" })
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" class="pokemonWithEggGroup">
+        <h2>Pokemon With Egg Group</h2>
+        <div class="grid-container pokemonList"></div>
+    </div>
+</div>

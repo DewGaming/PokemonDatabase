@@ -941,6 +941,28 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
+        public List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int secondaryEggGroupId)
+        {
+            List<PokemonEggGroupDetail> pokemonList = this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .ToList();
+
+            if (secondaryEggGroupId != 0)
+            {
+                pokemonList = pokemonList.Where(x => (x.PrimaryEggGroupId == primaryEggGroupId && x.SecondaryEggGroupId == secondaryEggGroupId) || (x.PrimaryEggGroupId == secondaryEggGroupId && x.SecondaryEggGroupId == primaryEggGroupId)).ToList();
+            }
+            else
+            {
+                pokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
+            }
+
+            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Name).ToList();
+
+            return pokemonList;
+        }
+
         public List<Pokemon> GetSurroundingPokemon(string pokemonId)
         {
             List<Pokemon> surroundingPokemon = new List<Pokemon>();

@@ -1316,5 +1316,43 @@ namespace Pokedex.Controllers
 
             return null;
         }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-by-egg-group")]
+        public EggGroupEvaluatorViewModel GetPokemonByEggGroup(int primaryEggGroupId, int secondaryEggGroupId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonEggGroupDetail> eggGroupList = this._dataService.GetAllPokemonWithSpecificEggGroups(primaryEggGroupId, secondaryEggGroupId);
+                List<Pokemon> pokemonList = new List<Pokemon>();
+
+                foreach(var p in eggGroupList)
+                {
+                    if(p.PokemonId.Contains('-'))
+                    {
+                        Pokemon pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
+                        pokemonList.Add(pokemon);
+                    }
+                    else
+                    {
+                        pokemonList.Add(p.Pokemon);
+                    }
+                }
+
+                EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){
+                    AllPokemonWithEggGroups = eggGroupList,
+                    AllPokemon = pokemonList,
+                    AppConfig = _appConfig,
+                };
+
+                return model;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
     }
 }
