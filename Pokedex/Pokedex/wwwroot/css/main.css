@@ -3,6 +3,19 @@
  max-height:150px;
  margin:5px
 }
+.column {
+  float: left;
+}
+.column a {
+  float: none;
+  color: black;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+.column a:hover {
+  background-color: #ddd;
+}
 .addPokemonImage {
  padding-left:0
 }

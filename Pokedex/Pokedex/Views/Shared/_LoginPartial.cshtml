@@ -1,50 +1,66 @@
-@using Microsoft.AspNetCore.Identity
+@{
+    string dropdownWidth, dropdownHeight, columnWidth;
+    if(User.IsInRole("Admin") || User.IsInRole("Owner"))
+    {
+        dropdownWidth = "28rem";
+        dropdownHeight = "28rem";
+        columnWidth = "50%";
+    }
+    else
+    {
+        dropdownWidth = "14rem";
+        dropdownHeight = "12.5rem";
+        columnWidth = "100%";
+    }
+}
 
 @if(User.Identity.IsAuthenticated)
 {
     <li class="nav-item dropdown accountDropdown">
         <a class="nav-link dropdown-toggle" href="" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-        <div class="dropdown-menu" aria-labelledby="userDropdown">
-            <span class="accountOptionHeader">General Options</span>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="@Url.Action("PokemonTeams", "User")">Pokemon Teams</a>
-            <a class="dropdown-item" href="@Url.Action("ShinyHuntingCounter", "User")">Shiny Hunting Counter</a>
-            <div class="dropdown-divider"></div>
-            @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
-            {
+        <div class="dropdown-menu" style="width: @dropdownWidth; height: @dropdownHeight" aria-labelledby="userDropdown">
+            <div class="column" style="width: @columnWidth">
+                <span class="accountOptionHeader">General Options</span>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="@Url.Action("PokemonTeams", "User")">Pokemon Teams</a>
+                <a class="dropdown-item" href="@Url.Action("ShinyHuntingCounter", "User")">Shiny Hunting Counter</a>
+                <span class="accountOptionHeader">Account Options</span>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
+                <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
                 @if(User.IsInRole("Owner"))
                 {
+                    <div class="dropdown-divider"></div>
                     <span class="accountOptionHeader">Owner Options</span>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
                     <a class="dropdown-item" href="@Url.Action("Comments", "Owner")">Comments</a>
                     <a class="dropdown-item" href="@Url.Action("ReviewedPokemon", "Owner")">Reviewed Pokemon</a>
-                    <div class="dropdown-divider"></div>
                 }
-                <span class="accountOptionHeader">Admin Options</span>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
-                <a class="dropdown-item" href="@Url.Action("AvailablePokemon", "Admin")">Available Pokemon</a>
-                <a class="dropdown-item" href="@Url.Action("BaseHappinesses", "Admin")">Base Happiness</a>
-                <a class="dropdown-item" href="@Url.Action("BattleItems", "Admin")">Battle Items</a>
-                <a class="dropdown-item" href="@Url.Action("CaptureRates", "Admin")">Capture Rates</a>
-                <a class="dropdown-item" href="@Url.Action("Classifications", "Admin")">Classifications</a>
-                <a class="dropdown-item" href="@Url.Action("EggGroups", "Admin")">Egg Groups</a>
-                <a class="dropdown-item" href="@Url.Action("EvolutionMethods", "Admin")">Evolution Methods</a>
-                <a class="dropdown-item" href="@Url.Action("FormItems", "Admin")">Form Items</a>
-                <a class="dropdown-item" href="@Url.Action("Forms", "Admin")">Forms</a>
-                <a class="dropdown-item" href="@Url.Action("Generations", "Admin")">Generations</a>
-                <a class="dropdown-item" href="@Url.Action("LegendaryTypes", "Admin")">Legendary Types</a>
-                <a class="dropdown-item" href="@Url.Action("Natures", "Admin")">Natures</a>
-                <a class="dropdown-item" href="@Url.Action("Pokemon", "Admin")">Pokemon</a>
-                <a class="dropdown-item" href="@Url.Action("ShinyHuntingTechniques", "Admin")">Shiny Hunting Techniques</a>
-                <a class="dropdown-item" href="@Url.Action("Types", "Admin")">Types</a>
-                <div class="dropdown-divider"></div>
+            </div>
+            @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
+            {
+                <div class="column" style="width: @columnWidth">
+                    <span class="accountOptionHeader">Admin Options</span>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
+                    <a class="dropdown-item" href="@Url.Action("AvailablePokemon", "Admin")">Available Pokemon</a>
+                    <a class="dropdown-item" href="@Url.Action("BaseHappinesses", "Admin")">Base Happiness</a>
+                    <a class="dropdown-item" href="@Url.Action("BattleItems", "Admin")">Battle Items</a>
+                    <a class="dropdown-item" href="@Url.Action("CaptureRates", "Admin")">Capture Rates</a>
+                    <a class="dropdown-item" href="@Url.Action("Classifications", "Admin")">Classifications</a>
+                    <a class="dropdown-item" href="@Url.Action("EggGroups", "Admin")">Egg Groups</a>
+                    <a class="dropdown-item" href="@Url.Action("EvolutionMethods", "Admin")">Evolution Methods</a>
+                    <a class="dropdown-item" href="@Url.Action("FormItems", "Admin")">Form Items</a>
+                    <a class="dropdown-item" href="@Url.Action("Forms", "Admin")">Forms</a>
+                    <a class="dropdown-item" href="@Url.Action("Generations", "Admin")">Generations</a>
+                    <a class="dropdown-item" href="@Url.Action("LegendaryTypes", "Admin")">Legendary Types</a>
+                    <a class="dropdown-item" href="@Url.Action("Natures", "Admin")">Natures</a>
+                    <a class="dropdown-item" href="@Url.Action("Pokemon", "Admin")">Pokemon</a>
+                    <a class="dropdown-item" href="@Url.Action("ShinyHuntingTechniques", "Admin")">Shiny Hunting Techniques</a>
+                    <a class="dropdown-item" href="@Url.Action("Types", "Admin")">Types</a>
+                </div>
             }
-            <span class="accountOptionHeader">Account Options</span>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
-            <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
         </div>
     </li>
 }
