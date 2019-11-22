@@ -147,8 +147,8 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("typing")]
-        public IActionResult Typing()
+        [Route("typing_evaluator")]
+        public IActionResult TypingEvaluator()
         {
             List<Pokedex.DataAccess.Models.Type> model = this._dataService.GetTypes();
 
