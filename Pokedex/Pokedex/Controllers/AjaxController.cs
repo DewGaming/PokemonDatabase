@@ -1127,6 +1127,7 @@ namespace Pokedex.Controllers
             forms.Add(this._dataService.GetForm(35));
             forms.Add(this._dataService.GetForm(33));
             forms.Add(this._dataService.GetForm(47));
+            forms.Add(this._dataService.GetForm(1002));
             forms.Add(this._dataService.GetForm(13));
             forms.Add(this._dataService.GetForm(46));
             forms.Add(this._dataService.GetForm(45));
