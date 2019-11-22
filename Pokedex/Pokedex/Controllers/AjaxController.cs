@@ -447,7 +447,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(string pokemonTeamName, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities)
+        public string SavePokemonTeam(string pokemonTeamName, string selectedGame, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -462,6 +462,11 @@ namespace Pokedex.Controllers
                         PokemonTeamName = pokemonTeamName,
                         UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                     };
+
+                    if(selectedGame != "0")
+                    {
+                        pokemonTeam.GenerationId = selectedGame;
+                    }
 
                     Pokemon pokemon;
                     Ability ability;
@@ -674,7 +679,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<string> selectedGens, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool onePokemonForm, bool randomAbility)
+        public TeamRandomizerViewModel GetPokemonTeam(List<string> selectedGens, string selectedGame, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool onePokemonForm, bool randomAbility)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -691,6 +696,7 @@ namespace Pokedex.Controllers
                     PokemonAbilities = new List<Ability>(),
                 };
                 List<Pokemon> pokemonList = new List<Pokemon>();
+                List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame);
                 List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
                 List<Evolution> allEvolutions = this._dataService.GetEvolutions();
                 Random rnd = new Random();
@@ -958,6 +964,11 @@ namespace Pokedex.Controllers
                             }
                         }
                     }
+                }
+
+                if(availablePokemon.Count() > 1)
+                {
+                    allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                 }
 
                 if(allPokemon.Count() > 0)
@@ -1270,6 +1281,43 @@ namespace Pokedex.Controllers
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 return this._dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("get-generations")]
+        public List<Generation> GetGenerations(string selectedGame)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                if(selectedGame != "0")
+                {
+                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame);
+                    List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
+                    Generation selectedGen = this._dataService.GetGeneration(selectedGame);
+                    List<Generation> generationList = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-') && x.ReleaseDate <= selectedGen.ReleaseDate).ToList();
+                    List<Generation> availableGenerations = new List<Generation>();
+                    allPokemon = allPokemon.Where(x => generationList.Any(y => y.Id == x.GenerationId)).ToList();
+
+                    foreach(var gen in generationList)
+                    {
+                        if(allPokemon.Where(x => x.GenerationId == gen.Id).ToList().Count() != 0)
+                        {
+                            availableGenerations.Add(gen);
+                        }
+                    }
+                    return availableGenerations;
+                }
+                else
+                {
+                    return this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
+                }
             }
             else
             {

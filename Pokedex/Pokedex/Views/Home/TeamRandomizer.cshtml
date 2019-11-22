@@ -29,15 +29,32 @@
     </span>
     <ul class="generatorDropdownMenu dropdown-menu">
         <section class="generatorSection">
-            <span class="generationOptionTitle">Generations</span>
-            @foreach(var gen in Model)
+            <span class="generationOptionTitle" id="generations">Generations</span>
+            @foreach(var gen in Model.Where(x => !x.Id.Contains('-')).ToList())
             {
                 <li class="dropdown-item generatorOption generationCheckbox gen@(gen.Id)Checkbox">
                     <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked="checked" />
                     <label for="gen@(gen.Id)" class="generatorOptionTitle">Generation @gen.Id</label>
                 </li>
             }
-            <span class="generationOptionTitle">Evolutions</span>
+            <span class="generationOptionTitle" id="alternateForms">Alternate Forms</span>
+            <li class="dropdown-item generatorOption alternateFormCheckbox megaCheckbox">
+                <input id="Mega" type="checkbox" value="Mega" checked="checked" />
+                <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
+            </li>
+            <li class="dropdown-item generatorOption alternateFormCheckbox alolanFormCheckbox">
+                <input id="Alolan" type="checkbox" value="Alolan" checked="checked" />
+                <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
+            </li>
+            <li class="dropdown-item generatorOption alternateFormCheckbox galarianFormCheckbox">
+                <input id="Galarian" type="checkbox" value="Galarian" checked="checked" />
+                <label for="Galarian" class="generatorOptionTitle">Galarian Forms</label>
+            </li>
+            <li class="dropdown-item generatorOption alternateFormCheckbox">
+                <input id="Other" type="checkbox" value="Other" checked="checked" />
+                <label for="Other" class="generatorOptionTitle">Other Forms</label>
+            </li>
+            <span class="generationOptionTitle" id="evolutions">Evolutions</span>
             <li class="dropdown-item generatorOption evolutionRadio">
                 <input id="allEvolutions" type="radio" name="evolutionSelection" value="allEvolutions" checked="checked" />
                 <label for="allEvolutions" class="generatorRadio">All Evolutions</label>
@@ -56,7 +73,21 @@
             </li>
         </section>
         <section class="generatorSection">
-            <span class="generationOptionTitle">Legendaries</span>
+            <span class="generationOptionTitle" id="games">Games</span>
+            <li class="dropdown-item generatorOption gameRadio">
+                <input id="game0" name="gameSelection" type="radio" value="0" checked="checked" />
+                <label for="game0" class="generatorOptionTitle">Any Game</label>
+            </li>
+            @foreach(var gen in Model)
+            {
+                <li class="dropdown-item generatorOption gameRadio">
+                    <input id="game@(gen.Id)" name="gameSelection" type="radio" value="@(gen.Id)" />
+                    <label for="game@(gen.Id)" class="generatorOptionTitle">@gen.Games</label>
+                </li>
+            }
+        </section>
+        <section class="generatorSection">
+            <span class="generationOptionTitle" id="legendaries">Legendaries</span>
             <li class="dropdown-item generatorOption legendaryCheckbox">
                 <input id="Legendary" type="checkbox" value="Legendary" checked="checked" />
                 <label for="Legendary" class="generatorOptionTitle">Legendaries</label>
@@ -69,26 +100,7 @@
                 <input id="UltraBeast" type="checkbox" value="UltraBeast" checked="checked" />
                 <label for="UltraBeast" class="generatorOptionTitle">Ultra Beasts</label>
             </li>
-            <span class="generationOptionTitle">Alternate Forms</span>
-            <li class="dropdown-item generatorOption alternateFormCheckbox megaCheckbox">
-                <input id="Mega" type="checkbox" value="Mega" checked="checked" />
-                <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
-            </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox alolanFormCheckbox">
-                <input id="Alolan" type="checkbox" value="Alolan" checked="checked" />
-                <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
-            </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox galarianFormCheckbox">
-                <input id="Galarian" type="checkbox" value="Galarian" checked="checked" />
-                <label for="Galarian" class="generatorOptionTitle">Galarian Forms</label>
-            </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox">
-                <input id="Other" type="checkbox" value="Other" checked="checked" />
-                <label for="Other" class="generatorOptionTitle">Other Forms</label>
-            </li>
-        </section>
-        <section class="generatorSection otherOptions">
-            <span class="generationOptionTitle">Other Options</span>
+            <span class="generationOptionTitle" id="otherOptions">Other Options</span>
             <li class="dropdown-item generatorOption randomAbilityCheckbox">
                 <input id="randomAbilityBool" type="checkbox" value="randomAbilityBool" checked="checked" />
                 <label for="randomAbilityBool" class="generatorOptionTitle">Show Random Ability</label>

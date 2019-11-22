@@ -291,8 +291,8 @@ img {
  margin:.2rem 0
 }
 .pokemonTeamPokemon {
- width: auto !important;
- max-height: 3.9rem !important;
+ height:  100% !important;
+ max-height:  3.9rem !important;
 }
 .teamButton {
  margin-bottom:10px

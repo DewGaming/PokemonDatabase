@@ -225,10 +225,16 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
             });
         }
 
+        $('.gameRadio input').each(function() {
+            if($(this).is(':checked')){
+                selectedGame = this.value;
+            }
+        });
+
         $.ajax({
             url: '/save-pokemon-team/',
             method: 'POST',
-            data: { 'pokemonTeamName': teamName, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities':  $("#randomAbilityBool").is(":checked") }
+            data: { 'pokemonTeamName': teamName, 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities':  $("#randomAbilityBool").is(":checked") }
         })
         .done(function(data) {
             alert(data);
@@ -278,6 +284,91 @@ $('.gen7Checkbox').on('click', function() {
     legendCheck = checkLegendaryChecks();
 });
 
+$('.gameRadio input').on('click', function() {
+    $.ajax({
+        url: '/get-generations/',
+        method: 'POST',
+        data: { 'selectedGame': $(this).val() }
+    })
+    .done(function(data) {
+        $(".generationCheckbox").remove();
+        var generationIds = [];
+
+        $.each(data, function() {
+            var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
+            var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id).attr("checked", "checked");
+            var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text("Generation " + this.id);
+            $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+            $("#generations").append($(dropdownItem));
+            generationIds.push(this.id);
+        });
+        
+        if($.inArray('6', generationIds) != -1 || $.inArray('6-1', generationIds) != -1)
+        {
+            if (!$('.multipleMegaBoolCheckbox').is(':visible'))
+            {
+                $(".multipleMegaBoolCheckbox").show();
+            }
+
+            if (!$('.megaCheckbox').is(':visible'))
+            {
+                $(".megaCheckbox").show();
+            }
+        }
+        else
+        {
+            $(".multipleMegaBoolCheckbox").hide();
+            $("#multipleMegaBool").prop('checked', false);
+            $(".megaCheckbox").hide();
+            $("#Mega").prop('checked', false);
+        }
+        
+        if($.inArray('7', generationIds) != -1 || $.inArray('7-1', generationIds) != -1)
+        {
+            if (!$('.ultraBeastCheckbox').is(':visible'))
+            {
+                $(".ultraBeastCheckbox").show();
+            }
+
+            if (!$('.alolanFormCheckbox').is(':visible'))
+            {
+                $(".alolanFormCheckbox").show();
+            }
+        }
+        else
+        {
+            $(".ultraBeastCheckbox").hide();
+            $("#UltraBeast").prop('checked', false);
+            $(".alolanFormCheckbox").hide();
+            $("#Alolan").prop('checked', false);
+        }
+        
+        if($.inArray('8', generationIds) != -1)
+        {
+            $(".multipleMegaBoolCheckbox").hide();
+            $("#multipleMegaBool").prop('checked', false);
+            $(".megaCheckbox").hide();
+            $("#Mega").prop('checked', false);
+            if (!$('.galarianFormCheckbox').is(':visible'))
+            {
+                $(".galarianFormCheckbox").show();
+            }
+        }
+        else
+        {
+            $(".galarianFormCheckbox").hide();
+            $("#Galarian").prop('checked', false);
+        }
+        
+        megaCheck = checkMegaCheck();
+        altCheck = checkAltFormChecks();
+        legendCheck = checkLegendaryChecks();
+    })
+    .fail( function() {
+        alert("Failed To Get Team!");
+    });
+});
+
 $(window).on('resize', function() {
     generatorMenuCheck();
 
@@ -293,7 +384,7 @@ $(window).on('resize', function() {
 });
 
 $('.generatorButton').on('click', function() {
-    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions;
+    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions, selectedGame;
     $('.generationCheckbox input').each(function() {
         if($(this).is(':checked')){
             selectedGens.push(this.value);
@@ -318,10 +409,16 @@ $('.generatorButton').on('click', function() {
         }
     });
 
+    $('.gameRadio input').each(function() {
+        if($(this).is(':checked')){
+            selectedGame = this.value;
+        }
+    });
+
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'onePokemonForm':  $("#onePokemonFormBool").is(":checked"), 'randomAbility':  $("#randomAbilityBool").is(":checked") }
+        data: { 'selectedGens': selectedGens, 'selectedGame': selectedGame, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms':  $("#altFormBool").is(":checked"), 'multipleMegas':  $("#multipleMegaBool").is(":checked"), 'onePokemonForm':  $("#onePokemonFormBool").is(":checked"), 'randomAbility':  $("#randomAbilityBool").is(":checked") }
     })
     .done(function(data) {
         pokemonList = data.allPokemonChangedNames;

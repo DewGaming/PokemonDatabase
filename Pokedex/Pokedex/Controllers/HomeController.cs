@@ -131,8 +131,8 @@ namespace Pokedex.Controllers
         [Route("team_randomizer")]
         public IActionResult TeamRandomizer()
         {
-            List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => x.Id.IndexOf('-') == -1).ToList();
-            List<Generation> generations = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
+            List<Pokemon> allPokemon = this._dataService.GetAllPokemon();
+            List<Generation> generations = this._dataService.GetGenerations();
             List<Generation> model = new List<Generation>();
 
             foreach(var gen in generations)
