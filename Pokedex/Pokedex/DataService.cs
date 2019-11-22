@@ -78,7 +78,17 @@ namespace Pokedex
 
         public List<FormItem> GetFormItems()
         {
-            return this._dataContext.FormItems.OrderBy(x => x.Name).ToList();
+            List<FormItem> formItemList = this._dataContext.FormItems
+                .Include(x => x.Pokemon)
+                .OrderBy(x => System.Convert.ToInt32(x.Pokemon.PokedexNumber))
+                .ToList();
+
+            foreach(var f in formItemList)
+            {
+                f.Pokemon.Name += " (" + this.GetPokemonFormName(f.PokemonId) + ")";
+            }
+
+            return formItemList;
         }
 
         public List<Type> GetTypeChartTypes()
@@ -669,6 +679,21 @@ namespace Pokedex
                     .Include("OriginalPokemon.BaseHappiness")
                 .Include(x => x.Form)
                 .ToList();
+        }
+
+        public List<Pokemon> GetAllPokemonOnlyForms()
+        {
+            List<Pokemon> pokemonList = this._dataContext.Pokemon
+                .Where(x => x.IsComplete && x.Id.Contains('-'))
+                .OrderBy(x => System.Convert.ToInt32(x.PokedexNumber))
+                .ToList();
+
+            foreach(var p in pokemonList)
+            {
+                p.Name += " (" + this.GetPokemonFormName(p.Id) + ")";
+            }
+
+            return pokemonList;
         }
 
         public List<PokemonFormDetail> GetAllAltFormsOnlyComplete()

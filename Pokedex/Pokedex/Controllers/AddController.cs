@@ -134,7 +134,12 @@ namespace Pokedex.Controllers
         [Route("add_form_item")]
         public IActionResult FormItem()
         {
-            return this.View();
+            FormItemViewModel model = new FormItemViewModel()
+            {
+                AllPokemon = this._dataService.GetAllPokemonOnlyForms(),
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -144,7 +149,12 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                FormItemViewModel model = new FormItemViewModel()
+                {
+                    AllPokemon = this._dataService.GetAllPokemonOnlyForms(),
+                };
+
+                return this.View(model);
             }
 
             this._dataService.AddFormItem(formItem);
