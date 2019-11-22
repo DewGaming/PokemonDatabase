@@ -1,10 +1,14 @@
 @using Pokedex.Models
 @model Pokedex.Models.AdminPokemonDropdownViewModel
 @{
-    AdminPokemonViewModel adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
     Layout = "_Layout";
     string style = "";
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name.Replace('_', ' ');
+    AdminPokemonViewModel adminPokemon = null;
+    if(User.IsInRole("Owner"))
+    {
+        adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
+    }
 }
 
 @section styles
@@ -66,7 +70,10 @@
 
 @foreach(var item in Model.PokemonList)
 {
-    adminPokemon.Pokemon = item.Pokemon;
+    if(User.IsInRole("Owner"))
+    {
+        adminPokemon.Pokemon = item.Pokemon;
+    }
     <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace(".","").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name.Replace('_', ' ')@(@item.Form != null ? " (" + @item.Form.Name + ")" : "")" src="@Url.Content(@item.AppConfig.WebUrl + "/images/pokemon/" + @item.Pokemon.Id + ".png")" />
