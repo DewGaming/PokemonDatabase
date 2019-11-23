@@ -427,6 +427,7 @@ namespace Pokedex.Controllers
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                 Id = pokemonTeam.Id,
                 PokemonTeamName = pokemonTeam.PokemonTeamName,
+                GenerationId = pokemonTeam.GenerationId,
                 UserId = pokemonTeam.UserId,
             };
 
@@ -455,6 +456,7 @@ namespace Pokedex.Controllers
                 UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                     Id = originalPokemonTeam.Id,
                     PokemonTeamName = originalPokemonTeam.PokemonTeamName,
+                    GenerationId = originalPokemonTeam.GenerationId,
                     UserId = originalPokemonTeam.UserId,
                 };
 
