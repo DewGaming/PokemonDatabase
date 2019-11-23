@@ -623,13 +623,13 @@ namespace Pokedex.Controllers
             if(pokemonName.LastIndexOf('-') != -1)
             {
                 string formName = pokemonName.Split('-').Last();
-                if(pokemonName == "Meowstic-F")
+                if(pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
                 {
                     formName = "Female";
                 }
 
                 Form form = this._dataService.GetFormByName(formName);
-                if(pokemonName == "Meowstic-F")
+                if(pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
                 {
                     formName = "F";
                 }
