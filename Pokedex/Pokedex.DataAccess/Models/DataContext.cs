@@ -53,6 +53,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<PokemonTeamDetail> PokemonTeamDetails { get; set; }
         public DbSet<PokemonTeamEV> PokemonTeamEVs { get; set; }
         public DbSet<PokemonTeamIV> PokemonTeamIVs { get; set; }
+        public DbSet<PokemonTeamMoveset> PokemonTeamMovesets { get; set; }
         public DbSet<BattleItem> BattleItems { get; set; }
         public DbSet<Nature> Natures { get; set; }
         public DbSet<ReviewedPokemon> ReviewedPokemons { get; set; }
