@@ -275,10 +275,11 @@ $('.megaCheckbox').on('click', function() {
 });
 
 $('.gameRadio input').on('click', function() {
+    var selectedGame = $(this).val();
     $.ajax({
         url: '/get-generations/',
         method: 'POST',
-        data: { 'selectedGame': $(this).val() }
+        data: { 'selectedGame': selectedGame }
     })
     .done(function(data) {
         $(".generationCheckbox").remove();
@@ -345,10 +346,14 @@ $('.gameRadio input').on('click', function() {
         
         if($.inArray('8', generationIds) != -1)
         {
-            $(".multipleMegaBoolCheckbox").hide();
-            $("#multipleMegaBool").prop('checked', false);
-            $(".megaCheckbox").hide();
-            $("#Mega").prop('checked', false);
+            if(selectedGame != "0")
+            {
+                $(".multipleMegaBoolCheckbox").hide();
+                $("#multipleMegaBool").prop('checked', false);
+                $(".megaCheckbox").hide();
+                $("#Mega").prop('checked', false);
+            }
+
             if (!$('.galarianFormCheckbox').is(':visible'))
             {
                 $(".galarianFormCheckbox").show();
