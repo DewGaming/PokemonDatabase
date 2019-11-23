@@ -281,6 +281,11 @@ namespace Pokedex.Controllers
             {
                 pokemonTeamString += this.FillIVs(pokemonTeamDetail.PokemonTeamIV);
             }
+            
+            if(pokemonTeamDetail.PokemonTeamMoveset != null)
+            {
+                pokemonTeamString += this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset);
+            }
 
             return pokemonTeamString;
         }
@@ -419,6 +424,32 @@ namespace Pokedex.Controllers
             }
 
             return ivString;
+        }
+
+        private string FillMoveset(PokemonTeamMoveset moveset)
+        {
+            string movesetString = string.Empty;
+            if(!string.IsNullOrEmpty(moveset.FirstMove))
+            {
+                movesetString += string.Concat("\n- ", moveset.FirstMove);
+            }
+            
+            if(!string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                movesetString += string.Concat("\n- ", moveset.SecondMove);
+            }
+            
+            if(!string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                movesetString += string.Concat("\n- ", moveset.ThirdMove);
+            }
+            
+            if(!string.IsNullOrEmpty(moveset.FourthMove))
+            {
+                movesetString += string.Concat("\n- ", moveset.FourthMove);
+            }
+
+            return movesetString;
         }
 
         private List<string> GetUserFormDetails(string pokemonId)
