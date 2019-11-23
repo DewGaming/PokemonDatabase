@@ -274,16 +274,6 @@ $('.megaCheckbox').on('click', function() {
     megaCheck = checkMegaCheck();
 });
 
-$('.gen1Checkbox').on('click', function() {
-    checkAlolanForms();
-    altCheck = checkAltFormChecks();
-});
-
-$('.gen7Checkbox').on('click', function() {
-    checkUltraBeasts();
-    legendCheck = checkLegendaryChecks();
-});
-
 $('.gameRadio input').on('click', function() {
     $.ajax({
         url: '/get-generations/',
@@ -334,6 +324,16 @@ $('.gameRadio input').on('click', function() {
             {
                 $(".alolanFormCheckbox").show();
             }
+
+            $('.gen1Checkbox').on('click', function() {
+                checkAlolanForms();
+                altCheck = checkAltFormChecks();
+            });
+            
+            $('.gen7Checkbox').on('click', function() {
+                checkUltraBeasts();
+                legendCheck = checkLegendaryChecks();
+            });
         }
         else
         {
