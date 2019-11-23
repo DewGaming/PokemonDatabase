@@ -675,38 +675,44 @@ namespace Pokedex.Controllers
                 PokemonTeamEV pokemonEVs = new PokemonTeamEV();
                 if(evs.Contains("HP"))
                 {
-                    string health = evs.Substring(evs.IndexOf("HP") - 3, 2).Trim();
+                    string health = evs.Substring(evs.IndexOf("HP") - 4, 3);
+                    health = health.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
                     pokemonEVs.Health = Convert.ToByte(health);
                 }
 
                 if(evs.Contains("Atk"))
                 {
-                    string health = evs.Substring(evs.IndexOf("Atk") - 3, 2).Trim();
-                    pokemonEVs.Attack = Convert.ToByte(health);
+                    string attack = evs.Substring(evs.IndexOf("Atk") - 4, 3);
+                    attack = attack.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                    pokemonEVs.Attack = Convert.ToByte(attack);
                 }
 
                 if(evs.Contains("Def"))
                 {
-                    string health = evs.Substring(evs.IndexOf("Def") - 3, 2).Trim();
-                    pokemonEVs.Defense = Convert.ToByte(health);
+                    string defense = evs.Substring(evs.IndexOf("Def") - 4, 3);
+                    defense = defense.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                    pokemonEVs.Defense = Convert.ToByte(defense);
                 }
 
                 if(evs.Contains("SpA"))
                 {
-                    string health = evs.Substring(evs.IndexOf("SpA") - 3, 2).Trim();
-                    pokemonEVs.SpecialAttack = Convert.ToByte(health);
+                    string specialAttack = evs.Substring(evs.IndexOf("SpA") - 4, 3);
+                    specialAttack = specialAttack.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                    pokemonEVs.SpecialAttack = Convert.ToByte(specialAttack);
                 }
 
                 if(evs.Contains("SpD"))
                 {
-                    string health = evs.Substring(evs.IndexOf("SpD") - 3, 2).Trim();
-                    pokemonEVs.SpecialDefense = Convert.ToByte(health);
+                    string specialDefense = evs.Substring(evs.IndexOf("SpD") - 4, 3);
+                    specialDefense = specialDefense.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                    pokemonEVs.SpecialDefense = Convert.ToByte(specialDefense);
                 }
 
                 if(evs.Contains("Spe"))
                 {
-                    string health = evs.Substring(evs.IndexOf("Spe") - 3, 2).Trim();
-                    pokemonEVs.Speed = Convert.ToByte(health);
+                    string speed = evs.Substring(evs.IndexOf("Spe") - 4, 3);
+                    speed = speed.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                    pokemonEVs.Speed = Convert.ToByte(speed);
                 }
 
                 int pokemonEVId = this._dataService.AddPokemonTeamEV(pokemonEVs);
