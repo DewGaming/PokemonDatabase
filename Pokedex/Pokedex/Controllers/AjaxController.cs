@@ -1281,16 +1281,15 @@ namespace Pokedex.Controllers
             {
                 if(selectedGame != "0")
                 {
-                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame);
+                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame).Where(x => !x.PokemonId.Contains('-')).ToList();
                     List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     Generation selectedGen = this._dataService.GetGeneration(selectedGame);
                     List<Generation> generationList = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-') && x.ReleaseDate <= selectedGen.ReleaseDate).ToList();
                     List<Generation> availableGenerations = new List<Generation>();
-                    allPokemon = allPokemon.Where(x => generationList.Any(y => y.Id == x.GenerationId)).ToList();
 
                     foreach(var gen in generationList)
                     {
-                        if(allPokemon.Where(x => x.GenerationId == gen.Id).ToList().Count() != 0)
+                        if(allPokemon.Where(x => x.GenerationId == gen.Id || x.GenerationId.Contains(string.Concat(gen.Id, "-"))).ToList().Count() != 0)
                         {
                             availableGenerations.Add(gen);
                         }
