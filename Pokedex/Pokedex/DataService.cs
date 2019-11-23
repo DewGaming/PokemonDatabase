@@ -458,6 +458,7 @@ namespace Pokedex
                     .Include("FirstPokemon.Ability")
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
+                    .Include("FirstPokemon.PokemonTeamMoveset")
                     .Include("FirstPokemon.BattleItem")
                     .Include("FirstPokemon.Nature")
                 .Include(x => x.SecondPokemon)
@@ -466,6 +467,7 @@ namespace Pokedex
                     .Include("SecondPokemon.Ability")
                     .Include("SecondPokemon.PokemonTeamEV")
                     .Include("SecondPokemon.PokemonTeamIV")
+                    .Include("SecondPokemon.PokemonTeamMoveset")
                     .Include("SecondPokemon.BattleItem")
                     .Include("SecondPokemon.Nature")
                 .Include(x => x.ThirdPokemon)
@@ -474,6 +476,7 @@ namespace Pokedex
                     .Include("ThirdPokemon.Ability")
                     .Include("ThirdPokemon.PokemonTeamEV")
                     .Include("ThirdPokemon.PokemonTeamIV")
+                    .Include("ThirdPokemon.PokemonTeamMoveset")
                     .Include("ThirdPokemon.BattleItem")
                     .Include("ThirdPokemon.Nature")
                 .Include(x => x.FourthPokemon)
@@ -482,6 +485,7 @@ namespace Pokedex
                     .Include("FourthPokemon.Ability")
                     .Include("FourthPokemon.PokemonTeamEV")
                     .Include("FourthPokemon.PokemonTeamIV")
+                    .Include("FourthPokemon.PokemonTeamMoveset")
                     .Include("FourthPokemon.BattleItem")
                     .Include("FourthPokemon.Nature")
                 .Include(x => x.FifthPokemon)
@@ -490,6 +494,7 @@ namespace Pokedex
                     .Include("FifthPokemon.Ability")
                     .Include("FifthPokemon.PokemonTeamEV")
                     .Include("FifthPokemon.PokemonTeamIV")
+                    .Include("FifthPokemon.PokemonTeamMoveset")
                     .Include("FifthPokemon.BattleItem")
                     .Include("FifthPokemon.Nature")
                 .Include(x => x.SixthPokemon)
@@ -498,6 +503,7 @@ namespace Pokedex
                     .Include("SixthPokemon.Ability")
                     .Include("SixthPokemon.PokemonTeamEV")
                     .Include("SixthPokemon.PokemonTeamIV")
+                    .Include("SixthPokemon.PokemonTeamMoveset")
                     .Include("SixthPokemon.BattleItem")
                     .Include("SixthPokemon.Nature")
                 .Include(x => x.User)
@@ -573,6 +579,7 @@ namespace Pokedex
                 .Include(x => x.Ability)
                 .Include(x => x.PokemonTeamEV)
                 .Include(x => x.PokemonTeamIV)
+                .Include(x => x.PokemonTeamMoveset)
                 .Include(x => x.BattleItem)
                 .Include(x => x.Nature)
                 .ToList()
@@ -593,6 +600,7 @@ namespace Pokedex
                 .Include(x => x.Ability)
                 .Include(x => x.PokemonTeamEV)
                 .Include(x => x.PokemonTeamIV)
+                .Include(x => x.PokemonTeamMoveset)
                 .Include(x => x.BattleItem)
                 .Include(x => x.Nature)
                 .ToList();
@@ -615,6 +623,13 @@ namespace Pokedex
         public PokemonTeamIV GetPokemonTeamIV(int id)
         {
             return this._dataContext.PokemonTeamIVs
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
+        public PokemonTeamMoveset GetPokemonTeamMoveset(int id)
+        {
+            return this._dataContext.PokemonTeamMovesets
                 .ToList()
                 .Find(x => x.Id == id);
         }
@@ -1679,6 +1694,12 @@ namespace Pokedex
                 pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIVId;
             }
             
+            if(pokemonTeamDetail.PokemonTeamMovesetId == null)
+            {
+                int pokemonTeamMovesetId = this.AddPokemonTeamMoveset(new PokemonTeamMoveset());
+                pokemonTeamDetail.PokemonTeamMovesetId = pokemonTeamMovesetId;
+            }
+            
             this._dataContext.PokemonTeamDetails.Add(pokemonTeamDetail);
             this._dataContext.SaveChanges();
             return pokemonTeamDetail.Id;
@@ -1696,6 +1717,13 @@ namespace Pokedex
             this._dataContext.PokemonTeamIVs.Add(pokemonTeamIV);
             this._dataContext.SaveChanges();
             return pokemonTeamIV.Id;
+        }
+
+        public int AddPokemonTeamMoveset(PokemonTeamMoveset pokemonTeamMoveset)
+        {
+            this._dataContext.PokemonTeamMovesets.Add(pokemonTeamMoveset);
+            this._dataContext.SaveChanges();
+            return pokemonTeamMoveset.Id;
         }
 
         public void AddPokemonFormDetails(PokemonFormDetail pokemonFormDetail)
@@ -1828,6 +1856,61 @@ namespace Pokedex
         {
             this._dataContext.PokemonTeamIVs.Update(pokemonTeamIVs);
             this._dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonTeamMoveset(PokemonTeamMoveset pokemonTeamMoveset)
+        {
+            pokemonTeamMoveset = this.SortMoveset(pokemonTeamMoveset);
+
+            this._dataContext.PokemonTeamMovesets.Update(pokemonTeamMoveset);
+            this._dataContext.SaveChanges();
+        }
+
+        public PokemonTeamMoveset SortMoveset(PokemonTeamMoveset moveset)
+        {
+            #region FirstSort
+            if(string.IsNullOrEmpty(moveset.FirstMove) && !string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.FirstMove = moveset.SecondMove;
+                moveset.SecondMove = null;
+            }
+            
+            if(string.IsNullOrEmpty(moveset.SecondMove) && !string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                moveset.SecondMove = moveset.ThirdMove;
+                moveset.ThirdMove = null;
+            }
+            
+            if(string.IsNullOrEmpty(moveset.ThirdMove) && !string.IsNullOrEmpty(moveset.FourthMove))
+            {
+                moveset.ThirdMove = moveset.FourthMove;
+                moveset.FourthMove = null;
+            }
+            #endregion
+            
+            #region SecondSort
+            if(string.IsNullOrEmpty(moveset.FirstMove) && !string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.FirstMove = moveset.SecondMove;
+                moveset.SecondMove = null;
+            }
+            
+            if(string.IsNullOrEmpty(moveset.SecondMove) && !string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                moveset.SecondMove = moveset.ThirdMove;
+                moveset.ThirdMove = null;
+            }
+            #endregion
+
+            #region ThirdSort
+            if(string.IsNullOrEmpty(moveset.FirstMove) && !string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.FirstMove = moveset.SecondMove;
+                moveset.SecondMove = null;
+            }
+            #endregion
+
+            return moveset;
         }
 
         public void UpdateEVYield(EVYield evYields)
@@ -2125,12 +2208,26 @@ namespace Pokedex
                 this.RemovePokemonFromTeam(pokemonTeam, pokemonTeamDetail);
             }
 
-            int evId = (int)pokemonTeamDetail.PokemonTeamEVId;
-            int ivId = (int)pokemonTeamDetail.PokemonTeamIVId;
+            int? evId = pokemonTeamDetail.PokemonTeamEVId;
+            int? ivId = pokemonTeamDetail.PokemonTeamIVId;
+            int? movesetId = pokemonTeamDetail.PokemonTeamMovesetId;
             this._dataContext.PokemonTeamDetails.Remove(pokemonTeamDetail);
             this._dataContext.SaveChanges();
-            this.DeletePokemonTeamEV(evId);
-            this.DeletePokemonTeamIV(ivId);
+
+            if(evId != null)
+            {
+                this.DeletePokemonTeamEV((int)evId);
+            }
+
+            if(ivId != null)
+            {
+                this.DeletePokemonTeamIV((int)ivId);
+            }
+
+            if(movesetId != null)
+            {
+                this.DeletePokemonTeamMoveset((int)movesetId);
+            }
         }
 
         public void DeletePokemonTeamEV(int id)
@@ -2144,6 +2241,13 @@ namespace Pokedex
         {
             PokemonTeamIV pokemonTeamDetailIV = this.GetPokemonTeamIV(id);
             this._dataContext.PokemonTeamIVs.Remove(pokemonTeamDetailIV);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonTeamMoveset(int id)
+        {
+            PokemonTeamMoveset pokemonTeamDetailMoveset = this.GetPokemonTeamMoveset(id);
+            this._dataContext.PokemonTeamMovesets.Remove(pokemonTeamDetailMoveset);
             this._dataContext.SaveChanges();
         }
 

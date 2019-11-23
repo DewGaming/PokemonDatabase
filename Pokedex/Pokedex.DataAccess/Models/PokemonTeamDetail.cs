@@ -38,5 +38,9 @@ namespace Pokedex.DataAccess.Models
         public int? PokemonTeamIVId { get; set; }
 
         public PokemonTeamIV PokemonTeamIV { get; set; }
+
+        public int? PokemonTeamMovesetId { get; set; }
+
+        public PokemonTeamMoveset PokemonTeamMoveset { get; set; }
     }
 }

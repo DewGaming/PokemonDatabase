@@ -329,6 +329,55 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("update_moveset/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
+        public IActionResult EditMoveset(int pokemonTeamId, int pokemonTeamDetailId)
+        {
+            this.UpdatePokemonTeamList();
+            if(_pokemonTeams.Count() < pokemonTeamId)
+            {
+                return this.RedirectToAction("PokemonTeams", "User");
+            }
+            else
+            {
+                PokemonTeamMoveset pokemonMoveset = this._dataService.GetPokemonTeamMoveset((int)_pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamMovesetId);
+                PokemonTeamMovesetViewModel model = new PokemonTeamMovesetViewModel(){
+                    Id = pokemonMoveset.Id,
+                    FirstMove = pokemonMoveset.FirstMove,
+                    SecondMove = pokemonMoveset.SecondMove,
+                    ThirdMove = pokemonMoveset.ThirdMove,
+                    FourthMove = pokemonMoveset.FourthMove,
+                    PokemonId = pokemonMoveset.Id,
+                };
+
+                return this.View(model);
+            }
+        }
+
+        [HttpPost]
+        [Route("update_moveset/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
+        public IActionResult EditMoveset(PokemonTeamMovesetViewModel pokemonTeamMoveset)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonTeamMoveset pokemon = this._dataService.GetPokemonTeamMoveset(pokemonTeamMoveset.PokemonId);
+                PokemonTeamMovesetViewModel model = new PokemonTeamMovesetViewModel(){
+                    Id = pokemonTeamMoveset.Id,
+                    FirstMove = pokemonTeamMoveset.FirstMove,
+                    SecondMove = pokemonTeamMoveset.SecondMove,
+                    ThirdMove = pokemonTeamMoveset.ThirdMove,
+                    FourthMove = pokemonTeamMoveset.FourthMove,
+                    PokemonId = pokemonTeamMoveset.Id,
+                };
+            
+                return this.View(model);
+            }
+
+            this._dataService.UpdatePokemonTeamMoveset(pokemonTeamMoveset);
+
+            return this.RedirectToAction("PokemonTeams", "User");
+        }
+
+        [HttpGet]
         [Route("update_iv/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditIV(int pokemonTeamId, int pokemonTeamDetailId)
         {
@@ -735,6 +784,7 @@ namespace Pokedex.Controllers
             if(remainingImportedText.Contains("IVs:"))
             {
                 string ivs = remainingImportedText.Split("\r\n")[0];
+                remainingImportedText = remainingImportedText.Replace(ivs + "\r\n", string.Empty);
                 PokemonTeamIV pokemonIVs = new PokemonTeamIV();
                 if(ivs.Contains("HP"))
                 {
@@ -774,6 +824,34 @@ namespace Pokedex.Controllers
 
                 int pokemonIVId = this._dataService.AddPokemonTeamIV(pokemonIVs);
                 pokemonTeamDetail.PokemonTeamIVId = pokemonIVId;
+            }
+            #endregion
+
+            #region Moveset
+            if(remainingImportedText.Contains("- "))
+            {
+                List<string> moves = remainingImportedText.Split("\r\n").ToList();
+                List<string> validMoves = new List<string>();
+                string move;
+                PokemonTeamMoveset moveset = new PokemonTeamMoveset();
+                
+                foreach(var m in moves)
+                {
+                    if(!string.IsNullOrEmpty(m) && validMoves.Count() < 4)
+                    {
+                        validMoves.Add(m);
+                    }
+                }
+
+                foreach(var m in validMoves)
+                {
+                    move = m.Substring(2, m.Length - 2).Trim();
+                    moveset.FourthMove = move;
+                    moveset = this._dataService.SortMoveset(moveset);
+                }
+
+                int pokemonMovesetId = this._dataService.AddPokemonTeamMoveset(moveset);
+                pokemonTeamDetail.PokemonTeamMovesetId = pokemonMovesetId;
             }
             #endregion
 

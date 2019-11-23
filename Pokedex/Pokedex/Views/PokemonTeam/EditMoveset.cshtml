@@ -1,0 +1,50 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonTeamMovesetViewModel
+@{
+    Layout = "_layout";
+    ViewBag.Title = "Edit Moveset";
+}
+
+<h2>Update Moveset</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.PokemonId)
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.FirstMove, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.FirstMove, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" }})
+            @Html.ValidationMessageFor(x => x.FirstMove)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.SecondMove, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.SecondMove, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" }})
+            @Html.ValidationMessageFor(x => x.SecondMove)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.ThirdMove, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.ThirdMove, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" }})
+            @Html.ValidationMessageFor(x => x.ThirdMove)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.FourthMove, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.FourthMove, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" }})
+            @Html.ValidationMessageFor(x => x.FourthMove)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
+        </p>
+    }
+
+</div>
