@@ -294,6 +294,11 @@ img {
  height:  100% !important;
  max-height:  3.9rem !important;
 }
+.pokemonTeamPicture {
+ display: inline-block;
+ width: 3rem;
+ text-align: center;
+}
 .teamButton {
  margin-bottom:6px;
 }
