@@ -71,12 +71,14 @@ $('.attemptCount').on('input', function() {
     updateCounterWidth();
 });
 
-$(this).on('keypress', function(e) {
-    if (e.keyCode == 45)
+$(this).on('keydown', function(e) {
+    var addArray = [32,38,39,61,107];
+    var subtractArray = [37,40,109,173];
+    if (jQuery.inArray(e.keyCode, subtractArray) != -1)
     {
         subtractCounter();
     }
-    else if (e.which == 43 || e.which == 61)
+    else if (jQuery.inArray(e.keyCode, addArray) != -1)
     {
         addCounter();
     }
