@@ -155,27 +155,6 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
     }
 
     return boxChecked;
-}, checkAlolanForms = function() {
-    var boxChecked = false;
-    if ($('#gen1').is(':checked'))
-    {
-        boxChecked = true;
-    }
-
-    if(!boxChecked)
-    {
-        if ($('.alolanFormCheckbox').is(':visible'))
-        {
-            $(".alolanFormCheckbox").hide();
-            $("#Alolan").prop('checked', false);
-        }
-    }
-    else
-    {
-        $(".alolanFormCheckbox").show();
-    }
-
-    return boxChecked;
 }, generatorMenuCheck = function() {
     if($(window).width() < 768)
     {
@@ -243,6 +222,23 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
             alert(jqXHR.statusText);
         });
     });
+}, checkOtherOptions = function() {
+    var isVisible = 0;
+
+    $('.otherOption').each( function() {
+        if( $(this).css('display') != 'none' ) {
+             isVisible++;
+        }
+    });
+
+    if(isVisible == 0)
+    {
+        $('#otherOptions').hide();
+    }
+    else
+    {
+        $('#otherOptions').show();
+    }
 };
 
 $(function() {
@@ -250,28 +246,31 @@ $(function() {
     altCheck = checkAltFormChecks();
     legendCheck = checkLegendaryChecks();
     megaCheck = checkMegaCheck();
-    checkAlolanForms();
     checkUltraBeasts();
+    checkOtherOptions();
 });
 
 $('.generatorDropdown').on('mouseover', function() {
     altCheck = checkAltFormChecks();
     legendCheck = checkLegendaryChecks();
     megaCheck = checkMegaCheck();
-    checkAlolanForms();
     checkUltraBeasts();
+    checkOtherOptions();
 });
 
 $('.alternateFormCheckbox').on('click', function() {
     altCheck = checkAltFormChecks();
+    checkOtherOptions();
 });
 
 $('.legendaryCheckbox').on('click', function() {
     legendCheck = checkLegendaryChecks();
+    checkOtherOptions();
 });
 
 $('.megaCheckbox').on('click', function() {
     megaCheck = checkMegaCheck();
+    checkOtherOptions();
 });
 
 $('.gameRadio input').on('click', function() {
@@ -293,8 +292,29 @@ $('.gameRadio input').on('click', function() {
             $("#generations").append($(dropdownItem));
             generationIds.push(this.id);
         });
+
+        if($.inArray(selectedGame, ['1', '2']) != -1)
+        {
+            $("#alternateForms").hide();
+            $(".randomAbilityCheckbox").hide();
+            $("#randomAbilityBool").prop('checked', false);
+            $(".otherFormCheckbox").hide();
+            $("#Other").prop('checked', false);
+            $(".onePokemonFormBoolCheckbox").hide();
+            $("#onePokemonFormBool").prop('checked', false);
+        }
+        else if (!$('.randomAbilityCheckbox').is(':visible'))
+        {
+            $("#alternateForms").show();
+            $(".randomAbilityCheckbox").show();
+            $("#randomAbilityBool").prop('checked', true);
+            $(".otherFormCheckbox").show();
+            $("#Other").prop('checked', true);
+            $(".onePokemonFormBoolCheckbox").show();
+            $("#onePokemonFormBool").prop('checked', true);
+        }
         
-        if($.inArray('6', generationIds) != -1 || $.inArray('6-1', generationIds) != -1)
+        if($.inArray(selectedGame, ['0', '6', '6-1', '7', '7-1', '7-2']) != -1)
         {
             if (!$('.multipleMegaBoolCheckbox').is(':visible'))
             {
@@ -304,6 +324,7 @@ $('.gameRadio input').on('click', function() {
             if (!$('.megaCheckbox').is(':visible'))
             {
                 $(".megaCheckbox").show();
+                $("#Mega").prop('checked', true);
             }
         }
         else
@@ -314,22 +335,13 @@ $('.gameRadio input').on('click', function() {
             $("#Mega").prop('checked', false);
         }
         
-        if($.inArray('7', generationIds) != -1 || $.inArray('7-1', generationIds) != -1)
+        if($.inArray(selectedGame, ['0', '7', '7-1']) != -1)
         {
             if (!$('.ultraBeastCheckbox').is(':visible'))
             {
                 $(".ultraBeastCheckbox").show();
+                $("#UltraBeast").prop('checked', true);
             }
-
-            if (!$('.alolanFormCheckbox').is(':visible'))
-            {
-                $(".alolanFormCheckbox").show();
-            }
-
-            $('.gen1Checkbox').on('click', function() {
-                checkAlolanForms();
-                altCheck = checkAltFormChecks();
-            });
             
             $('.gen7Checkbox').on('click', function() {
                 checkUltraBeasts();
@@ -340,23 +352,38 @@ $('.gameRadio input').on('click', function() {
         {
             $(".ultraBeastCheckbox").hide();
             $("#UltraBeast").prop('checked', false);
+        }
+
+        if(selectedGame == '7-2')
+        {
+            $(".otherFormCheckbox").hide();
+            $("#Other").prop('checked', false);
+        }
+
+        if($.inArray(selectedGame, ['0', '7', '7-1', '7-2', '8']) != -1)
+        {
+            if (!$('.alolanFormCheckbox').is(':visible'))
+            {
+                $(".alolanFormCheckbox").show();
+                $("#Alolan").prop('checked', true);
+            }
+
+            $('.gen1Checkbox').on('click', function() {
+                altCheck = checkAltFormChecks();
+            });
+        }
+        else
+        {
             $(".alolanFormCheckbox").hide();
             $("#Alolan").prop('checked', false);
         }
         
-        if($.inArray('8', generationIds) != -1)
+        if($.inArray(selectedGame, ['0', '8']) != -1)
         {
-            if(selectedGame != "0")
-            {
-                $(".multipleMegaBoolCheckbox").hide();
-                $("#multipleMegaBool").prop('checked', false);
-                $(".megaCheckbox").hide();
-                $("#Mega").prop('checked', false);
-            }
-
             if (!$('.galarianFormCheckbox').is(':visible'))
             {
                 $(".galarianFormCheckbox").show();
+                $("#Galarian").prop('checked', true);
             }
         }
         else
@@ -368,6 +395,7 @@ $('.gameRadio input').on('click', function() {
         megaCheck = checkMegaCheck();
         altCheck = checkAltFormChecks();
         legendCheck = checkLegendaryChecks();
+        checkOtherOptions();
     })
     .fail( function() {
         alert("Failed To Get Team!");
