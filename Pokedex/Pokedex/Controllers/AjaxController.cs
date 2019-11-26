@@ -184,15 +184,42 @@ namespace Pokedex.Controllers
                 List<PokemonTeam> pokemonTeams = this._dataService.GetAllPokemonTeams(User.Identity.Name);
                 List<PokemonTeamDetail> pokemonList;
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
+                string generationId;
                 foreach(var team in pokemonTeams)
                 {
                     pokemonList = team.GrabPokemonTeamDetails;
                     if(pokemonList.Count() > 0)
                     {
                         ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel(){
-                            ExportString = "=== " + team.PokemonTeamName + " ===\n\n",
+                            ExportString = "=== ",
                             TeamId = team.Id,
                         };
+
+                        if (team.GenerationId != null)
+                        {
+                            pokemonTeam.ExportString += "[gen";
+                            if (team.GenerationId == null)
+                            {
+                                generationId = this._dataService.GetGenerations().Last().Id;
+                            }
+                            else
+                            {
+                                generationId = team.GenerationId;
+                            }
+
+                            if (generationId.IndexOf('-') > -1)
+                            {
+                                pokemonTeam.ExportString += generationId.Substring(0, generationId.IndexOf('-'));
+                            }
+                            else
+                            {
+                                pokemonTeam.ExportString += generationId;
+                            }
+
+                            pokemonTeam.ExportString += "ou] ";
+                        }
+
+                        pokemonTeam.ExportString +=  string.Concat(team.PokemonTeamName, " ===\n\n");
 
                         for(var i = 0; i < pokemonList.Count(); i++)
                         {
