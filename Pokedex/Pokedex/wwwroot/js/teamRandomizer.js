@@ -222,59 +222,8 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
             alert(jqXHR.statusText);
         });
     });
-}, checkOtherOptions = function() {
-    var isVisible = 0;
-
-    $('.otherOption').each( function() {
-        if( $(this).css('display') != 'none' ) {
-             isVisible++;
-        }
-    });
-
-    if(isVisible == 0)
-    {
-        $('#otherOptions').hide();
-    }
-    else
-    {
-        $('#otherOptions').show();
-    }
-};
-
-$(function() {
-    generatorMenuCheck();
-    altCheck = checkAltFormChecks();
-    legendCheck = checkLegendaryChecks();
-    megaCheck = checkMegaCheck();
-    checkUltraBeasts();
-    checkOtherOptions();
-});
-
-$('.generatorDropdown').on('mouseover', function() {
-    altCheck = checkAltFormChecks();
-    legendCheck = checkLegendaryChecks();
-    megaCheck = checkMegaCheck();
-    checkUltraBeasts();
-    checkOtherOptions();
-});
-
-$('.alternateFormCheckbox').on('click', function() {
-    altCheck = checkAltFormChecks();
-    checkOtherOptions();
-});
-
-$('.legendaryCheckbox').on('click', function() {
-    legendCheck = checkLegendaryChecks();
-    checkOtherOptions();
-});
-
-$('.megaCheckbox').on('click', function() {
-    megaCheck = checkMegaCheck();
-    checkOtherOptions();
-});
-
-$('.gameRadio input').on('click', function() {
-    var selectedGame = $(this).val();
+}, refreshGenerationsByGame = function() {
+    var selectedGame = $('.gameRadio input:checked').val();
     $.ajax({
         url: '/get-generations/',
         method: 'POST',
@@ -282,7 +231,6 @@ $('.gameRadio input').on('click', function() {
     })
     .done(function(data) {
         $(".generationCheckbox").remove();
-        var generationIds = [];
 
         $.each(data, function() {
             var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
@@ -290,7 +238,6 @@ $('.gameRadio input').on('click', function() {
             var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text("Generation " + this.id);
             $(dropdownItem).append(dropdownInput).append(dropdownLabel);
             $("#generations").append($(dropdownItem));
-            generationIds.push(this.id);
         });
 
         if($.inArray(selectedGame, ['1', '2']) != -1)
@@ -359,6 +306,11 @@ $('.gameRadio input').on('click', function() {
             $(".otherFormCheckbox").hide();
             $("#Other").prop('checked', false);
         }
+        else
+        {
+            $(".otherFormCheckbox").show();
+            $("#Other").prop('checked', true);
+        }
 
         if($.inArray(selectedGame, ['0', '7', '7-1', '7-2', '8']) != -1)
         {
@@ -398,8 +350,60 @@ $('.gameRadio input').on('click', function() {
         checkOtherOptions();
     })
     .fail( function() {
-        alert("Failed To Get Team!");
+        alert("Failed To Get Generations!");
     });
+}, checkOtherOptions = function() {
+    var isVisible = 0;
+
+    $('.otherOption').each( function() {
+        if( $(this).css('display') != 'none' ) {
+             isVisible++;
+        }
+    });
+
+    if(isVisible == 0)
+    {
+        $('#otherOptions').hide();
+    }
+    else
+    {
+        $('#otherOptions').show();
+    }
+}, updateDropdown = function() {
+    altCheck = checkAltFormChecks();
+    legendCheck = checkLegendaryChecks();
+    megaCheck = checkMegaCheck();
+    checkUltraBeasts();
+    checkOtherOptions();
+};
+
+$(function() {
+    refreshGenerationsByGame();
+    generatorMenuCheck();
+    updateDropdown();
+});
+
+$('.generatorDropdown').on('mouseover', function() {
+    updateDropdown();
+});
+
+$('.alternateFormCheckbox').on('click', function() {
+    altCheck = checkAltFormChecks();
+    checkOtherOptions();
+});
+
+$('.legendaryCheckbox').on('click', function() {
+    legendCheck = checkLegendaryChecks();
+    checkOtherOptions();
+});
+
+$('.megaCheckbox').on('click', function() {
+    megaCheck = checkMegaCheck();
+    checkOtherOptions();
+});
+
+$('.gameRadio input').on('click', function() {
+    refreshGenerationsByGame();
 });
 
 $(window).on('resize', function() {
