@@ -607,19 +607,41 @@ namespace Pokedex.Controllers
                 }
             }
 
+            // Used to ensure that there are no issues when creating the pokemon detail.
+            List<PokemonTeamDetailViewModel> pokemonDetailList = new List<PokemonTeamDetailViewModel>();
+
             foreach(var p in filteredPokemonList)
             {
-                PokemonTeamDetail pokemon = this.CreatePokemonDetailFromImport(p);
-                int pokemonId = this._dataService.AddPokemonTeamDetail(pokemon);
+                pokemonDetailList.Add(this.CreatePokemonDetailFromImport(p));
+            }
+
+            foreach(var p in pokemonDetailList)
+            {
+                if(p.EVs != null)
+                {
+                    p.PokemonTeamEVId = this._dataService.AddPokemonTeamEV(p.EVs);
+                }
+
+                if(p.IVs != null)
+                {
+                    p.PokemonTeamIVId = this._dataService.AddPokemonTeamIV(p.IVs);
+                }
+                
+                if(p.Moveset != null)
+                {
+                    p.PokemonTeamMovesetId = this._dataService.AddPokemonTeamMoveset(p.Moveset);
+                }
+
+                int pokemonId = this._dataService.AddPokemonTeamDetail(p);
                 pokemonTeam.InsertPokemon(this._dataService.GetPokemonTeamDetail(pokemonId));
             }
 
             this._dataService.AddPokemonTeam(pokemonTeam);
         }
 
-        private PokemonTeamDetail CreatePokemonDetailFromImport(string importedPokemon)
+        private PokemonTeamDetailViewModel CreatePokemonDetailFromImport(string importedPokemon)
         {
-            PokemonTeamDetail pokemonTeamDetail = new PokemonTeamDetail();
+            PokemonTeamDetailViewModel pokemonTeamDetail = new PokemonTeamDetailViewModel();
             string pokemonName = importedPokemon.Split("\r\n")[0];
             string remainingImportedText = importedPokemon.Replace(pokemonName + "\r\n", string.Empty);
             pokemonName = pokemonName.Trim();
@@ -764,8 +786,7 @@ namespace Pokedex.Controllers
                     pokemonEVs.Speed = Convert.ToByte(speed);
                 }
 
-                int pokemonEVId = this._dataService.AddPokemonTeamEV(pokemonEVs);
-                pokemonTeamDetail.PokemonTeamEVId = pokemonEVId;
+                pokemonTeamDetail.EVs = pokemonEVs;
             }
             #endregion
 
@@ -822,8 +843,7 @@ namespace Pokedex.Controllers
                     pokemonIVs.Speed = Convert.ToByte(health);
                 }
 
-                int pokemonIVId = this._dataService.AddPokemonTeamIV(pokemonIVs);
-                pokemonTeamDetail.PokemonTeamIVId = pokemonIVId;
+                pokemonTeamDetail.IVs = pokemonIVs;
             }
             #endregion
 
@@ -850,8 +870,7 @@ namespace Pokedex.Controllers
                     moveset = this._dataService.SortMoveset(moveset);
                 }
 
-                int pokemonMovesetId = this._dataService.AddPokemonTeamMoveset(moveset);
-                pokemonTeamDetail.PokemonTeamMovesetId = pokemonMovesetId;
+                pokemonTeamDetail.Moveset = moveset;
             }
             #endregion
 
