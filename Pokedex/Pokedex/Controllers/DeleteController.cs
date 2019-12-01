@@ -68,7 +68,7 @@ namespace Pokedex.Controllers
         [Route("delete_type/{id:int}")]
         public IActionResult Type(Type type)
         {
-            List<TypeChart> typeCharts = this._dataService.GetTypeChartByType(type.Id);
+            List<TypeChart> typeCharts = this._dataService.GetTypeChartByDefendType(type.Id);
             foreach(var t in typeCharts)
             {
                 this._dataService.DeleteTypeChart(t.Id);    

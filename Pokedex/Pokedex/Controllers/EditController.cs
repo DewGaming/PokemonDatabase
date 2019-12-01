@@ -60,7 +60,7 @@ namespace Pokedex.Controllers
         {
             EditTypeChartViewModel model = new EditTypeChartViewModel()
             {
-                TypeChart = this._dataService.GetTypeChartByType(id),
+                TypeChart = this._dataService.GetTypeChartByDefendType(id),
                 Types = this._dataService.GetTypes(),
                 TypeId = id,
             };

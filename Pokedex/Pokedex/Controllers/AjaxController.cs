@@ -1262,7 +1262,7 @@ namespace Pokedex.Controllers
             {
                 TypeChart typeChart;
                 List<int> duplicateIds = resistances.Where(x => weaknesses.Contains(x)).ToList();
-                List<TypeChart> existingCharts = this._dataService.GetTypeChartByType(typeId);
+                List<TypeChart> existingCharts = this._dataService.GetTypeChartByDefendType(typeId);
 
                 foreach(var t in duplicateIds)
                 {
