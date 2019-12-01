@@ -55,6 +55,19 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Users", "Owner");
         }
 
+        [Route("edit_type_effectiveness/{id:int}")]
+        public IActionResult TypeEffectiveness(int id)
+        {
+            EditTypeChartViewModel model = new EditTypeChartViewModel()
+            {
+                TypeChart = this._dataService.GetTypeChartByType(id),
+                Types = this._dataService.GetTypes(),
+                TypeId = id,
+            };
+
+            return this.View(model);
+        }
+
         [HttpGet]
         [Route("edit_generation/{id}")]
         public IActionResult Generation(string id)

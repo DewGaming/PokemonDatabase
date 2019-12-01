@@ -280,7 +280,7 @@ namespace Pokedex.Controllers
         {
             TypeChartViewModel model = new TypeChartViewModel()
             {
-                TypeChart = this._dataService.GetTypeChart(),
+                TypeChart = this._dataService.GetTypeCharts(),
                 Types = this._dataService.GetTypeChartTypes(),
             };
 

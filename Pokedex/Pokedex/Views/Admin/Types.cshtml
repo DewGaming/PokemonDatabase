@@ -22,7 +22,9 @@
                     @item.Name
                 </td>
                 <td>
-                    <a href="@(Url.Action("Type", "Edit", new { id = item.Id }))">Edit</a>
+                    <a href="@(Url.Action("Type", "Edit", new { id = item.Id }))">Edit Name</a>
+                    |
+                    <a href="@(Url.Action("TypeEffectiveness", "Edit", new { id = item.Id }))">Edit Effectiveness</a>
                     @if(!(Model.AllPokemon.Exists(x => x.PrimaryType.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryType != null && x.SecondaryType.Id == item.Id)))
                     {
                         @('|')

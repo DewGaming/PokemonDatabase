@@ -8,8 +8,10 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public decimal Effective { get; set; }
         [Required]
+        public int AttackId { get; set; }
         public Type Attack { get; set; }
         [Required]
+        public int DefendId { get; set; }
         public Type Defend { get; set; }
     }
 }

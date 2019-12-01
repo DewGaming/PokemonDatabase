@@ -1255,6 +1255,59 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("update-type-chart")]
+        public string UpdateTypeChart(int typeId, List<int> resistances, List<int> weaknesses)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                TypeChart typeChart;
+                List<int> duplicateIds = resistances.Where(x => weaknesses.Contains(x)).ToList();
+                List<TypeChart> existingCharts = this._dataService.GetTypeChartByType(typeId);
+
+                foreach(var t in duplicateIds)
+                {
+                    resistances.Remove(resistances.Find(x => x == t));
+                    weaknesses.Remove(weaknesses.Find(x => x == t));
+                }
+                
+                foreach(var r in resistances)
+                {
+                    typeChart = new TypeChart()
+                    {
+                        AttackId = r,
+                        DefendId = typeId,
+                        Effective = 0.5m,
+                    };
+                    this._dataService.AddTypeChart(typeChart);
+                }
+                
+                foreach(var w in weaknesses)
+                {
+                    typeChart = new TypeChart()
+                    {
+                        AttackId = w,
+                        DefendId = typeId,
+                        Effective = 2m,
+                    };
+                    this._dataService.AddTypeChart(typeChart);
+                }
+
+                foreach(var t in existingCharts)
+                {
+                    this._dataService.DeleteTypeChart(t.Id);
+                }
+
+                return Json(Url.Action("Types", "Admin")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("get-pokemon-battle-items")]
         public List<BattleItem> GetPokemonBattleItems(string pokemonId, string generationId)
         {

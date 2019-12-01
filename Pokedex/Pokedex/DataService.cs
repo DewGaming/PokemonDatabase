@@ -57,6 +57,13 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public TypeChart GetTypeChart(int id)
+        {
+            return this._dataContext.TypeCharts
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
         public List<Type> GetTypes()
         {
             return this._dataContext.Types.OrderBy(x => x.Name).ToList();
@@ -1113,16 +1120,25 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<TypeChart> GetTypeChart()
+        public List<TypeChart> GetTypeCharts()
         {
-            List<TypeChart> typeChart = this._dataContext.TypeCharts
+            return this._dataContext.TypeCharts
                 .Include(x => x.Attack)
                 .Include(x => x.Defend)
-                .OrderBy(x => x.Attack.Id)
-                .ThenBy(x => x.Defend.Id)
+                .OrderBy(x => x.AttackId)
+                .ThenBy(x => x.DefendId)
                 .ToList();
+        }
 
-            return typeChart;
+        public List<TypeChart> GetTypeChartByType(int id)
+        {
+            return this._dataContext.TypeCharts
+                .Include(x => x.Attack)
+                .Include(x => x.Defend)
+                .Where(x => x.DefendId == id)
+                .OrderBy(x => x.AttackId)
+                .ThenBy(x => x.DefendId)
+                .ToList();
         }
 
         public TypeEffectivenessViewModel GetTypeChartPokemon(string pokemonId)
@@ -1626,6 +1642,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddTypeChart(TypeChart typeChart)
+        {
+            this._dataContext.TypeCharts.Add(typeChart);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddLegendaryType(LegendaryType legendaryType)
         {
             this._dataContext.LegendaryTypes.Add(legendaryType);
@@ -2040,6 +2062,13 @@ namespace Pokedex
         {
             Type type = this.GetType(id);
             this._dataContext.Types.Remove(type);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteTypeChart(int id)
+        {
+            TypeChart typeChart = this.GetTypeChart(id);
+            this._dataContext.TypeCharts.Remove(typeChart);
             this._dataContext.SaveChanges();
         }
 
