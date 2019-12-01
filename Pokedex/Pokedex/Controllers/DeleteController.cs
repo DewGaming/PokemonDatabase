@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,6 +68,12 @@ namespace Pokedex.Controllers
         [Route("delete_type/{id:int}")]
         public IActionResult Type(Type type)
         {
+            List<TypeChart> typeCharts = this._dataService.GetTypeChartByType(type.Id);
+            foreach(var t in typeCharts)
+            {
+                this._dataService.DeleteTypeChart(t.Id);    
+            }
+
             this._dataService.DeleteType(type.Id);
 
             return this.RedirectToAction("Types", "Admin");
