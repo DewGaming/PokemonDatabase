@@ -1130,6 +1130,17 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<TypeChart> GetTypeChartByAttackType(int id)
+        {
+            return this._dataContext.TypeCharts
+                .Include(x => x.Attack)
+                .Include(x => x.Defend)
+                .Where(x => x.AttackId == id)
+                .OrderBy(x => x.AttackId)
+                .ThenBy(x => x.DefendId)
+                .ToList();
+        }
+
         public List<TypeChart> GetTypeChartByDefendType(int id)
         {
             return this._dataContext.TypeCharts
