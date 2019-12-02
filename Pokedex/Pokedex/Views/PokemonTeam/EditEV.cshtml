@@ -16,45 +16,9 @@
 
 @section scripts
 {
+    <script src="/js/editEVs.js"></script>
     <script>
-        $(function() {
-            $('#healthVal').text(@Model.Health);
-            $('#attackVal').text(@Model.Attack);
-            $('#defenseVal').text(@Model.Defense);
-            $('#specialAttackVal').text(@Model.SpecialAttack);
-            $('#specialDefenseVal').text(@Model.SpecialDefense);
-            $('#speedVal').text(@Model.Speed);
-            $('.healthSlider').val(@Model.Health);
-            $('.attackSlider').val(@Model.Attack);
-            $('.defenseSlider').val(@Model.Defense);
-            $('.specialAttackSlider').val(@Model.SpecialAttack);
-            $('.specialDefenseSlider').val(@Model.SpecialDefense);
-            $('.speedSlider').val(@Model.Speed);
-        });
-
-        $('.healthSlider').on('input', function() {
-            $('#healthVal').text($(this).val());
-        });
-        
-        $('.attackSlider').on('input', function() {
-            $('#attackVal').text($(this).val());
-        });
-        
-        $('.defenseSlider').on('input', function() {
-            $('#defenseVal').text($(this).val());
-        });
-        
-        $('.specialAttackSlider').on('input', function() {
-            $('#specialAttackVal').text($(this).val());
-        });
-        
-        $('.specialDefenseSlider').on('input', function() {
-            $('#specialDefenseVal').text($(this).val());
-        });
-        
-        $('.speedSlider').on('input', function() {
-            $('#speedVal').text($(this).val());
-        });
+        $(setupLabels(@Model.Health, @Model.Attack, @Model.Defense, @Model.SpecialAttack, @Model.SpecialDefense, @Model.Speed));
     </script>
 }
 
