@@ -174,7 +174,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this._dataService.GetNatures(),
                     AllAbilities = this._dataService.GetAbilities(),
-                    AllBattleItems = this._dataService.GetBattleItems(),
+                    AllBattleItems = this._dataService.GetBattleItems().OrderBy(x => x.Name).ToList(),
                     GenerationId = pokemonTeam.GenerationId,
                 };
 
