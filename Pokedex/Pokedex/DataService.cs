@@ -145,6 +145,11 @@ namespace Pokedex
             return this._dataContext.Moves.OrderBy(x => x.Name).ToList();
         }
 
+        public List<MoveCategory> GetMoveCategories()
+        {
+            return this._dataContext.MoveCategories.ToList();
+        }
+
         public PokemonEggGroupDetail GetPokemonEggGroups(string pokemonId)
         {
             PokemonEggGroupDetail eggGroupDetail = this._dataContext.PokemonEggGroupDetails

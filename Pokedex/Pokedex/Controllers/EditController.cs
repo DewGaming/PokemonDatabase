@@ -855,7 +855,10 @@ namespace Pokedex.Controllers
                 BasePower = move.BasePower,
                 PP = move.PP,
                 Accuracy = move.Accuracy,
+                MoveTypeId = move.MoveTypeId,
+                MoveCategoryId = move.MoveCategoryId,
                 AllTypes = this._dataService.GetTypes(),
+                AllMoveCategories = this._dataService.GetMoveCategories(),
             };
 
             return this.View(model);
@@ -877,7 +880,10 @@ namespace Pokedex.Controllers
                     BasePower = moveReset.BasePower,
                     PP = moveReset.PP,
                     Accuracy = moveReset.Accuracy,
+                    MoveTypeId = move.MoveTypeId,
+                    MoveCategoryId = move.MoveCategoryId,
                     AllTypes = this._dataService.GetTypes(),
+                    AllMoveCategories = this._dataService.GetMoveCategories(),
                 };
 
                 return this.View(model);

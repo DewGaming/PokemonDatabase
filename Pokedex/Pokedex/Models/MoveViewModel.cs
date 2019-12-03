@@ -6,5 +6,7 @@ namespace Pokedex.Models
     public class MoveViewModel : Move
     {
         public List<Type> AllTypes { get; set; }
+
+        public List<MoveCategory> AllMoveCategories { get; set; }
     }
 }

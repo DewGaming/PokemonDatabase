@@ -72,6 +72,7 @@ namespace Pokedex.Controllers
             {
                 AllMoves = this._dataService.GetMoves(),
                 AllTypes = this._dataService.GetTypes(),
+                AllMoveCategories = this._dataService.GetMoveCategories(),
             };
 
             return this.View(model);

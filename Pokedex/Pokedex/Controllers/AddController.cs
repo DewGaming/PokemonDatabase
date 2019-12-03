@@ -235,6 +235,7 @@ namespace Pokedex.Controllers
             MoveViewModel model = new MoveViewModel()
             {
                 AllTypes = this._dataService.GetTypes(),
+                AllMoveCategories = this._dataService.GetMoveCategories(),
             };
 
             return this.View(model);
@@ -250,6 +251,7 @@ namespace Pokedex.Controllers
                 MoveViewModel model = new MoveViewModel()
                 {
                     AllTypes = this._dataService.GetTypes(),
+                    AllMoveCategories = this._dataService.GetMoveCategories(),
                 };
                 
                 return this.View(model);

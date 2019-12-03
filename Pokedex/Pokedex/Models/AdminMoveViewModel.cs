@@ -8,5 +8,7 @@ namespace Pokedex.Models
         public List<Move> AllMoves { get; set; }
 
         public List<Type> AllTypes { get; set; }
+
+        public List<MoveCategory> AllMoveCategories { get; set; }
     }
 }

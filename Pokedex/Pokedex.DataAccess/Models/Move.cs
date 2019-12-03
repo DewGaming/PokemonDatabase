@@ -10,6 +10,9 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public string Description { get; set; }
         [Required]
+        public int MoveCategoryId { get; set; }
+        public MoveCategory MoveCategory { get; set; }
+        [Required]
         public int MoveTypeId { get; set; }
         public Type MoveType { get; set; }
         public byte? BasePower { get; set; }
