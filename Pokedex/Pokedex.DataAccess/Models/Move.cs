@@ -12,10 +12,9 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public int MoveTypeId { get; set; }
         public Type MoveType { get; set; }
-        [Required]
-        public byte BasePower { get; set; }
+        public byte? BasePower { get; set; }
         [Required]
         public byte PP { get; set; }
-        public byte Accuracy { get; set; }
+        public byte? Accuracy { get; set; }
     }
 }
