@@ -1,0 +1,60 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.MoveViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Update Move</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {      
+        @Html.AntiForgeryToken()
+          
+        @Html.HiddenFor(x => x.Id)
+
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Name, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Name)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Description, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Description, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Description)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.MoveTypeId, "Type", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.MoveTypeId, new SelectList(Model.AllTypes, "Id", "Name"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.MoveTypeId)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.BasePower, "Base Power", new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.BasePower, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.BasePower)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.PP, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.PP, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.PP)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Accuracy, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Accuracy, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Accuracy)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Save</button>
+        </p>
+    }
+
+</div>

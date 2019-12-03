@@ -3,7 +3,7 @@
     if(User.IsInRole("Admin") || User.IsInRole("Owner"))
     {
         dropdownWidth = "28rem";
-        dropdownHeight = "28rem";
+        dropdownHeight = "29.3rem";
         columnWidth = "50%";
     }
     else
@@ -56,6 +56,7 @@
                     <a class="dropdown-item" href="@Url.Action("Forms", "Admin")">Forms</a>
                     <a class="dropdown-item" href="@Url.Action("Generations", "Admin")">Generations</a>
                     <a class="dropdown-item" href="@Url.Action("LegendaryTypes", "Admin")">Legendary Types</a>
+                    <a class="dropdown-item" href="@Url.Action("Moves", "Admin")">Moves</a>
                     <a class="dropdown-item" href="@Url.Action("Natures", "Admin")">Natures</a>
                     <a class="dropdown-item" href="@Url.Action("Pokemon", "Admin")">Pokemon</a>
                     <a class="dropdown-item" href="@Url.Action("ShinyHuntingTechniques", "Admin")">Shiny Hunting Techniques</a>

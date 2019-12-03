@@ -229,6 +229,38 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_move")]
+        public IActionResult Move()
+        {
+            MoveViewModel model = new MoveViewModel()
+            {
+                AllTypes = this._dataService.GetTypes(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_move")]
+        public IActionResult Move(Move move)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                MoveViewModel model = new MoveViewModel()
+                {
+                    AllTypes = this._dataService.GetTypes(),
+                };
+                
+                return this.View(model);
+            }
+
+            this._dataService.AddMove(move);
+
+            return this.RedirectToAction("Moves", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_classification")]
         public IActionResult Classification()
         {

@@ -65,6 +65,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("moves")]
+        public IActionResult Moves()
+        {
+            AdminMoveViewModel model = new AdminMoveViewModel()
+            {
+                AllMoves = this._dataService.GetMoves(),
+                AllTypes = this._dataService.GetTypes(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("ability")]
         public IActionResult Abilities()
         {

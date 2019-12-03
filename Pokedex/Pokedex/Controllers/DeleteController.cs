@@ -100,6 +100,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_move/{id:int}")]
+        public IActionResult Move(int id)
+        {
+            Move model = this._dataService.GetMove(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_move/{id:int}")]
+        public IActionResult Move(Move move)
+        {
+            this._dataService.DeleteMove(move.Id);
+
+            return this.RedirectToAction("Moves", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_capture_rate/{id:int}")]
         public IActionResult CaptureRate(int id)
         {

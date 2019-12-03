@@ -843,6 +843,52 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_move/{id:int}")]
+        public IActionResult Move(int id)
+        {
+            Move move = this._dataService.GetMove(id);
+            MoveViewModel model = new MoveViewModel()
+            {
+                Id = move.Id,
+                Name = move.Name,
+                Description = move.Description,
+                BasePower = move.BasePower,
+                PP = move.PP,
+                Accuracy = move.Accuracy,
+                AllTypes = this._dataService.GetTypes(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_move/{id:int}")]
+        public IActionResult Move(Move move)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Move moveReset = this._dataService.GetMove(move.Id);
+                MoveViewModel model = new MoveViewModel()
+                {
+                    Id = moveReset.Id,
+                    Name = moveReset.Name,
+                    Description = moveReset.Description,
+                    BasePower = moveReset.BasePower,
+                    PP = moveReset.PP,
+                    Accuracy = moveReset.Accuracy,
+                    AllTypes = this._dataService.GetTypes(),
+                };
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateMove(move);
+
+            return this.RedirectToAction("Moves", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_legendary_type/{id:int}")]
         public IActionResult LegendaryType(int id)
         {

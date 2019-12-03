@@ -1,0 +1,58 @@
+@model Pokedex.Models.AdminMoveViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="moveTable">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("Move", "Add")" role="button">Add Move</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Description</th>
+            <th scope="col">Base Power</th>
+            <th scope="col">PP</th>
+            <th scope="col">Accuracy</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllMoves)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@Model.AllTypes.Find(x => x.Id == item.MoveTypeId).Name</td>
+                <td>@item.Description</td>
+                <td>
+                    @if(item.BasePower != null)
+                    {
+                        @item.BasePower
+                    }
+                    else
+                    {
+                        @("--");
+                    }
+                </td>
+                <td>@item.PP</td>
+                <td>
+                    @if(item.Accuracy != null)
+                    {
+                        @item.Accuracy
+                    }
+                    else
+                    {
+                        @("--");
+                    }
+                </td>
+                <td>
+                    <a href="@(Url.Action("Move", "Edit", new { id = item.Id }))">Edit</a>
+                    |
+                    <a href="@(Url.Action("Move", "Delete", new { id = item.Id }))">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
