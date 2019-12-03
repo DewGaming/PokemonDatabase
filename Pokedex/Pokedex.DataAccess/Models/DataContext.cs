@@ -57,6 +57,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<BattleItem> BattleItems { get; set; }
         public DbSet<Nature> Natures { get; set; }
         public DbSet<Move> Moves { get; set; }
+        public DbSet<MoveCategory> MoveCategories { get; set; }
         public DbSet<ReviewedPokemon> ReviewedPokemons { get; set; }
         public DbSet<PokemonGameDetail> PokemonGameDetails { get; set; }
     }

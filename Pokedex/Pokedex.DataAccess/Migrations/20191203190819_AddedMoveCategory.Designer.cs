@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20191203190819_AddedMoveCategory")]
+    partial class AddedMoveCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,8 +376,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<int>("MoveCategoryId");
-
                     b.Property<int>("MoveTypeId");
 
                     b.Property<string>("Name")
@@ -384,8 +384,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<byte>("PP");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MoveCategoryId");
 
                     b.HasIndex("MoveTypeId");
 
@@ -983,11 +981,6 @@ namespace Pokedex.DataAccess.Migrations
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.Move", b =>
                 {
-                    b.HasOne("Pokedex.DataAccess.Models.MoveCategory", "MoveCategory")
-                        .WithMany()
-                        .HasForeignKey("MoveCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Pokedex.DataAccess.Models.Type", "MoveType")
                         .WithMany()
                         .HasForeignKey("MoveTypeId")
