@@ -250,7 +250,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
             $(".onePokemonFormBoolCheckbox").hide();
             $("#onePokemonFormBool").prop('checked', false);
         }
-        else if (!$('.randomAbilityCheckbox').is(':visible'))
+        else
         {
             $("#alternateForms").show();
             $(".randomAbilityCheckbox").show();
@@ -305,11 +305,6 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         {
             $(".otherFormCheckbox").hide();
             $("#Other").prop('checked', false);
-        }
-        else
-        {
-            $(".otherFormCheckbox").show();
-            $("#Other").prop('checked', true);
         }
 
         if($.inArray(selectedGame, ['0', '7', '7-1', '7-2', '8']) != -1)

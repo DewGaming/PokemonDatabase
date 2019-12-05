@@ -124,3 +124,20 @@ function lookupAdminGeneration(generationId) {
     });
   }
 }
+
+function lookupMoveTypes(typeId) {
+  if(!$('.active').is($('#Type' + typeId)))
+  {
+    $('button').each(function() {
+      $(this).removeClass('active');
+    });
+    
+    $('.page').each(function() {
+      $(this).removeClass('active');
+    });
+
+    $('button#Type' + typeId).addClass('active');
+
+    $('.type' + typeId).addClass('active');
+  }
+}
