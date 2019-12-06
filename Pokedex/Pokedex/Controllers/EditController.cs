@@ -313,6 +313,11 @@ namespace Pokedex.Controllers
         {
             Pokemon model = this._dataService.GetPokemonById(id);
 
+            if(id.Contains('-'))
+            {
+                model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+            }
+
             return this.View(model);
         }
 
