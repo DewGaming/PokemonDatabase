@@ -3,6 +3,9 @@
  max-height:150px;
  margin:5px
 }
+.evolutionImage img {
+  height: 3.5rem !important;
+}
 .column {
   float: left;
 }
@@ -159,10 +162,12 @@ main {
  border:0;
  cursor:pointer;
  overflow:hidden;
- outline:0
+ outline:0;
+ padding: 0;
 }
 .differentForms img {
- opacity:.8
+ opacity:.8;
+ height:3.5rem;
 }
 .table tbody tr:first-of-type * {
  border-top-width:0;
@@ -287,8 +292,7 @@ img {
  display:none
 }
 .lightshadowed {
- height:2.5rem;
- margin:.2rem 0
+ height:4rem;
 }
 .pokemonTeamPokemon {
  height:  100% !important;
