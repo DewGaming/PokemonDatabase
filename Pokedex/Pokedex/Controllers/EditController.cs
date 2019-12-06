@@ -357,7 +357,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + id.ToString() + ".png");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -1194,7 +1194,7 @@ namespace Pokedex.Controllers
 
             this._dataService.DeletePokemon(oldNumber);
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + oldNumber + ".png");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + oldNumber + ".png");
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
             request.Method = WebRequestMethods.Ftp.Rename;
             request.RenameTo = newPokemon.Id + ".png";

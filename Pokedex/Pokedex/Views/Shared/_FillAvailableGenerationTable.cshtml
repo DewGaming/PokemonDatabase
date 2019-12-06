@@ -8,19 +8,19 @@
             @if(p.Id.Contains('-'))
             {
                 <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                    <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+                    <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
                 </a>
             }
             else
             {
                 <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                    <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+                    <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
                 </a>
             }
         }
         else
         {
-            <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Id + ".png")">
+            <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
         }
         <div class="description">
             <span class="pokemonName">#@p.PokedexNumber.PadLeft(3, '0') @p.Name.Replace('_', ' ')</span>

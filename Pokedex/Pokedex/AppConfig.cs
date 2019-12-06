@@ -8,7 +8,9 @@ namespace Pokedex
 
         public string WebUrl { get; set; }
 
-        public string FTPUrl { get; set; }
+        public string PokemonImageUrl { get; set; }
+
+        public string PokemonImageFTPUrl { get; set; }
 
         public string FTPUsername { get; set; }
 

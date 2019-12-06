@@ -18,32 +18,32 @@
         <div class="pokemonList">
             @if(@Model.FirstPokemon != null)
             {
-                <img class="lightshadowed pokemonTeamPokemon" title="@Model.FirstPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.FirstPokemon.Pokemon.Id + ".png")" />
+                <img class="lightshadowed pokemonTeamPokemon" title="@Model.FirstPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.FirstPokemon.Pokemon.Id + ".png")" />
             }
 
             @if(@Model.SecondPokemon != null)
             {
-                <img class="lightshadowed pokemonTeamPokemon" title="@Model.SecondPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.SecondPokemon.Pokemon.Id + ".png")" />
+                <img class="lightshadowed pokemonTeamPokemon" title="@Model.SecondPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.SecondPokemon.Pokemon.Id + ".png")" />
             }
             
             @if(@Model.ThirdPokemon != null)
             {
-                <img class="lightshadowed pokemonTeamPokemon" title="@Model.ThirdPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.ThirdPokemon.Pokemon.Id + ".png")" />
+                <img class="lightshadowed pokemonTeamPokemon" title="@Model.ThirdPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.ThirdPokemon.Pokemon.Id + ".png")" />
             }
             
             @if(@Model.FourthPokemon != null)
             {
-                <img class="lightshadowed pokemonTeamPokemon" title="@Model.FourthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.FourthPokemon.Pokemon.Id + ".png")" />
+                <img class="lightshadowed pokemonTeamPokemon" title="@Model.FourthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.FourthPokemon.Pokemon.Id + ".png")" />
             }
             
             @if(@Model.FifthPokemon != null)
             {
-                <img class="lightshadowed pokemonTeamPokemon" title="@Model.FifthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.FifthPokemon.Pokemon.Id + ".png")" />
+                <img class="lightshadowed pokemonTeamPokemon" title="@Model.FifthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.FifthPokemon.Pokemon.Id + ".png")" />
             }
             
             @if(@Model.SixthPokemon != null)
             {
-                <img class="lightshadowed pokemonTeamPokemon" title="@Model.SixthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.SixthPokemon.Pokemon.Id + ".png")" />
+                <img class="lightshadowed pokemonTeamPokemon" title="@Model.SixthPokemon.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.SixthPokemon.Pokemon.Id + ".png")" />
             }
         </div>
 

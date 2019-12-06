@@ -21,7 +21,7 @@
         </div>
 
         <div class="pokemonList">
-            <img class="lightshadowed pokemonTeamPokemon" title="@Model.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @Model.Pokemon.Id + ".png")" />
+            <img class="lightshadowed pokemonTeamPokemon" title="@Model.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.Pokemon.Id + ".png")" />
         </div>
 
         <br>

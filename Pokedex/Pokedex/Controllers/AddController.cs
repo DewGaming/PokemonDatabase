@@ -716,7 +716,7 @@ namespace Pokedex.Controllers
 
             if(upload != null)
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + newPokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -737,7 +737,7 @@ namespace Pokedex.Controllers
 
                 byte[] file = request.DownloadData(_appConfig.WebUrl + "/images/general/tempPhoto.png");
                 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + newPokemon.Id.ToString() + ".png");
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + newPokemon.Id.ToString() + ".png");
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -841,7 +841,7 @@ namespace Pokedex.Controllers
 
             if(upload != null)
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + alternatePokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + alternatePokemon.Id.ToString() + upload.FileName.Substring(upload.FileName.LastIndexOf('.')));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -862,7 +862,7 @@ namespace Pokedex.Controllers
 
                 byte[] file = request.DownloadData(_appConfig.WebUrl + "/images/general/tempPhoto.png");
                 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl + alternatePokemon.Id.ToString() + ".png");
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + alternatePokemon.Id.ToString() + ".png");
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 

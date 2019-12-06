@@ -74,7 +74,7 @@
                                                         <span class="pokemonTeamPicture">
                                                             <img class="lightshadowed pokemonTeamPokemon" title="Pokemon: @p.Pokemon.Name.Replace('_', ' ')@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")
 Ability: @p.Ability.Name
-@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(@Model.AppConfig.WebUrl + "/images/pokemon/" + @p.Pokemon.Id + ".png")" />
+@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.Pokemon.Id + ".png")" />
                                                         </span>
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
