@@ -619,14 +619,15 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("get-pokemon-by-generation/{generationId}")]
-        public IActionResult GetPokemonByGeneration(string generationId)
+        [Route("get-pokemon-by-generation/{generationId}/{showSprites:int}")]
+        public IActionResult GetPokemonByGeneration(string generationId, int showSprites)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 GenerationTableViewModel model = new GenerationTableViewModel()
                 {
                     PokemonList = this._dataService.GetAllPokemonWithTypes().Where(x => x.Pokemon.GenerationId == generationId || x.Pokemon.GenerationId.Contains(generationId + '-')).ToList(),
+                    ShowSprites = Convert.ToBoolean(showSprites),
                     AppConfig = _appConfig,
                 };
 

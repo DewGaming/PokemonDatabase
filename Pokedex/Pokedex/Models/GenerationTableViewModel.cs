@@ -9,6 +9,8 @@ namespace Pokedex.Models
         
         public List<Pokemon> PokemonNoTypeList { get; set; }
 
+        public bool ShowSprites { get; set; }
+
         public AppConfig AppConfig { get; set; }
     }
 }
