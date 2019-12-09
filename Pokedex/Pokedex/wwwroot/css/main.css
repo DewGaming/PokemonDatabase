@@ -292,11 +292,11 @@ label {
  max-height:4rem;
 }
 .pokemonTeamPokemon {
- height: 4.5rem;
+ width:3rem;
+ object-fit: contain;
 }
 .pokemonTeamPicture {
  display: inline-block;
- width: 3rem;
  text-align: center;
 }
 .teamButton {
