@@ -2,23 +2,20 @@ var currentGeneration = 0, showSprites = false;
 
 function swapImages() {
   showSprites = !showSprites;
-  if (showSprites)
-  {
+  if (showSprites) {
     $('.imageSwapper').text("Switch To Official Artwork");
   }
-  else
-  {
+  else {
     $('.imageSwapper').text("Switch To Sprites");
   }
 
-  if(currentGeneration != 0)
-  {
+  if (currentGeneration != 0) {
     lookupGeneration(currentGeneration);
   }
 }
 
 function lookupPage(pageName) {
-  $('.active').each(function() {
+  $('.active').each(function () {
     $(this).removeClass('active');
   })
 
@@ -27,38 +24,36 @@ function lookupPage(pageName) {
 }
 
 function lookupPokemon(pageName, iconLink, pokemonName) {
-  $('.active').each(function() {
+  $('.active').each(function () {
     $(this).removeClass('active');
   })
 
   pokemonName = pokemonName.replace("&apos;", "\'");
 
   $('#' + pageName.replace('%', '\\%')).addClass('active');
-  
+
   $('.tabIcon').attr("href", iconLink);
   $('.pageTitle').text(pokemonName + " | Pokemon Database");
 }
 
 function lookupIncompletePokemon() {
-  $('button').each(function() {
+  $('button').each(function () {
     $(this).removeClass('active');
   });
 
   $('.pokemonList').removeClass('active');
   $('.pokemonList > .grid-container').empty();
 
-  $('.grid-container').load('/get-incomplete-pokemon-admin/', function (){
-    $.each($('.grid-container .pokemonName'), function(index, item)
-    {
-      if($(item).text().includes('_'))
-      {
+  $('.grid-container').load('/get-incomplete-pokemon-admin/', function () {
+    $.each($('.grid-container .pokemonName'), function (index, item) {
+      if ($(item).text().includes('_')) {
         $(item).text($(item).text().replace('_', ' '));
       }
     });
 
     $('.pokemonList').addClass('active');
   });
-  
+
   $('.pageButtons').hide();
   $('.incompletePokemon').hide();
   $('.allPokemon').show();
@@ -67,19 +62,18 @@ function lookupIncompletePokemon() {
 function lookupAllPokemon() {
   $('.pokemonList > .grid-container').empty();
   $('.pokemonList').removeClass('active');
-  
+
   $('.pageButtons').show();
   $('.incompletePokemon').show();
   $('.allPokemon').hide();
 };
 
 function lookupGeneration(generationId) {
-  if(currentGeneration != generationId)
-  {
+  if (currentGeneration != generationId) {
     currentGeneration = generationId;
   }
 
-  $('button').each(function() {
+  $('button').each(function () {
     $(this).removeClass('active');
   });
 
@@ -87,11 +81,9 @@ function lookupGeneration(generationId) {
   $('.pokemonList > .grid-container').empty();
   $('button#Generation' + generationId).addClass('active');
 
-  $('.grid-container').load('/get-pokemon-by-generation/' + generationId + '/' + +showSprites, function (){
-    $.each($('.grid-container .pokemonName'), function(index, item)
-    {
-      if($(item).text().includes('_'))
-      {
+  $('.grid-container').load('/get-pokemon-by-generation/' + generationId + '/' + +showSprites, function () {
+    $.each($('.grid-container .pokemonName'), function (index, item) {
+      if ($(item).text().includes('_')) {
         $(item).text($(item).text().replace('_', ' '));
       }
     });
@@ -101,9 +93,8 @@ function lookupGeneration(generationId) {
 }
 
 function lookupAvailableGeneration(generationId) {
-  if(!$('.active').is($('#Generation' + generationId)))
-  {
-    $('button').each(function() {
+  if (!$('.active').is($('#Generation' + generationId))) {
+    $('button').each(function () {
       $(this).removeClass('active');
     });
 
@@ -113,7 +104,7 @@ function lookupAvailableGeneration(generationId) {
     $('.pokemonList > .grid-container').empty();
     $('button#Generation' + generationId).addClass('active');
 
-    $('.grid-container').load('/get-available-pokemon-by-generation/' + generationId, function (){
+    $('.grid-container').load('/get-available-pokemon-by-generation/' + generationId, function () {
       $('.pokemonList').prepend($('<p>').addClass('pokemonCount').text('Count: ' + $('.grid-container').children().length));
 
       $('.pokemonList').addClass('active');
@@ -122,9 +113,8 @@ function lookupAvailableGeneration(generationId) {
 }
 
 function lookupAdminGeneration(generationId) {
-  if(!$('.active').is($('#Generation' + generationId)))
-  {
-    $('button').each(function() {
+  if (!$('.active').is($('#Generation' + generationId))) {
+    $('button').each(function () {
       $(this).removeClass('active');
     });
 
@@ -132,11 +122,9 @@ function lookupAdminGeneration(generationId) {
     $('.pokemonList > .grid-container').empty();
     $('button#Generation' + generationId).addClass('active');
 
-    $('.grid-container').load('/get-pokemon-by-generation-admin/' + generationId, function (){
-      $.each($('.grid-container .pokemonName'), function(index, item)
-      {
-        if($(item).text().includes('_'))
-        {
+    $('.grid-container').load('/get-pokemon-by-generation-admin/' + generationId, function () {
+      $.each($('.grid-container .pokemonName'), function (index, item) {
+        if ($(item).text().includes('_')) {
           $(item).text($(item).text().replace('_', ' '));
         }
       });
@@ -147,13 +135,12 @@ function lookupAdminGeneration(generationId) {
 }
 
 function lookupMoveTypes(typeId) {
-  if(!$('.active').is($('#Type' + typeId)))
-  {
-    $('button').each(function() {
+  if (!$('.active').is($('#Type' + typeId))) {
+    $('button').each(function () {
       $(this).removeClass('active');
     });
-    
-    $('.page').each(function() {
+
+    $('.page').each(function () {
       $(this).removeClass('active');
     });
 

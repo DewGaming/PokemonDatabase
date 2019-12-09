@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     var catchRate = $('.catchRate').attr('id');
     var x = Math.min(255, catchRate / 3);
     var y;

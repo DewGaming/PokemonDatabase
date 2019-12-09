@@ -1,10 +1,8 @@
-$(".navbar-toggler").on('click', function (){
-    if($('.fixed-nav').hasClass('nav-scroll'))
-    {
+$(".navbar-toggler").on('click', function () {
+    if ($('.fixed-nav').hasClass('nav-scroll')) {
         $('.fixed-nav').removeClass('nav-scroll');
     }
-    else
-    {
+    else {
         $('.fixed-nav').addClass('nav-scroll');
     }
 });
