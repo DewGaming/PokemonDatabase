@@ -380,6 +380,78 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokemon_sprite/{id}")]
+        public IActionResult SpriteImage(string id)
+        {
+            Pokemon model = this._dataService.GetPokemonById(id);
+
+            if(id.Contains('-'))
+            {
+                model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_sprite/{id}")]
+        public async Task<IActionResult> SpriteImage(Pokemon pokemon, string id, IFormFile upload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Pokemon model = this._dataService.GetPokemonById(id);
+
+                if(id.Contains('-'))
+                {
+                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                }
+                
+                return this.View(model);
+            }
+            else if (upload == null)
+            {
+                Pokemon model = this._dataService.GetPokemonById(id);
+
+                if(id.Contains('-'))
+                {
+                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                }
+                
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if (!upload.FileName.Contains(".png"))
+            {
+                Pokemon model = this._dataService.GetPokemonById(id);
+
+                if(id.Contains('-'))
+                {
+                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                }
+                
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.SpriteImageFTPUrl + id.ToString() + ".png");
+            request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+            using (var requestStream = request.GetRequestStream())  
+            {  
+                await upload.CopyToAsync(requestStream);  
+            }
+
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            {
+                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_typing/{pokemonId}")]
         public IActionResult Typing(string pokemonId)
         {

@@ -1,6 +1,7 @@
 .pokemonListPicture {
- max-width:150px;
- max-height:150px;
+ width:150px;
+ height:150px;
+ object-fit:contain;
  margin:5px
 }
 .column {
@@ -159,10 +160,8 @@ main {
  border:0;
  cursor:pointer;
  overflow:hidden;
- outline:0
-}
-.differentForms img {
- opacity:.8
+ outline:0;
+ padding: 0;
 }
 .table tbody tr:first-of-type * {
  border-top-width:0;
@@ -245,15 +244,13 @@ main {
 label {
  margin-bottom:0
 }
-img {
- border:0;
- max-width:318px;
- max-height:318px;
- width:auto;
- height:auto
-}
 .pokemonInfo {
  width:24.5rem
+}
+.pokemonInfo > img {
+  width:318px;
+  height:318px;
+  object-fit: contain;
 }
 .pokemonPicture img {
  display:block;
@@ -262,7 +259,7 @@ img {
 }
 .previousPokemon,
 .nextPokemon {
- width:50%
+ width:50%;
 }
 .previousPokemon,
 .previousPokemon table {
@@ -276,6 +273,11 @@ img {
 .evolutionPokemon {
  width:100%
 }
+.surroundingPokemon img, .differentForms img {
+  height: 96px;
+  object-fit: contain;
+  padding: 10px;
+}
 .surroundingPokemon a,
 .evolutionPokemon a,
 .surroundingPokemon a:hover,
@@ -287,12 +289,10 @@ img {
  display:none
 }
 .lightshadowed {
- height:2.5rem;
- margin:.2rem 0
+ max-height:4rem;
 }
 .pokemonTeamPokemon {
- height:  100% !important;
- max-height:  3.9rem !important;
+ height: 4.5rem;
 }
 .pokemonTeamPicture {
  display: inline-block;
@@ -317,7 +317,7 @@ img {
 }
 .evolutionPokemon a,
 .evolutionPokemon span {
- padding:0 10px
+ padding:0 10px;
 }
 h2 {
  font-size:1.5rem;

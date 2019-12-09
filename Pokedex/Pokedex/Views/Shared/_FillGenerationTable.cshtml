@@ -1,10 +1,21 @@
 @model Pokedex.Models.GenerationTableViewModel;
+@{
+    string pokemonImageUrl;
+}
 
 @foreach(var p in Model.PokemonList)
 {
+    @if(Model.ShowSprites)
+    {
+        pokemonImageUrl = Model.AppConfig.SpriteImageUrl + @p.PokemonId + ".png";
+    }
+    else
+    {
+        pokemonImageUrl = Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png";
+    }
     <div class="@p.Pokemon.Name">
         <a href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-            <img class="pokemonlistPicture" title="@p.Pokemon.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png")">
+            <img class="pokemonlistPicture" title="@p.Pokemon.Name.Replace('_', ' ')", src="@Url.Content(@pokemonImageUrl)">
         </a>
         <div class="description">
             <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Pokemon.PokedexNumber.PadLeft(3, '0') @p.Pokemon.Name.Replace(' ', '_')</a>
