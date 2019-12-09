@@ -163,9 +163,6 @@ main {
  outline:0;
  padding: 0;
 }
-.differentForms img {
- padding:5.5px;
-}
 .table tbody tr:first-of-type * {
  border-top-width:0;
  padding-bottom:10px;
@@ -276,7 +273,7 @@ label {
 .evolutionPokemon {
  width:100%
 }
-.surroundingPokemon img {
+.surroundingPokemon img, .differentForms img {
   height: 96px;
   object-fit: contain;
   padding: 10px;
