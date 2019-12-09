@@ -6,7 +6,7 @@
 
 .attemptCounter.focus, .attemptCounter:focus {
     -webkit-box-shadow: none !important;
-            box-shadow: none !important;
+    box-shadow: none !important;
 }
 
 .shinyCharmCheckBox.hidden {
@@ -22,24 +22,24 @@
 }
 
 .shinyHunt {
- padding-top:10px;
- display:-webkit-box;
- display:-ms-flexbox;
- display:flex;
- -ms-flex-wrap:wrap;
- flex-wrap:wrap
+    padding-top: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap
 }
 
 .shinyHunt th {
-  color: #737373;
-  font-size: .875rem;
-  font-weight: normal;
-  text-align: left;
+    color: #737373;
+    font-size: .875rem;
+    font-weight: normal;
+    text-align: left;
 }
 
 .shinyHunt th, td {
-  border-width: 1px 0;
-  border-style: solid;
-  border-color: #dbdbdb;
-  padding: 4px 10px;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #dbdbdb;
+    padding: 4px 10px;
 }

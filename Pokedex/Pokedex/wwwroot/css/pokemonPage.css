@@ -1,25 +1,25 @@
 .typing div {
-    width: 25%;
-  }
+  width: 25%;
+}
 
-  .WeakAgainst {
-      margin-right: 10px;
+.WeakAgainst {
+  margin-right: 10px;
+}
+
+@media (min-width: 783px) {
+  .container {
+    max-width: 762px !important;
   }
-  
-  @media (min-width: 783px){
-    .container {
-      max-width: 762px !important;
-    }
+}
+
+@media (min-width: 900px) {
+  .container {
+    max-width: 85% !important;
   }
-  
-  @media (min-width: 900px){
-    .container {
-      max-width: 85% !important;
-    }
+}
+
+@media (min-width: 1159px) {
+  .container {
+    max-width: 1138px !important;
   }
-  
-  @media (min-width: 1159px){
-    .container {
-      max-width: 1138px !important;
-    }
-  }
+}
