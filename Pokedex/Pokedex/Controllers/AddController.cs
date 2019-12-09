@@ -229,11 +229,12 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_move")]
-        public IActionResult Move()
+        [Route("add_move/{typeId:int}")]
+        public IActionResult Move(int typeId)
         {
             MoveViewModel model = new MoveViewModel()
             {
+                MoveTypeId = typeId,
                 AllTypes = this._dataService.GetTypes(),
                 AllMoveCategories = this._dataService.GetMoveCategories(),
             };
@@ -243,13 +244,14 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_move")]
+        [Route("add_move/{typeId:int}")]
         public IActionResult Move(Move move)
         {
             if (!this.ModelState.IsValid)
             {
                 MoveViewModel model = new MoveViewModel()
                 {
+                    MoveTypeId = move.MoveTypeId,
                     AllTypes = this._dataService.GetTypes(),
                     AllMoveCategories = this._dataService.GetMoveCategories(),
                 };

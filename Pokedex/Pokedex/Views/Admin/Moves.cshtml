@@ -13,13 +13,6 @@
     <script src="/js/pageLookup.js" type="text/javascript"></script>
 }
 
-@if(User.IsInRole("Owner"))
-{
-    <p>
-        <a class="btn btn-primary" href="@Url.Action("Move", "Add")" role="button">Add Move</a>
-    </p>
-}
-
 <div class="pageButtons">
     @foreach(var item in Model.AllTypes)
     {
@@ -30,6 +23,12 @@
     @foreach(var type in Model.AllTypes)
     {
         <div class="page type@(type.Id)">
+            @if(User.IsInRole("Owner"))
+            {
+                <p>
+                    <a class="btn btn-primary" href="@Url.Action("Move", "Add", new { typeId = @type.Id })" role="button">Add Move</a>
+                </p>
+            }
             <table class="moveTable">
                 <tr>
                     <th scope="col">Name</th>
