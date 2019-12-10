@@ -1,5 +1,5 @@
 function updateTypeChart(typeId) {
-    var resistances = [], weaknesses = [];
+    var resistances = [], weaknesses = [], immunities = [];
     $('.resistance input').each(function () {
         if ($(this).is(':checked')) {
             resistances.push(this.value);
@@ -12,10 +12,16 @@ function updateTypeChart(typeId) {
         }
     });
 
+    $('.immunity input').each(function () {
+        if ($(this).is(':checked')) {
+            immunities.push(this.value);
+        }
+    });
+
     $.ajax({
         url: '/update-type-chart/',
         method: "POST",
-        data: { "typeId": typeId, "resistances": resistances, "weaknesses": weaknesses }
+        data: { "typeId": typeId, "resistances": resistances, "weaknesses": weaknesses, "immunities": immunities }
     })
         .done(function (data) {
             window.location = data;

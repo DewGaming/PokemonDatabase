@@ -24,7 +24,7 @@
 
 <div class="flexDiv">
     <div class="resistance typeChart col-md-5">
-        <p>Resist</p>
+        <p>Resist To</p>
         <ul>
             @foreach(var t in Model.Types.OrderBy(x => x.Name))
             {
@@ -37,7 +37,7 @@
         </ul>
     </div>
     <div class="weakness typeChart col-md-5">
-        <p>Weak</p>
+        <p>Weak To</p>
         <ul>
             @foreach(var t in Model.Types.OrderBy(x => x.Name))
             {
@@ -45,6 +45,19 @@
                 <li>
                     <input id="weakness@(t.Name)" type="checkbox" value="@t.Id" @(typeChart != null && typeChart.Effective == 2m ? "checked=checked" : "") />
                     <label for="weakness@(t.Name)" class="generatorOptionTitle"><span class="type-icon type-@t.Name.ToLower() type-cell">@t.Name</span></label>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="immunity typeChart col-md-5">
+        <p>Immune To</p>
+        <ul>
+            @foreach(var t in Model.Types.OrderBy(x => x.Name))
+            {
+                var typeChart = @Model.TypeChart.Find(x => x.AttackId == t.Id);
+                <li>
+                    <input id="immunity@(t.Name)" type="checkbox" value="@t.Id" @(typeChart != null && typeChart.Effective == 0m ? "checked=checked" : "") />
+                    <label for="immunity@(t.Name)" class="generatorOptionTitle"><span class="type-icon type-@t.Name.ToLower() type-cell">@t.Name</span></label>
                 </li>
             }
         </ul>
