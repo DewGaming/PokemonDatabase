@@ -12,9 +12,13 @@ namespace Pokedex
 
         public string SpriteImageUrl { get; set; }
 
+        public string FaviconUrl { get; set; }
+
         public string PokemonImageFTPUrl { get; set; }
 
         public string SpriteImageFTPUrl { get; set; }
+
+        public string FaviconFTPUrl { get; set; }
 
         public string FTPUsername { get; set; }
 

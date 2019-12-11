@@ -16,7 +16,7 @@
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
-    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.PokemonList.FirstOrDefault().AppConfig.PokemonImageUrl + @Model.PokemonList.FirstOrDefault().Pokemon.Id + ".png")" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.PokemonList.FirstOrDefault().AppConfig.FaviconUrl + @Model.PokemonList.FirstOrDefault().Pokemon.Id + ".png")" />
     @if(User.IsInRole("Owner"))
     {
         <style>
@@ -89,7 +89,7 @@
                     <div class="formButtons">
                         @foreach(var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                         {
-                            string iconLink = Url.Content(button.AppConfig.PokemonImageUrl + button.Pokemon.Id + ".png");
+                            string iconLink = Url.Content(button.AppConfig.FaviconUrl + button.Pokemon.Id + ".png");
                             <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace(".", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', '@iconLink', '@button.Pokemon.Name.Replace('_', ' ').Replace("'", "&apos;")@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")')">
                                 <img class="lightshadowed" title="@button.Pokemon.Name.Replace('_', ' ')@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")" src="@Url.Content(@button.AppConfig.SpriteImageUrl + @button.Pokemon.Id + ".png")" />
                             </button>
