@@ -376,6 +376,7 @@ namespace Pokedex.Controllers
                 {
                     image.Trim();
                     MemoryStream strm = new MemoryStream();
+                    image.RePage();
                     image.Write(strm, MagickFormat.Png);
                     trimmedUpload = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
                 }
