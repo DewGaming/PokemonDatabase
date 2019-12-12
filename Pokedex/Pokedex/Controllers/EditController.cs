@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+
+using ImageMagick;
 
 using Pokedex.DataAccess.Models;
 
@@ -362,13 +366,28 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            IFormFile trimmedUpload;
+
+            using (var ms = new MemoryStream())
+            {
+                upload.CopyTo(ms);
+                byte[] uploadBytes = ms.ToArray();
+                using(MagickImage image = new MagickImage(uploadBytes))
+                {
+                    image.Trim();
+                    MemoryStream strm = new MemoryStream();
+                    image.Write(strm, MagickFormat.Png);
+                    trimmedUpload = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
+                }
+            }
+
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
             using (var requestStream = request.GetRequestStream())  
             {  
-                await upload.CopyToAsync(requestStream);  
+                await trimmedUpload.CopyToAsync(requestStream);  
             }
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
