@@ -454,13 +454,60 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            IFormFile trimmedUpload, squaredImage;
+
+            using (var ms = new MemoryStream())
+            {
+                upload.CopyTo(ms);
+                byte[] uploadBytes = ms.ToArray();
+                using(MagickImage image = new MagickImage(uploadBytes))
+                {
+                    image.Trim();
+                    MemoryStream strm = new MemoryStream();
+                    image.RePage();
+                    image.Write(strm, MagickFormat.Png);
+                    trimmedUpload = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
+                }
+            }
+
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.SpriteImageFTPUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
             using (var requestStream = request.GetRequestStream())  
             {  
-                await upload.CopyToAsync(requestStream);  
+                await trimmedUpload.CopyToAsync(requestStream);  
+            }
+
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            {
+                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
+            //-set option:distort:viewport "%[fx:max(w,h)]x%[fx:max(w,h)]-%[fx:max((h-w)/2,0)]-%[fx:max((w-h)/2,0)]"
+            using (var ms = new MemoryStream())
+            {
+                trimmedUpload.CopyTo(ms);
+                byte[] uploadBytes = ms.ToArray();
+                using(MagickImage image = new MagickImage(uploadBytes))
+                {
+                    image.VirtualPixelMethod = VirtualPixelMethod.Transparent;
+                    image.SetArtifact("distort:viewport", string.Concat(System.Math.Max(image.Width, image.Height).ToString(), 'x', System.Math.Max(image.Width, image.Height).ToString(), '-', System.Math.Max((image.Height - image.Width)/2,0).ToString(), '-', System.Math.Max((image.Width - image.Height)/2,0).ToString()));
+                    image.FilterType = FilterType.Point;
+                    image.Distort(DistortMethod.ScaleRotateTranslate, 0);
+                    MemoryStream strm = new MemoryStream();
+                    image.RePage();
+                    image.Write(strm, MagickFormat.Png);
+                    squaredImage = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
+                }
+            }
+
+            request = (FtpWebRequest)WebRequest.Create(_appConfig.FaviconFTPUrl + id.ToString() + ".png");
+            request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+            using (var requestStream = request.GetRequestStream())  
+            {  
+                await squaredImage.CopyToAsync(requestStream);  
             }
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
