@@ -483,7 +483,7 @@ namespace Pokedex.Controllers
             {
                 System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
-            //-set option:distort:viewport "%[fx:max(w,h)]x%[fx:max(w,h)]-%[fx:max((h-w)/2,0)]-%[fx:max((w-h)/2,0)]"
+            
             using (var ms = new MemoryStream())
             {
                 trimmedUpload.CopyTo(ms);
