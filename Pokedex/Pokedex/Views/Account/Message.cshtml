@@ -1,0 +1,24 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Message>;
+@{
+    Layout = "_Layout";
+}
+<table class="table">
+    <tr>
+        <th class="col-md-9" scope="col">Message</th>
+        <th scope="col">Actions</th>
+    </tr>
+    @foreach(var item in Model)
+    {
+        <tr>
+            <td>
+                @item.MessageTitle
+                <br>
+                <br>
+                @item.MessageContent
+            </td>
+            <td>
+                <a class="btn btn-primary" href="@Url.Action("ReplyMessage", "Account", new { id = @item.Id })">Reply to Message</a>
+            </td>
+        </tr>
+    }
+</table>
