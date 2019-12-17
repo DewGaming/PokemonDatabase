@@ -725,10 +725,19 @@ namespace Pokedex.Controllers
             #endregion
 
             #region Ability
+            Ability ability;
             string abilityName = remainingImportedText.Split("\r\n")[0];
-            remainingImportedText = remainingImportedText.Replace(abilityName + "\r\n", string.Empty);
-            abilityName = abilityName.Split("Ability: ")[1].Trim();
-            Ability ability = this._dataService.GetAbilityByName(abilityName);
+            if(abilityName.Contains("Ability: "))
+            {
+                remainingImportedText = remainingImportedText.Replace(abilityName + "\r\n", string.Empty);
+                abilityName = abilityName.Split("Ability: ")[1].Trim();
+                ability = this._dataService.GetAbilityByName(abilityName);
+            }
+            else
+            {
+                ability = this._dataService.GetAbilitiesForPokemon(pokemon.Id).First();
+            }
+            
             pokemonTeamDetail.AbilityId = ability.Id;
             #endregion
 
