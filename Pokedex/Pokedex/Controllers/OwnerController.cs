@@ -176,8 +176,6 @@ namespace Pokedex.Controllers
         {
             ReviewedPokemon reviewedPokemon = this._dataService.GetReviewedPokemonByPokemonId(pokemonId);
             this._dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemonId });
-            
-            ViewBag.ReviewedPokemonCount = this._dataService.GetAllReviewedPokemon().Count();
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -202,8 +200,6 @@ namespace Pokedex.Controllers
                 this._dataService.UpdatePokemon(pokemon);
                 this._dataService.DeleteReviewedPokemon(r.Id);
             }
-
-            ViewBag.ReviewedPokemonCount = this._dataService.GetAllReviewedPokemon().Count();
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

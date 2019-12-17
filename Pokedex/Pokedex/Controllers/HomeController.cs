@@ -56,7 +56,6 @@ namespace Pokedex.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            ViewBag.ReviewedPokemonCount = this._dataService.GetAllReviewedPokemon().Count();
             return this.View();
         }
 
