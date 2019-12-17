@@ -1588,6 +1588,16 @@ namespace Pokedex
             return this._dataContext.Users.ToList().Find(x => x.Username == username);
         }
 
+        public List<Message> GetMessagesToUsername(string username)
+        {
+            return this._dataContext.Messages.Where(x => x.ReceiverId == this.GetUserWithUsername(username).Id).ToList();
+        }
+
+        public Message GetMessage(int id)
+        {
+            return this._dataContext.Messages.ToList().Find(x => x.Id == id);
+        }
+
         public User GetUserById(int id)
         {
             return this._dataContext.Users.ToList().Find(x => x.Id == id);
@@ -1613,6 +1623,12 @@ namespace Pokedex
         public void AddComment(Comment comment)
         {
             this._dataContext.Comments.Add(comment);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddMessage(Message message)
+        {
+            this._dataContext.Messages.Add(message);
             this._dataContext.SaveChanges();
         }
 
@@ -1851,6 +1867,12 @@ namespace Pokedex
         public void UpdateComment(Comment comment)
         {
             this._dataContext.Comments.Update(comment);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateMessage(Message message)
+        {
+            this._dataContext.Messages.Update(message);
             this._dataContext.SaveChanges();
         }
 
@@ -2193,6 +2215,13 @@ namespace Pokedex
         {
             ReviewedPokemon reviewedPokemon = this.GetReviewedPokemon(id);
             this._dataContext.ReviewedPokemons.Remove(reviewedPokemon);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteMessage(int id)
+        {
+            Message message = this.GetMessage(id);
+            this._dataContext.Messages.Remove(message);
             this._dataContext.SaveChanges();
         }
 

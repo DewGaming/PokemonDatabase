@@ -86,6 +86,9 @@
 
                         <td>
                             <a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
+                        <br>
+                        <br>
+                            <a class="btn btn-primary" href="@Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
                         </td>
                     </tr>
                 }

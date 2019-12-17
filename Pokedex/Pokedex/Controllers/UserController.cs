@@ -28,6 +28,70 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [Route("messages")]
+        public IActionResult ViewMessages()
+        {
+            List<Message> model = this._dataService.GetMessagesToUsername(this.User.Identity.Name);
+
+            return this.View(model);
+        }
+
+        [HttpGet]
+        [Route("delete_message/{messageId:int}")]
+        public IActionResult DeleteMessage(int messageId)
+        {
+            Message model = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("delete_message/{messageId:int}")]
+        public IActionResult DeleteMessage(Message message)
+        {
+            this._dataService.DeleteMessage(message.Id);
+
+            return this.RedirectToAction("ViewMessages", "User");
+        }
+
+        [HttpGet]
+        [Route("reply_to_message/{messageId:int}")]
+        public IActionResult ReplyMessage(int messageId)
+        {
+            Message originalMessage = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
+            Message model = new Message() {
+                ReceiverId = originalMessage.SenderId,
+                SenderId = originalMessage.ReceiverId,
+                MessageTitle = string.Concat("Re: ", originalMessage.MessageTitle),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("reply_to_message/{messageId:int}")]
+        public IActionResult ReplyMessage(Message message, int messageId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Message originalMessage = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
+
+                Message model = new Message()
+                {
+                    ReceiverId = originalMessage.SenderId,
+                    SenderId = originalMessage.ReceiverId,
+                    MessageTitle = string.Concat("Re: ", originalMessage.MessageTitle),
+                };
+
+                return this.View(model);
+            }
+            
+            message.Id = 0;
+            this._dataService.AddMessage(message);
+
+            return this.RedirectToAction("ViewMessages", "User");
+        }
+
         [HttpGet]
         [Route("edit_password")]
         public IActionResult EditPassword()

@@ -48,6 +48,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<PokemonLegendaryDetail> PokemonLegendaryDetails { get; set; }
         public DbSet<LegendaryType> LegendaryTypes { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<FormItem> FormItems { get; set; }
         public DbSet<PokemonTeam> PokemonTeams { get; set; }
         public DbSet<PokemonTeamDetail> PokemonTeamDetails { get; set; }
