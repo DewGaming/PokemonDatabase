@@ -1,26 +1,32 @@
-@model IEnumerable<Pokedex.DataAccess.Models.User>;
+@model Pokedex.Models.UserViewModel;
 @{
     Layout = "_Layout";
 }
 
 <div class="userTable">
-    @if(Model.ToList().Count() > 0)
+    @if(Model.UserList.ToList().Count() > 0)
     {
         <table class="table">
             <tr>
                 <th scope="col">Username</th>
                 <th scope="col">Actions</th>
             </tr>
-            @foreach(var item in Model)
+            @foreach(var item in Model.UserList)
             {
                 <tr>
                     <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsAdmin ? " (Admin)" : "")</td>
                     <td>
                         <a href="@Url.Action("User", "Edit", new { id = item.Id })">Edit</a>
-                        @("|")
-                        <a href="@Url.Action("ShinyHuntingCounter", "Owner", new { id = item.Id })">View @(item.Username + "'")s Shiny Hunts</a>
-                        @("|")
-                        <a href="@Url.Action("PokemonTeams", "Owner", new { id = item.Id })">View @(item.Username + "'")s Pokemon Teams</a>
+                        @if(Model.UsersWithShinyHunts.Find(x => x.Id == item.Id) != null)
+                        {
+                            @("|")
+                            <a href="@Url.Action("ShinyHuntingCounter", "Owner", new { id = item.Id })">View Shiny Hunts</a>
+                        }
+                        @if(Model.UsersWithPokemonTeams.Find(x => x.Id == item.Id) != null)
+                        {
+                            @("|")
+                            <a href="@Url.Action("PokemonTeams", "Owner", new { id = item.Id })">View Pokemon Teams</a>
+                        }
                     </td>
                 </tr>
             }

@@ -29,7 +29,24 @@ namespace Pokedex.Controllers
         [Route("users")]
         public IActionResult Users()
         {
-            List<User> model = this._dataService.GetUsers().Where(x => !x.IsOwner).ToList();
+            UserViewModel model = new UserViewModel()
+            {
+                UserList = this._dataService.GetUsers().Where(x => !x.IsOwner).ToList(),
+                UsersWithShinyHunts = new List<User>(),
+                UsersWithPokemonTeams = new List<User>(),
+            };
+
+            foreach(var u in model.UserList)
+            {
+                if(this._dataService.GetShinyHunterById(u.Id).Count > 0)
+                {
+                    model.UsersWithShinyHunts.Add(u);
+                }
+                if(this._dataService.GetPokemonTeamsByUserId(u.Id).Count > 0)
+                {
+                    model.UsersWithPokemonTeams.Add(u);
+                }
+            }
 
             return this.View(model);
         }
