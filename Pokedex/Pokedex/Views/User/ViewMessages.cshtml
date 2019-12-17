@@ -2,6 +2,12 @@
 @{
     Layout = "_Layout";
 }
+
+@section scripts
+{
+    <script src="/js/markAsRead.js"></script>
+}
+
 <table class="table">
     <tr>
         <th class="col-md-9" scope="col">Message</th>
@@ -11,7 +17,14 @@
     {
         <tr>
             <td>
-                @item.MessageTitle
+                @if(item.IsRead == false)
+                {
+                    <b>@item.MessageTitle</b>
+                }
+                else
+                {  
+                    @item.MessageTitle
+                }
                 <br>
                 <br>
                 @item.MessageContent

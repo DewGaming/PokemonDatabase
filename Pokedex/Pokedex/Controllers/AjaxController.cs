@@ -27,6 +27,17 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [Route("mark-as-read")]
+        public void MarkAsRead()
+        {
+            List<Message> messages = this._dataService.GetMessagesToUsername(User.Identity.Name);
+            foreach(var m in messages.Where(x => !x.IsRead))
+            {
+                m.IsRead = true;
+                this._dataService.UpdateMessage(m);
+            }
+        }
+
         [Route("get-pokemon-by-generation-admin/{generationId}")]
         public IActionResult GetPokemonByGenerationAdmin(string generationId)
         {
