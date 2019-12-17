@@ -15,5 +15,7 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public int? ReceiverId { get; set; }
         public User Receiver { get; set; }
+        [Required]
+        public bool IsRead { get; set; }
     }
 }
