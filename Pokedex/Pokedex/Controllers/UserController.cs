@@ -55,6 +55,44 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("reply_to_message/{id:int}")]
+        public IActionResult ReplyMessage(int id)
+        {
+            Message originalMessage = this._dataService.GetMessage(id);
+            Message model = new Message() {
+                ReceiverId = originalMessage.SenderId,
+                SenderId = originalMessage.ReceiverId,
+                MessageTitle = string.Concat("Re: ", originalMessage.MessageTitle),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("reply_to_message/{id:int}")]
+        public IActionResult ReplyMessage(Message message, int id)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Message originalMessage = this._dataService.GetMessage(id);
+
+                Message model = new Message()
+                {
+                    ReceiverId = originalMessage.SenderId,
+                    SenderId = originalMessage.ReceiverId,
+                    MessageTitle = string.Concat("Re: ", originalMessage.MessageTitle),
+                };
+
+                return this.View(model);
+            }
+            
+            message.Id = 0;
+            this._dataService.AddMessage(message);
+
+            return this.RedirectToAction("ViewMessages", "User");
+        }
+
+        [HttpGet]
         [Route("edit_password")]
         public IActionResult EditPassword()
         {
