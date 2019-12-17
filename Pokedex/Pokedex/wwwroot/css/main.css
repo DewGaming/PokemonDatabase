@@ -6,6 +6,16 @@
   margin: 5px
 }
 
+.newMessageCount {
+  display: inline-block;
+  color: rgb(255, 255, 255);
+  background-color: gray;
+  border: 1px gray solid;
+  border-radius: 4px;
+  height: 30px;
+  padding: 0 5px;
+}
+
 .column {
   float: left;
 }
@@ -35,7 +45,7 @@
 }
 
 #search {
-  width: 10rem
+  width: 8.5rem
 }
 
 .generatorSection {

@@ -38,6 +38,12 @@ namespace Pokedex.Controllers
             }
         }
 
+        [Route("check-unread-messages")]
+        public int CheckUnreadMessages()
+        {
+            return this._dataService.GetMessagesToUsername(User.Identity.Name).Where(x => !x.IsRead).ToList().Count;
+        }
+
         [Route("get-pokemon-by-generation-admin/{generationId}")]
         public IActionResult GetPokemonByGenerationAdmin(string generationId)
         {

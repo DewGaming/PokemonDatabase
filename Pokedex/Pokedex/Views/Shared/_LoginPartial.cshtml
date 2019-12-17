@@ -34,7 +34,7 @@
                 <div class="dropdown-divider"></div>
                 <span class="accountOptionHeader">Account Options</span>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="@Url.Action("ViewMessages", "User")">View Messages</a>
+                <a class="dropdown-item messages" href="@Url.Action("ViewMessages", "User")">View Messages</a>
                 <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
                 <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
                 @if(User.IsInRole("Owner"))
