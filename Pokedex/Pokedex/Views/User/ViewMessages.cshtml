@@ -1,6 +1,7 @@
 @model IEnumerable<Pokedex.DataAccess.Models.Message>;
 @{
     Layout = "_Layout";
+    int messageCount = 0;
 }
 
 @section scripts
@@ -15,6 +16,7 @@
     </tr>
     @foreach(var item in Model.OrderByDescending(x => x.Id))
     {
+        messageCount++;
         <tr>
             <td>
                 @if(item.IsRead == false)
@@ -30,10 +32,10 @@
                 @item.MessageContent
             </td>
             <td>
-                <a class="btn btn-primary" href="@Url.Action("ReplyMessage", "User", new { id = @item.Id })">Reply to Message</a>
+                <a class="btn btn-primary" href="@Url.Action("ReplyMessage", "User", new { messageId = messageCount })">Reply to Message</a>
                 <br>
                 <br>
-                <a class="btn btn-primary" href="@Url.Action("DeleteMessage", "User", new { id = @item.Id })">Delete Message</a>
+                <a class="btn btn-primary" href="@Url.Action("DeleteMessage", "User", new { messageId = messageCount })">Delete Message</a>
             </td>
         </tr>
     }

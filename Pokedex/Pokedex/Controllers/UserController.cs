@@ -37,16 +37,16 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_message/{id:int}")]
-        public IActionResult DeleteMessage(int id)
+        [Route("delete_message/{messageId:int}")]
+        public IActionResult DeleteMessage(int messageId)
         {
-            Message model = this._dataService.GetMessage(id);
+            Message model = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
 
             return this.View(model);
         }
 
         [HttpPost]
-        [Route("delete_message/{id:int}")]
+        [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(Message message)
         {
             this._dataService.DeleteMessage(message.Id);
@@ -55,10 +55,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("reply_to_message/{id:int}")]
-        public IActionResult ReplyMessage(int id)
+        [Route("reply_to_message/{messageId:int}")]
+        public IActionResult ReplyMessage(int messageId)
         {
-            Message originalMessage = this._dataService.GetMessage(id);
+            Message originalMessage = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
             Message model = new Message() {
                 ReceiverId = originalMessage.SenderId,
                 SenderId = originalMessage.ReceiverId,
@@ -69,12 +69,12 @@ namespace Pokedex.Controllers
         }
 
         [HttpPost]
-        [Route("reply_to_message/{id:int}")]
-        public IActionResult ReplyMessage(Message message, int id)
+        [Route("reply_to_message/{messageId:int}")]
+        public IActionResult ReplyMessage(Message message, int messageId)
         {
             if (!this.ModelState.IsValid)
             {
-                Message originalMessage = this._dataService.GetMessage(id);
+                Message originalMessage = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
 
                 Message model = new Message()
                 {
