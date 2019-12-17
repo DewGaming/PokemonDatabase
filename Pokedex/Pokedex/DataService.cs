@@ -1588,6 +1588,11 @@ namespace Pokedex
             return this._dataContext.Users.ToList().Find(x => x.Username == username);
         }
 
+        public List<Message> GetMessagesToUsername(string username)
+        {
+            return this._dataContext.Messages.Where(x => x.ReceiverId == this.GetUserWithUsername(username).Id).ToList();
+        }
+
         public User GetUserById(int id)
         {
             return this._dataContext.Users.ToList().Find(x => x.Id == id);
@@ -1613,6 +1618,12 @@ namespace Pokedex
         public void AddComment(Comment comment)
         {
             this._dataContext.Comments.Add(comment);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddMessage(Message message)
+        {
+            this._dataContext.Messages.Add(message);
             this._dataContext.SaveChanges();
         }
 

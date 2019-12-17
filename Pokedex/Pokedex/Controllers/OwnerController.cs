@@ -34,12 +34,51 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [HttpGet]
+        [Route("send_message/{commentId:int}")]
+        public IActionResult SendMessage(int commentId)
+        {
+            Comment comment = this._dataService.GetComment(commentId);
+
+            Message model = new Message()
+            {
+                SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                ReceiverId = comment.CommentorId,
+                MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\" "),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("send_message/{commentId:int}")]
+        public IActionResult SendMessage(Message message, int commentId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Comment comment = this._dataService.GetComment(commentId);
+
+                Message model = new Message()
+                {
+                    SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                    ReceiverId = comment.CommentorId,
+                    MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\""),
+                };
+
+                return this.View(model);
+            }
+            
+            this._dataService.AddMessage(message);
+
+            return this.RedirectToAction("Comments", "Owner");
+        }
+
         [Route("comments")]
         public IActionResult Comments()
         {
             List<Comment> model = this._dataService.GetComments();
 
-            return this.View("Comments", model);
+            return this.View(model);
         }
 
         [Route("complete_comment/{id:int}")]
