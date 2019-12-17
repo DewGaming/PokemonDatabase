@@ -2,9 +2,16 @@
     string dropdownWidth, dropdownHeight, columnWidth;
     if(User.IsInRole("Admin") || User.IsInRole("Owner"))
     {
-        dropdownWidth = "28rem";
-        dropdownHeight = "29.3rem";
-        columnWidth = "50%";
+        dropdownWidth = "37rem";
+        if(ViewBag.ReviewedPokemonCount < 0)
+        {
+            dropdownHeight = "21.5rem";
+        }
+        else
+        {
+            dropdownHeight = "20rem";
+        }
+        columnWidth = "33.3%";
     }
     else
     {
@@ -36,14 +43,17 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="@Url.Action("Users", "Owner")">Users</a>
                     <a class="dropdown-item" href="@Url.Action("Comments", "Owner")">Comments</a>
-                    <a class="dropdown-item" href="@Url.Action("ReviewedPokemon", "Owner")">Reviewed Pokemon</a>
+                    if(ViewBag.ReviewedPokemonCount > 0)
+                    {
+                        <a class="dropdown-item" href="@Url.Action("ReviewedPokemon", "Owner")">Reviewed Pokemon</a>
+                    }
                 }
             </div>
             @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
             {
-                <div class="column" style="width: @columnWidth">
-                    <span class="accountOptionHeader">Admin Options</span>
-                    <div class="dropdown-divider"></div>
+                <span class="accountOptionHeader">Admin Options</span>
+                <div class="dropdown-divider"></div>
+                <div class="column" style="width: 30%">
                     <a class="dropdown-item" href="@Url.Action("Abilities", "Admin")">Abilities</a>
                     <a class="dropdown-item" href="@Url.Action("AvailablePokemon", "Admin")">Available Pokemon</a>
                     <a class="dropdown-item" href="@Url.Action("BaseHappinesses", "Admin")">Base Happiness</a>
@@ -53,6 +63,8 @@
                     <a class="dropdown-item" href="@Url.Action("EggGroups", "Admin")">Egg Groups</a>
                     <a class="dropdown-item" href="@Url.Action("EvolutionMethods", "Admin")">Evolution Methods</a>
                     <a class="dropdown-item" href="@Url.Action("FormItems", "Admin")">Form Items</a>
+                </div>
+                <div class="column" style="width: 36.7%">
                     <a class="dropdown-item" href="@Url.Action("Forms", "Admin")">Forms</a>
                     <a class="dropdown-item" href="@Url.Action("Generations", "Admin")">Generations</a>
                     <a class="dropdown-item" href="@Url.Action("LegendaryTypes", "Admin")">Legendary Types</a>
