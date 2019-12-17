@@ -28,6 +28,14 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        [Route("messages")]
+        public IActionResult ViewMessages()
+        {
+            List<Message> model = this._dataService.GetMessagesToUsername(this.User.Identity.Name);
+
+            return this.View(model);
+        }
+
         [HttpGet]
         [Route("edit_password")]
         public IActionResult EditPassword()

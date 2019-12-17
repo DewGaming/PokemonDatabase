@@ -5,18 +5,18 @@
         dropdownWidth = "37rem";
         if(ViewBag.ReviewedPokemonCount < 0)
         {
-            dropdownHeight = "21.5rem";
+            dropdownHeight = "23rem";
         }
         else
         {
-            dropdownHeight = "20rem";
+            dropdownHeight = "21.5rem";
         }
         columnWidth = "33.3%";
     }
     else
     {
         dropdownWidth = "13rem";
-        dropdownHeight = "13.5rem";
+        dropdownHeight = "15rem";
         columnWidth = "100%";
     }
 }
@@ -34,6 +34,7 @@
                 <div class="dropdown-divider"></div>
                 <span class="accountOptionHeader">Account Options</span>
                 <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="@Url.Action("ViewMessages", "User")">View Messages</a>
                 <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
                 <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
                 @if(User.IsInRole("Owner"))

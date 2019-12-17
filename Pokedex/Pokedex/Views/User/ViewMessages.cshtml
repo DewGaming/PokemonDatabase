@@ -17,7 +17,10 @@
                 @item.MessageContent
             </td>
             <td>
-                <a class="btn btn-primary" href="@Url.Action("ReplyMessage", "Account", new { id = @item.Id })">Reply to Message</a>
+                <a class="btn btn-primary" href="@Url.Action("ReplyMessage", "User", new { id = @item.Id })">Reply to Message</a>
+                <br>
+                <br>
+                <a class="btn btn-primary" href="@Url.Action("DeleteMessage", "User", new { id = @item.Id })">Delete Message</a>
             </td>
         </tr>
     }
