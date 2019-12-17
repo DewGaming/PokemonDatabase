@@ -1593,6 +1593,11 @@ namespace Pokedex
             return this._dataContext.Messages.Where(x => x.ReceiverId == this.GetUserWithUsername(username).Id).ToList();
         }
 
+        public Message GetMessage(int id)
+        {
+            return this._dataContext.Messages.ToList().Find(x => x.Id == id);
+        }
+
         public User GetUserById(int id)
         {
             return this._dataContext.Users.ToList().Find(x => x.Id == id);
@@ -2210,6 +2215,13 @@ namespace Pokedex
         {
             ReviewedPokemon reviewedPokemon = this.GetReviewedPokemon(id);
             this._dataContext.ReviewedPokemons.Remove(reviewedPokemon);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteMessage(int id)
+        {
+            Message message = this.GetMessage(id);
+            this._dataContext.Messages.Remove(message);
             this._dataContext.SaveChanges();
         }
 

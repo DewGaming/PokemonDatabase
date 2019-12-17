@@ -37,6 +37,24 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_message/{id:int}")]
+        public IActionResult DeleteMessage(int id)
+        {
+            Message model = this._dataService.GetMessage(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("delete_message/{id:int}")]
+        public IActionResult DeleteMessage(Message message)
+        {
+            this._dataService.DeleteMessage(message.Id);
+
+            return this.RedirectToAction("ViewMessages", "User");
+        }
+
+        [HttpGet]
         [Route("edit_password")]
         public IActionResult EditPassword()
         {
