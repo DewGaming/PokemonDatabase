@@ -17,21 +17,6 @@
 
         return commentTotalString;
     }
-    string GrabCompleteCommentCount()
-    {
-        string commentTotalString = string.Empty;
-        if(Model.Where(x => x.IsCompleted).ToList().Count() > 0)
-        {
-            commentTotalString = " (" + Model.Where(x => x.IsCompleted).ToList().Count().ToString() + " Comment";
-            if(Model.Where(x => x.IsCompleted).ToList().Count() > 1)
-            {
-                commentTotalString += "s";
-            }
-            commentTotalString += ")";
-        }
-
-        return commentTotalString;
-    }
 }
 
 @section styles
@@ -49,7 +34,6 @@
     {
         <button class="@(type.ToLower())" onclick="lookupPage('@(type.ToLower())')">@(type)s<br>@(GrabCommentCount(@type))</button>
     }
-    <button class="completedComments" onclick="lookupPage('completedComments')">Completed<br>@(GrabCompleteCommentCount())</button>
 </div>
 @foreach(var type in commentTypes)
 {
@@ -86,9 +70,12 @@
 
                         <td>
                             <a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
-                        <br>
-                        <br>
-                            <a class="btn btn-primary" href="@Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
+                        @if(item.CommentorId != null && item.CommentorId != 1)
+                        {
+                            <br>
+                            <br>
+                                <a class="btn btn-primary" href="@Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
+                        }
                         </td>
                     </tr>
                 }
@@ -100,48 +87,3 @@
         }
     </div>
 }
-<div class="page" id="completedComments">
-    @if(Model.Where(x => x.IsCompleted).ToList().Count() > 0)
-    {
-        <table class="table">
-            <tr>
-                <th class="col-md-9" scope="col">Comment</th>
-                <th scope="col">Actions</th>
-            </tr>
-            @foreach(var item in Model.Where(x => x.IsCompleted))
-            {
-                <tr>
-                    <td>
-                        @(@item.CommentType + " for ")
-                        @if(@item.PokemonName != null)
-                        {
-                            @(@item.CommentedPage + " (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
-                        }
-                        else
-                        {
-                            @item.CommentedPage
-                        }
-                        @if(item.Commentor != null)
-                        {
-                            @(" by " + @item.Commentor.Username)
-                        }
-                        <br>
-                        <br>
-                        @item.Name
-                    </td>
-                    
-                    <td>
-                        <a class="btn btn-primary" href="@Url.Action("UndoComment", "Owner", new { id = @item.Id })">Undo Completion</a>
-                        <br>
-                        <br>
-                        <a class="btn btn-primary" href="@Url.Action("Comment", "Delete", new { id = @item.Id })">Remove Comment</a>
-                    </td>
-                </tr>
-            }
-        </table>
-    }
-    else
-    {
-        <div class="noUsers">There are no comments at all!</div>
-    }
-</div>
