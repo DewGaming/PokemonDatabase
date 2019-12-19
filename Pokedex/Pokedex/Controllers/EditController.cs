@@ -416,7 +416,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit_pokemon_sprite/{id}")]
-        public async Task<IActionResult> SpriteImage(Pokemon pokemon, string id, IFormFile upload)
+        public async Task<IActionResult> SpriteImage(Pokemon pokemon, string id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -429,7 +429,7 @@ namespace Pokedex.Controllers
                 
                 return this.View(model);
             }
-            else if (upload == null)
+            else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
@@ -441,7 +441,7 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
                 return this.View(model);
             }
-            else if (!upload.FileName.Contains(".png"))
+            else if ((fileUpload != null && !fileUpload.FileName.Contains(".png")) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
@@ -452,6 +452,26 @@ namespace Pokedex.Controllers
                 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
                 return this.View(model);
+            }
+
+            IFormFile upload;
+
+            if(fileUpload == null)
+            {
+                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
+
+                using (WebResponse webResponse = webRequest.GetResponse())
+                {
+                    Stream stream = webResponse.GetResponseStream();
+                    MemoryStream memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+
+                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "sprite", "sprite.png");
+                }
+            }
+            else
+            {
+                upload = fileUpload;
             }
 
             IFormFile trimmedUpload, squaredImage;

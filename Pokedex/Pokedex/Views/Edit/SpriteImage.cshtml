@@ -30,9 +30,18 @@
         @Html.HiddenFor(x => x.BaseHappinessId)
 
         <div class="form-group row">
-            <label for="Picture" class="col-md-2">Picture</label>
+            <label for="PictureFile" class="col-md-2">Upload With File</label>
             <div class="col-md-8 addPokemonImage">
-                <input type="file" accept="image/png" id="Picture" name="upload" />
+                <input type="file" accept="image/png" id="PictureFile" name="fileUpload" />
+            </div>
+        </div>
+
+        <p>Or</p>
+
+        <div class="form-group row">
+            <label for="PictureUrl" class="col-md-2">Upload With URL</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="text" accept="image/png" id="PictureUrl" name="urlUpload" />
             </div>
         </div>
 
