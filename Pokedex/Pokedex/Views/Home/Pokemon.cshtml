@@ -131,6 +131,7 @@
                         <th>Height</th>
                         <td>
                             @{
+                                string height;
                                 var feet = 0;
                                 var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m), 0);
                                 while(inches >= 12)
@@ -138,15 +139,28 @@
                                     feet++;
                                     inches -= 12;
                                 }
+
+                                height = string.Concat(feet, "'", inches.ToString("D2"), "\" (", @item.Pokemon.Height.ToString("0.####"), " m)");
                             }
-                            @feet@("'")@inches.ToString("D2")@('"') (@item.Pokemon.Height.ToString("0.####") m)
+                            @height
                         </td>
                     </tr>
                     <tr>
                         <th>Weight</th>
                         <td>
-                            @(Math.Round(@item.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####")) lbs
-                            (@item.Pokemon.Weight.ToString("0.####") kg)
+                            @{
+                                string weight;
+                                
+                                if(item.Pokemon.Weight != 0m)
+                                {
+                                    weight = string.Concat(Math.Round(@item.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####"), " lbs (", item.Pokemon.Weight.ToString("0.####"), " kg)");
+                                }
+                                else
+                                {
+                                    weight = "??? lbs (??? kg)";
+                                }
+                            }
+                            @weight
                         </td>
                     </tr>
                     <tr>
