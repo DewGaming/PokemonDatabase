@@ -1,5 +1,51 @@
+@model Pokedex.AppConfig;
 @{
     Layout = "_Layout";
 }
 
+@section scripts
+{
+    <script src="/js/modalImage.js"></script>
+}
+
 <h4>Welcome to the Pokemon Database!</h4>
+<br>
+<p>This was created starting as a school project and then eventually being transformed into a website.  Please Enjoy!</p>
+<p>Want to do more then just view pokemon stats?  Explore other options!</p>
+<div class="siteFeatures">
+    <div class="feature teamRandomizerFeature">
+        <p>Randomize Teams!</p>
+        <img data-modalUrl="@Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" src="@(@Model.GeneralImageUrl + "small/teamRandomizer.png")">
+    </div>
+    <div class="feature typeEvaluator">
+        <p>Lookup Type Combinations!</p>
+        <img data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" src="@(@Model.GeneralImageUrl + "small/typingEvaluator.png")">
+    </div>
+    <div class="feature eggGroupEvaluator">
+        <p>Lookup Egg Group Combinations!</p>
+        <img data-modalUrl="@Url.Action("EggGroupEvaluator", "Home")" alt="Egg Group Evaluator" src="@(@Model.GeneralImageUrl + "small/eggGroupEvaluator.png")">
+    </div>
+</div>
+<br>
+<p>If you're logged in, you have access to these!  <a href="@Url.Action("Login", "Account")">Login</a></p>
+<div class="siteFeatures">
+    <div class="feature teamBuilder">
+        <p>Build Teams and Export to Showdown!</p>
+        <img data-modalUrl="" alt="Team Builder" src="@(@Model.GeneralImageUrl + "small/pokemonTeams.png")">
+    </div>
+    <div class="feature shinyHunting">
+        <p>Hunt for Shiny Pokemon!</p>
+        <img data-modalUrl=""alt="Shiny Hunting" src="@(@Model.GeneralImageUrl + "small/shinyHunting.png")">
+    </div>
+</div>
+</div>
+<div class="modal">
+    <span class="close">&times;</span>
+    <a target="_blank" class="modalLink"><img class="modalImage"></a>
+    <div class="modalCaption"></div>
+</div>
+<br>
+<br>
+<p>
+    Please Note: Information used for the pokemon are updated to be in line with the most current generation of Pokemon.
+</p>

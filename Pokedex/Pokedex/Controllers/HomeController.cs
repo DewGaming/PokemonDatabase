@@ -56,7 +56,7 @@ namespace Pokedex.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            return this.View();
+            return this.View(this._appConfig);
         }
 
         [AllowAnonymous]

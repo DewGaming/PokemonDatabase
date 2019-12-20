@@ -6,6 +6,99 @@
   margin: 5px
 }
 
+/* Style the Image Used to Trigger the Modal */
+.siteFeatures img {
+  height: 10rem;
+  object-fit: contain;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.siteFeatures img:hover {
+  opacity: 0.7;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.9);
+  overflow: hidden;
+}
+
+.modalImage {
+  margin: auto;
+  display: block;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}
+
+.modalCaption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+.modalImage, .modalCaption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+.close {
+  position: absolute;
+  top: 60px;
+  right: 25px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 700px){
+  .modalImage {
+    width: 100%;
+  }
+} 
+
+.siteFeatures {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.siteFeatures div {
+  display: inline-block;
+}
+
+.feature {
+  margin: 5px;
+}
+
 .newMessageCount {
   display: inline-block;
   color: rgb(255, 255, 255);
@@ -45,7 +138,7 @@
 }
 
 #search {
-  width: 8.5rem
+  width: 10rem;
 }
 
 .generatorSection {
