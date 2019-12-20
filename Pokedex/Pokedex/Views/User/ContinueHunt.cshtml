@@ -19,9 +19,9 @@
 
 <div class="shinyHunt">
     <div class="pokemonPicture shadowed">
-        <img width="327" title="@Model.ShinyHunt.Pokemon.Name" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.ShinyHunt.Pokemon.Id + ".png")" />
+        <img title="@Model.ShinyHunt.Pokemon.Name" src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @Model.ShinyHunt.Pokemon.Id + ".png")" />
     </div>
-    <div class="pokemonData pokemonTables input-md-5 input-lg-4">
+    <div class="pokemonData pokemonTables">
         <h2>Pokemon Data</h2>
         <table class="pokedexNumber">
             <tbody>
@@ -48,9 +48,7 @@
                             @("Game Hunting In");
                         }
                     </th>
-                    <td>
-                        @Model.ShinyHunt.Generation.Games
-                    </td>
+                    <td>@Model.ShinyHunt.Generation.Games</td>
                 </tr>
                 @if (Model.ShinyHunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
                 {
@@ -70,7 +68,7 @@
                 </tr>
             </tbody>
         </table>
-        <div style="margin-top: 20px;">
+        <div class="shinyHuntButtons">
             <a class="btn btn-primary" href="@Url.Action("ShinyHuntingCounter", "User")" role="button">Pause Shiny Hunt</a>
             <a class="btn btn-success" href="@Url.Action("CompleteShinyHunt", "User", new { huntId = @Model.HuntIndex })" role="button">Shiny Found</a>
             <a class="btn btn-danger" href="@Url.Action("GiveUpShinyHunt", "User", new { huntId = @Model.HuntIndex })" role="button">Give Up</a>

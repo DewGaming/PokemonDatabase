@@ -9,6 +9,21 @@
     box-shadow: none !important;
 }
 
+.shinyHunt img {
+    height: 327px;
+    width: 327px;
+    -o-object-fit: contain;
+       object-fit: contain;
+}
+
+.shinyHuntButtons {
+    margin-top: 20px;
+}
+
+.shinyHunt .pokemonData, table.pokedexNumber, .shinyHuntButtons {
+    width: 353px;
+}
+
 .shinyCharmCheckBox.hidden {
     display: none;
 }
@@ -26,8 +41,15 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    margin-left: -3rem;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .shinyHunt th {
