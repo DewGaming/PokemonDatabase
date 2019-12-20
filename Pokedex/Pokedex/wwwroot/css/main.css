@@ -6,9 +6,9 @@
   margin: 5px
 }
 
-/* Style the Image Used to Trigger the Modal */
 .siteFeatures img {
   height: 10rem;
+  width: 100%;
   object-fit: contain;
   border-radius: 3px;
   cursor: pointer;
@@ -38,7 +38,7 @@
   margin: auto;
   display: block;
   width: 90%;
-  height: 90%;
+  height: 85%;
   object-fit: contain;
 }
 
@@ -643,8 +643,11 @@ a {
   .search-bar {
     margin: 0
   }
-  .main {
-    margin-top: 70px
+}
+
+@media(max-width:854px) {
+  .close {
+    top: 75px;
   }
 }
 

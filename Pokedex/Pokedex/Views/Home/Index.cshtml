@@ -30,12 +30,12 @@
 <p>If you're logged in, you have access to these!  <a href="@Url.Action("Login", "Account")">Login</a></p>
 <div class="siteFeatures">
     <div class="feature teamBuilder">
-        <p>Build Teams and Export to Showdown!</p>
-        <img data-modalUrl="" alt="Team Builder" src="@(@Model.GeneralImageUrl + "small/pokemonTeams.png")">
+        <p>Build Teams!</p>
+        <img data-modalUrl="@Url.Action("PokemonTeams", "User")" alt="Team Builder" src="@(@Model.GeneralImageUrl + "small/pokemonTeams.png")">
     </div>
     <div class="feature shinyHunting">
         <p>Hunt for Shiny Pokemon!</p>
-        <img data-modalUrl=""alt="Shiny Hunting" src="@(@Model.GeneralImageUrl + "small/shinyHunting.png")">
+        <img data-modalUrl="@Url.Action("ShinyHuntingCounter", "User")" alt="Shiny Hunting" src="@(@Model.GeneralImageUrl + "small/shinyHunting.png")">
     </div>
 </div>
 </div>
