@@ -404,10 +404,6 @@ $('.generatorButton').on('click', function () {
         }
     });
 
-    //$('.grid-container').load('/get-pokemon-team/',  { 'selectedGens': selectedGens, 'selectedGame': selectedGame, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'randomAbility': $("#randomAbilityBool").is(":checked") }, function (){
-    //    refreshEvents();
-    //});
-
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
