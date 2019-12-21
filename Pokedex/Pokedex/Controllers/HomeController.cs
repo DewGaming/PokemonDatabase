@@ -37,7 +37,7 @@ namespace Pokedex.Controllers
             "Comment Page",
             "Search Page",
             "Shiny Hunt Page (Need to login to see)",
-            "Team Creator Page (Need to login to see)",
+            "Team Builder Page (Need to login to see)",
             "New Page",
             "Other",
         };

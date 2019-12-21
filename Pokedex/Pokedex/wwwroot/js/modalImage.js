@@ -7,4 +7,7 @@ $('.siteFeatures img').on('click', function(){
 
 $('.close').on('click', function() {
   $('.Modal').css('display', 'none');
+  $('.modalImage').prop('src', '');
+  $('.modalLink').attr('href', '');
+  $('.modalCaption').text('');
 });
