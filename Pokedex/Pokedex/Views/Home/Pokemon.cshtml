@@ -17,6 +17,12 @@
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.PokemonList.FirstOrDefault().AppConfig.FaviconUrl + @Model.PokemonList.FirstOrDefault().Pokemon.Id + ".png")" />
+
+    <style>
+        .mb-4 {
+            margin-bottom: 0 !important;
+        }
+    </style>
     @if(User.IsInRole("Owner"))
     {
         <style>
@@ -31,11 +37,6 @@
 {
     <script src="/js/pageLookup.js"></script>
     <script src="/js/calculateCaptureRate.js"></script>
-    <script>
-        $(function() {
-            $('.navbar').removeClass('mb-4');
-        });
-    </script>
 }
 
 <table class="surroundingPokemon pokemonPicture">
