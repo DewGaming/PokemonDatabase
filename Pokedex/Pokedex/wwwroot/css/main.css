@@ -6,6 +6,10 @@
   margin: 5px
 }
 
+#importedTeams {
+  height: 70%;
+}
+
 .siteFeatures img {
   height: 10rem;
   width: 100%;
