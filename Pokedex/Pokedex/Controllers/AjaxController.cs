@@ -306,9 +306,20 @@ namespace Pokedex.Controllers
 
             string pokemonTeamString = pokemonName;
             pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
+
+            if(pokemonTeamDetail.Level < 100)
+            {
+                pokemonTeamString += "\nLevel: " + pokemonTeamDetail.Level.ToString();
+            }
+
             if(pokemonTeamDetail.IsShiny)
             {
                 pokemonTeamString += "\nShiny: Yes";
+            }
+
+            if(pokemonTeamDetail.Happiness < 255)
+            {
+                pokemonTeamString += "\nHappiness: " + pokemonTeamDetail.Happiness.ToString();
             }
             
             if(pokemonTeamDetail.PokemonTeamEV != null)
