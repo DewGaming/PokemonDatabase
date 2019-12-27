@@ -19,6 +19,14 @@
   opacity: 0.7;
 }
 
+.siteFeatures a {
+  color: black;
+}
+
+.siteFeatures a:hover {
+  color: #007bff;
+}
+
 .modal {
   padding-top: 100px;
   background-color: rgba(0,0,0,0.9);
@@ -32,13 +40,17 @@
   object-fit: contain;
 }
 
+.modalDescription {
+  max-width: 800px;
+}
+
 .modalCaption, .modalDescription {
   margin: auto;
   display: block;
   width: 90%;
   text-align: center;
   color: #ccc;
-  padding: 10px 0;
+  padding-bottom: 5px;
 }
 
 .modalImage, .modalCaption, .modalDescription {
