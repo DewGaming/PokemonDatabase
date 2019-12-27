@@ -696,6 +696,12 @@ namespace Pokedex.Controllers
             if(pokemonName.LastIndexOf('-') != -1)
             {
                 string formName = pokemonName.Split('-').Last();
+                if(formName == "Gmax")
+                {
+                    pokemonName = pokemonName.Replace("-Gmax", string.Empty);
+                    formName = string.Empty;
+                }
+
                 if(pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
                 {
                     formName = "Female";
