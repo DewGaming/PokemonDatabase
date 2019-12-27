@@ -758,7 +758,7 @@ namespace Pokedex.Controllers
                 {
                     pokemonTeamDetail.Level = 1;
                 }
-                else if (pokemonTeamDetail.Level > 100 || string.Compare(pokemonTeamDetail.Level.ToString(), pokemonLevel) != 0)
+                else if (pokemonTeamDetail.Level > 100 || string.Compare(pokemonTeamDetail.Level.ToString(), pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2)) != 0)
                 {
                     pokemonTeamDetail.Level = 100;
                 }
@@ -784,7 +784,7 @@ namespace Pokedex.Controllers
                 remainingImportedText = remainingImportedText.Replace(happiness + "\r\n", string.Empty);
                 happiness = happiness.Trim();
                 pokemonTeamDetail.Happiness = Convert.ToByte(happiness.Substring(happiness.IndexOf(':') + 2, happiness.Length - (happiness.IndexOf(':') + 2)));
-                if(string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness) != 0)
+                if(string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness.Substring(happiness.IndexOf(':') + 2)) != 0)
                 {
                     pokemonTeamDetail.Happiness = 255;
                 }
