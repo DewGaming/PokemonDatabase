@@ -741,11 +741,51 @@ namespace Pokedex.Controllers
             pokemonTeamDetail.AbilityId = ability.Id;
             #endregion
 
+            #region Level
+            if(remainingImportedText.Contains("Level:"))
+            {
+                string pokemonLevel = remainingImportedText.Split("\r\n")[0];
+                remainingImportedText = remainingImportedText.Replace(pokemonLevel + "\r\n", string.Empty);
+                pokemonLevel = pokemonLevel.Trim();
+                pokemonTeamDetail.Level = Convert.ToByte(pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2, pokemonLevel.Length - (pokemonLevel.IndexOf(':') + 2)));
+                if(pokemonTeamDetail.Level == 0)
+                {
+                    pokemonTeamDetail.Level = 1;
+                }
+                else if (pokemonTeamDetail.Level > 100 || string.Compare(pokemonTeamDetail.Level.ToString(), pokemonLevel) != 0)
+                {
+                    pokemonTeamDetail.Level = 100;
+                }
+            }
+            else
+            {
+                pokemonTeamDetail.Level = 100;
+            }
+            #endregion
+
             #region Shiny
             if(remainingImportedText.Contains("Shiny: Yes"))
             {
                 remainingImportedText = remainingImportedText.Replace(remainingImportedText.Split("\r\n")[0] + "\r\n", string.Empty);
                 pokemonTeamDetail.IsShiny = true;
+            }
+            #endregion
+
+            #region Happiness
+            if(remainingImportedText.Contains("Happiness:"))
+            {
+                string happiness = remainingImportedText.Split("\r\n")[0];
+                remainingImportedText = remainingImportedText.Replace(happiness + "\r\n", string.Empty);
+                happiness = happiness.Trim();
+                pokemonTeamDetail.Happiness = Convert.ToByte(happiness.Substring(happiness.IndexOf(':') + 2, happiness.Length - (happiness.IndexOf(':') + 2)));
+                if(string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness) != 0)
+                {
+                    pokemonTeamDetail.Happiness = 255;
+                }
+            }
+            else
+            {
+                pokemonTeamDetail.Happiness = 255;
             }
             #endregion
 
