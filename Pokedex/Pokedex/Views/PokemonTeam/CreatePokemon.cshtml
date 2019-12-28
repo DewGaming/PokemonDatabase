@@ -5,9 +5,35 @@
     ViewBag.Title = "Create Pokemon";
 }
 
+@section styles
+{
+    <style>
+        .slider {
+            padding: 0;
+        }
+    </style>
+}
+
+
 @section scripts
 {
     <script src="/js/createPokemonTeamDetail.js"></script>
+    <script>
+        $(function() {
+            $('#levelVal').text(@Model.Level);
+            $('#happinessVal').text(@Model.Happiness);
+            $('.levelSlider').val(@Model.Level);
+            $('.happinessSlider').val(@Model.Happiness);
+        });
+
+        $('.levelSlider').on('input', function() {
+            $('#levelVal').text($(this).val());
+        });
+        
+        $('.happinessSlider').on('input', function() {
+            $('#happinessVal').text($(this).val());
+        });
+    </script>
 }
 
 <h2>Add Pokemon</h2>
@@ -62,6 +88,18 @@
             @Html.LabelFor(x => x.BattleItemId, "Held Item", new { @class = "col-md-2" })
             @Html.DropDownListFor(x => x.BattleItemId, Enumerable.Empty<SelectListItem>(), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.BattleItemId)
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-2" for="Level">Level: <span id="levelVal"></span></label>
+            <input class="levelSlider slider col-md-8" data-val-required="The Level field is required." id="Level" name="Level" type="range" min="1" max="100" value="100">
+            @Html.ValidationMessageFor(x => x.Level)
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-2" for="Happiness">Happiness: <span id="happinessVal"></span></label>
+            <input class="happinessSlider slider col-md-8" data-val-required="The Happiness field is required." id="Happiness" name="Happiness" type="range" min="0" max="255" value="255">
+            @Html.ValidationMessageFor(x => x.Happiness)
         </div>
 
         <p>

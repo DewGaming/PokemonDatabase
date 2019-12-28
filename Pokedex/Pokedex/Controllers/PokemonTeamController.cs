@@ -108,6 +108,8 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this._dataService.GetNatures(),
                     GenerationId = pokemonTeam.GenerationId,
+                    Level = 100,
+                    Happiness = 255,
                 };
 
                 return this.View(model);
