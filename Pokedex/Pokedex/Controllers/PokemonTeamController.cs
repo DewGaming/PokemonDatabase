@@ -107,6 +107,7 @@ namespace Pokedex.Controllers
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel(){
                     AllPokemon = pokemonList,
                     AllNatures = this._dataService.GetNatures(),
+                    NatureId = this._dataService.GetNatureByName("Serious").Id,
                     GenerationId = pokemonTeam.GenerationId,
                     Level = 100,
                     Happiness = 255,
@@ -125,7 +126,10 @@ namespace Pokedex.Controllers
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel(){
                     AllPokemon = this.FillPokemonList(_pokemonTeams[pokemonTeamId - 1]),
                     AllNatures = this._dataService.GetNatures(),
+                    NatureId = this._dataService.GetNatureByName("Serious").Id,
                     GenerationId = pokemonTeamDetail.GenerationId,
+                    Level = 100,
+                    Happiness = 255,
                 };
 
                 return this.View(model);
@@ -170,6 +174,11 @@ namespace Pokedex.Controllers
                 if(pokemonTeamDetail.PokemonId == "678-1")
                 {
                     pokemonTeamDetail.PokemonId = "678";
+                }
+
+                if(pokemonTeamDetail.Nature == null)
+                {
+                    pokemonTeamDetail.NatureId = this._dataService.GetNatureByName("Serious").Id;
                 }
                 
                 List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);

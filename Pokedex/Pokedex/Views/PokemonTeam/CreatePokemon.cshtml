@@ -50,7 +50,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.PokemonId, "Pokemon", new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control col-md-8" })
+            @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonId)
         </div>
 
@@ -79,9 +79,9 @@
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Nature, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.Nature, new SelectList(Model.AllNatures, "Id", "Name"), "", new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.Nature)
+            @Html.LabelFor(x => x.NatureId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.NatureId, new SelectList(Model.AllNatures, "Id", "Name"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.NatureId)
         </div>
 
         <div class="form-group row">
