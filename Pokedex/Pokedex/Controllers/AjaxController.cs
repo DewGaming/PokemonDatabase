@@ -245,7 +245,7 @@ namespace Pokedex.Controllers
                                 pokemonTeam.ExportString += "\n\n";
                             }
 
-                            pokemonTeam.ExportString += this.FillUserPokemonTeam(pokemonList[i]);
+                            pokemonTeam.ExportString += this.FillUserPokemonTeam(pokemonList[i], team.GenerationId);
                         }
 
                         exportList.Add(pokemonTeam);
@@ -264,7 +264,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("fill-user-pokemon-team")]
-        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail)
+        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, string generationId)
         {
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
             List<string> pokemonForm = new List<string>();
@@ -290,7 +290,7 @@ namespace Pokedex.Controllers
                 pokemonName += ")";
             }
 
-            if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender))
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != "1")
             {
                 pokemonName += " (" + pokemonTeamDetail.Gender.Substring(0,1) + ")";
             }
@@ -299,25 +299,28 @@ namespace Pokedex.Controllers
             {
                 pokemonName += pokemonForm[1];
             }
-            else if(pokemonTeamDetail.BattleItemId != null)
+            else if(pokemonTeamDetail.BattleItemId != null && generationId != "1")
             {
                 pokemonName += " @ " + pokemonTeamDetail.BattleItem.Name;
             }
 
             string pokemonTeamString = pokemonName;
-            pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
+            if(generationId != "1" && generationId != "2")
+            {
+                pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
+            }
 
             if(pokemonTeamDetail.Level < 100)
             {
                 pokemonTeamString += "\nLevel: " + pokemonTeamDetail.Level.ToString();
             }
 
-            if(pokemonTeamDetail.IsShiny)
+            if(pokemonTeamDetail.IsShiny && generationId != "1")
             {
                 pokemonTeamString += "\nShiny: Yes";
             }
 
-            if(pokemonTeamDetail.Happiness < 255)
+            if(pokemonTeamDetail.Happiness < 255 && generationId != "1")
             {
                 pokemonTeamString += "\nHappiness: " + pokemonTeamDetail.Happiness.ToString();
             }
@@ -327,7 +330,7 @@ namespace Pokedex.Controllers
                 pokemonTeamString += this.FillEVs(pokemonTeamDetail.PokemonTeamEV);
             }
 
-            if(pokemonTeamDetail.Nature != null)
+            if(pokemonTeamDetail.Nature != null && generationId != "1" && generationId != "2")
             {
                 pokemonTeamString += "\n" + pokemonTeamDetail.Nature.Name + " Nature";
             }
