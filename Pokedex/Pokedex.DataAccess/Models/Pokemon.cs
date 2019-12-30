@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
@@ -10,9 +11,9 @@ namespace Pokedex.DataAccess.Models
         public string PokedexNumber { get; set; }
         [Display(Name = "Pokemon Name"), StringLength(25), Required]
         public string Name { get; set; }
-        [Required]
+        [Required, Column(TypeName = "decimal(3,1)")]
         public decimal Height { get; set; }
-        [Required]
+        [Required, Column(TypeName = "decimal(4,1)")]
         public decimal Weight { get; set; }
         [Display(Name = "Experience Yield"), Required]
         public int ExpYield { get; set; }
