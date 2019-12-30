@@ -1228,25 +1228,17 @@ namespace Pokedex.Controllers
         private List<Form> GatherRemovableForms()
         {
             List<Form> forms = new List<Form>();
+            List<string> formNames = new List<string>()
+            {
+                "Female",
+            };
 
-            forms.Add(this._dataService.GetForm(9));
-            forms.Add(this._dataService.GetForm(10));
-            forms.Add(this._dataService.GetForm(11));
-            forms.Add(this._dataService.GetForm(21));
-            forms.Add(this._dataService.GetForm(1001));
-            forms.Add(this._dataService.GetForm(34));
-            forms.Add(this._dataService.GetForm(35));
-            forms.Add(this._dataService.GetForm(33));
-            forms.Add(this._dataService.GetForm(47));
-            forms.Add(this._dataService.GetForm(1002));
-            forms.Add(this._dataService.GetForm(13));
-            forms.Add(this._dataService.GetForm(46));
-            forms.Add(this._dataService.GetForm(45));
-            forms.Add(this._dataService.GetForm(44));
-            forms.Add(this._dataService.GetForm(29));
-            forms.Add(this._dataService.GetForm(22));
+            foreach(var formName in formNames)
+            {
+                forms.Add(this._dataService.GetFormByName(formName));
+            }
 
-            return forms;
+            return forms.Where(x => x != null).ToList();
         }
 
         private List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
