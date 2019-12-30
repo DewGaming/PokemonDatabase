@@ -32,6 +32,7 @@ namespace Pokedex.DataAccess.Models
         public int? BattleItemId { get; set; }
         
         public BattleItem BattleItem { get; set; }
+        [Required, Display(Name = "Nature")]
 
         public int? NatureId { get; set; }
 
