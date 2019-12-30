@@ -1230,7 +1230,12 @@ namespace Pokedex.Controllers
             List<Form> forms = new List<Form>();
             List<string> formNames = new List<string>()
             {
-                "Female",
+                "Alola",
+                "Galar",
+                "Mega",
+                "MegaX",
+                "MegaY",
+                "Eternamax"
             };
 
             foreach(var formName in formNames)
