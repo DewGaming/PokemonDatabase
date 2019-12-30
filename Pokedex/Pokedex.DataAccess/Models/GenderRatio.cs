@@ -5,9 +5,9 @@ namespace Pokedex.DataAccess.Models
     public class GenderRatio   
     {
         public int Id { get; set; }
-        [Required]
+        [Required, Display(Name = "Male Ratio")]
         public double MaleRatio { get; set; }
-        [Required]
+        [Required, Display(Name = "Female Ratio")]
         public double FemaleRatio { get; set; }
     }
 }

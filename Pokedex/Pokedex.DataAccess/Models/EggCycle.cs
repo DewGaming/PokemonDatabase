@@ -6,7 +6,7 @@ namespace Pokedex.DataAccess.Models
     public class EggCycle   
     {
         public int Id { get; set; }
-        [Required]
+        [Required, Display(Name = "Egg Cycles")]
         public Int16 CycleCount { get; set; }
     }
 }

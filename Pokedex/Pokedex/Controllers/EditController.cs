@@ -819,6 +819,84 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_egg_cycle/{id:int}")]
+        public IActionResult EggCycle(int id)
+        {
+            EggCycle model = this._dataService.GetEggCycle(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_egg_cycle/{id:int}")]
+        public IActionResult EggCycle(EggCycle eggCycle)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                EggCycle model = this._dataService.GetEggCycle(eggCycle.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateEggCycle(eggCycle);
+
+            return this.RedirectToAction("EggCycles", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_experience_growth/{id:int}")]
+        public IActionResult ExperienceGrowth(int id)
+        {
+            ExperienceGrowth model = this._dataService.GetExperienceGrowth(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_experience_growth/{id:int}")]
+        public IActionResult ExperienceGrowth(ExperienceGrowth experienceGrowth)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                ExperienceGrowth model = this._dataService.GetExperienceGrowth(experienceGrowth.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateExperienceGrowth(experienceGrowth);
+
+            return this.RedirectToAction("ExperienceGrowths", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_gender_ratio/{id:int}")]
+        public IActionResult GenderRatio(int id)
+        {
+            GenderRatio model = this._dataService.GetGenderRatio(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_gender_ratio/{id:int}")]
+        public IActionResult GenderRatio(GenderRatio genderRatio)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                GenderRatio model = this._dataService.GetGenderRatio(genderRatio.Id);
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateGenderRatio(genderRatio);
+
+            return this.RedirectToAction("GenderRatios", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_shiny_hunting_technique/{id:int}")]
         public IActionResult ShinyHuntingTechnique(int id)
         {

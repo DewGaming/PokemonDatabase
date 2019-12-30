@@ -1,0 +1,34 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.DataAccess.Models.ExperienceGrowth
+@{
+    Layout = "_layout";
+}
+
+<h2>Add Experience Growth</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Name, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Name)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.ExpPointTotal, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.ExpPointTotal, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.ExpPointTotal)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

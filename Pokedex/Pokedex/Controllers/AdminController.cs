@@ -57,6 +57,42 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("egg_cycle")]
+        public IActionResult EggCycles()
+        {
+            EggCycleViewModel model = new EggCycleViewModel()
+            {
+                AllEggCycles = this._dataService.GetEggCycles(),
+                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("experience_growth")]
+        public IActionResult ExperienceGrowths()
+        {
+            ExperienceGrowthViewModel model = new ExperienceGrowthViewModel()
+            {
+                AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("gender_ratio")]
+        public IActionResult GenderRatios()
+        {
+            GenderRatiosViewModel model = new GenderRatiosViewModel()
+            {
+                AllGenderRatios = this._dataService.GetGenderRatios(),
+                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("form_items")]
         public IActionResult FormItems()
         {

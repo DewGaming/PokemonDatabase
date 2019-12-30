@@ -1463,14 +1463,29 @@ namespace Pokedex
             return this._dataContext.CaptureRates.OrderBy(x => x.CatchRate).ToList();
         }
 
+        public EggCycle GetEggCycle(int id)
+        {
+            return this._dataContext.EggCycles.ToList().Find(x => x.Id == id);
+        }
+
         public List<EggCycle> GetEggCycles()
         {
             return this._dataContext.EggCycles.OrderBy(x => x.CycleCount).ToList();
         }
 
+        public ExperienceGrowth GetExperienceGrowth(int id)
+        {
+            return this._dataContext.ExperienceGrowths.ToList().Find(x => x.Id == id);
+        }
+
         public List<ExperienceGrowth> GetExperienceGrowths()
         {
             return this._dataContext.ExperienceGrowths.OrderBy(x => x.Name).ToList();
+        }
+
+        public GenderRatio GetGenderRatio(int id)
+        {
+            return this._dataContext.GenderRatios.ToList().Find(x => x.Id == id);
         }
 
         public List<GenderRatio> GetGenderRatios()
@@ -1810,6 +1825,24 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddEggCycle(EggCycle eggCycle)
+        {
+            this._dataContext.EggCycles.Add(eggCycle);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddExperienceGrowth(ExperienceGrowth experienceGrowth)
+        {
+            this._dataContext.ExperienceGrowths.Add(experienceGrowth);
+            this._dataContext.SaveChanges();
+        }
+
+        public void AddGenderRatio(GenderRatio genderRatio)
+        {
+            this._dataContext.GenderRatios.Add(genderRatio);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddPokemonLegendaryDetails(PokemonLegendaryDetail pokemonLegendaryDetail)
         {
             this._dataContext.PokemonLegendaryDetails.Add(pokemonLegendaryDetail);
@@ -1915,6 +1948,24 @@ namespace Pokedex
         public void UpdateBaseStat(BaseStat baseStats)
         {
             this._dataContext.BaseStats.Update(baseStats);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateEggCycle(EggCycle eggCycle)
+        {
+            this._dataContext.EggCycles.Update(eggCycle);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateExperienceGrowth(ExperienceGrowth experienceGrowth)
+        {
+            this._dataContext.ExperienceGrowths.Update(experienceGrowth);
+            this._dataContext.SaveChanges();
+        }
+
+        public void UpdateGenderRatio(GenderRatio genderRatio)
+        {
+            this._dataContext.GenderRatios.Update(genderRatio);
             this._dataContext.SaveChanges();
         }
 
@@ -2152,6 +2203,27 @@ namespace Pokedex
         {
             LegendaryType legendaryType = this.GetLegendaryType(id);
             this._dataContext.LegendaryTypes.Remove(legendaryType);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteEggCycle(int id)
+        {
+            EggCycle eggCycle = this.GetEggCycle(id);
+            this._dataContext.EggCycles.Remove(eggCycle);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteExperienceGrowth(int id)
+        {
+            ExperienceGrowth experienceGrowth = this.GetExperienceGrowth(id);
+            this._dataContext.ExperienceGrowths.Remove(experienceGrowth);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteGenderRatio(int id)
+        {
+            GenderRatio genderRatio = this.GetGenderRatio(id);
+            this._dataContext.GenderRatios.Remove(genderRatio);
             this._dataContext.SaveChanges();
         }
 

@@ -1,0 +1,35 @@
+@model Pokedex.Models.ExperienceGrowthViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="eggCycleCount">
+    @if(User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@Url.Action("ExperienceGrowth", "Add")" role="button">Add Experience Growths</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Experience Growth</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach(var item in Model.AllExperienceGrowths)
+        {
+            <tr>
+                <td>
+                    @item.Name @("(" + @item.ExpPointTotal + ")")
+                </td>
+                <td>
+                    <a href="@(Url.Action("ExperienceGrowth", "Edit", new { id = item.Id }))">Edit</a>
+                    @if(!(Model.AllPokemon.Exists(x => x.EggCycleId == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(Url.Action("ExperienceGrowth", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

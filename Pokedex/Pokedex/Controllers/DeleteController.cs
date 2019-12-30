@@ -101,6 +101,63 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_egg_cycle/{id:int}")]
+        public IActionResult EggCycle(int id)
+        {
+            EggCycle model = this._dataService.GetEggCycle(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_egg_cycle/{id:int}")]
+        public IActionResult EggCycle(EggCycle eggCycle)
+        {
+            this._dataService.DeleteEggCycle(eggCycle.Id);
+
+            return this.RedirectToAction("EggCycles", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_experience_growth/{id:int}")]
+        public IActionResult ExperienceGrowth(int id)
+        {
+            ExperienceGrowth model = this._dataService.GetExperienceGrowth(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_experience_growth/{id:int}")]
+        public IActionResult ExperienceGrowth(ExperienceGrowth experienceGrowth)
+        {
+            this._dataService.DeleteExperienceGrowth(experienceGrowth.Id);
+
+            return this.RedirectToAction("ExperienceGrowths", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_gender_ratio/{id:int}")]
+        public IActionResult GenderRatio(int id)
+        {
+            GenderRatio model = this._dataService.GetGenderRatio(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_gender_ratio/{id:int}")]
+        public IActionResult GenderRatio(GenderRatio genderRatio)
+        {
+            this._dataService.DeleteGenderRatio(genderRatio.Id);
+
+            return this.RedirectToAction("GenderRatios", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_move/{id:int}")]
         public IActionResult Move(int id)
         {

@@ -185,6 +185,72 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_egg_cycle")]
+        public IActionResult EggCycle()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_egg_cycle")]
+        public IActionResult EggCycle(EggCycle eggCycle)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddEggCycle(eggCycle);
+
+            return this.RedirectToAction("EggCycles", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_experience_growth")]
+        public IActionResult ExperienceGrowth()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_experience_growth")]
+        public IActionResult ExperienceGrowth(ExperienceGrowth experienceGrowth)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddExperienceGrowth(experienceGrowth);
+
+            return this.RedirectToAction("ExperienceGrowths", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_gender_ratio")]
+        public IActionResult GenderRatio()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_gender_ratio")]
+        public IActionResult GenderRatio(GenderRatio genderRatio)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this._dataService.AddGenderRatio(genderRatio);
+
+            return this.RedirectToAction("GenderRatios", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_legendary_type")]
         public IActionResult LegendaryType()
         {
