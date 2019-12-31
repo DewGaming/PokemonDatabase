@@ -1156,7 +1156,6 @@ namespace Pokedex.Controllers
         public IActionResult BaseStats(int pokemonId)
         {
             _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
-            _cameFromAdminAltForms = Request.Headers["Referer"].ToString().Contains("admin/edit_alternate_forms");
 
             BaseStat model = new BaseStat()
             {
@@ -1183,8 +1182,9 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonBaseStat(baseStat);
 
-            if (this._dataService.CheckIfAltForm(baseStat.PokemonId))
+            if (this._dataService.CheckIfAltForm(baseStat.PokemonId) || _cameFromAdminPokemon)
             {
+                _cameFromAdminPokemon = false;
                 return this.RedirectToAction("Pokemon", "Admin");
             }
             else
