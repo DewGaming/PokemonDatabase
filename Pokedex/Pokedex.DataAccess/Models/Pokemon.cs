@@ -6,7 +6,7 @@ namespace Pokedex.DataAccess.Models
     public class Pokemon   
     {
         public int Id { get; set; }
-        [Display(Name = "Pokedex Number"), StringLength(6)]
+        [Display(Name = "Pokedex Number")]
         public int PokedexNumber { get; set; }
         [Display(Name = "Pokemon Name"), StringLength(25), Required]
         public string Name { get; set; }
