@@ -864,7 +864,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Mega"))
                     {  
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Id == 9 || x.Form.Id == 10 || x.Form.Id == 11).ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Mega" || x.Form.Name == "Mega X" || x.Form.Name == "Mega Y").ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -893,7 +893,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Alolan"))
                     {
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Id == 21).ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Alola").ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -922,7 +922,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Galarian"))
                     {
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Id == 1001).ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Galar").ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -1145,8 +1145,8 @@ namespace Pokedex.Controllers
                 "Alola",
                 "Galar",
                 "Mega",
-                "MegaX",
-                "MegaY",
+                "Mega X",
+                "Mega Y",
                 "Eternamax"
             };
 
@@ -1379,7 +1379,7 @@ namespace Pokedex.Controllers
             {
                 if(selectedGame != 0)
                 {
-                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame).Where(x => !this._dataService.CheckIfAltForm(x.PokemonId)).ToList();
+                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGame(selectedGame).Where(x => !this._dataService.CheckIfAltForm(x.PokemonId)).ToList();
                     List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     Generation selectedGen = this._dataService.GetGenerationFromGame(selectedGame);
                     List<Generation> generationList = this._dataService.GetGenerations().Where(x => x.Id <= selectedGen.Id).ToList();

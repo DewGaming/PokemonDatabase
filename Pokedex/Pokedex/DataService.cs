@@ -1471,6 +1471,11 @@ namespace Pokedex
             return this._dataContext.EvolutionMethods.ToList().Find(x => x.Id == id);
         }
 
+        public List<Game> GetGamesFromGeneration(Generation generation)
+        {
+            return this._dataContext.Games.Where(x => x.GenerationId == generation.Id).ToList();
+        }
+
         public List<Generation> GetGenerations()
         {
             return this._dataContext.Generations.ToList();
@@ -1535,7 +1540,11 @@ namespace Pokedex
 
         public Generation GetGenerationFromGame(int id)
         {
-            return this._dataContext.Games.ToList().Find(x => x.Id == id).Generation;
+            return this._dataContext.Games
+                .Include(x => x.Generation)
+                .ToList()
+                .Find(x => x.Id == id)
+                .Generation;
         }
 
         public BattleItem GetBattleItem(int id)

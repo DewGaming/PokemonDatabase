@@ -235,7 +235,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
                     $("#onePokemonFormBool").prop('checked', true);
                 }
 
-                if ($.inArray(selectedGame, ['0', '6', '6-1', '7', '7-1', '7-2']) != -1) {
+                if ($.inArray(selectedGame, ['0', '12', '13', '14', '15', '16']) != -1) {
                     if (!$('.multipleMegaBoolCheckbox').is(':visible')) {
                         $(".multipleMegaBoolCheckbox").show();
                     }
@@ -252,7 +252,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
                     $("#Mega").prop('checked', false);
                 }
 
-                if ($.inArray(selectedGame, ['0', '7', '7-1']) != -1) {
+                if ($.inArray(selectedGame, ['0', '14', '15']) != -1) {
                     if (!$('.ultraBeastCheckbox').is(':visible')) {
                         $(".ultraBeastCheckbox").show();
                         $("#UltraBeast").prop('checked', true);
@@ -268,12 +268,12 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
                     $("#UltraBeast").prop('checked', false);
                 }
 
-                if (selectedGame == '7-2') {
+                if (selectedGame == 16) {
                     $(".otherFormCheckbox").hide();
                     $("#Other").prop('checked', false);
                 }
 
-                if ($.inArray(selectedGame, ['0', '7', '7-1', '7-2', '8']) != -1) {
+                if ($.inArray(selectedGame, ['0', '14', '15', '16', '17']) != -1) {
                     if (!$('.alolanFormCheckbox').is(':visible')) {
                         $(".alolanFormCheckbox").show();
                         $("#Alolan").prop('checked', true);
@@ -288,7 +288,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
                     $("#Alolan").prop('checked', false);
                 }
 
-                if ($.inArray(selectedGame, ['0', '8']) != -1) {
+                if ($.inArray(selectedGame, ['0', '17']) != -1) {
                     if (!$('.galarianFormCheckbox').is(':visible')) {
                         $(".galarianFormCheckbox").show();
                         $("#Galarian").prop('checked', true);

@@ -33,9 +33,9 @@
             <span class="generationOptionTitle" id="generations">Generations</span>
             @foreach(var gen in Model.Select(x => x.Generation).Distinct().ToList())
             {
-                <li class="dropdown-item generatorOption generationCheckbox gen@(gen.Id)Checkbox">
-                    <input id="gen@(gen.Id)" type="checkbox" value="@(gen.Id)" checked="checked" />
-                    <label for="gen@(gen.Id)" class="generatorOptionTitle">Generation @gen.Id</label>
+                <li class="dropdown-item generatorOption generationCheckbox gen@(gen)Checkbox">
+                    <input id="gen@(gen)" type="checkbox" value="@(gen)" checked="checked" />
+                    <label for="gen@(gen)" class="generatorOptionTitle">Generation @gen</label>
                 </li>
             }
             <span class="generationOptionTitle" id="alternateForms">Alternate Forms</span>

@@ -135,13 +135,13 @@ namespace Pokedex.Controllers
         {
             List<Pokemon> allPokemon = this._dataService.GetAllPokemon();
             List<Generation> generations = this._dataService.GetGenerations();
-            List<Generation> model = new List<Generation>();
+            List<Game> model = new List<Game>();
 
             foreach(var gen in generations)
             {
                 if(allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
                 {
-                    model.Add(gen);
+                    model.AddRange(this._dataService.GetGamesFromGeneration(gen));
                 }
             }
 
