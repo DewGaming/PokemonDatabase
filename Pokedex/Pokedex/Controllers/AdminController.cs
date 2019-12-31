@@ -45,6 +45,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("game")]
+        public IActionResult Games()
+        {
+            AdminGameViewModel model = new AdminGameViewModel()
+            {
+                AllGames = this._dataService.GetGames().OrderBy(x => x.ReleaseDate).ToList(),
+                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("type")]
         public IActionResult Types()
         {

@@ -485,6 +485,36 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_game")]
+        public IActionResult Game()
+        {
+            GameViewModel model = new GameViewModel(){
+                AllGenerations = this._dataService.GetGenerations(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_game")]
+        public IActionResult Game(Game game)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                GameViewModel model = new GameViewModel(){
+                    AllGenerations = this._dataService.GetGenerations(),
+                };
+
+                return this.View(model);
+            }
+
+            this._dataService.AddGame(game);
+
+            return this.RedirectToAction("Games", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_battle_item")]
         public IActionResult BattleItem()
         {

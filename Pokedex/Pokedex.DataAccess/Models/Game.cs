@@ -15,7 +15,7 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Release Date")]
         [Required]
         public DateTime ReleaseDate { get; set; }
-        [Required]
+        [Required, Display(Name = "Generation")]
         public int GenerationId { get; set; }
         public Generation Generation { get; set; }
     }

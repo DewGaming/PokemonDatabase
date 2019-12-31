@@ -56,6 +56,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_game/{id:int}")]
+        public IActionResult Game(int id)
+        {
+            Game model = this._dataService.GetGame(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_game/{id:int}")]
+        public IActionResult Game(Game game)
+        {
+            this._dataService.DeleteGame(game.Id);
+
+            return this.RedirectToAction("Games", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_type/{id:int}")]
         public IActionResult Type(int id)
         {

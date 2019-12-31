@@ -99,6 +99,48 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_game/{id:int}")]
+        public IActionResult Game(int id)
+        {
+            Game game = this._dataService.GetGame(id);
+            GameViewModel model = new GameViewModel(){
+                Id = game.Id,
+                Name = game.Name,
+                Abbreviation = game.Abbreviation,
+                ReleaseDate = game.ReleaseDate,
+                GenerationId = game.GenerationId,
+                AllGenerations = this._dataService.GetGenerations(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_game/{id:int}")]
+        public IActionResult Game(Game game)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Game oldGame = this._dataService.GetGame(game.Id);
+                GameViewModel model = new GameViewModel(){
+                    Id = oldGame.Id,
+                    Name = oldGame.Name,
+                    Abbreviation = oldGame.Abbreviation,
+                    ReleaseDate = oldGame.ReleaseDate,
+                    GenerationId = oldGame.GenerationId,
+                    AllGenerations = this._dataService.GetGenerations(),
+                };
+
+                return this.View(model);
+            }
+
+            this._dataService.UpdateGame(game);
+
+            return this.RedirectToAction("Games", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_battle_item/{id:int}")]
         public IActionResult BattleItem(int id)
         {

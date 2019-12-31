@@ -1649,6 +1649,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void AddGame(Game game)
+        {
+            this._dataContext.Games.Add(game);
+            this._dataContext.SaveChanges();
+        }
+
         public void AddFormItem(FormItem formItem)
         {
             this._dataContext.FormItems.Add(formItem);
@@ -2056,6 +2062,12 @@ namespace Pokedex
             this._dataContext.SaveChanges();
         }
 
+        public void UpdateGame(Game game)
+        {
+            this._dataContext.Games.Update(game);
+            this._dataContext.SaveChanges();
+        }
+
         public void UpdateType(Type type)
         {
             this._dataContext.Types.Update(type);
@@ -2127,6 +2139,13 @@ namespace Pokedex
         {
             Generation generation = this.GetGeneration(id);
             this._dataContext.Generations.Remove(generation);
+            this._dataContext.SaveChanges();
+        }
+
+        public void DeleteGame(int id)
+        {
+            Game game = this.GetGame(id);
+            this._dataContext.Games.Remove(game);
             this._dataContext.SaveChanges();
         }
 

@@ -1,0 +1,46 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.GameViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Add Game</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Name, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Name)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Abbreviation, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Abbreviation, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Abbreviation)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.ReleaseDate, new { @class = "col-md-2" })
+            @Html.TextBoxFor(x => x.ReleaseDate, new { @class = "form-control col-md-8", @type = "date" })
+            @Html.ValidationMessageFor(x => x.ReleaseDate)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.GenerationId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.GenerationId, new SelectList(Model.AllGenerations, "Id", "Id"), "", new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.GenerationId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>
