@@ -690,48 +690,6 @@ namespace Pokedex.Controllers
                 this.ModelState.AddModelError("Pokedex Number", "Pokedex Number already exists.");
                 return this.View(model);
             }
-            else if (!upload.FileName.Contains(".png"))
-            {
-                BasePokemonViewModel model = new BasePokemonViewModel()
-                {
-                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                    AllClassifications = this._dataService.GetClassifications(),
-                    AllCaptureRates = this._dataService.GetCaptureRates(),
-                    AllEggCycles = this._dataService.GetEggCycles(),
-                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
-                    AllGenderRatios = new List<GenderRatioViewModel>(),
-                    AllGames = this._dataService.GetGames(),
-                };
-
-                foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
-                {
-                    GenderRatioViewModel viewModel = new GenderRatioViewModel() {
-                        Id = genderRatio.Id
-                    };
-
-                    if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
-                    {
-                        viewModel.GenderRatioString = "Genderless";
-                    }
-                    else if (genderRatio.FemaleRatio == 0)
-                    {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
-                    }
-                    else if (genderRatio.MaleRatio == 0)
-                    {
-                        viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
-                    }
-                    else
-                    {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
-                    }
-
-                    model.AllGenderRatios.Add(viewModel);
-                }
-                
-                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
-                return this.View(model);
-            }
 
             if(upload != null)
             {
