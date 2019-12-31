@@ -690,21 +690,7 @@ namespace Pokedex
         {
             return this._dataContext.PokemonFormDetails
                 .Include(x => x.AltFormPokemon)
-                    .Include("AltFormPokemon.EggCycle")
-                    .Include("AltFormPokemon.GenderRatio")
-                    .Include("AltFormPokemon.Classification")
-                    .Include("AltFormPokemon.Generation")
-                    .Include("AltFormPokemon.ExperienceGrowth")
-                    .Include("AltFormPokemon.CaptureRate")
-                    .Include("AltFormPokemon.BaseHappiness")
                 .Include(x => x.OriginalPokemon)
-                    .Include("OriginalPokemon.EggCycle")
-                    .Include("OriginalPokemon.GenderRatio")
-                    .Include("OriginalPokemon.Classification")
-                    .Include("OriginalPokemon.Generation")
-                    .Include("OriginalPokemon.ExperienceGrowth")
-                    .Include("OriginalPokemon.CaptureRate")
-                    .Include("OriginalPokemon.BaseHappiness")
                 .Include(x => x.Form)
                 .ToList();
         }
