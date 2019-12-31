@@ -6,10 +6,10 @@ namespace Pokedex.DataAccess.Models
     {
         public int Id { get; set; }
         [Required]
-        public string GenerationId { get; set; }
-        public Generation Generation { get; set; }
+        public int GameId { get; set; }
+        public Game Game { get; set; }
         [Required]
-        public string PokemonId { get; set; }
+        public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
     }
 }

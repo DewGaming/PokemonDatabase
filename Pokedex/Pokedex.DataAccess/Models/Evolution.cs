@@ -11,10 +11,10 @@ namespace Pokedex.DataAccess.Models
         public int? EvolutionMethodId { get; set; }
         public EvolutionMethod EvolutionMethod { get; set; }
         [Required, Display(Name = "Pokedex Number of Pre-Evolution")]
-        public string PreevolutionPokemonId { get; set; }
+        public int PreevolutionPokemonId { get; set; }
         public Pokemon PreevolutionPokemon { get; set; }
         [Required, Display(Name = "Pokedex Number of Evolution")]
-        public string EvolutionPokemonId { get; set; }
+        public int EvolutionPokemonId { get; set; }
         public Pokemon EvolutionPokemon { get; set; }
     }
 }

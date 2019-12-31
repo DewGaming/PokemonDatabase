@@ -9,6 +9,6 @@ namespace Pokedex.Models
 
         public int AbilityId { get; set; }
 
-        public string PokemonId { get; set; }
+        public int PokemonId { get; set; }
     }
 }

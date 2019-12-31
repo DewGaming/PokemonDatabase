@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Generation>;
+@model IEnumerable<Pokedex.DataAccess.Models.Game>;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Available Pokemon List";
@@ -18,7 +18,7 @@
 <div class="pageButtons">
     @foreach(var p in Model)
     {
-        <button id="Generation@(p.Id)" onclick="lookupAvailableGeneration('@p.Id')">@p.Abbreviation</button>
+        <button id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Abbreviation</button>
     }
 </div>
 <div class="page generation pokemonList">

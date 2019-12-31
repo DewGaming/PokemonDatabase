@@ -57,7 +57,7 @@
                 </tr>
                 <tr>
                     <th>Pokedex Number</th>
-                    <td>@('#')@Model.Pokemon.PokedexNumber.PadLeft(3, '0')</td>
+                    <td>@('#')@Model.Pokemon.PokedexNumber.ToString().PadLeft(3, '0')</td>
                 </tr>
                 <tr>
                     <th>Classification</th>
@@ -151,7 +151,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @if (Model.Pokemon.Generation.Games.IndexOf('/') > -1)
+                        @if (Model.Pokemon.Game.Name.IndexOf('/') > -1)
                         {
                             @("Games of Origin");
                         }
@@ -161,7 +161,7 @@
                         }
                     </th>
                     <td>
-                        @Model.Pokemon.Generation.Games
+                        @Model.Pokemon.Game.Name
                     </td>
                 </tr>
             </tbody>

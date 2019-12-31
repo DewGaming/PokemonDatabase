@@ -10,6 +10,6 @@ namespace Pokedex.Models
 
         public List<Nature> AllNatures { get; set; }
         
-        public string GenerationId { get; set; }
+        public int? GameId { get; set; }
     }
 }

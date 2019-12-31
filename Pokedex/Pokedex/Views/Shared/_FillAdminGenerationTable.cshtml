@@ -26,11 +26,11 @@
         <div class="description">
             @if(p.IsComplete)
             {
-                <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokedexNumber.PadLeft(3, '0') @p.Name.Replace(' ', '_')</a>
+                <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name.Replace(' ', '_')</a>
             }
             else
             {
-                <span class="pokemonName">#@p.PokedexNumber.PadLeft(3, '0') @p.Name.Replace(' ', '_')</span>
+                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name.Replace(' ', '_')</span>
             }
             <br>
             @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)

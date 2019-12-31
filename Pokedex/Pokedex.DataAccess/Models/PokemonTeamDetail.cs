@@ -21,7 +21,7 @@ namespace Pokedex.DataAccess.Models
         public byte Happiness { get; set; }
 
         [Required]
-        public string PokemonId { get; set; }
+        public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
 
         [Required]

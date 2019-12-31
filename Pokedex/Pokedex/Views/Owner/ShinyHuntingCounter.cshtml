@@ -30,7 +30,7 @@
                         Game@{
                             foreach(var hunt in Model)
                             {
-                                if (hunt.Generation.Games.Contains('/'))
+                                if (hunt.Game.Name.Contains('/'))
                                 {
                                     @("(s)");
                                     break;
@@ -42,7 +42,7 @@
                     @{
                         foreach(var hunt in Model)
                         {
-                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
                                 <th scope="col">Used Shiny Charm</th>
                                 break;
@@ -55,12 +55,12 @@
                 {
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
-                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
                             foreach(var hunt in Model)
                             {
-                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
                                     <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
                                     break;
@@ -89,7 +89,7 @@
                         Game@{
                             foreach(var hunt in Model)
                             {
-                                if (hunt.Generation.Games.Contains('/'))
+                                if (hunt.Game.Name.Contains('/'))
                                 {
                                     @("(s)");
                                     break;
@@ -101,7 +101,7 @@
                     @{
                         foreach(var hunt in Model)
                         {
-                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
                                 <th scope="col">Used Shiny Charm</th>
                                 break;
@@ -114,12 +114,12 @@
                 {
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
-                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
                             foreach(var hunt in Model)
                             {
-                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
                                     <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
                                     break;
@@ -148,7 +148,7 @@
                         Game@{
                             foreach(var hunt in Model)
                             {
-                                if (hunt.Generation.Games.Contains('/'))
+                                if (hunt.Game.Name.Contains('/'))
                                 {
                                     @("(s)");
                                     break;
@@ -160,7 +160,7 @@
                     @{
                         foreach(var hunt in Model)
                         {
-                            if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                            if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
                                 <th scope="col">Used Shiny Charm</th>
                                 break;
@@ -173,12 +173,12 @@
                 {
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
-                        <td>@hunts.Generation.Games</td>
+                        <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
                             foreach(var hunt in Model)
                             {
-                                if (hunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                                if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
                                     <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
                                     break;

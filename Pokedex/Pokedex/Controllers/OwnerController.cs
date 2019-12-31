@@ -121,8 +121,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("review_pokemon/{pokemonId}")]
-        public IActionResult ReviewPokemon(string pokemonId)
+        [Route("review_pokemon/{pokemonId:int}")]
+        public IActionResult ReviewPokemon(int pokemonId)
         {
             // Ensuring that the pokemon really has all of these added.
             bool PokemonIsComplete = this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
@@ -157,7 +157,7 @@ namespace Pokedex.Controllers
                     AppConfig = this._appConfig,
                 };
 
-                if(pokemonId.Contains('-'))
+                if(this._dataService.CheckIfAltForm(pokemonId))
                 {
                     model.OriginalPokemon = this._dataService.GetOriginalPokemonByAltFormId(pokemon.Id);
                 }
@@ -171,8 +171,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpPost]
-        [Route("review_pokemon/{pokemonId}")]
-        public IActionResult ReviewPokemon(Pokemon pokemon, string pokemonId)
+        [Route("review_pokemon/{pokemonId:int}")]
+        public IActionResult ReviewPokemon(Pokemon pokemon, int pokemonId)
         {
             ReviewedPokemon reviewedPokemon = this._dataService.GetReviewedPokemonByPokemonId(pokemonId);
             this._dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemonId });
@@ -204,8 +204,8 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
-        [Route("complete_pokemon/{pokemonId}")]
-        public IActionResult CompletePokemon(string pokemonId)
+        [Route("complete_pokemon/{pokemonId:int}")]
+        public IActionResult CompletePokemon(int pokemonId)
         {
             Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(pokemonId);
             pokemon.IsComplete = true;

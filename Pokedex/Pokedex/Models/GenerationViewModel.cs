@@ -7,6 +7,6 @@ namespace Pokedex.Models
     {
         public List<Generation> AllGenerations { get; set; }
 
-        public List<Pokemon> AllPokemon { get; set; }
+        public List<Game> AllGames { get; set; }
     }
 }

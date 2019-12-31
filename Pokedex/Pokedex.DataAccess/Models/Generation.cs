@@ -5,16 +5,8 @@ namespace Pokedex.DataAccess.Models
 {
     public class Generation   
     {
-        [StringLength(4)]
-        public string Id { get; set; }
-        [StringLength(50)]
-        [Required]
-        public string Games { get; set; }
-        [StringLength(5)]
-        [Required]
-        public string Abbreviation { get; set; }
-        [Display(Name = "Release Date")]
-        [Required]
-        public DateTime ReleaseDate { get; set; }
+        public int Id { get; set; }
+        [Required, StringLength(10)]
+        public string Region { get; set; }
     }
 }

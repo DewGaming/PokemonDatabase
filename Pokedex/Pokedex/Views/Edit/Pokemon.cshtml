@@ -4,7 +4,7 @@
     Layout = "_layout";
 }
 
-<h2>Update @((!Model.Pokemon.Id.Contains('-')) ? "Pokemon" : @Model.Name)</h2>
+<h2>Update @Model.Name</h2>
 
 <div class="form-horizontal">
 
@@ -17,25 +17,17 @@
         @Html.HiddenFor(x => x.Pokemon.IsComplete)
         @Html.HiddenFor(x => x.Pokemon.Id)
 
-        @if(!Model.Pokemon.Id.Contains('-'))
-        {
-            <div class="form-group row">
-                @Html.LabelFor(x => x.Pokemon.Name, new { @class = "col-md-2" })
-                @Html.EditorFor(x => x.Pokemon.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
-                @Html.ValidationMessageFor(x => x.Pokemon.Name)
-            </div>
-            
-            <div class="form-group row">
-                @Html.LabelFor(x => x.Pokemon.PokedexNumber, new { @class = "col-md-2" })
-                @Html.EditorFor(x => x.Pokemon.PokedexNumber, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
-                @Html.ValidationMessageFor(x => x.Pokemon.PokedexNumber)
-            </div>
-        }
-        else
-        {
-            @Html.HiddenFor(x => x.Pokemon.Name)
-            @Html.HiddenFor(x => x.Pokemon.PokedexNumber)
-        }
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Pokemon.Name, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Pokemon.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.Name)
+        </div>
+        
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Pokemon.PokedexNumber, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Pokemon.PokedexNumber, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.PokedexNumber)
+        </div>
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Pokemon.ClassificationId, new { @class = "col-md-2" })
@@ -44,9 +36,9 @@
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Pokemon.GenerationId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.Pokemon.GenerationId, new SelectList(Model.AllGenerations, "Id", "Games"), new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.Pokemon.GenerationId)
+            @Html.LabelFor(x => x.Pokemon.GameId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.Pokemon.GameId, new SelectList(Model.AllGames, "Id", "Name"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.Pokemon.GameId)
         </div>
 
         <div class="form-group row">

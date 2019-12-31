@@ -35,6 +35,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Form> Forms { get; set; }
         public DbSet<GenderRatio> GenderRatios { get; set; }
         public DbSet<Generation> Generations { get; set; }
+        public DbSet<Game> Games { get; set; }
         public DbSet<Pokemon> Pokemon { get; set; }
         public DbSet<PokemonAbilityDetail> PokemonAbilityDetails { get; set; }
         public DbSet<PokemonEggGroupDetail> PokemonEggGroupDetails { get; set; }

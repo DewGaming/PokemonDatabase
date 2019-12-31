@@ -39,7 +39,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @if (Model.ShinyHunt.Generation.Games.IndexOf('/') > -1)
+                        @if (Model.ShinyHunt.Game.Name.IndexOf('/') > -1)
                         {
                             @("Games Hunting In");
                         }
@@ -48,9 +48,9 @@
                             @("Game Hunting In");
                         }
                     </th>
-                    <td>@Model.ShinyHunt.Generation.Games</td>
+                    <td>@Model.ShinyHunt.Game.Name</td>
                 </tr>
-                @if (Model.ShinyHunt.Generation.ReleaseDate >= new DateTime(2012, 10, 7))
+                @if (Model.ShinyHunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                 {
                     <tr>
                         <th>Using Shiny Charm</th>

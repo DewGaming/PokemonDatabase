@@ -13,18 +13,7 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
-            <th scope="col">
-                        Game@{
-                            foreach(var item in Model.AllBattleItems)
-                            {
-                                if (item.Generation.Games.Contains('/'))
-                                {
-                                    @("(s)");
-                                    break;
-                                }
-                            }
-                        }
-                    </th>
+            <th scope="col">Region</th>
             @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
             {
                 <th scope="col">Specific Pokemon</th>
@@ -41,7 +30,7 @@
                     {
                         @("Only In ")
                     }
-                    @item.Generation.Games
+                    @item.Generation.Region
                 </td>
                 @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0 && item.PokemonId != null)
                 {

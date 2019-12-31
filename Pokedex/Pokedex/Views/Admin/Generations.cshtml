@@ -21,13 +21,10 @@
         {
             <tr>
                 <td>@item.Id</td>
-                <td>
-                    @item.Games (@item.Abbreviation)
-                </td>
-                <td>@item.ReleaseDate.ToString("MMMM d, yyyy")</td>
+                <td>@item.Region</td>
                 <td>
                     <a href="@(Url.Action("Generation", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!Model.AllPokemon.Exists(x => x.Generation.Id == item.Id))
+                    @if(!Model.AllGames.Exists(x => x.Generation.Id == item.Id))
                     {
                         @("|")
                         <a href="@(Url.Action("Generation", "Delete", new { id = item.Id }))">Delete</a>

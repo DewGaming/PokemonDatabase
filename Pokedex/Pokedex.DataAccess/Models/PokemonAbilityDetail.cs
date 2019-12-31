@@ -6,7 +6,7 @@ namespace Pokedex.DataAccess.Models
     {
         public int Id { get; set; }
         [Required]
-        public string PokemonId { get; set; }
+        public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
         [Display(Name = "Primary Ability"), Required]
         public int? PrimaryAbilityId { get; set; }

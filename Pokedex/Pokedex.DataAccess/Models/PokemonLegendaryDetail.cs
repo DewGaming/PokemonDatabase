@@ -10,7 +10,7 @@ namespace Pokedex.DataAccess.Models
         public int LegendaryTypeId { get; set; }
         public LegendaryType LegendaryType { get; set; }
         [Required]
-        public string PokemonId { get; set; }
+        public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
     }
 }

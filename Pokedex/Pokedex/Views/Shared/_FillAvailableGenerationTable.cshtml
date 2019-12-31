@@ -5,7 +5,7 @@
     <div class="@p.Name">
         @if(p.IsComplete)
         {
-            @if(p.Id.Contains('-'))
+            @if(p.Name.IndexOf(" (") > -1)
             {
                 <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
                     <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
@@ -23,7 +23,7 @@
             <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')", src="@Url.Content(@Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
         }
         <div class="description">
-            <span class="pokemonName">#@p.PokedexNumber.PadLeft(3, '0') @p.Name.Replace('_', ' ')</span>
+            <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name.Replace('_', ' ')</span>
         </div>
     </div>
 }

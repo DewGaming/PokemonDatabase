@@ -8,13 +8,13 @@ namespace Pokedex.Models
     {
         public List<Form> AllForms { get; set; }
 
-        public List<Generation> AllGenerations { get; set; }
+        public List<Game> AllGames { get; set; }
 
         public List<Classification> AllClassifications { get; set; }
 
         [Display(Name = "Original Pokemon")]
         [Required]
-        public string OriginalPokemonId { get; set; }
+        public int OriginalPokemonId { get; set; }
         public Pokemon OriginalPokemon { get; set; }
 
         [Display(Name = "Classification")]
@@ -27,7 +27,7 @@ namespace Pokedex.Models
 
         [Display(Name = "Game(s) of Origin")]
         [Required]
-        public string GenerationId { get; set; }
+        public int GameId { get; set; }
 
         [Display(Name = "Height (In Meters)")]
         [Required]

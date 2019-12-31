@@ -12,9 +12,9 @@ namespace Pokedex.DataAccess.Models
         public string PokemonTeamName { get; set; }
         
         [Display(Name = "Origin Game(s) (Optional)")]
-        public string GenerationId { get; set; }
+        public int? GameId { get; set; }
 
-        public Generation Generation { get; set; }
+        public Game Game { get; set; }
 
         [Required]
         public int? UserId { get; set; }

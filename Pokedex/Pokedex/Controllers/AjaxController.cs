@@ -45,7 +45,7 @@ namespace Pokedex.Controllers
         }
 
         [Route("get-pokemon-by-generation-admin/{generationId}")]
-        public IActionResult GetPokemonByGenerationAdmin(string generationId)
+        public IActionResult GetPokemonByGenerationAdmin(int generationId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -67,7 +67,7 @@ namespace Pokedex.Controllers
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
-                    PokemonList = this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Where(x => x.GenerationId == generationId || x.GenerationId.Contains(generationId + '-')).ToList(),
+                    PokemonList = this._dataService.GetAllPokemonWithoutFormsWithIncomplete().Where(x => x.Game.GenerationId == generationId).ToList(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = _appConfig,
                 };
@@ -181,12 +181,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [Route("update-pokemon-list/{generationId}")]
-        public UpdatePokemonListViewModel UpdatePokemonList(string generationId)
+        public UpdatePokemonListViewModel UpdatePokemonList(int generationId)
         {
             Generation gen = this._dataService.GetGeneration(generationId);
             List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(generationId);
             UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel(){
-                PokemonList = this._dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id) && !x.Id.Contains('-')).ToList(),
+                PokemonList = this._dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id) && !this._dataService.CheckIfAltForm(x.Id)).ToList(),
                 Generation = gen,
             };
             return pokemonList;
@@ -201,7 +201,6 @@ namespace Pokedex.Controllers
                 List<PokemonTeam> pokemonTeams = this._dataService.GetAllPokemonTeams(User.Identity.Name);
                 List<PokemonTeamDetail> pokemonList;
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
-                string generationId;
                 foreach(var team in pokemonTeams)
                 {
                     pokemonList = team.GrabPokemonTeamDetails;
@@ -212,30 +211,6 @@ namespace Pokedex.Controllers
                             TeamId = team.Id,
                         };
 
-                        if (team.GenerationId != null)
-                        {
-                            pokemonTeam.ExportString += "[gen";
-                            if (team.GenerationId == null)
-                            {
-                                generationId = this._dataService.GetGenerations().Last().Id;
-                            }
-                            else
-                            {
-                                generationId = team.GenerationId;
-                            }
-
-                            if (generationId.IndexOf('-') > -1)
-                            {
-                                pokemonTeam.ExportString += generationId.Substring(0, generationId.IndexOf('-'));
-                            }
-                            else
-                            {
-                                pokemonTeam.ExportString += generationId;
-                            }
-
-                            pokemonTeam.ExportString += "ou] ";
-                        }
-
                         pokemonTeam.ExportString +=  string.Concat(team.PokemonTeamName, " ===\n\n");
 
                         for(var i = 0; i < pokemonList.Count(); i++)
@@ -245,7 +220,7 @@ namespace Pokedex.Controllers
                                 pokemonTeam.ExportString += "\n\n";
                             }
 
-                            pokemonTeam.ExportString += this.FillUserPokemonTeam(pokemonList[i], team.GenerationId);
+                            pokemonTeam.ExportString += this.FillUserPokemonTeam(pokemonList[i], team.GameId);
                         }
 
                         exportList.Add(pokemonTeam);
@@ -264,12 +239,12 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("fill-user-pokemon-team")]
-        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, string generationId)
+        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? generationId)
         {
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
             List<string> pokemonForm = new List<string>();
             string pokemonName = string.Empty;
-            if(pokemon.Id.Contains('-'))
+            if(this._dataService.CheckIfAltForm(pokemon.Id))
             {
                 pokemonForm = this.GetUserFormDetails(pokemon.Id);
             }
@@ -280,9 +255,9 @@ namespace Pokedex.Controllers
             }
             
             pokemonName += pokemon.Name;
-            if(pokemon.Id.Contains('-'))
+            if(this._dataService.CheckIfAltForm(pokemon.Id))
             {
-                pokemonName += "-" + ((pokemon.Id == "678-1") ? "F" : pokemonForm[0]);
+                pokemonName += "-" + ((pokemonForm[0] == "Female") ? "F" : pokemonForm[0]);
             }
 
             if(!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
@@ -290,7 +265,7 @@ namespace Pokedex.Controllers
                 pokemonName += ")";
             }
 
-            if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != "1")
+            if(!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != 1)
             {
                 pokemonName += " (" + pokemonTeamDetail.Gender.Substring(0,1) + ")";
             }
@@ -299,13 +274,13 @@ namespace Pokedex.Controllers
             {
                 pokemonName += pokemonForm[1];
             }
-            else if(pokemonTeamDetail.BattleItemId != null && generationId != "1")
+            else if(pokemonTeamDetail.BattleItemId != null && generationId != 1)
             {
                 pokemonName += " @ " + pokemonTeamDetail.BattleItem.Name;
             }
 
             string pokemonTeamString = pokemonName;
-            if(generationId != "1" && generationId != "2")
+            if(generationId != 1 && generationId != 2)
             {
                 pokemonTeamString += "\nAbility: " + pokemonTeamDetail.Ability.Name;
             }
@@ -315,12 +290,12 @@ namespace Pokedex.Controllers
                 pokemonTeamString += "\nLevel: " + pokemonTeamDetail.Level.ToString();
             }
 
-            if(pokemonTeamDetail.IsShiny && generationId != "1")
+            if(pokemonTeamDetail.IsShiny && generationId != 1)
             {
                 pokemonTeamString += "\nShiny: Yes";
             }
 
-            if(pokemonTeamDetail.Happiness < 255 && generationId != "1")
+            if(pokemonTeamDetail.Happiness < 255 && generationId != 1)
             {
                 pokemonTeamString += "\nHappiness: " + pokemonTeamDetail.Happiness.ToString();
             }
@@ -330,7 +305,7 @@ namespace Pokedex.Controllers
                 pokemonTeamString += this.FillEVs(pokemonTeamDetail.PokemonTeamEV);
             }
 
-            if(pokemonTeamDetail.Nature != null && generationId != "1" && generationId != "2")
+            if(pokemonTeamDetail.Nature != null && generationId != 1 && generationId != 2)
             {
                 pokemonTeamString += "\n" + pokemonTeamDetail.Nature.Name + " Nature";
             }
@@ -510,7 +485,7 @@ namespace Pokedex.Controllers
             return movesetString;
         }
 
-        private List<string> GetUserFormDetails(string pokemonId)
+        private List<string> GetUserFormDetails(int pokemonId)
         {
             string form = string.Empty, itemName = string.Empty;
             List<string> formDetails = new List<string>();
@@ -524,10 +499,6 @@ namespace Pokedex.Controllers
             if(formItem != null)
             {
                 itemName = formItem.Name;
-            }
-            else if(form.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
-            {
-                itemName = "[Insert Mega Stone Here]";
             }
 
             if(!string.IsNullOrEmpty(itemName))
@@ -546,7 +517,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(string pokemonTeamName, string selectedGame, List<string> pokemonIdList, List<int> abilityIdList, bool exportAbilities)
+        public string SavePokemonTeam(string pokemonTeamName, int selectedGame, List<int> pokemonIdList, List<int> abilityIdList, bool exportAbilities)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -562,9 +533,9 @@ namespace Pokedex.Controllers
                         UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                     };
 
-                    if(selectedGame != "0")
+                    if(selectedGame != 0)
                     {
-                        pokemonTeam.GenerationId = selectedGame;
+                        pokemonTeam.GameId = selectedGame;
                     }
 
                     Pokemon pokemon;
@@ -577,7 +548,7 @@ namespace Pokedex.Controllers
 
                         if(exportAbilities)
                         {
-                            ability = (pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34) : this._dataService.GetAbility(abilityIdList[i]);
+                            ability = this._dataService.GetAbility(abilityIdList[i]);
                         }
                         else
                         {
@@ -651,13 +622,13 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-generation/{generationId}/{showSprites:int}")]
-        public IActionResult GetPokemonByGeneration(string generationId, int showSprites)
+        public IActionResult GetPokemonByGeneration(int generationId, int showSprites)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 GenerationTableViewModel model = new GenerationTableViewModel()
                 {
-                    PokemonList = this._dataService.GetAllPokemonWithTypes().Where(x => x.Pokemon.GenerationId == generationId || x.Pokemon.GenerationId.Contains(generationId + '-')).ToList(),
+                    PokemonList = this._dataService.GetAllPokemonWithTypes().Where(x => x.Pokemon.Game.GenerationId == generationId).ToList(),
                     ShowSprites = Convert.ToBoolean(showSprites),
                     AppConfig = _appConfig,
                 };
@@ -671,15 +642,15 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("get-available-pokemon-by-generation/{generationId}")]
-        public IActionResult GetAvailablePokemonByGeneration(string generationId)
+        [Route("get-available-pokemon-by-game/{gameId}")]
+        public IActionResult GetAvailablePokemonByGame(int gameId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(generationId);
+                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(gameId);
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete();
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
-                foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+                foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
                 {
                     p.Name = p.Name + " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
                 }
@@ -698,7 +669,7 @@ namespace Pokedex.Controllers
             }
         }
 
-        private string ExportPokemonTeam(List<string> pokemonIdList, List<string> abilityList, bool exportAbilities, string necrozmaOriginalId, string zygardeOriginalId)
+        private string ExportPokemonTeam(List<int> pokemonIdList, List<string> abilityList, bool exportAbilities)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -714,16 +685,16 @@ namespace Pokedex.Controllers
 
                     pokemon = this._dataService.GetPokemonById(pokemonIdList[i]);
                     pokemonName = pokemon.Name;
-                    if(pokemon.Id.Contains('-') && !(pokemonIdList[i] == "718-2" && zygardeOriginalId == "718"))
+                    if(this._dataService.CheckIfAltForm(pokemon.Id))
                     {
-                        pokemonForm = this.GetFormDetails(pokemon.Id, necrozmaOriginalId, zygardeOriginalId);
+                        pokemonForm = this.GetFormDetails(pokemon.Id);
                         pokemonName += "-" + pokemonForm;
                     }
 
                     pokemonTeam += pokemonName;
                     if(exportAbilities)
                     {
-                        pokemonTeam += "\nAbility: " + ((pokemonIdList[i] == "800-3") ? this._dataService.GetAbility(34).Name : abilityList[i]);
+                        pokemonTeam += "\nAbility: " + abilityList[i];
                     }
 
                     pokemonTeam += "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
@@ -739,23 +710,12 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        private string GetFormDetails(string pokemonId, string necrozmaOriginalId, string zygardeOriginalId)
+        private string GetFormDetails(int pokemonId)
         {
             string formDetails = string.Empty, itemName = string.Empty;
             PokemonFormDetail pokemonFormDetail;
 
-            if(pokemonId == "800-3")
-            {
-                pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(necrozmaOriginalId);
-            }
-            else if (pokemonId == "718-2")
-            {
-                pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(zygardeOriginalId);
-            }
-            else
-            {
-                pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
-            }
+            pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
 
             formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
             
@@ -763,10 +723,6 @@ namespace Pokedex.Controllers
             if(formItem != null)
             {
                 itemName = formItem.Name;
-            }
-            else if(formDetails.Contains("Mega") && pokemonFormDetail.AltFormPokemonId != "384-1")
-            {
-                itemName = "[Insert Mega Stone Here]";
             }
 
             if(!string.IsNullOrEmpty(itemName))
@@ -779,11 +735,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<string> selectedGens, string selectedGame, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool onePokemonForm, bool randomAbility)
+        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool onePokemonForm, bool randomAbility)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
+                List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !this._dataService.CheckIfAltForm(x.Id)).ToList();
                 foreach(var item in selectedGens)
                 {
                     unselectedGens.Remove(unselectedGens.Find(x => x.Id == item));
@@ -796,14 +752,14 @@ namespace Pokedex.Controllers
                     PokemonAbilities = new List<Ability>(),
                 };
                 List<Pokemon> pokemonList = new List<Pokemon>();
-                List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame);
+                List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(this._dataService.GetGenerationFromGame(selectedGame).Id);
                 List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
                 List<Evolution> allEvolutions = this._dataService.GetEvolutions();
                 Random rnd = new Random();
 
                 foreach(var gen in unselectedGens)
                 {
-                    allPokemon = allPokemon.Except(allPokemon.Where(x => (x.GenerationId == gen.Id) || (x.GenerationId.IndexOf('-') > -1 && x.GenerationId.Substring(0, x.GenerationId.IndexOf('-')) == gen.Id)).ToList()).ToList();
+                    allPokemon = allPokemon.Except(allPokemon.Where(x => x.Game.GenerationId == gen.Id)).ToList();
                 }
 
                 if (selectedEvolutions == "stage1Pokemon")
@@ -1036,7 +992,7 @@ namespace Pokedex.Controllers
 
                 if (onlyAltForms)
                 {
-                    allPokemon = allPokemon.Where(x => x.Id.Contains('-')).ToList();
+                    allPokemon = allPokemon.Where(x => this._dataService.CheckIfAltForm(x.Id)).ToList();
                 }
                 
                 if (!multipleMegas)
@@ -1088,10 +1044,10 @@ namespace Pokedex.Controllers
 
                         if (onePokemonForm)
                         {
-                            string originalPokemonId;
-                            if (pokemon.Id.Contains('-'))
+                            int originalPokemonId;
+                            if (this._dataService.CheckIfAltForm(pokemon.Id))
                             {
-                                originalPokemonId = pokemon.Id.Substring(0, pokemon.Id.IndexOf('-'));
+                                originalPokemonId = this._dataService.GetOriginalPokemonByAltFormId(pokemon.Id).Id;
                             }
                             else
                             {
@@ -1100,7 +1056,7 @@ namespace Pokedex.Controllers
 
                             List<Pokemon> altForms = this._dataService.GetAltForms(originalPokemonId);
 
-                            if (pokemon.Id.Contains('-'))
+                            if (this._dataService.CheckIfAltForm(pokemon.Id))
                             {
                                 altForms.Remove(altForms.Find(x => x.Id == pokemon.Id));
                                 altForms.Add(this._dataService.GetPokemonById(originalPokemonId));
@@ -1148,25 +1104,16 @@ namespace Pokedex.Controllers
                             abilities.Add(pokemonAbilities.HiddenAbility);
                         }
 
-                        if(p.Id == "744")
+                        if(pokemonAbilities.SpecialEventAbility != null)
                         {
-                            abilities.Add(this._dataService.GetAbility(174));
+                            abilities.Add(pokemonAbilities.SpecialEventAbility);
                         }
 
-                        if(p.Id == "718" || p.Id == "718-1")
-                        {
-                            model.PokemonAbilities.Add(abilities[0]);
-                        }
-                        else
-                        {
-                            model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
-                        }
+                        model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
                     }
                 }
 
-                string zygardeOriginalId, necrozmaOriginalId;
-
-                List<string> pokemonIds = new List<string>();
+                List<int> pokemonIds = new List<int>();
                 foreach(var p in model.AllPokemonOriginalNames)
                 {
                     pokemonIds.Add(p.Id);
@@ -1178,42 +1125,7 @@ namespace Pokedex.Controllers
                     abilityNames.Add(a.Name);
                 }
 
-                List<string> list = new List<string>(){ "1", "2" };
-                    
-                if(pokemonIds.IndexOf("800-1") > -1 && pokemonIds.IndexOf("800-2") == -1)
-                {
-                    necrozmaOriginalId = "800-2";
-                }
-                else if(pokemonIds.IndexOf("800-1") == -1 && pokemonIds.IndexOf("800-2") > -1)
-                {
-                    necrozmaOriginalId = "800-1";
-                }
-                else
-                {
-                    necrozmaOriginalId = "800-" + list[rnd.Next(list.Count)];
-                }
-
-                if(pokemonIds.IndexOf("718") > -1 && pokemonIds.IndexOf("718-1") == -1)
-                {
-                    zygardeOriginalId = "718-1";
-                }
-                else if(pokemonIds.IndexOf("718") == -1 && pokemonIds.IndexOf("718-1") > -1)
-                {
-                    zygardeOriginalId = "718";
-                }
-                else
-                {
-                    if(list[rnd.Next(list.Count)] == "1")
-                    {
-                        zygardeOriginalId = "718";
-                    }
-                    else
-                    {
-                        zygardeOriginalId = "718-1";
-                    }
-                }
-
-                model.ExportString = this.ExportPokemonTeam(pokemonIds, abilityNames, randomAbility, necrozmaOriginalId, zygardeOriginalId);
+                model.ExportString = this.ExportPokemonTeam(pokemonIds, abilityNames, randomAbility);
 
                 return model;
             }
@@ -1249,18 +1161,18 @@ namespace Pokedex.Controllers
         private List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
         {
             Random rnd = new Random();
-            List<Pokemon> pumpkabooCount = pokemonList.Where(x => x.Id.StartsWith("710")).ToList();
+            List<Pokemon> pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
             while(pumpkabooCount.Count() > 1)
             {
                 pokemonList.Remove(pumpkabooCount[rnd.Next(pumpkabooCount.Count)]);
-                pumpkabooCount = pokemonList.Where(x => x.Id.StartsWith("710")).ToList();
+                pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
             }
 
-            List<Pokemon> gourgeistCount = pokemonList.Where(x => x.Id.StartsWith("711")).ToList();
+            List<Pokemon> gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
             while(gourgeistCount.Count() > 1)
             {
                 pokemonList.Remove(gourgeistCount[rnd.Next(gourgeistCount.Count)]);
-                gourgeistCount = pokemonList.Where(x => x.Id.StartsWith("711")).ToList();
+                gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
             }
 
             return pokemonList;
@@ -1268,11 +1180,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-abilities")]
-        public List<Ability> GetPokemonAbilities(string pokemonId, string gender)
+        public List<Ability> GetPokemonAbilities(int pokemonId, string gender)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Ability> pokemonAbilities = this._dataService.GetAbilitiesForPokemon(((pokemonId == "678" && gender == "Female") ? "678-1" : pokemonId));
+                List<Ability> pokemonAbilities = this._dataService.GetAbilitiesForPokemon(pokemonId);
                 return pokemonAbilities;
             }
             else
@@ -1362,7 +1274,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-battle-items")]
-        public List<BattleItem> GetPokemonBattleItems(string pokemonId, string generationId)
+        public List<BattleItem> GetPokemonBattleItems(int pokemonId, int generationId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1375,15 +1287,15 @@ namespace Pokedex.Controllers
                     battleItems.AddRange(allBattleItems.Where(x => !x.OnlyInThisGeneration && x.PokemonId == null).ToList());
                     if(generation != null)
                     {
-                        battleItems = battleItems.Where(x => x.Generation.ReleaseDate <= generation.ReleaseDate).ToList();
+                        battleItems = battleItems.Where(x => x.Generation.Id <= generation.Id).ToList();
                         if(allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList().Count() > 0)
                         {
                             battleItems.AddRange(allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList());
                         }
 
-                        if(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.ReleaseDate <= generation.ReleaseDate).ToList().Count() > 0)
+                        if(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList().Count() > 0)
                         {
-                            battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.ReleaseDate <= generation.ReleaseDate).ToList());
+                            battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList());
                         }
                     }
                     else
@@ -1409,7 +1321,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-genders")]
-        public List<string> GetPokemonGenders(string pokemonId)
+        public List<string> GetPokemonGenders(int pokemonId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1429,11 +1341,6 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    if(pokemonId != "678")
-                    {
-                        genders.Add("");
-                    }
-
                     genders.Add("Male");
                     genders.Add("Female");
                 }
@@ -1466,21 +1373,21 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-generations")]
-        public List<Generation> GetGenerations(string selectedGame)
+        public List<Generation> GetGenerations(int selectedGame)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                if(selectedGame != "0")
+                if(selectedGame != 0)
                 {
-                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame).Where(x => !x.PokemonId.Contains('-')).ToList();
+                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(selectedGame).Where(x => !this._dataService.CheckIfAltForm(x.PokemonId)).ToList();
                     List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
-                    Generation selectedGen = this._dataService.GetGeneration(selectedGame);
-                    List<Generation> generationList = this._dataService.GetGenerations().Where(x => !x.Id.Contains('-') && x.ReleaseDate <= selectedGen.ReleaseDate).ToList();
+                    Generation selectedGen = this._dataService.GetGenerationFromGame(selectedGame);
+                    List<Generation> generationList = this._dataService.GetGenerations().Where(x => x.Id <= selectedGen.Id).ToList();
                     List<Generation> availableGenerations = new List<Generation>();
 
                     foreach(var gen in generationList)
                     {
-                        if(allPokemon.Where(x => x.GenerationId == gen.Id || x.GenerationId.Contains(string.Concat(gen.Id, "-"))).ToList().Count() != 0)
+                        if(allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
                         {
                             availableGenerations.Add(gen);
                         }
@@ -1489,7 +1396,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    return this._dataService.GetGenerations().Where(x => !x.Id.Contains('-')).ToList();
+                    return this._dataService.GetGenerations().Where(x => !this._dataService.CheckIfAltForm(x.Id)).ToList();
                 }
             }
             else
@@ -1511,7 +1418,7 @@ namespace Pokedex.Controllers
 
                 foreach(var p in typingList)
                 {
-                    if(p.PokemonId.Contains('-'))
+                    if(this._dataService.CheckIfAltForm(p.PokemonId))
                     {
                         Pokemon pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
                         pokemonList.Add(pokemon);
@@ -1549,7 +1456,7 @@ namespace Pokedex.Controllers
 
                 foreach(var p in eggGroupList)
                 {
-                    if(p.PokemonId.Contains('-'))
+                    if(this._dataService.CheckIfAltForm(p.PokemonId))
                     {
                         Pokemon pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
                         pokemonList.Add(pokemon);

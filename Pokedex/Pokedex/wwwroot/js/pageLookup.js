@@ -92,8 +92,8 @@ function lookupGeneration(generationId) {
   });
 }
 
-function lookupAvailableGeneration(generationId) {
-  if (!$('.active').is($('#Generation' + generationId))) {
+function lookupAvailableGame(gameId) {
+  if (!$('.active').is($('#Game' + gameId))) {
     $('button').each(function () {
       $(this).removeClass('active');
     });
@@ -102,9 +102,9 @@ function lookupAvailableGeneration(generationId) {
 
     $('.pokemonList').removeClass('active');
     $('.pokemonList > .grid-container').empty();
-    $('button#Generation' + generationId).addClass('active');
+    $('button#Game' + gameId).addClass('active');
 
-    $('.grid-container').load('/get-available-pokemon-by-generation/' + generationId, function () {
+    $('.grid-container').load('/get-available-pokemon-by-game/' + gameId, function () {
       $('.pokemonList').prepend($('<p>').addClass('pokemonCount').text('Count: ' + $('.grid-container').children().length));
 
       $('.pokemonList').addClass('active');

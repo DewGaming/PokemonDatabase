@@ -30,15 +30,15 @@ namespace Pokedex.Controllers
         [Route("delete_game_availability/{id:int}")]
         public IActionResult PokemonGameDetail(int id)
         {
-            string pokemonId = this._dataService.GetPokemonGameDetail(id).PokemonId;
+            int pokemonId = this._dataService.GetPokemonGameDetail(id).PokemonId;
             this._dataService.DeletePokemonGameDetail(id);
 
             return this.RedirectToAction("PokemonGameDetails", "Admin", new { pokemonId = pokemonId });
         }
 
         [HttpGet]
-        [Route("delete_generation/{id}")]
-        public IActionResult Generation(string id)
+        [Route("delete_generation/{id:int}")]
+        public IActionResult Generation(int id)
         {
             Generation model = this._dataService.GetGeneration(id);
 
@@ -47,7 +47,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("delete_generation/{id}")]
+        [Route("delete_generation/{id:int}")]
         public IActionResult Generation(Generation generation)
         {
             this._dataService.DeleteGeneration(generation.Id);

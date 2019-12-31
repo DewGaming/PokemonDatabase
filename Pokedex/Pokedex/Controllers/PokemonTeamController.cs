@@ -34,7 +34,7 @@ namespace Pokedex.Controllers
         public IActionResult CreateTeam()
         {
             CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel(){
-                AllGenerations = this._dataService.GetGenerations().ToList(),
+                AllGames = this._dataService.GetGames().Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
                 UserId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
             };
             
@@ -48,7 +48,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel(){
-                    AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
+                    AllGames = this._dataService.GetGames().Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
                     UserId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
                 };
             
@@ -108,7 +108,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this._dataService.GetNatures(),
                     NatureId = this._dataService.GetNatureByName("Serious").Id,
-                    GenerationId = pokemonTeam.GenerationId,
+                    GameId = pokemonTeam.GameId,
                     Level = 100,
                     Happiness = 255,
                 };
@@ -127,7 +127,7 @@ namespace Pokedex.Controllers
                     AllPokemon = this.FillPokemonList(_pokemonTeams[pokemonTeamId - 1]),
                     AllNatures = this._dataService.GetNatures(),
                     NatureId = this._dataService.GetNatureByName("Serious").Id,
-                    GenerationId = pokemonTeamDetail.GenerationId,
+                    GameId = pokemonTeamDetail.GameId,
                     Level = 100,
                     Happiness = 255,
                 };
@@ -136,11 +136,6 @@ namespace Pokedex.Controllers
             }
 
             PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
-
-            if(pokemonTeamDetail.PokemonId == "678" && pokemonTeamDetail.Gender == "Female")
-            {
-                pokemonTeamDetail.PokemonId = "678-1";
-            }
 
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
 
@@ -171,10 +166,6 @@ namespace Pokedex.Controllers
             {
                 PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
                 PokemonTeamDetail pokemonTeamDetail = this._dataService.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
-                if(pokemonTeamDetail.PokemonId == "678-1")
-                {
-                    pokemonTeamDetail.PokemonId = "678";
-                }
 
                 if(pokemonTeamDetail.Nature == null)
                 {
@@ -188,7 +179,7 @@ namespace Pokedex.Controllers
                     AllNatures = this._dataService.GetNatures(),
                     AllAbilities = this._dataService.GetAbilities(),
                     AllBattleItems = this._dataService.GetBattleItems().OrderBy(x => x.Name).ToList(),
-                    GenerationId = pokemonTeam.GenerationId,
+                    GameId = pokemonTeam.GameId,
                 };
 
                 return this.View(model);
@@ -210,15 +201,10 @@ namespace Pokedex.Controllers
                     AllNatures = this._dataService.GetNatures(),
                     AllAbilities = this._dataService.GetAbilities(),
                     AllBattleItems = this._dataService.GetBattleItems().OrderBy(x => x.Name).ToList(),
-                    GenerationId = pokemonTeam.GenerationId,
+                    GameId = pokemonTeam.GameId,
                 };
 
                 return this.View(model);
-            }
-
-            if(pokemonTeamDetail.PokemonId == "678" && pokemonTeamDetail.Gender == "Female")
-            {
-                pokemonTeamDetail.PokemonId = "678-1";
             }
 
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
@@ -482,24 +468,24 @@ namespace Pokedex.Controllers
         {
             this.UpdatePokemonTeamList();
             
-            List<Generation> allGenerations = this._dataService.GetGenerations();
+            List<Game> allGames = this._dataService.GetGames();
             PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
             Generation generation = this._dataService.GetLatestGeneration(pokemonTeam.Id);
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                 Id = pokemonTeam.Id,
                 PokemonTeamName = pokemonTeam.PokemonTeamName,
-                GenerationId = pokemonTeam.GenerationId,
+                GameId = pokemonTeam.GameId,
                 UserId = pokemonTeam.UserId,
             };
 
             if(generation != null)
             {
-                model.AllGenerations = allGenerations.Where(x => x.ReleaseDate >= generation.ReleaseDate).ToList();
+                model.AllGames = allGames.Where(x => x.GenerationId >= generation.Id).ToList();
             }
             else
             {
-                model.AllGenerations = allGenerations;
+                model.AllGames = allGames;
             }
 
             return this.View(model);
@@ -512,23 +498,23 @@ namespace Pokedex.Controllers
             PokemonTeam originalPokemonTeam = this._dataService.GetPokemonTeamNoIncludes(newPokemonTeam.Id);
             if (!this.ModelState.IsValid)
             {
-                List<Generation> allGenerations = this._dataService.GetGenerations();
+                List<Game> allGames = this._dataService.GetGames();
                 Generation generation = this._dataService.GetLatestGeneration(newPokemonTeam.Id);
 
                 UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                     Id = originalPokemonTeam.Id,
                     PokemonTeamName = originalPokemonTeam.PokemonTeamName,
-                    GenerationId = originalPokemonTeam.GenerationId,
+                    GameId = originalPokemonTeam.GameId,
                     UserId = originalPokemonTeam.UserId,
                 };
 
                 if(generation != null)
                 {
-                    model.AllGenerations = allGenerations.Where(x => x.ReleaseDate >= generation.ReleaseDate).ToList();
+                    model.AllGames = allGames.Where(x => x.GenerationId >= generation.Id).ToList();
                 }
                 else
                 {
-                    model.AllGenerations = allGenerations;
+                    model.AllGames = allGames;
                 }
 
                 return this.View(model);
@@ -539,9 +525,9 @@ namespace Pokedex.Controllers
                 originalPokemonTeam.PokemonTeamName = newPokemonTeam.PokemonTeamName;
             }
 
-            if(originalPokemonTeam.GenerationId != newPokemonTeam.GenerationId)
+            if(originalPokemonTeam.GameId != newPokemonTeam.GameId)
             {
-                originalPokemonTeam.GenerationId = newPokemonTeam.GenerationId;
+                originalPokemonTeam.GameId = newPokemonTeam.GameId;
             }
 
             this._dataService.UpdatePokemonTeam(originalPokemonTeam);
@@ -556,10 +542,10 @@ namespace Pokedex.Controllers
 
         private List<Pokemon> FillPokemonList(PokemonTeam pokemonTeam)
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != "800-3" && x.Id != "718-2" && x.Id != "678-1").ToList();
-            if(pokemonTeam.Generation != null)
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().ToList();
+            if(pokemonTeam.GameId != null)
             {
-                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(pokemonTeam.GenerationId);
+                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame((int)pokemonTeam.GameId);
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
 
@@ -568,7 +554,7 @@ namespace Pokedex.Controllers
                 p.Name = p.Name.Replace('_', ' ');
             }
             
-            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')).ToList())
+            foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)).ToList())
             {
                 p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
             }

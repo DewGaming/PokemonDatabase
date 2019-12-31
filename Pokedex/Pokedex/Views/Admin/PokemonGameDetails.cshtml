@@ -14,12 +14,12 @@
             <th scope="col">Available</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllGenerations)
+        @foreach(var item in Model.AllGames)
         {
-            pokemonGameDetail = Model.PokemonGameDetails.Find(x => x.GenerationId == item.Id);
+            pokemonGameDetail = Model.PokemonGameDetails.Find(x => x.GameId == item.Id);
             <tr>
                 <td>
-                    @item.Games
+                    @item.Name
                 </td>
                 <td>
                     @if(pokemonGameDetail != null)

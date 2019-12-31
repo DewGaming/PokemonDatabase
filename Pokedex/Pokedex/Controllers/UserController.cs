@@ -169,7 +169,7 @@ namespace Pokedex.Controllers
             {
                 UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                 AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
-                AllGenerations = this._dataService.GetGenerations(),
+                AllGames = this._dataService.GetGames(),
                 AllPokemon = new List<Pokemon>(),
             };
 
@@ -181,15 +181,15 @@ namespace Pokedex.Controllers
         [Route("begin_shiny_hunt")]
         public IActionResult BeginShinyHunt(ShinyHunt shinyHunt)
         {
-            List<Generation> generations = this._dataService.GetGenerations().OrderBy(p => p.Id).ToList();
-            if (generations.IndexOf(this._dataService.GetGeneration(shinyHunt.GenerationId)) < generations.IndexOf(this._dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
+            List<Generation> generations = this._dataService.GetGenerations().OrderBy(x => x.Id).ToList();
+            if (generations.IndexOf(this._dataService.GetGenerationFromGame(shinyHunt.GameId)) < generations.IndexOf(this._dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
             {
                 BeginShinyHuntViewModel model = new BeginShinyHuntViewModel()
                 {
                     UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                     AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
                     AllPokemon = this._dataService.GetAllPokemon(),
-                    AllGenerations = this._dataService.GetGenerations(),
+                    AllGames = this._dataService.GetGames(),
                 };
 
                 this.ModelState.AddModelError("GenerationId", "Pokemon does not exist in this generation");

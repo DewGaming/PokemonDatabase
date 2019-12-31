@@ -73,8 +73,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_generation/{id}")]
-        public IActionResult Generation(string id)
+        [Route("edit_generation/{id:int}")]
+        public IActionResult Generation(int id)
         {
             Generation model = this._dataService.GetGeneration(id);
 
@@ -83,7 +83,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_generation/{id}")]
+        [Route("edit_generation/{id:int}")]
         public IActionResult Generation(Generation generation)
         {
             if (!this.ModelState.IsValid)
@@ -103,7 +103,7 @@ namespace Pokedex.Controllers
         public IActionResult BattleItem(int id)
         {
             List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+            foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
             {
                 p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
             }
@@ -113,7 +113,7 @@ namespace Pokedex.Controllers
                 Id = battleItem.Id,
                 Name = battleItem.Name,
                 GenerationId = battleItem.GenerationId,
-                AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= new System.DateTime(2000, 10, 15)).ToList(),
+                AllGenerations = this._dataService.GetGenerations().Where(x => x.Id >= 1).ToList(),
                 AllPokemon = pokemonList,
             };
 
@@ -128,7 +128,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-                foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+                foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
                 {
                     p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
                 }
@@ -138,7 +138,7 @@ namespace Pokedex.Controllers
                     Id = item.Id,
                     Name = item.Name,
                     GenerationId = item.GenerationId,
-                    AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= new System.DateTime(2000, 10, 15)).ToList(),
+                    AllGenerations = this._dataService.GetGenerations().Where(x => x.Id >= 1).ToList(),
                     AllPokemon = pokemonList,
                 };
 
@@ -151,12 +151,12 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_pokemon/{id}")]
-        public IActionResult Pokemon(string id)
+        [Route("edit_pokemon/{id:int}")]
+        public IActionResult Pokemon(int id)
         {
             BasePokemonViewModel model = new BasePokemonViewModel(){
                 Pokemon = this._dataService.GetPokemonById(id),
-                AllGenerations = this._dataService.GetGenerations(),
+                AllGames = this._dataService.GetGames(),
                 AllClassifications = this._dataService.GetClassifications(),
             };
 
@@ -192,7 +192,7 @@ namespace Pokedex.Controllers
                 model.AllGenderRatios.Add(viewModel);
             }
             
-            if(id.Contains('-'))
+            if(this._dataService.CheckIfAltForm(id))
             {
                 model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
             }
@@ -202,17 +202,17 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_pokemon/{id}")]
-        public IActionResult Pokemon(Pokemon pokemon, string id)
+        [Route("edit_pokemon/{id:int}")]
+        public IActionResult Pokemon(Pokemon pokemon, int id)
         {
             if (!this.ModelState.IsValid)
             {
                 BasePokemonViewModel model = new BasePokemonViewModel(){
                     Pokemon = this._dataService.GetPokemonById(pokemon.Id),
-                    AllGenerations = this._dataService.GetGenerations(),
+                    AllGames = this._dataService.GetGames(),
                 };
     
-                if(!pokemon.Id.Contains('-'))
+                if(!this._dataService.CheckIfAltForm(pokemon.Id))
                 {
                     model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
                     model.AllClassifications = this._dataService.GetClassifications();
@@ -258,10 +258,10 @@ namespace Pokedex.Controllers
             {
                 BasePokemonViewModel model = new BasePokemonViewModel(){
                     Pokemon = this._dataService.GetPokemonById(pokemon.Id),
-                    AllGenerations = this._dataService.GetGenerations(),
+                    AllGames = this._dataService.GetGames(),
                 };
     
-                if(!pokemon.Id.Contains('-'))
+                if(!this._dataService.CheckIfAltForm(pokemon.Id))
                 {
                     model.AllBaseHappinesses = this._dataService.GetBaseHappinesses();
                     model.AllClassifications = this._dataService.GetClassifications();
@@ -312,12 +312,12 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_pokemon_image/{id}")]
-        public IActionResult PokemonImage(string id)
+        [Route("edit_pokemon_image/{id:int}")]
+        public IActionResult PokemonImage(int id)
         {
             Pokemon model = this._dataService.GetPokemonById(id);
 
-            if(id.Contains('-'))
+            if(this._dataService.CheckIfAltForm(id))
             {
                 model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
             }
@@ -327,14 +327,14 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_pokemon_image/{id}")]
-        public async Task<IActionResult> PokemonImage(Pokemon pokemon, string id, IFormFile fileUpload, string urlUpload)
+        [Route("edit_pokemon_image/{id:int}")]
+        public async Task<IActionResult> PokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid)
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
-                if(id.Contains('-'))
+                if(this._dataService.CheckIfAltForm(id))
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
@@ -345,7 +345,7 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
-                if(id.Contains('-'))
+                if(this._dataService.CheckIfAltForm(id))
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
@@ -357,7 +357,7 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
-                if(id.Contains('-'))
+                if(this._dataService.CheckIfAltForm(id))
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
@@ -420,12 +420,12 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_pokemon_sprite/{id}")]
-        public IActionResult SpriteImage(string id)
+        [Route("edit_pokemon_sprite/{id:int}")]
+        public IActionResult SpriteImage(int id)
         {
             Pokemon model = this._dataService.GetPokemonById(id);
 
-            if(id.Contains('-'))
+            if(this._dataService.CheckIfAltForm(id))
             {
                 model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
             }
@@ -435,14 +435,14 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_pokemon_sprite/{id}")]
-        public async Task<IActionResult> SpriteImage(Pokemon pokemon, string id, IFormFile fileUpload, string urlUpload)
+        [Route("edit_pokemon_sprite/{id:int}")]
+        public async Task<IActionResult> SpriteImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid)
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
-                if(id.Contains('-'))
+                if(this._dataService.CheckIfAltForm(id))
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
@@ -453,7 +453,7 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
-                if(id.Contains('-'))
+                if(this._dataService.CheckIfAltForm(id))
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
@@ -465,7 +465,7 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
-                if(id.Contains('-'))
+                if(this._dataService.CheckIfAltForm(id))
                 {
                     model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
                 }
@@ -559,8 +559,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_typing/{pokemonId}")]
-        public IActionResult Typing(string pokemonId)
+        [Route("edit_typing/{pokemonId:int}")]
+        public IActionResult Typing(int pokemonId)
         {
             PokemonTypeDetail typeDetail = this._dataService.GetPokemonWithTypes(pokemonId);
             PokemonTypingViewModel model = new PokemonTypingViewModel()
@@ -577,7 +577,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_typing/{id}")]
+        [Route("edit_typing/{id:int}")]
         public IActionResult Typing(PokemonTypeDetail pokemonTypeDetail)
         {
             if (!this.ModelState.IsValid)
@@ -606,8 +606,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_abilities/{pokemonId}")]
-        public IActionResult Abilities(string pokemonId)
+        [Route("edit_abilities/{pokemonId:int}")]
+        public IActionResult Abilities(int pokemonId)
         {
             PokemonAbilityDetail abilityDetail = this._dataService.GetPokemonWithAbilities(pokemonId);
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
@@ -625,7 +625,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_abilities/{pokemonId}")]
+        [Route("edit_abilities/{pokemonId:int}")]
         public IActionResult Abilities(PokemonAbilityDetail pokemonAbilityDetail)
         {
             if (!this.ModelState.IsValid)
@@ -650,8 +650,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_egg_groups/{pokemonId}")]
-        public IActionResult EggGroups(string pokemonId)
+        [Route("edit_egg_groups/{pokemonId:int}")]
+        public IActionResult EggGroups(int pokemonId)
         {
             PokemonEggGroupDetail eggGroupDetail = this._dataService.GetPokemonWithEggGroups(pokemonId);
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
@@ -668,7 +668,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_egg_groups/{pokemonId}")]
+        [Route("edit_egg_groups/{pokemonId:int}")]
         public IActionResult EggGroups(PokemonEggGroupDetail pokemonEggGroupDetail)
         {
             if (!this.ModelState.IsValid)
@@ -692,8 +692,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_base_stats/{pokemonId}")]
-        public IActionResult BaseStats(string pokemonId)
+        [Route("edit_base_stats/{pokemonId:int}")]
+        public IActionResult BaseStats(int pokemonId)
         {
             BaseStat model = this._dataService.GetPokemonBaseStats(pokemonId);
 
@@ -702,7 +702,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_base_stats/{pokemonId}")]
+        [Route("edit_base_stats/{pokemonId:int}")]
         public IActionResult BaseStats(BaseStat baseStat)
         {
             if (!this.ModelState.IsValid)
@@ -718,8 +718,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_ev_yields/{pokemonId}")]
-        public IActionResult EVYields(string pokemonId)
+        [Route("edit_ev_yields/{pokemonId:int}")]
+        public IActionResult EVYields(int pokemonId)
         {
             EVYield model = this._dataService.GetPokemonEVYields(pokemonId);
 
@@ -728,7 +728,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_ev_yields/{pokemonId}")]
+        [Route("edit_ev_yields/{pokemonId:int}")]
         public IActionResult EVYields(EVYield evYield)
         {
             if (!this.ModelState.IsValid)
@@ -1261,8 +1261,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_evolution/{pokemonId}")]
-        public IActionResult Evolution(string pokemonId)
+        [Route("edit_evolution/{pokemonId:int}")]
+        public IActionResult Evolution(int pokemonId)
         {
             Evolution preEvolution = this._dataService.GetEvolutions().Find(x => x.EvolutionPokemonId == pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
@@ -1279,7 +1279,7 @@ namespace Pokedex.Controllers
             };
 
             List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
-            foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+            foreach (var pokemon in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
             }
@@ -1291,7 +1291,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_evolution/{pokemonId}")]
+        [Route("edit_evolution/{pokemonId:int}")]
         public IActionResult Evolution(EvolutionViewModel evolution)
         {
             if (!this.ModelState.IsValid)
@@ -1311,7 +1311,7 @@ namespace Pokedex.Controllers
                 };
 
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                foreach (var pokemon in pokemonList.Where(p => p.Id.Contains('-')))
+                foreach (var pokemon in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
                 {
                     pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
                 }
@@ -1326,11 +1326,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
-        [Route("edit_alternate_forms/{pokemonId}")]
-        public IActionResult AltForms(string pokemonId)
+        [Route("edit_alternate_forms/{pokemonId:int}")]
+        public IActionResult AltForms(int pokemonId)
         {
             Pokemon originalPokemon = this._dataService.GetPokemonById(pokemonId);
-            List<Pokemon> altFormList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Name == originalPokemon.Name && x.Id.Contains('-')).ToList();
+            List<Pokemon> altFormList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Name == originalPokemon.Name && this._dataService.CheckIfAltForm(x.Id)).ToList();
             foreach (var pokemon in altFormList)
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
@@ -1357,8 +1357,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_alternate_form/{pokemonId}")]
-        public IActionResult AltFormsForm(string pokemonId)
+        [Route("edit_alternate_form/{pokemonId:int}")]
+        public IActionResult AltFormsForm(int pokemonId)
         {
             PokemonFormDetail pokemonForm = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
             AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
@@ -1372,7 +1372,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_alternate_form/{pokemonId}")]
+        [Route("edit_alternate_form/{pokemonId:int}")]
         public IActionResult AltFormsForm(PokemonFormDetail pokemonFormDetail)
         {
             if (!this.ModelState.IsValid)
@@ -1390,77 +1390,6 @@ namespace Pokedex.Controllers
             this._dataService.UpdatePokemonFormDetail(pokemonFormDetail);
 
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
-        }
-
-        private void UpdateAltForm(Pokemon newPokemon, string oldNumber, string originalNumber)
-        {
-            PokemonTypeDetail typing = this._dataService.GetPokemonWithTypesNoIncludes(oldNumber);
-            PokemonAbilityDetail abilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(oldNumber);
-            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonWithEggGroupsNoIncludes(oldNumber);
-            BaseStat baseStats = this._dataService.GetPokemonBaseStatsNoIncludes(oldNumber);
-            EVYield evYields = this._dataService.GetEVYieldNoIncludes(oldNumber);
-            Evolution preEvolution = this._dataService.GetPreEvolutionNoEdit(oldNumber);
-            List<Evolution> evolutions = this._dataService.GetPokemonEvolutionsNoEdit(oldNumber);
-            PokemonFormDetail altFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(oldNumber);
-
-            this._dataService.AddPokemon(newPokemon);
-
-            if (typing != null)
-            {
-                typing.PokemonId = newPokemon.Id;
-                this._dataService.UpdatePokemonTypeDetail(typing);
-            }
-
-            if (abilities != null)
-            {
-                abilities.PokemonId = newPokemon.Id;
-                this._dataService.UpdatePokemonAbilityDetail(abilities);
-            }
-
-            if (eggGroups != null)
-            {
-                eggGroups.PokemonId = newPokemon.Id;
-                this._dataService.UpdatePokemonEggGroupDetail(eggGroups);
-            }
-
-            if (baseStats != null)
-            {
-                baseStats.PokemonId = newPokemon.Id;
-                this._dataService.UpdateBaseStat(baseStats);
-            }
-
-            if (evYields != null)
-            {
-                evYields.PokemonId = newPokemon.Id;
-                this._dataService.UpdateEVYield(evYields);
-            }
-
-            if (preEvolution != null)
-            {
-                preEvolution.EvolutionPokemonId = newPokemon.Id;
-                this._dataService.UpdateEvolution(preEvolution);
-            }
-
-            if (evolutions.Count() > 0)
-            {
-                foreach(var e in evolutions)
-                {
-                    e.PreevolutionPokemonId = newPokemon.Id;
-                    this._dataService.UpdateEvolution(e);
-                }
-            }
-
-            altFormDetail.AltFormPokemonId = newPokemon.Id;
-            altFormDetail.OriginalPokemonId = originalNumber;
-            this._dataService.UpdatePokemonFormDetail(altFormDetail);
-
-            this._dataService.DeletePokemon(oldNumber);
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + oldNumber + ".png");
-            request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-            request.Method = WebRequestMethods.Ftp.Rename;
-            request.RenameTo = newPokemon.Id + ".png";
-            request.GetResponse();
         }
     }
 }

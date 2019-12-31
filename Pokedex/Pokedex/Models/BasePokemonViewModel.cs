@@ -13,7 +13,7 @@ namespace Pokedex.Models
 
         public List<Classification> AllClassifications { get; set; }
 
-        public List<Generation> AllGenerations { get; set; }
+        public List<Game> AllGames { get; set; }
 
         public List<ExperienceGrowth> AllExperienceGrowths { get; set; }
 

@@ -88,7 +88,7 @@ namespace Pokedex.Controllers
                 search = this._dataService.FormatPokemonName(search);
 
                 List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes()
-                                                                 .Where(p => p.Pokemon.Name.ToLower().Contains(search.ToLower()))
+                                                                 .Where(x => x.Pokemon.Name.ToLower().Contains(search.ToLower()))
                                                                  .ToList();
 
                 Pokemon pokemonSearched = this._dataService.GetPokemon(search);
@@ -124,7 +124,7 @@ namespace Pokedex.Controllers
         public IActionResult AllPokemon()
         {
             List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutForms();
-            List<string> model = pokemonList.Select(x => x.Generation.Id).Distinct().Where(x => x.IndexOf('-') < 0).OrderBy(x => x).ToList();
+            List<int> model = pokemonList.Select(x => x.Game.Generation.Id).Distinct().OrderBy(x => x).ToList();
 
             return this.View(model);
         }
@@ -139,7 +139,7 @@ namespace Pokedex.Controllers
 
             foreach(var gen in generations)
             {
-                if(allPokemon.Where(x => x.GenerationId == gen.Id).ToList().Count() != 0)
+                if(allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
                 {
                     model.Add(gen);
                 }
@@ -282,7 +282,7 @@ namespace Pokedex.Controllers
             TypeChartViewModel model = new TypeChartViewModel()
             {
                 TypeChart = this._dataService.GetTypeCharts(),
-                Types = this._dataService.GetTypeChartTypes(),
+                Types = this._dataService.GetTypes(),
             };
 
             return this.View(model);

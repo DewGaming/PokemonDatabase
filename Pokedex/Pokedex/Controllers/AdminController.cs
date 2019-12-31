@@ -28,7 +28,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<string> model = this._dataService.GetGenerations().Select(x => x.Id).Where(x => x.IndexOf('-') < 0).OrderBy(x => x).ToList();
+            List<int> model = this._dataService.GetGenerations().Select(x => x.Id).OrderBy(x => x).ToList();
 
             return this.View(model);
         }
@@ -39,7 +39,7 @@ namespace Pokedex.Controllers
             GenerationViewModel model = new GenerationViewModel()
             {
                 AllGenerations = this._dataService.GetGenerations(),
-                AllPokemon = this._dataService.GetAllPokemon(),
+                AllGames = this._dataService.GetGames(),
             };
 
             return this.View(model);
@@ -210,11 +210,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("game_availability/{pokemonId}")]
-        public IActionResult PokemonGameDetails(string pokemonId)
+        [Route("game_availability/{pokemonId:int}")]
+        public IActionResult PokemonGameDetails(int pokemonId)
         {
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
-            if(pokemonId.Contains('-'))
+            if(this._dataService.CheckIfAltForm(pokemonId))
             {
                 pokemon.Name += " (" + this._dataService.GetFormByAltFormId(pokemonId).Name + ")";
             }
@@ -223,7 +223,7 @@ namespace Pokedex.Controllers
             {
                 Pokemon = pokemon,
                 PokemonGameDetails = this._dataService.GetPokemonGameDetails(pokemonId),
-                AllGenerations = this._dataService.GetGenerations().Where(x => x.ReleaseDate >= pokemon.Generation.ReleaseDate).ToList(),
+                AllGames = this._dataService.GetGames().Where(x => x.ReleaseDate >= pokemon.Game.ReleaseDate).ToList(),
             };
 
             return this.View(model);
@@ -261,7 +261,7 @@ namespace Pokedex.Controllers
         public IActionResult BattleItems()
         {
             List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            foreach(var p in pokemonList.Where(x => x.Id.Contains('-')))
+            foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
             {
                 p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
             }

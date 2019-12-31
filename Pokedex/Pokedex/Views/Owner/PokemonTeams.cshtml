@@ -16,13 +16,13 @@
             <tbody>
                 <tr>
                     <th class="col-md-2" scope="col">Team Name</th>
-                    @if(Model.AllPokemonTeams.Where(x => x.Generation != null).Count() > 0)
+                    @if(Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
                     {
                         <th class="col-md-2" scope="col">
                             Game@{
                                 foreach(var team in Model.AllPokemonTeams)
                                 {
-                                    if (team.Generation != null && team.Generation.Games.Contains('/'))
+                                    if (team.Game != null && team.Game.Name.Contains('/'))
                                     {
                                         @("(s)");
                                         break;
@@ -37,12 +37,12 @@
                 {
                     <tr>
                         <td>@pt.PokemonTeamName</td>
-                        @if(Model.AllPokemonTeams.Where(x => x.Generation != null).Count() > 0)
+                        @if(Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
                         {
                             <td>
-                                @if(@pt.Generation != null)
+                                @if(@pt.Game != null)
                                 {
-                                    @pt.Generation.Games
+                                    @pt.Game.Name
                                 }
                                 else
                                 {

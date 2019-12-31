@@ -15,7 +15,7 @@ namespace Pokedex.Models
 
         public List<BattleItem> AllBattleItems { get; set; }
 
-        public string GenerationId { get; set; }
+        public int? GameId { get; set; }
 
         public List<string> Genders
         {
