@@ -347,6 +347,15 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
+            if(classification.Name.Contains("pokemon"))
+            {
+                classification.Name = classification.Name.Replace("pokemon", "Pokemon");
+            }
+            else if(!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
+            {
+                classification.Name = classification.Name.Trim() + " Pokemon";
+            }
+
             this._dataService.AddClassification(classification);
 
             return this.RedirectToAction("Classifications", "Admin");
