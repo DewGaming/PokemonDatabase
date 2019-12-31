@@ -867,13 +867,6 @@ namespace Pokedex
         {
             List<PokemonTypeDetail> pokemonList = this._dataContext.PokemonTypeDetails
                                                         .Include(x => x.Pokemon)
-                                                            .Include("Pokemon.EggCycle")
-                                                            .Include("Pokemon.BaseHappiness")
-                                                            .Include("Pokemon.CaptureRate")
-                                                            .Include("Pokemon.ExperienceGrowth")
-                                                            .Include("Pokemon.Generation")
-                                                            .Include("Pokemon.Classification")
-                                                            .Include("Pokemon.GenderRatio")
                                                         .Include(x => x.PrimaryType)
                                                         .Include(x => x.SecondaryType)
                                                         .ToList();
