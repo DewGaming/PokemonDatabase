@@ -11,20 +11,20 @@
 <h4>Welcome to the Pokemon Database!</h4>
 <br>
 <p>This was created starting as a school project and then eventually being transformed into a website.  Please Enjoy!</p>
-<p><b>Please Note:</b> Information used for the pokemon are updated to be in line with the most current generation of Pokemon.</p>
-<p>Want to do more then just view pokemon stats?  Explore other options!</p>
+<p><b>Please Note:</b> Information used for the Pokemon are updated to be in line with the most current generation of Pokemon.</p>
+<p>Want to do more then just view Pokemon stats?  Explore other options!</p>
 <div class="siteFeatures">
     <div class="feature teamRandomizerFeature">
         <a href="@Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
-        <img data-modalUrl="@Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random pokemon team!" src="@(@Model.GeneralImageUrl + "small/teamRandomizer.png")">
+        <img data-modalUrl="@Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokemon team!" src="@(@Model.GeneralImageUrl + "small/teamRandomizer.png")">
     </div>
     <div class="feature typeEvaluator">
         <a href="@Url.Action("TypingEvaluator", "Home")"><p>Lookup Type Combinations!</p></a>
-        <img data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what pokemon have a specific typing and what that type chart looks like!" src="@(@Model.GeneralImageUrl + "small/typingEvaluator.png")">
+        <img data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokemon have a specific typing and what that type chart looks like!" src="@(@Model.GeneralImageUrl + "small/typingEvaluator.png")">
     </div>
     <div class="feature eggGroupEvaluator">
         <a href="@Url.Action("EggGroupEvaluator", "Home")"><p>Lookup Egg Group Combinations!</p></a>
-        <img data-modalUrl="@Url.Action("EggGroupEvaluator", "Home")" alt="Egg Group Evaluator" title="Find out what pokemon have a specific egg grouping!" src="@(@Model.GeneralImageUrl + "small/eggGroupEvaluator.png")">
+        <img data-modalUrl="@Url.Action("EggGroupEvaluator", "Home")" alt="Egg Group Evaluator" title="Find out what Pokemon have a specific egg grouping!" src="@(@Model.GeneralImageUrl + "small/eggGroupEvaluator.png")">
     </div>
 </div>
 @if(!User.Identity.IsAuthenticated)
@@ -39,7 +39,7 @@
     </div>
     <div class="feature shinyHunting">
         <a href="@Url.Action("ShinyHuntingCounter", "User")"><p>Hunt for Shiny Pokemon!</p></a>
-        <img data-modalUrl="@Url.Action("ShinyHuntingCounter", "User")" alt="Shiny Hunting" title="Hunt for shiny pokemon utilizing different hunting methods!" src="@(@Model.GeneralImageUrl + "small/shinyHunting.png")">
+        <img data-modalUrl="@Url.Action("ShinyHuntingCounter", "User")" alt="Shiny Hunting" title="Hunt for shiny Pokemon utilizing different hunting methods!" src="@(@Model.GeneralImageUrl + "small/shinyHunting.png")">
     </div>
 </div>
 </div>
