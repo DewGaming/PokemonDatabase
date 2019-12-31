@@ -34,7 +34,7 @@
                 <td>
                     @if(pokemonGameDetail == null)
                     {
-                        <a href="@(Url.Action("PokemonGameDetail", "Add", new { pokemonId = Model.Pokemon.Id, generationId = item.Id }))">Add</a>
+                        <a href="@(Url.Action("PokemonGameDetail", "Add", new { pokemonId = Model.Pokemon.Id, gameId = item.Id }))">Add</a>
                     }
                     else
                     {
