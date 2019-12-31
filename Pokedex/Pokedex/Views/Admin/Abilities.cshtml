@@ -25,7 +25,7 @@
                 <td>@item.Description</td>
                 <td>
                     <a href="@(Url.Action("Ability", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(User.IsInRole("Owner") && !(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id)))
+                    @if(User.IsInRole("Owner") && !(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SpecialEventAbility != null && x.SpecialEventAbility.Id == item.Id)))
                     {
                         @('|')
                         <a href="@(Url.Action("Ability", "Delete", new { id = item.Id }))">Delete</a>
