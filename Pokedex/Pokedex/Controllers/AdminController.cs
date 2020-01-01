@@ -28,7 +28,8 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<int> model = this._dataService.GetGenerations().Select(x => x.Id).OrderBy(x => x).ToList();
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutFormsWithIncomplete();
+            List<int> model = pokemonList.Select(x => x.Game.Generation.Id).Distinct().OrderBy(x => x).ToList();
 
             return this.View(model);
         }

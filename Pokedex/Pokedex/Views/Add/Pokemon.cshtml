@@ -15,9 +15,16 @@
         @Html.ValidationSummary()
 
         <div class="form-group row">
-            <label for="Picture" class="col-md-2">Picture</label>
+            <label for="OfficialArtwork" class="col-md-2">Official Artwork</label>
             <div class="col-md-8 addPokemonImage">
-                <input type="file" accept="image/png" id="Picture" name="upload" />
+                <input type="file" accept="image/png" id="OfficialArtwork" name="artworkUpload" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="SpriteUpload" class="col-md-2">Sprite</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="file" accept="image/png" id="SpriteUpload" name="spriteUpload" />
             </div>
         </div>
 
