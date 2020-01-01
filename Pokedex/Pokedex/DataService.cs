@@ -322,8 +322,17 @@ namespace Pokedex
         {
             return this._dataContext.PokemonGameDetails
                 .Include(x => x.Pokemon)
+                    .Include("Pokemon.Game")
                 .Include(x => x.Game)
                 .Where(x => x.PokemonId == pokemonId)
+                .ToList();
+        }
+
+        public List<PokemonGameDetail> GetAllPokemonGameDetails()
+        {
+            return this._dataContext.PokemonGameDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.Game)
                 .ToList();
         }
 

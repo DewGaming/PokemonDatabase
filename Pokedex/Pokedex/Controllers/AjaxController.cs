@@ -739,7 +739,7 @@ namespace Pokedex.Controllers
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Generation> unselectedGens = this._dataService.GetGenerations().Where(x => !this._dataService.CheckIfAltForm(x.Id)).ToList();
+                List<Generation> unselectedGens = this._dataService.GetGenerations().ToList();
                 foreach(var item in selectedGens)
                 {
                     unselectedGens.Remove(unselectedGens.Find(x => x.Id == item));
@@ -752,7 +752,17 @@ namespace Pokedex.Controllers
                     PokemonAbilities = new List<Ability>(),
                 };
                 List<Pokemon> pokemonList = new List<Pokemon>();
-                List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(this._dataService.GetGenerationFromGame(selectedGame).Id);
+                List<PokemonGameDetail> availablePokemon = new List<PokemonGameDetail>();
+
+                if(selectedGame != 0)
+                {
+                    availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(this._dataService.GetGenerationFromGame(selectedGame).Id);
+                }
+                else
+                {
+                    availablePokemon = this._dataService.GetAllPokemonGameDetails();
+                }
+
                 List<Pokemon> allPokemon = this._dataService.GetAllPokemonWithoutForms();
                 List<Evolution> allEvolutions = this._dataService.GetEvolutions();
                 Random rnd = new Random();
@@ -1396,7 +1406,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    return this._dataService.GetGenerations().Where(x => !this._dataService.CheckIfAltForm(x.Id)).ToList();
+                    return this._dataService.GetGenerations().Where(x => this._dataService.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList();
                 }
             }
             else

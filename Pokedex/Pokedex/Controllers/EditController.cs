@@ -583,7 +583,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            request = (FtpWebRequest)WebRequest.Create(_appConfig.FaviconFTPUrl + id.ToString() + ".png");
+            request = (FtpWebRequest)WebRequest.Create(_appConfig.FaviconImageFtpUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
