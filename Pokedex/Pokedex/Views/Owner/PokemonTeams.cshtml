@@ -60,7 +60,7 @@
                                                 <div class="pokemonTeamGroup">
                                                     <img class="lightshadowed pokemonTeamPokemon" title="Pokemon: @p.Pokemon.Name.Replace('_', ' ')@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")
 Ability: @p.Ability.Name
-@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(@Model.AppConfig.SpriteImageUrl + @p.Pokemon.Id + ".png")" />
+@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(@Model.AppConfig.WebUrl+ @Model.AppConfig.SpriteImageUrl + @p.Pokemon.Id + ".png")" />
                                                 </div>
                                             }
                                         </td>

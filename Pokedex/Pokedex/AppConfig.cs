@@ -12,7 +12,7 @@ namespace Pokedex
 
         public string SpriteImageUrl { get; set; }
 
-        public string FaviconUrl { get; set; }
+        public string FaviconImageUrl { get; set; }
 
         public string GeneralImageUrl { get; set; }
 
@@ -20,7 +20,7 @@ namespace Pokedex
 
         public string SpriteImageFTPUrl { get; set; }
 
-        public string FaviconFTPUrl { get; set; }
+        public string FaviconImageFtpUrl { get; set; }
 
         public string FTPUsername { get; set; }
 

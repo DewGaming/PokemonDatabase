@@ -7,11 +7,11 @@
 {
     @if(Model.ShowSprites)
     {
-        pokemonImageUrl = Model.AppConfig.SpriteImageUrl + @p.PokemonId + ".png";
+        pokemonImageUrl = Model.AppConfig.WebUrl + Model.AppConfig.SpriteImageUrl + @p.PokemonId + ".png";
     }
     else
     {
-        pokemonImageUrl = Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png";
+        pokemonImageUrl = Model.AppConfig.WebUrl + Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png";
     }
     <div class="@p.Pokemon.Name">
         <a href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
