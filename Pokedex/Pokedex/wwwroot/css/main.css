@@ -44,6 +44,10 @@
   object-fit: contain;
 }
 
+.modalPreview {
+  border: 2px black solid;
+}
+
 .modalDescription {
   max-width: 800px;
 }
