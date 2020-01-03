@@ -30,16 +30,16 @@ $('#ShinyHuntingTechniqueId').on('change', function () {
 
 $('.generationDropDown').on('change', function () {
     $('.generationDropDown option[value=""]').remove();
-    var generationId = this.value;
+    var gameId = this.value;
     var selection = $('.pokemonDropDown').val();
     var gen5Date = new Date('October 7, 2012');
 
     $.ajax({
-        url: '/update-pokemon-list/' + generationId,
+        url: '/update-pokemon-list/' + gameId,
         method: "POST"
     })
         .done(function (data) {
-            var latestGenDate = new Date(Date.parse(data.generation.releaseDate));
+            var latestGenDate = new Date(Date.parse(data.game.releaseDate));
 
             $('.pokemonDropDown').empty();
 

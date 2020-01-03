@@ -180,14 +180,14 @@ namespace Pokedex.Controllers
         }
 
         [HttpPost]
-        [Route("update-pokemon-list/{generationId}")]
-        public UpdatePokemonListViewModel UpdatePokemonList(int generationId)
+        [Route("update-pokemon-list/{gameId}")]
+        public UpdatePokemonListViewModel UpdatePokemonList(int gameId)
         {
-            Generation gen = this._dataService.GetGeneration(generationId);
-            List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(generationId);
+            Game game = this._dataService.GetGame(gameId);
+            List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame(gameId);
             UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel(){
                 PokemonList = this._dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id) && !this._dataService.CheckIfAltForm(x.Id)).ToList(),
-                Generation = gen,
+                Game = game,
             };
             return pokemonList;
         }
