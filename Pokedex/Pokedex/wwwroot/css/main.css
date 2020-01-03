@@ -39,9 +39,11 @@
 .modalImage {
   margin: auto;
   display: block;
-  width: 90%;
-  height: 80%;
+  max-width: 90%;
+  max-height: 80%;
   object-fit: contain;
+  border: black 1px solid;
+  border-radius: 5px;
 }
 
 .modalPreview {
