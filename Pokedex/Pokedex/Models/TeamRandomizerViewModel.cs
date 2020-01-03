@@ -13,6 +13,8 @@ namespace Pokedex.Models
 
         public List<string> PokemonURLs { get; set; }
 
+        public AppConfig AppConfig { get; set; }
+
         public string ExportString { get; set; }
     }
 }

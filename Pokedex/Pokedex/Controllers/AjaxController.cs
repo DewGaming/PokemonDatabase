@@ -750,6 +750,7 @@ namespace Pokedex.Controllers
                     AllPokemonChangedNames = new List<Pokemon>(),
                     AllPokemonOriginalNames = new List<Pokemon>(),
                     PokemonAbilities = new List<Ability>(),
+                    AppConfig = _appConfig,
                 };
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 List<PokemonGameDetail> availablePokemon = new List<PokemonGameDetail>();

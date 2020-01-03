@@ -1,5 +1,5 @@
 var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exportString
-    , fillGeneratedTable = function () {
+    , fillGeneratedTable = function (appConfig) {
         removeEventButtons();
         $('.teamRandomizerTable tbody').remove();
         $('.teamRandomizerTable').append($('<tbody>'));
@@ -48,7 +48,7 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         }
 
         for (var i = 0; i < originalNames.length; i++) {
-            $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="https://www.pokemondatabase.net/images/pokemon/' + pokemonList[i].id + '.png" /></a>');
+            $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + appConfig.pokemonImageUrl + pokemonList[i].id + '.png" /></a>');
             if ($(randomAbilityBool).is(':checked')) {
                 $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
             }
@@ -415,7 +415,7 @@ $('.generatorButton').on('click', function () {
             pokemonURLs = data.pokemonURLs;
             abilityList = data.pokemonAbilities;
             exportString = data.exportString;
-            fillGeneratedTable();
+            fillGeneratedTable(data.appConfig);
         })
         .fail(function () {
             alert("Failed To Get Team!");
