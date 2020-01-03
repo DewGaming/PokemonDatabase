@@ -1283,6 +1283,40 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("update-game-availability")]
+        public string UpdateGameAvailability(int pokemonId, List<int> games)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonGameDetail pokemonGameDetail;
+                List<PokemonGameDetail> existingGameDetails = this._dataService.GetPokemonGameDetails(pokemonId);
+                
+                foreach(var g in games)
+                {
+                    pokemonGameDetail = new PokemonGameDetail()
+                    {
+                        PokemonId = pokemonId,
+                        GameId = g,
+                    };
+                    this._dataService.AddPokemonGameDetail(pokemonGameDetail);
+                }
+
+                foreach(var g in existingGameDetails)
+                {
+                    this._dataService.DeletePokemonGameDetail(g.Id);
+                }
+
+                return Json(Url.Action("Pokemon", "Admin")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("get-pokemon-battle-items")]
         public List<BattleItem> GetPokemonBattleItems(int pokemonId, int generationId)
         {

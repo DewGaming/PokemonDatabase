@@ -72,6 +72,25 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("game_availability/{pokemonId:int}")]
+        public IActionResult PokemonGameDetails(int pokemonId)
+        {
+            Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
+            if(this._dataService.CheckIfAltForm(pokemonId))
+            {
+                pokemon.Name += " (" + this._dataService.GetFormByAltFormId(pokemonId).Name + ")";
+            }
+
+            PokemonGameViewModel model = new PokemonGameViewModel()
+            {
+                Pokemon = pokemon,
+                PokemonGameDetails = this._dataService.GetPokemonGameDetails(pokemonId),
+                AllGames = this._dataService.GetGames().Where(x => x.ReleaseDate >= pokemon.Game.ReleaseDate).ToList(),
+            };
+
+            return this.View(model);
+        }
+
         [HttpGet]
         [Route("edit_generation/{id:int}")]
         public IActionResult Generation(int id)

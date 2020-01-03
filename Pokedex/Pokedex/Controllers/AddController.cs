@@ -1022,18 +1022,6 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Typing", "Add", new { pokemonId = alternatePokemon.Id });
         }
 
-        [Route("add_game_availability/{pokemonId:int}/{gameId:int}")]
-        public IActionResult PokemonGameDetail(int pokemonId, int gameId)
-        {
-            this._dataService.AddPokemonGameDetail(new PokemonGameDetail()
-            {
-                PokemonId = pokemonId,
-                GameId = gameId,
-            });
-
-            return this.RedirectToAction("PokemonGameDetails", "Admin", new { pokemonId = pokemonId });
-        }
-
         [HttpGet]
         [Route("add_typing/{pokemonId:int}")]
         public IActionResult Typing(int pokemonId)

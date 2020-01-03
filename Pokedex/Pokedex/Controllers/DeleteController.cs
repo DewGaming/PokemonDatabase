@@ -26,15 +26,6 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ReviewedPokemon", "Owner");
         }
-        
-        [Route("delete_game_availability/{id:int}")]
-        public IActionResult PokemonGameDetail(int id)
-        {
-            int pokemonId = this._dataService.GetPokemonGameDetail(id).PokemonId;
-            this._dataService.DeletePokemonGameDetail(id);
-
-            return this.RedirectToAction("PokemonGameDetails", "Admin", new { pokemonId = pokemonId });
-        }
 
         [HttpGet]
         [Route("delete_generation/{id:int}")]
