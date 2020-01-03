@@ -471,6 +471,7 @@ namespace Pokedex
                 .Include(x => x.FirstPokemon)
                     .Include("FirstPokemon.Pokemon")
                         .Include("FirstPokemon.Pokemon.Game")
+                            .Include("FirstPokemon.Pokemon.Game.Generation")
                     .Include("FirstPokemon.Ability")
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
@@ -585,13 +586,7 @@ namespace Pokedex
         {
             return this._dataContext.PokemonTeamDetails
                 .Include(x => x.Pokemon)
-                    .Include("Pokemon.EggCycle")
-                    .Include("Pokemon.GenderRatio")
-                    .Include("Pokemon.Classification")
-                    .Include("Pokemon.Generation")
-                    .Include("Pokemon.ExperienceGrowth")
-                    .Include("Pokemon.CaptureRate")
-                    .Include("Pokemon.BaseHappiness")
+                    .Include("Pokemon.Game.Generation")
                 .Include(x => x.Ability)
                 .Include(x => x.PokemonTeamEV)
                 .Include(x => x.PokemonTeamIV)
@@ -606,13 +601,7 @@ namespace Pokedex
         {
             return this._dataContext.PokemonTeamDetails
                 .Include(x => x.Pokemon)
-                    .Include("Pokemon.EggCycle")
-                    .Include("Pokemon.GenderRatio")
-                    .Include("Pokemon.Classification")
-                    .Include("Pokemon.Generation")
-                    .Include("Pokemon.ExperienceGrowth")
-                    .Include("Pokemon.CaptureRate")
-                    .Include("Pokemon.BaseHappiness")
+                    .Include("Pokemon.Game.Generation")
                 .Include(x => x.Ability)
                 .Include(x => x.PokemonTeamEV)
                 .Include(x => x.PokemonTeamIV)
