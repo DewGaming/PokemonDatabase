@@ -536,7 +536,7 @@ namespace Pokedex.Controllers
             }
 
             BattleItemViewModel model = new BattleItemViewModel(){
-                AllGenerations = this._dataService.GetGenerations().Where(x => x.Id >= 1).ToList(),
+                AllGenerations = this._dataService.GetGenerations().Where(x => x.Id > 1).ToList(),
                 AllPokemon = pokemonList,
             };
 
