@@ -853,6 +853,10 @@ namespace Pokedex.Controllers
                 Nature nature = this._dataService.GetNatureByName(natureName);
                 pokemonTeamDetail.NatureId = nature.Id;
             }
+            else
+            {
+                pokemonTeamDetail.NatureId = this._dataService.GetNatureByName("Serious").Id;
+            }
             #endregion
 
             #region IVs
