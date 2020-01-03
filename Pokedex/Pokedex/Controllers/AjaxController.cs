@@ -1009,9 +1009,7 @@ namespace Pokedex.Controllers
                 {
                     List<Pokemon> megaList = new List<Pokemon>();
                     List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
-                    foreach(var p in altFormList.Where(x => x.Form.Id == 9
-                                                         || x.Form.Id == 10
-                                                         || x.Form.Id == 11).ToList())
+                    foreach(var p in altFormList.Where(x => x.Form.Name.Contains("Mega")).ToList())
                     {
                         if(allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
                         {
