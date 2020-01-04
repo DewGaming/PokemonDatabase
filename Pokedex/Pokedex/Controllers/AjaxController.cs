@@ -1490,23 +1490,51 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-egg-group")]
-        public EggGroupEvaluatorViewModel GetPokemonByEggGroup(int primaryEggGroupId, int secondaryEggGroupId)
+        public IActionResult GetPokemonByEggGroup(int pokemonId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonEggGroupDetail> eggGroupList = this._dataService.GetAllPokemonWithSpecificEggGroups(primaryEggGroupId, secondaryEggGroupId);
+                PokemonEggGroupDetail searchedEggGroupDetails = this._dataService.GetPokemonWithEggGroups(pokemonId);
+                GenderRatio genderRatio = this._dataService.GetGenderRatio(searchedEggGroupDetails.Pokemon.GenderRatioId);
+                List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
                 List<Pokemon> pokemonList = new List<Pokemon>();
-
-                foreach(var p in eggGroupList)
+                if (pokemonId == this._dataService.GetPokemon("Phione").Id)
                 {
-                    if(this._dataService.CheckIfAltForm(p.PokemonId))
+                    eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
+                    eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Phione"));
+                    pokemonList.Add(this._dataService.GetPokemon("Ditto"));
+                    pokemonList.Add(this._dataService.GetPokemon("Phione"));
+                }
+                else if(pokemonId == this._dataService.GetPokemon("Manaphy").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0))
+                {
+                    eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
+                    pokemonList.Add(this._dataService.GetPokemon("Ditto"));
+                }
+                else
+                {
+                    Pokemon pokemon;
+                    eggGroupList = this._dataService.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
+                    List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
+                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).ToList();
+
+                    foreach(var p in eggGroupList)
                     {
-                        Pokemon pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
-                        pokemonList.Add(pokemon);
+                        if(this._dataService.CheckIfAltForm(p.PokemonId))
+                        {
+                            pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
+                            pokemonList.Add(pokemon);
+                        }
+                        else
+                        {
+                            pokemonList.Add(p.Pokemon);
+                        }
                     }
-                    else
+
+                    pokemon = this._dataService.GetPokemonById(pokemonId);
+
+                    if(genderRatio.MaleRatio == 100 || genderRatio.FemaleRatio == 100)
                     {
-                        pokemonList.Add(p.Pokemon);
+                        pokemonList.Remove(pokemon);
                     }
                 }
 
@@ -1514,9 +1542,10 @@ namespace Pokedex.Controllers
                     AllPokemonWithEggGroups = eggGroupList,
                     AllPokemon = pokemonList,
                     AppConfig = _appConfig,
+                    SearchedPokemon = this._dataService.GetPokemonById(pokemonId),
                 };
 
-                return model;
+                return this.PartialView("_FillEggGroupEvaluator", model);
             }
             else
             {

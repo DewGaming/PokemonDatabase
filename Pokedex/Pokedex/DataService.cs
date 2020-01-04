@@ -408,6 +408,52 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<PokemonEggGroupDetail> GetAllBreedablePokemon()
+        {
+            List<Pokemon> pokemonList = this._dataContext.Pokemon
+                .Where(x => x.IsComplete == true)
+                .ToList();
+
+            List<PokemonFormDetail> formDetails = new List<PokemonFormDetail>();
+            List<string> formNames = new List<string>(){
+                "Mega",
+                "Mega X",
+                "Mega Y",
+                "Core",
+                "Blade",
+                "Crowned",
+                "Ash",
+            };
+
+            foreach(var n in formNames)
+            {
+                formDetails.AddRange(this.GetPokemonFormDetailsByFormName(n));
+            }
+            
+            List<PokemonEggGroupDetail> eggGroupDetails =  this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .ToList();
+
+            List<Pokemon> unbreedablePokemon = this.GetAllPokemon().Where(x => !eggGroupDetails.Any(y => y.PokemonId == x.Id && y.PrimaryEggGroup.Name != "Undiscovered")).ToList();
+
+            eggGroupDetails = eggGroupDetails.Where(x => !formDetails.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList();
+            eggGroupDetails = eggGroupDetails.Where(x => !unbreedablePokemon.Any(y => y.Id == x.PokemonId)).ToList();
+
+            foreach(var e in eggGroupDetails)
+            {
+                if(this.CheckIfAltForm(e.PokemonId))
+                {
+                    e.Pokemon.Name = string.Concat(GetAltFormWithFormName(e.PokemonId).Name);
+                }
+            }
+
+            eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
+
+            return eggGroupDetails;
+        }
+
         public List<Pokemon> GetAllPokemonIncludeIncomplete()
         {
             return this._dataContext.Pokemon
@@ -748,6 +794,16 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<PokemonFormDetail> GetPokemonFormDetailsByFormName(string formName)
+        {
+            return this._dataContext.PokemonFormDetails
+                .Include(x => x.OriginalPokemon)
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .Where(x => x.Form.Name == formName)
+                .ToList();
+        }
+
         public PokemonTypeDetail GetPokemonWithTypes(int pokemonId)
         {
             return this._dataContext.PokemonTypeDetails
@@ -923,7 +979,17 @@ namespace Pokedex
                 .Find(x => x.Pokemon.Id == pokemonId);
         }
 
-        public List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int secondaryEggGroupId)
+        public PokemonEggGroupDetail GetPokemonWithEggGroupsFromPokemonName(string pokemonName)
+        {
+            return this._dataContext.PokemonEggGroupDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryEggGroup)
+                .Include(x => x.SecondaryEggGroup)
+                .ToList()
+                .Find(x => x.Pokemon.Name == pokemonName);
+        }
+
+        public List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int? secondaryEggGroupId)
         {
             List<PokemonEggGroupDetail> pokemonList = this._dataContext.PokemonEggGroupDetails
                 .Include(x => x.Pokemon)
@@ -931,7 +997,7 @@ namespace Pokedex
                 .Include(x => x.SecondaryEggGroup)
                 .ToList();
 
-            if (secondaryEggGroupId != 0)
+            if (secondaryEggGroupId != null)
             {
                 pokemonList = pokemonList.Where(x => (x.PrimaryEggGroupId == primaryEggGroupId && x.SecondaryEggGroupId == secondaryEggGroupId) || (x.PrimaryEggGroupId == secondaryEggGroupId && x.SecondaryEggGroupId == primaryEggGroupId)).ToList();
             }

@@ -161,7 +161,12 @@ namespace Pokedex.Controllers
         [Route("egg_group_evaluator")]
         public IActionResult EggGroupEvaluator()
         {
-            List<Pokedex.DataAccess.Models.EggGroup> model = this._dataService.GetEggGroups();
+            List<PokemonEggGroupDetail> eggGroupDetails = this._dataService.GetAllBreedablePokemon();
+            EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){
+                AllPokemonWithEggGroups = eggGroupDetails,
+                AllPokemon = eggGroupDetails.Select(x => x.Pokemon).ToList(),
+                AppConfig = _appConfig,
+            };
 
             return View(model);
         }

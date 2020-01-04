@@ -1,0 +1,23 @@
+@model Pokedex.Models.EggGroupEvaluatorViewModel;
+@{
+    List<Pokedex.DataAccess.Models.PokemonEggGroupDetail> eggGroups = Model.AllPokemonWithEggGroups;
+}
+
+<a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.ToLower() } )">
+    <img class="pokemonlistPicture" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name.Replace('_', ' ')">
+</a>
+
+<h2>Pokemon With Which to Breed</h2>
+<div class="grid-container pokemonList">
+    @for(var i = 0; i < eggGroups.Count(); i++)
+    {
+        <div class="@eggGroups[i].Pokemon.Name">
+            <a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.ToLower() } )">
+                <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name.Replace('_', ' ')" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, eggGroups[i].PokemonId, ".png")">
+            </a>
+            <div>
+                <span class="pokemonName">@Model.AllPokemon[i].Name.Replace('_', ' ')</span>
+            </div>
+        </div>
+    }
+</div>

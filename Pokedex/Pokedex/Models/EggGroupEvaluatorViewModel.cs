@@ -10,5 +10,7 @@ namespace Pokedex.Models
         public List<Pokemon> AllPokemon { get; set; }
 
         public AppConfig AppConfig { get; set; }
+
+        public Pokemon SearchedPokemon { get; set; }
     }
 }

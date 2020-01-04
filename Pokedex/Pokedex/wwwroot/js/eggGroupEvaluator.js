@@ -1,20 +1,4 @@
-var primaryEggGroupID, secondaryEggGroupID, updateIDs = function () {
-    primaryEggGroupID = $(".primaryList > select").val();
-    secondaryEggGroupID = $(".secondaryList > select").val();
-}, checkEggGroups = function () {
-    if (primaryEggGroupID != $(".primaryList > select").val() || secondaryEggGroupID != $(".secondaryList > select").val()) {
-        updateIDs();
-        if (primaryEggGroupID == "0" && secondaryEggGroupID != "0") {
-            $(".primaryList > select").val(secondaryEggGroupID);
-            $(".secondaryList > select").val("0");
-            updateIDs();
-        }
-        else if (primaryEggGroupID == secondaryEggGroupID) {
-            $(".secondaryList > select").val("0");
-            updateIDs();
-        }
-    }
-}, fillList = function (data) {
+var fillList = function (data) {
     var eggGroups = data.allPokemonWithEggGroups, pokemon = data.allPokemon;
     for (i = 0; i < eggGroups.length; i += 1) {
         var pokemonDiv = $('<div>'), pokemonLink = $('<a>'), pokemonImage = $('<img>'), pokemonNameDiv = $('<div>'), pokemonName = $('<span>');
@@ -26,41 +10,17 @@ var primaryEggGroupID, secondaryEggGroupID, updateIDs = function () {
         $(pokemonDiv).addClass(eggGroups[i].pokemon.name).append(pokemonLink).append(pokemonNameDiv);
         $('.pokemonList').append(pokemonDiv);
     };
-}, grabPokemon = function () {
-    if (primaryEggGroupID != "") {
-        $.ajax({
-            url: '/get-pokemon-by-egg-group/',
-            method: 'POST',
-            data: { 'primaryEggGroupID': primaryEggGroupID, 'secondaryEggGroupID': secondaryEggGroupID }
-        })
-            .done(function (data) {
-                pokemonList = data.allPokemonWithEggGroups;
-                if (pokemonList.length != 0) {
-                    $(".pokemonList").empty();
-
-                    fillList(data);
-
-                    $(".pokemonWithEggGroup").css("display", "block");
-                }
-                else {
-                    $(".pokemonWithEggGroup").css("display", "none");
-                }
-            })
-            .fail(function () {
-                alert("Failed To Get Egg Group Chart!");
-            });
-    }
-    else {
-        $(".pokemonWithEggGroups").css("display", "none");
+}, grabPokemon = function (pokemonId) {
+    $('.pokemonWithEggGroup').empty();
+    if (pokemonId != "") {
+        $('.pokemonWithEggGroup').load('/get-pokemon-by-egg-group/', { 'pokemonId': pokemonId });
     }
 }
 
 $(function () {
-    checkEggGroups();
-    grabPokemon();
+    grabPokemon($('.eggGroupSelectList option:selected').val());
 });
 
 $(".eggGroupSelectList").on('change', function () {
-    checkEggGroups();
-    grabPokemon();
+    grabPokemon($('.eggGroupSelectList option:selected').val());
 });
