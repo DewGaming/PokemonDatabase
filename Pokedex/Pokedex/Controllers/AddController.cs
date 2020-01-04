@@ -994,18 +994,6 @@ namespace Pokedex.Controllers
             };
             this._dataService.AddPokemonEggGroups(alternatePokemonEggGroups);
 
-            EVYield evYields = this._dataService.GetEVYield(pokemon.OriginalPokemonId);
-            EVYield alternatePokemonEVYields = new EVYield(){
-                Health = evYields.Health,
-                Attack = evYields.Attack,
-                Defense = evYields.Defense,
-                SpecialAttack = evYields.SpecialAttack,
-                SpecialDefense = evYields.SpecialDefense,
-                Speed = evYields.Speed,
-                PokemonId = alternatePokemon.Id,
-            };
-            this._dataService.AddPokemonEVYield(alternatePokemonEVYields);
-
             PokemonFormDetail alternateForm = new PokemonFormDetail(){
                 OriginalPokemonId = pokemon.OriginalPokemonId,
                 AltFormPokemonId = alternatePokemon.Id,
@@ -1258,7 +1246,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonBaseStat(baseStat);
 
-            if (this._dataService.CheckIfAltForm(baseStat.PokemonId) || _cameFromAdminPokemon)
+            if (_cameFromAdminPokemon)
             {
                 _cameFromAdminPokemon = false;
                 return this.RedirectToAction("Pokemon", "Admin");
