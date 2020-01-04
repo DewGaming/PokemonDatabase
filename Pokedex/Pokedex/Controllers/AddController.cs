@@ -986,7 +986,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonEggGroups(pokemon.OriginalPokemonId);
+            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId);
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail(){
                 PrimaryEggGroupId = eggGroups.PrimaryEggGroupId,
                 SecondaryEggGroupId = eggGroups.SecondaryEggGroupId,

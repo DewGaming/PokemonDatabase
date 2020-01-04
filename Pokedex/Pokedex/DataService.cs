@@ -164,18 +164,6 @@ namespace Pokedex
             return this._dataContext.MoveCategories.ToList();
         }
 
-        public PokemonEggGroupDetail GetPokemonEggGroups(int pokemonId)
-        {
-            PokemonEggGroupDetail eggGroupDetail = this._dataContext.PokemonEggGroupDetails
-                                                        .Include(x => x.Pokemon)
-                                                        .Include(x => x.PrimaryEggGroup)
-                                                        .Include(x => x.SecondaryEggGroup)
-                                                        .ToList()
-                                                        .Find(x => x.Pokemon.Id == pokemonId);
-
-            return eggGroupDetail;
-        }
-
         public List<Evolution> GetEvolutions()
         {
             return this._dataContext.Evolutions
