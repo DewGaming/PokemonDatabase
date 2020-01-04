@@ -83,6 +83,15 @@ var primaryTypeID, secondaryTypeID, updateIDs = function () {
 }, checkTypings = function () {
     if (primaryTypeID != $(".primaryList > select").val() || secondaryTypeID != $(".secondaryList > select").val()) {
         updateIDs();
+        $(".secondaryList option").each(function() {
+            if(!$(this).is(":visible"))
+            {
+                $(this).css('display', 'block');
+            }
+        });
+
+        $('.secondaryList option[value="' + primaryTypeID + '"]').css('display', 'none');
+
         if (primaryTypeID == "0" && secondaryTypeID != "0") {
             if ($(".secondaryList > select").val() == "100") {
                 $(".primaryList > select").val("0");
