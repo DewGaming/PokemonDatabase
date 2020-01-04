@@ -124,42 +124,24 @@ var primaryTypeID, secondaryTypeID, updateIDs = function () {
             $(".effectivenessChart").css("display", "none");
         }
     }
-}, fillList = function (data) {
-    var typing = data.allPokemonWithTypes, pokemon = data.allPokemon;
-    for (i = 0; i < typing.length; i += 1) {
-        var pokemonDiv = $('<div>'), pokemonLink = $('<a>'), pokemonImage = $('<img>'), pokemonNameDiv = $('<div>'), pokemonName = $('<span>');
-        $(pokemonLink).attr('href', data.appConfig.webUrl + '/pokemon/' + typing[i].pokemon.name.replace(': ', '_').replace(' ', '_').toLowerCase());
-        $(pokemonImage).addClass('pokemonListPicture').attr('title', typing[i].pokemon.name.replace('_', ' ')).attr('src', data.appConfig.webUrl + '/images/pokemon/' + typing[i].pokemon.id + '.png');
-        $(pokemonLink).append(pokemonImage);
-        $(pokemonName).addClass('pokemonName').text(pokemon[i].name.replace('_', ' '));
-        $(pokemonNameDiv).append(pokemonName);
-        $(pokemonDiv).addClass(typing[i].pokemon.name).append(pokemonLink).append(pokemonNameDiv);
-        $('.pokemonList').append(pokemonDiv);
-    };
 }, grabPokemon = function () {
     if (primaryTypeID != "") {
-        $.ajax({
-            url: '/get-pokemon-by-typing/',
-            method: 'POST',
-            data: { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }
-        })
-            .done(function (data) {
-                pokemonList = data.allPokemonWithTypes;
-                if (pokemonList.length != 0) {
+        $(".pokemonWithTyping").css("display", "none");
+        $('.effectivenessChart').css("display", "none");
+        $(".pokemonList").empty();
+        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function () {
+            if ($('.pokemonList').children().length > 0) {
+                $(".pokemonWithTyping").css("display", "block");
+            }
+            else {
+                $(".pokemonWithTyping").css("display", "none");
+            }
 
-                    $(".pokemonList").empty();
-
-                    fillList(data);
-
-                    $(".pokemonWithTyping").css("display", "block");
-                }
-                else {
-                    $(".pokemonWithTyping").css("display", "none");
-                }
-            })
-            .fail(function () {
-                alert("Failed To Get Effectiveness Chart!");
-            });
+            if($(".secondaryList > select").val() == "")
+            {
+                $('.effectivenessChart').css("display", "flex");
+            }
+        });
     }
     else {
         $(".pokemonWithTyping").css("display", "none");

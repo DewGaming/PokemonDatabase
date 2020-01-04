@@ -1452,7 +1452,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-typing")]
-        public TypingEvaluatorViewModel GetPokemon(int primaryTypeId, int secondaryTypeId)
+        public IActionResult GetPokemon(int primaryTypeId, int secondaryTypeId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1478,7 +1478,7 @@ namespace Pokedex.Controllers
                     AppConfig = _appConfig,
                 };
 
-                return model;
+                return this.PartialView("_FillTypingEvaluator", model);
             }
             else
             {
