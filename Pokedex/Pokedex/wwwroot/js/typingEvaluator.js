@@ -1,90 +1,11 @@
 var primaryTypeID, secondaryTypeID, updateIDs = function () {
-    primaryTypeID = $(".primaryList > select").val();
-    secondaryTypeID = $(".secondaryList > select").val();
-}, fillTables = function (data) {
-    fillStrong(data);
-    fillWeak(data);
-    fillImmune(data);
-}, fillStrong = function (data) {
-    if (data.strongAgainst.length == 0) {
-        $(".StrongAgainst").css("display", "none");
-    }
-    else {
-        $.each(data.strongAgainst, function (input, type) {
-            var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
-            $(quadTag).addClass("pokemon-type quad-icon");
-
-            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
-            $(iconTag).text(type);
-
-            if (~type.indexOf("Quad")) {
-                $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
-                $(iconTag).text(type.substr(0, type.indexOf(' ')));
-                $(quadTag).addClass("quad-resist");
-                $(quadTag).text("Quad");
-            }
-
-            $(dataTag).append(iconTag);
-            if (~type.indexOf("Quad")) {
-                $(dataTag).append(quadTag);
-            }
-
-            $(rowTag).append(dataTag);
-
-            $(".typing-table-strong").append(rowTag);
-        });
-
-        $(".StrongAgainst").css("display", "block");
-    }
-}, fillWeak = function (data) {
-    $.each(data.weakAgainst, function (input, type) {
-        var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
-        $(quadTag).addClass("pokemon-type quad-icon");
-
-        $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
-        $(iconTag).text(type);
-
-        if (~type.indexOf("Quad")) {
-            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase().substr(0, type.indexOf(' ')));
-            $(iconTag).text(type.substr(0, type.indexOf(' ')));
-            $(quadTag).addClass("quad-weak");
-            $(quadTag).text("Quad");
-        }
-
-        $(dataTag).append(iconTag);
-        if (~type.indexOf("Quad")) {
-            $(dataTag).append(quadTag);
-        }
-
-        $(rowTag).append(dataTag);
-
-        $(".typing-table-weak").append(rowTag);
-    });
-}, fillImmune = function (data) {
-    if (data.immuneTo.length == 0) {
-        $(".ImmuneTo").css("display", "none");
-    }
-    else {
-        $.each(data.immuneTo, function (input, type) {
-            var rowTag = $("<tr>"), dataTag = $("<td>"), iconTag = $("<div>"), quadTag = $("<div>");
-            $(quadTag).addClass("pokemon-type quad-icon");
-
-            $(iconTag).addClass("pokemon-type type-icon type-" + type.toLowerCase());
-            $(iconTag).text(type);
-            $(dataTag).append(iconTag);
-
-            $(rowTag).append(dataTag);
-
-            $(".typing-table-immune").append(rowTag);
-        });
-
-        $(".ImmuneTo").css("display", "block");
-    }
+    primaryTypeID = $('.primaryList > select').val();
+    secondaryTypeID = $('.secondaryList > select').val();
 }, checkTypings = function () {
-    if (primaryTypeID != $(".primaryList > select").val() || secondaryTypeID != $(".secondaryList > select").val()) {
+    if (primaryTypeID != $('.primaryList > select').val() || secondaryTypeID != $('.secondaryList > select').val()) {
         updateIDs();
-        $(".secondaryList option").each(function() {
-            if(!$(this).is(":visible"))
+        $('.secondaryList option').each(function() {
+            if(!$(this).is(':visible'))
             {
                 $(this).css('display', 'block');
             }
@@ -92,68 +13,81 @@ var primaryTypeID, secondaryTypeID, updateIDs = function () {
 
         $('.secondaryList option[value="' + primaryTypeID + '"]').css('display', 'none');
 
-        if (primaryTypeID == "0" && secondaryTypeID != "0") {
-            if ($(".secondaryList > select").val() == "100") {
-                $(".primaryList > select").val("0");
+        if (primaryTypeID == '0' && secondaryTypeID != '0') {
+            if ($('.secondaryList > select').val() == '100') {
+                $('.primaryList > select').val('0');
             }
             else {
-                $(".primaryList > select").val(secondaryTypeID);
+                $('.primaryList > select').val(secondaryTypeID);
             }
 
-            $(".secondaryList > select").val("0");
+            $('.secondaryList > select').val('0');
             updateIDs();
         }
         else if (primaryTypeID == secondaryTypeID) {
-            $(".secondaryList > select").val("0");
+            $('.secondaryList > select').val('0');
             updateIDs();
         }
 
-        if (primaryTypeID != "0" && secondaryTypeID != "100") {
-            $.ajax({
-                url: '/get-typing-effectiveness/',
-                method: 'POST',
-                data: { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }
-            })
-                .done(function (data) {
-                    typingList = data;
+        if (primaryTypeID != '0' && secondaryTypeID != '100') {
+            $('.effectivenessChart').empty();
 
-                    $(".typing-table").each(function (index) {
-                        $(this).children().remove()
-                    });
+            $('.effectivenessChart').load('/get-typing-effectiveness/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function() {
+                if($('.typing-table-strong').children().length > 0)
+                {
+                    $(".StrongAgainst").css("display", "block");
+                }
+                else
+                {
+                    $(".StrongAgainst").css("display", "none");
+                }
 
-                    fillTables(data);
+                if($('.typing-table-weak').children().length > 0)
+                {
+                    $(".WeakAgainst").css("display", "block");
+                }
+                else
+                {
+                    $(".WeakAgainst").css("display", "none");
+                }
 
-                    $(".effectivenessChart").css("display", "flex");
-                })
-                .fail(function () {
-                    alert("Failed To Get Effectiveness Chart!");
-                });
+                if($('.typing-table-immune').children().length > 0)
+                {
+                    $(".ImmuneTo").css("display", "block");
+                }
+                else
+                {
+                    $(".ImmuneTo").css("display", "none");
+                }
+
+                $('.effectivenessChart').css('display', 'flex');
+            });
         }
         else {
-            $(".effectivenessChart").css("display", "none");
+            $('.effectivenessChart').css('display', 'none');
         }
     }
 }, grabPokemon = function () {
-    if (primaryTypeID != "") {
-        $(".pokemonWithTyping").css("display", "none");
-        $('.effectivenessChart').css("display", "none");
-        $(".pokemonList").empty();
+    if (primaryTypeID != '') {
+        $('.pokemonWithTyping').css('display', 'none');
+        $('.effectivenessChart').css('display', 'none');
+        $('.pokemonList').empty();
         $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function () {
             if ($('.pokemonList').children().length > 0) {
-                $(".pokemonWithTyping").css("display", "block");
+                $('.pokemonWithTyping').css('display', 'block');
             }
             else {
-                $(".pokemonWithTyping").css("display", "none");
+                $('.pokemonWithTyping').css('display', 'none');
             }
 
-            if($(".secondaryList > select").val() == "")
+            if($('.secondaryList > select').val() == '')
             {
-                $('.effectivenessChart').css("display", "flex");
+                $('.effectivenessChart').css('display', 'flex');
             }
         });
     }
     else {
-        $(".pokemonWithTyping").css("display", "none");
+        $('.pokemonWithTyping').css('display', 'none');
     }
 }
 
@@ -162,7 +96,7 @@ $(function () {
     grabPokemon();
 });
 
-$(".typingSelectList").on('change', function () {
+$('.typingSelectList').on('change', function () {
     checkTypings();
     grabPokemon();
 });

@@ -1400,11 +1400,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-typing-effectiveness")]
-        public TypeEffectivenessViewModel GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
+        public IActionResult GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this._dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId);
+                return this.PartialView("_FillTypeEffectiveness", _dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId));
             }
             else
             {
