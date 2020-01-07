@@ -1503,6 +1503,29 @@ namespace Pokedex.Controllers
                     eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
                     pokemonList.Add(this._dataService.GetPokemon("Ditto"));
                 }
+                else if(pokemonId == this._dataService.GetPokemon("Ditto").Id)
+                {
+                    Pokemon pokemon;
+                    eggGroupList = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete();
+                    List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
+                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.Name).ToList();
+                    eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
+
+                    foreach(var p in eggGroupList)
+                    {
+                        if(this._dataService.CheckIfAltForm(p.PokemonId))
+                        {
+                            pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
+                            pokemonList.Add(pokemon);
+                        }
+                        else
+                        {
+                            pokemonList.Add(p.Pokemon);
+                        }
+                    }
+
+                    pokemon = this._dataService.GetPokemonById(pokemonId);
+                }
                 else
                 {
                     Pokemon pokemon;
