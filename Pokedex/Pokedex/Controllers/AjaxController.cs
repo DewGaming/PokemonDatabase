@@ -1498,14 +1498,7 @@ namespace Pokedex.Controllers
                 GenderRatio genderRatio = this._dataService.GetGenderRatio(searchedEggGroupDetails.Pokemon.GenderRatioId);
                 List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
                 List<Pokemon> pokemonList = new List<Pokemon>();
-                if (pokemonId == this._dataService.GetPokemon("Phione").Id)
-                {
-                    eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
-                    eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Phione"));
-                    pokemonList.Add(this._dataService.GetPokemon("Ditto"));
-                    pokemonList.Add(this._dataService.GetPokemon("Phione"));
-                }
-                else if(pokemonId == this._dataService.GetPokemon("Manaphy").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0))
+                if(pokemonId == this._dataService.GetPokemon("Manaphy").Id || pokemonId == this._dataService.GetPokemon("Phione").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0 && pokemonId != this._dataService.GetPokemon("Ditto").Id))
                 {
                     eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
                     pokemonList.Add(this._dataService.GetPokemon("Ditto"));
