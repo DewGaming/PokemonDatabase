@@ -112,11 +112,11 @@
                         <td>
                             @if(item.Form != null)
                             {
-                                @(item.Pokemon.Name + " (" + item.Form.Name + ")")
+                                @(item.Pokemon.Name.Replace('_', ' ') + " (" + item.Form.Name + ")")
                             }
                             else
                             {
-                                @(item.Pokemon.Name)
+                                @(item.Pokemon.Name.Replace('_', ' '))
                             }
                         </td>
                     </tr>
