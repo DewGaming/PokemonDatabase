@@ -1006,8 +1006,6 @@ namespace Pokedex
                 pokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
             }
 
-            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Name).ToList();
-
             return pokemonList;
         }
 
