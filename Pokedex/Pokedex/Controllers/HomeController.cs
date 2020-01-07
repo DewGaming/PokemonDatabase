@@ -158,8 +158,8 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("egg_group_evaluator")]
-        public IActionResult EggGroupEvaluator()
+        [Route("day_care_evaluator")]
+        public IActionResult DayCareEvaluator()
         {
             List<PokemonEggGroupDetail> eggGroupDetails = this._dataService.GetAllBreedablePokemon();
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){

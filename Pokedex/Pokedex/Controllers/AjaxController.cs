@@ -1561,7 +1561,7 @@ namespace Pokedex.Controllers
                     SearchedPokemon = this._dataService.GetPokemonById(pokemonId),
                 };
 
-                return this.PartialView("_FillEggGroupEvaluator", model);
+                return this.PartialView("_FillDayCareEvaluator", model);
             }
             else
             {

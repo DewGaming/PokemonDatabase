@@ -23,8 +23,8 @@
         <img class="modalPreview" data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokemon have a specific typing and what that type chart looks like!" src="@(@Model.WebUrl + @Model.GeneralImageUrl + "small/typingEvaluator.png")">
     </div>
     <div class="feature eggGroupEvaluator">
-        <a href="@Url.Action("EggGroupEvaluator", "Home")"><p>Lookup Egg Group Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("EggGroupEvaluator", "Home")" alt="Egg Group Evaluator" title="Find out what Pokemon have a specific egg grouping!" src="@(@Model.WebUrl + @Model.GeneralImageUrl + "small/eggGroupEvaluator.png")">
+        <a href="@Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
+        <img class="modalPreview" data-modalUrl="@Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokemon can be placed in a day care to produce a Pokemon Egg!" src="@(@Model.WebUrl + @Model.GeneralImageUrl + "small/dayCareEvaluator.png")">
     </div>
 </div>
 @if(!User.Identity.IsAuthenticated)

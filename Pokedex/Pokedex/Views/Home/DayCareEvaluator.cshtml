@@ -1,7 +1,7 @@
 @model Pokedex.Models.EggGroupEvaluatorViewModel;
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Egg Group Evaluator";
+    ViewBag.Title = "Day Care Evaluator";
 }
 
 @section styles
@@ -23,7 +23,7 @@
 
 @section scripts
 {
-    <script src="/js/eggGroupEvaluator.js"></script>
+    <script src="/js/dayCareEvaluator.js"></script>
     <script>
         var eggGroupDetails = @Html.Raw(Json.Serialize(Model.AllPokemonWithEggGroups));
     </script>
