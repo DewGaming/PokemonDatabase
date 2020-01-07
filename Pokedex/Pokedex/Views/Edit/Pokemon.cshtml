@@ -61,7 +61,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Pokemon.EggCycleId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.Pokemon.EggCycleId, new SelectList(Model.AllEggCycles, "Id", "CycleCount"), new { @class = "form-control col-md-8" })
+            @Html.DropDownListFor(x => x.Pokemon.EggCycleId, new SelectList(Model.AllEggCycles, "Id", "CycleWithSteps"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.Pokemon.EggCycleId)
         </div>
 
