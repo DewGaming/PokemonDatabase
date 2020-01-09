@@ -367,6 +367,20 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            Pokemon oldPokemon = this._dataService.GetPokemonById(pokemon.Id);
+            List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
+            if(oldPokemon.PokedexNumber != pokemon.PokedexNumber)
+            {
+                foreach(var p in altForms)
+                {
+                    if(p.PokedexNumber != pokemon.PokedexNumber)
+                    {
+                        p.PokedexNumber = pokemon.PokedexNumber;
+                        this._dataService.UpdatePokemon(p);
+                    }
+                }
+            }
+
             this._dataService.UpdatePokemon(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
