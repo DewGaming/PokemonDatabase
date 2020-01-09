@@ -1013,7 +1013,13 @@ namespace Pokedex.Controllers
         [Route("edit_form_item/{id:int}")]
         public IActionResult FormItem(int id)
         {
-            FormItem model = this._dataService.GetFormItem(id);
+            FormItem item = this._dataService.GetFormItem(id);
+            FormItemViewModel model = new FormItemViewModel()
+            {
+                AllPokemon = this._dataService.GetAllPokemonOnlyForms(),
+                PokemonId = item.PokemonId,
+                Name = item.Name,
+            };
 
             return this.View(model);
         }
@@ -1025,7 +1031,13 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                FormItem model = this._dataService.GetFormItem(formItem.Id);
+                FormItem item = this._dataService.GetFormItem(formItem.Id);
+                FormItemViewModel model = new FormItemViewModel()
+                {
+                    AllPokemon = this._dataService.GetAllPokemonOnlyForms(),
+                    PokemonId = item.PokemonId,
+                    Name = item.Name,
+                };
 
                 return this.View(model);
             }
