@@ -714,7 +714,7 @@ namespace Pokedex
 
             Pokemon pokemon = pokemonForm.AltFormPokemon;
 
-            pokemon.Name += " (" + pokemonForm.Form.Name + ")";
+            pokemon.Name += string.Concat(" (", pokemonForm.Form.Name, ")");
 
             return pokemon;
         }
