@@ -731,9 +731,11 @@ namespace Pokedex
         public List<Pokemon> GetAllPokemonOnlyForms()
         {
             List<Pokemon> pokemonList = this._dataContext.Pokemon
-                .Where(x => x.IsComplete && this.CheckIfAltForm(x.Id))
+                .Where(x => x.IsComplete)
                 .OrderBy(x => x.PokedexNumber)
                 .ToList();
+
+            pokemonList = pokemonList.Where(x => this.CheckIfAltForm(x.Id)).ToList();
 
             foreach(var p in pokemonList)
             {
