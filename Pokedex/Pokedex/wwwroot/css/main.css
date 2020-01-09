@@ -162,7 +162,8 @@
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   background-color: gray;
-  padding: 7.5px 10px
+  padding: 7.5px 10px;
+  width: 100%;
 }
 
 .grid-container>div {
