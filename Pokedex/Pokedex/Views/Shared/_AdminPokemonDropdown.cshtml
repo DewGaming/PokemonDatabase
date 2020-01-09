@@ -16,6 +16,7 @@
             {
                 <span class="adminMenuTitle">Review Pokemon</span>
                 <li><a class="dropdown-item" href="@(Url.Action("ReviewPokemon", "Owner", new { pokemonId = Model.Pokemon.Id }))">Review Info</a></li>
+                <hr class="adminOptionSeparator">
             }
         }
         @if(User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id))
@@ -38,7 +39,7 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Add", new { pokemonId = Model.Pokemon.Id }))">Add EV Yields</a></li>
         }
-        @if(!Model.Pokemon.IsComplete && everythingAdded && Model.Pokemon.ExpYield != 0)
+        @if(!Model.Pokemon.IsComplete && !everythingAdded)
         {
             <hr class="adminOptionSeparator">
         }
@@ -68,7 +69,7 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit EV Yields</a></li>
         }
-        @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id)))
+        @if(!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id)))
         {
             <hr class="adminOptionSeparator">
             <span class="adminMenuTitle">Add Relations</span>
@@ -77,7 +78,7 @@
         {
             <li><a class="dropdown-item" href="@(Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Pre-Evolution</a></li>
         }
-        @if(Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if(Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(Url.Action("AltForm", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Alternate Form</a></li>
         }
