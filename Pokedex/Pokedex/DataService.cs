@@ -440,12 +440,13 @@ namespace Pokedex
 
             eggGroupDetails = eggGroupDetails.Where(x => !formDetails.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => !unbreedablePokemon.Any(y => y.Id == x.PokemonId)).ToList();
+            eggGroupDetails = eggGroupDetails.Where(x => x.Pokemon.IsComplete).ToList();
 
             foreach(var e in eggGroupDetails)
             {
                 if(this.CheckIfAltForm(e.PokemonId))
                 {
-                    e.Pokemon.Name = string.Concat(GetAltFormWithFormName(e.PokemonId).Name);
+                    e.Pokemon.Name = GetAltFormWithFormName(e.PokemonId).Name;
                 }
             }
 
