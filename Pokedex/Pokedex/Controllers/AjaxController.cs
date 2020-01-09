@@ -647,7 +647,7 @@ namespace Pokedex.Controllers
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGeneration(gameId);
+                List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame(gameId);
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete();
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
                 foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))

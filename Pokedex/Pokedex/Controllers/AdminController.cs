@@ -226,7 +226,7 @@ namespace Pokedex.Controllers
         [Route("available_pokemon")]
         public IActionResult AvailablePokemon()
         {
-            List<Generation> model = this._dataService.GetGenerations();
+            List<Game> model = this._dataService.GetGames();
 
             return this.View(model);
         }
