@@ -1246,15 +1246,7 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonBaseStat(baseStat);
 
-            if (_cameFromAdminPokemon)
-            {
-                _cameFromAdminPokemon = false;
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
-            }
+            return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
         }
 
         [HttpGet]
@@ -1356,7 +1348,14 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonEVYield(evYield);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if(User.IsInRole("Owner"))
+            {
+                return this.RedirectToAction("ReviewPokemon", "Owner", new { pokemonId = evYield.PokemonId });
+            }
+            else
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
         }
 
         [HttpGet]
