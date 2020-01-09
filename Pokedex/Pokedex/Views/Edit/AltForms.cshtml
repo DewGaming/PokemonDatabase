@@ -42,7 +42,7 @@
                     }
                     else
                     {
-                        <span>@('#')@item.Id @item.Name.Replace('_', ' ')</span>
+                        <span>@('#')@item.PokedexNumber.ToString().PadLeft(3, '0') @item.Name.Replace('_', ' ')</span>
                     }
                     <br>
                     @await Html.PartialAsync("_AdminPokemonDropdown", new AdminPokemonViewModel() { DropdownViewModel = Model, Pokemon = item })
