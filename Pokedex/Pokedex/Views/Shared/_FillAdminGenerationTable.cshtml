@@ -12,7 +12,7 @@
 {
     adminPokemon.Pokemon = p;
     everythingAdded = Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == p.Id);
-    <div class="@p.Name @(p.IsComplete ? "" : everythingAdded && p.ExpYield != 0 ? "review" : "incomplete")">
+    <div class="@p.Name@(p.IsComplete ? "" : everythingAdded && p.ExpYield != 0 ? " review" : " incomplete")">
         @if(p.IsComplete)
         {
             <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
