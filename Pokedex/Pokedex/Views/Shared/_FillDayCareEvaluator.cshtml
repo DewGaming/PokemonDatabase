@@ -7,7 +7,7 @@
     <img class="pokemonlistPicture" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name.Replace('_', ' ')">
 </a>
 
-<h2>Pokemon @Model.SearchedPokemon.Name Can Breed With</h2>
+<h2>Pokemon @Model.SearchedPokemon.Name.Replace('_', ' ') Can Breed With</h2>
 <div class="grid-container pokemonList">
     @for(var i = 0; i < eggGroups.Count(); i++)
     {
