@@ -448,6 +448,11 @@ namespace Pokedex
                 {
                     e.Pokemon.Name = GetAltFormWithFormName(e.PokemonId).Name;
                 }
+
+                if(e.Pokemon.Name.Contains('_'))
+                {
+                    e.Pokemon.Name = e.Pokemon.Name.Replace('_', ' ');
+                }
             }
 
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
