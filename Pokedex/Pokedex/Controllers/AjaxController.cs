@@ -1531,8 +1531,8 @@ namespace Pokedex.Controllers
                     Pokemon pokemon;
                     eggGroupList = this._dataService.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
                     List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
-                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.Name).ToList();
                     eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
+                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.Name).ToList();
 
                     foreach(var p in eggGroupList)
                     {
