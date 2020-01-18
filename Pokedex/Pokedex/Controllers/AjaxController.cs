@@ -1533,6 +1533,8 @@ namespace Pokedex.Controllers
                     List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
                     eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
                     eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.Name).ToList();
+                    List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>();
+                    finalEggGroupList.AddRange(eggGroupList);
 
                     foreach(var p in eggGroupList)
                     {
@@ -1541,18 +1543,17 @@ namespace Pokedex.Controllers
                             pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
                             pokemonList.Add(pokemon);
                         }
-                        else
+                        else if (!(genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) && !(genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
                         {
                             pokemonList.Add(p.Pokemon);
                         }
+                        else
+                        {
+                            finalEggGroupList.Remove(p);
+                        }
                     }
 
-                    pokemon = this._dataService.GetPokemonById(pokemonId);
-
-                    if(genderRatio.MaleRatio == 100 || genderRatio.FemaleRatio == 100)
-                    {
-                        pokemonList.Remove(pokemon);
-                    }
+                    eggGroupList = finalEggGroupList;
                 }
 
                 EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){

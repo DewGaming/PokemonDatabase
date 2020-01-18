@@ -991,6 +991,7 @@ namespace Pokedex
         {
             return this._dataContext.PokemonEggGroupDetails
                 .Include(x => x.Pokemon)
+                    .Include("Pokemon.GenderRatio")
                 .Include(x => x.PrimaryEggGroup)
                 .Include(x => x.SecondaryEggGroup)
                 .ToList()
@@ -1001,6 +1002,7 @@ namespace Pokedex
         {
             List<PokemonEggGroupDetail> pokemonList = this._dataContext.PokemonEggGroupDetails
                 .Include(x => x.Pokemon)
+                    .Include("Pokemon.GenderRatio")
                 .Include(x => x.PrimaryEggGroup)
                 .Include(x => x.SecondaryEggGroup)
                 .ToList();
