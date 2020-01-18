@@ -332,16 +332,8 @@
                         <tbody class="evolutionPokemon">
                             <tr>
                                 <th>
-                                    @if(@Model.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
-                                    {
-                                        <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
-                                        <a class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</a>
-                                    }
-                                    else
-                                    {
-                                        <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
-                                        <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</span>
-                                    }
+                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
+                                    <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</span>
                                 </th>
                                 <td>
                                     @Model.PreEvolution.EvolutionMethod.Name
@@ -369,16 +361,8 @@
                             {
                                 <tr>
                                     <th>
-                                        @if(@evolution.EvolutionPokemon.Name.Contains(" ("))
-                                        {
-                                            <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
-                                            <span class="evolutionLink">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</span>
-                                        }
-                                        else
-                                        {
-                                            <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
-                                            <span class="evolutionLink">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</span>
-                                        }
+                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
+                                        <span class="evolutionLink">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</span>
                                     </th>
                                     <td>
                                         @evolution.EvolutionMethod.Name
