@@ -254,6 +254,15 @@ namespace Pokedex.Controllers
                 pokemonName = pokemonTeamDetail.Nickname + " (";
             }
             
+            if(pokemon.Name.Contains(" (Male)"))
+            {
+                pokemon.Name = pokemon.Name.Replace(" (Male)", "-M");
+            }
+            else if(pokemon.Name.Contains(" (Female)"))
+            {
+                pokemon.Name = pokemon.Name.Replace(" (Female)", "-F");
+            }
+
             pokemonName += pokemon.Name;
             if(this._dataService.CheckIfAltForm(pokemon.Id))
             {
