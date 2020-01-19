@@ -7,8 +7,8 @@
 @for(var i = 0; i < typing.Count(); i++)
 {
     <div class="@typing[i].Pokemon.Name">
-        <a href=@string.Concat(Model.AppConfig.WebUrl, "/pokemon/", typing[i].Pokemon.Name.Replace("; ", "_").Replace(' ', '_').ToLower())>
             <img class="pokemonListPicture" title="typing[i].Pokemon.Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, typing[i].PokemonId, ".png")>
+        <a href=@Url.Action("Pokemon", "Home", new { name = typing[i].Pokemon.Name.Replace("; ", "_").Replace(' ', '_').ToLower() })>
         </a>
         <div>
             <span class="pokemonName">@Model.AllPokemon[i].Name</span>
