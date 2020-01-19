@@ -18,6 +18,8 @@ namespace Pokedex
 
         public string GeneralImageUrl { get; set; }
 
+        public string HomePageImageUrl { get; set; }
+
         public string PokemonImageFTPUrl { get; set; }
 
         public string SpriteImageFTPUrl { get; set; }
