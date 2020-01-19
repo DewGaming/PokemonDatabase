@@ -63,8 +63,14 @@ namespace Pokedex.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            this.UpdatePreLGPEGameDetails();
             return this.View(this._appConfig);
+        }
+
+        [Route("update-game-details")]
+        public IActionResult UpdateGameDetails()
+        {
+            this.UpdatePreLGPEGameDetails();
+            return this.RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous]
