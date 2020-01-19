@@ -1539,7 +1539,17 @@ namespace Pokedex.Controllers
                     eggGroupList = this._dataService.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
                     List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
                     eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
-                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.Name).ToList();
+                    if(eggGroupList.Where(x => x.Pokemon.Name == "Manaphy").Count() > 0)
+                    {
+                        eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Manaphy"));
+                    }
+
+                    if(eggGroupList.Where(x => x.Pokemon.Name == "Phione").Count() > 0)
+                    {
+                        eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Phione"));
+                    }
+
+                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
                     List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>();
                     finalEggGroupList.AddRange(eggGroupList);
 
