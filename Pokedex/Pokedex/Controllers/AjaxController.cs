@@ -1515,7 +1515,7 @@ namespace Pokedex.Controllers
                     Pokemon pokemon;
                     eggGroupList = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete();
                     List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
-                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.Name).ToList();
+                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
                     eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
 
                     foreach(var p in eggGroupList)

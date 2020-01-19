@@ -878,7 +878,7 @@ namespace Pokedex
                 pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
             }
 
-            pokemonList = pokemonList.OrderBy(x => x.Pokemon.Name).ToList();
+            pokemonList = pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
 
             return pokemonList;
         }
