@@ -448,11 +448,6 @@ namespace Pokedex
                 {
                     e.Pokemon.Name = GetAltFormWithFormName(e.PokemonId).Name;
                 }
-
-                if(e.Pokemon.Name.Contains('_'))
-                {
-                    e.Pokemon.Name = e.Pokemon.Name.Replace('_', ' ');
-                }
             }
 
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
@@ -2505,7 +2500,8 @@ namespace Pokedex
             {
                 pokemonName = "Type: Null";
             }
-            else if (!pokemonName.Contains("nidoran"))
+            
+            if (pokemonName.Contains('_'))
             {
                 pokemonName = pokemonName.Replace('_', ' ');
             }

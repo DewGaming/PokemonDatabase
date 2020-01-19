@@ -1,7 +1,7 @@
 @model Pokedex.Models.PokemonViewModel
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Review " + @Model.Pokemon.Name.Replace('_', ' ');
+    ViewBag.Title = "Review " + @Model.Pokemon.Name;
 }
 
 @section styles
@@ -29,12 +29,12 @@
 
 <div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
     <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
-        <img title="@Model.Pokemon.Name.Replace('_', ' ')@(@Model.Form != null ? " (" + @Model.Form.Name + ")" : "")" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.Pokemon.Id + ".png")" />
+        <img title="@Model.Pokemon.Name@(@Model.Form != null ? " (" + @Model.Form.Name + ")" : "")" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.Pokemon.Id + ".png")" />
         @if(Model.OriginalPokemon != null)
         {
             <div class="differentForms">
                 <h2>Original Form</h2>
-                <img style="margin-left: 0" class="lightshadowed" title="@Model.OriginalPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.OriginalPokemon.Id + ".png")" />
+                <img style="margin-left: 0" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.OriginalPokemon.Id + ".png")" />
             </div>
         }
     </div>
@@ -332,8 +332,8 @@
                         <tbody class="evolutionPokemon">
                             <tr>
                                 <th>
-                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
-                                    <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name.Replace('_', ' ')</span>
+                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
+                                    <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name</span>
                                 </th>
                                 <td>
                                     @Model.PreEvolution.EvolutionMethod.Name
@@ -361,8 +361,8 @@
                             {
                                 <tr>
                                     <th>
-                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
-                                        <span class="evolutionLink">@evolution.EvolutionPokemon.Name.Replace('_', ' ')</span>
+                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
+                                        <span class="evolutionLink">@evolution.EvolutionPokemon.Name</span>
                                     </th>
                                     <td>
                                         @evolution.EvolutionMethod.Name

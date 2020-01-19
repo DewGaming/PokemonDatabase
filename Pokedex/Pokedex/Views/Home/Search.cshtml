@@ -20,10 +20,10 @@
         {
             <div class="@item.Pokemon.Name">
                 <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
-                    <img class="pokemonListPicture" title="@item.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @item.Pokemon.Id + ".png")"/>
+                    <img class="pokemonListPicture" title="@item.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @item.Pokemon.Id + ".png")"/>
                 </a>
                 <div>
-                    <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @item.Pokemon.Name.Replace('_', ' ')</a>
+                    <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @item.Pokemon.Name</a>
                     <div class="typing">
                         <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                         @if(@item.SecondaryType != null)

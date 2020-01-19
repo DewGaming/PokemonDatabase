@@ -16,18 +16,18 @@
         @if(p.IsComplete)
         {
             <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
+                <img class="pokemonlistPicture" title="@p.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
             </a>
         }
         else if (everythingAdded && p.ExpYield != 0)
         {
             <a href="@(Url.Action("ReviewPokemon", "Owner", new { pokemonId = p.Id }))">
-                <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
+                <img class="pokemonlistPicture" title="@p.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
             </a>
         }
         else
         {
-            <img class="pokemonlistPicture" title="@p.Name.Replace('_', ' ')" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
+            <img class="pokemonlistPicture" title="@p.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @p.Id + ".png")">
         }
         <div class="description">
             @if(p.IsComplete)

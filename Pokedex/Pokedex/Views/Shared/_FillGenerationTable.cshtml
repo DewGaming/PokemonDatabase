@@ -15,7 +15,7 @@
     }
     <div class="@p.Pokemon.Name">
         <a href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-            <img class="pokemonlistPicture" title="@p.Pokemon.Name.Replace('_', ' ')" src="@Url.Content(@pokemonImageUrl)">
+            <img class="pokemonlistPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
         </a>
         <div class="description">
             <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @p.Pokemon.Name.Replace(' ', '_')</a>

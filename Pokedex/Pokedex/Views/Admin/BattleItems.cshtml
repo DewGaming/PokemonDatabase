@@ -34,7 +34,7 @@
                 </td>
                 @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0 && item.PokemonId != null)
                 {
-                    <td>@Model.AllPokemon.Find(x => x.Id == item.PokemonId).Name.Replace('_', ' ')</td>
+                    <td>@Model.AllPokemon.Find(x => x.Id == item.PokemonId).Name</td>
                 }
                 else
                 {

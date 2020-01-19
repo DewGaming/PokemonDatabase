@@ -548,11 +548,6 @@ namespace Pokedex.Controllers
                 List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame((int)pokemonTeam.GameId);
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
-
-            foreach(var p in pokemonList.Where(x => x.Name.Contains('_')))
-            {
-                p.Name = p.Name.Replace('_', ' ');
-            }
             
             foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)).ToList())
             {

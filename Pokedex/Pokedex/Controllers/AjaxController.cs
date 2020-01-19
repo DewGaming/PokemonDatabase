@@ -599,8 +599,6 @@ namespace Pokedex.Controllers
                         pokemon.Name = "Type: Null";
                     }
 
-                    pokemon.Name = pokemon.Name.Replace('_', ' ');
-
                     TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
                     pokemon.Name = textInfo.ToTitleCase(pokemon.Name);
 
