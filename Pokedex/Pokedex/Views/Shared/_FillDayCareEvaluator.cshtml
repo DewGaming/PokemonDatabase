@@ -12,7 +12,7 @@
     @for(var i = 0; i < eggGroups.Count(); i++)
     {
         <div class="@eggGroups[i].Pokemon.Name">
-            <a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.ToLower() } )">
+            <a href="@Url.Action("Pokemon", "Home", new { name = @Model.AllPokemon[i].Name.ToLower() } )">
                 <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name.Replace('_', ' ')" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, eggGroups[i].PokemonId, ".png")">
             </a>
             <div>
