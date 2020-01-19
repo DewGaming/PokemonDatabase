@@ -36,6 +36,10 @@
 
         <p>
             <button type="submit" class="btn btn-primary" role="button">Add</button>
+            @if(!Model.EvolutionPokemon.IsComplete && User.IsInRole("Owner"))
+            {
+                <a class="btn btn-primary" href="@Url.Action("ReviewPokemon", "Owner", new { pokemonId = @Model.EvolutionPokemonId })">Skip</a>
+            }
         </p>
     }
 

@@ -85,7 +85,14 @@ namespace Pokedex.Controllers
 
             this._dataService.AddEvolution(evolution);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if(this._dataService.GetPokemonById(evolution.EvolutionPokemonId).IsComplete)
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
+            else
+            {
+                return this.RedirectToAction("ReviewPokemon", "Owner", new { pokemonId = evolution.EvolutionPokemonId });
+            }
         }
 
         [HttpGet]
@@ -1350,7 +1357,7 @@ namespace Pokedex.Controllers
 
             if(User.IsInRole("Owner"))
             {
-                return this.RedirectToAction("ReviewPokemon", "Owner", new { pokemonId = evYield.PokemonId });
+                return this.RedirectToAction("Evolution", "Add", new { pokemonId = evYield.PokemonId });
             }
             else
             {
