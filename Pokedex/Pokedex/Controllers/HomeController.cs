@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -29,10 +29,41 @@ namespace Pokedex.Controllers
             this._dataService = new DataService(dataContext);
         }
 
+        private void UpdatePreLGPEGameDetails()
+        {
+            List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.GameId <= 15).ToList();
+            List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
+            List<Game> gameList = this._dataService.GetGames();
+            List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetAllPokemonGameDetails();
+            foreach(var p in pokemonList)
+            {
+                foreach(var g in gameList.Where(x => x.Id >= p.GameId && x.Id <= 15).ToList())
+                {
+                    if(pokemonGameDetails.Where(x => x.PokemonId == p.Id && x.GameId == g.Id).Count() == 0)
+                    {
+                        this._dataService.AddPokemonGameDetail(new PokemonGameDetail() { PokemonId = p.Id, GameId = g.Id });
+                    }
+                }
+
+                if(p.GameId == 1)
+                {
+                    this._dataService.AddPokemonGameDetail(new PokemonGameDetail() { PokemonId = p.Id, GameId = 16 });
+                    foreach(var a in altFormList.Where(x => x.OriginalPokemonId == p.Id).ToList())
+                    {
+                        if(pokemonGameDetails.Where(x => x.PokemonId == a.AltFormPokemonId && x.GameId == 16).Count() == 0)
+                        {
+                            this._dataService.AddPokemonGameDetail(new PokemonGameDetail() { PokemonId = a.AltFormPokemonId, GameId = 16 });
+                        }
+                    }
+                }
+            }
+        }
+
         [AllowAnonymous]
         [Route("")]
         public IActionResult Index()
         {
+            this.UpdatePreLGPEGameDetails();
             return this.View(this._appConfig);
         }
 
