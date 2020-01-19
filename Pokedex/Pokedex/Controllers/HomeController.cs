@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,29 +19,6 @@ namespace Pokedex.Controllers
     [Route("")]
     public class HomeController : Controller
     {
-        private readonly List<string> _commentTypes = new List<string>(){
-            "Bug",
-            "Critique",
-            "Feature",
-            "Other",
-        };
-
-        private readonly List<string> _pageTypes = new List<string>(){
-            "Home Page",
-            "Pokemon List",
-            "Pokemon Page",
-            "Team Randomizer Page",
-            "Type Chart Page",
-            "Typing Evaluator Page",
-            "Egg Group Evaluator Page",
-            "Comment Page",
-            "Search Page",
-            "Shiny Hunt Page (Need to login to see)",
-            "Team Builder Page (Need to login to see)",
-            "New Page",
-            "Other",
-        };
-        
         private readonly DataService _dataService;
 
         private readonly AppConfig _appConfig;
@@ -307,8 +284,8 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                TypeOfComment = _commentTypes,
-                Page = _pageTypes,
+                TypeOfComment = _appConfig.CommentCategories,
+                Page = _appConfig.PageCategories,
             };
             return this.View(model);
         }
@@ -322,8 +299,8 @@ namespace Pokedex.Controllers
             {
                 CommentViewModel model = new CommentViewModel()
                 {
-                    TypeOfComment = _commentTypes,
-                    Page = _pageTypes,
+                    TypeOfComment = _appConfig.CommentCategories,
+                    Page = _appConfig.PageCategories,
                 };
                 return this.View(model);
             }

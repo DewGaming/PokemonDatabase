@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pokedex
 {
     public class AppConfig
@@ -29,5 +31,9 @@ namespace Pokedex
         public string EmailAddress { get; set; }
 
         public string EmailAddressPassword { get; set; }
+
+        public List<string> CommentCategories { get; set; }
+
+        public List<string> PageCategories { get; set; }
     }
 }
