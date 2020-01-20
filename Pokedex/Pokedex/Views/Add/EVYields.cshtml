@@ -4,6 +4,23 @@
     Layout = "_layout";
 }
 
+@section styles
+{
+    <style>
+        .slider {
+            padding: 0;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/editEVYields.js"></script>
+    <script>
+        $(setupLabels(0, 0, 0, 0, 0, 0));
+    </script>
+}
+
 <h2>Add EV Yeild</h2>
 
 <div class="form-horizontal">
@@ -17,38 +34,38 @@
         @Html.HiddenFor(x => x.PokemonId)
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Health, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Health, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            <label class="col-md-2" for="Health">Health: <span id="healthVal"></span></label>
+            <input class="healthSlider slider col-md-7" data-val-required="The Health field is required." id="Health" name="Health" type="range" min="0" max="3" value="0">
             @Html.ValidationMessageFor(x => x.Health)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Attack, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Attack, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            <label class="col-md-2" for="Attack">Attack: <span id="attackVal"></span></label>
+            <input class="attackSlider slider slider col-md-7" data-val-required="The Attack field is required." id="Attack" name="Attack" type="range" min="0" max="3" value="0">
             @Html.ValidationMessageFor(x => x.Attack)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Defense, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Defense, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            <label class="col-md-2" for="Defense">Defense: <span id="defenseVal"></span></label>
+            <input class="defenseSlider slider col-md-7" data-val-required="The Defense field is required." id="Defense" name="Defense" type="range" min="0" max="3" value="0">
             @Html.ValidationMessageFor(x => x.Defense)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.SpecialAttack, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.SpecialAttack, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            <label class="col-md-2" for="SpecialAttack">Special Attack: <span id="specialAttackVal"></span></label>
+            <input class="specialAttackSlider slider col-md-7" data-val-required="The Special Attack field is required." id="SpecialAttack" name="SpecialAttack" type="range" min="0" max="3" value="0">
             @Html.ValidationMessageFor(x => x.SpecialAttack)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.SpecialDefense, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.SpecialDefense, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            <label class="col-md-2" for="SpecialDefense">Special Defense: <span id="specialDefenseVal"></span></label>
+            <input class="specialDefenseSlider slider col-md-7" data-val-required="The Special Defense field is required." id="SpecialDefense" name="SpecialDefense" type="range" min="0" max="3" value="0">
             @Html.ValidationMessageFor(x => x.SpecialDefense)
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Speed, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Speed, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            <label class="col-md-2" for="Speed">Speed: <span id="speedVal"></span></label>
+            <input class="speedSlider slider col-md-7" data-val-required="The Speed field is required." id="Speed" name="Speed" type="range" min="0" max="3" value="0">
             @Html.ValidationMessageFor(x => x.Speed)
         </div>
 
