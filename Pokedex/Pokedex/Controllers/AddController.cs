@@ -25,10 +25,6 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig _appConfig;
 
-        private static bool _cameFromAdminPokemon = false;
-
-        private static bool _cameFromAdminAltForms = false;
-
         public AddController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             // Instantiate an instance of the data service.
@@ -1021,9 +1017,6 @@ namespace Pokedex.Controllers
         [Route("add_typing/{pokemonId:int}")]
         public IActionResult Typing(int pokemonId)
         {
-            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
-            _cameFromAdminAltForms = Request.Headers["Referer"].ToString().Contains("admin/edit_alternate_forms");
-
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 AllTypes = this._dataService.GetTypes(),
@@ -1051,23 +1044,13 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonTyping(typing);
 
-            if(_cameFromAdminPokemon || _cameFromAdminAltForms)
+            if(this._dataService.GetPokemonWithAbilities(typing.PokemonId) == null)
             {
-                if (_cameFromAdminPokemon)
-                {
-                    _cameFromAdminPokemon = false;
-                    return this.RedirectToAction("Pokemon", "Admin");
-                }
-                else
-                {
-                    _cameFromAdminAltForms = false;
-                    PokemonFormDetail pokemon = this._dataService.GetPokemonFormDetailByAltFormId(typing.PokemonId);
-                    return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.OriginalPokemonId });
-                }
+                return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
             }
             else
             {
-                return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
+                return this.RedirectToAction("Pokemon", "Admin");
             }
         }
 
@@ -1075,9 +1058,6 @@ namespace Pokedex.Controllers
         [Route("add_abilities/{pokemonId:int}")]
         public IActionResult Abilities(int pokemonId)
         {
-            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
-            _cameFromAdminAltForms = Request.Headers["Referer"].ToString().Contains("admin/edit_alternate_forms");
-
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
                 AllAbilities = this._dataService.GetAbilities(),
@@ -1105,27 +1085,17 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonAbilities(abilities);
 
-            if(_cameFromAdminPokemon || _cameFromAdminAltForms)
+            if(this._dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null)
             {
-                if (_cameFromAdminPokemon)
-                {
-                    _cameFromAdminPokemon = false;
-                    return this.RedirectToAction("Pokemon", "Admin");
-                }
-                else
-                {
-                    _cameFromAdminAltForms = false;
-                    PokemonFormDetail pokemon = this._dataService.GetPokemonFormDetailByAltFormId(abilities.PokemonId);
-                    return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.OriginalPokemonId });
-                }
+                return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
             }
-            else if (this._dataService.CheckIfAltForm(abilities.PokemonId))
+            else if (this._dataService.CheckIfAltForm(abilities.PokemonId) && this._dataService.GetPokemonBaseStats(abilities.PokemonId) == null)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
             }
             else
             {
-                return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
+                return this.RedirectToAction("Pokemon", "Admin");
             }
         }
 
@@ -1133,8 +1103,6 @@ namespace Pokedex.Controllers
         [Route("add_special_event_ability/{pokemonId:int}")]
         public IActionResult SpecialEventAbility(int pokemonId)
         {
-            _cameFromAdminAltForms = Request.Headers["Referer"].ToString().Contains("admin/edit_alternate_forms");
-
             SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
             {
                 AllAbilities = this._dataService.GetAbilities(),
@@ -1166,24 +1134,13 @@ namespace Pokedex.Controllers
 
             this._dataService.UpdatePokemonAbilityDetail(pokemonAbilities);
 
-            if (_cameFromAdminAltForms)
-            {
-                _cameFromAdminAltForms = false;
-                PokemonFormDetail pokemon = this._dataService.GetPokemonFormDetailByAltFormId(ability.PokemonId);
-                return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemon.OriginalPokemonId });
-            }
-            else
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
+            return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
         [Route("add_egg_groups/{pokemonId:int}")]
         public IActionResult EggGroups(int pokemonId)
         {
-            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
-
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
                 AllEggGroups = this._dataService.GetEggGroups(),
@@ -1211,14 +1168,13 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonEggGroups(eggGroups);
 
-            if(_cameFromAdminPokemon)
+            if (this._dataService.GetPokemonBaseStats(eggGroups.PokemonId) == null)
             {
-                _cameFromAdminPokemon = false;
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
             }
             else
             {
-                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
+                return this.RedirectToAction("Pokemon", "Admin");
             }
         }
 
@@ -1226,8 +1182,6 @@ namespace Pokedex.Controllers
         [Route("add_base_stats/{pokemonId:int}")]
         public IActionResult BaseStats(int pokemonId)
         {
-            _cameFromAdminPokemon = Request.Headers["Referer"].ToString().Contains("admin/pokemon");
-
             BaseStat model = new BaseStat()
             {
                 PokemonId = pokemonId,
@@ -1253,7 +1207,14 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemonBaseStat(baseStat);
 
-            return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
+            if (this._dataService.GetPokemonEVYields(baseStat.PokemonId) == null)
+            {
+                return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
+            }
+            else
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
         }
 
         [HttpGet]
