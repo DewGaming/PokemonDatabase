@@ -33,12 +33,6 @@
           <li class="nav-item dropdown">
             <a class="nav-link" href="@Url.Action("Comment", "Home")">Leave Comment</a>
           </li>
-          @if(User.IsInRole("Owner"))
-          {
-            <li class="nav-item dropdown">
-              <a href="@Url.Action("UpdateGameDetails", "Home")" class="nav-link">Update Game Details</a>
-            </li>
-          }
         </ul>
         @await Html.PartialAsync("_SearchBarPartial")
       </div>
