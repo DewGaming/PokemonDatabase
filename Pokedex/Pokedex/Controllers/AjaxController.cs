@@ -1560,7 +1560,7 @@ namespace Pokedex.Controllers
                             pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
                             pokemonList.Add(pokemon);
                         }
-                        else if (!(genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) && !(genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
+                        else if (!(p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0) && !(genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) && !(genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
                         {
                             pokemonList.Add(p.Pokemon);
                         }
