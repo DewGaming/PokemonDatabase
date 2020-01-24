@@ -9,6 +9,8 @@ namespace Pokedex.Models
 
         public List<Pokemon> AllPokemon { get; set; }
 
+        public List<Pokemon> AllOriginalPokemon { get; set; }
+
         public AppConfig AppConfig { get; set; }
 
         public Pokemon SearchedPokemon { get; set; }

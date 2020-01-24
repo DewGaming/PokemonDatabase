@@ -1576,6 +1576,7 @@ namespace Pokedex.Controllers
                 EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){
                     AllPokemonWithEggGroups = eggGroupList,
                     AllPokemon = pokemonList,
+                    AllOriginalPokemon = eggGroupList.Select(x => x.Pokemon).ToList(),
                     AppConfig = _appConfig,
                     SearchedPokemon = this._dataService.GetPokemonById(pokemonId),
                 };

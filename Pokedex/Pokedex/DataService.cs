@@ -442,14 +442,6 @@ namespace Pokedex
             eggGroupDetails = eggGroupDetails.Where(x => !unbreedablePokemon.Any(y => y.Id == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => x.Pokemon.IsComplete).ToList();
 
-            foreach(var e in eggGroupDetails)
-            {
-                if(this.CheckIfAltForm(e.PokemonId))
-                {
-                    e.Pokemon.Name = GetAltFormWithFormName(e.PokemonId).Name;
-                }
-            }
-
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
 
             return eggGroupDetails;
@@ -1002,16 +994,16 @@ namespace Pokedex
                 .Include(x => x.SecondaryEggGroup)
                 .ToList();
 
-            if (secondaryEggGroupId != null)
+            List<PokemonEggGroupDetail> finalPokemonList = new List<PokemonEggGroupDetail>();
+
+            finalPokemonList.AddRange(pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList());
+
+            if(secondaryEggGroupId != null)
             {
-                pokemonList = pokemonList.Where(x => (x.PrimaryEggGroupId == primaryEggGroupId && x.SecondaryEggGroupId == secondaryEggGroupId) || (x.PrimaryEggGroupId == secondaryEggGroupId && x.SecondaryEggGroupId == primaryEggGroupId)).ToList();
-            }
-            else
-            {
-                pokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
+                finalPokemonList.AddRange(pokemonList.Where(x => x.PrimaryEggGroupId == secondaryEggGroupId || x.SecondaryEggGroupId == secondaryEggGroupId).ToList());
             }
 
-            return pokemonList;
+            return finalPokemonList;
         }
 
         public List<Pokemon> GetSurroundingPokemon(int pokedexNumber)

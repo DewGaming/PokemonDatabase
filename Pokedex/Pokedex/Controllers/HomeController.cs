@@ -141,9 +141,18 @@ namespace Pokedex.Controllers
             List<PokemonEggGroupDetail> eggGroupDetails = this._dataService.GetAllBreedablePokemon();
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){
                 AllPokemonWithEggGroups = eggGroupDetails,
-                AllPokemon = eggGroupDetails.Select(x => x.Pokemon).ToList(),
                 AppConfig = _appConfig,
             };
+
+            foreach(var e in eggGroupDetails)
+            {
+                if(this._dataService.CheckIfAltForm(e.PokemonId))
+                {
+                    e.Pokemon.Name = this._dataService.GetAltFormWithFormName(e.PokemonId).Name;
+                }
+            }
+
+            model.AllPokemon = eggGroupDetails.Select(x => x.Pokemon).ToList();
 
             return View(model);
         }
