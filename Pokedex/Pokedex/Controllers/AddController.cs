@@ -139,10 +139,26 @@ namespace Pokedex.Controllers
         [Route("add_form_item")]
         public IActionResult FormItem()
         {
-            FormItemViewModel model = new FormItemViewModel()
+            FormItemViewModel model = new FormItemViewModel();
+            List<Pokemon> altForms = this._dataService.GetPokemonFormDetailsByFormName("Mega").Select(x => x.AltFormPokemon).ToList();
+            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Mega X").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Mega Y").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Primal").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Origin").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Ultra").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Crowned").Select(x => x.AltFormPokemon).ToList());
+
+            foreach(var p in this._dataService.GetFormItems().Select(x => x.Pokemon))
             {
-                AllPokemon = this._dataService.GetAllPokemonOnlyForms(),
-            };
+                altForms.Remove(altForms.Find(x => x.PokedexNumber == p.PokedexNumber));
+            }
+
+            foreach(var p in altForms)
+            {
+                p.Name += " (" + this._dataService.GetPokemonFormName(p.Id) + ")";
+            }
+
+            model.AllPokemon = altForms;
 
             return this.View(model);
         }

@@ -723,7 +723,6 @@ namespace Pokedex
         public List<Pokemon> GetAllPokemonOnlyForms()
         {
             List<Pokemon> pokemonList = this._dataContext.Pokemon
-                .Where(x => x.IsComplete)
                 .OrderBy(x => x.PokedexNumber)
                 .ToList();
 
