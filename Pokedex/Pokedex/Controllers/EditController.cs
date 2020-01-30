@@ -815,7 +815,6 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
-                model.Pokemon.Name = this._dataService.GetPokemonFormName(model.Pokemon.Name);
 
                 return this.View(model);
             }
