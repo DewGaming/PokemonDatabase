@@ -157,6 +157,14 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [Route("game_availability")]
+        public IActionResult GameAvailability()
+        {
+            List<Game> model = this._dataService.GetGames();
+
+            return this.View(model);
+        }
+
         [AllowAnonymous]
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)

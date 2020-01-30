@@ -223,14 +223,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("available_pokemon")]
-        public IActionResult AvailablePokemon()
-        {
-            List<Game> model = this._dataService.GetGames();
-
-            return this.View(model);
-        }
-
         [Route("nature")]
         public IActionResult Natures()
         {
