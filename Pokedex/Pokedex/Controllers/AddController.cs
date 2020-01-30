@@ -1021,6 +1021,7 @@ namespace Pokedex.Controllers
             {
                 AllTypes = this._dataService.GetTypes(),
                 PokemonId = pokemonId,
+                Pokemon = this._dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1037,6 +1038,7 @@ namespace Pokedex.Controllers
                 {
                     AllTypes = this._dataService.GetTypes(),
                     PokemonId = typing.PokemonId,
+                    Pokemon = this._dataService.GetPokemonById(typing.PokemonId),
                 };
 
                 return this.View(model);
@@ -1062,6 +1064,7 @@ namespace Pokedex.Controllers
             {
                 AllAbilities = this._dataService.GetAbilities(),
                 PokemonId = pokemonId,
+                Pokemon = this._dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1078,6 +1081,7 @@ namespace Pokedex.Controllers
                 {
                     AllAbilities = this._dataService.GetAbilities(),
                     PokemonId = abilities.PokemonId,
+                    Pokemon = this._dataService.GetPokemonById(abilities.PokemonId),
                 };
 
                 return this.View(model);
@@ -1145,6 +1149,7 @@ namespace Pokedex.Controllers
             {
                 AllEggGroups = this._dataService.GetEggGroups(),
                 PokemonId = pokemonId,
+                Pokemon = this._dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1161,6 +1166,7 @@ namespace Pokedex.Controllers
                 {
                     AllEggGroups = this._dataService.GetEggGroups(),
                     PokemonId = eggGroups.PokemonId,
+                    Pokemon = this._dataService.GetPokemonById(eggGroups.PokemonId),
                 };
 
                 return this.View(model);
@@ -1185,6 +1191,7 @@ namespace Pokedex.Controllers
             BaseStat model = new BaseStat()
             {
                 PokemonId = pokemonId,
+                Pokemon = this._dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1200,6 +1207,7 @@ namespace Pokedex.Controllers
                 BaseStat model = new BaseStat()
                 {
                     PokemonId = baseStat.PokemonId,
+                    Pokemon = this._dataService.GetPokemonById(baseStat.PokemonId),
                 };
 
                 return this.View(model);
@@ -1224,6 +1232,7 @@ namespace Pokedex.Controllers
             EVYield model = new EVYield()
             {
                 PokemonId = pokemonId,
+                Pokemon = this._dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1239,6 +1248,7 @@ namespace Pokedex.Controllers
                 EVYield model = new EVYield()
                 {
                     PokemonId = evYield.PokemonId,
+                    Pokemon = this._dataService.GetPokemonById(evYield.PokemonId),
                 };
 
                 return this.View(model);

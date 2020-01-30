@@ -643,6 +643,7 @@ namespace Pokedex.Controllers
                 Id = typeDetail.Id,
                 AllTypes = this._dataService.GetTypes(),
                 PokemonId = typeDetail.PokemonId,
+                Pokemon = typeDetail.Pokemon,
                 PrimaryTypeId = typeDetail.PrimaryTypeId,
                 SecondaryTypeId = typeDetail.SecondaryTypeId
             };
@@ -663,6 +664,7 @@ namespace Pokedex.Controllers
                     Id = typeDetail.Id,
                     AllTypes = this._dataService.GetTypes(),
                     PokemonId = typeDetail.PokemonId,
+                    Pokemon = typeDetail.Pokemon,
                     PrimaryTypeId = typeDetail.PrimaryTypeId,
                     SecondaryTypeId = typeDetail.SecondaryTypeId
                 };
@@ -690,6 +692,7 @@ namespace Pokedex.Controllers
                 Id = abilityDetail.Id,
                 AllAbilities = this._dataService.GetAbilities(),
                 PokemonId = abilityDetail.PokemonId,
+                Pokemon = abilityDetail.Pokemon,
                 PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
                 SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
                 HiddenAbilityId = abilityDetail.HiddenAbilityId
@@ -711,6 +714,7 @@ namespace Pokedex.Controllers
                     Id = abilityDetail.Id,
                     AllAbilities = this._dataService.GetAbilities(),
                     PokemonId = abilityDetail.PokemonId,
+                    Pokemon = abilityDetail.Pokemon,
                     PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
                     SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
                     HiddenAbilityId = abilityDetail.HiddenAbilityId
@@ -734,6 +738,7 @@ namespace Pokedex.Controllers
                 Id = eggGroupDetail.Id,
                 AllEggGroups = this._dataService.GetEggGroups(),
                 PokemonId = eggGroupDetail.PokemonId,
+                Pokemon = eggGroupDetail.Pokemon,
                 PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
                 SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId
             };
@@ -754,6 +759,7 @@ namespace Pokedex.Controllers
                     Id = eggGroupDetail.Id,
                     AllEggGroups = this._dataService.GetEggGroups(),
                     PokemonId = eggGroupDetail.PokemonId,
+                    Pokemon = eggGroupDetail.Pokemon,
                     PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
                     SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId
                 };
@@ -809,6 +815,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 EVYield model = this._dataService.GetPokemonEVYields(evYield.PokemonId);
+                model.Pokemon.Name = this._dataService.GetPokemonFormName(model.Pokemon.Name);
 
                 return this.View(model);
             }
