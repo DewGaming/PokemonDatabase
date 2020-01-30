@@ -14,6 +14,14 @@
 <p><b>Please Note:</b> Information used for the Pokemon are updated to be in line with the most current generation of Pokemon.</p>
 <p>Want to do more then just view Pokemon stats?  Explore other options!</p>
 <div class="siteFeatures">
+    <div class="feature dayCareEvaluator">
+        <a href="@Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
+        <img class="modalPreview" data-modalUrl="@Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokemon can be placed in a day care to produce a Pokemon Egg!" src="@(@Model.WebUrl + @Model.HomePageImageUrl + "thumbnail/dayCareEvaluator.png")">
+    </div>
+    <div class="feature gameAvailability">
+        <a href="@Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
+        <img class="modalPreview" data-modalUrl="@Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different pokemon can appear in each game!  Especially useful starting with Sword and Shield!" src="@(@Model.WebUrl + @Model.HomePageImageUrl + "thumbnail/gameAvailability.png")">
+    </div>
     <div class="feature teamRandomizerFeature">
         <a href="@Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
         <img class="modalPreview" data-modalUrl="@Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokemon team!" src="@(@Model.WebUrl + @Model.HomePageImageUrl + "thumbnail/teamRandomizer.png")">
@@ -21,10 +29,6 @@
     <div class="feature typeEvaluator">
         <a href="@Url.Action("TypingEvaluator", "Home")"><p>Lookup Type Combinations!</p></a>
         <img class="modalPreview" data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokemon have a specific typing and what that type chart looks like!" src="@(@Model.WebUrl + @Model.HomePageImageUrl + "thumbnail/typingEvaluator.png")">
-    </div>
-    <div class="feature eggGroupEvaluator">
-        <a href="@Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokemon can be placed in a day care to produce a Pokemon Egg!" src="@(@Model.WebUrl + @Model.HomePageImageUrl + "thumbnail/dayCareEvaluator.png")">
     </div>
 </div>
 @if(!User.Identity.IsAuthenticated)
