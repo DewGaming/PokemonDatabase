@@ -26,19 +26,21 @@
                 <td>
                     @item.Name
                 </td>
-                <td>@if(item.OnlyInThisGeneration)
+                <td>
+                    @if(item.OnlyInThisGeneration)
                     {
                         @("Only In ")
                     }
                     @item.Generation.Region
                 </td>
-                @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0 && item.PokemonId != null)
+                @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
                 {
-                    <td>@Model.AllPokemon.Find(x => x.Id == item.PokemonId).Name</td>
-                }
-                else
-                {
-                    <td></td>
+                    <td>
+                        @if(item.PokemonId != null)
+                        {
+                            @Model.AllPokemon.Find(x => x.Id == item.PokemonId).Name
+                        }
+                    </td>
                 }
                 <td>
                     <a href="@(Url.Action("BattleItem", "Edit", new { id = item.Id }))">Edit</a>
