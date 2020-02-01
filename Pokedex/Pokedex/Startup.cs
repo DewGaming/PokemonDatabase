@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
@@ -72,7 +72,6 @@ namespace Pokedex
             }
             else
             {
-                // TODO: Add error view!
                 app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
