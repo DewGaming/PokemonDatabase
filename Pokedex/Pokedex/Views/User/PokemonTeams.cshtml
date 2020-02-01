@@ -79,7 +79,7 @@ Ability: @p.Ability.Name
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
                                                         <span class="adminMenuTitle">View</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(' ', '_').ToLower() }))" target="_blank">View Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokemon</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Update</span>
                                                         <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokemon</a></li>

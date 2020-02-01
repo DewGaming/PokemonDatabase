@@ -56,7 +56,7 @@
                             }
                             @if(@item.PokemonName != null)
                             {
-                                @(" (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
+                                @(" (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
                             }
 
                             @if(item.Commentor != null)

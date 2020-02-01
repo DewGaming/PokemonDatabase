@@ -45,10 +45,10 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(' ', '_').ToLower() })">
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                             <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name" src="@Url.Content(@Model.PokemonList.First().AppConfig.WebUrl + @Model.PokemonList.First().AppConfig.SpriteImageUrl + @Model.PokemonList.First().SurroundingPokemon[0].Id + ".png")" />
                         </a>
                     </td>
@@ -59,12 +59,12 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                             <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name" src="@Url.Content(@Model.PokemonList.First().AppConfig.WebUrl + @Model.PokemonList.First().AppConfig.SpriteImageUrl + @Model.PokemonList.First().SurroundingPokemon[1].Id + ".png")" />
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
+                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
                     </td>
                 </tr>
             </table>
@@ -496,17 +496,17 @@
                                     <th>
                                         @if(@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                         {
-                                            <a class="evolutionImage" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">
+                                            <a class="evolutionImage" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                 <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + @item.AppConfig.SpriteImageUrl + @item.PreEvolution.PreevolutionPokemon.Id + ".png")" />
                                             </a>
-                                            <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                            <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
                                         }
                                         else
                                         {
-                                            <a class="evolutionImage" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower() })">
+                                            <a class="evolutionImage" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                 <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + @item.AppConfig.SpriteImageUrl + @item.PreEvolution.PreevolutionPokemon.Id + ".png")" />
                                             </a>
-                                            <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                            <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
                                         }
                                     </th>
                                     <td>
@@ -537,17 +537,17 @@
                                         <th>
                                             @if(@evolution.EvolutionPokemon.Name.Contains(" ("))
                                             {
-                                                <a class="evolutionImage"  href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">
+                                                <a class="evolutionImage"  href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + @item.AppConfig.SpriteImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
                                                 </a>
-                                                <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                                <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
                                             }
                                             else
                                             {
-                                                <a class="evolutionImage"  href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower() })">
+                                                <a class="evolutionImage"  href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(@item.AppConfig.WebUrl + @item.AppConfig.SpriteImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
                                                 </a>
-                                                <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                                <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
                                             }
                                         </th>
                                         <td>
