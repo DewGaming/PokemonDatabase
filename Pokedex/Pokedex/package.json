@@ -13,7 +13,7 @@
     "remove-pokedex-data-access-folder": "rimraf ../Pokedex.DataAccess/bin && rimraf ../Pokedex.DataAccess/obj",
     "clean-build-folders": "rimraf .dist && npm run remove-pokedex-build && npm run remove-pokedex-data-access-folder",
     "build-app": "dotnet publish --configuration Release",
-    "copy-to-dist": "npx kpy bin/Release/netcoreapp2.2/publish/ ** !package.json !package-lock.json .dist",
+    "copy-to-dist": "npx kpy bin/Release/netcoreapp3.0/publish/ ** !package.json !package-lock.json .dist",
     "minify-main-css": "npx uglifycss .dist/wwwroot/css/main.css --output .dist/wwwroot/css/main.css",
     "minify-pageLookup-css": "npx uglifycss .dist/wwwroot/css/pageLookup.css --output .dist/wwwroot/css/pageLookup.css",
     "minify-pokemonPage-css": "npx uglifycss .dist/wwwroot/css/pokemonPage.css --output .dist/wwwroot/css/pokemonPage.css",
