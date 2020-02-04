@@ -10,6 +10,8 @@ namespace Pokedex
 
         public string WebUrl { get; set; }
 
+        public string FTPUrl { get; set; }
+
         public string PokemonImageUrl { get; set; }
 
         public string SpriteImageUrl { get; set; }

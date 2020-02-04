@@ -476,7 +476,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.PokemonImageFTPUrl + id.ToString() + ".png");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -584,7 +584,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.SpriteImageFTPUrl + id.ToString() + ".png");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.SpriteImageFTPUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -615,7 +615,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            request = (FtpWebRequest)WebRequest.Create(_appConfig.FaviconImageFtpUrl + id.ToString() + ".png");
+            request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + id.ToString() + ".png");
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
