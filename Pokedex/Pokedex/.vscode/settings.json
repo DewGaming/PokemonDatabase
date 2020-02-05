@@ -1,8 +1,0 @@
-{
-    // Excludes the bin and obj folders and the minified files from the Explorer.
-    "files.exclude": {        
-        "**/bin/": true,
-        "**/obj/": true,
-        "**/node_modules/": true
-    }
-}
