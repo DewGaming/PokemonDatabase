@@ -24,12 +24,6 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="@Url.Action("PokemonTeams", "User")">Pokemon Teams</a>
                 <a class="dropdown-item" href="@Url.Action("ShinyHuntingCounter", "User")">Shiny Hunting Counter</a>
-                <div class="dropdown-divider"></div>
-                <span class="accountOptionHeader">Account Options</span>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item messages" href="@Url.Action("ViewMessages", "User")">View Messages</a>
-                <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
-                <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
                 @if(User.IsInRole("Owner"))
                 {
                     <div class="dropdown-divider"></div>
@@ -39,6 +33,12 @@
                     <a class="dropdown-item" href="@Url.Action("Comments", "Owner")">Comments</a>
                     <a class="dropdown-item" href="@Url.Action("ReviewedPokemon", "Owner")">Reviewed Pokemon</a>
                 }
+                <div class="dropdown-divider"></div>
+                <span class="accountOptionHeader">Account Options</span>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item messages" href="@Url.Action("ViewMessages", "User")">View Messages</a>
+                <a class="dropdown-item" href="@Url.Action("EditPassword", "User")">Change Password</a>
+                <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a>
             </div>
             @if(User.IsInRole("Admin") || User.IsInRole("Owner"))
             {
