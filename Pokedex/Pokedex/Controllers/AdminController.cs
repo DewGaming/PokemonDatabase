@@ -28,8 +28,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutFormsWithIncomplete();
-            List<int> model = pokemonList.Select(x => x.Game.Generation.Id).Distinct().OrderBy(x => x).ToList();
+            List<int> model = this._dataService.GetGenerationsFromPokemonWithIncomplete();
 
             return this.View(model);
         }
@@ -247,9 +246,10 @@ namespace Pokedex.Controllers
         public IActionResult BattleItems()
         {
             List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
+            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            foreach(var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+                p.Name = this._dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
             BattleItemViewModel model = new BattleItemViewModel()

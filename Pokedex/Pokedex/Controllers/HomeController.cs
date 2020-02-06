@@ -100,8 +100,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemonWithoutForms();
-            List<int> model = pokemonList.Select(x => x.Game.Generation.Id).Distinct().OrderBy(x => x).ToList();
+            List<int> model = this._dataService.GetGenerationsFromPokemon();
 
             return this.View(model);
         }
@@ -144,12 +143,11 @@ namespace Pokedex.Controllers
                 AppConfig = _appConfig,
             };
 
-            foreach(var e in eggGroupDetails)
+            List<Pokemon> altForms = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+
+            foreach(var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.Id)))
             {
-                if(this._dataService.CheckIfAltForm(e.PokemonId))
-                {
-                    e.Pokemon.Name = this._dataService.GetAltFormWithFormName(e.PokemonId).Name;
-                }
+                e.Pokemon.Name = this._dataService.GetAltFormWithFormName(e.PokemonId).Name;
             }
 
             model.AllPokemon = eggGroupDetails.Select(x => x.Pokemon).ToList();
@@ -169,71 +167,32 @@ namespace Pokedex.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
+            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
             name = this._dataService.FormatPokemonName(name);
 
             Pokemon pokemon = this._dataService.GetPokemon(name);
             if(pokemon != null && pokemon.IsComplete)
             {
-                Form form;
-                BaseStat baseStat = this._dataService.GetBaseStat(pokemon.Id);
-                EVYield evYield = this._dataService.GetEVYield(pokemon.Id);
-                List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
-                PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
-                PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
-                PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
-                List<Pokemon> surroundingPokemon = this._dataService.GetSurroundingPokemon(pokemon.Id);
-
                 List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
-                pokemonList.Add(new PokemonViewModel()
-                {
-                    Pokemon = pokemon,
-                    BaseStats = baseStat,
-                    EVYields = evYield,
-                    PrimaryType = pokemonTypes.PrimaryType,
-                    SecondaryType = pokemonTypes.SecondaryType,
-                    PrimaryAbility = pokemonAbilities.PrimaryAbility,
-                    SecondaryAbility = pokemonAbilities.SecondaryAbility,
-                    HiddenAbility = pokemonAbilities.HiddenAbility,
-                    SpecialEventAbility = pokemonAbilities.SpecialEventAbility,
-                    PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
-                    SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
-                    PreEvolution = this._dataService.GetPreEvolution(pokemon.Id),
-                    Evolutions = this._dataService.GetPokemonEvolutions(pokemon.Id),
-                    Effectiveness = this._dataService.GetTypeChartPokemon(pokemon.Id),
-                    SurroundingPokemon = surroundingPokemon,
-                    AppConfig = this._appConfig,
-                });
+                PokemonViewModel pokemonDetails = this._dataService.GetPokemonDetails(pokemon, null, this._appConfig);
+                pokemonDetails.SurroundingPokemon = this._dataService.GetSurroundingPokemon(pokemon.Id);
 
-                foreach (var p in altForms)
+                pokemonList.Add(pokemonDetails);
+                
+                List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
+                if(altForms.Count() > 0)
                 {
-                    if (p.IsComplete)
+                    Form form;
+                    foreach (var p in altForms)
                     {
-                        form = this._dataService.GetFormByAltFormId(p.Id);
-                        baseStat = this._dataService.GetBaseStat(p.Id);
-                        evYield = this._dataService.GetEVYield(p.Id);
-                        pokemonTypes = this._dataService.GetPokemonWithTypes(p.Id);
-                        pokemonAbilities = this._dataService.GetPokemonWithAbilities(p.Id);
-                        pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(p.Id);
-                        var pokemonModel = new PokemonViewModel()
+                        if (p.IsComplete)
                         {
-                            Pokemon = p,
-                            Form = form,
-                            BaseStats = baseStat,
-                            EVYields = evYield,
-                            PrimaryType = pokemonTypes.PrimaryType,
-                            SecondaryType = pokemonTypes.SecondaryType,
-                            PrimaryAbility = pokemonAbilities.PrimaryAbility,
-                            SecondaryAbility = pokemonAbilities.SecondaryAbility,
-                            HiddenAbility = pokemonAbilities.HiddenAbility,
-                            PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
-                            SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
-                            PreEvolution = this._dataService.GetPreEvolution(p.Id),
-                            Evolutions = this._dataService.GetPokemonEvolutions(p.Id),
-                            Effectiveness = this._dataService.GetTypeChartPokemon(p.Id),
-                            AppConfig = this._appConfig,
-                        };
+                            form = this._dataService.GetFormByAltFormId(p.Id);
+                            pokemonDetails = this._dataService.GetPokemonDetails(p, form, this._appConfig);
 
-                        pokemonList.Add(pokemonModel);
+                            pokemonList.Add(pokemonDetails);
+                        }
                     }
                 }
 
@@ -244,18 +203,9 @@ namespace Pokedex.Controllers
 
                 if(User.IsInRole("Owner"))
                 {
-                    AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
-                        AllAltForms = this._dataService.GetAllAltForms(),
-                        AllEvolutions = this._dataService.GetEvolutions(),
-                        AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
-                        AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
-                        AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
-                        AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
-                        AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
-                        AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
-                    };
+                    AllAdminPokemonViewModel allAdminPokemon = this._dataService.GetAllAdminPokemonDetails();
                     DropdownViewModel dropdownViewModel = new DropdownViewModel(){
-                        AllPokemon = allPokemon,
+                        AllPokemon = allAdminPokemon,
                         AppConfig = this._appConfig,
                     };
                     AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
@@ -273,6 +223,7 @@ namespace Pokedex.Controllers
                     model.AdminDropdown = adminDropdown;
                 }
 
+                stopWatch.Stop();
                 return this.View(model);
             }
             else

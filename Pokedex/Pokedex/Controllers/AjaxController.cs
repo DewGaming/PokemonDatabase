@@ -49,19 +49,10 @@ namespace Pokedex.Controllers
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
-                    AllAltForms = this._dataService.GetAllAltForms(),
-                    AllEvolutions = this._dataService.GetEvolutions(),
-                    AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
-                    AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
-                    AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
-                    AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
-                    AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
-                    AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypes(),
-                };
+                AllAdminPokemonViewModel allAdminPokemon = this._dataService.GetAllAdminPokemonDetails();
 
                 DropdownViewModel dropdownViewModel = new DropdownViewModel(){
-                    AllPokemon = allPokemon,
+                    AllPokemon = allAdminPokemon,
                     AppConfig = this._appConfig,
                 };
 
@@ -85,19 +76,10 @@ namespace Pokedex.Controllers
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){
-                    AllAltForms = this._dataService.GetAllAltForms(),
-                    AllEvolutions = this._dataService.GetEvolutions(),
-                    AllTypings = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
-                    AllAbilities = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
-                    AllEggGroups = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
-                    AllBaseStats = this._dataService.GetBaseStatsWithIncomplete(),
-                    AllEVYields = this._dataService.GetEVYieldsWithIncomplete(),
-                    AllLegendaryDetails = this._dataService.GetAllPokemonWithLegendaryTypesAndIncomplete(),
-                };
+                AllAdminPokemonViewModel allAdminPokemon = this._dataService.GetAllAdminPokemonDetails();
 
                 DropdownViewModel dropdownViewModel = new DropdownViewModel(){
-                    AllPokemon = allPokemon,
+                    AllPokemon = allAdminPokemon,
                     AppConfig = this._appConfig,
                 };
 
@@ -185,10 +167,14 @@ namespace Pokedex.Controllers
         {
             Game game = this._dataService.GetGame(gameId);
             List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame(gameId);
+            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
             UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel(){
-                PokemonList = this._dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id) && !this._dataService.CheckIfAltForm(x.Id)).ToList(),
+                PokemonList = this._dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList(),
                 Game = game,
             };
+
+            pokemonList.PokemonList = pokemonList.PokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)).ToList();
+
             return pokemonList;
         }
 
@@ -657,7 +643,8 @@ namespace Pokedex.Controllers
                 List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame(gameId);
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete();
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
-                foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
+                List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                foreach(var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     p.Name = p.Name + " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
                 }
@@ -1010,7 +997,8 @@ namespace Pokedex.Controllers
 
                 if (onlyAltForms)
                 {
-                    allPokemon = allPokemon.Where(x => this._dataService.CheckIfAltForm(x.Id)).ToList();
+                    List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                    allPokemon = allPokemon.Where(x => altFormsList.Any(y => y.Id == x.Id)).ToList();
                 }
                 
                 if (!multipleMegas)
@@ -1429,7 +1417,8 @@ namespace Pokedex.Controllers
             {
                 if(selectedGame != 0)
                 {
-                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGame(selectedGame).Where(x => !this._dataService.CheckIfAltForm(x.PokemonId)).ToList();
+                    List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                    List<PokemonGameDetail> availablePokemon = this._dataService.GetPokemonGameDetailsByGame(selectedGame).Where(x => !altFormsList.Any(y => y.Id == x.PokemonId)).ToList();
                     List<Pokemon> allPokemon = this._dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     Generation selectedGen = this._dataService.GetGenerationFromGame(selectedGame);
                     List<Generation> generationList = this._dataService.GetGenerations().Where(x => x.Id <= selectedGen.Id).ToList();
@@ -1503,6 +1492,7 @@ namespace Pokedex.Controllers
             {
                 PokemonEggGroupDetail searchedEggGroupDetails = this._dataService.GetPokemonWithEggGroups(pokemonId);
                 GenderRatio genderRatio = this._dataService.GetGenderRatio(searchedEggGroupDetails.Pokemon.GenderRatioId);
+                List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
                 List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 if(pokemonId == this._dataService.GetPokemon("Manaphy").Id || pokemonId == this._dataService.GetPokemon("Phione").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0 && pokemonId != this._dataService.GetPokemon("Ditto").Id))
@@ -1520,15 +1510,12 @@ namespace Pokedex.Controllers
 
                     foreach(var p in eggGroupList)
                     {
-                        if(this._dataService.CheckIfAltForm(p.PokemonId))
+                        if(altFormsList.Find(x => x.Id == p.PokemonId) != null)
                         {
                             pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
-                            pokemonList.Add(pokemon);
                         }
-                        else
-                        {
-                            pokemonList.Add(p.Pokemon);
-                        }
+                        
+                        pokemonList.Add(p.Pokemon);
                     }
 
                     pokemon = this._dataService.GetPokemonById(pokemonId);
@@ -1555,7 +1542,7 @@ namespace Pokedex.Controllers
 
                     foreach(var p in eggGroupList)
                     {
-                        if(this._dataService.CheckIfAltForm(p.PokemonId))
+                        if(altFormsList.Find(x => x.Id == p.PokemonId) != null)
                         {
                             pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
                             pokemonList.Add(pokemon);

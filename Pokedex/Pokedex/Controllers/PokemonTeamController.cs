@@ -548,10 +548,12 @@ namespace Pokedex.Controllers
                 List<PokemonGameDetail> pokemonGameDetails = this._dataService.GetPokemonGameDetailsByGame((int)pokemonTeam.GameId);
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
+
+            List<Pokemon> altForms = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
             
-            foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)).ToList())
+            foreach(var p in pokemonList.Where(x => altForms.Any(y => y.Id == x.Id)).ToList())
             {
-                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+                p.Name = this._dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
             pokemonList = pokemonList.OrderBy(x => x.Name).ToList();

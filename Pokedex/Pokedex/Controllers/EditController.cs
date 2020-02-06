@@ -77,7 +77,7 @@ namespace Pokedex.Controllers
             Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
             if(this._dataService.CheckIfAltForm(pokemonId))
             {
-                pokemon.Name += " (" + this._dataService.GetFormByAltFormId(pokemonId).Name + ")";
+                pokemon.Name = this._dataService.GetAltFormWithFormName(pokemon.Id).Name;
             }
 
             PokemonGameViewModel model = new PokemonGameViewModel()
@@ -163,9 +163,10 @@ namespace Pokedex.Controllers
         public IActionResult BattleItem(int id)
         {
             List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
+            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            foreach(var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+                p.Name = this._dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
             BattleItem battleItem = this._dataService.GetBattleItem(id);
@@ -188,9 +189,10 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-                foreach(var p in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
+                List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                foreach(var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
-                    p.Name += " (" + this._dataService.GetFormByAltFormId(p.Id).Name + ")";
+                    p.Name = this._dataService.GetAltFormWithFormName(p.Id).Name;
                 }
 
                 BattleItem item = this._dataService.GetBattleItem(battleItem.Id);
@@ -1359,7 +1361,8 @@ namespace Pokedex.Controllers
             };
 
             List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
-            foreach (var pokemon in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
+            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
             }
@@ -1391,7 +1394,8 @@ namespace Pokedex.Controllers
                 };
 
                 List<Pokemon> pokemonList = this._dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                foreach (var pokemon in pokemonList.Where(x => this._dataService.CheckIfAltForm(x.Id)))
+                List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                foreach(var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
                 }
@@ -1410,7 +1414,7 @@ namespace Pokedex.Controllers
         public IActionResult AltForms(int pokemonId)
         {
             Pokemon originalPokemon = this._dataService.GetPokemonById(pokemonId);
-            List<Pokemon> altFormList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Name == originalPokemon.Name && this._dataService.CheckIfAltForm(x.Id)).ToList();
+            List<Pokemon> altFormList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).Where(x => x.Name == originalPokemon.Name).ToList();
             foreach (var pokemon in altFormList)
             {
                 pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
