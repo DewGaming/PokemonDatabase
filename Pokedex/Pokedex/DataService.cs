@@ -1572,7 +1572,7 @@ namespace Pokedex
 
             if(pokemonTeam.SecondPokemonId != null)
             {
-                if(pokemonTeam.SecondPokemon.Pokemon.Game.Generation.Id > latestGeneration.Id)
+                if(pokemonTeam.SecondPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
                 {
                     latestGeneration = pokemonTeam.SecondPokemon.Pokemon.Game.Generation;
                 }
@@ -1580,7 +1580,7 @@ namespace Pokedex
 
             if(pokemonTeam.ThirdPokemonId != null)
             {
-                if(pokemonTeam.ThirdPokemon.Pokemon.Game.Generation.Id > latestGeneration.Id)
+                if(pokemonTeam.ThirdPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
                 {
                     latestGeneration = pokemonTeam.ThirdPokemon.Pokemon.Game.Generation;
                 }
@@ -1588,7 +1588,7 @@ namespace Pokedex
 
             if(pokemonTeam.FourthPokemonId != null)
             {
-                if(pokemonTeam.FourthPokemon.Pokemon.Game.Generation.Id > latestGeneration.Id)
+                if(pokemonTeam.FourthPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
                 {
                     latestGeneration = pokemonTeam.FourthPokemon.Pokemon.Game.Generation;
                 }
@@ -1596,7 +1596,7 @@ namespace Pokedex
 
             if(pokemonTeam.FifthPokemonId != null)
             {
-                if(pokemonTeam.FifthPokemon.Pokemon.Game.Generation.Id > latestGeneration.Id)
+                if(pokemonTeam.FifthPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
                 {
                     latestGeneration = pokemonTeam.FifthPokemon.Pokemon.Game.Generation;
                 }
@@ -1604,7 +1604,7 @@ namespace Pokedex
 
             if(pokemonTeam.SixthPokemonId != null)
             {
-                if(pokemonTeam.SixthPokemon.Pokemon.Game.Generation.Id > latestGeneration.Id)
+                if(pokemonTeam.SixthPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
                 {
                     latestGeneration = pokemonTeam.SixthPokemon.Pokemon.Game.Generation;
                 }
