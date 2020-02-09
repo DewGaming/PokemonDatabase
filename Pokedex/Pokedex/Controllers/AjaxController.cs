@@ -175,6 +175,10 @@ namespace Pokedex.Controllers
 
             List<Pokemon> breedablePokemonList = this._dataService.GetAllBreedablePokemon().Select(x => x.Pokemon).ToList();
             pokemonList.PokemonList = pokemonList.PokemonList.Where(x => breedablePokemonList.Any(y => y.Id == x.Id)).ToList();
+            foreach(var pokemon in pokemonList.PokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            {
+                pokemon.Name = this._dataService.GetAltFormWithFormName(pokemon.Id).Name;
+            }
 
             return pokemonList;
         }
