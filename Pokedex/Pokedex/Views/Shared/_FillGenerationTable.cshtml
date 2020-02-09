@@ -13,7 +13,7 @@
     {
         pokemonImageUrl = Model.AppConfig.WebUrl + Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png";
     }
-    <div class="@p.Pokemon.Name">
+    <div class="shadowed @p.Pokemon.Name">
         <a href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
             <img class="pokemonlistPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
         </a>

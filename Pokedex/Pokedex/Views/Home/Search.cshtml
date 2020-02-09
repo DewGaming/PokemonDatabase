@@ -18,7 +18,7 @@
     <div class="grid-container">
         @foreach(var item in Model.AllPokemon)
         {
-            <div class="@item.Pokemon.Name">
+            <div class="shadowed @item.Pokemon.Name">
                 <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
                     <img class="pokemonListPicture" title="@item.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @item.Pokemon.Id + ".png")"/>
                 </a>

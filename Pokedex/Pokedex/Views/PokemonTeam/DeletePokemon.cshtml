@@ -20,7 +20,7 @@
             @Html.DisplayFor(x => x.Pokemon.Name, new { htmlAttributes = new { @class = "form-control" } })
         </div>
 
-        <div class="pokemonList">
+        <div class="pokemonList shadowed">
             <img class="lightshadowed pokemonTeamPokemon" title="@Model.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl+ @Model.AppConfig.SpriteImageUrl + @Model.Pokemon.Id + ".png")" />
         </div>
 

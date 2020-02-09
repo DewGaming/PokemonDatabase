@@ -15,7 +15,7 @@
         
         @Html.HiddenFor(x => x.Id)
 
-        <div class="pokemonList">
+        <div class="pokemonList shadowed">
             @if(@Model.FirstPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.FirstPokemon.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl+ @Model.AppConfig.SpriteImageUrl + @Model.FirstPokemon.Pokemon.Id + ".png")" />

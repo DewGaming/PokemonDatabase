@@ -3,15 +3,17 @@
     List<Pokedex.DataAccess.Models.PokemonEggGroupDetail> eggGroups = Model.AllPokemonWithEggGroups;
 }
 
-<a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
-    <img class="pokemonlistPicture" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
-</a>
+<div class="shadowed">
+    <a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
+        <img class="pokemonlistPicture" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
+    </a>
+</div>
 
 <h2>Pokemon @Model.SearchedPokemon.Name Can Breed With</h2>
 <div class="grid-container pokemonList">
     @for(var i = 0; i < eggGroups.Count(); i++)
     {
-        <div class="@eggGroups[i].Pokemon.Name">
+        <div class="shadowed @eggGroups[i].Pokemon.Name">
             <a href="@Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
                 <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, eggGroups[i].PokemonId, ".png")">
             </a>

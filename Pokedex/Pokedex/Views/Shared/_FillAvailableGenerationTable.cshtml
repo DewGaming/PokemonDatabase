@@ -2,7 +2,7 @@
 
 @foreach(var p in Model.PokemonNoTypeList)
 {
-    <div class="@p.Name">
+    <div class="shadowed @p.Name">
         @if(p.IsComplete)
         {
             @if(p.Name.IndexOf(" (") > -1)

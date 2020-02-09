@@ -57,7 +57,7 @@
                                         <td>
                                             @foreach(var p in @pt.GrabPokemonTeamDetails)
                                             {
-                                                <div class="pokemonTeamGroup">
+                                                <div class="pokemonTeamGroup shadowed">
                                                     <img class="lightshadowed pokemonTeamPokemon" title="Pokemon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")
 Ability: @p.Ability.Name
 @((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(@Model.AppConfig.WebUrl+ @Model.AppConfig.SpriteImageUrl + @p.Pokemon.Id + ".png")" />
