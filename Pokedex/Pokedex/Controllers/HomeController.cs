@@ -145,7 +145,7 @@ namespace Pokedex.Controllers
 
             List<Pokemon> altForms = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
 
-            foreach(var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.Id)))
+            foreach(var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.PokemonId)))
             {
                 e.Pokemon.Name = this._dataService.GetAltFormWithFormName(e.PokemonId).Name;
             }
