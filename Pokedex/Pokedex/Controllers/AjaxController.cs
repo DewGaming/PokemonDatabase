@@ -173,7 +173,8 @@ namespace Pokedex.Controllers
                 Game = game,
             };
 
-            pokemonList.PokemonList = pokemonList.PokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)).ToList();
+            List<Pokemon> breedablePokemonList = this._dataService.GetAllBreedablePokemon().Select(x => x.Pokemon).ToList();
+            pokemonList.PokemonList = pokemonList.PokemonList.Where(x => breedablePokemonList.Any(y => y.Id == x.Id)).ToList();
 
             return pokemonList;
         }
