@@ -44,6 +44,8 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
+            registerViewModel.Username = registerViewModel.Username.Trim();
+
             User existingUser = this._dataService.GetUserWithUsername(registerViewModel.Username);
             if (existingUser != null)
             {
