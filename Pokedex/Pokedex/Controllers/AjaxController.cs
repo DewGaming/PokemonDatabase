@@ -732,7 +732,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool onePokemonForm, bool randomAbility)
+        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -957,6 +957,35 @@ namespace Pokedex.Controllers
                         }
                     }
 
+                    if (selectedForms.Contains("Gigantamax"))
+                    {  
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Gigantamax").ToList();
+
+                        List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
+
+                        foreach(var p in allPokemon)
+                        {
+                            List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
+                            foreach(var a in altForm)
+                            {
+                                a.AltFormPokemon.Name += " (" + a.Form.Name + ")";
+                            }
+
+                            if(altForm.Count() > 0)
+                            {
+                                filteredFormList.AddRange(altForm);
+                            }
+                        }
+
+                        if (filteredFormList.Count() > 0)
+                        {
+                            foreach(var p in filteredFormList)
+                            {
+                                altForms.Add(p.AltFormPokemon);
+                            }
+                        }
+                    }
+
                     if (selectedForms.Contains("Other"))
                     {
                         List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete();
@@ -1009,6 +1038,31 @@ namespace Pokedex.Controllers
                     List<Pokemon> megaList = new List<Pokemon>();
                     List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
                     foreach(var p in altFormList.Where(x => x.Form.Name.Contains("Mega")).ToList())
+                    {
+                        if(allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
+                        {
+                            megaList.Add(p.AltFormPokemon);
+                        }
+                    }
+
+                    if(megaList.Count > 0)
+                    {
+                        Pokemon mega = megaList[rnd.Next(megaList.Count)];
+                        foreach(var p in megaList.Where(x => x.Id != mega.Id))
+                        {
+                            if (allPokemon.Exists(x => x.Id == p.Id))
+                            {
+                                allPokemon.Remove(allPokemon.Find(x => x.Id == p.Id));
+                            }
+                        }
+                    }
+                }
+                
+                if (!multipleGMax)
+                {
+                    List<Pokemon> megaList = new List<Pokemon>();
+                    List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
+                    foreach(var p in altFormList.Where(x => x.Form.Name == "Gigantamax").ToList())
                     {
                         if(allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
                         {
@@ -1151,6 +1205,7 @@ namespace Pokedex.Controllers
             {
                 "Alola",
                 "Galar",
+                "Gigantamax",
                 "Mega",
                 "Mega X",
                 "Mega Y",
