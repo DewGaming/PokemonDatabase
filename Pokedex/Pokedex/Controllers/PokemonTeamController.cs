@@ -692,8 +692,8 @@ namespace Pokedex.Controllers
                 string formName = pokemonName.Split('-').Last();
                 if(formName == "Gmax")
                 {
-                    pokemonName = pokemonName.Replace("-Gmax", string.Empty);
-                    formName = string.Empty;
+                    pokemonName = pokemonName.Replace("-Gmax", "-Gigantamax");
+                    formName = "Gigantamax";
                 }
 
                 if(pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
