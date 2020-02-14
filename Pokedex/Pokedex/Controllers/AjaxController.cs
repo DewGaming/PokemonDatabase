@@ -489,9 +489,9 @@ namespace Pokedex.Controllers
             List<string> formDetails = new List<string>();
             PokemonFormDetail pokemonFormDetail;
 
-             pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+            pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
 
-            form += pokemonFormDetail.Form.Name.Replace(' ', '-');
+            form += pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax");
             
             FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
             if(formItem != null)
@@ -557,6 +557,9 @@ namespace Pokedex.Controllers
                         {
                             PokemonId = pokemon.Id,
                             AbilityId = ability.Id,
+                            NatureId = this._dataService.GetNatureByName("Serious").Id,
+                            Level = 100,
+                            Happiness = 255,
                         };
 
                         this._dataService.AddPokemonTeamDetail(pokemonTeamDetail);
@@ -714,7 +717,7 @@ namespace Pokedex.Controllers
 
             pokemonFormDetail = this._dataService.GetPokemonFormDetailByAltFormId(pokemonId);
 
-            formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-');
+            formDetails += pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax");
             
             FormItem formItem = this._dataService.GetFormItemByPokemonId(pokemonId);
             if(formItem != null)
@@ -872,7 +875,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Mega"))
                     {  
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Mega" || x.Form.Name == "Mega X" || x.Form.Name == "Mega Y").ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name.Contains("Mega")).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -959,7 +962,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Gigantamax"))
                     {  
-                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name == "Gigantamax").ToList();
+                        List<PokemonFormDetail> pokemonFormList = this._dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name.Contains("Gigantamax")).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
 
@@ -1062,7 +1065,7 @@ namespace Pokedex.Controllers
                 {
                     List<Pokemon> megaList = new List<Pokemon>();
                     List<PokemonFormDetail> altFormList = this._dataService.GetAllAltForms();
-                    foreach(var p in altFormList.Where(x => x.Form.Name == "Gigantamax").ToList())
+                    foreach(var p in altFormList.Where(x => x.Form.Name.Contains("Gigantamax")).ToList())
                     {
                         if(allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
                         {
