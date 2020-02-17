@@ -762,7 +762,7 @@ namespace Pokedex
                 .Include(x => x.AltFormPokemon)
                 .Include(x => x.Form)
                 .ToList()
-                .Find(x => x.AltFormPokemonId == pokemonId && x.AltFormPokemon.IsComplete);
+                .Find(x => x.AltFormPokemonId == pokemonId);
 
             Pokemon pokemon = pokemonForm.AltFormPokemon;
 
