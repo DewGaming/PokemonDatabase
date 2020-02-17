@@ -406,7 +406,7 @@ namespace Pokedex.Controllers
         [Route("edit_pokemon_image/{id:int}")]
         public async Task<IActionResult> PokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
-            if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
                 Pokemon model = this._dataService.GetPokemonById(id);
 
