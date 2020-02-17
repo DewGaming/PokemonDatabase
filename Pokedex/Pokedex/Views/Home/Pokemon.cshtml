@@ -2,7 +2,7 @@
 @model Pokedex.Models.AdminPokemonDropdownViewModel
 @{
     Layout = "_Layout";
-    string style = "";
+    string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     AdminPokemonViewModel adminPokemon = null;
     if(User.IsInRole("Owner"))
@@ -80,9 +80,9 @@
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
-    <div class="page pokemon@(@item.Form == null ? " active" : "")" id="@item.Pokemon.Name.Replace("%", "").Replace(".","").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@item.Form != null ? @item.Form.Name.Replace(" ", "") : "")">
+    <div class="page pokemon@(@item.Form == null ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
-            <img title="@item.Pokemon.Name@(@item.Form != null ? " (" + @item.Form.Name + ")" : "")" src="@Url.Content(@item.AppConfig.WebUrl + @item.AppConfig.PokemonImageUrl + @item.Pokemon.Id + ".png")" />
+            <img title="@item.Pokemon.Name@(@item.Form != null ? " (" + @item.Form.Name + ")" : string.Empty)" src="@Url.Content(@item.AppConfig.WebUrl + @item.AppConfig.PokemonImageUrl + @item.Pokemon.Id + ".png")" />
             @if(Model.PokemonList.Count() > 1)
             {
                 <div class="differentForms">
@@ -91,8 +91,8 @@
                         @foreach(var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                         {
                             string iconLink = Url.Content(button.AppConfig.WebUrl + button.AppConfig.FaviconImageUrl + button.Pokemon.Id + ".png");
-                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", "").Replace("'", "").Replace(".", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@button.Form != null ? @button.Form.Name.Replace(" ", "") : "")', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")')">
-                                <img class="lightshadowed" title="@button.Pokemon.Name@(@button.Form != null ? " (" + @button.Form.Name + ")" : "")" src="@Url.Content(@button.AppConfig.WebUrl + @button.AppConfig.SpriteImageUrl + @button.Pokemon.Id + ".png")" />
+                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")@(@button.Form != null ? " (" + @button.Form.Name.Replace("'", "&apos;") + ")" : string.Empty)')">
+                                <img class="lightshadowed" title="@button.Pokemon.Name@(@button.Form != null ? " (" + @button.Form.Name + ")" : string.Empty)" src="@Url.Content(@button.AppConfig.WebUrl + @button.AppConfig.SpriteImageUrl + @button.Pokemon.Id + ".png")" />
                             </button>
                         }
                     </div>
@@ -283,7 +283,7 @@
                             </tbody>
                         </table>
                     </div>
-                    style = "";
+                    style = string.Empty;
                 }
                 else
                 {
