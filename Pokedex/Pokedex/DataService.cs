@@ -208,7 +208,8 @@ namespace Pokedex
         {
             List<Evolution> evolutions = this.GetEvolutions()
                 .Where(x => x.PreevolutionPokemon.Id == pokemonId && x.PreevolutionPokemon.IsComplete == true && x.EvolutionPokemon.IsComplete == true)
-                .OrderBy(x => x.EvolutionPokemon.Id)
+                .OrderBy(x => x.EvolutionPokemon.PokedexNumber)
+                .ThenBy(x => x.EvolutionPokemon.Id)
                 .ToList();
 
             foreach(var e in evolutions)
