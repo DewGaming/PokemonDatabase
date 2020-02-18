@@ -155,6 +155,7 @@ namespace Pokedex.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [Route("game_availability")]
         public IActionResult GameAvailability()
         {
