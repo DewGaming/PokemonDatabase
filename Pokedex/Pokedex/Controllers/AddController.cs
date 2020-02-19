@@ -718,6 +718,20 @@ namespace Pokedex.Controllers
 
             if(artworkUpload != null)
             {
+                using (var ms = new MemoryStream())
+                {
+                    artworkUpload.CopyTo(ms);
+                    byte[] uploadBytes = ms.ToArray();
+                    using(MagickImage image = new MagickImage(uploadBytes))
+                    {
+                        image.Trim();
+                        MemoryStream strm = new MemoryStream();
+                        image.RePage();
+                        image.Write(strm, MagickFormat.Png);
+                        artworkUpload = new FormFile(strm, 0, strm.Length, artworkUpload.Name, artworkUpload.FileName);
+                    }
+                }
+
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + newPokemon.Id.ToString() + artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.')));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
