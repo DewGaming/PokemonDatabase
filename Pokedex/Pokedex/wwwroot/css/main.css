@@ -443,11 +443,11 @@ label {
   width: 100%
 }
 
-.surroundingPokemon img, .differentForms img {
-  height: 96px;
+.lightshadowed {
+  height: 3.75rem;
+  width: 3.75rem;
   -o-object-fit: contain;
   object-fit: contain;
-  padding: 10px;
 }
 
 .surroundingPokemon a, .evolutionPokemon a, .surroundingPokemon a:hover, .evolutionPokemon a:hover {
@@ -457,10 +457,6 @@ label {
 
 .hide {
   display: none
-}
-
-.lightshadowed {
-  max-height: 4rem;
 }
 
 .pokemonTeamPokemon {
