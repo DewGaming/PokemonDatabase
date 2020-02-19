@@ -5,14 +5,7 @@
 
 @foreach(var p in Model.PokemonList)
 {
-    @if(Model.ShowSprites)
-    {
-        pokemonImageUrl = Model.AppConfig.WebUrl + Model.AppConfig.SpriteImageUrl + @p.PokemonId + ".png";
-    }
-    else
-    {
-        pokemonImageUrl = Model.AppConfig.WebUrl + Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png";
-    }
+    pokemonImageUrl = Model.AppConfig.WebUrl + Model.AppConfig.PokemonImageUrl + @p.PokemonId + ".png";
     <div class="shadowed @p.Pokemon.Name">
         <a href="@Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
             <img class="pokemonlistPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">

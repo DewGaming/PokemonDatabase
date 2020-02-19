@@ -34,7 +34,7 @@
         {
             <div class="differentForms">
                 <h2>Original Form</h2>
-                <img style="margin-left: 0" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @Model.OriginalPokemon.Id + ".png")" />
+                <img style="margin-left: 0" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.OriginalPokemon.Id + ".png")" />
             </div>
         }
     </div>
@@ -332,7 +332,7 @@
                         <tbody class="evolutionPokemon">
                             <tr>
                                 <th>
-                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
+                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
                                     <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name</span>
                                 </th>
                                 <td>
@@ -361,7 +361,7 @@
                             {
                                 <tr>
                                     <th>
-                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.SpriteImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
+                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
                                         <span class="evolutionLink">@evolution.EvolutionPokemon.Name</span>
                                     </th>
                                     <td>

@@ -1,18 +1,4 @@
-var currentGeneration = 0, showSprites = false;
-
-function swapImages() {
-  showSprites = !showSprites;
-  if (showSprites) {
-    $('.imageSwapper').text("Switch To Official Artwork");
-  }
-  else {
-    $('.imageSwapper').text("Switch To Sprites");
-  }
-
-  if (currentGeneration != 0) {
-    lookupGeneration(currentGeneration);
-  }
-}
+var currentGeneration = 0
 
 function lookupPage(pageName) {
   $('.active').each(function () {
@@ -81,7 +67,7 @@ function lookupGeneration(generationId) {
   $('.pokemonList > .grid-container').empty();
   $('button#Generation' + generationId).addClass('active');
 
-  $('.grid-container').load('/get-pokemon-by-generation/' + generationId + '/' + +showSprites, function () {
+  $('.grid-container').load('/get-pokemon-by-generation/' + generationId, function () {
     $.each($('.grid-container .pokemonName'), function (index, item) {
       if ($(item).text().includes('_')) {
         $(item).text($(item).text().replace('_', ' '));

@@ -14,8 +14,6 @@ namespace Pokedex
 
         public string PokemonImageUrl { get; set; }
 
-        public string SpriteImageUrl { get; set; }
-
         public string FaviconImageUrl { get; set; }
 
         public string GeneralImageUrl { get; set; }
@@ -23,8 +21,6 @@ namespace Pokedex
         public string HomePageImageUrl { get; set; }
 
         public string PokemonImageFTPUrl { get; set; }
-
-        public string SpriteImageFTPUrl { get; set; }
 
         public string FaviconImageFtpUrl { get; set; }
 

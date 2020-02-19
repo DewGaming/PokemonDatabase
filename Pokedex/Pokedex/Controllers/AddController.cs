@@ -772,20 +772,6 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.SpriteImageFTPUrl + newPokemon.Id.ToString() + ".png");
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await trimmedUpload.CopyToAsync(requestStream);  
-                }
-
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
-
                 using (var ms = new MemoryStream())
                 {
                     trimmedUpload.CopyTo(ms);
@@ -803,7 +789,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + newPokemon.Id.ToString() + ".png");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + newPokemon.Id.ToString() + ".png");
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -961,20 +947,6 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.SpriteImageFTPUrl + alternatePokemon.Id.ToString() + ".png");
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await trimmedUpload.CopyToAsync(requestStream);  
-                }
-
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
-
                 using (var ms = new MemoryStream())
                 {
                     trimmedUpload.CopyTo(ms);
@@ -992,7 +964,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + alternatePokemon.Id.ToString() + ".png");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + alternatePokemon.Id.ToString() + ".png");
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
