@@ -444,7 +444,7 @@ label {
 }
 
 .lightshadowed {
-  height: 3.75rem;
+  height: 3.5rem;
   width: 3.75rem;
   -o-object-fit: contain;
   object-fit: contain;
