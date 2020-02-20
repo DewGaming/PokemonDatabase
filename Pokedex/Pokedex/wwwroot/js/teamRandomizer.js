@@ -1,4 +1,4 @@
-var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exportString
+var pokemonList, pokemonURLs, abilityList, exportString
     , fillGeneratedTable = function (appConfig) {
         removeEventButtons();
         $('.teamRandomizerTable tbody').remove();
@@ -75,8 +75,6 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         else {
             $(".legendaryBoolCheckbox").show();
         }
-
-        return boxChecked;
     }, checkAltFormChecks = function () {
         var boxChecked = false;
         $('.alternateFormCheckbox input').each(function () {
@@ -98,8 +96,6 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
             $(".altFormBoolCheckbox").show();
             $(".oneAltFormBoolCheckbox").show();
         }
-
-        return boxChecked;
     }, checkMegaCheck = function () {
         var boxChecked = false;
         if ($('#Mega').is(':checked')) {
@@ -115,8 +111,21 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         else {
             $(".multipleMegaBoolCheckbox").show();
         }
+    }, checkGigantamaxCheck = function () {
+        var boxChecked = false;
+        if ($('#Gigantamax').is(':checked')) {
+            boxChecked = true;
+        }
 
-        return boxChecked;
+        if (!boxChecked) {
+            if ($('.multipleGMaxBoolCheckbox').is(':visible')) {
+                $(".multipleGMaxBoolCheckbox").hide();
+                $("#multipleGMaxBool").prop('checked', false);
+            }
+        }
+        else {
+            $(".multipleGMaxBoolCheckbox").show();
+        }
     }, checkUltraBeasts = function () {
         var boxChecked = false;
         if ($('#gen7').is(':checked')) {
@@ -132,8 +141,6 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
         else {
             $(".ultraBeastCheckbox").show();
         }
-
-        return boxChecked;
     }, generatorMenuCheck = function () {
         if ($(window).width() < 768) {
             $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
@@ -336,9 +343,10 @@ var altCheck, legendCheck, megaCheck, pokemonList, pokemonURLs, abilityList, exp
             $('#otherOptions').show();
         }
     }, updateDropdown = function () {
-        altCheck = checkAltFormChecks();
-        legendCheck = checkLegendaryChecks();
-        megaCheck = checkMegaCheck();
+        checkAltFormChecks();
+        checkLegendaryChecks();
+        checkMegaCheck();
+        checkGigantamaxCheck();
         checkUltraBeasts();
         checkOtherOptions();
     };
@@ -354,17 +362,22 @@ $('.generatorDropdown').on('mouseover', function () {
 });
 
 $('.alternateFormCheckbox').on('click', function () {
-    altCheck = checkAltFormChecks();
+    checkAltFormChecks();
     checkOtherOptions();
 });
 
 $('.legendaryCheckbox').on('click', function () {
-    legendCheck = checkLegendaryChecks();
+    checkLegendaryChecks();
     checkOtherOptions();
 });
 
 $('.megaCheckbox').on('click', function () {
-    megaCheck = checkMegaCheck();
+    checkMegaCheck();
+    checkOtherOptions();
+});
+
+$('.gigantamaxFormCheckbox').on('click', function () {
+    checkGigantamaxCheck();
     checkOtherOptions();
 });
 
