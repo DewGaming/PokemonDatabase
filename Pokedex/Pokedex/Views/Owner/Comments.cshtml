@@ -7,12 +7,12 @@
         string commentTotalString = string.Empty;
         if(Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
         {
-            commentTotalString = " (" + Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString() + " Comment";
+            commentTotalString = string.Concat(" (", Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString(), " Comment");
             if(Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
             {
-                commentTotalString += "s";
+                commentTotalString = string.Concat(commentTotalString, "s");
             }
-            commentTotalString += ")";
+            commentTotalString = string.Concat(commentTotalString, ")");
         }
 
         return commentTotalString;
@@ -52,7 +52,7 @@
                             @item.CommentType
                             @if(@item.CommentedPage != null)
                             {
-                                 @(" for " + @item.CommentedPage)
+                                 @(string.Concat(" for ", @item.CommentedPage))
                             }
                             @if(@item.PokemonName != null)
                             {
@@ -61,7 +61,7 @@
 
                             @if(item.Commentor != null)
                             {
-                                @(" by " + @item.Commentor.Username)
+                                @(string.Concat(" by ", @item.Commentor.Username))
                             }
                             <br>
                             <br>

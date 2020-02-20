@@ -18,7 +18,7 @@
         @Html.HiddenFor(x => x.EvolutionPokemonId)
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PreevolutionPokemonId, "Pre-Evolution Of " + @Model.EvolutionPokemon.Name, new { @class = "col-md-3" })
+            @Html.LabelFor(x => x.PreevolutionPokemonId, string.Concat("Pre-Evolution Of ", @Model.EvolutionPokemon.Name), new { @class = "col-md-3" })
             @Html.DropDownListFor(x => x.PreevolutionPokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PreevolutionPokemonId)
         </div>

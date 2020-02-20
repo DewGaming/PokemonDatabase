@@ -47,7 +47,7 @@ namespace Pokedex.Controllers
             List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
             foreach(var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
             }
 
             model.AllPokemon = pokemonList;
@@ -72,7 +72,7 @@ namespace Pokedex.Controllers
                 List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
                 foreach(var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
-                    pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                    pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
                 }
 
                 model.AllPokemon = pokemonList;
@@ -156,7 +156,7 @@ namespace Pokedex.Controllers
 
             foreach(var p in altForms)
             {
-                p.Name += " (" + this._dataService.GetPokemonFormName(p.Id) + ")";
+                p.Name = string.Concat(p.Name, " (", this._dataService.GetPokemonFormName(p.Id), ")");
             }
 
             model.AllPokemon = altForms;
@@ -375,7 +375,7 @@ namespace Pokedex.Controllers
             }
             else if(!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
             {
-                classification.Name = classification.Name.Trim() + " Pokemon";
+                classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
             }
 
             this._dataService.AddClassification(classification);
@@ -606,15 +606,15 @@ namespace Pokedex.Controllers
                 }
                 else if (genderRatio.FemaleRatio == 0)
                 {
-                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                    viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
                 }
                 else if (genderRatio.MaleRatio == 0)
                 {
-                    viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                    viewModel.GenderRatioString = string.Concat(genderRatio.FemaleRatio, "% Female");
                 }
                 else
                 {
-                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                    viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                 }
 
                 model.AllGenderRatios.Add(viewModel);
@@ -655,15 +655,15 @@ namespace Pokedex.Controllers
                     }
                     else if (genderRatio.FemaleRatio == 0)
                     {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                        viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
                     }
                     else if (genderRatio.MaleRatio == 0)
                     {
-                        viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                        viewModel.GenderRatioString = string.Concat(genderRatio.FemaleRatio, "% Female");
                     }
                     else
                     {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                        viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                     }
 
                     model.AllGenderRatios.Add(viewModel);
@@ -696,15 +696,15 @@ namespace Pokedex.Controllers
                     }
                     else if (genderRatio.FemaleRatio == 0)
                     {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                        viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
                     }
                     else if (genderRatio.MaleRatio == 0)
                     {
-                        viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                        viewModel.GenderRatioString = string.Concat(genderRatio.FemaleRatio, "% Female");
                     }
                     else
                     {
-                        viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                        viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                     }
     
                     model.AllGenderRatios.Add(viewModel);
@@ -732,7 +732,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + newPokemon.Id.ToString() + artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.')));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.'))));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -751,9 +751,9 @@ namespace Pokedex.Controllers
                 WebClient webRequest = new WebClient();
                 webRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
-                byte[] file = webRequest.DownloadData(_appConfig.WebUrl + "/images/general/tempPhoto.png");
+                byte[] file = webRequest.DownloadData(string.Concat(_appConfig.WebUrl, "/images/general/tempPhoto.png"));
                 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + newPokemon.Id.ToString() + ".png");
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -803,7 +803,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + newPokemon.Id.ToString() + ".png");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, newPokemon.Id.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -907,7 +907,7 @@ namespace Pokedex.Controllers
 
             if(artworkUpload != null)
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + alternatePokemon.Id.ToString() + artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.')));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.'))));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -926,9 +926,9 @@ namespace Pokedex.Controllers
                 WebClient webRequest = new WebClient();
                 webRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
-                byte[] file = webRequest.DownloadData(_appConfig.WebUrl + "/images/general/tempPhoto.png");
+                byte[] file = webRequest.DownloadData(string.Concat(_appConfig.WebUrl, "/images/general/tempPhoto.png"));
                 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + alternatePokemon.Id.ToString() + ".png");
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -978,7 +978,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + alternatePokemon.Id.ToString() + ".png");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, alternatePokemon.Id.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 

@@ -19,7 +19,7 @@
 
 <div class="shinyHunt">
     <div class="pokemonPicture shadowed">
-        <img title="@Model.ShinyHunt.Pokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.ShinyHunt.Pokemon.Id + ".png")" />
+        <img title="@Model.ShinyHunt.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.ShinyHunt.Pokemon.Id, ".png"))" />
     </div>
     <div class="pokemonData pokemonTables">
         <h2>Pokemon Data</h2>

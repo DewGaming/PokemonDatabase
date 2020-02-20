@@ -325,20 +325,20 @@ namespace Pokedex.Controllers
                     string body = comment.CommentType;
                     if(comment.CommentedPage != null)
                     {
-                        body += " for " + comment.CommentedPage;
+                        body = string.Concat(body, " for ", comment.CommentedPage);
                     }
 
                     if(comment.PokemonName != null)
                     {
-                        body += " (" + comment.PokemonName + ")";
+                        body = string.Concat(body, " (", comment.PokemonName, ")");
                     }
 
                     if(comment.CommentorId != null)
                     {
-                        body += " by " + this._dataService.GetUserById((int)comment.CommentorId).Username;
+                        body = string.Concat(body, " by ", this._dataService.GetUserById((int)comment.CommentorId).Username);
                     }
 
-                    body += ": " + comment.Name;
+                    body = string.Concat(body, ": ", comment.Name);
 
                     SmtpClient smtp = new SmtpClient()
                     {
@@ -363,7 +363,7 @@ namespace Pokedex.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Email could not be sent. " + ((ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message));
+                Console.WriteLine("Email could not be sent. ", ((ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message));
             }
         }
     }

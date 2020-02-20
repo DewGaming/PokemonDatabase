@@ -1,6 +1,6 @@
 @{
   string defaultTitle = "Pokemon Database";
-	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle :  ViewBag.Title + " | " + defaultTitle;
+	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle :  string.Concat(ViewBag.Title, " | ", defaultTitle);
 }
 
 <html>

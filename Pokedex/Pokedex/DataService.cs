@@ -111,7 +111,7 @@ namespace Pokedex
 
             foreach(var f in formItemList)
             {
-                f.Pokemon.Name += " (" + this.GetPokemonFormName(f.PokemonId) + ")";
+                f.Pokemon.Name = string.Concat(f.Pokemon.Name, " (", this.GetPokemonFormName(f.PokemonId), ")");
             }
 
             return formItemList;
@@ -179,7 +179,7 @@ namespace Pokedex
 
             if (preEvolution != null && this.CheckIfAltForm(preEvolution.PreevolutionPokemonId))
             {
-                preEvolution.PreevolutionPokemon.Name += " (" + this.GetPokemonFormName(preEvolution.PreevolutionPokemonId) + ")";
+                preEvolution.PreevolutionPokemon.Name = string.Concat(preEvolution.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(preEvolution.PreevolutionPokemonId), ")");
             }
 
             return preEvolution;
@@ -191,7 +191,7 @@ namespace Pokedex
 
             if (preEvolution != null && this.CheckIfAltForm(preEvolution.PreevolutionPokemonId))
             {
-                preEvolution.PreevolutionPokemon.Name += " (" + this.GetPokemonFormName(preEvolution.PreevolutionPokemonId) + ")";
+                preEvolution.PreevolutionPokemon.Name = string.Concat(preEvolution.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(preEvolution.PreevolutionPokemonId), ")");
             }
 
             return preEvolution;
@@ -216,7 +216,7 @@ namespace Pokedex
             {
                 if (this.CheckIfAltForm(e.EvolutionPokemonId))
                 {
-                    e.EvolutionPokemon.Name += " (" + this.GetPokemonFormName(e.EvolutionPokemonId) + ")";
+                    e.EvolutionPokemon.Name = string.Concat(e.EvolutionPokemon.Name, " (", this.GetPokemonFormName(e.EvolutionPokemonId), ")");
                 }
             }
 
@@ -234,7 +234,7 @@ namespace Pokedex
             {
                 if (this.CheckIfAltForm(e.EvolutionPokemonId))
                 {
-                    e.EvolutionPokemon.Name += " (" + this.GetPokemonFormName(e.EvolutionPokemonId) + ")";
+                    e.EvolutionPokemon.Name = string.Concat(e.EvolutionPokemon.Name, " (", this.GetPokemonFormName(e.EvolutionPokemonId), ")");
                 }
             }
 
@@ -766,7 +766,7 @@ namespace Pokedex
 
             Pokemon pokemon = pokemonForm.AltFormPokemon;
 
-            pokemon.Name += string.Concat(" (", pokemonForm.Form.Name, ")");
+            pokemon.Name = string.Concat(pokemon.Name, " (", pokemonForm.Form.Name, ")");
 
             return pokemon;
         }
@@ -786,7 +786,7 @@ namespace Pokedex
 
             foreach(var p in pokemonList)
             {
-                p.Name += " (" + this.GetPokemonFormName(p.Id) + ")";
+                p.Name = string.Concat(p.Name, " (", this.GetPokemonFormName(p.Id), ")");
             }
 
             return pokemonList;
@@ -1236,7 +1236,7 @@ namespace Pokedex
                             if (strongAgainst.Exists(x => x == attackType))
                             {
                                 strongAgainst.Remove(attackType);
-                                superStrongAgainst.Add(attackType + " Quad");
+                                superStrongAgainst.Add(string.Concat(attackType, " Quad"));
                             }
                             else if (weakAgainst.Exists(x => x == attackType))
                             {
@@ -1252,7 +1252,7 @@ namespace Pokedex
                             if (weakAgainst.Exists(x => x == attackType))
                             {
                                 weakAgainst.Remove(attackType);
-                                superWeakAgainst.Add(attackType + " Quad");
+                                superWeakAgainst.Add(string.Concat(attackType, " Quad"));
                             }
                             else if (strongAgainst.Exists(x => x == attackType))
                             {
@@ -1332,7 +1332,7 @@ namespace Pokedex
                             if (strongAgainst.Exists(x => x == attackType))
                             {
                                 strongAgainst.Remove(attackType);
-                                superStrongAgainst.Add(attackType + " Quad");
+                                superStrongAgainst.Add(string.Concat(attackType, " Quad"));
                             }
                             else if (weakAgainst.Exists(x => x == attackType))
                             {
@@ -1348,7 +1348,7 @@ namespace Pokedex
                             if (weakAgainst.Exists(x => x == attackType))
                             {
                                 weakAgainst.Remove(attackType);
-                                superWeakAgainst.Add(attackType + " Quad");
+                                superWeakAgainst.Add(string.Concat(attackType, " Quad"));
                             }
                             else if (strongAgainst.Exists(x => x == attackType))
                             {
@@ -2537,7 +2537,7 @@ namespace Pokedex
 
             if (pokemonName.Length > 1 && pokemonName.Substring(pokemonName.Length - 2, 2) == "-O")
             {
-                pokemonName = pokemonName.Remove(pokemonName.Length - 2, 2) + "-o";
+                pokemonName = string.Concat(pokemonName.Remove(pokemonName.Length - 2, 2), "-o");
             }
 
             return pokemonName;

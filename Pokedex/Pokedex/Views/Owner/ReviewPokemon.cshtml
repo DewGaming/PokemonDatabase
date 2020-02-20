@@ -1,7 +1,7 @@
 @model Pokedex.Models.PokemonViewModel
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Review " + @Model.Pokemon.Name;
+    ViewBag.Title = string.Concat("Review ", @Model.Pokemon.Name);
 }
 
 @section styles
@@ -9,7 +9,7 @@
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
-    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.FaviconImageUrl + @Model.Pokemon.Id + ".png")" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.FaviconImageUrl, @Model.Pokemon.Id, ".png"))" />
 }
 
 @section scripts
@@ -29,12 +29,12 @@
 
 <div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
     <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
-        <img title="@Model.Pokemon.Name@(@Model.Form != null ? " (" + @Model.Form.Name + ")" : "")" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.Pokemon.Id + ".png")" />
+        <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
         @if(Model.OriginalPokemon != null)
         {
             <div class="differentForms">
                 <h2>Original Form</h2>
-                <img style="margin-left: 0" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.OriginalPokemon.Id + ".png")" />
+                <img style="margin-left: 0" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.OriginalPokemon.Id, ".png"))" />
             </div>
         }
     </div>
@@ -47,7 +47,7 @@
                     <td>
                         @if(Model.Form != null)
                         {
-                            @(Model.Pokemon.Name + " (" + Model.Form.Name + ")")
+                            @(string.Concat(Model.Pokemon.Name, " (", Model.Form.Name, ")"))
                         }
                         else
                         {
@@ -332,7 +332,7 @@
                         <tbody class="evolutionPokemon">
                             <tr>
                                 <th>
-                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @Model.PreEvolution.PreevolutionPokemon.Id + ".png")" />
+                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
                                     <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name</span>
                                 </th>
                                 <td>
@@ -340,7 +340,7 @@
                                     @if (@Model.PreEvolution.EvolutionDetails != null)
                                     {
                                         <br>
-                                        @(" (" + @Model.PreEvolution.EvolutionDetails + ")");
+                                        @(string.Concat(" (", @Model.PreEvolution.EvolutionDetails, ")"));
                                     }
                                 </td>
                             </tr>
@@ -361,7 +361,7 @@
                             {
                                 <tr>
                                     <th>
-                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(@Model.AppConfig.WebUrl + @Model.AppConfig.PokemonImageUrl + @evolution.EvolutionPokemon.Id + ".png")" />
+                                        <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                         <span class="evolutionLink">@evolution.EvolutionPokemon.Name</span>
                                     </th>
                                     <td>
@@ -369,7 +369,7 @@
                                         @if (@evolution.EvolutionDetails != null)
                                         {
                                             <br>
-                                            @(" (" + @evolution.EvolutionDetails + ")");
+                                            @(string.Concat(" (", @evolution.EvolutionDetails, ")"));
                                         }
                                     </td>
                                 </tr>

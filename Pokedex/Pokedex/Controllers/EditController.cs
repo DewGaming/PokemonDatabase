@@ -240,15 +240,15 @@ namespace Pokedex.Controllers
                 }
                 else if (genderRatio.FemaleRatio == 0)
                 {
-                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                    viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
                 }
                 else if (genderRatio.MaleRatio == 0)
                 {
-                    viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                    viewModel.GenderRatioString = string.Concat(genderRatio.FemaleRatio, "% Female");
                 }
                 else
                 {
-                    viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                    viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                 }
 
                 model.AllGenderRatios.Add(viewModel);
@@ -256,7 +256,7 @@ namespace Pokedex.Controllers
             
             if(this._dataService.CheckIfAltForm(id))
             {
-                model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                model.Name = string.Concat(model.Pokemon.Name, " (", this._dataService.GetPokemonFormName(id), ")");
             }
 
             return this.View(model);
@@ -295,15 +295,15 @@ namespace Pokedex.Controllers
                         }
                         else if (genderRatio.FemaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                            viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
                         }
                         else if (genderRatio.MaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                            viewModel.GenderRatioString = string.Concat(genderRatio.FemaleRatio, "% Female");
                         }
                         else
                         {
-                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                            viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                         }
 
                         model.AllGenderRatios.Add(viewModel);
@@ -311,7 +311,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                    model.Name = string.Concat(model.Pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
                 }
 
                 return this.View(model);
@@ -344,15 +344,15 @@ namespace Pokedex.Controllers
                         }
                         else if (genderRatio.FemaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male";
+                            viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
                         }
                         else if (genderRatio.MaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = genderRatio.FemaleRatio + "% Female";
+                            viewModel.GenderRatioString = string.Concat(genderRatio.FemaleRatio, "% Female");
                         }
                         else
                         {
-                            viewModel.GenderRatioString = genderRatio.MaleRatio + "% Male / " + genderRatio.FemaleRatio + "% Female";
+                            viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                         }
 
                         model.AllGenderRatios.Add(viewModel);
@@ -360,7 +360,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    model.Name = model.Pokemon.Name + " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                    model.Name = string.Concat(model.Pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
                 }
 
                 this.ModelState.AddModelError("PokedexNumber", "A pokemon with a this pokedex number already exists.");
@@ -395,7 +395,7 @@ namespace Pokedex.Controllers
 
             if(this._dataService.CheckIfAltForm(id))
             {
-                model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
             }
 
             return this.View(model);
@@ -412,7 +412,7 @@ namespace Pokedex.Controllers
 
                 if(this._dataService.CheckIfAltForm(id))
                 {
-                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
                 }
                 
                 return this.View(model);
@@ -423,7 +423,7 @@ namespace Pokedex.Controllers
 
                 if(this._dataService.CheckIfAltForm(id))
                 {
-                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
                 }
                 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -435,7 +435,7 @@ namespace Pokedex.Controllers
 
                 if(this._dataService.CheckIfAltForm(id))
                 {
-                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
                 }
                 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -478,7 +478,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.PokemonImageFTPUrl + id.ToString() + ".png");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, id.ToString(), ".png"));
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -503,7 +503,7 @@ namespace Pokedex.Controllers
 
             if(this._dataService.CheckIfAltForm(id))
             {
-                model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
             }
 
             return this.View(model);
@@ -520,7 +520,7 @@ namespace Pokedex.Controllers
 
                 if(this._dataService.CheckIfAltForm(id))
                 {
-                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
                 }
                 
                 return this.View(model);
@@ -531,7 +531,7 @@ namespace Pokedex.Controllers
 
                 if(this._dataService.CheckIfAltForm(id))
                 {
-                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
                 }
                 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -543,7 +543,7 @@ namespace Pokedex.Controllers
 
                 if(this._dataService.CheckIfAltForm(id))
                 {
-                    model.Name = model.Name + " (" + this._dataService.GetPokemonFormName(id) + ")";
+                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
                 }
                 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -603,7 +603,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_appConfig.FTPUrl+ _appConfig.FaviconImageFtpUrl + id.ToString() + ".png");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, id.ToString(), ".png"));
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
@@ -988,7 +988,7 @@ namespace Pokedex.Controllers
 
             foreach(var p in altForms)
             {
-                p.Name += " (" + this._dataService.GetPokemonFormName(p.Id) + ")";
+                p.Name = string.Concat(p.Name, " (", this._dataService.GetPokemonFormName(p.Id), ")");
             }
 
             model.AllPokemon = altForms;
@@ -1020,7 +1020,7 @@ namespace Pokedex.Controllers
 
                 foreach(var p in altForms)
                 {
-                    p.Name += " (" + this._dataService.GetPokemonFormName(p.Id) + ")";
+                    p.Name = string.Concat(p.Name, " (", this._dataService.GetPokemonFormName(p.Id), ")");
                 }
 
                 model.AllPokemon = altForms;
@@ -1268,7 +1268,7 @@ namespace Pokedex.Controllers
             }
             else if(!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
             {
-                classification.Name = classification.Name.Trim() + " Pokemon";
+                classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
             }
 
             this._dataService.UpdateClassification(classification);
@@ -1350,7 +1350,7 @@ namespace Pokedex.Controllers
             List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
             foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
             }
 
             model.AllPokemon = pokemonList;
@@ -1383,7 +1383,7 @@ namespace Pokedex.Controllers
                 List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
                 foreach(var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
-                    pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                    pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
                 }
 
                 model.AllPokemon = pokemonList;
@@ -1403,7 +1403,7 @@ namespace Pokedex.Controllers
             List<Pokemon> altFormList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).Where(x => x.Name == originalPokemon.Name).ToList();
             foreach (var pokemon in altFormList)
             {
-                pokemon.Name += " (" + this._dataService.GetPokemonFormName(pokemon.Id) + ")";
+                pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
             }
 
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel(){

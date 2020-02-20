@@ -80,7 +80,7 @@ namespace Pokedex.Controllers
             List<string> pokemonTeams = importedTeams.Split("\r\n===").ToList();
             for(var i = 1; i < pokemonTeams.Count(); i++)
             {
-                pokemonTeams[i] = "===" + pokemonTeams[i];
+                pokemonTeams[i] = string.Concat("===", pokemonTeams[i]);
             }
 
             foreach(var p in pokemonTeams)
@@ -567,7 +567,7 @@ namespace Pokedex.Controllers
             string pokemonString;
             if(teamName.IndexOf("===") != -1)
             {
-                teamName += "===";
+                teamName = string.Concat(teamName, "===");
                 int teamNameStart = teamName.IndexOf("] ");
                 if(teamNameStart == -1)
                 {
@@ -580,7 +580,7 @@ namespace Pokedex.Controllers
 
                 int teamNameTo = teamName.LastIndexOf(" ===");
                 teamName = teamName.Substring(teamNameStart, teamNameTo - teamNameStart);
-                pokemonString = "\r\n" + importedTeam.Split("===\r\n")[1];
+                pokemonString = string.Concat("\r\n", importedTeam.Split("===\r\n")[1]);
             }
             else
             {
@@ -639,7 +639,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamDetailViewModel pokemonTeamDetail = new PokemonTeamDetailViewModel();
             string pokemonName = importedPokemon.Split("\r\n")[0];
-            string remainingImportedText = importedPokemon.Replace(pokemonName + "\r\n", string.Empty);
+            string remainingImportedText = importedPokemon.Replace(string.Concat(pokemonName, "\r\n"), string.Empty);
             pokemonName = pokemonName.Trim();
 
             #region HeldItem
@@ -652,7 +652,7 @@ namespace Pokedex.Controllers
                     pokemonTeamDetail.BattleItemId = battleItem.Id;
                 }
 
-                pokemonName = pokemonName.Split(" @ " + itemName)[0];
+                pokemonName = pokemonName.Split(string.Concat(" @ ", itemName))[0];
             }
             #endregion
 
@@ -670,7 +670,7 @@ namespace Pokedex.Controllers
                     pokemonTeamDetail.Gender = "Female";
                 }
 
-                pokemonName = pokemonName.Split(" (" + genderInitial + ")")[0];
+                pokemonName = pokemonName.Split(string.Concat(" (", genderInitial, ")"))[0];
             }
             #endregion
 
@@ -678,7 +678,7 @@ namespace Pokedex.Controllers
             if(pokemonName.IndexOf("(") != -1)
             {
                 pokemonTeamDetail.Nickname = pokemonName.Substring(0, pokemonName.IndexOf("(") - 1);
-                pokemonName = pokemonName.Replace(pokemonTeamDetail.Nickname + " (", string.Empty);
+                pokemonName = pokemonName.Replace(string.Concat(pokemonTeamDetail.Nickname, " ("), string.Empty);
                 pokemonName = pokemonName.Replace(")", string.Empty);
             }
             #endregion
@@ -709,7 +709,7 @@ namespace Pokedex.Controllers
 
                 if(form != null)
                 {
-                    pokemon = this._dataService.GetPokemonFromNameAndFormName(pokemonName.Replace("-" + formName, string.Empty), form.Name);
+                    pokemon = this._dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", formName), string.Empty), form.Name);
                 }
                 else
                 {
@@ -729,7 +729,7 @@ namespace Pokedex.Controllers
             string abilityName = remainingImportedText.Split("\r\n")[0];
             if(abilityName.Contains("Ability: "))
             {
-                remainingImportedText = remainingImportedText.Replace(abilityName + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(abilityName, "\r\n"), string.Empty);
                 abilityName = abilityName.Split("Ability: ")[1].Trim();
                 ability = this._dataService.GetAbilityByName(abilityName);
             }
@@ -745,7 +745,7 @@ namespace Pokedex.Controllers
             if(remainingImportedText.Contains("Level:"))
             {
                 string pokemonLevel = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(pokemonLevel + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(pokemonLevel, "\r\n"), string.Empty);
                 pokemonLevel = pokemonLevel.Trim();
                 pokemonTeamDetail.Level = Convert.ToByte(pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2, pokemonLevel.Length - (pokemonLevel.IndexOf(':') + 2)));
                 if(pokemonTeamDetail.Level == 0)
@@ -766,7 +766,7 @@ namespace Pokedex.Controllers
             #region Shiny
             if(remainingImportedText.Contains("Shiny: Yes"))
             {
-                remainingImportedText = remainingImportedText.Replace(remainingImportedText.Split("\r\n")[0] + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(remainingImportedText.Split("\r\n")[0], "\r\n"), string.Empty);
                 pokemonTeamDetail.IsShiny = true;
             }
             #endregion
@@ -775,7 +775,7 @@ namespace Pokedex.Controllers
             if(remainingImportedText.Contains("Happiness:"))
             {
                 string happiness = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(happiness + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(happiness, "\r\n"), string.Empty);
                 happiness = happiness.Trim();
                 pokemonTeamDetail.Happiness = Convert.ToByte(happiness.Substring(happiness.IndexOf(':') + 2, happiness.Length - (happiness.IndexOf(':') + 2)));
                 if(string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness.Substring(happiness.IndexOf(':') + 2)) != 0)
@@ -793,7 +793,7 @@ namespace Pokedex.Controllers
             if(remainingImportedText.Contains("EVs:"))
             {
                 string evs = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(evs + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(evs, "\r\n"), string.Empty);
                 PokemonTeamEV pokemonEVs = new PokemonTeamEV();
                 if(evs.Contains("HP"))
                 {
@@ -845,7 +845,7 @@ namespace Pokedex.Controllers
             if(remainingImportedText.Contains("Nature"))
             {
                 string natureName = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(natureName + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(natureName, "\r\n"), string.Empty);
                 natureName = natureName.Replace("Nature", string.Empty).Trim();
                 Nature nature = this._dataService.GetNatureByName(natureName);
                 pokemonTeamDetail.NatureId = nature.Id;
@@ -860,7 +860,7 @@ namespace Pokedex.Controllers
             if(remainingImportedText.Contains("IVs:"))
             {
                 string ivs = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(ivs + "\r\n", string.Empty);
+                remainingImportedText = remainingImportedText.Replace(string.Concat(ivs, "\r\n"), string.Empty);
                 PokemonTeamIV pokemonIVs = new PokemonTeamIV();
                 if(ivs.Contains("HP"))
                 {
