@@ -154,6 +154,8 @@ namespace Pokedex.Controllers
                 altForms.Remove(altForms.Find(x => x.PokedexNumber == p.PokedexNumber));
             }
 
+            altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
+
             foreach(var p in altForms)
             {
                 p.Name = string.Concat(p.Name, " (", this._dataService.GetPokemonFormName(p.Id), ")");

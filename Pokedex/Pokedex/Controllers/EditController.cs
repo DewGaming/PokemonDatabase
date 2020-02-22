@@ -986,6 +986,8 @@ namespace Pokedex.Controllers
             altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Ultra").Select(x => x.AltFormPokemon).ToList());
             altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Crowned").Select(x => x.AltFormPokemon).ToList());
 
+            altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
+
             foreach(var p in altForms)
             {
                 p.Name = string.Concat(p.Name, " (", this._dataService.GetPokemonFormName(p.Id), ")");
@@ -1017,6 +1019,8 @@ namespace Pokedex.Controllers
                 altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Origin").Select(x => x.AltFormPokemon).ToList());
                 altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Ultra").Select(x => x.AltFormPokemon).ToList());
                 altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Crowned").Select(x => x.AltFormPokemon).ToList());
+
+                altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
 
                 foreach(var p in altForms)
                 {
