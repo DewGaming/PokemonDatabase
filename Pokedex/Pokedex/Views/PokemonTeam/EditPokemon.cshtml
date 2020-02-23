@@ -52,7 +52,7 @@
         @Html.HiddenFor(x => x.GameId);
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.PokemonId, "Pokemon", new { @class = "col-md-2" })
+            @Html.LabelFor(x => x.PokemonTeamDetail.PokemonId, "Pokémon", new { @class = "col-md-2" })
             @Html.DropDownListFor(x => x.PokemonTeamDetail.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.PokemonId)
         </div>
