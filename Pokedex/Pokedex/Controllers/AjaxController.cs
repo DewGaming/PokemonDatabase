@@ -1577,7 +1577,6 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    Pokemon pokemon;
                     eggGroupList = this._dataService.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
                     List<PokemonEggGroupDetail> breedablePokemonList = this._dataService.GetAllBreedablePokemon();
                     eggGroupList.Add(this._dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
@@ -1597,17 +1596,17 @@ namespace Pokedex.Controllers
 
                     foreach(var p in eggGroupList)
                     {
-                        if(altFormsList.Find(x => x.Id == p.PokemonId) != null)
-                        {
-                            pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
-                            pokemonList.Add(pokemon);
-                        }
-                        else if ((p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0) || (genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) || (genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
+                        if ((p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0) || (genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) || (genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
                         {
                             finalEggGroupList.Remove(p);
                         }
                         else
                         {
+                            if(altFormsList.Find(x => x.Id == p.PokemonId) != null)
+                            {
+                                p.Pokemon = this._dataService.GetAltFormWithFormName(p.PokemonId);
+                            }
+
                             pokemonList.Add(p.Pokemon);
                         }
                     }
