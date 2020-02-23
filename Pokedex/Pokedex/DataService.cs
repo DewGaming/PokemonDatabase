@@ -476,6 +476,15 @@ namespace Pokedex
                 "Mega",
                 "Mega X",
                 "Mega Y",
+                "Gigantamax",
+                "Low Key Gigantamax",
+                "Sunny",
+                "Rainy",
+                "Snowy",
+                "Zen",
+                "Galar Zen",
+                "Noice",
+                "School",
                 "Core",
                 "Blade",
                 "Crowned",
@@ -1034,16 +1043,14 @@ namespace Pokedex
                 .Include(x => x.SecondaryEggGroup)
                 .ToList();
 
-            List<PokemonEggGroupDetail> finalPokemonList = new List<PokemonEggGroupDetail>();
-
-            finalPokemonList.AddRange(pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList());
+            List<PokemonEggGroupDetail> finalPokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
 
             if(secondaryEggGroupId != null)
             {
                 finalPokemonList.AddRange(pokemonList.Where(x => x.PrimaryEggGroupId == secondaryEggGroupId || x.SecondaryEggGroupId == secondaryEggGroupId).ToList());
             }
 
-            return finalPokemonList;
+            return finalPokemonList.Distinct().ToList();
         }
 
         public List<Pokemon> GetSurroundingPokemon(int pokedexNumber)
