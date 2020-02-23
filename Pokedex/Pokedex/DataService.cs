@@ -2529,7 +2529,9 @@ namespace Pokedex
 
         public string FormatPokemonName(string pokemonName)
         {
-            if (pokemonName.Contains("type_null"))
+            pokemonName.ToLower();
+
+            if (pokemonName.Contains("type") && pokemonName.Contains("null"))
             {
                 pokemonName = "Type: Null";
             }
