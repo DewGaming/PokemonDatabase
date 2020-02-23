@@ -23,7 +23,7 @@
         @foreach(var item in Model.AllPokemon.AllPokemon)
         {
             everythingAdded = Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == item.Id);
-            Model.Pokémon = item;
+            Model.Pokemon = item;
             <div class="@item.Name @(item.IsComplete ? "" : "incomplete")">
                 @if(item.IsComplete)
                 {
