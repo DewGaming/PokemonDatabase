@@ -21,7 +21,7 @@
     @using (Html.BeginForm())
     {
         <button type="submit" class="btn btn-primary" role="button">Finish Review</button>
-        <a href="@Url.Action("CompletePokemon", "Owner", new { pokemonId = @Model.Pokemon.Id })" class="btn btn-primary">Mark Pokemon As Complete</a>
+        <a href="@Url.Action("CompletePokemon", "Owner", new { pokemonId = @Model.Pokemon.Id })" class="btn btn-primary">Mark Pokémon As Complete</a>
     }
 </p>
 
@@ -39,11 +39,11 @@
         }
     </div>
     <div class="pokemonInfo pokemonData pokemonTables">
-        <h2>Pokemon Data</h2>
+        <h2>Pokémon Data</h2>
         <table class="pokedexNumber">
             <tbody>
                 <tr>
-                    <th>Pokemon Name</th>
+                    <th>Pokémon Name</th>
                     <td>
                         @if(Model.Form != null)
                         {

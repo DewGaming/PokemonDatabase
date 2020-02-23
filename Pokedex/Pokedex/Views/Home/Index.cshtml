@@ -8,15 +8,15 @@
     <script src="/js/modalImage.js"></script>
 }
 
-<h4>Welcome to the Pokemon Database!</h4>
+<h4>Welcome to the Pokémon Database!</h4>
 <br>
 <p>This was created starting as a school project and then eventually being transformed into a website.  Please Enjoy!</p>
-<p><b>Please Note:</b> Information used for the Pokemon are updated to be in line with the most current generation of Pokemon.</p>
-<p>Want to do more then just view Pokemon stats?  Explore other options!</p>
+<p><b>Please Note:</b> Information used for the Pokémon are updated to be in line with the most current generation of Pokemon.</p>
+<p>Want to do more then just view Pokémon stats?  Explore other options!</p>
 <div class="siteFeatures">
     <div class="feature dayCareEvaluator">
         <a href="@Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokemon can be placed in a day care to produce a Pokemon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareEvaluator.png"))">
+        <img class="modalPreview" data-modalUrl="@Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokémon can be placed in a day care to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareEvaluator.png"))">
     </div>
     <div class="feature gameAvailability">
         <a href="@Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
@@ -24,11 +24,11 @@
     </div>
     <div class="feature teamRandomizerFeature">
         <a href="@Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokemon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
+        <img class="modalPreview" data-modalUrl="@Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
     </div>
     <div class="feature typeEvaluator">
         <a href="@Url.Action("TypingEvaluator", "Home")"><p>Lookup Type Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokemon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingEvaluator.png"))">
+        <img class="modalPreview" data-modalUrl="@Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingEvaluator.png"))">
     </div>
 </div>
 @if(!User.Identity.IsAuthenticated)
@@ -39,11 +39,11 @@
 <div class="siteFeatures">
     <div class="feature teamBuilder">
         <a href="@Url.Action("PokemonTeams", "User")"><p>Build Teams!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("PokemonTeams", "User")" alt="Team Builder" title="Build different teams with the given options, or import them from Pokemon Showdown!  Once saved, you can export them to Showdown as well!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonTeams.png"))">
+        <img class="modalPreview" data-modalUrl="@Url.Action("PokemonTeams", "User")" alt="Team Builder" title="Build different teams with the given options, or import them from Pokémon Showdown!  Once saved, you can export them to Showdown as well!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonTeams.png"))">
     </div>
     <div class="feature shinyHunting">
         <a href="@Url.Action("ShinyHuntingCounter", "User")"><p>Hunt for Shiny Pokemon!</p></a>
-        <img class="modalPreview" data-modalUrl="@Url.Action("ShinyHuntingCounter", "User")" alt="Shiny Hunting" title="Hunt for shiny Pokemon utilizing different hunting methods!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunting.png"))">
+        <img class="modalPreview" data-modalUrl="@Url.Action("ShinyHuntingCounter", "User")" alt="Shiny Hunting" title="Hunt for shiny Pokémon utilizing different hunting methods!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunting.png"))">
     </div>
 </div>
 </div>

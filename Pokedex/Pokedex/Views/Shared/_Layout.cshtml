@@ -1,5 +1,5 @@
 @{
-  string defaultTitle = "Pokemon Database";
+  string defaultTitle = "Pokémon Database";
 	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle :  string.Concat(ViewBag.Title, " | ", defaultTitle);
 }
 
@@ -13,7 +13,7 @@
 </head>
 <body>
     <nav class="fixed-nav navbar navbar-expand-custom navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokemon Database</a>
+      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokémon Database</a>
       <button class="navbar-toggler collapse-button" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

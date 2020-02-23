@@ -19,7 +19,7 @@ function lookupPokemon(pageName, iconLink, pokemonName) {
   $('#' + pageName.replace('%', '\\%')).addClass('active');
 
   $('.tabIcon').attr("href", iconLink);
-  $('.pageTitle').text(pokemonName + " | Pokemon Database");
+  $('.pageTitle').text(pokemonName + " | Pokémon Database");
 }
 
 function lookupIncompletePokemon() {
