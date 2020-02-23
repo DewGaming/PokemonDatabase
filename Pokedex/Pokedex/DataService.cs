@@ -2541,6 +2541,11 @@ namespace Pokedex
                 pokemonName = pokemonName.Replace('_', ' ');
             }
 
+            if (pokemonName == "flabe" || pokemonName == "flabeb" || pokemonName == "flabebe")
+            {
+                pokemonName = "Flabébé";
+            }
+
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             pokemonName = textInfo.ToTitleCase(pokemonName);
 
