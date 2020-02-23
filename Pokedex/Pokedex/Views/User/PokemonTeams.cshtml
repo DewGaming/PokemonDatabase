@@ -79,23 +79,23 @@ Ability: @p.Ability.Name
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
                                                         <span class="adminMenuTitle">View</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Update</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokémon</a></li>
                                                         <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update EVs</a></li>
                                                         <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update IVs</a></li>
                                                         <li><a class="dropdown-item" href="@(Url.Action("EditMoveset", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Moveset</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Delete</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokemon</a></li>
+                                                        <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokémon</a></li>
                                                     </ul>
                                                 </div>
                                             }
                                             @if(@Model.AllPokemonTeams[i].GrabPokemonTeamDetails.Count < 6)
                                             {
                                                 <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
-                                                    <img class="lightshadowed addButton" title="Add Pokemon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, "/images/general/addButton.png"))" />
+                                                    <img class="lightshadowed addButton" title="Add Pokémon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, "/images/general/addButton.png"))" />
                                                 </a>
                                             }
                                         </td>

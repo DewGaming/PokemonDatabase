@@ -91,7 +91,7 @@ function lookupAvailableGame(gameId) {
     $('button#Game' + gameId).addClass('active');
 
     $('.grid-container').load('/get-available-pokemon-by-game/' + gameId, function () {
-      $('.pokemonList').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokemon: ' + $('.grid-container').children().length));
+      $('.pokemonList').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokémon: ' + $('.grid-container').children().length));
 
       $('.pokemonList').addClass('active');
     });
