@@ -2531,7 +2531,7 @@ namespace Pokedex
         {
             pokemonName.ToLower();
 
-            if (pokemonName.Contains("type") && pokemonName.Contains("null"))
+            if (pokemonName.Contains("type"))
             {
                 pokemonName = "Type: Null";
             }
