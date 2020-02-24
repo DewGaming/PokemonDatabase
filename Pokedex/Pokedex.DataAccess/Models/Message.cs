@@ -12,7 +12,7 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public int? SenderId { get; set; }
         public User Sender { get; set; }
-        [Required]
+        [Required, Display(Name = "Receiver")]
         public int? ReceiverId { get; set; }
         public User Receiver { get; set; }
         [Required]

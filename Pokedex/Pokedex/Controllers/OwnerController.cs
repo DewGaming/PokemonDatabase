@@ -90,6 +90,45 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Comments", "Owner");
         }
 
+        [HttpGet]
+        [Route("send_message")]
+        public IActionResult SendMessageNoComment()
+        {
+            List<User> users = this._dataService.GetUsers();
+            users.Remove(users.Find(x => x.Username == User.Identity.Name));
+
+            MessageViewModel model = new MessageViewModel()
+            {
+                SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                AllUsers = users,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("send_message")]
+        public IActionResult SendMessageNoComment(MessageViewModel message)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                List<User> users = this._dataService.GetUsers();
+                users.Remove(users.Find(x => x.Username == User.Identity.Name));
+
+                MessageViewModel model = new MessageViewModel()
+                {
+                    SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                    AllUsers = users,
+                };
+
+                return this.View(model);
+            }
+            
+            this._dataService.AddMessage(message);
+
+            return this.RedirectToAction("ViewMessages", "User");
+        }
+
         [Route("comments")]
         public IActionResult Comments()
         {

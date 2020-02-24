@@ -1,0 +1,42 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.MessageViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Send Message</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.SenderId)
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.ReceiverId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.ReceiverId, new SelectList(Model.AllUsers, "Id", "Username"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.ReceiverId)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.MessageTitle, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.MessageTitle, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.MessageTitle)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.MessageContent, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.MessageContent, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.MessageContent)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Send</button>
+        </p>
+    }
+
+</div>
