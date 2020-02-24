@@ -751,7 +751,7 @@ namespace Pokedex.Controllers
 
                 if(selectedGame != 0)
                 {
-                    availablePokemon = this._dataService.GetPokemonGameDetailsByGeneration(this._dataService.GetGenerationFromGame(selectedGame).Id);
+                    availablePokemon = this._dataService.GetPokemonGameDetailsByGame(selectedGame);
                 }
                 else
                 {
