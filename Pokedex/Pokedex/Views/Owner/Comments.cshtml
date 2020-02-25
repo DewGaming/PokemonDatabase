@@ -1,14 +1,13 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Comment>;
+@model Pokedex.Models.AllCommentsViewModel;
 @{
     Layout = "_Layout";
-    List<string> commentTypes = new List<string>() { "Bug", "Critique", "Feature", "Other" };
     string GrabCommentCount(string pageName)
     {
         string commentTotalString = string.Empty;
-        if(Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
+        if(Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
         {
-            commentTotalString = string.Concat(" (", Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString(), " Comment");
-            if(Model.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
+            commentTotalString = string.Concat(" (", Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString(), " Comment");
+            if(Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
             {
                 commentTotalString = string.Concat(commentTotalString, "s");
             }
@@ -30,22 +29,22 @@
 }
 
 <div class="pageButtons">
-    @foreach(var type in commentTypes)
+    @foreach(var type in Model.CommentTypes)
     {
-        <button class="@(type.ToLower())" onclick="lookupPage('@(type.ToLower())')">@(type)s<br>@(GrabCommentCount(@type))</button>
+        <button class="@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())" onclick="lookupPage('@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())')">@(type)<br>@(GrabCommentCount(@type))</button>
     }
 </div>
-@foreach(var type in commentTypes)
+@foreach(var type in Model.CommentTypes)
 {
-    <div class="page" id="@(type.ToLower())">
-        @if(@Model.Where(x => !x.IsCompleted && x.CommentType == @type).ToList().Count() > 0)
+    <div class="page" id="@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())">
+        @if(@Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type).ToList().Count() > 0)
         {
             <table class="table">
                 <tr>
                     <th class="col-md-9" scope="col">Comment</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach(var item in Model.Where(x => !x.IsCompleted && x.CommentType == @type))
+                @foreach(var item in Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type))
                 {
                     <tr>
                         <td>

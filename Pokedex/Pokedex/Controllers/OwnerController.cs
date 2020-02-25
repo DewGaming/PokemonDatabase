@@ -132,7 +132,11 @@ namespace Pokedex.Controllers
         [Route("comments")]
         public IActionResult Comments()
         {
-            List<Comment> model = this._dataService.GetComments();
+            AllCommentsViewModel model = new AllCommentsViewModel()
+            {
+                AllComments = this._dataService.GetComments(),
+                CommentTypes = this._appConfig.CommentCategories,
+            };
 
             return this.View(model);
         }
