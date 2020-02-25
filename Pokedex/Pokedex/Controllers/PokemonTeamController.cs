@@ -470,7 +470,7 @@ namespace Pokedex.Controllers
             
             List<Game> allGames = this._dataService.GetGames();
             PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
-            Generation generation = this._dataService.GetLatestGeneration(pokemonTeam.Id);
+            Game game = this._dataService.GetLatestGame(pokemonTeam.Id);
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                 Id = pokemonTeam.Id,
@@ -479,9 +479,9 @@ namespace Pokedex.Controllers
                 UserId = pokemonTeam.UserId,
             };
 
-            if(generation != null)
+            if(game != null)
             {
-                model.AllGames = allGames.Where(x => x.GenerationId >= generation.Id).ToList();
+                model.AllGames = allGames.Where(x => x.ReleaseDate >= game.ReleaseDate).ToList();
             }
             else
             {
@@ -499,7 +499,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 List<Game> allGames = this._dataService.GetGames();
-                Generation generation = this._dataService.GetLatestGeneration(newPokemonTeam.Id);
+                Game game = this._dataService.GetLatestGame(newPokemonTeam.Id);
 
                 UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                     Id = originalPokemonTeam.Id,
@@ -508,9 +508,9 @@ namespace Pokedex.Controllers
                     UserId = originalPokemonTeam.UserId,
                 };
 
-                if(generation != null)
+                if(game != null)
                 {
-                    model.AllGames = allGames.Where(x => x.GenerationId >= generation.Id).ToList();
+                    model.AllGames = allGames.Where(x => x.ReleaseDate >= game.ReleaseDate).ToList();
                 }
                 else
                 {

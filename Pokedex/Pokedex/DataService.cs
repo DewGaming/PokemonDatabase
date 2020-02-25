@@ -575,7 +575,6 @@ namespace Pokedex
                 .Include(x => x.FirstPokemon)
                     .Include("FirstPokemon.Pokemon")
                         .Include("FirstPokemon.Pokemon.Game")
-                            .Include("FirstPokemon.Pokemon.Game.Generation")
                     .Include("FirstPokemon.Ability")
                     .Include("FirstPokemon.PokemonTeamEV")
                     .Include("FirstPokemon.PokemonTeamIV")
@@ -1569,56 +1568,56 @@ namespace Pokedex
             return this._dataContext.Generations.ToList();
         }
 
-        public Generation GetLatestGeneration(int pokemonTeamId)
+        public Game GetLatestGame(int pokemonTeamId)
         {
             PokemonTeam pokemonTeam = this.GetPokemonTeam(pokemonTeamId);
-            Generation latestGeneration = null;
+            Game latestGame = null;
             if(pokemonTeam.FirstPokemonId != null)
             {
-                latestGeneration = pokemonTeam.FirstPokemon.Pokemon.Game.Generation;
+                latestGame = pokemonTeam.FirstPokemon.Pokemon.Game;
             }
 
             if(pokemonTeam.SecondPokemonId != null)
             {
-                if(pokemonTeam.SecondPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
+                if(pokemonTeam.SecondPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
                 {
-                    latestGeneration = pokemonTeam.SecondPokemon.Pokemon.Game.Generation;
+                    latestGame = pokemonTeam.SecondPokemon.Pokemon.Game;
                 }
             }
 
             if(pokemonTeam.ThirdPokemonId != null)
             {
-                if(pokemonTeam.ThirdPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
+                if(pokemonTeam.ThirdPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
                 {
-                    latestGeneration = pokemonTeam.ThirdPokemon.Pokemon.Game.Generation;
+                    latestGame = pokemonTeam.ThirdPokemon.Pokemon.Game;
                 }
             }
 
             if(pokemonTeam.FourthPokemonId != null)
             {
-                if(pokemonTeam.FourthPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
+                if(pokemonTeam.FourthPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
                 {
-                    latestGeneration = pokemonTeam.FourthPokemon.Pokemon.Game.Generation;
+                    latestGame = pokemonTeam.FourthPokemon.Pokemon.Game;
                 }
             }
 
             if(pokemonTeam.FifthPokemonId != null)
             {
-                if(pokemonTeam.FifthPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
+                if(pokemonTeam.FifthPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
                 {
-                    latestGeneration = pokemonTeam.FifthPokemon.Pokemon.Game.Generation;
+                    latestGame = pokemonTeam.FifthPokemon.Pokemon.Game;
                 }
             }
 
             if(pokemonTeam.SixthPokemonId != null)
             {
-                if(pokemonTeam.SixthPokemon.Pokemon.Game.GenerationId > latestGeneration.Id)
+                if(pokemonTeam.SixthPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
                 {
-                    latestGeneration = pokemonTeam.SixthPokemon.Pokemon.Game.Generation;
+                    latestGame = pokemonTeam.SixthPokemon.Pokemon.Game;
                 }
             }
             
-            return latestGeneration;
+            return latestGame;
         }
 
         public Generation GetGeneration(int id)
@@ -1655,9 +1654,9 @@ namespace Pokedex
             return this._dataContext.Users.ToList().Find(x => x.Username == username);
         }
 
-        public List<Message> GetMessagesToUsername(string username)
+        public List<Message> GetMessagesToUser(int id)
         {
-            return this._dataContext.Messages.Where(x => x.ReceiverId == this.GetUserWithUsername(username).Id).ToList();
+            return this._dataContext.Messages.Where(x => x.ReceiverId == id).ToList();
         }
 
         public Message GetMessage(int id)
