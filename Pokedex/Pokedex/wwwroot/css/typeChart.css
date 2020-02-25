@@ -20,9 +20,8 @@
 .type-icon, .quad-icon {
   margin: 2px 0 2px;
   background: #dbdbdb;
-  border: 1px solid #a3a3a3;
-  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
   color: #fff;
   font-size: .75rem;
   font-weight: normal;
