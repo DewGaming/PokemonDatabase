@@ -1206,7 +1206,8 @@ namespace Pokedex.Controllers
                 "Mega",
                 "Mega X",
                 "Mega Y",
-                "Eternamax"
+                "Eternamax",
+                "Blade",
             };
 
             foreach(var formName in formNames)
