@@ -200,6 +200,11 @@ namespace Pokedex.Controllers
                             TeamId = team.Id,
                         };
 
+                        if(team.Game != null)
+                        {
+                            pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, " [gen", team.Game.GenerationId, "] ");
+                        }
+
                         pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, team.PokemonTeamName, " ===\n\n");
 
                         for(var i = 0; i < pokemonList.Count(); i++)
