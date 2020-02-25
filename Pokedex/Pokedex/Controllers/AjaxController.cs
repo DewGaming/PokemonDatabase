@@ -1615,12 +1615,20 @@ namespace Pokedex.Controllers
                     eggGroupList = finalEggGroupList;
                 }
 
+                List<EggGroup> pokemonEggGroupList = new List<EggGroup>();
+                pokemonEggGroupList.Add(searchedEggGroupDetails.PrimaryEggGroup);
+                if(searchedEggGroupDetails.SecondaryEggGroup != null)
+                {
+                    pokemonEggGroupList.Add(searchedEggGroupDetails.SecondaryEggGroup);
+                }
+
                 EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){
                     AllPokemonWithEggGroups = eggGroupList,
                     AllPokemon = pokemonList,
                     AllOriginalPokemon = eggGroupList.Select(x => x.Pokemon).ToList(),
                     AppConfig = _appConfig,
                     SearchedPokemon = this._dataService.GetPokemonById(pokemonId),
+                    PokemonEggGroups = pokemonEggGroupList,
                 };
 
                 return this.PartialView("_FillDayCareEvaluator", model);

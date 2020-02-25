@@ -7,6 +7,12 @@
     <a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
         <img class="pokemonlistPicture" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
     </a>
+    <div class="eggGroups">
+        @foreach(var e in Model.PokemonEggGroups)
+        {
+            <div class="egg-group-icon egg-group-@(e.Name.ToLower().Replace(' ', '-'))">@e.Name</div>
+        }
+    </div>
 </div>
 
 <h2>Pokémon @Model.SearchedPokemon.Name Can Breed With</h2>

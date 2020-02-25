@@ -14,5 +14,7 @@ namespace Pokedex.Models
         public AppConfig AppConfig { get; set; }
 
         public Pokemon SearchedPokemon { get; set; }
+
+        public List<EggGroup> PokemonEggGroups { get; set; }
     }
 }
