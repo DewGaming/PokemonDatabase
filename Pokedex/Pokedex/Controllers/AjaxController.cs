@@ -30,7 +30,7 @@ namespace Pokedex.Controllers
         [Route("mark-as-read")]
         public void MarkAsRead()
         {
-            List<Message> messages = this._dataService.GetMessagesToUsername(User.Identity.Name);
+            List<Message> messages = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value));
             foreach(var m in messages.Where(x => !x.IsRead))
             {
                 m.IsRead = true;
@@ -41,7 +41,7 @@ namespace Pokedex.Controllers
         [Route("check-unread-messages")]
         public int CheckUnreadMessages()
         {
-            return this._dataService.GetMessagesToUsername(User.Identity.Name).Where(x => !x.IsRead).ToList().Count;
+            return this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value)).Where(x => !x.IsRead).ToList().Count;
         }
 
         [Route("get-pokemon-by-generation-admin/{generationId}")]

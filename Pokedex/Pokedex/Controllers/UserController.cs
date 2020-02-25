@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,7 @@ namespace Pokedex.Controllers
         [Route("messages")]
         public IActionResult ViewMessages()
         {
-            List<Message> model = this._dataService.GetMessagesToUsername(this.User.Identity.Name);
+            List<Message> model = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value));
 
             return this.View(model);
         }
@@ -40,7 +41,7 @@ namespace Pokedex.Controllers
         [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(int messageId)
         {
-            Message model = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
+            Message model = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
 
             return this.View(model);
         }
@@ -58,7 +59,7 @@ namespace Pokedex.Controllers
         [Route("reply_to_message/{messageId:int}")]
         public IActionResult ReplyMessage(int messageId)
         {
-            Message originalMessage = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
+            Message originalMessage = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
             Message model = new Message() {
                 ReceiverId = originalMessage.SenderId,
                 SenderId = originalMessage.ReceiverId,
@@ -74,7 +75,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Message originalMessage = this._dataService.GetMessagesToUsername(User.Identity.Name)[messageId - 1];
+                Message originalMessage = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
 
                 Message model = new Message()
                 {
