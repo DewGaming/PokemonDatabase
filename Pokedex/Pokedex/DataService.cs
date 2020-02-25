@@ -754,6 +754,9 @@ namespace Pokedex
                     .Include("AltFormPokemon.CaptureRate")
                     .Include("AltFormPokemon.BaseHappiness")
                 .Include(x => x.Form)
+                .OrderBy(x => x.AltFormPokemon.Game.ReleaseDate)
+                .ThenBy(x => x.AltFormPokemon.PokedexNumber)
+                .ThenBy(x => x.AltFormPokemon.Id)
                 .Where(x => x.OriginalPokemonId == pokemonId).ToList();
             List<Pokemon> pokemonList = new List<Pokemon>();
             foreach (var p in pokemonFormList)
