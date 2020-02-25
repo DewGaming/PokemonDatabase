@@ -276,8 +276,8 @@ var pokemonList, pokemonURLs, abilityList, exportString
                 }
 
                 if (selectedGame == 16) {
-                    $(".otherFormCheckbox").hide();
-                    $("#Other").prop('checked', false);
+                    $(".randomAbilityCheckbox").hide();
+                    $("#randomAbilityBool").prop('checked', false);
                 }
 
                 if ($.inArray(selectedGame, ['0', '14', '15', '16', '17']) != -1) {
