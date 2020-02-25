@@ -3,9 +3,9 @@
     List<Pokedex.DataAccess.Models.PokemonEggGroupDetail> eggGroups = Model.AllPokemonWithEggGroups;
 }
 
-<div class="shadowed">
+<div class="shadowed dayCarePokemon">
     <a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
-        <img class="pokemonlistPicture" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
+        <img class="pokemonlistPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
     </a>
     <div class="eggGroups">
         @foreach(var e in Model.PokemonEggGroups)

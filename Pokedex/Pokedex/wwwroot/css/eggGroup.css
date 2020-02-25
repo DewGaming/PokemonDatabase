@@ -1,0 +1,96 @@
+.flexDiv {
+    padding: 0 0 1rem;
+}
+
+.pokemonTables {
+    padding: 0;
+}
+
+.pokemonList > div {
+    min-width: 216.75px;
+}
+
+.dayCarePokemon {
+    width: 230px;
+    text-align: center;
+}
+
+.eggGroupImage {
+    width: 230px;
+    height: 230px;
+}
+
+.egg-group-icon {
+    display: inline-block;
+    width: 45%;
+    margin: 2px 0 2px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: normal;
+    line-height: 1.5rem;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    text-transform: uppercase;
+}
+
+.egg-group-amorphous {
+    background-color: #8a8a8a;
+}
+
+.egg-group-bug {
+    background-color: #aac22a;
+}
+
+.egg-group-ditto {
+    background-color: #a664bf;
+}
+
+.egg-group-dragon {
+    background-color: #7a42ff;
+}
+
+.egg-group-fairy {
+    background-color: #ffc8f0;
+}
+
+.egg-group-field {
+    background-color: #e0c068;
+}
+
+.egg-group-flying {
+    background-color: #b29afa;
+}
+
+.egg-group-grass {
+    background-color: #82d25a;
+}
+
+.egg-group-human-like {
+    background-color: #d29682;
+}
+
+.egg-group-mineral {
+    background-color: #7a6252;
+}
+
+.egg-group-monster {
+    background-color: #d25064;
+}
+
+.egg-group-undiscovered {
+    background-color: #333;
+}
+
+.egg-group-water-1 {
+    background-color: #97b5fd;
+}
+
+.egg-group-water-2 {
+    background-color: #729afa;
+}
+
+.egg-group-water-3 {
+    background-color: #5876be;
+}
