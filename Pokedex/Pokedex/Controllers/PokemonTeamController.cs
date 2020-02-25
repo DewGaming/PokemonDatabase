@@ -689,27 +689,27 @@ namespace Pokedex.Controllers
             // Used to check for alternate form
             if(pokemonName.LastIndexOf('-') != -1)
             {
-                string formName = pokemonName.Split('-').Last();
-                if(formName == "Gmax")
+                if(pokemonName.Contains("Gmax"))
                 {
                     pokemonName = pokemonName.Replace("-Gmax", "-Gigantamax");
-                    formName = "Gigantamax";
                 }
 
                 if(pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
                 {
-                    formName = "Female";
+                    pokemonName = pokemonName.Replace("-F", "-Female");
                 }
 
-                Form form = this._dataService.GetFormByName(formName);
-                if(pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
+                List<Form> forms = this._dataService.GetForms();
+                foreach(var f in forms)
                 {
-                    formName = "F";
+                    f.Name = f.Name.Replace(' ', '-');
                 }
+
+                Form form = forms.Find(x => pokemonName.Contains(x.Name));
 
                 if(form != null)
                 {
-                    pokemon = this._dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", formName), string.Empty), form.Name);
+                    pokemon = this._dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", form.Name), string.Empty), form.Name.Replace('-', ' '));
                 }
                 else
                 {
