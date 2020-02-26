@@ -452,6 +452,7 @@ label {
   width: 3.75rem;
   -o-object-fit: contain;
   object-fit: contain;
+  padding: .125rem;
 }
 
 .surroundingPokemon a, .evolutionPokemon a, .surroundingPokemon a:hover, .evolutionPokemon a:hover {
