@@ -1240,6 +1240,14 @@ namespace Pokedex.Controllers
                 gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
             }
 
+            List<Pokemon> starterForms = this._dataService.GetPokemonFormDetailsByFormName("Starter").Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
+            while(lgpeStarterCount.Count() > 1)
+            {
+                pokemonList.Remove(lgpeStarterCount[rnd.Next(lgpeStarterCount.Count)]);
+                lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
+            }
+
             return pokemonList;
         }
 
@@ -1440,6 +1448,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
+                    genders.Add("");
                     genders.Add("Male");
                     genders.Add("Female");
                 }
