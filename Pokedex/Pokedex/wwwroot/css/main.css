@@ -12,7 +12,7 @@
 
 .siteFeatures img {
   height: 10rem;
-  width: 100%;
+  width: auto;
   object-fit: contain;
   border-radius: 3px;
   cursor: pointer;
