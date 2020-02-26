@@ -284,12 +284,16 @@ main {
 
 .shadowed img {
   -webkit-filter: drop-shadow(2px 2px 2px #222);
-  filter: drop-shadow(2px 2px 2px #222)
+  filter: url("data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='5'/><feOffset dx='2' dy='2' result='offsetblur'/><feFlood flood-color='rgba(2,2,2,1)'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow");
+  -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=2, OffY=2, Color='#222')";
+  filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=2, OffY=2, Color='#222')";
 }
 
 .lightshadowed {
-  -webkit-filter: drop-shadow(.5px .5px .5px #222) !important;
-  filter: drop-shadow(.5px .5px .5px #222) !important
+  -webkit-filter: drop-shadow(0.5px 0.5px 0.5px #222) !important;
+  filter: url("data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='2'/><feOffset dx='0.5' dy='0.5' result='offsetblur'/><feFlood flood-color='rgba(2,2,2,1)'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow") !important;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0.5, OffY=0.5, Color='#222')" !important;
+  filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0.5, OffY=0.5, Color='#222')" !important;
 }
 
 .accountDropdown .dropdown-item {
