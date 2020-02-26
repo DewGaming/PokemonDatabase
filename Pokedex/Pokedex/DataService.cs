@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using ImageMagick;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
@@ -2557,6 +2560,48 @@ namespace Pokedex
             }
 
             return pokemonName;
+        }
+
+        public IFormFile TrimImage(IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                byte[] fileBytes = ms.ToArray();
+                using(MagickImage image = new MagickImage(fileBytes))
+                {
+                    image.Trim();
+                    MemoryStream strm = new MemoryStream();
+                    image.RePage();
+                    image.Write(strm, MagickFormat.Png);
+                    file = new FormFile(strm, 0, strm.Length, file.Name, file.FileName);
+                }
+            }
+
+            return file;
+        }
+
+        public IFormFile SquareImage(IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                byte[] fileBytes = ms.ToArray();
+                using(MagickImage image = new MagickImage(fileBytes))
+                {
+                    image.Trim();
+                    image.VirtualPixelMethod = VirtualPixelMethod.Transparent;
+                    image.SetArtifact("distort:viewport", string.Concat(System.Math.Max(image.Width, image.Height).ToString(), 'x', System.Math.Max(image.Width, image.Height).ToString(), '-', System.Math.Max((image.Height - image.Width)/2,0).ToString(), '-', System.Math.Max((image.Width - image.Height)/2,0).ToString()));
+                    image.FilterType = FilterType.Point;
+                    image.Distort(DistortMethod.ScaleRotateTranslate, 0);
+                    MemoryStream strm = new MemoryStream();
+                    image.RePage();
+                    image.Write(strm, MagickFormat.Png);
+                    file = new FormFile(strm, 0, strm.Length, file.Name, file.FileName);
+                }
+
+                return file;
+            }
         }
     }
 }

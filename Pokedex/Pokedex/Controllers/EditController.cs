@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-using ImageMagick;
-
 using Pokedex.DataAccess.Models;
 
 using Pokedex.Models;
@@ -462,21 +460,7 @@ namespace Pokedex.Controllers
                 upload = fileUpload;
             }
 
-            IFormFile trimmedUpload;
-
-            using (var ms = new MemoryStream())
-            {
-                upload.CopyTo(ms);
-                byte[] uploadBytes = ms.ToArray();
-                using(MagickImage image = new MagickImage(uploadBytes))
-                {
-                    image.Trim();
-                    MemoryStream strm = new MemoryStream();
-                    image.RePage();
-                    image.Write(strm, MagickFormat.Png);
-                    trimmedUpload = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
-                }
-            }
+            upload = this._dataService.TrimImage(upload);
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, id.ToString(), ".png"));
             request.Method = WebRequestMethods.Ftp.UploadFile;
@@ -484,7 +468,7 @@ namespace Pokedex.Controllers
 
             using (var requestStream = request.GetRequestStream())  
             {  
-                await trimmedUpload.CopyToAsync(requestStream);  
+                await upload.CopyToAsync(requestStream);  
             }
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -570,38 +554,7 @@ namespace Pokedex.Controllers
                 upload = fileUpload;
             }
 
-            IFormFile trimmedUpload, squaredImage;
-
-            using (var ms = new MemoryStream())
-            {
-                upload.CopyTo(ms);
-                byte[] uploadBytes = ms.ToArray();
-                using(MagickImage image = new MagickImage(uploadBytes))
-                {
-                    image.Trim();
-                    MemoryStream strm = new MemoryStream();
-                    image.RePage();
-                    image.Write(strm, MagickFormat.Png);
-                    trimmedUpload = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
-                }
-            }
-
-            using (var ms = new MemoryStream())
-            {
-                trimmedUpload.CopyTo(ms);
-                byte[] uploadBytes = ms.ToArray();
-                using(MagickImage image = new MagickImage(uploadBytes))
-                {
-                    image.VirtualPixelMethod = VirtualPixelMethod.Transparent;
-                    image.SetArtifact("distort:viewport", string.Concat(System.Math.Max(image.Width, image.Height).ToString(), 'x', System.Math.Max(image.Width, image.Height).ToString(), '-', System.Math.Max((image.Height - image.Width)/2,0).ToString(), '-', System.Math.Max((image.Width - image.Height)/2,0).ToString()));
-                    image.FilterType = FilterType.Point;
-                    image.Distort(DistortMethod.ScaleRotateTranslate, 0);
-                    MemoryStream strm = new MemoryStream();
-                    image.RePage();
-                    image.Write(strm, MagickFormat.Png);
-                    squaredImage = new FormFile(strm, 0, strm.Length, upload.Name, upload.FileName);
-                }
-            }
+            upload = this._dataService.SquareImage(upload);
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, id.ToString(), ".png"));
             request.Method = WebRequestMethods.Ftp.UploadFile;
@@ -609,7 +562,7 @@ namespace Pokedex.Controllers
 
             using (var requestStream = request.GetRequestStream())  
             {  
-                await squaredImage.CopyToAsync(requestStream);  
+                await upload.CopyToAsync(requestStream);  
             }
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
