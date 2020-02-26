@@ -415,8 +415,8 @@ label {
 }
 
 .pokemonInfo>img {
-  width: 318px;
-  height: 318px;
+  width: 327px;
+  height: 327px;
   -o-object-fit: contain;
   object-fit: contain;
 }
