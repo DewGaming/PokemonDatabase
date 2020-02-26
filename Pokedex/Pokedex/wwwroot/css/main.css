@@ -290,8 +290,13 @@ main {
 }
 
 .lightshadowed {
+  height: 3.5rem;
+  width: 3.75rem;
+  -o-object-fit: contain;
+  object-fit: contain;
+  padding: .125rem;
   -webkit-filter: drop-shadow(0.5px 0.5px 0.5px #222) !important;
-  filter: url("data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='2'/><feOffset dx='0.5' dy='0.5' result='offsetblur'/><feFlood flood-color='rgba(2,2,2,1)'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow") !important;
+  filter: url("data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0.5' dy='0.5' result='offsetblur'/><feFlood flood-color='rgba(2,2,2,1)'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow") !important;
   -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0.5, OffY=0.5, Color='#222')" !important;
   filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0.5, OffY=0.5, Color='#222')" !important;
 }
@@ -445,14 +450,6 @@ label {
 
 .surroundingPokemon, .evolutionPokemon {
   width: 100%
-}
-
-.lightshadowed {
-  height: 3.5rem;
-  width: 3.75rem;
-  -o-object-fit: contain;
-  object-fit: contain;
-  padding: .125rem;
 }
 
 .surroundingPokemon a, .evolutionPokemon a, .surroundingPokemon a:hover, .evolutionPokemon a:hover {
