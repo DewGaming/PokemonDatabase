@@ -1574,56 +1574,41 @@ namespace Pokedex
             return this._dataContext.Generations.ToList();
         }
 
-        public Game GetLatestGame(int pokemonTeamId)
+        public List<Game> GetAvailableGames(int pokemonTeamId)
         {
             PokemonTeam pokemonTeam = this.GetPokemonTeam(pokemonTeamId);
-            Game latestGame = null;
+            List<Game> availableGames = new List<Game>();
             if(pokemonTeam.FirstPokemonId != null)
             {
-                latestGame = pokemonTeam.FirstPokemon.Pokemon.Game;
+                availableGames = this.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).Select(x => x.Game).ToList();
             }
 
             if(pokemonTeam.SecondPokemonId != null)
             {
-                if(pokemonTeam.SecondPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
-                {
-                    latestGame = pokemonTeam.SecondPokemon.Pokemon.Game;
-                }
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
             }
 
             if(pokemonTeam.ThirdPokemonId != null)
             {
-                if(pokemonTeam.ThirdPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
-                {
-                    latestGame = pokemonTeam.ThirdPokemon.Pokemon.Game;
-                }
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
             }
 
             if(pokemonTeam.FourthPokemonId != null)
             {
-                if(pokemonTeam.FourthPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
-                {
-                    latestGame = pokemonTeam.FourthPokemon.Pokemon.Game;
-                }
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
             }
 
             if(pokemonTeam.FifthPokemonId != null)
             {
-                if(pokemonTeam.FifthPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
-                {
-                    latestGame = pokemonTeam.FifthPokemon.Pokemon.Game;
-                }
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
             }
 
             if(pokemonTeam.SixthPokemonId != null)
             {
-                if(pokemonTeam.SixthPokemon.Pokemon.Game.ReleaseDate > latestGame.ReleaseDate)
-                {
-                    latestGame = pokemonTeam.SixthPokemon.Pokemon.Game;
-                }
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
             }
             
-            return latestGame;
+            return availableGames;
         }
 
         public Generation GetGeneration(int id)

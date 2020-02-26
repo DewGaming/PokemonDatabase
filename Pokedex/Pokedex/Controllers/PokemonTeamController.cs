@@ -468,25 +468,15 @@ namespace Pokedex.Controllers
         {
             this.UpdatePokemonTeamList();
             
-            List<Game> allGames = this._dataService.GetGames();
             PokemonTeam pokemonTeam = _pokemonTeams[pokemonTeamId - 1];
-            Game game = this._dataService.GetLatestGame(pokemonTeam.Id);
-
+            
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                 Id = pokemonTeam.Id,
                 PokemonTeamName = pokemonTeam.PokemonTeamName,
                 GameId = pokemonTeam.GameId,
                 UserId = pokemonTeam.UserId,
+                AllGames = this._dataService.GetAvailableGames(pokemonTeam.Id),
             };
-
-            if(game != null)
-            {
-                model.AllGames = allGames.Where(x => x.ReleaseDate >= game.ReleaseDate).ToList();
-            }
-            else
-            {
-                model.AllGames = allGames;
-            }
 
             return this.View(model);
         }
@@ -498,24 +488,13 @@ namespace Pokedex.Controllers
             PokemonTeam originalPokemonTeam = this._dataService.GetPokemonTeamNoIncludes(newPokemonTeam.Id);
             if (!this.ModelState.IsValid)
             {
-                List<Game> allGames = this._dataService.GetGames();
-                Game game = this._dataService.GetLatestGame(newPokemonTeam.Id);
-
                 UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel(){
                     Id = originalPokemonTeam.Id,
                     PokemonTeamName = originalPokemonTeam.PokemonTeamName,
                     GameId = originalPokemonTeam.GameId,
                     UserId = originalPokemonTeam.UserId,
+                    AllGames = this._dataService.GetAvailableGames(newPokemonTeam.Id),
                 };
-
-                if(game != null)
-                {
-                    model.AllGames = allGames.Where(x => x.ReleaseDate >= game.ReleaseDate).ToList();
-                }
-                else
-                {
-                    model.AllGames = allGames;
-                }
 
                 return this.View(model);
             }
