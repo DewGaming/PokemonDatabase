@@ -772,46 +772,6 @@ namespace Pokedex.Controllers
                     allPokemon = allPokemon.Except(allPokemon.Where(x => x.Game.GenerationId == gen.Id)).ToList();
                 }
 
-                if (selectedEvolutions == "stage1Pokemon")
-                {
-                    List<Pokemon> newPokemon = new List<Pokemon>();
-                    foreach(var p in allPokemon)
-                    {
-                        if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
-                        {
-                            newPokemon.Add(p);
-                        }
-                    }
-
-                    allPokemon = newPokemon;
-                }
-                else if (selectedEvolutions == "middleEvolution")
-                {
-                    List<Pokemon> newPokemon = new List<Pokemon>();
-                    foreach(var p in allPokemon)
-                    {
-                        if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
-                        {
-                            newPokemon.Add(p);
-                        }
-                    }
-
-                    allPokemon = newPokemon;
-                }
-                else if (selectedEvolutions == "onlyFullyEvolved")
-                {
-                    List<Pokemon> newPokemon = new List<Pokemon>();
-                    foreach(var p in allPokemon)
-                    {
-                        if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
-                        {
-                            newPokemon.Add(p);
-                        }
-                    }
-
-                    allPokemon = newPokemon;
-                }
-
                 if(selectedLegendaries.Count() == 0)
                 {
                     List<PokemonLegendaryDetail> legendaryList = this._dataService.GetAllPokemonWithLegendaryTypes();
@@ -1083,6 +1043,46 @@ namespace Pokedex.Controllers
                             }
                         }
                     }
+                }
+
+                if (selectedEvolutions == "stage1Pokemon")
+                {
+                    List<Pokemon> newPokemon = new List<Pokemon>();
+                    foreach(var p in allPokemon)
+                    {
+                        if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                        {
+                            newPokemon.Add(p);
+                        }
+                    }
+
+                    allPokemon = newPokemon;
+                }
+                else if (selectedEvolutions == "middleEvolution")
+                {
+                    List<Pokemon> newPokemon = new List<Pokemon>();
+                    foreach(var p in allPokemon)
+                    {
+                        if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                        {
+                            newPokemon.Add(p);
+                        }
+                    }
+
+                    allPokemon = newPokemon;
+                }
+                else if (selectedEvolutions == "onlyFullyEvolved")
+                {
+                    List<Pokemon> newPokemon = new List<Pokemon>();
+                    foreach(var p in allPokemon)
+                    {
+                        if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
+                        {
+                            newPokemon.Add(p);
+                        }
+                    }
+
+                    allPokemon = newPokemon;
                 }
 
                 if(availablePokemon.Count() > 1)
