@@ -1569,6 +1569,11 @@ namespace Pokedex
             return this._dataContext.Games.Where(x => x.GenerationId == generation.Id).ToList();
         }
 
+        public List<Game> GetGamesFromGenerationId(int id)
+        {
+            return this._dataContext.Games.Where(x => x.GenerationId == id).ToList();
+        }
+
         public List<Generation> GetGenerations()
         {
             return this._dataContext.Generations.ToList();
@@ -1609,6 +1614,75 @@ namespace Pokedex
             }
             
             return availableGames;
+        }
+        
+        public List<Game> GetAvailableGames(PokemonTeam pokemonTeam)
+        {
+            List<Game> availableGames = new List<Game>();
+            if(pokemonTeam.FirstPokemonId != null)
+            {
+                availableGames = this.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).Select(x => x.Game).ToList();
+            }
+
+            if(pokemonTeam.SecondPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if(pokemonTeam.ThirdPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if(pokemonTeam.FourthPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if(pokemonTeam.FifthPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if(pokemonTeam.SixthPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+            
+            return availableGames;
+        }
+
+        public void FillPokemonTeam(PokemonTeam pokemonTeam)
+        {
+            if(pokemonTeam.FirstPokemonId != null)
+            {
+                pokemonTeam.FirstPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.FirstPokemonId);
+            }
+            
+            if(pokemonTeam.SecondPokemonId != null)
+            {
+                pokemonTeam.SecondPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.SecondPokemonId);
+            }
+            
+            if(pokemonTeam.ThirdPokemonId != null)
+            {
+                pokemonTeam.ThirdPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.ThirdPokemonId);
+            }
+            
+            if(pokemonTeam.FourthPokemonId != null)
+            {
+                pokemonTeam.FourthPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.FourthPokemonId);
+            }
+            
+            if(pokemonTeam.FifthPokemonId != null)
+            {
+                pokemonTeam.FifthPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.FifthPokemonId);
+            }
+            
+            if(pokemonTeam.SixthPokemonId != null)
+            {
+                pokemonTeam.SixthPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.SixthPokemonId);
+            }
         }
 
         public Generation GetGeneration(int id)

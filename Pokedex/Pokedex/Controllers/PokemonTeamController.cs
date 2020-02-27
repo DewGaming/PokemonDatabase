@@ -611,6 +611,53 @@ namespace Pokedex.Controllers
                 pokemonTeam.InsertPokemon(this._dataService.GetPokemonTeamDetail(pokemonId));
             }
 
+            string generationId = importedTeam.Split("===\r\n")[0];
+            this._dataService.FillPokemonTeam(pokemonTeam);
+            List<Game> availableGames = this._dataService.GetAvailableGames(pokemonTeam);
+            if(generationId.IndexOf("[gen") != -1)
+            {
+                int generationStart = generationId.IndexOf(" [");
+                int generationEnd = generationId.IndexOf("] ");
+                generationId = generationId.Substring(generationStart, generationEnd - generationStart);
+                int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, @"[^0-9]+", ""));
+                pokemonTeam.GameId = availableGames.Where(x => x.GenerationId == genId).Last().Id;
+            }
+            else
+            {
+                Game newestGame = availableGames.Last();
+                pokemonTeam.GameId = newestGame.Id;
+            }
+
+            if(pokemonTeam.FirstPokemon != null)
+            {
+                pokemonTeam.FirstPokemon = null;
+            }
+
+            if(pokemonTeam.SecondPokemon != null)
+            {
+                pokemonTeam.SecondPokemon = null;
+            }
+
+            if(pokemonTeam.ThirdPokemon != null)
+            {
+                pokemonTeam.ThirdPokemon = null;
+            }
+
+            if(pokemonTeam.FourthPokemon != null)
+            {
+                pokemonTeam.FourthPokemon = null;
+            }
+
+            if(pokemonTeam.FifthPokemon != null)
+            {
+                pokemonTeam.FifthPokemon = null;
+            }
+
+            if(pokemonTeam.SixthPokemon != null)
+            {
+                pokemonTeam.SixthPokemon = null;
+            }
+
             this._dataService.AddPokemonTeam(pokemonTeam);
         }
 
