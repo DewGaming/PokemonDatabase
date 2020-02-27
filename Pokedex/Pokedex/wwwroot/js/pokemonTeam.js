@@ -1,6 +1,39 @@
 var pokemonTeams, exportString;
 
 $(document).ready(function () {
+    $('.pokemonTeamButton').on("click", function () {
+        $.ajax({
+            url: '/grab-user-pokemon-team/',
+            method: 'POST',
+            async: false,
+            data: { 'teamId': $(this).attr('id') }
+        })
+            .done(function (data) {
+                var pokemonTeam = data;
+                if (typeof (pokemonTeam) !== "undefined") {
+                    exportString = pokemonTeam[0].exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+
+                    console.clear();
+
+                    var temp = $("<textarea>");
+                    $("body").append(temp);
+                    $(temp).text(exportString);
+                    $(temp).select();
+                    document.execCommand("copy");
+                    $(temp).remove();
+
+                    console.log(exportString);
+
+                    alert("Team has been copied to your clipboard!");
+                }
+            })
+            .fail(function (jqXHR) {
+                if (jqXHR.statusText != "error") {
+                    alert(jqXHR.statusText);
+                }
+            });
+        });
+
     $.ajax({
         url: '/grab-all-user-pokemon-teams/',
         method: 'POST'
@@ -11,6 +44,8 @@ $(document).ready(function () {
                 $('.hide').each(function () {
                     $(this).removeClass('hide');
                 });
+
+                $('.pokemonTeamButton').unbind("click");
 
                 $('.pokemonTeamButton').on("click", function () {
                     var buttonId = $(this).attr('id')

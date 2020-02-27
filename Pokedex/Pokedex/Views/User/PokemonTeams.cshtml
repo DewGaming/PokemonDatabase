@@ -107,7 +107,7 @@ Ability: @p.Ability.Name
                             <a class="teamButton btn btn-primary" title="Edit @Model.AllPokemonTeams[i].PokemonTeamName" href="@Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
                             @if(@Model.AllPokemonTeams[i].FirstPokemon != null)
                             {
-                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary hide" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
+                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
                             }
                             <br/>
                             <a class="teamButton btn btn-primary" title="Delete @Model.AllPokemonTeams[i].PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>

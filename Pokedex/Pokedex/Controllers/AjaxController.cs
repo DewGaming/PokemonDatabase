@@ -182,6 +182,52 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("grab-user-pokemon-team")]
+        public List<ExportPokemonViewModel> ExportUserPokemonTeam(int teamId)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonTeam pokemonTeam = this._dataService.GetPokemonTeam(teamId);
+                List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
+                List<PokemonTeamDetail> pokemonList = pokemonTeam.GrabPokemonTeamDetails;
+                if(pokemonList.Count() > 0)
+                {
+                    ExportPokemonViewModel pokemonTeamExport = new ExportPokemonViewModel(){
+                        ExportString = "=== ",
+                        TeamId = pokemonTeam.Id,
+                    };
+
+                    if(pokemonTeam.Game != null)
+                    {
+                        pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, " [gen", pokemonTeam.Game.GenerationId, "] ");
+                    }
+
+                    pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, pokemonTeam.PokemonTeamName, " ===\n\n");
+
+                    for(var i = 0; i < pokemonList.Count(); i++)
+                    {
+                        if(i != 0)
+                        {
+                            pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, "\n\n");
+                        }
+
+                        pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, this.FillUserPokemonTeam(pokemonList[i], pokemonTeam.GameId));
+                    }
+
+                    exportList.Add(pokemonTeamExport);
+                }
+
+                return exportList;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("grab-all-user-pokemon-teams")]
         public List<ExportPokemonViewModel> ExportAllUserPokemonTeams()
         {
