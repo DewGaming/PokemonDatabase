@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -628,7 +629,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokemon")]
-        public async Task<IActionResult> Pokemon(BasePokemonViewModel newPokemon, IFormFile artworkUpload, IFormFile spriteUpload)
+        public async Task<IActionResult> Pokemon(BasePokemonViewModel newPokemon, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -716,22 +717,58 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemon(newPokemon);
 
-            if(artworkUpload != null)
+            IFormFile upload;
+            
+            if(fileUpload == null)
             {
-                artworkUpload = this._dataService.TrimImage(artworkUpload);
+                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.'))));
+                using (WebResponse webResponse = webRequest.GetResponse())
+                {
+                    Stream stream = webResponse.GetResponseStream();
+                    MemoryStream memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+
+                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
+                }
+            }
+            else
+            {
+                upload = fileUpload;
+            }
+
+            if(upload != null)
+            {
+                upload = this._dataService.TrimImage(upload);
+
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
                 using (var requestStream = request.GetRequestStream())  
                 {  
-                    await artworkUpload.CopyToAsync(requestStream);  
+                    await upload.CopyToAsync(requestStream);  
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                 {
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
+
+                IFormFile spriteUpload = this._dataService.FormatFavIcon(upload);
+                
+                request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, newPokemon.Id.ToString(), ".png"));
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                using (var requestStream = request.GetRequestStream())  
+                {  
+                    await spriteUpload.CopyToAsync(requestStream);  
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                {
+                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
             }
             else
@@ -753,25 +790,6 @@ namespace Pokedex.Controllers
                 using (FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse())
                 {
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
-            }
-
-            if(spriteUpload != null)
-            {
-                spriteUpload = this._dataService.SquareImage(spriteUpload);
-
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, newPokemon.Id.ToString(), ".png"));
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await spriteUpload.CopyToAsync(requestStream);  
-                }
-
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
             }
 
@@ -808,7 +826,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_alternate_form/{pokemonId:int}")]
-        public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile artworkUpload, IFormFile spriteUpload)
+        public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile fileUpload, string urlUpload)
         {
             List<PokemonFormDetail> originalPokemonForms = this._dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
             if (!this.ModelState.IsValid)
@@ -862,22 +880,58 @@ namespace Pokedex.Controllers
 
             this._dataService.AddPokemon(alternatePokemon);
 
-            if(artworkUpload != null)
+            IFormFile upload;
+            
+            if(fileUpload == null)
             {
-                artworkUpload = this._dataService.TrimImage(artworkUpload);
+                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), artworkUpload.FileName.Substring(artworkUpload.FileName.LastIndexOf('.'))));
+                using (WebResponse webResponse = webRequest.GetResponse())
+                {
+                    Stream stream = webResponse.GetResponseStream();
+                    MemoryStream memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+
+                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
+                }
+            }
+            else
+            {
+                upload = fileUpload;
+            }
+
+            if(upload != null)
+            {
+                upload = this._dataService.TrimImage(upload);
+
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 
                 using (var requestStream = request.GetRequestStream())  
                 {  
-                    await artworkUpload.CopyToAsync(requestStream);  
+                    await upload.CopyToAsync(requestStream);  
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                 {
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
+
+                IFormFile spriteUpload = this._dataService.FormatFavIcon(upload);
+                
+                request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, alternatePokemon.Id.ToString(), ".png"));
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+
+                using (var requestStream = request.GetRequestStream())  
+                {  
+                    await spriteUpload.CopyToAsync(requestStream);  
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                {
+                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
             }
             else
@@ -899,25 +953,6 @@ namespace Pokedex.Controllers
                 using (FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse())
                 {
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
-            }
-
-            if(spriteUpload != null)
-            {
-                spriteUpload = this._dataService.SquareImage(spriteUpload);
-
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, alternatePokemon.Id.ToString(), ".png"));
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
-
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await spriteUpload.CopyToAsync(requestStream);  
-                }
-
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
             }
 

@@ -475,88 +475,10 @@ namespace Pokedex.Controllers
             {
                 System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
+            
+            upload = this._dataService.FormatFavIcon(upload);
 
-            return this.RedirectToAction("Pokemon", "Admin");
-        }
-
-        [HttpGet]
-        [Route("edit_pokemon_sprite/{id:int}")]
-        public IActionResult SpriteImage(int id)
-        {
-            Pokemon model = this._dataService.GetPokemonById(id);
-
-            if(this._dataService.CheckIfAltForm(id))
-            {
-                model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
-            }
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_pokemon_sprite/{id:int}")]
-        public async Task<IActionResult> SpriteImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Pokemon model = this._dataService.GetPokemonById(id);
-
-                if(this._dataService.CheckIfAltForm(id))
-                {
-                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
-                }
-                
-                return this.View(model);
-            }
-            else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
-            {
-                Pokemon model = this._dataService.GetPokemonById(id);
-
-                if(this._dataService.CheckIfAltForm(id))
-                {
-                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
-                }
-                
-                this.ModelState.AddModelError("Picture", "An image is needed to update.");
-                return this.View(model);
-            }
-            else if ((fileUpload != null && !fileUpload.FileName.Contains(".png")) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
-            {
-                Pokemon model = this._dataService.GetPokemonById(id);
-
-                if(this._dataService.CheckIfAltForm(id))
-                {
-                    model.Name = string.Concat(model.Name, " (", this._dataService.GetPokemonFormName(id), ")");
-                }
-                
-                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
-                return this.View(model);
-            }
-
-            IFormFile upload;
-
-            if(fileUpload == null)
-            {
-                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
-
-                using (WebResponse webResponse = webRequest.GetResponse())
-                {
-                    Stream stream = webResponse.GetResponseStream();
-                    MemoryStream memoryStream = new MemoryStream();
-                    stream.CopyTo(memoryStream);
-
-                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "sprite", "sprite.png");
-                }
-            }
-            else
-            {
-                upload = fileUpload;
-            }
-
-            upload = this._dataService.SquareImage(upload);
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, id.ToString(), ".png"));
+            request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, id.ToString(), ".png"));
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
 

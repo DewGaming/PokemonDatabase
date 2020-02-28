@@ -2642,7 +2642,7 @@ namespace Pokedex
             return file;
         }
 
-        public IFormFile SquareImage(IFormFile file)
+        public IFormFile FormatFavIcon(IFormFile file)
         {
             using (var ms = new MemoryStream())
             {
@@ -2655,6 +2655,9 @@ namespace Pokedex
                     image.SetArtifact("distort:viewport", string.Concat(System.Math.Max(image.Width, image.Height).ToString(), 'x', System.Math.Max(image.Width, image.Height).ToString(), '-', System.Math.Max((image.Height - image.Width)/2,0).ToString(), '-', System.Math.Max((image.Width - image.Height)/2,0).ToString()));
                     image.FilterType = FilterType.Point;
                     image.Distort(DistortMethod.ScaleRotateTranslate, 0);
+                    image.Quality = 75;
+                    image.FilterType = FilterType.Catrom;
+                    image.Resize(64, 64);
                     MemoryStream strm = new MemoryStream();
                     image.RePage();
                     image.Write(strm, MagickFormat.Png);
