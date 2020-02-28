@@ -423,6 +423,7 @@ namespace Pokedex
             if(form != null)
             {
                 pokemonViewModel.Form = form;
+                pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
             }
 
             return pokemonViewModel;
