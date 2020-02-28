@@ -492,6 +492,7 @@ namespace Pokedex
                 "Blade",
                 "Crowned",
                 "Ash",
+                "Starter",
             };
 
             foreach(var n in formNames)
