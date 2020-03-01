@@ -637,7 +637,7 @@ namespace Pokedex
 
         public List<PokemonTeam> GetAllPokemonTeams(string username)
         {
-            return this.GetPokemonTeams().Where(x => x.User.Username == username).ToList();
+            return this.GetPokemonTeams().Where(x => x.User.Username == username).OrderBy(x => x.Id).ToList();
         }
 
         public PokemonTeam GetPokemonTeam(int id)
