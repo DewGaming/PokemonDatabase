@@ -1721,6 +1721,11 @@ namespace Pokedex
             return this._dataContext.Users.ToList().Find(x => x.Username == username);
         }
 
+        public User GetUser(int id)
+        {
+            return this._dataContext.Users.ToList().Find(x => x.Id == id);
+        }
+
         public List<Message> GetMessagesToUser(int id)
         {
             return this._dataContext.Messages.Where(x => x.ReceiverId == id).ToList();

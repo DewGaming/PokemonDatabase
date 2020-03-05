@@ -15,4 +15,17 @@ $(document).ready(function () {
                 alert(jqXHR.statusText);
             }
         });
+
+    $.ajax({
+        url: '/update-last-visit/',
+        method: 'POST'
+    })
+        .done(function (data) {
+            console.log("Updated last visit time");
+        })
+        .fail(function (jqXHR) {
+            if (jqXHR.statusText != "error") {
+                alert(jqXHR.statusText);
+            }
+        });
 })

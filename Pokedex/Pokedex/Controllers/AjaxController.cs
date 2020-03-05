@@ -44,6 +44,14 @@ namespace Pokedex.Controllers
             return this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value)).Where(x => !x.IsRead).ToList().Count;
         }
 
+        [Route("update-last-visit")]
+        public void UpdateLastVisit()
+        {
+            User user = this._dataService.GetUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value));
+            user.LastVisit = DateTime.Now;
+            this._dataService.UpdateUser(user);
+        }
+
         [Route("get-pokemon-by-generation-admin/{generationId}")]
         public IActionResult GetPokemonByGenerationAdmin(int generationId)
         {

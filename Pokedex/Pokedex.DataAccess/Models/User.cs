@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
@@ -13,6 +14,9 @@ namespace Pokedex.DataAccess.Models
 
         [Required]
         public string PasswordHash { get; set; }
+
+        [Required]
+        public DateTime LastVisit { get; set; }
 
         [Required]
         [Display(Name = "Is Owner")]
