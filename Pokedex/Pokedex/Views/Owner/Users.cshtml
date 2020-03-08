@@ -16,7 +16,7 @@
             {
                 <tr>
                     <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsAdmin ? " (Admin)" : "")</td>
-                    <td>@item.LastVisit.ToString("MMMM dd yyyy H:mm tt")</td>
+                    <td>@item.LastVisit.ToString("MMMM dd yyyy h:mm tt")</td>
                     <td>
                         <a href="@Url.Action("User", "Edit", new { id = item.Id })">Edit</a>
                         @if(Model.UsersWithShinyHunts.Find(x => x.Id == item.Id) != null)
