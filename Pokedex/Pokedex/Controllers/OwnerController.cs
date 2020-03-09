@@ -36,13 +36,16 @@ namespace Pokedex.Controllers
                 UsersWithPokemonTeams = new List<User>(),
             };
 
+            List<ShinyHunt> shinyHunts = this._dataService.GetShinyHunters();
+            List<PokemonTeam> pokemonTeams = this._dataService.GetPokemonTeams();
+
             foreach(var u in model.UserList)
             {
-                if(this._dataService.GetShinyHunterById(u.Id).Count > 0)
+                if(shinyHunts.Where(x => x.UserId == u.Id).ToList().Count > 0)
                 {
                     model.UsersWithShinyHunts.Add(u);
                 }
-                if(this._dataService.GetPokemonTeamsByUserId(u.Id).Count > 0)
+                if(pokemonTeams.Where(x => x.UserId == u.Id).ToList().Count > 0)
                 {
                     model.UsersWithPokemonTeams.Add(u);
                 }
