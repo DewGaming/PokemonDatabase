@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using Pokedex.DataAccess.Models;
-
 using Pokedex.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pokedex.Controllers
 {

@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Pokedex.DataAccess.Models;
+using System.Collections.Generic;
 
 namespace Pokedex.Controllers
 {
@@ -18,7 +16,7 @@ namespace Pokedex.Controllers
             // Instantiate an instance of the data service.
             this.dataService = new DataService(dataContext);
         }
-        
+
         [Route("delete_reviewed_pokemon/{id:int}")]
         public IActionResult ReviewedPokemon(int id)
         {
@@ -83,7 +81,7 @@ namespace Pokedex.Controllers
             typeCharts.AddRange(this.dataService.GetTypeChartByAttackType(type.Id));
             foreach (var t in typeCharts)
             {
-                this.dataService.DeleteTypeChart(t.Id);    
+                this.dataService.DeleteTypeChart(t.Id);
             }
 
             this.dataService.DeleteType(type.Id);
@@ -356,7 +354,7 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("LegendaryTypes", "Admin");
         }
-        
+
         [HttpGet]
         [Route("delete_comment/{id:int}")]
         public IActionResult Comment(int id)

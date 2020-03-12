@@ -2,7 +2,7 @@ var grabAbilities = function () {
     $.ajax({
         url: '/get-pokemon-abilities/',
         method: "POST",
-        data: { 'pokemonId': $('#PokemonId').val(), "gender": $('#Gender').val() }
+        data: { 'pokemonId': $('#PokemonId').val() }
     })
         .done(function (data) {
             $('#AbilityId').empty();

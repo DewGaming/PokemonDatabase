@@ -1,15 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-
-using Pokedex.DataAccess.Models;
-
-using Pokedex.Models;
 
 namespace Pokedex.Controllers
 {
@@ -120,7 +117,7 @@ namespace Pokedex.Controllers
         public ShinyHuntingTechnique GetShinyHuntTechnique(int id)
         {
             ShinyHuntingTechnique technique = this.dataService.GetShinyHuntingTechnique(id);
-            
+
             return technique;
         }
 
@@ -216,7 +213,7 @@ namespace Pokedex.Controllers
 
                     pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, pokemonTeam.PokemonTeamName, " ===\n\n");
 
-                    for(var i = 0; i < pokemonList.Count(); i++)
+                    for (var i = 0; i < pokemonList.Count(); i++)
                     {
                         if (i != 0)
                         {
@@ -266,7 +263,7 @@ namespace Pokedex.Controllers
 
                         pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, team.PokemonTeamName, " ===\n\n");
 
-                        for(var i = 0; i < pokemonList.Count(); i++)
+                        for (var i = 0; i < pokemonList.Count(); i++)
                         {
                             if (i != 0)
                             {
@@ -306,7 +303,7 @@ namespace Pokedex.Controllers
             {
                 pokemonName = string.Concat(pokemonTeamDetail.Nickname, " (");
             }
-            
+
             if (pokemon.Name.Contains(" (Male)"))
             {
                 pokemon.Name = pokemon.Name.Replace(" (Male)", "-M");
@@ -329,7 +326,7 @@ namespace Pokedex.Controllers
 
             if (!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != 1)
             {
-                pokemonName = string.Concat(pokemonName, " (", pokemonTeamDetail.Gender.Substring(0,1), ")");
+                pokemonName = string.Concat(pokemonName, " (", pokemonTeamDetail.Gender.Substring(0, 1), ")");
             }
 
             if (pokemonForm.Count == 2)
@@ -361,7 +358,7 @@ namespace Pokedex.Controllers
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
             }
-            
+
             if (pokemonTeamDetail.PokemonTeamEV != null)
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
@@ -371,205 +368,18 @@ namespace Pokedex.Controllers
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, "\n", pokemonTeamDetail.Nature.Name, " Nature");
             }
-            
+
             if (pokemonTeamDetail.PokemonTeamIV != null)
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV));
             }
-            
+
             if (pokemonTeamDetail.PokemonTeamMoveset != null)
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
             }
 
             return pokemonTeamString;
-        }
-
-        private string FillEVs(PokemonTeamEV evs)
-        {
-            string evString = string.Empty;
-            if (evs.EVTotal == 0)
-            {
-                evString = "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
-            }
-            else
-            {
-                if (evs.Health > 0)
-                {
-                    evString = string.Concat(evString, evs.Health.ToString(), " HP");
-                }
-
-                if (evs.Attack > 0)
-                {
-                    if (!string.IsNullOrEmpty(evString))
-                    {
-                        evString = string.Concat(evString, " / ");
-                    }
-                    
-                    evString = string.Concat(evString, evs.Attack.ToString(), " Atk");
-                }
-
-                if (evs.Defense > 0)
-                {
-                    if (!string.IsNullOrEmpty(evString))
-                    {
-                        evString = string.Concat(evString, " / ");
-                    }
-                    
-                    evString = string.Concat(evString, evs.Defense.ToString(), " Def");
-                }
-
-                if (evs.SpecialAttack > 0)
-                {
-                    if (!string.IsNullOrEmpty(evString))
-                    {
-                        evString = string.Concat(evString, " / ");
-                    }
-                    
-                    evString = string.Concat(evString, evs.SpecialAttack.ToString(), " SpA");
-                }
-
-                if (evs.SpecialDefense > 0)
-                {
-                    if (!string.IsNullOrEmpty(evString))
-                    {
-                        evString = string.Concat(evString, " / ");
-                    }
-                    
-                    evString = string.Concat(evString, evs.SpecialDefense.ToString(), " SpD");
-                }
-
-                if (evs.Speed > 0)
-                {
-                    if (!string.IsNullOrEmpty(evString))
-                    {
-                        evString = string.Concat(evString, " / ");
-                    }
-
-                    evString = string.Concat(evString, evs.Speed.ToString(), " Spe");
-                }
-
-                evString = string.Concat("\nEVs: ", evString);
-            }
-
-            return evString;
-        }
-
-        private string FillIVs(PokemonTeamIV ivs)
-        {
-            string ivString = string.Empty;
-            if (ivs.Health < 31)
-            {
-                ivString = string.Concat(ivString, ivs.Health.ToString(), " HP");
-            }
-
-            if (ivs.Attack < 31)
-            {
-                if (!string.IsNullOrEmpty(ivString))
-                {
-                    ivString = string.Concat(ivString, " / ");
-                }
-                
-                ivString = string.Concat(ivString, ivs.Attack.ToString(), " Atk");
-            }
-
-            if (ivs.Defense < 31)
-            {
-                if (!string.IsNullOrEmpty(ivString))
-                {
-                    ivString = string.Concat(ivString, " / ");
-                }
-                
-                ivString = string.Concat(ivString, ivs.Defense.ToString(), " Def");
-            }
-
-            if (ivs.SpecialAttack < 31)
-            {
-                if (!string.IsNullOrEmpty(ivString))
-                {
-                    ivString = string.Concat(ivString, " / ");
-                }
-                
-                ivString = string.Concat(ivString, ivs.SpecialAttack.ToString(), " SpA");
-            }
-
-            if (ivs.SpecialDefense < 31)
-            {
-                if (!string.IsNullOrEmpty(ivString))
-                {
-                    ivString = string.Concat(ivString, " / ");
-                }
-                
-                ivString = string.Concat(ivString, ivs.SpecialDefense.ToString(), " SpD");
-            }
-
-            if (ivs.Speed < 31)
-            {
-                if (!string.IsNullOrEmpty(ivString))
-                {
-                    ivString = string.Concat(ivString, " / ");
-                }
-                
-                ivString = string.Concat(ivString, ivs.Speed.ToString(), " Spe");
-            }
-
-            if (!string.IsNullOrEmpty(ivString))
-            {
-                ivString = string.Concat("\nIVs: ", ivString);
-            }
-
-            return ivString;
-        }
-
-        private string FillMoveset(PokemonTeamMoveset moveset)
-        {
-            string movesetString = string.Empty;
-            if (!string.IsNullOrEmpty(moveset.FirstMove))
-            {
-                movesetString = string.Concat(movesetString, "\n- ", moveset.FirstMove);
-            }
-            
-            if (!string.IsNullOrEmpty(moveset.SecondMove))
-            {
-                movesetString = string.Concat(movesetString, "\n- ", moveset.SecondMove);
-            }
-            
-            if (!string.IsNullOrEmpty(moveset.ThirdMove))
-            {
-                movesetString = string.Concat(movesetString, "\n- ", moveset.ThirdMove);
-            }
-            
-            if (!string.IsNullOrEmpty(moveset.FourthMove))
-            {
-                movesetString = string.Concat(movesetString, "\n- ", moveset.FourthMove);
-            }
-
-            return movesetString;
-        }
-
-        private List<string> GetUserFormDetails(int pokemonId)
-        {
-            string form = string.Empty, itemName = string.Empty;
-            List<string> formDetails = new List<string>();
-            PokemonFormDetail pokemonFormDetail;
-
-            pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
-
-            form = string.Concat(form, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
-            
-            FormItem formItem = this.dataService.GetFormItemByPokemonId(pokemonId);
-            if (formItem != null)
-            {
-                itemName = string.Concat(" @ ", formItem.Name);
-            }
-
-            formDetails.Add(form);
-            if (!string.IsNullOrEmpty(itemName))
-            {
-                formDetails.Add(itemName);
-            }
-
-            return formDetails;
         }
 
         [AllowAnonymous]
@@ -600,7 +410,7 @@ namespace Pokedex.Controllers
                     Ability ability;
                     PokemonTeamDetail pokemonTeamDetail;
 
-                    for(var i = 0; i < pokemonIdList.Count; i++)
+                    for (var i = 0; i < pokemonIdList.Count; i++)
                     {
                         pokemon = this.dataService.GetPokemonById(pokemonIdList[i]);
 
@@ -728,70 +538,6 @@ namespace Pokedex.Controllers
             }
         }
 
-        private string ExportPokemonTeam(List<int> pokemonIdList, List<string> abilityList, bool exportAbilities)
-        {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                string pokemonTeam = string.Empty, pokemonName = string.Empty, pokemonForm = string.Empty;
-                Pokemon pokemon;
-
-                for(var i = 0; i < pokemonIdList.Count; i++)
-                {
-                    if (i != 0)
-                    {
-                        pokemonTeam = string.Concat(pokemonTeam, "\n\n");
-                    }
-
-                    pokemon = this.dataService.GetPokemonById(pokemonIdList[i]);
-                    pokemonName = pokemon.Name;
-                    if (this.dataService.CheckIfAltForm(pokemon.Id))
-                    {
-                        pokemonForm = this.GetFormDetails(pokemon.Id);
-                        pokemonName = string.Concat(pokemonName, "-", pokemonForm);
-                    }
-
-                    pokemonTeam = string.Concat(pokemonTeam, pokemonName);
-                    if (exportAbilities)
-                    {
-                        pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
-                    }
-
-                    pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");
-                }
-
-                return pokemonTeam;
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
-
-            return null;
-        }
-
-        private string GetFormDetails(int pokemonId)
-        {
-            string formDetails = string.Empty, itemName = string.Empty;
-            PokemonFormDetail pokemonFormDetail;
-
-            pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
-
-            formDetails = string.Concat(formDetails, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
-            
-            FormItem formItem = this.dataService.GetFormItemByPokemonId(pokemonId);
-            if (formItem != null)
-            {
-                itemName = formItem.Name;
-            }
-
-            if (!string.IsNullOrEmpty(itemName))
-            {
-                formDetails = string.Concat(formDetails, " @ ", itemName);
-            }
-
-            return formDetails;
-        }
-
         [AllowAnonymous]
         [Route("get-pokemon-team")]
         public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility)
@@ -853,6 +599,7 @@ namespace Pokedex.Controllers
                             allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
                         }
                     }
+
                     if (!selectedLegendaries.Contains("Mythical"))
                     {
                         List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Mythical").ToList();
@@ -862,6 +609,7 @@ namespace Pokedex.Controllers
                             allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
                         }
                     }
+
                     if (!selectedLegendaries.Contains("UltraBeast"))
                     {
                         List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Ultra Beast").ToList();
@@ -894,7 +642,7 @@ namespace Pokedex.Controllers
                     List<Pokemon> altForms = new List<Pokemon>();
 
                     if (selectedForms.Contains("Mega"))
-                    {  
+                    {
                         List<PokemonFormDetail> pokemonFormList = this.dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name.Contains("Mega")).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
@@ -981,7 +729,7 @@ namespace Pokedex.Controllers
                     }
 
                     if (selectedForms.Contains("Gigantamax"))
-                    {  
+                    {
                         List<PokemonFormDetail> pokemonFormList = this.dataService.GetAllAltFormsOnlyComplete().Where(x => x.Form.Name.Contains("Gigantamax")).ToList();
 
                         List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
@@ -1055,7 +803,7 @@ namespace Pokedex.Controllers
                     List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
                     allPokemon = allPokemon.Where(x => altFormsList.Any(y => y.Id == x.Id)).ToList();
                 }
-                
+
                 if (!multipleMegas)
                 {
                     List<Pokemon> megaList = new List<Pokemon>();
@@ -1080,7 +828,7 @@ namespace Pokedex.Controllers
                         }
                     }
                 }
-                
+
                 if (!multipleGMax)
                 {
                     List<Pokemon> megaList = new List<Pokemon>();
@@ -1261,60 +1009,9 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        private List<Form> GatherRemovableForms()
-        {
-            List<Form> forms = new List<Form>();
-            List<string> formNames = new List<string>()
-            {
-                "Alola",
-                "Galar",
-                "Gigantamax",
-                "Mega",
-                "Mega X",
-                "Mega Y",
-                "Eternamax",
-                "Blade",
-            };
-
-            foreach (var formName in formNames)
-            {
-                forms.Add(this.dataService.GetFormByName(formName));
-            }
-
-            return forms.Where(x => x != null).ToList();
-        }
-
-        private List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
-        {
-            Random rnd = new Random();
-            List<Pokemon> pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
-            while(pumpkabooCount.Count() > 1)
-            {
-                pokemonList.Remove(pumpkabooCount[rnd.Next(pumpkabooCount.Count)]);
-                pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
-            }
-
-            List<Pokemon> gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
-            while(gourgeistCount.Count() > 1)
-            {
-                pokemonList.Remove(gourgeistCount[rnd.Next(gourgeistCount.Count)]);
-                gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
-            }
-
-            List<Pokemon> starterForms = this.dataService.GetPokemonFormDetailsByFormName("Starter").Select(x => x.AltFormPokemon).ToList();
-            List<Pokemon> lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
-            while(lgpeStarterCount.Count() > 1)
-            {
-                pokemonList.Remove(lgpeStarterCount[rnd.Next(lgpeStarterCount.Count)]);
-                lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
-            }
-
-            return pokemonList;
-        }
-
         [AllowAnonymous]
         [Route("get-pokemon-abilities")]
-        public List<Ability> GetPokemonAbilities(int pokemonId, string gender)
+        public List<Ability> GetPokemonAbilities(int pokemonId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1357,7 +1054,7 @@ namespace Pokedex.Controllers
                         weaknesses.Remove(weaknesses.Find(x => x == t));
                     }
                 }
-                
+
                 foreach (var r in resistances)
                 {
                     typeChart = new TypeChart()
@@ -1368,7 +1065,7 @@ namespace Pokedex.Controllers
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
-                
+
                 foreach (var w in weaknesses)
                 {
                     typeChart = new TypeChart()
@@ -1379,7 +1076,7 @@ namespace Pokedex.Controllers
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
-                
+
                 foreach (var i in immunities)
                 {
                     typeChart = new TypeChart()
@@ -1414,7 +1111,7 @@ namespace Pokedex.Controllers
             {
                 PokemonGameDetail pokemonGameDetail;
                 List<PokemonGameDetail> existingGameDetails = this.dataService.GetPokemonGameDetails(pokemonId);
-                
+
                 foreach (var g in games)
                 {
                     pokemonGameDetail = new PokemonGameDetail()
@@ -1476,7 +1173,7 @@ namespace Pokedex.Controllers
 
                     battleItems = battleItems.OrderBy(x => x.Name).ToList();
                 }
-                
+
                 return battleItems;
             }
             else
@@ -1562,6 +1259,7 @@ namespace Pokedex.Controllers
                             availableGenerations.Add(gen);
                         }
                     }
+
                     return availableGenerations;
                 }
                 else
@@ -1646,7 +1344,7 @@ namespace Pokedex.Controllers
                         {
                             pokemon = this.dataService.GetAltFormWithFormName(p.PokemonId);
                         }
-                        
+
                         pokemonList.Add(p.Pokemon);
                     }
 
@@ -1691,8 +1389,11 @@ namespace Pokedex.Controllers
                     eggGroupList = finalEggGroupList;
                 }
 
-                List<EggGroup> pokemonEggGroupList = new List<EggGroup>();
-                pokemonEggGroupList.Add(searchedEggGroupDetails.PrimaryEggGroup);
+                List<EggGroup> pokemonEggGroupList = new List<EggGroup>
+                {
+                    searchedEggGroupDetails.PrimaryEggGroup,
+                };
+
                 if (searchedEggGroupDetails.SecondaryEggGroup != null)
                 {
                     pokemonEggGroupList.Add(searchedEggGroupDetails.SecondaryEggGroup);
@@ -1716,6 +1417,308 @@ namespace Pokedex.Controllers
             }
 
             return null;
+        }
+
+        private string FillEVs(PokemonTeamEV evs)
+        {
+            string evString = string.Empty;
+            if (evs.EVTotal == 0)
+            {
+                evString = "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
+            }
+            else
+            {
+                if (evs.Health > 0)
+                {
+                    evString = string.Concat(evString, evs.Health.ToString(), " HP");
+                }
+
+                if (evs.Attack > 0)
+                {
+                    if (!string.IsNullOrEmpty(evString))
+                    {
+                        evString = string.Concat(evString, " / ");
+                    }
+
+                    evString = string.Concat(evString, evs.Attack.ToString(), " Atk");
+                }
+
+                if (evs.Defense > 0)
+                {
+                    if (!string.IsNullOrEmpty(evString))
+                    {
+                        evString = string.Concat(evString, " / ");
+                    }
+
+                    evString = string.Concat(evString, evs.Defense.ToString(), " Def");
+                }
+
+                if (evs.SpecialAttack > 0)
+                {
+                    if (!string.IsNullOrEmpty(evString))
+                    {
+                        evString = string.Concat(evString, " / ");
+                    }
+
+                    evString = string.Concat(evString, evs.SpecialAttack.ToString(), " SpA");
+                }
+
+                if (evs.SpecialDefense > 0)
+                {
+                    if (!string.IsNullOrEmpty(evString))
+                    {
+                        evString = string.Concat(evString, " / ");
+                    }
+
+                    evString = string.Concat(evString, evs.SpecialDefense.ToString(), " SpD");
+                }
+
+                if (evs.Speed > 0)
+                {
+                    if (!string.IsNullOrEmpty(evString))
+                    {
+                        evString = string.Concat(evString, " / ");
+                    }
+
+                    evString = string.Concat(evString, evs.Speed.ToString(), " Spe");
+                }
+
+                evString = string.Concat("\nEVs: ", evString);
+            }
+
+            return evString;
+        }
+
+        private string FillIVs(PokemonTeamIV ivs)
+        {
+            string ivString = string.Empty;
+            if (ivs.Health < 31)
+            {
+                ivString = string.Concat(ivString, ivs.Health.ToString(), " HP");
+            }
+
+            if (ivs.Attack < 31)
+            {
+                if (!string.IsNullOrEmpty(ivString))
+                {
+                    ivString = string.Concat(ivString, " / ");
+                }
+
+                ivString = string.Concat(ivString, ivs.Attack.ToString(), " Atk");
+            }
+
+            if (ivs.Defense < 31)
+            {
+                if (!string.IsNullOrEmpty(ivString))
+                {
+                    ivString = string.Concat(ivString, " / ");
+                }
+
+                ivString = string.Concat(ivString, ivs.Defense.ToString(), " Def");
+            }
+
+            if (ivs.SpecialAttack < 31)
+            {
+                if (!string.IsNullOrEmpty(ivString))
+                {
+                    ivString = string.Concat(ivString, " / ");
+                }
+
+                ivString = string.Concat(ivString, ivs.SpecialAttack.ToString(), " SpA");
+            }
+
+            if (ivs.SpecialDefense < 31)
+            {
+                if (!string.IsNullOrEmpty(ivString))
+                {
+                    ivString = string.Concat(ivString, " / ");
+                }
+
+                ivString = string.Concat(ivString, ivs.SpecialDefense.ToString(), " SpD");
+            }
+
+            if (ivs.Speed < 31)
+            {
+                if (!string.IsNullOrEmpty(ivString))
+                {
+                    ivString = string.Concat(ivString, " / ");
+                }
+
+                ivString = string.Concat(ivString, ivs.Speed.ToString(), " Spe");
+            }
+
+            if (!string.IsNullOrEmpty(ivString))
+            {
+                ivString = string.Concat("\nIVs: ", ivString);
+            }
+
+            return ivString;
+        }
+
+        private string FillMoveset(PokemonTeamMoveset moveset)
+        {
+            string movesetString = string.Empty;
+            if (!string.IsNullOrEmpty(moveset.FirstMove))
+            {
+                movesetString = string.Concat(movesetString, "\n- ", moveset.FirstMove);
+            }
+
+            if (!string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                movesetString = string.Concat(movesetString, "\n- ", moveset.SecondMove);
+            }
+
+            if (!string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                movesetString = string.Concat(movesetString, "\n- ", moveset.ThirdMove);
+            }
+
+            if (!string.IsNullOrEmpty(moveset.FourthMove))
+            {
+                movesetString = string.Concat(movesetString, "\n- ", moveset.FourthMove);
+            }
+
+            return movesetString;
+        }
+
+        private List<string> GetUserFormDetails(int pokemonId)
+        {
+            string form = string.Empty, itemName = string.Empty;
+            List<string> formDetails = new List<string>();
+            PokemonFormDetail pokemonFormDetail;
+
+            pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+
+            form = string.Concat(form, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
+
+            FormItem formItem = this.dataService.GetFormItemByPokemonId(pokemonId);
+            if (formItem != null)
+            {
+                itemName = string.Concat(" @ ", formItem.Name);
+            }
+
+            formDetails.Add(form);
+            if (!string.IsNullOrEmpty(itemName))
+            {
+                formDetails.Add(itemName);
+            }
+
+            return formDetails;
+        }
+
+        private string ExportPokemonTeam(List<int> pokemonIdList, List<string> abilityList, bool exportAbilities)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                string pokemonTeam = string.Empty;
+                Pokemon pokemon;
+
+                for (var i = 0; i < pokemonIdList.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                        pokemonTeam = string.Concat(pokemonTeam, "\n\n");
+                    }
+
+                    pokemon = this.dataService.GetPokemonById(pokemonIdList[i]);
+                    string pokemonName = pokemon.Name;
+                    if (this.dataService.CheckIfAltForm(pokemon.Id))
+                    {
+                        string pokemonForm = this.GetFormDetails(pokemon.Id);
+                        pokemonName = string.Concat(pokemonName, "-", pokemonForm);
+                    }
+
+                    pokemonTeam = string.Concat(pokemonTeam, pokemonName);
+                    if (exportAbilities)
+                    {
+                        pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
+                    }
+
+                    pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");
+                }
+
+                return pokemonTeam;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        private string GetFormDetails(int pokemonId)
+        {
+            string formDetails = string.Empty, itemName = string.Empty;
+            PokemonFormDetail pokemonFormDetail;
+
+            pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+
+            formDetails = string.Concat(formDetails, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
+
+            FormItem formItem = this.dataService.GetFormItemByPokemonId(pokemonId);
+            if (formItem != null)
+            {
+                itemName = formItem.Name;
+            }
+
+            if (!string.IsNullOrEmpty(itemName))
+            {
+                formDetails = string.Concat(formDetails, " @ ", itemName);
+            }
+
+            return formDetails;
+        }
+
+        private List<Form> GatherRemovableForms()
+        {
+            List<Form> forms = new List<Form>();
+            List<string> formNames = new List<string>()
+            {
+                "Alola",
+                "Galar",
+                "Gigantamax",
+                "Mega",
+                "Mega X",
+                "Mega Y",
+                "Eternamax",
+                "Blade",
+            };
+
+            foreach (var formName in formNames)
+            {
+                forms.Add(this.dataService.GetFormByName(formName));
+            }
+
+            return forms.Where(x => x != null).ToList();
+        }
+
+        private List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
+        {
+            Random rnd = new Random();
+            List<Pokemon> pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
+            while (pumpkabooCount.Count() > 1)
+            {
+                pokemonList.Remove(pumpkabooCount[rnd.Next(pumpkabooCount.Count)]);
+                pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
+            }
+
+            List<Pokemon> gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
+            while (gourgeistCount.Count() > 1)
+            {
+                pokemonList.Remove(gourgeistCount[rnd.Next(gourgeistCount.Count)]);
+                gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
+            }
+
+            List<Pokemon> starterForms = this.dataService.GetPokemonFormDetailsByFormName("Starter").Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
+            while (lgpeStarterCount.Count() > 1)
+            {
+                pokemonList.Remove(lgpeStarterCount[rnd.Next(lgpeStarterCount.Count)]);
+                lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
+            }
+
+            return pokemonList;
         }
     }
 }

@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using ImageMagick;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace Pokedex
 {
@@ -91,11 +91,20 @@ namespace Pokedex
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets a specific legendary type.
+        /// </summary>
+        /// <param name="id">The id of the legendary type.</param>
+        /// <returns>The specified legendary type.</returns>
         public LegendaryType GetLegendaryType(int id)
         {
             return this.dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList().Find(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Gets all legendary types.
+        /// </summary>
+        /// <returns>A list of all legendary types.</returns>
         public List<LegendaryType> GetLegendaryTypes()
         {
             return this.dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList();

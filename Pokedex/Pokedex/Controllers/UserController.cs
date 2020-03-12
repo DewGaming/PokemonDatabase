@@ -145,7 +145,7 @@ namespace Pokedex.Controllers
                 {
                     UserId = newPasswordViewModel.UserId,
                 };
-                
+
                 // Set invalid password error message.
                 this.ModelState.AddModelError("Error", "Invalid password.");
 

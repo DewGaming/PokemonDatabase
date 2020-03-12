@@ -30,6 +30,10 @@ namespace Pokedex.Controllers
             this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// The method that is used when a user tries to sign up.
+        /// </summary>
+        /// <returns>The sign up page.</returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("signup")]
@@ -38,6 +42,11 @@ namespace Pokedex.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// The method that is used when a user tries to sign up.
+        /// </summary>
+        /// <param name="registerViewModel">The register credentials.</param>
+        /// <returns>The home page.</returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("signup")]
@@ -91,6 +100,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// The method that is used when a user tries to log in.
+        /// </summary>
+        /// <returns>The log in page.</returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("login")]
@@ -99,6 +112,12 @@ namespace Pokedex.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// The method that is used when a user tries to log in.
+        /// </summary>
+        /// <param name="loginViewModel">The login credentials.</param>
+        /// <param name="returnUrl">The url the user came from.</param>
+        /// <returns>The home page.</returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
@@ -161,6 +180,10 @@ namespace Pokedex.Controllers
             }
         }
 
+        /// <summary>
+        /// The method that is used when a user wants to log out.
+        /// </summary>
+        /// <returns>The home page.</returns>
         [HttpGet]
         [Route("logout")]
         public async Task<IActionResult> Logout()
@@ -171,6 +194,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// The method that is used when a user tries to access a page without permissions.
+        /// </summary>
+        /// <returns>The access denied page.</returns>
         [HttpGet]
         [Route("access_denied")]
         public IActionResult AccessDenied()

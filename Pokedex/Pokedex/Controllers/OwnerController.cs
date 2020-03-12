@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using Pokedex.DataAccess.Models;
-
 using Pokedex.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pokedex.Controllers
 {
@@ -45,6 +42,7 @@ namespace Pokedex.Controllers
                 {
                     model.UsersWithShinyHunts.Add(u);
                 }
+
                 if (pokemonTeams.Where(x => x.UserId == u.Id).ToList().Count > 0)
                 {
                     model.UsersWithPokemonTeams.Add(u);
@@ -87,7 +85,7 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            
+
             this.dataService.AddMessage(message);
 
             return this.RedirectToAction("Comments", "Owner");
@@ -126,7 +124,7 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            
+
             this.dataService.AddMessage(message);
 
             return this.RedirectToAction("ViewMessages", "User");
@@ -212,16 +210,19 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");   
+                return this.RedirectToAction("Pokemon", "Admin");
             }
         }
 
         [HttpPost]
         [Route("review_pokemon/{pokemonId:int}")]
-        public IActionResult ReviewPokemon(Pokemon pokemon, int pokemonId)
+        public IActionResult ReviewPokemon(Pokemon pokemon)
         {
-            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemonId);
-            this.dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemonId });
+            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemon.Id);
+            if (reviewedPokemon != null)
+            {
+                this.dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemon.Id });
+            }
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

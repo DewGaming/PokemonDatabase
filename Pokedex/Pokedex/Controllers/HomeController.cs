@@ -34,10 +34,6 @@ namespace Pokedex.Controllers
             this.dataService = new DataService(dataContext);
         }
 
-        /// <summary>
-        /// The method that routes to the homepage.
-        /// </summary>
-        /// <returns>Returns .</returns>
         [AllowAnonymous]
         [Route("")]
         public IActionResult Index()
@@ -48,17 +44,17 @@ namespace Pokedex.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("search")]
-        public IActionResult Search(string search)
+        public IActionResult Search(string searchText)
         {
-            search = HttpUtility.UrlDecode(search);
-            search = string.IsNullOrEmpty(search) ? string.Empty : search.Replace("/", string.Empty).Replace("\\", string.Empty);
-            if (string.IsNullOrEmpty(search))
+            searchText = HttpUtility.UrlDecode(searchText);
+            searchText = string.IsNullOrEmpty(searchText) ? string.Empty : searchText.Replace("/", string.Empty).Replace("\\", string.Empty);
+            if (string.IsNullOrEmpty(searchText))
             {
                 return this.RedirectToAction("AllPokemon", "Home");
             }
             else
             {
-                return this.RedirectToAction("SearchRedirect", "Home", new { search = search } );
+                return this.RedirectToAction("SearchRedirect", "Home", new { search = searchText });
             }
         }
 
@@ -85,6 +81,7 @@ namespace Pokedex.Controllers
                     {
                         pokemonSearched = model[0].Pokemon;
                     }
+
                     return this.RedirectToAction("Pokemon", "Home", new { Name = pokemonSearched.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
                 else if (model.Count() == 0)
@@ -191,7 +188,7 @@ namespace Pokedex.Controllers
                 pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemon.Id);
 
                 pokemonList.Add(pokemonDetails);
-                
+
                 List<Pokemon> altForms = this.dataService.GetAltForms(pokemon.Id);
                 if (altForms.Count() > 0)
                 {
@@ -294,7 +291,7 @@ namespace Pokedex.Controllers
                     comment.PokemonName = null;
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(comment.PokemonName) && comment.CommentedPage != "Pokemon Page")
             {
                 comment.CommentedPage = "Pokemon Page";

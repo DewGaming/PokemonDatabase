@@ -695,14 +695,14 @@ namespace Pokedex.Controllers
                     AllGenderRatios = new List<GenderRatioViewModel>(),
                     AllGames = this.dataService.GetGames(),
                 };
-    
+
                 foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
                 {
                     GenderRatioViewModel viewModel = new GenderRatioViewModel()
                     {
                         Id = genderRatio.Id,
                     };
-    
+
                     if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                     {
                         viewModel.GenderRatioString = "Genderless";
@@ -719,7 +719,7 @@ namespace Pokedex.Controllers
                     {
                         viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male / ", genderRatio.FemaleRatio, "% Female");
                     }
-    
+
                     model.AllGenderRatios.Add(viewModel);
                 }
 
@@ -730,7 +730,7 @@ namespace Pokedex.Controllers
             this.dataService.AddPokemon(newPokemon);
 
             IFormFile upload;
-            
+
             if (fileUpload == null)
             {
                 WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
@@ -757,9 +757,9 @@ namespace Pokedex.Controllers
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await upload.CopyToAsync(requestStream);  
+                using (var requestStream = request.GetRequestStream())
+                {
+                    await upload.CopyToAsync(requestStream);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -768,14 +768,14 @@ namespace Pokedex.Controllers
                 }
 
                 IFormFile spriteUpload = this.dataService.FormatFavIcon(upload);
-                
+
                 request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, newPokemon.Id.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await spriteUpload.CopyToAsync(requestStream);  
+                using (var requestStream = request.GetRequestStream())
+                {
+                    await spriteUpload.CopyToAsync(requestStream);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -789,7 +789,7 @@ namespace Pokedex.Controllers
                 webRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
                 byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
-                
+
                 FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
@@ -873,7 +873,7 @@ namespace Pokedex.Controllers
                         OriginalPokemon = originalPokemon,
                         OriginalPokemonId = originalPokemon.Id,
                     };
-    
+
                     this.ModelState.AddModelError("Alternate Form Name", "Original Pokemon already has an alternate form of this type.");
                     return this.View(model);
                 }
@@ -893,7 +893,7 @@ namespace Pokedex.Controllers
             this.dataService.AddPokemon(alternatePokemon);
 
             IFormFile upload;
-            
+
             if (fileUpload == null)
             {
                 WebRequest webRequest = WebRequest.CreateHttp(urlUpload);

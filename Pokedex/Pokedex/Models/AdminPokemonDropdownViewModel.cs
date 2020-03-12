@@ -2,10 +2,19 @@ using System.Collections.Generic;
 
 namespace Pokedex.Models
 {
+    /// <summary>
+    /// The class that is sued to represent the pokemon dropdown view model.
+    /// </summary>
     public class AdminPokemonDropdownViewModel
     {
+        /// <summary>
+        /// Gets or sets a list of all pokemon.
+        /// </summary>
         public List<PokemonViewModel> PokemonList { get; set; }
 
+        /// <summary>
+        /// Gets or sets the admin generation dropdown menu.
+        /// </summary>
         public AdminGenerationTableViewModel AdminDropdown { get; set; }
     }
 }

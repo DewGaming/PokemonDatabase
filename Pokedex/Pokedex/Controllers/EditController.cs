@@ -1,17 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-
-using Pokedex.DataAccess.Models;
-
-using Pokedex.Models;
 
 namespace Pokedex.Controllers
 {
@@ -230,7 +227,7 @@ namespace Pokedex.Controllers
             model.AllEggCycles = this.dataService.GetEggCycles();
             model.AllExperienceGrowths = this.dataService.GetExperienceGrowths();
             model.AllGenderRatios = new List<GenderRatioViewModel>();
-    
+
             foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
             {
                 GenderRatioViewModel viewModel = new GenderRatioViewModel()
@@ -257,7 +254,7 @@ namespace Pokedex.Controllers
 
                 model.AllGenderRatios.Add(viewModel);
             }
-            
+
             if (this.dataService.CheckIfAltForm(id))
             {
                 model.Name = string.Concat(model.Pokemon.Name, " (", this.dataService.GetPokemonFormName(id), ")");
@@ -278,7 +275,7 @@ namespace Pokedex.Controllers
                     Pokemon = this.dataService.GetPokemonById(pokemon.Id),
                     AllGames = this.dataService.GetGames(),
                 };
-    
+
                 if (!this.dataService.CheckIfAltForm(pokemon.Id))
                 {
                     model.AllBaseHappinesses = this.dataService.GetBaseHappinesses();
@@ -329,7 +326,7 @@ namespace Pokedex.Controllers
                     Pokemon = this.dataService.GetPokemonById(pokemon.Id),
                     AllGames = this.dataService.GetGames(),
                 };
-    
+
                 if (!this.dataService.CheckIfAltForm(pokemon.Id))
                 {
                     model.AllBaseHappinesses = this.dataService.GetBaseHappinesses();
@@ -422,7 +419,7 @@ namespace Pokedex.Controllers
                 {
                     model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
                 }
-                
+
                 return this.View(model);
             }
             else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
@@ -433,7 +430,7 @@ namespace Pokedex.Controllers
                 {
                     model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
                 }
-                
+
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
                 return this.View(model);
             }
@@ -445,7 +442,7 @@ namespace Pokedex.Controllers
                 {
                     model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
                 }
-                
+
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
                 return this.View(model);
             }
@@ -476,25 +473,25 @@ namespace Pokedex.Controllers
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-            using (var requestStream = request.GetRequestStream())  
-            {  
-                await upload.CopyToAsync(requestStream);  
+            using (var requestStream = request.GetRequestStream())
+            {
+                await upload.CopyToAsync(requestStream);
             }
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
             {
                 System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
-            
+
             upload = this.dataService.FormatFavIcon(upload);
 
             request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, id.ToString(), ".png"));
             request.Method = WebRequestMethods.Ftp.UploadFile;
             request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-            using (var requestStream = request.GetRequestStream())  
-            {  
-                await upload.CopyToAsync(requestStream);  
+            using (var requestStream = request.GetRequestStream())
+            {
+                await upload.CopyToAsync(requestStream);
             }
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -862,7 +859,7 @@ namespace Pokedex.Controllers
                 PokemonId = item.PokemonId,
                 Name = item.Name,
             };
-            
+
             List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").Select(x => x.AltFormPokemon).ToList();
             altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").Select(x => x.AltFormPokemon).ToList());
             altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").Select(x => x.AltFormPokemon).ToList());
@@ -896,7 +893,7 @@ namespace Pokedex.Controllers
                     PokemonId = item.PokemonId,
                     Name = item.Name,
                 };
-                
+
                 List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").Select(x => x.AltFormPokemon).ToList();
                 altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").Select(x => x.AltFormPokemon).ToList());
                 altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").Select(x => x.AltFormPokemon).ToList());
@@ -913,7 +910,7 @@ namespace Pokedex.Controllers
                 }
 
                 model.AllPokemon = altForms;
-    
+
                 return this.View(model);
             }
 
@@ -1324,7 +1321,7 @@ namespace Pokedex.Controllers
             PokemonFormDetail pokemonForm = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
             AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
             {
-                pokemonFormDetail = pokemonForm,
+                PokemonFormDetail = pokemonForm,
                 AllForms = this.dataService.GetForms(),
             };
 
@@ -1341,7 +1338,7 @@ namespace Pokedex.Controllers
                 PokemonFormDetail pokemonForm = this.dataService.GetPokemonFormDetailByAltFormId(pokemonFormDetail.AltFormPokemonId);
                 AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
                 {
-                    pokemonFormDetail = pokemonForm,
+                    PokemonFormDetail = pokemonForm,
                     AllForms = this.dataService.GetForms(),
                 };
 

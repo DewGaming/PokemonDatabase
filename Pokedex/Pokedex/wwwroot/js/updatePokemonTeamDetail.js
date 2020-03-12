@@ -2,7 +2,7 @@ var abilityId = 0, gender = "Empty", battleItem = "Empty", grabAbilities = funct
     $.ajax({
         url: '/get-pokemon-abilities/',
         method: "POST",
-        data: { 'pokemonId': $('#PokemonTeamDetail_PokemonId').val(), "gender": $('#PokemonTeamDetail_Gender').val() }
+        data: { 'pokemonId': $('#PokemonTeamDetail_PokemonId').val() }
     })
         .done(function (data) {
             $('#PokemonTeamDetail_AbilityId').empty();
