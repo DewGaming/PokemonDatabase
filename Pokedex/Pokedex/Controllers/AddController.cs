@@ -1,56 +1,62 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-
-using Pokedex.DataAccess.Models;
-
-using Pokedex.Models;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that is used to represent the add controller.
+    /// </summary>
     [Authorize(Roles = "Owner")]
     [Route("admin")]
     public class AddController : Controller
     {
-        private readonly DataService _dataService;
+        private readonly DataService dataService;
 
-        private readonly AppConfig _appConfig;
+        private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddController"/> class.
+        /// </summary>
+        /// <param name="appConfig">The application's configuration.</param>
+        /// <param name="dataContext">The pokemon database's context.</param>
         public AddController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             // Instantiate an instance of the data service.
-            this._appConfig = appConfig.Value;
-            this._dataService = new DataService(dataContext);
+            this.appConfig = appConfig.Value;
+            this.dataService = new DataService(dataContext);
         }
 
         [HttpGet]
         [Route("add_evolution/{pokemonId:int}")]
         public IActionResult Evolution(int pokemonId)
         {
-            Pokemon evolutionPokemon = this._dataService.GetPokemonById(pokemonId);
+            Pokemon evolutionPokemon = this.dataService.GetPokemonById(pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
             {
-                AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
+                AllEvolutionMethods = this.dataService.GetEvolutionMethods(),
                 EvolutionPokemon = evolutionPokemon,
                 EvolutionPokemonId = evolutionPokemon.Id,
             };
 
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
-            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
-            foreach(var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
+                pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
             }
 
             model.AllPokemon = pokemonList;
-            
+
             return this.View(model);
         }
 
@@ -63,15 +69,15 @@ namespace Pokedex.Controllers
             {
                 EvolutionViewModel model = new EvolutionViewModel()
                 {
-                    AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
+                    AllEvolutionMethods = this.dataService.GetEvolutionMethods(),
                     EvolutionPokemon = evolution.EvolutionPokemon,
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
                 };
-                List<Pokemon> pokemonList = this._dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
-                foreach(var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+                List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
+                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
-                    pokemon.Name = string.Concat(pokemon.Name, " (", this._dataService.GetPokemonFormName(pokemon.Id), ")");
+                    pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
                 }
 
                 model.AllPokemon = pokemonList;
@@ -79,9 +85,9 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this._dataService.AddEvolution(evolution);
+            this.dataService.AddEvolution(evolution);
 
-            if(this._dataService.GetPokemonById(evolution.EvolutionPokemonId).IsComplete)
+            if (this.dataService.GetPokemonById(evolution.EvolutionPokemonId).IsComplete)
             {
                 return this.RedirectToAction("Pokemon", "Admin");
             }
@@ -108,7 +114,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddShinyHuntingTechnique(shinyHuntingTechnique);
+            this.dataService.AddShinyHuntingTechnique(shinyHuntingTechnique);
 
             return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
         }
@@ -130,7 +136,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddGeneration(generation);
+            this.dataService.AddGeneration(generation);
 
             return this.RedirectToAction("Generations", "Admin");
         }
@@ -140,24 +146,24 @@ namespace Pokedex.Controllers
         public IActionResult FormItem()
         {
             FormItemViewModel model = new FormItemViewModel();
-            List<Pokemon> altForms = this._dataService.GetPokemonFormDetailsByFormName("Mega").Select(x => x.AltFormPokemon).ToList();
-            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Mega X").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Mega Y").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Primal").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Origin").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Ultra").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this._dataService.GetPokemonFormDetailsByFormName("Crowned").Select(x => x.AltFormPokemon).ToList());
+            List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").Select(x => x.AltFormPokemon).ToList();
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Primal").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Origin").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Ultra").Select(x => x.AltFormPokemon).ToList());
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Crowned").Select(x => x.AltFormPokemon).ToList());
 
-            foreach(var p in this._dataService.GetFormItems().Select(x => x.Pokemon))
+            foreach (var p in this.dataService.GetFormItems().Select(x => x.Pokemon))
             {
                 altForms.Remove(altForms.Find(x => x.PokedexNumber == p.PokedexNumber));
             }
 
             altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
 
-            foreach(var p in altForms)
+            foreach (var p in altForms)
             {
-                p.Name = string.Concat(p.Name, " (", this._dataService.GetPokemonFormName(p.Id), ")");
+                p.Name = string.Concat(p.Name, " (", this.dataService.GetPokemonFormName(p.Id), ")");
             }
 
             model.AllPokemon = altForms;
@@ -174,13 +180,13 @@ namespace Pokedex.Controllers
             {
                 FormItemViewModel model = new FormItemViewModel()
                 {
-                    AllPokemon = this._dataService.GetAllPokemonOnlyForms(),
+                    AllPokemon = this.dataService.GetAllPokemonOnlyForms(),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddFormItem(formItem);
+            this.dataService.AddFormItem(formItem);
 
             return this.RedirectToAction("FormItems", "Admin");
         }
@@ -202,7 +208,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddType(type);
+            this.dataService.AddType(type);
 
             return this.RedirectToAction("Types", "Admin");
         }
@@ -224,7 +230,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddEggCycle(eggCycle);
+            this.dataService.AddEggCycle(eggCycle);
 
             return this.RedirectToAction("EggCycles", "Admin");
         }
@@ -246,7 +252,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddExperienceGrowth(experienceGrowth);
+            this.dataService.AddExperienceGrowth(experienceGrowth);
 
             return this.RedirectToAction("ExperienceGrowths", "Admin");
         }
@@ -268,7 +274,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddGenderRatio(genderRatio);
+            this.dataService.AddGenderRatio(genderRatio);
 
             return this.RedirectToAction("GenderRatios", "Admin");
         }
@@ -290,7 +296,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddLegendaryType(legendaryType);
+            this.dataService.AddLegendaryType(legendaryType);
 
             return this.RedirectToAction("LegendaryTypes", "Admin");
         }
@@ -312,7 +318,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddEggGroup(eggGroup);
+            this.dataService.AddEggGroup(eggGroup);
 
             return this.RedirectToAction("EggGroups", "Admin");
         }
@@ -324,8 +330,8 @@ namespace Pokedex.Controllers
             MoveViewModel model = new MoveViewModel()
             {
                 MoveTypeId = typeId,
-                AllTypes = this._dataService.GetTypes(),
-                AllMoveCategories = this._dataService.GetMoveCategories(),
+                AllTypes = this.dataService.GetTypes(),
+                AllMoveCategories = this.dataService.GetMoveCategories(),
             };
 
             return this.View(model);
@@ -341,14 +347,14 @@ namespace Pokedex.Controllers
                 MoveViewModel model = new MoveViewModel()
                 {
                     MoveTypeId = move.MoveTypeId,
-                    AllTypes = this._dataService.GetTypes(),
-                    AllMoveCategories = this._dataService.GetMoveCategories(),
+                    AllTypes = this.dataService.GetTypes(),
+                    AllMoveCategories = this.dataService.GetMoveCategories(),
                 };
-                
+
                 return this.View(model);
             }
 
-            this._dataService.AddMove(move);
+            this.dataService.AddMove(move);
 
             return this.RedirectToAction("Moves", "Admin");
         }
@@ -370,16 +376,16 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            if(classification.Name.Contains("pokemon"))
+            if (classification.Name.Contains("pokemon"))
             {
                 classification.Name = classification.Name.Replace("pokemon", "Pokemon");
             }
-            else if(!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
+            else if (!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
             {
                 classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
             }
 
-            this._dataService.AddClassification(classification);
+            this.dataService.AddClassification(classification);
 
             return this.RedirectToAction("Classifications", "Admin");
         }
@@ -401,7 +407,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddNature(nature);
+            this.dataService.AddNature(nature);
 
             return this.RedirectToAction("Natures", "Admin");
         }
@@ -423,7 +429,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddForm(form);
+            this.dataService.AddForm(form);
 
             return this.RedirectToAction("Forms", "Admin");
         }
@@ -445,7 +451,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddEvolutionMethod(evolutionMethod);
+            this.dataService.AddEvolutionMethod(evolutionMethod);
 
             return this.RedirectToAction("EvolutionMethods", "Admin");
         }
@@ -467,7 +473,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddCaptureRate(captureRate);
+            this.dataService.AddCaptureRate(captureRate);
 
             return this.RedirectToAction("CaptureRates", "Admin");
         }
@@ -489,7 +495,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddAbility(ability);
+            this.dataService.AddAbility(ability);
 
             return this.RedirectToAction("Abilities", "Admin");
         }
@@ -511,7 +517,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddBaseHappiness(baseHappiness);
+            this.dataService.AddBaseHappiness(baseHappiness);
 
             return this.RedirectToAction("BaseHappinesses", "Admin");
         }
@@ -520,8 +526,9 @@ namespace Pokedex.Controllers
         [Route("add_game")]
         public IActionResult Game()
         {
-            GameViewModel model = new GameViewModel(){
-                AllGenerations = this._dataService.GetGenerations(),
+            GameViewModel model = new GameViewModel()
+            {
+                AllGenerations = this.dataService.GetGenerations(),
             };
 
             return this.View(model);
@@ -534,14 +541,15 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                GameViewModel model = new GameViewModel(){
-                    AllGenerations = this._dataService.GetGenerations(),
+                GameViewModel model = new GameViewModel()
+                {
+                    AllGenerations = this.dataService.GetGenerations(),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddGame(game);
+            this.dataService.AddGame(game);
 
             return this.RedirectToAction("Games", "Admin");
         }
@@ -550,15 +558,16 @@ namespace Pokedex.Controllers
         [Route("add_battle_item")]
         public IActionResult BattleItem()
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
-            foreach(var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                p.Name = this._dataService.GetAltFormWithFormName(p.Id).Name;
+                p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
-            BattleItemViewModel model = new BattleItemViewModel(){
-                AllGenerations = this._dataService.GetGenerations().Where(x => x.Id > 1).ToList(),
+            BattleItemViewModel model = new BattleItemViewModel()
+            {
+                AllGenerations = this.dataService.GetGenerations().Where(x => x.Id > 1).ToList(),
                 AllPokemon = pokemonList,
             };
 
@@ -575,7 +584,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this._dataService.AddBattleItem(battleItem);
+            this.dataService.AddBattleItem(battleItem);
 
             return this.RedirectToAction("BattleItems", "Admin");
         }
@@ -586,19 +595,20 @@ namespace Pokedex.Controllers
         {
             BasePokemonViewModel model = new BasePokemonViewModel()
             {
-                AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                AllClassifications = this._dataService.GetClassifications(),
-                AllCaptureRates = this._dataService.GetCaptureRates(),
-                AllEggCycles = this._dataService.GetEggCycles(),
-                AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
+                AllClassifications = this.dataService.GetClassifications(),
+                AllCaptureRates = this.dataService.GetCaptureRates(),
+                AllEggCycles = this.dataService.GetEggCycles(),
+                AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
                 AllGenderRatios = new List<GenderRatioViewModel>(),
-                AllGames = this._dataService.GetGames(),
+                AllGames = this.dataService.GetGames(),
             };
 
-            foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+            foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
             {
-                GenderRatioViewModel viewModel = new GenderRatioViewModel() {
-                    Id = genderRatio.Id
+                GenderRatioViewModel viewModel = new GenderRatioViewModel()
+                {
+                    Id = genderRatio.Id,
                 };
 
                 if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
@@ -621,7 +631,7 @@ namespace Pokedex.Controllers
                 model.AllGenderRatios.Add(viewModel);
             }
 
-            model.GameId = this._dataService.GetGames().Last().Id;
+            model.GameId = this.dataService.GetGames().Last().Id;
 
             return this.View(model);
         }
@@ -635,19 +645,20 @@ namespace Pokedex.Controllers
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                    AllClassifications = this._dataService.GetClassifications(),
-                    AllCaptureRates = this._dataService.GetCaptureRates(),
-                    AllEggCycles = this._dataService.GetEggCycles(),
-                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                    AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
+                    AllClassifications = this.dataService.GetClassifications(),
+                    AllCaptureRates = this.dataService.GetCaptureRates(),
+                    AllEggCycles = this.dataService.GetEggCycles(),
+                    AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
                     AllGenderRatios = new List<GenderRatioViewModel>(),
-                    AllGames = this._dataService.GetGames(),
+                    AllGames = this.dataService.GetGames(),
                 };
 
-                foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+                foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
                 {
-                    GenderRatioViewModel viewModel = new GenderRatioViewModel() {
-                        Id = genderRatio.Id
+                    GenderRatioViewModel viewModel = new GenderRatioViewModel()
+                    {
+                        Id = genderRatio.Id,
                     };
 
                     if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
@@ -672,23 +683,24 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            else if (this._dataService.GetPokemonByPokedexNumber(newPokemon.PokedexNumber) != null)
+            else if (this.dataService.GetPokemonByPokedexNumber(newPokemon.PokedexNumber) != null)
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                    AllClassifications = this._dataService.GetClassifications(),
-                    AllCaptureRates = this._dataService.GetCaptureRates(),
-                    AllEggCycles = this._dataService.GetEggCycles(),
-                    AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
+                    AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
+                    AllClassifications = this.dataService.GetClassifications(),
+                    AllCaptureRates = this.dataService.GetCaptureRates(),
+                    AllEggCycles = this.dataService.GetEggCycles(),
+                    AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
                     AllGenderRatios = new List<GenderRatioViewModel>(),
-                    AllGames = this._dataService.GetGames(),
+                    AllGames = this.dataService.GetGames(),
                 };
     
-                foreach(GenderRatio genderRatio in this._dataService.GetGenderRatios())
+                foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
                 {
-                    GenderRatioViewModel viewModel = new GenderRatioViewModel() {
-                        Id = genderRatio.Id
+                    GenderRatioViewModel viewModel = new GenderRatioViewModel()
+                    {
+                        Id = genderRatio.Id,
                     };
     
                     if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
@@ -715,11 +727,11 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this._dataService.AddPokemon(newPokemon);
+            this.dataService.AddPokemon(newPokemon);
 
             IFormFile upload;
             
-            if(fileUpload == null)
+            if (fileUpload == null)
             {
                 WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
 
@@ -737,13 +749,13 @@ namespace Pokedex.Controllers
                 upload = fileUpload;
             }
 
-            if(upload != null)
+            if (upload != null)
             {
-                upload = this._dataService.TrimImage(upload);
+                upload = this.dataService.TrimImage(upload);
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
                 using (var requestStream = request.GetRequestStream())  
                 {  
@@ -755,11 +767,11 @@ namespace Pokedex.Controllers
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                IFormFile spriteUpload = this._dataService.FormatFavIcon(upload);
+                IFormFile spriteUpload = this.dataService.FormatFavIcon(upload);
                 
-                request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, newPokemon.Id.ToString(), ".png"));
+                request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, newPokemon.Id.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
                 using (var requestStream = request.GetRequestStream())  
                 {  
@@ -774,13 +786,13 @@ namespace Pokedex.Controllers
             else
             {
                 WebClient webRequest = new WebClient();
-                webRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                webRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                byte[] file = webRequest.DownloadData(string.Concat(_appConfig.WebUrl, "/images/general/tempPhoto.png"));
+                byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
                 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), ".png"));
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
-                ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
                 using (var requestStream = ftpRequest.GetRequestStream())
                 {
@@ -793,7 +805,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            this._dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            this.dataService.AddPokemonGameDetail(new PokemonGameDetail()
             {
                 PokemonId = newPokemon.Id,
                 GameId = newPokemon.GameId,
@@ -806,19 +818,19 @@ namespace Pokedex.Controllers
         [Route("add_alternate_form/{pokemonId:int}")]
         public IActionResult AltForm(int pokemonId)
         {
-            Pokemon originalPokemon = this._dataService.GetPokemonById(pokemonId);
-            List<Game> games = this._dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+            Pokemon originalPokemon = this.dataService.GetPokemonById(pokemonId);
+            List<Game> games = this.dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
 
             AlternateFormViewModel model = new AlternateFormViewModel()
             {
-                AllForms = this._dataService.GetForms(),
-                AllClassifications = this._dataService.GetClassifications(),
+                AllForms = this.dataService.GetForms(),
+                AllClassifications = this.dataService.GetClassifications(),
                 AllGames = games,
                 OriginalPokemon = originalPokemon,
                 OriginalPokemonId = originalPokemon.Id,
             };
 
-            model.GameId = this._dataService.GetGames().Last().Id;
+            model.GameId = this.dataService.GetGames().Last().Id;
 
             return this.View(model);
         }
@@ -828,16 +840,16 @@ namespace Pokedex.Controllers
         [Route("add_alternate_form/{pokemonId:int}")]
         public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile fileUpload, string urlUpload)
         {
-            List<PokemonFormDetail> originalPokemonForms = this._dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
+            List<PokemonFormDetail> originalPokemonForms = this.dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
             if (!this.ModelState.IsValid)
             {
-                Pokemon originalPokemon = this._dataService.GetPokemonById(pokemon.OriginalPokemonId);
-                List<Game> games = this._dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+                Pokemon originalPokemon = this.dataService.GetPokemonById(pokemon.OriginalPokemonId);
+                List<Game> games = this.dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
 
                 AlternateFormViewModel model = new AlternateFormViewModel()
                 {
-                    AllForms = this._dataService.GetForms(),
-                    AllClassifications = this._dataService.GetClassifications(),
+                    AllForms = this.dataService.GetForms(),
+                    AllClassifications = this.dataService.GetClassifications(),
                     AllGames = games,
                     OriginalPokemon = originalPokemon,
                     OriginalPokemonId = originalPokemon.Id,
@@ -850,13 +862,13 @@ namespace Pokedex.Controllers
             {
                 if (p.FormId == pokemon.FormId)
                 {
-                    Pokemon originalPokemon = this._dataService.GetPokemonById(pokemon.OriginalPokemonId);
-                    List<Game> games = this._dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+                    Pokemon originalPokemon = this.dataService.GetPokemonById(pokemon.OriginalPokemonId);
+                    List<Game> games = this.dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
 
                     AlternateFormViewModel model = new AlternateFormViewModel()
                     {
-                        AllForms = this._dataService.GetForms(),
-                        AllClassifications = this._dataService.GetClassifications(),
+                        AllForms = this.dataService.GetForms(),
+                        AllClassifications = this.dataService.GetClassifications(),
                         AllGames = games,
                         OriginalPokemon = originalPokemon,
                         OriginalPokemonId = originalPokemon.Id,
@@ -867,10 +879,10 @@ namespace Pokedex.Controllers
                 }
             }
 
-            Pokemon alternatePokemon = this._dataService.GetPokemonNoIncludesById(pokemon.OriginalPokemonId);
+            Pokemon alternatePokemon = this.dataService.GetPokemonNoIncludesById(pokemon.OriginalPokemonId);
 
             alternatePokemon.Id = 0;
-            alternatePokemon.PokedexNumber = this._dataService.GetPokemonByIdNoIncludes(pokemon.OriginalPokemonId).PokedexNumber;
+            alternatePokemon.PokedexNumber = this.dataService.GetPokemonByIdNoIncludes(pokemon.OriginalPokemonId).PokedexNumber;
             alternatePokemon.Height = pokemon.Height;
             alternatePokemon.Weight = pokemon.Weight;
             alternatePokemon.ExpYield = pokemon.ExpYield;
@@ -878,11 +890,11 @@ namespace Pokedex.Controllers
             alternatePokemon.ClassificationId = pokemon.ClassificationId;
             alternatePokemon.IsComplete = false;
 
-            this._dataService.AddPokemon(alternatePokemon);
+            this.dataService.AddPokemon(alternatePokemon);
 
             IFormFile upload;
             
-            if(fileUpload == null)
+            if (fileUpload == null)
             {
                 WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
 
@@ -900,17 +912,17 @@ namespace Pokedex.Controllers
                 upload = fileUpload;
             }
 
-            if(upload != null)
+            if (upload != null)
             {
-                upload = this._dataService.TrimImage(upload);
+                upload = this.dataService.TrimImage(upload);
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await upload.CopyToAsync(requestStream);  
+                using (var requestStream = request.GetRequestStream())
+                {
+                    await upload.CopyToAsync(requestStream);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -918,32 +930,34 @@ namespace Pokedex.Controllers
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                IFormFile spriteUpload = this._dataService.FormatFavIcon(upload);
-                
-                request = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.FaviconImageFtpUrl, alternatePokemon.Id.ToString(), ".png"));
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                IFormFile spriteUpload = this.dataService.FormatFavIcon(upload);
 
-                using (var requestStream = request.GetRequestStream())  
-                {  
-                    await spriteUpload.CopyToAsync(requestStream);  
+                request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, alternatePokemon.Id.ToString(), ".png"));
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
+
+                using (var requestStream = request.GetRequestStream())
+                {
+                    await spriteUpload.CopyToAsync(requestStream);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                 {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
             }
             else
             {
-                WebClient webRequest = new WebClient();
-                webRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                WebClient webRequest = new WebClient
+                {
+                    Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword),
+                };
 
-                byte[] file = webRequest.DownloadData(string.Concat(_appConfig.WebUrl, "/images/general/tempPhoto.png"));
-                
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(_appConfig.FTPUrl, _appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), ".png"));
+                byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
+
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
-                ftpRequest.Credentials = new NetworkCredential(_appConfig.FTPUsername, _appConfig.FTPPassword);
+                ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
                 using (var requestStream = ftpRequest.GetRequestStream())
                 {
@@ -956,22 +970,24 @@ namespace Pokedex.Controllers
                 }
             }
 
-            PokemonEggGroupDetail eggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId);
-            PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail(){
+            PokemonEggGroupDetail eggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId);
+            PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
+            {
                 PrimaryEggGroupId = eggGroups.PrimaryEggGroupId,
                 SecondaryEggGroupId = eggGroups.SecondaryEggGroupId,
                 PokemonId = alternatePokemon.Id,
             };
-            this._dataService.AddPokemonEggGroups(alternatePokemonEggGroups);
+            this.dataService.AddPokemonEggGroups(alternatePokemonEggGroups);
 
-            PokemonFormDetail alternateForm = new PokemonFormDetail(){
+            PokemonFormDetail alternateForm = new PokemonFormDetail()
+            {
                 OriginalPokemonId = pokemon.OriginalPokemonId,
                 AltFormPokemonId = alternatePokemon.Id,
                 FormId = pokemon.FormId,
             };
-            this._dataService.AddPokemonFormDetails(alternateForm);
+            this.dataService.AddPokemonFormDetails(alternateForm);
 
-            this._dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            this.dataService.AddPokemonGameDetail(new PokemonGameDetail()
             {
                 PokemonId = alternatePokemon.Id,
                 GameId = alternatePokemon.GameId,
@@ -986,9 +1002,9 @@ namespace Pokedex.Controllers
         {
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
-                AllTypes = this._dataService.GetTypes(),
+                AllTypes = this.dataService.GetTypes(),
                 PokemonId = pokemonId,
-                Pokemon = this._dataService.GetPokemonById(pokemonId),
+                Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1003,17 +1019,17 @@ namespace Pokedex.Controllers
             {
                 PokemonTypingViewModel model = new PokemonTypingViewModel()
                 {
-                    AllTypes = this._dataService.GetTypes(),
+                    AllTypes = this.dataService.GetTypes(),
                     PokemonId = typing.PokemonId,
-                    Pokemon = this._dataService.GetPokemonById(typing.PokemonId),
+                    Pokemon = this.dataService.GetPokemonById(typing.PokemonId),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddPokemonTyping(typing);
+            this.dataService.AddPokemonTyping(typing);
 
-            if(this._dataService.GetPokemonWithAbilities(typing.PokemonId) == null)
+            if (this.dataService.GetPokemonWithAbilities(typing.PokemonId) == null)
             {
                 return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
             }
@@ -1029,9 +1045,9 @@ namespace Pokedex.Controllers
         {
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
-                AllAbilities = this._dataService.GetAbilities(),
+                AllAbilities = this.dataService.GetAbilities(),
                 PokemonId = pokemonId,
-                Pokemon = this._dataService.GetPokemonById(pokemonId),
+                Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1046,21 +1062,21 @@ namespace Pokedex.Controllers
             {
                 PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
                 {
-                    AllAbilities = this._dataService.GetAbilities(),
+                    AllAbilities = this.dataService.GetAbilities(),
                     PokemonId = abilities.PokemonId,
-                    Pokemon = this._dataService.GetPokemonById(abilities.PokemonId),
+                    Pokemon = this.dataService.GetPokemonById(abilities.PokemonId),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddPokemonAbilities(abilities);
+            this.dataService.AddPokemonAbilities(abilities);
 
-            if(this._dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null)
+            if (this.dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null)
             {
                 return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
             }
-            else if (this._dataService.CheckIfAltForm(abilities.PokemonId) && this._dataService.GetPokemonBaseStats(abilities.PokemonId) == null)
+            else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId) == null)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
             }
@@ -1076,7 +1092,7 @@ namespace Pokedex.Controllers
         {
             SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
             {
-                AllAbilities = this._dataService.GetAbilities(),
+                AllAbilities = this.dataService.GetAbilities(),
                 PokemonId = pokemonId,
             };
 
@@ -1092,18 +1108,18 @@ namespace Pokedex.Controllers
             {
                 SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
                 {
-                    AllAbilities = this._dataService.GetAbilities(),
+                    AllAbilities = this.dataService.GetAbilities(),
                     PokemonId = ability.PokemonId,
                 };
 
                 return this.View(model);
             }
 
-            PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilitiesNoIncludes(ability.PokemonId);
+            PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilitiesNoIncludes(ability.PokemonId);
 
             pokemonAbilities.SpecialEventAbilityId = ability.AbilityId;
 
-            this._dataService.UpdatePokemonAbilityDetail(pokemonAbilities);
+            this.dataService.UpdatePokemonAbilityDetail(pokemonAbilities);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -1114,9 +1130,9 @@ namespace Pokedex.Controllers
         {
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
-                AllEggGroups = this._dataService.GetEggGroups(),
+                AllEggGroups = this.dataService.GetEggGroups(),
                 PokemonId = pokemonId,
-                Pokemon = this._dataService.GetPokemonById(pokemonId),
+                Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1131,17 +1147,17 @@ namespace Pokedex.Controllers
             {
                 PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
                 {
-                    AllEggGroups = this._dataService.GetEggGroups(),
+                    AllEggGroups = this.dataService.GetEggGroups(),
                     PokemonId = eggGroups.PokemonId,
-                    Pokemon = this._dataService.GetPokemonById(eggGroups.PokemonId),
+                    Pokemon = this.dataService.GetPokemonById(eggGroups.PokemonId),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddPokemonEggGroups(eggGroups);
+            this.dataService.AddPokemonEggGroups(eggGroups);
 
-            if (this._dataService.GetPokemonBaseStats(eggGroups.PokemonId) == null)
+            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId) == null)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
             }
@@ -1158,7 +1174,7 @@ namespace Pokedex.Controllers
             BaseStat model = new BaseStat()
             {
                 PokemonId = pokemonId,
-                Pokemon = this._dataService.GetPokemonById(pokemonId),
+                Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1174,15 +1190,15 @@ namespace Pokedex.Controllers
                 BaseStat model = new BaseStat()
                 {
                     PokemonId = baseStat.PokemonId,
-                    Pokemon = this._dataService.GetPokemonById(baseStat.PokemonId),
+                    Pokemon = this.dataService.GetPokemonById(baseStat.PokemonId),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddPokemonBaseStat(baseStat);
+            this.dataService.AddPokemonBaseStat(baseStat);
 
-            if (this._dataService.GetPokemonEVYields(baseStat.PokemonId) == null)
+            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId) == null)
             {
                 return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
             }
@@ -1199,7 +1215,7 @@ namespace Pokedex.Controllers
             EVYield model = new EVYield()
             {
                 PokemonId = pokemonId,
-                Pokemon = this._dataService.GetPokemonById(pokemonId),
+                Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1215,15 +1231,15 @@ namespace Pokedex.Controllers
                 EVYield model = new EVYield()
                 {
                     PokemonId = evYield.PokemonId,
-                    Pokemon = this._dataService.GetPokemonById(evYield.PokemonId),
+                    Pokemon = this.dataService.GetPokemonById(evYield.PokemonId),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddPokemonEVYield(evYield);
+            this.dataService.AddPokemonEVYield(evYield);
 
-            if(User.IsInRole("Owner"))
+            if (this.User.IsInRole("Owner"))
             {
                 return this.RedirectToAction("Evolution", "Add", new { pokemonId = evYield.PokemonId });
             }
@@ -1239,9 +1255,9 @@ namespace Pokedex.Controllers
         {
             PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
             {
-                AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
+                AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
                 PokemonId = pokemonId,
-                Pokemon = this._dataService.GetPokemonById(pokemonId),
+                Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
 
             return this.View(model);
@@ -1256,15 +1272,15 @@ namespace Pokedex.Controllers
             {
                 PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
                 {
-                    AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
+                    AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
                     PokemonId = pokemonLegendaryDetails.PokemonId,
-                    Pokemon = this._dataService.GetPokemonById(pokemonLegendaryDetails.PokemonId),
+                    Pokemon = this.dataService.GetPokemonById(pokemonLegendaryDetails.PokemonId),
                 };
 
                 return this.View(model);
             }
 
-            this._dataService.AddPokemonLegendaryDetails(pokemonLegendaryDetails);
+            this.dataService.AddPokemonLegendaryDetails(pokemonLegendaryDetails);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

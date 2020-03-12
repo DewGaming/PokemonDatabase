@@ -16,32 +16,32 @@
         @Html.HiddenFor(x => x.Id)
 
         <div class="pokemonList shadowed">
-            @if(@Model.FirstPokemon != null)
+            @if (@Model.FirstPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.FirstPokemon.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.FirstPokemon.Pokemon.Id, ".png"))" />
             }
 
-            @if(@Model.SecondPokemon != null)
+            @if (@Model.SecondPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.SecondPokemon.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.SecondPokemon.Pokemon.Id, ".png"))" />
             }
             
-            @if(@Model.ThirdPokemon != null)
+            @if (@Model.ThirdPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.ThirdPokemon.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.ThirdPokemon.Pokemon.Id, ".png"))" />
             }
             
-            @if(@Model.FourthPokemon != null)
+            @if (@Model.FourthPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.FourthPokemon.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.FourthPokemon.Pokemon.Id, ".png"))" />
             }
             
-            @if(@Model.FifthPokemon != null)
+            @if (@Model.FifthPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.FifthPokemon.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.FifthPokemon.Pokemon.Id, ".png"))" />
             }
             
-            @if(@Model.SixthPokemon != null)
+            @if (@Model.SixthPokemon != null)
             {
                 <img class="lightshadowed pokemonTeamPokemon" title="@Model.SixthPokemon.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.SixthPokemon.Pokemon.Id, ".png"))" />
             }

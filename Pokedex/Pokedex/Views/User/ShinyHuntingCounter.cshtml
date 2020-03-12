@@ -16,7 +16,7 @@
 }
 
 <p>
-    <a class="btn btn-primary" href="@Url.Action("BeginShinyHunt", "User")" role="button">Begin Shiny Hunt</a>
+    <a class="btn btn-primary" href="@this.Url.Action("BeginShinyHunt", "User")" role="button">Begin Shiny Hunt</a>
 </p>
 <div class="pageButtons">
     <button class="huntsInProgress active" onclick="lookupPage('huntsInProgress')">Hunts In Progress</button>
@@ -33,7 +33,7 @@
                     <th scope="col">Pokémon</th>
                     <th scope="col">
                         Game@{
-                            foreach(var hunt in Model.InProgressHunts)
+                            foreach (var hunt in Model.InProgressHunts)
                             {
                                 if (hunt.Game.Name.Contains('/'))
                                 {
@@ -45,7 +45,7 @@
                     </th>
                     <th scope="col">Technique</th>
                     @{
-                        foreach(var hunt in Model.InProgressHunts)
+                        foreach (var hunt in Model.InProgressHunts)
                         {
                             if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
@@ -57,7 +57,7 @@
                     <th scope="col">Number of Attempts</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach(var hunts in Model.InProgressHunts)
+                @foreach (var hunts in Model.InProgressHunts)
                 {
                     huntCount++;
                     <tr>
@@ -65,7 +65,7 @@
                         <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
-                            foreach(var hunt in Model.InProgressHunts)
+                            foreach (var hunt in Model.InProgressHunts)
                             {
                                 if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
@@ -76,9 +76,9 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("ContinueHunt", "User", new { huntId = @huntCount })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
+                            <a href="@this.Url.Action("ContinueHunt", "User", new { huntId = @huntCount })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
                             |
-                            <a href="@Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="InProgress" })">Delete Hunt</a>
+                            <a href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="InProgress" })">Delete Hunt</a>
                         </td>
                     </tr>
                 }
@@ -91,7 +91,7 @@
     }
 </div>
 <div class="page" id="huntsCompleted">
-    @if(Model.CompletedHunts.Count > 0)
+    @if (Model.CompletedHunts.Count > 0)
     {
         huntCount = 0;
         <table class="table pokemonHunt huntCompleteTable">
@@ -100,7 +100,7 @@
                     <th scope="col">Pokémon</th>
                     <th scope="col">
                         Game@{
-                            foreach(var hunt in Model.CompletedHunts)
+                            foreach (var hunt in Model.CompletedHunts)
                             {
                                 if (hunt.Game.Name.Contains('/'))
                                 {
@@ -112,7 +112,7 @@
                     </th>
                     <th scope="col">Technique</th>
                     @{
-                        foreach(var hunt in Model.CompletedHunts)
+                        foreach (var hunt in Model.CompletedHunts)
                         {
                             if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
@@ -124,7 +124,7 @@
                     <th scope="col">Number of Attempts</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach(var hunts in Model.CompletedHunts)
+                @foreach (var hunts in Model.CompletedHunts)
                 {
                     huntCount++;
                     <tr>
@@ -132,7 +132,7 @@
                         <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
-                            foreach(var hunt in Model.CompletedHunts)
+                            foreach (var hunt in Model.CompletedHunts)
                             {
                                 if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
@@ -143,7 +143,7 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Completed" })">Delete Hunt</a>
+                            <a href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Completed" })">Delete Hunt</a>
                         </td>
                     </tr>
                 }
@@ -156,7 +156,7 @@
     }
 </div>
 <div class="page" id="huntsFailed">
-    @if(Model.FailedHunts.Count > 0)
+    @if (Model.FailedHunts.Count > 0)
     {
         huntCount = 0;
         <table class="table pokemonHunt huntFailedTable">
@@ -165,7 +165,7 @@
                     <th scope="col">Pokémon</th>
                     <th scope="col">
                         Game@{
-                            foreach(var hunt in Model.FailedHunts)
+                            foreach (var hunt in Model.FailedHunts)
                             {
                                 if (hunt.Game.Name.Contains('/'))
                                 {
@@ -177,7 +177,7 @@
                     </th>
                     <th scope="col">Technique</th>
                     @{
-                        foreach(var hunt in Model.FailedHunts)
+                        foreach (var hunt in Model.FailedHunts)
                         {
                             if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
@@ -189,7 +189,7 @@
                     <th scope="col">Number of Attempts</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach(var hunts in Model.FailedHunts)
+                @foreach (var hunts in Model.FailedHunts)
                 {
                     huntCount++;
                     <tr>
@@ -197,7 +197,7 @@
                         <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
-                            foreach(var hunt in Model.FailedHunts)
+                            foreach (var hunt in Model.FailedHunts)
                             {
                                 if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
@@ -208,9 +208,9 @@
                         }
                         <td>@hunts.ShinyAttemptCount</td>
                         <td>
-                            <a href="@Url.Action("RetryHunt", "User", new { huntId = @huntCount })">Retry Hunt</a>
+                            <a href="@this.Url.Action("RetryHunt", "User", new { huntId = @huntCount })">Retry Hunt</a>
                             @("|")
-                            <a href="@Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Failed" })">Delete Hunt</a>
+                            <a href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Failed" })">Delete Hunt</a>
                         </td>
                     </tr>
                 }

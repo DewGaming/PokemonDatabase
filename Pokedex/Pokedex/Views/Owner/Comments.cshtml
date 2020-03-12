@@ -4,10 +4,10 @@
     string GrabCommentCount(string pageName)
     {
         string commentTotalString = string.Empty;
-        if(Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
+        if (Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
         {
             commentTotalString = string.Concat(" (", Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString(), " Comment");
-            if(Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
+            if (Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
             {
                 commentTotalString = string.Concat(commentTotalString, "s");
             }
@@ -29,36 +29,36 @@
 }
 
 <div class="pageButtons">
-    @foreach(var type in Model.CommentTypes)
+    @foreach (var type in Model.CommentTypes)
     {
         <button class="@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())" onclick="lookupPage('@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())')">@(type)<br>@(GrabCommentCount(@type))</button>
     }
 </div>
-@foreach(var type in Model.CommentTypes)
+@foreach (var type in Model.CommentTypes)
 {
     <div class="page" id="@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())">
-        @if(@Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type).ToList().Count() > 0)
+        @if (@Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type).ToList().Count() > 0)
         {
             <table class="table">
                 <tr>
                     <th class="col-md-9" scope="col">Comment</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach(var item in Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type))
+                @foreach (var item in Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type))
                 {
                     <tr>
                         <td>
                             @item.CommentType
-                            @if(@item.CommentedPage != null)
+                            @if (@item.CommentedPage != null)
                             {
                                  @(string.Concat(" for ", @item.CommentedPage))
                             }
-                            @if(@item.PokemonName != null)
+                            @if (@item.PokemonName != null)
                             {
-                                @(" (")<a href="@Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
+                                @(" (")<a href="@this.Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
                             }
 
-                            @if(item.Commentor != null)
+                            @if (item.Commentor != null)
                             {
                                 @(string.Concat(" by ", @item.Commentor.Username))
                             }
@@ -68,12 +68,12 @@
                         </td>
 
                         <td>
-                            <a class="btn btn-primary" href="@Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
-                        @if(item.CommentorId != null && item.CommentorId != 1)
+                            <a class="btn btn-primary" href="@this.Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
+                        @if (item.CommentorId != null && item.CommentorId != 1)
                         {
                             <br>
                             <br>
-                                <a class="btn btn-primary" href="@Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
+                                <a class="btn btn-primary" href="@this.Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
                         }
                         </td>
                     </tr>

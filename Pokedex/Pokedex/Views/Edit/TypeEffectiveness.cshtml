@@ -26,7 +26,7 @@
     <div class="resistance typeChart col-md-5">
         <p>Resist To</p>
         <ul>
-            @foreach(var t in Model.Types.OrderBy(x => x.Name))
+            @foreach (var t in Model.Types.OrderBy(x => x.Name))
             {
                 var typeChart = @Model.TypeChart.Find(x => x.AttackId == t.Id);
                 <li>
@@ -39,7 +39,7 @@
     <div class="weakness typeChart col-md-5">
         <p>Weak To</p>
         <ul>
-            @foreach(var t in Model.Types.OrderBy(x => x.Name))
+            @foreach (var t in Model.Types.OrderBy(x => x.Name))
             {
                 var typeChart = @Model.TypeChart.Find(x => x.AttackId == t.Id);
                 <li>
@@ -52,7 +52,7 @@
     <div class="immunity typeChart col-md-5">
         <p>Immune To</p>
         <ul>
-            @foreach(var t in Model.Types.OrderBy(x => x.Name))
+            @foreach (var t in Model.Types.OrderBy(x => x.Name))
             {
                 var typeChart = @Model.TypeChart.Find(x => x.AttackId == t.Id);
                 <li>

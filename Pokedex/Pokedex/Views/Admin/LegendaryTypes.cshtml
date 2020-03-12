@@ -4,10 +4,10 @@
 }
 
 <div class="abilityTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("LegendaryType", "Add")" role="button">Add Legendary Form</a>
+            <a class="btn btn-primary" href="@this.Url.Action("LegendaryType", "Add")" role="button">Add Legendary Form</a>
         </p>
     }
     <table class="table">
@@ -15,18 +15,18 @@
             <th scope="col">Name</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllLegendaryTypes)
+        @foreach (var item in Model.AllLegendaryTypes)
         {
             <tr>
                 <td>
                     @item.Type
                 </td>
                 <td>
-                    <a href="@(Url.Action("LegendaryType", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!(Model.AllPokemon.Exists(x => x.LegendaryTypeId == item.Id)))
+                    <a href="@(this.Url.Action("LegendaryType", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllPokemon.Exists(x => x.LegendaryTypeId == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("LegendaryType", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("LegendaryType", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

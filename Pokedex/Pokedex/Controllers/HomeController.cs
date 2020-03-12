@@ -1,39 +1,48 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Pokedex.DataAccess.Models;
+using Pokedex.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-
-using Pokedex.DataAccess.Models;
-
-using Pokedex.Models;
-
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that is used to represent the HomeController.
+    /// </summary>
     [Authorize]
     [Route("")]
     public class HomeController : Controller
     {
-        private readonly DataService _dataService;
+        private readonly DataService dataService;
 
-        private readonly AppConfig _appConfig;
+        private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HomeController"/> class.
+        /// </summary>
+        /// <param name="appConfig">The application configuration.</param>
+        /// <param name="dataContext">The database context.</param>
         public HomeController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
-            this._appConfig = appConfig.Value;
-            this._dataService = new DataService(dataContext);
+            this.appConfig = appConfig.Value;
+            this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// The method that routes to the homepage.
+        /// </summary>
+        /// <returns>Returns .</returns>
         [AllowAnonymous]
         [Route("")]
         public IActionResult Index()
         {
-            return this.View(this._appConfig);
+            return this.View(this.appConfig);
         }
 
         [AllowAnonymous]
@@ -42,8 +51,8 @@ namespace Pokedex.Controllers
         public IActionResult Search(string search)
         {
             search = HttpUtility.UrlDecode(search);
-            search = string.IsNullOrEmpty(search) ? "" : search.Replace("/", "").Replace("\\", "");
-            if(string.IsNullOrEmpty(search))
+            search = string.IsNullOrEmpty(search) ? string.Empty : search.Replace("/", string.Empty).Replace("\\", string.Empty);
+            if (string.IsNullOrEmpty(search))
             {
                 return this.RedirectToAction("AllPokemon", "Home");
             }
@@ -62,13 +71,13 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
-                search = this._dataService.FormatPokemonName(search);
+                search = this.dataService.FormatPokemonName(search);
 
-                List<PokemonTypeDetail> model = this._dataService.GetAllPokemonWithTypes()
+                List<PokemonTypeDetail> model = this.dataService.GetAllPokemonWithTypes()
                                                                  .Where(x => x.Pokemon.Name.ToLower().Contains(search.ToLower()))
                                                                  .ToList();
 
-                Pokemon pokemonSearched = this._dataService.GetPokemon(search);
+                Pokemon pokemonSearched = this.dataService.GetPokemon(search);
 
                 if (model.Count() == 1 || pokemonSearched != null)
                 {
@@ -84,9 +93,10 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel(){
+                    AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel()
+                    {
                         AllPokemon = model,
-                        AppConfig = this._appConfig,
+                        AppConfig = this.appConfig,
                     };
 
                     return this.View("Search", viewModel);
@@ -100,7 +110,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
-            List<int> model = this._dataService.GetGenerationsFromPokemon();
+            List<int> model = this.dataService.GetGenerationsFromPokemon();
 
             return this.View(model);
         }
@@ -109,15 +119,15 @@ namespace Pokedex.Controllers
         [Route("team_randomizer")]
         public IActionResult TeamRandomizer()
         {
-            List<Pokemon> allPokemon = this._dataService.GetAllPokemon();
-            List<Generation> generations = this._dataService.GetGenerations();
+            List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
+            List<Generation> generations = this.dataService.GetGenerations();
             List<Game> model = new List<Game>();
 
-            foreach(var gen in generations)
+            foreach (var gen in generations)
             {
-                if(allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
+                if (allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
                 {
-                    model.AddRange(this._dataService.GetGamesFromGeneration(gen));
+                    model.AddRange(this.dataService.GetGamesFromGeneration(gen));
                 }
             }
 
@@ -128,38 +138,39 @@ namespace Pokedex.Controllers
         [Route("typing_evaluator")]
         public IActionResult TypingEvaluator()
         {
-            List<Pokedex.DataAccess.Models.Type> model = this._dataService.GetTypes();
+            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetTypes();
 
-            return View(model);
+            return this.View(model);
         }
 
         [AllowAnonymous]
         [Route("day_care_evaluator")]
         public IActionResult DayCareEvaluator()
         {
-            List<PokemonEggGroupDetail> eggGroupDetails = this._dataService.GetAllBreedablePokemon();
-            EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel(){
+            List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon();
+            EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
+            {
                 AllPokemonWithEggGroups = eggGroupDetails,
-                AppConfig = _appConfig,
+                AppConfig = this.appConfig,
             };
 
-            List<Pokemon> altForms = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altForms = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
 
-            foreach(var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.PokemonId)))
+            foreach (var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.PokemonId)))
             {
-                e.Pokemon.Name = this._dataService.GetAltFormWithFormName(e.PokemonId).Name;
+                e.Pokemon.Name = this.dataService.GetAltFormWithFormName(e.PokemonId).Name;
             }
 
             model.AllPokemon = eggGroupDetails.Select(x => x.Pokemon).ToList();
 
-            return View(model);
+            return this.View(model);
         }
 
         [AllowAnonymous]
         [Route("game_availability")]
         public IActionResult GameAvailability()
         {
-            List<Game> model = this._dataService.GetGames();
+            List<Game> model = this.dataService.GetGames();
 
             return this.View(model);
         }
@@ -170,27 +181,27 @@ namespace Pokedex.Controllers
         {
             System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
-            name = this._dataService.FormatPokemonName(name);
+            name = this.dataService.FormatPokemonName(name);
 
-            Pokemon pokemon = this._dataService.GetPokemon(name);
-            if(pokemon != null && pokemon.IsComplete)
+            Pokemon pokemon = this.dataService.GetPokemon(name);
+            if (pokemon != null && pokemon.IsComplete)
             {
                 List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
-                PokemonViewModel pokemonDetails = this._dataService.GetPokemonDetails(pokemon, null, this._appConfig);
-                pokemonDetails.SurroundingPokemon = this._dataService.GetSurroundingPokemon(pokemon.Id);
+                PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, null, this.appConfig);
+                pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemon.Id);
 
                 pokemonList.Add(pokemonDetails);
                 
-                List<Pokemon> altForms = this._dataService.GetAltForms(pokemon.Id);
-                if(altForms.Count() > 0)
+                List<Pokemon> altForms = this.dataService.GetAltForms(pokemon.Id);
+                if (altForms.Count() > 0)
                 {
                     Form form;
                     foreach (var p in altForms)
                     {
                         if (p.IsComplete)
                         {
-                            form = this._dataService.GetFormByAltFormId(p.Id);
-                            pokemonDetails = this._dataService.GetPokemonDetails(p, form, this._appConfig);
+                            form = this.dataService.GetFormByAltFormId(p.Id);
+                            pokemonDetails = this.dataService.GetPokemonDetails(p, form, this.appConfig);
 
                             pokemonList.Add(pokemonDetails);
                         }
@@ -202,21 +213,22 @@ namespace Pokedex.Controllers
                     PokemonList = pokemonList,
                 };
 
-                if(User.IsInRole("Owner"))
+                if (this.User.IsInRole("Owner"))
                 {
-                    AllAdminPokemonViewModel allAdminPokemon = this._dataService.GetAllAdminPokemonDetails();
-                    DropdownViewModel dropdownViewModel = new DropdownViewModel(){
+                    AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+                    DropdownViewModel dropdownViewModel = new DropdownViewModel()
+                    {
                         AllPokemon = allAdminPokemon,
-                        AppConfig = this._appConfig,
+                        AppConfig = this.appConfig,
                     };
                     AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
                     {
                         PokemonList = new List<Pokemon>(),
                         DropdownViewModel = dropdownViewModel,
-                        AppConfig = _appConfig,
+                        AppConfig = this.appConfig,
                     };
 
-                    foreach(var p in pokemonList)
+                    foreach (var p in pokemonList)
                     {
                         adminDropdown.PokemonList.Add(p.Pokemon);
                     }
@@ -239,8 +251,8 @@ namespace Pokedex.Controllers
         {
             TypeChartViewModel model = new TypeChartViewModel()
             {
-                TypeChart = this._dataService.GetTypeCharts(),
-                Types = this._dataService.GetTypes(),
+                TypeChart = this.dataService.GetTypeCharts(),
+                Types = this.dataService.GetTypes(),
             };
 
             return this.View(model);
@@ -253,8 +265,8 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                TypeOfComment = _appConfig.CommentCategories,
-                Page = _appConfig.PageCategories,
+                TypeOfComment = this.appConfig.CommentCategories,
+                Page = this.appConfig.PageCategories,
             };
             return this.View(model);
         }
@@ -268,32 +280,32 @@ namespace Pokedex.Controllers
             {
                 CommentViewModel model = new CommentViewModel()
                 {
-                    TypeOfComment = _appConfig.CommentCategories,
-                    Page = _appConfig.PageCategories,
+                    TypeOfComment = this.appConfig.CommentCategories,
+                    Page = this.appConfig.PageCategories,
                 };
                 return this.View(model);
             }
 
             if (!string.IsNullOrEmpty(comment.PokemonName))
             {
-                Pokemon pokemon = this._dataService.GetPokemon(this._dataService.FormatPokemonName(comment.PokemonName));
+                Pokemon pokemon = this.dataService.GetPokemon(this.dataService.FormatPokemonName(comment.PokemonName));
                 if (pokemon == null)
                 {
                     comment.PokemonName = null;
                 }
             }
             
-            if(!string.IsNullOrEmpty(comment.PokemonName) && comment.CommentedPage != "Pokemon Page")
+            if (!string.IsNullOrEmpty(comment.PokemonName) && comment.CommentedPage != "Pokemon Page")
             {
                 comment.CommentedPage = "Pokemon Page";
             }
 
-            if (User.Identity.Name != null)
+            if (this.User.Identity.Name != null)
             {
-                comment.CommentorId = this._dataService.GetUserWithUsername(User.Identity.Name).Id;
+                comment.CommentorId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id;
             }
 
-            this._dataService.AddComment(comment);
+            this.dataService.AddComment(comment);
 
             this.EmailComment(comment);
 
@@ -318,24 +330,24 @@ namespace Pokedex.Controllers
         {
             try
             {
-                if(comment.CommentorId != 1 || comment.CommentorId == null)
+                if (comment.CommentorId != 1 || comment.CommentorId == null)
                 {
-                    MailAddress fromAddress = new MailAddress(_appConfig.EmailAddress, "Pokemon Database Website");
-                    MailAddress toAddress = new MailAddress(_appConfig.EmailAddress, "Pokemon Database Email");
+                    MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
                     string body = comment.CommentType;
-                    if(comment.CommentedPage != null)
+                    if (comment.CommentedPage != null)
                     {
                         body = string.Concat(body, " for ", comment.CommentedPage);
                     }
 
-                    if(comment.PokemonName != null)
+                    if (comment.PokemonName != null)
                     {
                         body = string.Concat(body, " (", comment.PokemonName, ")");
                     }
 
-                    if(comment.CommentorId != null)
+                    if (comment.CommentorId != null)
                     {
-                        body = string.Concat(body, " by ", this._dataService.GetUserById((int)comment.CommentorId).Username);
+                        body = string.Concat(body, " by ", this.dataService.GetUserById((int)comment.CommentorId).Username);
                     }
 
                     body = string.Concat(body, ": ", comment.Name);
@@ -347,7 +359,7 @@ namespace Pokedex.Controllers
                         EnableSsl = true,
                         DeliveryMethod = SmtpDeliveryMethod.Network,
                         UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(fromAddress.Address, _appConfig.EmailAddressPassword),
+                        Credentials = new NetworkCredential(fromAddress.Address, this.appConfig.EmailAddressPassword),
                     };
 
                     using (var message = new MailMessage(fromAddress, toAddress)
@@ -359,11 +371,10 @@ namespace Pokedex.Controllers
                         smtp.Send(message);
                     }
                 }
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Email could not be sent. ", ((ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message));
+                Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
             }
         }
     }

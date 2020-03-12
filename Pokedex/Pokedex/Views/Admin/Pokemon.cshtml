@@ -19,15 +19,15 @@
 }
 
 <p class="adminButtons">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
-        <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>
+        <a class="btn btn-primary" href="@this.Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>
         <button class="btn btn-primary incompletePokemon" onclick="lookupIncompletePokemon()">View Incomplete Pokémon</button>
         <button class="btn btn-primary allPokemon" onclick="lookupAllPokemon()">View All Pokémon</button>
     }
 </p>
 <div class="pageButtons">
-    @foreach(var id in Model)
+    @foreach (var id in Model)
     {
         <button id="Generation@(id)" onclick="lookupAdminGeneration('@id')">Generation @id</button>
     }

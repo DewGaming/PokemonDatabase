@@ -21,7 +21,7 @@
     @using (Html.BeginForm())
     {
         <button type="submit" class="btn btn-primary" role="button">Finish Review</button>
-        <a href="@Url.Action("CompletePokemon", "Owner", new { pokemonId = @Model.Pokemon.Id })" class="btn btn-primary">Mark Pokémon As Complete</a>
+        <a href="@this.Url.Action("CompletePokemon", "Owner", new { pokemonId = @Model.Pokemon.Id })" class="btn btn-primary">Mark Pokémon As Complete</a>
     }
 </p>
 
@@ -30,7 +30,7 @@
 <div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
     <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
         <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
-        @if(Model.OriginalPokemon != null)
+        @if (Model.OriginalPokemon != null)
         {
             <div class="differentForms">
                 <h2>Original Form</h2>
@@ -45,7 +45,7 @@
                 <tr>
                     <th>Pokémon Name</th>
                     <td>
-                        @if(Model.Form != null)
+                        @if (Model.Form != null)
                         {
                             @(string.Concat(Model.Pokemon.Name, " (", Model.Form.Name, ")"))
                         }
@@ -87,7 +87,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @if(Model.SecondaryAbility == null && Model.HiddenAbility == null)
+                        @if (Model.SecondaryAbility == null && Model.HiddenAbility == null)
                         {
                             @("Ability")
                         }
@@ -171,7 +171,7 @@
         <div class="pokemonInfo typing pokemonTables">
             <h2>Typing</h2>
             <div class="pokemon-type type-icon type-@Model.PrimaryType.Name.ToLower()">@Model.PrimaryType.Name</div>
-            @if(@Model.SecondaryType != null)
+            @if (@Model.SecondaryType != null)
             {
                 <div class="pokemon-type type-icon type-@Model.SecondaryType.Name.ToLower()">@Model.SecondaryType.Name</div>
             }
@@ -357,7 +357,7 @@
                             </tr>
                         </thead>
                         <tbody class="evolutionPokemon">
-                            @foreach(var evolution in Model.Evolutions)
+                            @foreach (var evolution in Model.Evolutions)
                             {
                                 <tr>
                                     <th>

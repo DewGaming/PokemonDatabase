@@ -28,7 +28,7 @@
                     <th scope="col">Pokémon</th>
                     <th scope="col">
                         Game@{
-                            foreach(var hunt in Model)
+                            foreach (var hunt in Model)
                             {
                                 if (hunt.Game.Name.Contains('/'))
                                 {
@@ -40,7 +40,7 @@
                     </th>
                     <th scope="col">Technique</th>
                     @{
-                        foreach(var hunt in Model)
+                        foreach (var hunt in Model)
                         {
                             if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
@@ -51,14 +51,14 @@
                     }
                     <th scope="col">Number of Attempts</th>
                 </tr>
-                @foreach(var hunts in Model.Where(x => !x.HuntComplete))
+                @foreach (var hunts in Model.Where(x => !x.HuntComplete))
                 {
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
-                            foreach(var hunt in Model)
+                            foreach (var hunt in Model)
                             {
                                 if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
@@ -79,7 +79,7 @@
     }
 </div>
 <div class="page" id="huntsCompleted">
-    @if(Model.Where(x => x.HuntComplete & x.IsPokemonCaught).ToList().Count > 0)
+    @if (Model.Where(x => x.HuntComplete & x.IsPokemonCaught).ToList().Count > 0)
     {
         <table class="table pokemonHunt huntCompleteTable">
             <tbody>
@@ -87,7 +87,7 @@
                     <th scope="col">Pokémon</th>
                     <th scope="col">
                         Game@{
-                            foreach(var hunt in Model)
+                            foreach (var hunt in Model)
                             {
                                 if (hunt.Game.Name.Contains('/'))
                                 {
@@ -99,7 +99,7 @@
                     </th>
                     <th scope="col">Technique</th>
                     @{
-                        foreach(var hunt in Model)
+                        foreach (var hunt in Model)
                         {
                             if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
@@ -110,14 +110,14 @@
                     }
                     <th scope="col">Number of Attempts</th>
                 </tr>
-                @foreach(var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
+                @foreach (var hunts in Model.Where(x => x.IsPokemonCaught && x.HuntComplete))
                 {
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
-                            foreach(var hunt in Model)
+                            foreach (var hunt in Model)
                             {
                                 if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {
@@ -138,7 +138,7 @@
     }
 </div>
 <div class="page" id="huntsFailed">
-    @if(Model.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList().Count > 0)
+    @if (Model.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList().Count > 0)
     {
         <table class="table pokemonHunt huntFailedTable">
             <tbody>
@@ -146,7 +146,7 @@
                     <th scope="col">Pokémon</th>
                     <th scope="col">
                         Game@{
-                            foreach(var hunt in Model)
+                            foreach (var hunt in Model)
                             {
                                 if (hunt.Game.Name.Contains('/'))
                                 {
@@ -158,7 +158,7 @@
                     </th>
                     <th scope="col">Technique</th>
                     @{
-                        foreach(var hunt in Model)
+                        foreach (var hunt in Model)
                         {
                             if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                             {
@@ -169,14 +169,14 @@
                     }
                     <th scope="col">Number of Attempts</th>
                 </tr>
-                @foreach(var hunts in Model.Where(x => !x.IsPokemonCaught && x.HuntComplete))
+                @foreach (var hunts in Model.Where(x => !x.IsPokemonCaught && x.HuntComplete))
                 {
                     <tr>
                         <td>@hunts.Pokemon.Name</td>
                         <td>@hunts.Game.Name</td>
                         <td>@hunts.ShinyHuntingTechnique.Name</td>
                         @{
-                            foreach(var hunt in Model)
+                            foreach (var hunt in Model)
                             {
                                 if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
                                 {

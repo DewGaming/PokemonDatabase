@@ -4,10 +4,10 @@
 }
 
 <div class="typeTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("ShinyHuntingTechnique", "Add")" role="button">Add Shiny Hunting Technique</a>
+            <a class="btn btn-primary" href="@this.Url.Action("ShinyHuntingTechnique", "Add")" role="button">Add Shiny Hunting Technique</a>
         </p>
     }
     <table class="table">
@@ -16,7 +16,7 @@
             <th scope="col">Technique</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllShinyHuntingTechniques)
+        @foreach (var item in Model.AllShinyHuntingTechniques)
         {
             <tr>
                 <td>
@@ -24,11 +24,11 @@
                 </td>
                 <td>@item.Technique</td>
                 <td>
-                    <a href="@(Url.Action("ShinyHuntingTechnique", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!(Model.AllShinyHunters.Exists(x => x.ShinyHuntingTechnique.Id == item.Id)))
+                    <a href="@(this.Url.Action("ShinyHuntingTechnique", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllShinyHunters.Exists(x => x.ShinyHuntingTechnique.Id == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("ShinyHuntingTechnique", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("ShinyHuntingTechnique", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

@@ -4,11 +4,11 @@
 }
 
 <div class="shadowed dayCarePokemon">
-    <a href="@Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
+    <a href="@this.Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
         <img class="pokemonlistPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
     </a>
     <div class="eggGroups">
-        @foreach(var e in Model.PokemonEggGroups)
+        @foreach (var e in Model.PokemonEggGroups)
         {
             <div class="egg-group-icon egg-group-@(e.Name.ToLower().Replace(' ', '-'))">@e.Name</div>
         }
@@ -20,11 +20,11 @@
     @for(var i = 0; i < eggGroups.Count(); i++)
     {
         <div class="shadowed @eggGroups[i].Pokemon.Name">
-            <a href="@Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
+            <a href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
                 <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, eggGroups[i].PokemonId, ".png")">
             </a>
             <div>
-                <a class="pokemonName" href="@Url.Action("Pokemon", "Home", new { name = Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+                <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
             </div>
         </div>
     }

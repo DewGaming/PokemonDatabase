@@ -1,29 +1,33 @@
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 using Pokedex.DataAccess.Models;
-
 using Pokedex.Models;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that is used to represent the account controller.
+    /// </summary>
     [Authorize]
     [Route("")]
     public class AccountController : Controller
     {
-        private readonly DataService _dataService;
+        private readonly DataService dataService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// </summary>
+        /// <param name="dataContext">The pokemon database's context.</param>
         public AccountController(DataContext dataContext)
         {
             // Instantiate an instance of the data service.
-            this._dataService = new DataService(dataContext);
+            this.dataService = new DataService(dataContext);
         }
 
         [AllowAnonymous]
@@ -46,7 +50,7 @@ namespace Pokedex.Controllers
 
             registerViewModel.Username = registerViewModel.Username.Trim();
 
-            User existingUser = this._dataService.GetUserWithUsername(registerViewModel.Username);
+            User existingUser = this.dataService.GetUserWithUsername(registerViewModel.Username);
             if (existingUser != null)
             {
                 this.ModelState.AddModelError("Error", "An account already exists with that username.");
@@ -62,7 +66,7 @@ namespace Pokedex.Controllers
                 PasswordHash = passwordHasher.HashPassword(null, registerViewModel.Password),
             };
 
-            this._dataService.AddUser(user);
+            this.dataService.AddUser(user);
 
             var claims = new List<Claim>
             {
@@ -105,7 +109,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            User user = this._dataService.GetUserWithUsername(loginViewModel.Username);
+            User user = this.dataService.GetUserWithUsername(loginViewModel.Username);
 
             if (user == null)
             {

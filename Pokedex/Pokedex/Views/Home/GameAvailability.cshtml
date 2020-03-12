@@ -16,7 +16,7 @@
 }
 
 <div class="pageButtons">
-    @foreach(var p in Model)
+    @foreach (var p in Model)
     {
         <button id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Abbreviation</button>
     }

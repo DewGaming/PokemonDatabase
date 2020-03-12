@@ -4,10 +4,10 @@
 }
 
 <div class="eggCycleCount">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("ExperienceGrowth", "Add")" role="button">Add Experience Growths</a>
+            <a class="btn btn-primary" href="@this.Url.Action("ExperienceGrowth", "Add")" role="button">Add Experience Growths</a>
         </p>
     }
     <table class="table">
@@ -15,18 +15,18 @@
             <th scope="col">Experience Growth</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllExperienceGrowths.OrderBy(x => x.ExpPointTotal).ToList())
+        @foreach (var item in Model.AllExperienceGrowths.OrderBy(x => x.ExpPointTotal).ToList())
         {
             <tr>
                 <td>
                     @item.Name @(string.Concat("(", @String.Format("{0:n0}", item.ExpPointTotal), ")"))
                 </td>
                 <td>
-                    <a href="@(Url.Action("ExperienceGrowth", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!(Model.AllPokemon.Exists(x => x.EggCycleId == item.Id)))
+                    <a href="@(this.Url.Action("ExperienceGrowth", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllPokemon.Exists(x => x.EggCycleId == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("ExperienceGrowth", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("ExperienceGrowth", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

@@ -24,7 +24,7 @@
     <div class="gameAvailability">
         <p>Games</p>
         <ul>
-            @foreach(var g in Model.AllGames.OrderBy(x => x.ReleaseDate))
+            @foreach (var g in Model.AllGames.OrderBy(x => x.ReleaseDate))
             {
                 <li>
                     <input id="game@(g.Id)" type="checkbox" value="@g.Id" @(Model.PokemonGameDetails.Find(x => x.GameId == g.Id) != null ? "checked=checked" : "") />

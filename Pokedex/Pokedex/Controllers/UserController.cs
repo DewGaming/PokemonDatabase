@@ -1,66 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using Pokedex.DataAccess.Models;
-
 using Pokedex.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that is used to represent the user controller.
+    /// </summary>
     [Authorize]
     [Route("")]
     public class UserController : Controller
     {
-        private static List<ShinyHunt> _shinyHunts;
+        private static List<ShinyHunt> shinyHunts;
 
-        private readonly DataService _dataService;
+        private readonly DataService dataService;
 
-        private readonly AppConfig _appConfig;
+        private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="appConfig">The application configuration.</param>
+        /// <param name="dataContext">The database context.</param>
         public UserController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
-            this._appConfig = appConfig.Value;
-            this._dataService = new DataService(dataContext);
+            this.appConfig = appConfig.Value;
+            this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// Gets a list of messages for the user that is logged in.
+        /// </summary>
+        /// <returns>The view messages page.</returns>
         [Route("messages")]
         public IActionResult ViewMessages()
         {
-            List<Message> model = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value));
+            List<Message> model = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
 
             return this.View(model);
         }
 
+        /// <summary>
+        /// Deletes the selected message.
+        /// </summary>
+        /// <param name="messageId">The id of the message being deleted.</param>
+        /// <returns>The delete message page.</returns>
         [HttpGet]
         [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(int messageId)
         {
-            Message model = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+            Message model = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
 
             return this.View(model);
         }
 
+        /// <summary>
+        /// Deletes the selected message.
+        /// </summary>
+        /// <param name="message">The message being deleted.</param>
+        /// <returns>The messages page for the user.</returns>
         [HttpPost]
         [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(Message message)
         {
-            this._dataService.DeleteMessage(message.Id);
+            this.dataService.DeleteMessage(message.Id);
 
             return this.RedirectToAction("ViewMessages", "User");
         }
 
+        /// <summary>
+        /// Replies to the provided message.
+        /// </summary>
+        /// <param name="messageId">The id for the message.</param>
+        /// <returns>The reply message page.</returns>
         [HttpGet]
         [Route("reply_to_message/{messageId:int}")]
         public IActionResult ReplyMessage(int messageId)
         {
-            Message originalMessage = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
-            Message model = new Message() {
+            Message originalMessage = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+            Message model = new Message()
+            {
                 ReceiverId = originalMessage.SenderId,
                 SenderId = originalMessage.ReceiverId,
                 MessageTitle = string.Concat("Re: ", originalMessage.MessageTitle),
@@ -75,7 +100,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Message originalMessage = this._dataService.GetMessagesToUser(Convert.ToInt32(User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+                Message originalMessage = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
 
                 Message model = new Message()
                 {
@@ -86,9 +111,9 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            
+
             message.Id = 0;
-            this._dataService.AddMessage(message);
+            this.dataService.AddMessage(message);
 
             return this.RedirectToAction("ViewMessages", "User");
         }
@@ -99,7 +124,7 @@ namespace Pokedex.Controllers
         {
             NewPasswordViewModel model = new NewPasswordViewModel()
             {
-                UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id
+                UserId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
             };
 
             return this.View(model);
@@ -109,7 +134,7 @@ namespace Pokedex.Controllers
         [Route("edit_password")]
         public IActionResult EditPassword(NewPasswordViewModel newPasswordViewModel)
         {
-            User user = this._dataService.GetUserById(newPasswordViewModel.UserId);
+            User user = this.dataService.GetUserById(newPasswordViewModel.UserId);
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
             PasswordVerificationResult passwordVerificationResult =
                 passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
@@ -118,8 +143,9 @@ namespace Pokedex.Controllers
             {
                 NewPasswordViewModel model = new NewPasswordViewModel()
                 {
-                    UserId = newPasswordViewModel.UserId
+                    UserId = newPasswordViewModel.UserId,
                 };
+                
                 // Set invalid password error message.
                 this.ModelState.AddModelError("Error", "Invalid password.");
 
@@ -128,17 +154,18 @@ namespace Pokedex.Controllers
 
             user.PasswordHash = passwordHasher.HashPassword(null, newPasswordViewModel.NewPassword);
 
-            this._dataService.UpdateUser(user);
+            this.dataService.UpdateUser(user);
 
             return this.RedirectToAction("Index", "Home");
         }
-        
+
         [Authorize]
         [Route("shiny_hunting_counter")]
         public IActionResult ShinyHuntingCounter()
         {
-            List<ShinyHunt> shinyHunts = this._dataService.GetShinyHunter(this.User.Identity.Name);
-            ShinyHuntingViewModel model = new ShinyHuntingViewModel(){
+            List<ShinyHunt> shinyHunts = this.dataService.GetShinyHunter(this.User.Identity.Name);
+            ShinyHuntingViewModel model = new ShinyHuntingViewModel()
+            {
                 InProgressHunts = shinyHunts.Where(x => !x.HuntComplete).ToList(),
                 CompletedHunts = shinyHunts.Where(x => x.HuntComplete && x.IsPokemonCaught).ToList(),
                 FailedHunts = shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList(),
@@ -151,11 +178,12 @@ namespace Pokedex.Controllers
         public IActionResult ContinueHunt(int huntId)
         {
             this.UpdateShinyHuntList();
-            ShinyHunt shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
+            ShinyHunt shinyHunt = shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
 
-            ContinueHuntViewModel model = new ContinueHuntViewModel(){
+            ContinueHuntViewModel model = new ContinueHuntViewModel()
+            {
                 ShinyHunt = shinyHunt,
-                AppConfig = this._appConfig,
+                AppConfig = this.appConfig,
                 HuntIndex = huntId,
             };
 
@@ -166,12 +194,12 @@ namespace Pokedex.Controllers
         [Route("begin_shiny_hunt")]
         public IActionResult BeginShinyHunt()
         {
-            List<Game> games = this._dataService.GetGames();
+            List<Game> games = this.dataService.GetGames();
             games.Remove(games.Find(x => x.Abbreviation == "RBY"));
             BeginShinyHuntViewModel model = new BeginShinyHuntViewModel()
             {
-                UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
-                AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
+                UserId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                AllShinyHuntingTechniques = this.dataService.GetShinyHuntingTechniques(),
                 AllGames = games,
                 AllPokemon = new List<Pokemon>(),
             };
@@ -184,17 +212,17 @@ namespace Pokedex.Controllers
         [Route("begin_shiny_hunt")]
         public IActionResult BeginShinyHunt(ShinyHunt shinyHunt)
         {
-            List<Generation> generations = this._dataService.GetGenerations().OrderBy(x => x.Id).ToList();
-            if (generations.IndexOf(this._dataService.GetGenerationFromGame(shinyHunt.GameId)) < generations.IndexOf(this._dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
+            List<Generation> generations = this.dataService.GetGenerations().OrderBy(x => x.Id).ToList();
+            if (generations.IndexOf(this.dataService.GetGenerationFromGame(shinyHunt.GameId)) < generations.IndexOf(this.dataService.GetGenerationByPokemon(shinyHunt.PokemonId)))
             {
-                List<Game> games = this._dataService.GetGames();
+                List<Game> games = this.dataService.GetGames();
                 games.Remove(games.Find(x => x.Abbreviation == "RBY"));
                 BeginShinyHuntViewModel model = new BeginShinyHuntViewModel()
                 {
-                    UserId = this._dataService.GetUserWithUsername(this.User.Identity.Name).Id,
-                    AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
+                    UserId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                    AllShinyHuntingTechniques = this.dataService.GetShinyHuntingTechniques(),
                     AllGames = games,
-                    AllPokemon = this._dataService.GetAllPokemon(),
+                    AllPokemon = this.dataService.GetAllPokemon(),
                 };
 
                 this.ModelState.AddModelError("GenerationId", "Pokemon does not exist in this generation");
@@ -202,7 +230,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this._dataService.AddShinyHunt(shinyHunt);
+            this.dataService.AddShinyHunt(shinyHunt);
 
             return this.RedirectToAction("ShinyHuntingCounter");
         }
@@ -211,11 +239,11 @@ namespace Pokedex.Controllers
         public IActionResult CompleteShinyHunt(int huntId)
         {
             this.UpdateShinyHuntList();
-            ShinyHunt shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
+            ShinyHunt shinyHunt = shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
             shinyHunt.HuntComplete = true;
             shinyHunt.IsPokemonCaught = true;
 
-            this._dataService.UpdateShinyHunt(shinyHunt);
+            this.dataService.UpdateShinyHunt(shinyHunt);
 
             return this.RedirectToAction("ShinyHuntingCounter");
         }
@@ -224,11 +252,11 @@ namespace Pokedex.Controllers
         public IActionResult GiveUpShinyHunt(int huntId)
         {
             this.UpdateShinyHuntList();
-            ShinyHunt shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
+            ShinyHunt shinyHunt = shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
             shinyHunt.HuntComplete = true;
             shinyHunt.IsPokemonCaught = false;
 
-            this._dataService.UpdateShinyHunt(shinyHunt);
+            this.dataService.UpdateShinyHunt(shinyHunt);
 
             return this.RedirectToAction("ShinyHuntingCounter");
         }
@@ -238,22 +266,22 @@ namespace Pokedex.Controllers
         {
             this.UpdateShinyHuntList();
             ShinyHunt shinyHunt = null;
-            if(huntProgress == "InProgress")
+            if (huntProgress == "InProgress")
             {
-                shinyHunt = _shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
+                shinyHunt = shinyHunts.Where(x => !x.HuntComplete).ToList()[huntId - 1];
             }
-            else if(huntProgress == "Completed")
+            else if (huntProgress == "Completed")
             {
-                shinyHunt = _shinyHunts.Where(x => x.HuntComplete && x.IsPokemonCaught).ToList()[huntId - 1];
+                shinyHunt = shinyHunts.Where(x => x.HuntComplete && x.IsPokemonCaught).ToList()[huntId - 1];
             }
-            else if(huntProgress == "Failed")
+            else if (huntProgress == "Failed")
             {
-                shinyHunt = _shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList()[huntId - 1];
+                shinyHunt = shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList()[huntId - 1];
             }
 
             if (shinyHunt != null)
             {
-                this._dataService.DeleteShinyHunt(shinyHunt.Id);
+                this.dataService.DeleteShinyHunt(shinyHunt.Id);
             }
 
             return this.RedirectToAction("ShinyHuntingCounter");
@@ -263,11 +291,11 @@ namespace Pokedex.Controllers
         public IActionResult RetryHunt(int huntId)
         {
             this.UpdateShinyHuntList();
-            ShinyHunt hunt = _shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList()[huntId - 1];
+            ShinyHunt hunt = shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList()[huntId - 1];
             hunt.IsPokemonCaught = false;
             hunt.HuntComplete = false;
 
-            this._dataService.UpdateShinyHunt(hunt);
+            this.dataService.UpdateShinyHunt(hunt);
 
             return this.RedirectToAction("ShinyHuntingCounter", "User");
         }
@@ -275,9 +303,10 @@ namespace Pokedex.Controllers
         [Route("pokemon_teams")]
         public IActionResult PokemonTeams()
         {
-            PokemonTeamsViewModel model = new PokemonTeamsViewModel(){
-                AllPokemonTeams = this._dataService.GetAllPokemonTeams(this.User.Identity.Name),
-                AppConfig = _appConfig,
+            PokemonTeamsViewModel model = new PokemonTeamsViewModel()
+            {
+                AllPokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name),
+                AppConfig = this.appConfig,
             };
 
             return this.View(model);
@@ -285,7 +314,7 @@ namespace Pokedex.Controllers
 
         private void UpdateShinyHuntList()
         {
-            _shinyHunts = this._dataService.GetShinyHunter(User.Identity.Name);
+            shinyHunts = this.dataService.GetShinyHunter(this.User.Identity.Name);
         }
     }
 }

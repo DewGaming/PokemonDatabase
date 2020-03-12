@@ -26,7 +26,7 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.CommentType, "What type of comment is this?")
-            @foreach(var c in Model.TypeOfComment)
+            @foreach (var c in Model.TypeOfComment)
             {
                 <div class="radioButton col-md-8">
                     @Html.RadioButtonFor(x => x.CommentType, c, new { @id = string.Concat(c.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Type") })
@@ -37,14 +37,14 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.CommentedPage, "What page are you commenting on?")
-            @foreach(var p in Model.Page)
+            @foreach (var p in Model.Page)
             {
                 <div class="radioButton">
                     <div class="col-md-8">
                         @Html.RadioButtonFor(x => x.CommentedPage, p, new { @id = string.Concat(p.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page") })
                         @Html.Label(string.Concat(p.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page"), p)
                     </div>
-                    @if(p == "Pokémon Page")
+                    @if (p == "Pokémon Page")
                     {
                         <div class="col-md-3">
                             @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })

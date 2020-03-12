@@ -4,10 +4,10 @@
 }
 
 <div class="abilityTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("Ability", "Add")" role="button">Add Ability</a>
+            <a class="btn btn-primary" href="@this.Url.Action("Ability", "Add")" role="button">Add Ability</a>
         </p>
     }
     <table class="table">
@@ -16,7 +16,7 @@
             <th scope="col">Description</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllAbilities)
+        @foreach (var item in Model.AllAbilities)
         {
             <tr>
                 <td>
@@ -24,11 +24,11 @@
                 </td>
                 <td>@item.Description</td>
                 <td>
-                    <a href="@(Url.Action("Ability", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(User.IsInRole("Owner") && !(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SpecialEventAbility != null && x.SpecialEventAbility.Id == item.Id)))
+                    <a href="@(this.Url.Action("Ability", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner") && !(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SpecialEventAbility != null && x.SpecialEventAbility.Id == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("Ability", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("Ability", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

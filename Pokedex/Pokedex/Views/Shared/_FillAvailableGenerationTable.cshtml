@@ -1,19 +1,19 @@
 @model Pokedex.Models.GenerationTableViewModel;
 
-@foreach(var p in Model.PokemonNoTypeList)
+@foreach (var p in Model.PokemonNoTypeList)
 {
-    if(p.IsComplete)
+    if (p.IsComplete)
     {
         <div class="shadowed @p.Name">
-            @if(p.Name.IndexOf(" (") > -1)
+            @if (p.Name.IndexOf(" (") > -1)
             {
-                <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
                     <img class="pokemonlistPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Id, ".png"))">
                 </a>
             }
             else
             {
-                <a href="@Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                     <img class="pokemonlistPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Id, ".png"))">
                 </a>
             }
@@ -22,7 +22,7 @@
             </div>
         </div>
     }
-    else if (User.IsInRole("Owner"))
+    else if (this.User.IsInRole("Owner"))
     {
         <div class="shadowed incomplete @p.Name">
             <img class="pokemonlistPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Id, ".png"))">

@@ -4,10 +4,10 @@
 }
 
 <div class="eggCycleCount">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("EggCycle", "Add")" role="button">Add Egg Cycle</a>
+            <a class="btn btn-primary" href="@this.Url.Action("EggCycle", "Add")" role="button">Add Egg Cycle</a>
         </p>
     }
     <table class="table">
@@ -15,18 +15,18 @@
             <th scope="col">Egg Cycle</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllEggCycles)
+        @foreach (var item in Model.AllEggCycles)
         {
             <tr>
                 <td>
                     @item.CycleCount Cycles (@(item.CycleCount * 257)-@(item.CycleCount * 257 + 256))
                 </td>
                 <td>
-                    <a href="@(Url.Action("EggCycle", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!(Model.AllPokemon.Exists(x => x.EggCycleId == item.Id)))
+                    <a href="@(this.Url.Action("EggCycle", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllPokemon.Exists(x => x.EggCycleId == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("EggCycle", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("EggCycle", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

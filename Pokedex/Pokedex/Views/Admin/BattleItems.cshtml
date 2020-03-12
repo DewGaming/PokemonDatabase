@@ -4,50 +4,50 @@
 }
 
 <div class="battleItemTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("BattleItem", "Add")" role="button">Add Battle Item</a>
+            <a class="btn btn-primary" href="@this.Url.Action("BattleItem", "Add")" role="button">Add Battle Item</a>
         </p>
     }
     <table class="table">
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Region</th>
-            @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
+            @if (Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
             {
                 <th scope="col">Specific Pokémon</th>
             }
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllBattleItems)
+        @foreach (var item in Model.AllBattleItems)
         {
             <tr>
                 <td>
                     @item.Name
                 </td>
                 <td>
-                    @if(item.OnlyInThisGeneration)
+                    @if (item.OnlyInThisGeneration)
                     {
                         @("Only In ")
                     }
                     @item.Generation.Region
                 </td>
-                @if(Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
+                @if (Model.AllBattleItems.Where(x => x.PokemonId != null).Count() > 0)
                 {
                     <td>
-                        @if(item.PokemonId != null)
+                        @if (item.PokemonId != null)
                         {
                             @Model.AllPokemon.Find(x => x.Id == item.PokemonId).Name
                         }
                     </td>
                 }
                 <td>
-                    <a href="@(Url.Action("BattleItem", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(User.IsInRole("Owner") && Model.AllPokemonTeamDetails.Where(x => x.BattleItemId == item.Id).Count() == 0)
+                    <a href="@(this.Url.Action("BattleItem", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner") && Model.AllPokemonTeamDetails.Where(x => x.BattleItemId == item.Id).Count() == 0)
                     {
                         @('|')
-                        <a href="@(Url.Action("BattleItem", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("BattleItem", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

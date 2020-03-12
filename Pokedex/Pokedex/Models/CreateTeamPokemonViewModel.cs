@@ -9,7 +9,7 @@ namespace Pokedex.Models
         public List<Pokemon> AllPokemon { get; set; }
 
         public List<Nature> AllNatures { get; set; }
-        
+
         public int? GameId { get; set; }
     }
 }

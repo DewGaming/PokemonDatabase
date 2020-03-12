@@ -5,7 +5,7 @@
     string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     AdminPokemonViewModel adminPokemon = null;
-    if(User.IsInRole("Owner"))
+    if (this.User.IsInRole("Owner"))
     {
         adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
     }
@@ -23,7 +23,7 @@
             margin-bottom: 0 !important;
         }
     </style>
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <style>
             .btn-group {
@@ -45,10 +45,10 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                             <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.PokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[0].Id, ".png"))" />
                         </a>
                     </td>
@@ -59,12 +59,12 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                             <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.PokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[1].Id, ".png"))" />
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
                     </td>
                 </tr>
             </table>
@@ -74,21 +74,21 @@
 
 <hr style="margin-top: 0;">
 
-@foreach(var item in Model.PokemonList)
+@foreach (var item in Model.PokemonList)
 {
-    if(User.IsInRole("Owner"))
+    if (this.User.IsInRole("Owner"))
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
     <div class="page pokemon@(@item.Form == null ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-            @if(Model.PokemonList.Count() > 1)
+            @if (Model.PokemonList.Count() > 1)
             {
                 <div class="differentForms">
                     <h2>Different Forms</h2>
                     <div class="formButtons">
-                        @foreach(var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
+                        @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                         {
                             string iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
                             <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")@(@button.Form != null ? string.Concat(" (", @button.Form.Name.Replace("'", "&apos;"), ")") : string.Empty)')">
@@ -100,7 +100,7 @@
             }
         </div>
         <div class="pokemonInfo pokemonData pokemonTables">
-            @if(User.IsInRole("Owner"))
+            @if (this.User.IsInRole("Owner"))
             {
                 @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
             }
@@ -145,7 +145,7 @@
                             @{
                                 string weight;
                                 
-                                if(item.Pokemon.Weight != 0m)
+                                if (item.Pokemon.Weight != 0m)
                                 {
                                     weight = string.Concat(Math.Round(@item.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####"), " lbs (", item.Pokemon.Weight.ToString("0.####"), " kg)");
                                 }
@@ -159,7 +159,7 @@
                     </tr>
                     <tr>
                         <th>
-                            @if(item.SecondaryAbility == null && item.HiddenAbility == null)
+                            @if (item.SecondaryAbility == null && item.HiddenAbility == null)
                             {
                                 @("Ability")
                             }
@@ -243,7 +243,7 @@
             <div class="typing pokemonTables">
                 <h2>Typing</h2>
                 <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                @if(@item.SecondaryType != null)
+                @if (@item.SecondaryType != null)
                 {
                     <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
                 }
@@ -255,7 +255,7 @@
                         <h2>Resistances</h2>
                         <table class="StrongAgainstTable">
                             <tbody>
-                                @foreach(string s in item.Effectiveness.StrongAgainst)
+                                @foreach (string s in item.Effectiveness.StrongAgainst)
                                 {
                                     <tr>
                                         @if (@s.IndexOf(" Quad") > -1)
@@ -289,7 +289,7 @@
                             <h2>Weaknesses</h2>
                             <table class="WeakAgainstTable">
                                 <tbody>
-                                    @foreach(string w in item.Effectiveness.WeakAgainst)
+                                    @foreach (string w in item.Effectiveness.WeakAgainst)
                                     {
                                         <tr>
                                             @if (@w.IndexOf(" Quad") > -1)
@@ -317,7 +317,7 @@
                             <h2>Immunities</h2>
                             <table class="ImmuneToTable">
                                 <tbody>
-                                    @foreach(string i in item.Effectiveness.ImmuneTo)
+                                    @foreach (string i in item.Effectiveness.ImmuneTo)
                                     {
                                         <tr>
                                             <td>
@@ -487,19 +487,19 @@
                             <tbody class="evolutionPokemon">
                                 <tr>
                                     <th>
-                                        @if(@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                                        @if (@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                         {
-                                            <a class="evolutionImage" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                            <a class="evolutionImage" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                 <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
                                             </a>
-                                            <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
                                         }
                                         else
                                         {
-                                            <a class="evolutionImage" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                            <a class="evolutionImage" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                 <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
                                             </a>
-                                            <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
                                         }
                                     </th>
                                     <td>
@@ -524,23 +524,23 @@
                                 </tr>
                             </thead>
                             <tbody class="evolutionPokemon">
-                                @foreach(var evolution in item.Evolutions)
+                                @foreach (var evolution in item.Evolutions)
                                 {
                                     <tr>
                                         <th>
-                                            @if(@evolution.EvolutionPokemon.Name.Contains(" ("))
+                                            @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
                                             {
-                                                <a class="evolutionImage"  href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                                 </a>
-                                                <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                                <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
                                             }
                                             else
                                             {
-                                                <a class="evolutionImage"  href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                                                     <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                                 </a>
-                                                <a class="evolutionLink" href="@Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                                <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
                                             }
                                         </th>
                                         <td>

@@ -4,10 +4,10 @@
 }
 
 <div class="natureTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("Nature", "Add")" role="button">Add Nature</a>
+            <a class="btn btn-primary" href="@this.Url.Action("Nature", "Add")" role="button">Add Nature</a>
         </p>
     }
     <table class="table">
@@ -15,18 +15,18 @@
             <th scope="col">Name</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>
                     @item.Name
                 </td>
                 <td>
-                    <a href="@(Url.Action("Nature", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(User.IsInRole("Owner"))
+                    <a href="@(this.Url.Action("Nature", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner"))
                     {
                         @('|')
-                        <a href="@(Url.Action("Nature", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("Nature", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

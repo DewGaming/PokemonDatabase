@@ -16,14 +16,14 @@
 }
 
 <p>
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
-        <a class="btn btn-primary" href="@Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>
+        <a class="btn btn-primary" href="@this.Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>
     }
 </p>
 
 <div class="pageButtons">
-    @foreach(var id in Model)
+    @foreach (var id in Model)
     {
         <button id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
     }

@@ -25,7 +25,7 @@
                             <br>
                             ATTACK ↴
                         </th>
-                        @foreach(var item in Model.Types)
+                        @foreach (var item in Model.Types)
                         {
                             <th>
                                 <span class="type-icon type-@item.Name.ToLower() type-cell type-abbr" title="@item.Name">@item.Name.Substring(0, 3)</span>
@@ -34,23 +34,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var atk in Model.Types)
+                    @foreach (var atk in Model.Types)
                     {
                         <tr>
                             <th>
                                 <span class="type-icon type-@atk.Name.ToLower() type-cell">@atk.Name</span>
                             </th>
-                            @foreach(var def in Model.Types)
+                            @foreach (var def in Model.Types)
                             {
-                                @if(@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "0"))
+                                @if (@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "0"))
                                 {
                                     <td class="type-fx-cell type-fx-0" title="@atk.Name → @def.Name = No Efecct">0</td>
                                 }
-                                else if(@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "0.5"))
+                                else if (@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "0.5"))
                                 {
                                     <td class="type-fx-cell type-fx-50" title="@atk.Name → @def.Name = Not Very Effective">½</td>
                                 }
-                                else if(@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "2"))
+                                else if (@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "2"))
                                 {
                                     <td class="type-fx-cell type-fx-200" title="@atk.Name → @def.Name = Super Effective">2</td>
                                 }

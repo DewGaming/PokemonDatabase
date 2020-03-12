@@ -9,24 +9,24 @@
     <script src="/js/markAsRead.js"></script>
 }
 
-@if(User.IsInRole("Owner"))
+@if (this.User.IsInRole("Owner"))
 {
-    <a href="@Url.Action("SendMessageNoComment", "Owner")" class="btn btn-primary">Send Message</a>
+    <a href="@this.Url.Action("SendMessageNoComment", "Owner")" class="btn btn-primary">Send Message</a>
 }
 
-@if(Model.Count() > 0)
+@if (Model.Count() > 0)
 {
     <table class="table">
         <tr>
             <th class="col-md-9" scope="col">Message</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.OrderByDescending(x => x.Id))
+        @foreach (var item in Model.OrderByDescending(x => x.Id))
         {
             messageCount++;
             <tr>
                 <td>
-                    @if(item.IsRead == false)
+                    @if (item.IsRead == false)
                     {
                         <b>@item.MessageTitle</b>
                     }
@@ -39,10 +39,10 @@
                     @item.MessageContent
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="@Url.Action("ReplyMessage", "User", new { messageId = messageCount })">Reply to Message</a>
+                    <a class="btn btn-primary" href="@this.Url.Action("ReplyMessage", "User", new { messageId = messageCount })">Reply to Message</a>
                     <br>
                     <br>
-                    <a class="btn btn-primary" href="@Url.Action("DeleteMessage", "User", new { messageId = messageCount })">Delete Message</a>
+                    <a class="btn btn-primary" href="@this.Url.Action("DeleteMessage", "User", new { messageId = messageCount })">Delete Message</a>
                 </td>
             </tr>
         }

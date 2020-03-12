@@ -4,10 +4,10 @@
 }
 
 <div class="gameTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("Game", "Add")" role="button">Add Game</a>
+            <a class="btn btn-primary" href="@this.Url.Action("Game", "Add")" role="button">Add Game</a>
         </p>
     }
     <table class="table">
@@ -17,18 +17,18 @@
             <th scope="col">Generation</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllGames)
+        @foreach (var item in Model.AllGames)
         {
             <tr>
                 <td>@item.Name (@item.Abbreviation)</td>
                 <td>@item.ReleaseDate.ToString("MMMM dd, yyyy")</td>
                 <td>Generation @item.GenerationId</td>
                 <td>
-                    <a href="@(Url.Action("Game", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!Model.AllPokemon.Exists(x => x.Game.Id == item.Id))
+                    <a href="@(this.Url.Action("Game", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!Model.AllPokemon.Exists(x => x.Game.Id == item.Id))
                     {
                         @("|")
-                        <a href="@(Url.Action("Game", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("Game", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

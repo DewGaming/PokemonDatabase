@@ -13,7 +13,7 @@
 </head>
 <body>
     <nav class="fixed-nav navbar navbar-expand-custom navbar-dark bg-dark mb-4">
-      <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pokémon Database</a>
+      <a class="navbar-brand" href="@this.Url.Action("Index", "Home")">Pokémon Database</a>
       <button class="navbar-toggler collapse-button" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -23,16 +23,16 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="" id="pokedexDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pokedex</a>
             <div class="dropdown-menu" aria-labelledby="pokedexDropdown">
-              <a class="dropdown-item" href="@Url.Action("AllPokemon", "Home")">Pokémon</a>
-              <a class="dropdown-item" href="@Url.Action("DayCareEvaluator", "Home")">Day Care Evaluator</a>
-              <a class="dropdown-item" href="@Url.Action("GameAvailability", "Home")">Game Availability</a>
-              <a class="dropdown-item" href="@Url.Action("TeamRandomizer", "Home")">Team Randomizer</a>
-              <a class="dropdown-item" href="@Url.Action("TypeChart", "Home")">Type Chart</a>
-              <a class="dropdown-item" href="@Url.Action("TypingEvaluator", "Home")">Typing Evaluator</a>
+              <a class="dropdown-item" href="@this.Url.Action("AllPokemon", "Home")">Pokémon</a>
+              <a class="dropdown-item" href="@this.Url.Action("DayCareEvaluator", "Home")">Day Care Evaluator</a>
+              <a class="dropdown-item" href="@this.Url.Action("GameAvailability", "Home")">Game Availability</a>
+              <a class="dropdown-item" href="@this.Url.Action("TeamRandomizer", "Home")">Team Randomizer</a>
+              <a class="dropdown-item" href="@this.Url.Action("TypeChart", "Home")">Type Chart</a>
+              <a class="dropdown-item" href="@this.Url.Action("TypingEvaluator", "Home")">Typing Evaluator</a>
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link" href="@Url.Action("Comment", "Home")">Leave Comment</a>
+            <a class="nav-link" href="@this.Url.Action("Comment", "Home")">Leave Comment</a>
           </li>
         </ul>
         @await Html.PartialAsync("_SearchBarPartial")
@@ -48,7 +48,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
     
     <script src="/js/navbarFix.js"></script>
-    @if(User.Identity.IsAuthenticated)
+    @if (this.User.Identity.IsAuthenticated)
     {
       <script src="/js/loginAjax.js"></script>
     }

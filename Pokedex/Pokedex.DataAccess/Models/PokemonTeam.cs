@@ -41,27 +41,27 @@ namespace Pokedex.DataAccess.Models
 
         public void InsertPokemon(PokemonTeamDetail pokemon)
         {
-            if(this.FirstPokemonId == null)
+            if (this.FirstPokemonId == null)
             {
                 this.FirstPokemonId = pokemon.Id;
             }
-            else if(this.SecondPokemonId == null)
+            else if (this.SecondPokemonId == null)
             {
                 this.SecondPokemonId = pokemon.Id;
             }
-            else if(this.ThirdPokemonId == null)
+            else if (this.ThirdPokemonId == null)
             {
                 this.ThirdPokemonId = pokemon.Id;
             }
-            else if(this.FourthPokemonId == null)
+            else if (this.FourthPokemonId == null)
             {
                 this.FourthPokemonId = pokemon.Id;
             }
-            else if(this.FifthPokemonId == null)
+            else if (this.FifthPokemonId == null)
             {
                 this.FifthPokemonId = pokemon.Id;
             }
-            else if(this.SixthPokemonId == null)
+            else if (this.SixthPokemonId == null)
             {
                 this.SixthPokemonId = pokemon.Id;
             }
@@ -70,32 +70,32 @@ namespace Pokedex.DataAccess.Models
         public List<int> GrabPokemonTeamDetailIds()
         {
             List<int> pokemonTeamDetailIds = new List<int>();
-            if(this.FirstPokemonId != null)
+            if (this.FirstPokemonId != null)
             {
                 pokemonTeamDetailIds.Add((int)this.FirstPokemonId);
             }
 
-            if(this.SecondPokemonId != null)
+            if (this.SecondPokemonId != null)
             {
                 pokemonTeamDetailIds.Add((int)this.SecondPokemonId);
             }
 
-            if(this.ThirdPokemonId != null)
+            if (this.ThirdPokemonId != null)
             {
                 pokemonTeamDetailIds.Add((int)this.ThirdPokemonId);
             }
 
-            if(this.FourthPokemonId != null)
+            if (this.FourthPokemonId != null)
             {
                 pokemonTeamDetailIds.Add((int)this.FourthPokemonId);
             }
 
-            if(this.FifthPokemonId != null)
+            if (this.FifthPokemonId != null)
             {
                 pokemonTeamDetailIds.Add((int)this.FifthPokemonId);
             }
 
-            if(this.SixthPokemonId != null)
+            if (this.SixthPokemonId != null)
             {
                 pokemonTeamDetailIds.Add((int)this.SixthPokemonId);
             }
@@ -109,7 +109,7 @@ namespace Pokedex.DataAccess.Models
             get
             {
                 List<PokemonTeamDetail> pokemonTeamDetails = new List<PokemonTeamDetail>();
-                if(this.FirstPokemonId != null)
+                if (this.FirstPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.FirstPokemon);
                 }
@@ -118,7 +118,7 @@ namespace Pokedex.DataAccess.Models
                     return pokemonTeamDetails;
                 }
 
-                if(this.SecondPokemonId != null)
+                if (this.SecondPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.SecondPokemon);
                 }
@@ -127,7 +127,7 @@ namespace Pokedex.DataAccess.Models
                     return pokemonTeamDetails;
                 }
 
-                if(this.ThirdPokemonId != null)
+                if (this.ThirdPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.ThirdPokemon);
                 }
@@ -136,7 +136,7 @@ namespace Pokedex.DataAccess.Models
                     return pokemonTeamDetails;
                 }
 
-                if(this.FourthPokemonId != null)
+                if (this.FourthPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.FourthPokemon);
                 }
@@ -145,7 +145,7 @@ namespace Pokedex.DataAccess.Models
                     return pokemonTeamDetails;
                 }
 
-                if(this.FifthPokemonId != null)
+                if (this.FifthPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.FifthPokemon);
                 }
@@ -154,7 +154,7 @@ namespace Pokedex.DataAccess.Models
                     return pokemonTeamDetails;
                 }
 
-                if(this.SixthPokemonId != null)
+                if (this.SixthPokemonId != null)
                 {
                     pokemonTeamDetails.Add(this.SixthPokemon);
                 }

@@ -14,19 +14,19 @@
 }
 
 <div class="pageButtons">
-    @foreach(var item in Model.AllTypes)
+    @foreach (var item in Model.AllTypes)
     {
         <button id="Type@(item.Id)" onclick="lookupMoveTypes('@item.Id')">@item.Name</button>
     }
 </div>
 <div class="moveTable">
-    @foreach(var type in Model.AllTypes)
+    @foreach (var type in Model.AllTypes)
     {
         <div class="page type@(type.Id)">
-            @if(User.IsInRole("Owner"))
+            @if (this.User.IsInRole("Owner"))
             {
                 <p>
-                    <a class="btn btn-primary" href="@Url.Action("Move", "Add", new { typeId = @type.Id })" role="button">Add Move</a>
+                    <a class="btn btn-primary" href="@this.Url.Action("Move", "Add", new { typeId = @type.Id })" role="button">Add Move</a>
                 </p>
             }
             <table class="moveTable">
@@ -40,7 +40,7 @@
                     <th scope="col">Accuracy</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach(var item in Model.AllMoves.Where(x => x.MoveTypeId == type.Id).ToList())
+                @foreach (var item in Model.AllMoves.Where(x => x.MoveTypeId == type.Id).ToList())
                 {
                     <tr>
                         <td>@item.Name</td>
@@ -48,7 +48,7 @@
                         <td>@Model.AllMoveCategories.Find(x => x.Id == item.MoveCategoryId).Category</td>
                         <td>@item.Description</td>
                         <td>
-                            @if(item.BasePower != null)
+                            @if (item.BasePower != null)
                             {
                                 @item.BasePower
                             }
@@ -59,7 +59,7 @@
                         </td>
                         <td>@item.PP</td>
                         <td>
-                            @if(item.Accuracy != null)
+                            @if (item.Accuracy != null)
                             {
                                 @item.Accuracy
                             }
@@ -69,9 +69,9 @@
                             }
                         </td>
                         <td>
-                            <a href="@(Url.Action("Move", "Edit", new { id = item.Id }))">Edit</a>
+                            <a href="@(this.Url.Action("Move", "Edit", new { id = item.Id }))">Edit</a>
                             |
-                            <a href="@(Url.Action("Move", "Delete", new { id = item.Id }))">Delete</a>
+                            <a href="@(this.Url.Action("Move", "Delete", new { id = item.Id }))">Delete</a>
                         </td>
                     </tr>
                 }

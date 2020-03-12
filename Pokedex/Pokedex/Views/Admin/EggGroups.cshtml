@@ -4,10 +4,10 @@
 }
 
 <div class="eggGroupTable">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("EggGroup", "Add")" role="button">Add Egg Group</a>
+            <a class="btn btn-primary" href="@this.Url.Action("EggGroup", "Add")" role="button">Add Egg Group</a>
         </p>
     }
     <table class="table">
@@ -15,18 +15,18 @@
             <th scope="col">Egg Group</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllEggGroups)
+        @foreach (var item in Model.AllEggGroups)
         {
             <tr>
                 <td>
                     @item.Name
                 </td>
                 <td>
-                    <a href="@(Url.Action("EggGroup", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
+                    <a href="@(this.Url.Action("EggGroup", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllPokemon.Exists(x => x.PrimaryEggGroup.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryEggGroup != null && x.SecondaryEggGroup.Id == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("EggGroup", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("EggGroup", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

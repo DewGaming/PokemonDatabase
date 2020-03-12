@@ -13,16 +13,29 @@ using Pokedex.DataAccess.Models;
 
 namespace Pokedex
 {
+    /// <summary>
+    /// The class that is used to represent the startup of the program.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The program's configuration.</param>
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
         }
 
+        /// <summary>
+        /// Gets the program's configuration.
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">A collection of services for the application.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -31,14 +44,14 @@ namespace Pokedex
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<AppConfig>(Configuration.GetSection("AppConfig"));
+            services.Configure<AppConfig>(this.Configuration.GetSection("AppConfig"));
 
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
-            
+
             services.AddDbContext<MyKeysContext>(options =>
             {
                 options.UseSqlServer(this.Configuration.GetConnectionString("MyKeysConnection"));
@@ -59,7 +72,11 @@ namespace Pokedex
             services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">The builder for the program.</param>
+        /// <param name="env">The web host's environment.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var cookiePolicyOptions = new CookiePolicyOptions
@@ -93,12 +110,23 @@ namespace Pokedex
         }
     }
 
-    class MyKeysContext : DbContext, IDataProtectionKeyContext
+    /// <summary>
+    /// The class that is used to represent the data protection key database context.
+    /// </summary>
+    internal class MyKeysContext : DbContext, IDataProtectionKeyContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MyKeysContext"/> class.
+        /// </summary>
+        /// <param name="options">The data protection keys database context.</param>
         public MyKeysContext(DbContextOptions<MyKeysContext> options)
             : base(options)
-        { }
+        {
+        }
 
+        /// <summary>
+        /// Gets or sets the database table DataProtectionKeys.
+        /// </summary>
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     }
 }

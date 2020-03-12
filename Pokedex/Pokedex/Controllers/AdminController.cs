@@ -15,20 +15,20 @@ namespace Pokedex.Controllers
     [Route("admin")]
     public class AdminController : Controller
     {
-        private readonly DataService _dataService;
+        private readonly DataService dataService;
 
-        private readonly AppConfig _appConfig;
+        private readonly AppConfig appConfig;
 
         public AdminController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
-            this._appConfig = appConfig.Value;
-            this._dataService = new DataService(dataContext);
+            this.appConfig = appConfig.Value;
+            this.dataService = new DataService(dataContext);
         }
 
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<int> model = this._dataService.GetGenerationsFromPokemonWithIncomplete();
+            List<int> model = this.dataService.GetGenerationsFromPokemonWithIncomplete();
 
             return this.View(model);
         }
@@ -38,8 +38,8 @@ namespace Pokedex.Controllers
         {
             GenerationViewModel model = new GenerationViewModel()
             {
-                AllGenerations = this._dataService.GetGenerations(),
-                AllGames = this._dataService.GetGames(),
+                AllGenerations = this.dataService.GetGenerations(),
+                AllGames = this.dataService.GetGames(),
             };
 
             return this.View(model);
@@ -50,8 +50,8 @@ namespace Pokedex.Controllers
         {
             AdminGameViewModel model = new AdminGameViewModel()
             {
-                AllGames = this._dataService.GetGames().OrderBy(x => x.ReleaseDate).ToList(),
-                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+                AllGames = this.dataService.GetGames().OrderBy(x => x.ReleaseDate).ToList(),
+                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
             return this.View(model);
@@ -62,8 +62,8 @@ namespace Pokedex.Controllers
         {
             TypeViewModel model = new TypeViewModel()
             {
-                AllTypes = this._dataService.GetTypes(),
-                AllPokemon = this._dataService.GetAllPokemonWithTypesAndIncomplete(),
+                AllTypes = this.dataService.GetTypes(),
+                AllPokemon = this.dataService.GetAllPokemonWithTypesAndIncomplete(),
             };
 
             return this.View(model);
@@ -74,8 +74,8 @@ namespace Pokedex.Controllers
         {
             EggCycleViewModel model = new EggCycleViewModel()
             {
-                AllEggCycles = this._dataService.GetEggCycles(),
-                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+                AllEggCycles = this.dataService.GetEggCycles(),
+                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
             return this.View(model);
@@ -86,8 +86,8 @@ namespace Pokedex.Controllers
         {
             ExperienceGrowthViewModel model = new ExperienceGrowthViewModel()
             {
-                AllExperienceGrowths = this._dataService.GetExperienceGrowths(),
-                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+                AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
+                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
             return this.View(model);
@@ -98,8 +98,8 @@ namespace Pokedex.Controllers
         {
             GenderRatiosViewModel model = new GenderRatiosViewModel()
             {
-                AllGenderRatios = this._dataService.GetGenderRatios(),
-                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+                AllGenderRatios = this.dataService.GetGenderRatios(),
+                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
             return this.View(model);
@@ -108,7 +108,7 @@ namespace Pokedex.Controllers
         [Route("form_items")]
         public IActionResult FormItems()
         {
-            List<FormItem> model = this._dataService.GetFormItems();
+            List<FormItem> model = this.dataService.GetFormItems();
 
             return this.View(model);
         }
@@ -118,9 +118,9 @@ namespace Pokedex.Controllers
         {
             AdminMoveViewModel model = new AdminMoveViewModel()
             {
-                AllMoves = this._dataService.GetMoves(),
-                AllTypes = this._dataService.GetTypes(),
-                AllMoveCategories = this._dataService.GetMoveCategories(),
+                AllMoves = this.dataService.GetMoves(),
+                AllTypes = this.dataService.GetTypes(),
+                AllMoveCategories = this.dataService.GetMoveCategories(),
             };
 
             return this.View(model);
@@ -131,8 +131,8 @@ namespace Pokedex.Controllers
         {
             AbilityViewModel model = new AbilityViewModel()
             {
-                AllAbilities = this._dataService.GetAbilities(),
-                AllPokemon = this._dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                AllAbilities = this.dataService.GetAbilities(),
+                AllPokemon = this.dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
             };
 
             return this.View(model);
@@ -143,8 +143,8 @@ namespace Pokedex.Controllers
         {
             LegendaryTypeViewModel model = new LegendaryTypeViewModel()
             {
-                AllLegendaryTypes = this._dataService.GetLegendaryTypes(),
-                AllPokemon = this._dataService.GetAllPokemonWithLegendaryTypesAndIncomplete(),
+                AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
+                AllPokemon = this.dataService.GetAllPokemonWithLegendaryTypesAndIncomplete(),
             };
 
             return this.View(model);
@@ -155,8 +155,8 @@ namespace Pokedex.Controllers
         {
             FormViewModel model = new FormViewModel()
             {
-                AllForms = this._dataService.GetForms(),
-                AllPokemon = this._dataService.GetPokemonFormDetails(),
+                AllForms = this.dataService.GetForms(),
+                AllPokemon = this.dataService.GetPokemonFormDetails(),
             };
 
             return this.View(model);
@@ -167,8 +167,8 @@ namespace Pokedex.Controllers
         {
             EggGroupViewModel model = new EggGroupViewModel()
             {
-                AllEggGroups = this._dataService.GetEggGroups(),
-                AllPokemon = this._dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                AllEggGroups = this.dataService.GetEggGroups(),
+                AllPokemon = this.dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
             };
 
             return this.View(model);
@@ -179,8 +179,8 @@ namespace Pokedex.Controllers
         {
             EvolutionMethodViewModel model = new EvolutionMethodViewModel()
             {
-                AllEvolutionMethods = this._dataService.GetEvolutionMethods(),
-                AllEvolutions = this._dataService.GetEvolutions(),
+                AllEvolutionMethods = this.dataService.GetEvolutionMethods(),
+                AllEvolutions = this.dataService.GetEvolutions(),
             };
 
             return this.View(model);
@@ -191,8 +191,8 @@ namespace Pokedex.Controllers
         {
             CaptureRateViewModel model = new CaptureRateViewModel()
             {
-                AllCaptureRates = this._dataService.GetCaptureRates(),
-                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+                AllCaptureRates = this.dataService.GetCaptureRates(),
+                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
             return this.View(model);
@@ -203,8 +203,8 @@ namespace Pokedex.Controllers
         {
             BaseHappinessViewModel model = new BaseHappinessViewModel()
             {
-                AllBaseHappinesses = this._dataService.GetBaseHappinesses(),
-                AllPokemon = this._dataService.GetAllPokemonIncludeIncomplete(),
+                AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
+                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
             return this.View(model);
@@ -215,8 +215,8 @@ namespace Pokedex.Controllers
         {
             ClassificationViewModel model = new ClassificationViewModel()
             {
-                AllClassifications = this._dataService.GetClassifications(),
-                AllPokemon = this._dataService.GetAllPokemonWithClassificationsAndIncomplete(),
+                AllClassifications = this.dataService.GetClassifications(),
+                AllPokemon = this.dataService.GetAllPokemonWithClassificationsAndIncomplete(),
             };
 
             return this.View(model);
@@ -225,7 +225,7 @@ namespace Pokedex.Controllers
         [Route("nature")]
         public IActionResult Natures()
         {
-            List<Nature> model = this._dataService.GetNatures();
+            List<Nature> model = this.dataService.GetNatures();
 
             return this.View(model);
         }
@@ -235,8 +235,8 @@ namespace Pokedex.Controllers
         {
             ShinyHuntViewModel model = new ShinyHuntViewModel()
             {
-                AllShinyHunters = this._dataService.GetShinyHunters(),
-                AllShinyHuntingTechniques = this._dataService.GetShinyHuntingTechniques(),
+                AllShinyHunters = this.dataService.GetShinyHunters(),
+                AllShinyHuntingTechniques = this.dataService.GetShinyHuntingTechniques(),
             };
 
             return this.View(model);
@@ -245,17 +245,17 @@ namespace Pokedex.Controllers
         [Route("battle_item")]
         public IActionResult BattleItems()
         {
-            List<Pokemon> pokemonList = this._dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this._dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
-            foreach(var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
-                p.Name = this._dataService.GetAltFormWithFormName(p.Id).Name;
+                p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
             BattleItemViewModel model = new BattleItemViewModel()
             {
-                AllBattleItems = this._dataService.GetBattleItems(),
-                AllPokemonTeamDetails = this._dataService.GetPokemonTeamDetails(),
+                AllBattleItems = this.dataService.GetBattleItems(),
+                AllPokemonTeamDetails = this.dataService.GetPokemonTeamDetails(),
                 AllPokemon = pokemonList,
             };
 

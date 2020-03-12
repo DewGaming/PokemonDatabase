@@ -20,14 +20,14 @@
 
 <div class="generation"">
     <div class="grid-container">
-        @foreach(var item in Model.AllPokemon.AllPokemon)
+        @foreach (var item in Model.AllPokemon.AllPokemon)
         {
             everythingAdded = Model.AllPokemon.AllTypings.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllAbilities.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == item.Id) && Model.AllPokemon.AllEVYields.Exists(x => x.PokemonId == item.Id);
             Model.Pokemon = item;
             <div class="@item.Name @(item.IsComplete ? "" : "incomplete")">
-                @if(item.IsComplete)
+                @if (item.IsComplete)
                 {
-                    <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Substring(0, item.Name.LastIndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                    <a href="@this.Url.Action("Pokemon", "Home", new { Name = @item.Name.Substring(0, item.Name.LastIndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower()})">
                         <img class="pokemonListPicture" title="@item.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @item.Id, ".png"))"/>
                     </a>
                 }
@@ -36,9 +36,9 @@
                     <img class="pokemonListPicture" title="@item.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @item.Id, ".png"))"/>
                 }
                 <div>
-                    @if(item.IsComplete)
+                    @if (item.IsComplete)
                     {
-                        <a href="@Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" class="pokemonName">@item.Name</a>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { Name = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})" class="pokemonName">@item.Name</a>
                     }
                     else
                     {

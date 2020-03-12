@@ -12,8 +12,8 @@
 }
 
 <p class="teamButtons">
-    <a class="btn btn-primary" href="@Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
-    <a class="btn btn-primary" href="@Url.Action("ImportTeams", "PokemonTeam")" role="button">Import Teams</a>
+    <a class="btn btn-primary" href="@this.Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
+    <a class="btn btn-primary" href="@this.Url.Action("ImportTeams", "PokemonTeam")" role="button">Import Teams</a>
     <button class="pokemonTeamsButton btn btn-primary hide">Export All Teams</button>
 </p>
 
@@ -24,11 +24,11 @@
             <tbody>
                 <tr>
                     <th class="col-md-2" scope="col">Team Name</th>
-                    @if(Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
+                    @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
                     {
                         <th class="col-md-2" scope="col">
                             Game@{
-                                foreach(var team in Model.AllPokemonTeams)
+                                foreach (var team in Model.AllPokemonTeams)
                                 {
                                     if (team.Game != null && team.Game.Name.Contains('/'))
                                     {
@@ -48,10 +48,10 @@
                     pokemonCount = 0;
                     <tr>
                         <td>@Model.AllPokemonTeams[i].PokemonTeamName</td>
-                        @if(Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
+                        @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
                         {
                             <td>
-                                @if(@Model.AllPokemonTeams[i].Game != null)
+                                @if (@Model.AllPokemonTeams[i].Game != null)
                                 {
                                     @Model.AllPokemonTeams[i].Game.Name
                                 }
@@ -66,7 +66,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            @foreach(var p in @Model.AllPokemonTeams[i].GrabPokemonTeamDetails)
+                                            @foreach (var p in @Model.AllPokemonTeams[i].GrabPokemonTeamDetails)
                                             {
                                                 pokemonCount++;
                                                 <div class="pokemonTeamGroup">
@@ -79,22 +79,22 @@ Ability: @p.Ability.Name
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
                                                         <span class="adminMenuTitle">View</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Update</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokémon</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditEV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update EVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditIV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update IVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("EditMoveset", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Moveset</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokémon</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditEV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update EVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditIV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update IVs</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditMoveset", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Moveset</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Delete</span>
-                                                        <li><a class="dropdown-item" href="@(Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokémon</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokémon</a></li>
                                                     </ul>
                                                 </div>
                                             }
-                                            @if(@Model.AllPokemonTeams[i].GrabPokemonTeamDetails.Count < 6)
+                                            @if (@Model.AllPokemonTeams[i].GrabPokemonTeamDetails.Count < 6)
                                             {
-                                                <a href="@Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
+                                                <a href="@this.Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
                                                     <img class="lightshadowed addButton" title="Add Pokémon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, "/images/general/addButton.png"))" />
                                                 </a>
                                             }
@@ -104,13 +104,13 @@ Ability: @p.Ability.Name
                             </table>
                         </td>
                         <td>
-                            <a class="teamButton btn btn-primary" title="Edit @Model.AllPokemonTeams[i].PokemonTeamName" href="@Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
-                            @if(@Model.AllPokemonTeams[i].FirstPokemon != null)
+                            <a class="teamButton btn btn-primary" title="Edit @Model.AllPokemonTeams[i].PokemonTeamName" href="@this.Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
+                            @if (@Model.AllPokemonTeams[i].FirstPokemon != null)
                             {
                                 <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
                             }
                             <br/>
-                            <a class="teamButton btn btn-primary" title="Delete @Model.AllPokemonTeams[i].PokemonTeamName" href="@Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
+                            <a class="teamButton btn btn-primary" title="Delete @Model.AllPokemonTeams[i].PokemonTeamName" href="@this.Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
                         </td>
                     </tr>
                 }

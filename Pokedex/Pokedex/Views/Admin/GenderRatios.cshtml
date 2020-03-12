@@ -4,10 +4,10 @@
 }
 
 <div class="eggCycleCount">
-    @if(User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@Url.Action("GenderRatio", "Add")" role="button">Add Gender Ratio</a>
+            <a class="btn btn-primary" href="@this.Url.Action("GenderRatio", "Add")" role="button">Add Gender Ratio</a>
         </p>
     }
     <table class="table">
@@ -15,18 +15,18 @@
             <th scope="col">Gender Ratio</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model.AllGenderRatios)
+        @foreach (var item in Model.AllGenderRatios)
         {
             <tr>
                 <td>
                     @item.MaleRatio / @item.FemaleRatio
                 </td>
                 <td>
-                    <a href="@(Url.Action("GenderRatio", "Edit", new { id = item.Id }))">Edit</a>
-                    @if(!(Model.AllPokemon.Exists(x => x.GenderRatioId == item.Id)))
+                    <a href="@(this.Url.Action("GenderRatio", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllPokemon.Exists(x => x.GenderRatioId == item.Id)))
                     {
                         @('|')
-                        <a href="@(Url.Action("GenderRatio", "Delete", new { id = item.Id }))">Delete</a>
+                        <a href="@(this.Url.Action("GenderRatio", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>
             </tr>

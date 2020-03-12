@@ -15,15 +15,15 @@ namespace Pokedex.Controllers
     [Route("admin")]
     public class OwnerController : Controller
     {
-        private readonly DataService _dataService;
+        private readonly DataService dataService;
 
-        private readonly AppConfig _appConfig;
+        private readonly AppConfig appConfig;
 
         public OwnerController(DataContext dataContext, IOptions<AppConfig> appConfig)
         {
             // Instantiate an instance of the data service.
-            this._dataService = new DataService(dataContext);
-            this._appConfig = appConfig.Value;
+            this.dataService = new DataService(dataContext);
+            this.appConfig = appConfig.Value;
         }
 
         [Route("users")]
@@ -31,21 +31,21 @@ namespace Pokedex.Controllers
         {
             UserViewModel model = new UserViewModel()
             {
-                UserList = this._dataService.GetUsers().Where(x => !x.IsOwner).ToList(),
+                UserList = this.dataService.GetUsers().Where(x => !x.IsOwner).ToList(),
                 UsersWithShinyHunts = new List<User>(),
                 UsersWithPokemonTeams = new List<User>(),
             };
 
-            List<ShinyHunt> shinyHunts = this._dataService.GetShinyHunters();
-            List<PokemonTeam> pokemonTeams = this._dataService.GetPokemonTeams();
+            List<ShinyHunt> shinyHunts = this.dataService.GetShinyHunters();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams();
 
-            foreach(var u in model.UserList)
+            foreach (var u in model.UserList)
             {
-                if(shinyHunts.Where(x => x.UserId == u.Id).ToList().Count > 0)
+                if (shinyHunts.Where(x => x.UserId == u.Id).ToList().Count > 0)
                 {
                     model.UsersWithShinyHunts.Add(u);
                 }
-                if(pokemonTeams.Where(x => x.UserId == u.Id).ToList().Count > 0)
+                if (pokemonTeams.Where(x => x.UserId == u.Id).ToList().Count > 0)
                 {
                     model.UsersWithPokemonTeams.Add(u);
                 }
@@ -58,11 +58,11 @@ namespace Pokedex.Controllers
         [Route("send_message/{commentId:int}")]
         public IActionResult SendMessage(int commentId)
         {
-            Comment comment = this._dataService.GetComment(commentId);
+            Comment comment = this.dataService.GetComment(commentId);
 
             Message model = new Message()
             {
-                SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                 ReceiverId = comment.CommentorId,
                 MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\" "),
             };
@@ -76,11 +76,11 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Comment comment = this._dataService.GetComment(commentId);
+                Comment comment = this.dataService.GetComment(commentId);
 
                 Message model = new Message()
                 {
-                    SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                    SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                     ReceiverId = comment.CommentorId,
                     MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\""),
                 };
@@ -88,7 +88,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
             
-            this._dataService.AddMessage(message);
+            this.dataService.AddMessage(message);
 
             return this.RedirectToAction("Comments", "Owner");
         }
@@ -97,12 +97,12 @@ namespace Pokedex.Controllers
         [Route("send_message")]
         public IActionResult SendMessageNoComment()
         {
-            List<User> users = this._dataService.GetUsers();
-            users.Remove(users.Find(x => x.Username == User.Identity.Name));
+            List<User> users = this.dataService.GetUsers();
+            users.Remove(users.Find(x => x.Username == this.User.Identity.Name));
 
             MessageViewModel model = new MessageViewModel()
             {
-                SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                 AllUsers = users,
             };
 
@@ -115,19 +115,19 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                List<User> users = this._dataService.GetUsers();
-                users.Remove(users.Find(x => x.Username == User.Identity.Name));
+                List<User> users = this.dataService.GetUsers();
+                users.Remove(users.Find(x => x.Username == this.User.Identity.Name));
 
                 MessageViewModel model = new MessageViewModel()
                 {
-                    SenderId = this._dataService.GetUserWithUsername(User.Identity.Name).Id,
+                    SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
                     AllUsers = users,
                 };
 
                 return this.View(model);
             }
             
-            this._dataService.AddMessage(message);
+            this.dataService.AddMessage(message);
 
             return this.RedirectToAction("ViewMessages", "User");
         }
@@ -137,8 +137,8 @@ namespace Pokedex.Controllers
         {
             AllCommentsViewModel model = new AllCommentsViewModel()
             {
-                AllComments = this._dataService.GetComments(),
-                CommentTypes = this._appConfig.CommentCategories,
+                AllComments = this.dataService.GetComments(),
+                CommentTypes = this.appConfig.CommentCategories,
             };
 
             return this.View(model);
@@ -147,10 +147,10 @@ namespace Pokedex.Controllers
         [Route("complete_comment/{id:int}")]
         public IActionResult CompleteComment(int id)
         {
-            Comment comment = this._dataService.GetComment(id);
+            Comment comment = this.dataService.GetComment(id);
             comment.IsCompleted = true;
 
-            this._dataService.UpdateComment(comment);
+            this.dataService.UpdateComment(comment);
 
             return this.RedirectToAction("Comments", "Owner");
         }
@@ -158,10 +158,10 @@ namespace Pokedex.Controllers
         [Route("undo_completion/{id:int}")]
         public IActionResult UndoComment(int id)
         {
-            Comment comment = this._dataService.GetComment(id);
+            Comment comment = this.dataService.GetComment(id);
             comment.IsCompleted = false;
 
-            this._dataService.UpdateComment(comment);
+            this.dataService.UpdateComment(comment);
 
             return this.RedirectToAction("Comments", "Owner");
         }
@@ -171,25 +171,25 @@ namespace Pokedex.Controllers
         public IActionResult ReviewPokemon(int pokemonId)
         {
             // Ensuring that the pokemon really has all of these added.
-            bool PokemonIsComplete = this._dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this._dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
+            bool pokemonIsComplete = this.dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
 
-            Pokemon pokemon = this._dataService.GetPokemonById(pokemonId);
+            Pokemon pokemon = this.dataService.GetPokemonById(pokemonId);
 
-            if(PokemonIsComplete && !pokemon.IsComplete)
+            if (pokemonIsComplete && !pokemon.IsComplete)
             {
-                PokemonTypeDetail pokemonTypes = this._dataService.GetPokemonWithTypes(pokemon.Id);
-                PokemonAbilityDetail pokemonAbilities = this._dataService.GetPokemonWithAbilities(pokemon.Id);
-                PokemonEggGroupDetail pokemonEggGroups = this._dataService.GetPokemonWithEggGroups(pokemon.Id);
+                PokemonTypeDetail pokemonTypes = this.dataService.GetPokemonWithTypes(pokemon.Id);
+                PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(pokemon.Id);
+                PokemonEggGroupDetail pokemonEggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.Id);
 
                 PokemonViewModel model = new PokemonViewModel()
                 {
                     Pokemon = pokemon,
-                    BaseStats = this._dataService.GetBaseStat(pokemon.Id),
-                    EVYields = this._dataService.GetEVYield(pokemon.Id),
+                    BaseStats = this.dataService.GetBaseStat(pokemon.Id),
+                    EVYields = this.dataService.GetEVYield(pokemon.Id),
                     PrimaryType = pokemonTypes.PrimaryType,
                     SecondaryType = pokemonTypes.SecondaryType,
                     PrimaryAbility = pokemonAbilities.PrimaryAbility,
@@ -197,15 +197,15 @@ namespace Pokedex.Controllers
                     HiddenAbility = pokemonAbilities.HiddenAbility,
                     PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
                     SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
-                    PreEvolution = this._dataService.GetPreEvolutionIncludeIncomplete(pokemon.Id),
-                    Evolutions = this._dataService.GetPokemonEvolutionsIncludeIncomplete(pokemon.Id),
-                    Effectiveness = this._dataService.GetTypeChartPokemon(pokemon.Id),
-                    AppConfig = this._appConfig,
+                    PreEvolution = this.dataService.GetPreEvolutionIncludeIncomplete(pokemon.Id),
+                    Evolutions = this.dataService.GetPokemonEvolutionsIncludeIncomplete(pokemon.Id),
+                    Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
+                    AppConfig = this.appConfig,
                 };
 
-                if(this._dataService.CheckIfAltForm(pokemonId))
+                if (this.dataService.CheckIfAltForm(pokemonId))
                 {
-                    model.OriginalPokemon = this._dataService.GetOriginalPokemonByAltFormId(pokemon.Id);
+                    model.OriginalPokemon = this.dataService.GetOriginalPokemonByAltFormId(pokemon.Id);
                 }
 
                 return this.View(model);
@@ -220,8 +220,8 @@ namespace Pokedex.Controllers
         [Route("review_pokemon/{pokemonId:int}")]
         public IActionResult ReviewPokemon(Pokemon pokemon, int pokemonId)
         {
-            ReviewedPokemon reviewedPokemon = this._dataService.GetReviewedPokemonByPokemonId(pokemonId);
-            this._dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemonId });
+            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemonId);
+            this.dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemonId });
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -229,7 +229,7 @@ namespace Pokedex.Controllers
         [Route("reviewed_pokemon")]
         public IActionResult ReviewedPokemon()
         {
-            List<ReviewedPokemon> model = this._dataService.GetAllReviewedPokemon();
+            List<ReviewedPokemon> model = this.dataService.GetAllReviewedPokemon();
 
             return this.View(model);
         }
@@ -237,14 +237,14 @@ namespace Pokedex.Controllers
         [Route("complete_reviewed_pokemon")]
         public IActionResult CompleteReviewedPokemon()
         {
-            List<ReviewedPokemon> reviewedPokemonList = this._dataService.GetAllReviewedPokemon();
+            List<ReviewedPokemon> reviewedPokemonList = this.dataService.GetAllReviewedPokemon();
             Pokemon pokemon;
-            foreach(var r in reviewedPokemonList)
+            foreach (var r in reviewedPokemonList)
             {
-                pokemon = this._dataService.GetPokemonByIdNoIncludes(r.PokemonId);
+                pokemon = this.dataService.GetPokemonByIdNoIncludes(r.PokemonId);
                 pokemon.IsComplete = true;
-                this._dataService.UpdatePokemon(pokemon);
-                this._dataService.DeleteReviewedPokemon(r.Id);
+                this.dataService.UpdatePokemon(pokemon);
+                this.dataService.DeleteReviewedPokemon(r.Id);
             }
 
             return this.RedirectToAction("Pokemon", "Admin");
@@ -253,9 +253,9 @@ namespace Pokedex.Controllers
         [Route("complete_pokemon/{pokemonId:int}")]
         public IActionResult CompletePokemon(int pokemonId)
         {
-            Pokemon pokemon = this._dataService.GetPokemonByIdNoIncludes(pokemonId);
+            Pokemon pokemon = this.dataService.GetPokemonByIdNoIncludes(pokemonId);
             pokemon.IsComplete = true;
-            this._dataService.UpdatePokemon(pokemon);
+            this.dataService.UpdatePokemon(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -263,7 +263,7 @@ namespace Pokedex.Controllers
         [Route("shiny_hunting_counter/{id:int}")]
         public IActionResult ShinyHuntingCounter(int id)
         {
-            List<ShinyHunt> model = this._dataService.GetShinyHunterById(id);
+            List<ShinyHunt> model = this.dataService.GetShinyHunterById(id);
 
             return this.View(model);
         }
@@ -271,9 +271,10 @@ namespace Pokedex.Controllers
         [Route("pokemon_teams/{id:int}")]
         public IActionResult PokemonTeams(int id)
         {
-            PokemonTeamsViewModel model = new PokemonTeamsViewModel(){
-                AllPokemonTeams = this._dataService.GetPokemonTeamsByUserId(id),
-                AppConfig = _appConfig,
+            PokemonTeamsViewModel model = new PokemonTeamsViewModel()
+            {
+                AllPokemonTeams = this.dataService.GetPokemonTeamsByUserId(id),
+                AppConfig = this.appConfig,
             };
 
             return this.View(model);

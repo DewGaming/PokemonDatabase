@@ -69,9 +69,9 @@
             </tbody>
         </table>
         <div class="shinyHuntButtons">
-            <a class="btn btn-primary" href="@Url.Action("ShinyHuntingCounter", "User")" role="button">Pause Shiny Hunt</a>
-            <a class="btn btn-success" href="@Url.Action("CompleteShinyHunt", "User", new { huntId = @Model.HuntIndex })" role="button">Shiny Found</a>
-            <a class="btn btn-danger" href="@Url.Action("GiveUpShinyHunt", "User", new { huntId = @Model.HuntIndex })" role="button">Give Up</a>
+            <a class="btn btn-primary" href="@this.Url.Action("ShinyHuntingCounter", "User")" role="button">Pause Shiny Hunt</a>
+            <a class="btn btn-success" href="@this.Url.Action("CompleteShinyHunt", "User", new { huntId = @Model.HuntIndex })" role="button">Shiny Found</a>
+            <a class="btn btn-danger" href="@this.Url.Action("GiveUpShinyHunt", "User", new { huntId = @Model.HuntIndex })" role="button">Give Up</a>
         </div>
     </div>
 </div>

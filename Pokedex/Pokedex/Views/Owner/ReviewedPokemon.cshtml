@@ -3,9 +3,9 @@
     Layout = "_Layout";
 }
 
-@if(Model.Count() > 0)
+@if (Model.Count() > 0)
 {
-    <a class="btn btn-primary" role="button" href="@(Url.Action("CompleteReviewedPokemon", "Owner"))">Complete Reviewed Pokémon</a>
+    <a class="btn btn-primary" role="button" href="@(this.Url.Action("CompleteReviewedPokemon", "Owner"))">Complete Reviewed Pokémon</a>
 }
 
 <div class="reviewedPokemonTable">
@@ -15,12 +15,12 @@
             <th scope="col">Pokémon Name</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>@item.Pokemon.PokedexNumber</td>
                 <td>@item.Pokemon.Name</td>
-                <td><a href="@(Url.Action("ReviewedPokemon", "Delete", new { id = item.Id }))">Delete</a></td>
+                <td><a href="@(this.Url.Action("ReviewedPokemon", "Delete", new { id = item.Id }))">Delete</a></td>
             </tr>
         }
     </table>
