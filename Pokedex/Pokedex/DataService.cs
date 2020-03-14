@@ -954,6 +954,21 @@ namespace Pokedex
             return pokemonList;
         }
 
+        public List<PokemonTypeDetail> GetAllPokemonWithTypesWithAltForms()
+        {
+            List<PokemonTypeDetail> pokemonList = this.dataContext.PokemonTypeDetails
+                                                        .Include(x => x.Pokemon)
+                                                            .Include("Pokemon.Game")
+                                                        .Include(x => x.PrimaryType)
+                                                        .Include(x => x.SecondaryType)
+                                                        .Where(x => x.Pokemon.IsComplete == true)
+                                                        .OrderBy(x => x.Pokemon.PokedexNumber)
+                                                        .ThenBy(x => x.PokemonId)
+                                                        .ToList();
+
+            return pokemonList;
+        }
+
         public List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId)
         {
             List<PokemonTypeDetail> pokemonList = this.dataContext.PokemonTypeDetails

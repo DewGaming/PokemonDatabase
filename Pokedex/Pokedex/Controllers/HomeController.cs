@@ -118,15 +118,22 @@ namespace Pokedex.Controllers
         {
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetGenerations();
-            List<Game> model = new List<Game>();
+            List<DataAccess.Models.Type> types = this.dataService.GetTypes();
+            List<Game> games = new List<Game>();
 
             foreach (var gen in generations)
             {
                 if (allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
                 {
-                    model.AddRange(this.dataService.GetGamesFromGeneration(gen));
+                    games.AddRange(this.dataService.GetGamesFromGeneration(gen));
                 }
             }
+
+            TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
+            {
+                AllGames = games,
+                AllTypes = types,
+            };
 
             return this.View(model);
         }

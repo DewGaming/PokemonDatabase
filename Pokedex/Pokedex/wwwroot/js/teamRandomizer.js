@@ -1,4 +1,4 @@
-var pokemonList, pokemonURLs, abilityList, exportString
+var pokemonList, pokemonURLs, abilityList, typeList, exportString
     , fillGeneratedTable = function (appConfig) {
         removeEventButtons();
         $('.teamRandomizerTable tbody').remove();
@@ -206,7 +206,7 @@ var pokemonList, pokemonURLs, abilityList, exportString
                 });
         });
     }, refreshGenerationsByGame = function () {
-        var selectedGame = $('.gameRadio input:checked').val();
+        var selectedGame = $('.gameRadioOption input:checked').val();
         $.ajax({
             url: '/get-generations/',
             method: 'POST',
@@ -215,7 +215,7 @@ var pokemonList, pokemonURLs, abilityList, exportString
             .done(function (data) {
                 $(".generationCheckbox").remove();
 
-                $.each(data, function () {
+                $.each(data.allGenerations, function () {
                     var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
                     var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id).attr("checked", "checked");
                     var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text("Generation " + this.id);
@@ -319,6 +319,24 @@ var pokemonList, pokemonURLs, abilityList, exportString
                     $("#multipleGMaxBool").prop('checked', false);
                 }
 
+                data.pokemonTypes;
+
+                $('.typeRadioOption').remove();
+        
+                var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
+                var dropdownInput = $("<input>").attr("id", "type0").attr("name", "typeSelection").attr("type", "radio").val(0).attr("checked", "checked");;
+                var dropdownLabel = $("<label>").attr("for", "type0").addClass("generatorOptionTitle").text("Any Type");
+                $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+                $("#types").append($(dropdownItem));
+
+                $.each(data.allTypes, function() {
+                    var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
+                    var dropdownInput = $("<input>").attr("id", "type" + this.id).attr("name", "typeSelection").attr("type", "radio").val(this.id);
+                    var dropdownLabel = $("<label>").attr("for", "type" + this.id).addClass("generatorOptionTitle").text(this.name);
+                    $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+                    $("#types").append($(dropdownItem));
+                });
+
                 megaCheck = checkMegaCheck();
                 altCheck = checkAltFormChecks();
                 legendCheck = checkLegendaryChecks();
@@ -381,7 +399,7 @@ $('.gigantamaxFormCheckbox').on('click', function () {
     checkOtherOptions();
 });
 
-$('.gameRadio input').on('click', function () {
+$('.gameRadioOption input').on('click', function () {
     refreshGenerationsByGame();
 });
 
@@ -399,7 +417,7 @@ $(window).on('resize', function () {
 });
 
 $('.generatorButton').on('click', function () {
-    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions, selectedGame;
+    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions, selectedGame, selectedType;
     $('.generationCheckbox input').each(function () {
         if ($(this).is(':checked')) {
             selectedGens.push(this.value);
@@ -424,16 +442,22 @@ $('.generatorButton').on('click', function () {
         }
     });
 
-    $('.gameRadio input').each(function () {
+    $('.gameRadioOption input').each(function () {
         if ($(this).is(':checked')) {
             selectedGame = this.value;
+        }
+    });
+
+    $('.typeRadioOption input').each(function () {
+        if ($(this).is(':checked')) {
+            selectedType = this.value;
         }
     });
 
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedGame': selectedGame, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'randomAbility': $("#randomAbilityBool").is(":checked") }
+        data: { 'selectedGens': selectedGens, 'selectedGame': selectedGame, 'selectedType': selectedType, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'randomAbility': $("#randomAbilityBool").is(":checked") }
     })
         .done(function (data) {
             pokemonList = data.allPokemonChangedNames;

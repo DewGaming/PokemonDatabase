@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Game>
+@model Pokedex.Models.TeamRandomizerListViewModel;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Team Randomizer";
@@ -31,7 +31,7 @@
     <ul class="generatorDropdownMenu dropdown-menu">
         <section class="generatorSection">
             <span class="generationOptionTitle" id="generations">Generations</span>
-            @foreach (var gen in Model.Select(x => x.GenerationId).Distinct().ToList())
+            @foreach (var gen in Model.AllGames.Select(x => x.GenerationId).Distinct().ToList())
             {
                 <li class="dropdown-item generatorOption generationCheckbox gen@(gen)Checkbox">
                     <input id="gen@(gen)" type="checkbox" value="@(gen)" checked="checked" />
@@ -79,15 +79,29 @@
         </section>
         <section class="generatorSection">
             <span class="generationOptionTitle" id="games">Games</span>
-            <li class="dropdown-item generatorOption gameRadio">
+            <li class="dropdown-item generatorOption gameRadioOption">
                 <input id="game0" name="gameSelection" type="radio" value="0" checked="checked" />
                 <label for="game0" class="generatorOptionTitle">Any Game</label>
             </li>
-            @foreach (var game in Model)
+            @foreach (var game in Model.AllGames)
             {
-                <li class="dropdown-item generatorOption gameRadio">
+                <li class="dropdown-item generatorOption gameRadioOption">
                     <input id="game@(game.Id)" name="gameSelection" type="radio" value="@(game.Id)" />
                     <label for="game@(game.Id)" class="generatorOptionTitle">@game.Name</label>
+                </li>
+            }
+        </section>
+        <section class="generatorSection">
+            <span class="generationOptionTitle" id="types">Types</span>
+            <li class="dropdown-item generatorOption typeRadioOption">
+                <input id="type0" name="typeSelection" type="radio" value="0" checked="checked" />
+                <label for="type0" class="generatorOptionTitle">Any Type</label>
+            </li>
+            @foreach (var type in Model.AllTypes)
+            {
+                <li class="dropdown-item generatorOption typeRadioOption">
+                    <input id="type@(type.Id)" name="typeSelection" type="radio" value="@(type.Id)" />
+                    <label for="type@(type.Id)" class="generatorOptionTitle">@type.Name</label>
                 </li>
             }
         </section>
