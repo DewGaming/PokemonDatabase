@@ -32,7 +32,6 @@
             <table class="moveTable">
                 <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Type</th>
                     <th scope="col">Move Category</th>
                     <th scope="col">Description</th>
                     <th scope="col">Base Power</th>
@@ -44,7 +43,6 @@
                 {
                     <tr>
                         <td>@item.Name</td>
-                        <td>@Model.AllTypes.Find(x => x.Id == item.MoveTypeId).Name</td>
                         <td>@Model.AllMoveCategories.Find(x => x.Id == item.MoveCategoryId).Category</td>
                         <td>@item.Description</td>
                         <td>
