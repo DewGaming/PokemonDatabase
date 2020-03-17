@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that is used to represent the owner controller.
+    /// </summary>
     [Authorize(Roles = "Owner")]
     [Route("admin")]
     public class OwnerController : Controller
@@ -16,6 +19,11 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OwnerController"/> class.
+        /// </summary>
+        /// <param name="dataContext">The database context.</param>
+        /// <param name="appConfig">The application configuration.</param>
         public OwnerController(DataContext dataContext, IOptions<AppConfig> appConfig)
         {
             // Instantiate an instance of the data service.
@@ -23,6 +31,10 @@ namespace Pokedex.Controllers
             this.appConfig = appConfig.Value;
         }
 
+        /// <summary>
+        /// Allows owners to view all users on the site.
+        /// </summary>
+        /// <returns>The owner user page.</returns>
         [Route("users")]
         public IActionResult Users()
         {
@@ -52,6 +64,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Opens the page to send a message based off of a comment.
+        /// </summary>
+        /// <param name="commentId">The id of the comment being replied to.</param>
+        /// <returns>The send message page.</returns>
         [HttpGet]
         [Route("send_message/{commentId:int}")]
         public IActionResult SendMessage(int commentId)
@@ -68,6 +85,12 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Sends the message to the user.
+        /// </summary>
+        /// <param name="message">The message being sent.</param>
+        /// <param name="commentId">The id of the comment being replied to.</param>
+        /// <returns>The owner's comment page.</returns>
         [HttpPost]
         [Route("send_message/{commentId:int}")]
         public IActionResult SendMessage(Message message, int commentId)
@@ -91,6 +114,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Comments", "Owner");
         }
 
+        /// <summary>
+        /// Opens the page to send a message without the need of a comment.
+        /// </summary>
+        /// <returns>The send message page.</returns>
         [HttpGet]
         [Route("send_message")]
         public IActionResult SendMessageNoComment()
@@ -107,6 +134,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Sends the message to the user.
+        /// </summary>
+        /// <param name="message">The message being sent.</param>
+        /// <returns>The owner's view message page.</returns>
         [HttpPost]
         [Route("send_message")]
         public IActionResult SendMessageNoComment(MessageViewModel message)
@@ -130,6 +162,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ViewMessages", "User");
         }
 
+        /// <summary>
+        /// Opens the page to view comments left by users.
+        /// </summary>
+        /// <returns>The comments page.</returns>
         [Route("comments")]
         public IActionResult Comments()
         {
@@ -142,6 +178,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Marks a comment as being completed.
+        /// </summary>
+        /// <param name="id">The comment's id.</param>
+        /// <returns>The comments page.</returns>
         [Route("complete_comment/{id:int}")]
         public IActionResult CompleteComment(int id)
         {
@@ -153,17 +194,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Comments", "Owner");
         }
 
-        [Route("undo_completion/{id:int}")]
-        public IActionResult UndoComment(int id)
-        {
-            Comment comment = this.dataService.GetComment(id);
-            comment.IsCompleted = false;
-
-            this.dataService.UpdateComment(comment);
-
-            return this.RedirectToAction("Comments", "Owner");
-        }
-
+        /// <summary>
+        /// Opens the review incomplete pokemon page.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>The pokemon review page.</returns>
         [HttpGet]
         [Route("review_pokemon/{pokemonId:int}")]
         public IActionResult ReviewPokemon(int pokemonId)
@@ -214,6 +249,11 @@ namespace Pokedex.Controllers
             }
         }
 
+        /// <summary>
+        /// Marks a newly finished pokemon as reviewed.
+        /// </summary>
+        /// <param name="pokemon">The newly finished pokemon.</param>
+        /// <returns>The admin pokemon page.</returns>
         [HttpPost]
         [Route("review_pokemon/{pokemonId:int}")]
         public IActionResult ReviewPokemon(Pokemon pokemon)
@@ -227,6 +267,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
+        /// <summary>
+        /// Opens the page to view all reviewed pokemon.
+        /// </summary>
+        /// <returns>The reviewed pokemon page.</returns>
         [Route("reviewed_pokemon")]
         public IActionResult ReviewedPokemon()
         {
@@ -235,6 +279,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Opens the page to mark all reviewed pokemon as complete.
+        /// </summary>
+        /// <returns>The admin pokemon page.</returns>
         [Route("complete_reviewed_pokemon")]
         public IActionResult CompleteReviewedPokemon()
         {
@@ -251,6 +299,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
+        /// <summary>
+        /// Marks a newly finished pokemon as completed.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>The admin pokemon page.</returns>
         [Route("complete_pokemon/{pokemonId:int}")]
         public IActionResult CompletePokemon(int pokemonId)
         {
@@ -261,6 +314,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
+        /// <summary>
+        /// Opens the page to view a specific shiny hunt.
+        /// </summary>
+        /// <param name="id">The shiny hunt's id.</param>
+        /// <returns>The shiny hunt page.</returns>
         [Route("shiny_hunting_counter/{id:int}")]
         public IActionResult ShinyHuntingCounter(int id)
         {
@@ -269,6 +327,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Opens the page to view a specific saved pokemon team.
+        /// </summary>
+        /// <param name="id">The pokemon team's id.</param>
+        /// <returns>The pokemon team page.</returns>
         [Route("pokemon_teams/{id:int}")]
         public IActionResult PokemonTeams(int id)
         {
