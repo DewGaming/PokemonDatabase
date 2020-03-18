@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Pokedex
 {
     /// <summary>
@@ -71,15 +69,5 @@ namespace Pokedex
         /// Gets or sets the email address password.
         /// </summary>
         public string EmailAddressPassword { get; set; }
-
-        /// <summary>
-        /// Gets or sets the comment categories.
-        /// </summary>
-        public List<string> CommentCategories { get; set; }
-
-        /// <summary>
-        /// Gets or sets the page categories.
-        /// </summary>
-        public List<string> PageCategories { get; set; }
     }
 }

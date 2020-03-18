@@ -1806,6 +1806,36 @@ namespace Pokedex
             return this.dataContext.Users.ToList().Find(x => x.Id == id);
         }
 
+        public List<CommentPage> GetCommentPages()
+        {
+            return this.dataContext.CommentPages.ToList();
+        }
+
+        public CommentPage GetCommentPage(int id)
+        {
+            return this.dataContext.CommentPages.ToList().Find(x => x.Id == id);
+        }
+
+        public CommentPage GetCommentPageByName(string name)
+        {
+            return this.dataContext.CommentPages.ToList().Find(x => x.Name == name);
+        }
+
+        public List<CommentCategory> GetCommentCategories()
+        {
+            return this.dataContext.CommentCategories.ToList();
+        }
+
+        public CommentCategory GetCommentCategory(int id)
+        {
+            return this.dataContext.CommentCategories.ToList().Find(x => x.Id == id);
+        }
+
+        public CommentCategory GetCommentCategoryByName(string name)
+        {
+            return this.dataContext.CommentCategories.ToList().Find(x => x.Name == name);
+        }
+
         public List<User> GetUsers()
         {
             return this.dataContext.Users.ToList();
@@ -1815,6 +1845,8 @@ namespace Pokedex
         {
             return this.dataContext.Comments
                 .Include(x => x.Commentor)
+                .Include(x => x.Category)
+                .Include(x => x.Page)
                 .ToList();
         }
 
@@ -2082,6 +2114,30 @@ namespace Pokedex
         public void AddForm(Form form)
         {
             this.dataContext.Forms.Add(form);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddCommentCategory(CommentCategory commentCategory)
+        {
+            this.dataContext.CommentCategories.Add(commentCategory);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddCommentPage(CommentPage commentPage)
+        {
+            this.dataContext.CommentPages.Add(commentPage);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateCommentPage(CommentPage commentPage)
+        {
+            this.dataContext.CommentPages.Update(commentPage);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateCommentCategory(CommentCategory commentCategories)
+        {
+            this.dataContext.CommentCategories.Update(commentCategories);
             this.dataContext.SaveChanges();
         }
 
@@ -2414,6 +2470,20 @@ namespace Pokedex
         {
             EggCycle eggCycle = this.GetEggCycle(id);
             this.dataContext.EggCycles.Remove(eggCycle);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteCommentCategory(int id)
+        {
+            CommentCategory commentCategory = this.GetCommentCategory(id);
+            this.dataContext.CommentCategories.Remove(commentCategory);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteCommentPage(int id)
+        {
+            CommentPage commentPage = this.GetCommentPage(id);
+            this.dataContext.CommentPages.Remove(commentPage);
             this.dataContext.SaveChanges();
         }
 

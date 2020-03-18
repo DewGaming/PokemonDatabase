@@ -318,6 +318,44 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_comment_page/{id:int}")]
+        public IActionResult CommentPage(int id)
+        {
+            CommentPage model = this.dataService.GetCommentPage(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_comment_page/{id:int}")]
+        public IActionResult CommentPage(CommentPage commentPage)
+        {
+            this.dataService.DeleteCommentPage(commentPage.Id);
+
+            return this.RedirectToAction("CommentPages", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_comment_category/{id:int}")]
+        public IActionResult CommentCategory(int id)
+        {
+            CommentCategory model = this.dataService.GetCommentCategory(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_comment_category/{id:int}")]
+        public IActionResult CommentCategory(CommentCategory commentCommentCategory)
+        {
+            this.dataService.DeleteCommentCategory(commentCommentCategory.Id);
+
+            return this.RedirectToAction("CommentCategories", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_form/{id:int}")]
         public IActionResult Form(int id)
         {

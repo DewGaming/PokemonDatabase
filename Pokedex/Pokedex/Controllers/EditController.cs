@@ -1215,6 +1215,58 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_comment_page/{id:int}")]
+        public IActionResult CommentPage(int id)
+        {
+            CommentPage model = this.dataService.GetCommentPage(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_comment_page/{id:int}")]
+        public IActionResult CommentPage(CommentPage page)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                CommentPage model = this.dataService.GetCommentPage(page.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateCommentPage(page);
+
+            return this.RedirectToAction("CommentPages", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_comment_category/{id:int}")]
+        public IActionResult CommentCategory(int id)
+        {
+            CommentCategory model = this.dataService.GetCommentCategory(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_comment_category/{id:int}")]
+        public IActionResult CommentCategory(CommentCategory category)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                CommentCategory model = this.dataService.GetCommentCategory(category.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateCommentCategory(category);
+
+            return this.RedirectToAction("CommentCategories", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_evolution/{pokemonId:int}")]
         public IActionResult Evolution(int pokemonId)
         {

@@ -172,7 +172,7 @@ namespace Pokedex.Controllers
             AllCommentsViewModel model = new AllCommentsViewModel()
             {
                 AllComments = this.dataService.GetComments(),
-                CommentTypes = this.appConfig.CommentCategories,
+                AllCategories = this.dataService.GetCommentCategories(),
             };
 
             return this.View(model);

@@ -11,11 +11,16 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of pages to comment on.
         /// </summary>
-        public List<string> Page { get; set; }
+        public List<Comment> AllComments { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of pages to comment on.
+        /// </summary>
+        public List<CommentPage> AllPages { get; set; }
 
         /// <summary>
         /// Gets or sets a list of types of comment possible.
         /// </summary>
-        public List<string> TypeOfComment { get; set; }
+        public List<CommentCategory> AllCategories { get; set; }
     }
 }

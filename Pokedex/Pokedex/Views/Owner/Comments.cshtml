@@ -4,10 +4,10 @@
     string GrabCommentCount(string pageName)
     {
         string commentTotalString = string.Empty;
-        if (Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 0)
+        if (Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == pageName).ToList().Count() > 0)
         {
-            commentTotalString = string.Concat(" (", Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count().ToString(), " Comment");
-            if (Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == pageName).ToList().Count() > 1)
+            commentTotalString = string.Concat(" (", Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == pageName).ToList().Count().ToString(), " Comment");
+            if (Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == pageName).ToList().Count() > 1)
             {
                 commentTotalString = string.Concat(commentTotalString, "s");
             }
@@ -29,29 +29,29 @@
 }
 
 <div class="pageButtons">
-    @foreach (var type in Model.CommentTypes)
+    @foreach (var category in Model.AllCategories)
     {
-        <button class="@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())" onclick="lookupPage('@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())')">@(type)<br>@(GrabCommentCount(@type))</button>
+        <button class="@(category.Name.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())" onclick="lookupPage('@(category.Name.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())')">@(category.Name)<br>@(GrabCommentCount(@category.Name))</button>
     }
 </div>
-@foreach (var type in Model.CommentTypes)
+@foreach (var category in Model.AllCategories)
 {
-    <div class="page" id="@(type.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())">
-        @if (@Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type).ToList().Count() > 0)
+    <div class="page" id="@(category.Name.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())">
+        @if (@Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == category.Name).ToList().Count() > 0)
         {
             <table class="table">
                 <tr>
                     <th class="col-md-9" scope="col">Comment</th>
                     <th scope="col">Actions</th>
                 </tr>
-                @foreach (var item in Model.AllComments.Where(x => !x.IsCompleted && x.CommentType == @type))
+                @foreach (var item in Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == category.Name))
                 {
                     <tr>
                         <td>
-                            @item.CommentType
-                            @if (@item.CommentedPage != null)
+                            @item.Category.Name
+                            @if (@item.PageId != null)
                             {
-                                 @(string.Concat(" for ", @item.CommentedPage))
+                                 @(string.Concat(" for ", @item.Page.Name))
                             }
                             @if (@item.PokemonName != null)
                             {

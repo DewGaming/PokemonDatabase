@@ -1,0 +1,35 @@
+@model Pokedex.Models.CommentViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="commentCategoryTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("CommentCategory", "Add")" role="button">Add Comment Category</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model.AllCategories)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("CommentCategory", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner") && !(Model.AllComments.Exists(x => x.CategoryId == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("CommentCategory", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

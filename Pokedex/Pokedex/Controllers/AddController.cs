@@ -501,6 +501,50 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_comment_category")]
+        public IActionResult CommentCategory()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_comment_category")]
+        public IActionResult CommentCategory(CommentCategory commentCategory)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddCommentCategory(commentCategory);
+
+            return this.RedirectToAction("CommentCategories", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_comment_page")]
+        public IActionResult CommentPage()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_comment_page")]
+        public IActionResult CommentPage(CommentPage commentPage)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddCommentPage(commentPage);
+
+            return this.RedirectToAction("CommentPages", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_base_happiness")]
         public IActionResult BaseHappiness()
         {

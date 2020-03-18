@@ -269,8 +269,8 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                TypeOfComment = this.appConfig.CommentCategories,
-                Page = this.appConfig.PageCategories,
+                AllCategories = this.dataService.GetCommentCategories(),
+                AllPages = this.dataService.GetCommentPages(),
             };
             return this.View(model);
         }
@@ -284,8 +284,8 @@ namespace Pokedex.Controllers
             {
                 CommentViewModel model = new CommentViewModel()
                 {
-                    TypeOfComment = this.appConfig.CommentCategories,
-                    Page = this.appConfig.PageCategories,
+                    AllCategories = this.dataService.GetCommentCategories(),
+                    AllPages = this.dataService.GetCommentPages(),
                 };
                 return this.View(model);
             }
@@ -299,9 +299,9 @@ namespace Pokedex.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(comment.PokemonName) && comment.CommentedPage != "Pokemon Page")
+            if (!string.IsNullOrEmpty(comment.PokemonName) && comment.Page.Name != "Pokemon Page")
             {
-                comment.CommentedPage = "Pokemon Page";
+                comment.Page = this.dataService.GetCommentPageByName("Pokemon Page");
             }
 
             if (this.User.Identity.Name != null)
@@ -338,10 +338,10 @@ namespace Pokedex.Controllers
                 {
                     MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
                     MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
-                    string body = comment.CommentType;
-                    if (comment.CommentedPage != null)
+                    string body = comment.Category.Name;
+                    if (comment.Page != null)
                     {
-                        body = string.Concat(body, " for ", comment.CommentedPage);
+                        body = string.Concat(body, " for ", comment.Page.Name);
                     }
 
                     if (comment.PokemonName != null)

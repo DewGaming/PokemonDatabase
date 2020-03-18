@@ -11,7 +11,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all comment types.
         /// </summary>
-        public List<string> CommentTypes { get; set; }
+        public List<CommentCategory> AllCategories { get; set; }
 
         /// <summary>
         /// Gets or sets a list of all comments.
