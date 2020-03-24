@@ -47,10 +47,55 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
     
-    <script src="/js/navbarFix.js"></script>
+    <script>
+      $(".navbar-toggler").on('click', function () {
+          if ($('.fixed-nav').hasClass('nav-scroll')) {
+              $('.fixed-nav').removeClass('nav-scroll');
+          }
+          else {
+              $('.fixed-nav').addClass('nav-scroll');
+          }
+      });
+    </script>
+
     @if (this.User.Identity.IsAuthenticated)
     {
-      <script src="/js/loginAjax.js"></script>
+      <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/check-unread-messages/',
+                method: 'POST'
+            })
+                .done(function (data) {
+                    console.log("Checked for unread messages");
+                    if(data != 0)
+                    {
+                        $('.dropdown-item.messages').html($('.dropdown-item.messages').text() + ' <b>New!</b>');
+                        $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data + '</span>')
+                        console.log("Unread messages");
+                    }
+                    console.log("No new unread messages");
+                })
+                .fail(function (jqXHR) {
+                    if (jqXHR.statusText != "error") {
+                        alert(jqXHR.statusText);
+                    }
+                });
+
+            $.ajax({
+                url: '/update-last-visit/',
+                method: 'POST'
+            })
+                .done(function (data) {
+                    console.log("Updated last visit time");
+                })
+                .fail(function (jqXHR) {
+                    if (jqXHR.statusText != "error") {
+                        alert(jqXHR.statusText);
+                    }
+                });
+        })
+      </script>
     }
 
     @RenderSection("scripts", required: false)
