@@ -256,12 +256,13 @@ namespace Pokedex.Controllers
         /// <returns>The admin pokemon page.</returns>
         [HttpPost]
         [Route("review_pokemon/{pokemonId:int}")]
-        public IActionResult ReviewPokemon(Pokemon pokemon)
+        public IActionResult ReviewPokemon(Pokemon pokemon, int pokemonId)
         {
-            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemon.Id);
-            if (reviewedPokemon != null)
+            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemonId);
+            if (reviewedPokemon == null)
             {
-                this.dataService.AddReviewedPokemon(new ReviewedPokemon() { PokemonId = pokemon.Id });
+                reviewedPokemon = new ReviewedPokemon() { PokemonId = pokemonId };
+                this.dataService.AddReviewedPokemon(reviewedPokemon);
             }
 
             return this.RedirectToAction("Pokemon", "Admin");
