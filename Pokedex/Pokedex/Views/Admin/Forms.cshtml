@@ -13,14 +13,14 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Part Of "Other Forms" In Randomize Team Page</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllForms)
         {
             <tr>
-                <td>
-                    @item.Name
-                </td>
+                <td>@item.Name</td>
+                <td>@(item.Randomizable ? "Yes" : "No")</td>
                 <td>
                     <a href="@(this.Url.Action("Form", "Edit", new { id = item.Id }))">Edit</a>
                     @if (!(Model.AllPokemon.Exists(x => x.FormId == item.Id)))
