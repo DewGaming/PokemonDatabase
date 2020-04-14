@@ -761,7 +761,7 @@ namespace Pokedex.Controllers
                     {
                         List<PokemonFormDetail> pokemonFormList = this.dataService.GetAllAltFormsOnlyComplete();
 
-                        List<Form> formsToRemove = this.GatherRemovableForms();
+                        List<Form> formsToRemove = this.dataService.GetForms().Where(x => x.Randomizable == true).ToList();
 
                         foreach (var f in formsToRemove)
                         {
@@ -1694,29 +1694,6 @@ namespace Pokedex.Controllers
             }
 
             return formDetails;
-        }
-
-        private List<Form> GatherRemovableForms()
-        {
-            List<Form> forms = new List<Form>();
-            List<string> formNames = new List<string>()
-            {
-                "Alola",
-                "Galar",
-                "Gigantamax",
-                "Mega",
-                "Mega X",
-                "Mega Y",
-                "Eternamax",
-                "Blade",
-            };
-
-            foreach (var formName in formNames)
-            {
-                forms.Add(this.dataService.GetFormByName(formName));
-            }
-
-            return forms.Where(x => x != null).ToList();
         }
 
         private List<Pokemon> RemoveExtraPokemonForms(List<Pokemon> pokemonList)
