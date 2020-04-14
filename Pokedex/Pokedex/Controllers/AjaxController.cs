@@ -761,7 +761,7 @@ namespace Pokedex.Controllers
                     {
                         List<PokemonFormDetail> pokemonFormList = this.dataService.GetAllAltFormsOnlyComplete();
 
-                        List<Form> formsToRemove = this.dataService.GetForms().Where(x => x.Randomizable == true).ToList();
+                        List<Form> formsToRemove = this.dataService.GetForms().Where(x => x.Randomizable == false).ToList();
 
                         foreach (var f in formsToRemove)
                         {
