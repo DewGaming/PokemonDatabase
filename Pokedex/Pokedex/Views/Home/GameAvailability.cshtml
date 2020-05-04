@@ -18,7 +18,7 @@
 <div class="pageButtons">
     @foreach (var p in Model)
     {
-        <button class="gameButton" id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Abbreviation</button>
+        <button class="gameButton" id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Name (@p.Abbreviation)</button>
     }
 </div>
 <div class="page generation pokemonList">
