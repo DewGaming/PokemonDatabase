@@ -9,9 +9,10 @@
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="3.0.0"/>
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.15.1"/>
     <PackageReference Include="StyleCop.Analyzers" Version="*"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pokedex.DataAccess\Pokedex.DataAccess.csproj"/>
-    <AdditionalFiles Include="..\Pokedex\stylecop.json" />
+    <AdditionalFiles Include="..\Pokedex\stylecop.json"/>
   </ItemGroup>
 </Project>

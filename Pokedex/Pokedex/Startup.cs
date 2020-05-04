@@ -69,7 +69,8 @@ namespace Pokedex
                 });
 
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
         }
 
         /// <summary>
