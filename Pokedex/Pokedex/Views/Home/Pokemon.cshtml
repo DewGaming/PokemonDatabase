@@ -92,7 +92,7 @@
                         {
                             string iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
                             <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")')">
-                                <img class="lightshadowed" title="@button.Pokemon.Name@(@button.Form != null ? string.Concat(" (", @button.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                                <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
                             </button>
                         }
                     </div>
