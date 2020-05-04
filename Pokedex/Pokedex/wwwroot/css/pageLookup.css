@@ -56,6 +56,10 @@
   transition: color .2s, background-color .2s;
 }
 
+.gameButton {
+  flex-basis: 26% !important;
+}
+
 .pageButtons button:hover {
   background-color: #ddd;
 }
