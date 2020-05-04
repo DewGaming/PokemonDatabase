@@ -40,7 +40,7 @@ namespace Pokedex.Controllers
         {
             UserViewModel model = new UserViewModel()
             {
-                UserList = this.dataService.GetUsers().Where(x => !x.IsOwner).OrderBy(x => x.LastVisit).ThenBy(x => x.Id).ToList(),
+                UserList = this.dataService.GetUsers().OrderByDescending(x => x.LastVisit).ThenBy(x => x.Id).ToList(),
                 UsersWithShinyHunts = new List<User>(),
                 UsersWithPokemonTeams = new List<User>(),
             };
