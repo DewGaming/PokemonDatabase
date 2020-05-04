@@ -183,8 +183,6 @@ namespace Pokedex.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
-            System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-            stopWatch.Start();
             name = this.dataService.FormatPokemonName(name);
 
             Pokemon pokemon = this.dataService.GetPokemon(name);
@@ -240,7 +238,6 @@ namespace Pokedex.Controllers
                     model.AdminDropdown = adminDropdown;
                 }
 
-                stopWatch.Stop();
                 return this.View(model);
             }
             else
