@@ -16,5 +16,10 @@ namespace Pokedex.Models
         /// Gets or sets the admin generation dropdown menu.
         /// </summary>
         public AdminGenerationTableViewModel AdminDropdown { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pokemon's id that will be selected upon opening the page.
+        /// </summary>
+        public int PokemonId { get; set; }
     }
 }

@@ -19,6 +19,8 @@ namespace Pokedex.Controllers
     [Route("")]
     public class HomeController : Controller
     {
+        private static int selectedPokemonId = 0;
+
         private readonly DataService dataService;
 
         private readonly AppConfig appConfig;
@@ -180,12 +182,28 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("pokemon/{pokemonName}/{pokemonId:int}")]
+        public IActionResult PokemonWithId(string pokemonName, int pokemonId)
+        {
+            selectedPokemonId = pokemonId;
+
+            return this.RedirectToAction("Pokemon", "Home", new { name = pokemonName });
+        }
+
+        [AllowAnonymous]
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
+            int pokemonId = selectedPokemonId;
+            selectedPokemonId = 0;
             name = this.dataService.FormatPokemonName(name);
 
             Pokemon pokemon = this.dataService.GetPokemon(name);
+            if (pokemonId == 0)
+            {
+                pokemonId = pokemon.Id;
+            }
+
             if (pokemon != null && pokemon.IsComplete)
             {
                 List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
@@ -210,9 +228,17 @@ namespace Pokedex.Controllers
                     }
                 }
 
+                List<int> pokemonIds = pokemonList.Select(x => x.Pokemon.Id).ToList();
+
+                if (pokemonIds.IndexOf(pokemonId) == -1)
+                {
+                    pokemonId = pokemon.Id;
+                }
+
                 AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
                 {
                     PokemonList = pokemonList,
+                    PokemonId = pokemonId,
                 };
 
                 if (this.User.IsInRole("Owner"))

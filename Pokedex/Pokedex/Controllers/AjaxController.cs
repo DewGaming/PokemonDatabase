@@ -963,7 +963,7 @@ namespace Pokedex.Controllers
                 model.PokemonURLs = new List<string>();
                 foreach (var p in model.AllPokemonOriginalNames)
                 {
-                    model.PokemonURLs.Add(this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }));
+                    model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id }));
                 }
 
                 if (randomAbility)

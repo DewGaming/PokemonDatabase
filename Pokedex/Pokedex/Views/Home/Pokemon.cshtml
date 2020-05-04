@@ -16,7 +16,7 @@
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
-    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"))" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
         .mb-4 {
@@ -80,7 +80,7 @@
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
-    <div class="page pokemon@(@item.Form == null ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+    <div class="page pokemon@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
             <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
             @if (Model.PokemonList.Count() > 1)
