@@ -171,8 +171,11 @@ namespace Pokedex
                                                 .Include(x => x.SecondaryType)
                                                 .ToList()
                                                 .Find(x => x.Pokemon.Id == pokemonId);
-            List<Type> types = new List<Type>();
-            types.Add(this.GetType(typeDetail.PrimaryType.Id));
+            List<Type> types = new List<Type>
+            {
+                this.GetType(typeDetail.PrimaryType.Id),
+            };
+
             if (typeDetail.SecondaryType != null)
             {
                 types.Add(this.GetType(typeDetail.SecondaryType.Id));
