@@ -831,7 +831,7 @@ namespace Pokedex.Controllers
             {
                 WebClient webRequest = new WebClient
                 {
-                    Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword)
+                    Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword),
                 };
 
                 byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
