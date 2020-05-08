@@ -640,11 +640,18 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("PokemonTeams", "User");
         }
 
+        /// <summary>
+        /// Updates the static list with the given user's username.
+        /// </summary>
         private void UpdatePokemonTeamList()
         {
             pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
         }
 
+        /// <summary>
+        /// Creates a pokemon list from a selected pokemon team.
+        /// </summary>
+        /// <returns>The pokemon list.</returns>
         private List<Pokemon> FillPokemonList(PokemonTeam pokemonTeam)
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon().ToList();
@@ -666,6 +673,11 @@ namespace Pokedex.Controllers
             return pokemonList;
         }
 
+        /// <summary>
+        /// Creates a pokemon team from a string in Pokemon Showndown's export format.
+        /// </summary>
+        /// <param name="importedTeam">The pokemon string in Pokemon Showdown's export format.</param>
+        /// <param name="userId">The id of the user.</param>
         private void CreateTeamFromImport(string importedTeam, int userId)
         {
             string teamName = importedTeam.Split("===\r\n")[0];
@@ -787,6 +799,11 @@ namespace Pokedex.Controllers
             this.dataService.AddPokemonTeam(pokemonTeam);
         }
 
+        /// <summary>
+        /// Creates a pokemon for the imported team.
+        /// </summary>
+        /// <param name="importedPokemon">The pokemon string from the Pokemon Showdown export string.</param>
+        /// <returns>The created PokemonTeamDetail object.</returns>
         private PokemonTeamDetailViewModel CreatePokemonDetailFromImport(string importedPokemon)
         {
             PokemonTeamDetailViewModel pokemonTeamDetail = new PokemonTeamDetailViewModel();

@@ -94,6 +94,12 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Replies to the provided message.
+        /// </summary>
+        /// <param name="message">The message being sent.</param>
+        /// <param name="messageId">The id for the message.</param>
+        /// <returns>The user's message page.</returns>
         [HttpPost]
         [Route("reply_to_message/{messageId:int}")]
         public IActionResult ReplyMessage(Message message, int messageId)
@@ -118,6 +124,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ViewMessages", "User");
         }
 
+        /// <summary>
+        /// Allows the user to change the password they use with the site.
+        /// </summary>
+        /// <returns>The edit password page.</returns>
         [HttpGet]
         [Route("edit_password")]
         public IActionResult EditPassword()
@@ -130,6 +140,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Allows the user to change the password they use with the site.
+        /// </summary>
+        /// <param name="newPasswordViewModel">The newly created password from the user.</param>
+        /// <returns>The home page.</returns>
         [HttpPost]
         [Route("edit_password")]
         public IActionResult EditPassword(NewPasswordViewModel newPasswordViewModel)
@@ -159,6 +174,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Brings up the user's shiny hunting counter page.
+        /// </summary>
+        /// <returns>The shiny hunting counter page.</returns>
         [Authorize]
         [Route("shiny_hunting_counter")]
         public IActionResult ShinyHuntingCounter()
@@ -174,6 +193,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Brings user to the page to continue a shiny hunt.
+        /// </summary>
+        /// <param name="huntId">The id of the pre-existing hunt.</param>
+        /// <returns>The shiny hunting page.</returns>
         [Route("shiny_hunt/{huntId:int}")]
         public IActionResult ContinueHunt(int huntId)
         {
@@ -190,6 +214,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Creates a new shiny hunt for the user.
+        /// </summary>
+        /// <returns>The shiny hunting creation page.</returns>
         [HttpGet]
         [Route("begin_shiny_hunt")]
         public IActionResult BeginShinyHunt()
@@ -207,6 +235,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Creates a new shiny hunt for the user.
+        /// </summary>
+        /// <param name="shinyHunt">The shiny hunt being created.</param>
+        /// <returns>The shiny hunting counter page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("begin_shiny_hunt")]
@@ -235,6 +268,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
+        /// <summary>
+        /// Marks the shiny hunt as a success for the user.
+        /// </summary>
+        /// <param name="huntId">The id of shiny hunt.</param>
+        /// <returns>The shiny hunting counter page.</returns>
         [Route("complete_shiny_hunt/{huntId:int}")]
         public IActionResult CompleteShinyHunt(int huntId)
         {
@@ -248,6 +286,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
+        /// <summary>
+        /// Marks the shiny hunt as a failure for the user.
+        /// </summary>
+        /// <param name="huntId">The id of shiny hunt.</param>
+        /// <returns>The shiny hunting counter page.</returns>
         [Route("give_up_shiny_hunt/{huntId:int}")]
         public IActionResult GiveUpShinyHunt(int huntId)
         {
@@ -261,6 +304,12 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
+        /// <summary>
+        /// Deletes a shiny hunt for the user.
+        /// </summary>
+        /// <param name="huntProgress">Marks whether the hunt is completed, failed, or in progress.</param>
+        /// <param name="huntId">The id of shiny hunt.</param>
+        /// <returns>The shiny hunting counter page.</returns>
         [Route("remove_hunt/{huntProgress}/{huntId:int}")]
         public IActionResult RemoveHunt(string huntProgress, int huntId)
         {
@@ -287,6 +336,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter");
         }
 
+        /// <summary>
+        /// Allows the user to retry a failed shiny hunt.
+        /// </summary>
+        /// <param name="huntId">The id of shiny hunt.</param>
+        /// <returns>The shiny hunting counter page.</returns>
         [Route("retry_hunt/{huntId:int}")]
         public IActionResult RetryHunt(int huntId)
         {
@@ -300,6 +354,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("ShinyHuntingCounter", "User");
         }
 
+        /// <summary>
+        /// Transport the user to their pokemon team page.
+        /// </summary>
+        /// <returns>The pokemon team page.</returns>
         [Route("pokemon_teams")]
         public IActionResult PokemonTeams()
         {
@@ -312,6 +370,9 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Updates the static list with the given user's username.
+        /// </summary>
         private void UpdateShinyHuntList()
         {
             shinyHunts = this.dataService.GetShinyHunter(this.User.Identity.Name);
