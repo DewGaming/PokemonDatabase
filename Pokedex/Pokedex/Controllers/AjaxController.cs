@@ -45,7 +45,7 @@ namespace Pokedex.Controllers
         public void UpdateLastVisit()
         {
             User user = this.dataService.GetUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
-            user.LastVisit = DateTime.Now;
+            user.LastVisit = DateTime.Now.ToUniversalTime();
             this.dataService.UpdateUser(user);
         }
 
