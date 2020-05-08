@@ -1351,6 +1351,8 @@ namespace Pokedex.Controllers
                 List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
                 List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
                 List<Pokemon> pokemonList = new List<Pokemon>();
+                List<Pokemon> originalPokemon = new List<Pokemon>();
+
                 if (pokemonId == this.dataService.GetPokemon("Manaphy").Id || pokemonId == this.dataService.GetPokemon("Phione").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0 && pokemonId != this.dataService.GetPokemon("Ditto").Id))
                 {
                     eggGroupList.Add(this.dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
@@ -1392,8 +1394,8 @@ namespace Pokedex.Controllers
                     }
 
                     eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
-                    List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>();
-                    finalEggGroupList.AddRange(eggGroupList);
+                    originalPokemon = eggGroupList.Select(x => x.Pokemon).ToList();
+                    List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
 
                     foreach (var p in eggGroupList)
                     {
@@ -1415,6 +1417,13 @@ namespace Pokedex.Controllers
                     eggGroupList = finalEggGroupList;
                 }
 
+                if (originalPokemon == null)
+                {
+                    originalPokemon = eggGroupList.Select(x => x.Pokemon).ToList();
+                }
+
+                originalPokemon.RemoveAll(x => !eggGroupList.Select(y => y.PokemonId).Contains(x.Id));
+
                 List<EggGroup> pokemonEggGroupList = new List<EggGroup>
                 {
                     searchedEggGroupDetails.PrimaryEggGroup,
@@ -1429,7 +1438,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonWithEggGroups = eggGroupList,
                     AllPokemon = pokemonList,
-                    AllOriginalPokemon = eggGroupList.Select(x => x.Pokemon).ToList(),
+                    AllOriginalPokemon = originalPokemon.ToList(),
                     AppConfig = this.appConfig,
                     SearchedPokemon = this.dataService.GetPokemonById(pokemonId),
                     PokemonEggGroups = pokemonEggGroupList,
