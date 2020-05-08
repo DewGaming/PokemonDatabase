@@ -252,7 +252,8 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Marks a newly finished pokemon as reviewed.
         /// </summary>
-        /// <param name="pokemon">The newly finished pokemon.</param>
+        /// <param name="pokemon">The newly finished pokemon. Variable not used.</param>
+        /// <param name="pokemonId">The newly finished pokemon's id'.</param>
         /// <returns>The admin pokemon page.</returns>
         [HttpPost]
         [Route("review_pokemon/{pokemonId:int}")]
