@@ -14,11 +14,8 @@ namespace Pokedex.Controllers
     {
         private readonly DataService dataService;
 
-        private readonly AppConfig appConfig;
-
-        public AdminController(IOptions<AppConfig> appConfig, DataContext dataContext)
+        public AdminController(DataContext dataContext)
         {
-            this.appConfig = appConfig.Value;
             this.dataService = new DataService(dataContext);
         }
 

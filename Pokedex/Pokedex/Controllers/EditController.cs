@@ -266,7 +266,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit_pokemon/{id:int}")]
-        public IActionResult Pokemon(Pokemon pokemon, int id)
+        public IActionResult Pokemon(Pokemon pokemon)
         {
             if (!this.ModelState.IsValid)
             {
