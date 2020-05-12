@@ -6,6 +6,24 @@
   margin-right: 10px;
 }
 
+.differentForms {
+  margin-right: -20px;
+}
+.differentFormsMobile {
+  display: none;
+}
+
+@media (max-width: 445px) {
+  .differentForms {
+    display: none;
+  }
+
+  .differentFormsMobile {
+    display: block !important;
+    margin-bottom: 20px;
+  }
+}
+
 @media (min-width: 783px) {
   .container {
     max-width: 762px !important;

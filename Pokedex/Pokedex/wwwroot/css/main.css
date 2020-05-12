@@ -305,15 +305,15 @@ main {
   padding: 0 1.5rem !important
 }
 
-.differentForms {
+.differentForms, .differentFormsMobile {
   padding-top: 5px
 }
 
-.differentForms .formButtons {
+.differentForms .formButtons, .differentFormsMobile .formButtons {
   width: 318px
 }
 
-.differentForms button {
+.differentForms button, .differentFormsMobile button {
   background: 0;
   border: 0;
   cursor: pointer;
@@ -544,9 +544,9 @@ h2 {
   width: auto;
   color: #212529;
   text-align: left;
-  padding-left: 0;
+  padding: 0;
   white-space: nowrap;
-  border-top-width: 0
+  border-top-width: 0;
 }
 
 .evolutions thead tr h2 {
