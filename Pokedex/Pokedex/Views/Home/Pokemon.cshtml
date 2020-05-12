@@ -332,6 +332,27 @@
                 </div>
             </div>
         </div>
+        <div class="pokemonInfo pokemonGames pokemonTables">
+            <h2>Games Available In</h2>
+            <table>
+                <tbody>
+                    @for(var i = 0; i < item.GamesAvailableIn.Count; i+=2)
+                    {
+                        <tr>
+                            <td>@item.GamesAvailableIn[i].Name</td>
+                            @if(@item.GamesAvailableIn.Last() != @item.GamesAvailableIn[i])
+                            {
+                                <td>@item.GamesAvailableIn[i+1].Name</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
         <div class="pokemonInfo pokemonTraining pokemonTables">
             <h2>Training</h2>
             <table>

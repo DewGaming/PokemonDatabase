@@ -17,9 +17,3 @@
     max-width: 85% !important;
   }
 }
-
-@media (min-width: 1159px) {
-  .container {
-    max-width: 1138px !important;
-  }
-}

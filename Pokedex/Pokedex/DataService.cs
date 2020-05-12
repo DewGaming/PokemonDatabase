@@ -468,6 +468,7 @@ namespace Pokedex
                 PreEvolution = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
+                GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).Select(x => x.Game).ToList(),
                 AppConfig = appConfig,
             };
 

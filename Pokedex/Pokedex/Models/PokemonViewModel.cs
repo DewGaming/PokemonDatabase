@@ -89,6 +89,11 @@ namespace Pokedex.Models
         public List<Pokemon> SurroundingPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets the games this pokemon is available in.
+        /// </summary>
+        public List<Game> GamesAvailableIn { get; set; }
+
+        /// <summary>
         /// Gets or sets the pokemon before any edits.
         /// </summary>
         public Pokemon OriginalPokemon { get; set; }
