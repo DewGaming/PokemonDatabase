@@ -344,7 +344,7 @@ main {
   padding-bottom: 0 !important
 }
 
-.pokemonTables {
+.pokemonTables, .typing {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   -webkit-box-pack: start;
@@ -554,8 +554,8 @@ h2 {
   margin-bottom: 4px
 }
 
-.evolutions thead th:first-child, .evolutions tbody th:first-child {
-  padding-right: 20px
+.evolutions tbody th:first-child {
+  padding-right: 10px
 }
 
 .evolutions thead th:first-of-type {

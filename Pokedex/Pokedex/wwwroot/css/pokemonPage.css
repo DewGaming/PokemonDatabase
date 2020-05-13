@@ -9,8 +9,13 @@
 .differentForms {
   margin-right: -20px;
 }
+
 .differentFormsMobile {
   display: none;
+}
+
+.preEvoBreak {
+  line-height: 13px;
 }
 
 @media (max-width: 445px) {
@@ -30,7 +35,7 @@
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 950px) {
   .container {
     max-width: 85% !important;
   }

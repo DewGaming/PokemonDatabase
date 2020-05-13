@@ -254,8 +254,8 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <div class="typing pokemonTables">
+        <div class="pokemonInfo pokemonTables">
+            <div class="typing">
                 <h2>Typing</h2>
                 <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                 @if (@item.SecondaryType != null)
@@ -263,7 +263,7 @@
                     <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
                 }
             </div>
-            <div class="pokemonInfo effectivenessChart pokemonTables tableWithHeaders noRowBorders">
+            <div class="effectivenessChart tableWithHeaders noRowBorders">
                 @if (item.Effectiveness.StrongAgainst.Count > 0)
                 {
                     <div class="StrongAgainst">
@@ -474,42 +474,8 @@
             </table>
         </div>
         <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
-            <div class="pokemonBreeding">
-                <h2>Breeding</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            @if (item.SecondaryEggGroup != null)
-                            {
-                                <th>Egg Groups</th>
-                            }
-                            else
-                            {
-                                <th>Egg Group</th>
-                            }
-                            <td>
-                                @item.PrimaryEggGroup.Name
-                                @if (item.SecondaryEggGroup != null)
-                                {
-                                    <br>
-                                    @item.SecondaryEggGroup.Name
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                           <th>Egg Cycles</th>
-                           <td>
-                               @item.Pokemon.EggCycle.CycleCount Cycles
-                               <br>
-                               (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
             @if (item.PreEvolution != null)
             {
-                <br>
                 <div class="evolutions">
                     <h2>Pre-Evolution</h2>
                     <table class="preEvolutionTable">
@@ -543,11 +509,45 @@
                         </tbody>
                     </table>
                 </div>
+                <br class="preEvoBreak">
             }
+            <div class="pokemonBreeding">
+                <h2>Breeding</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            @if (item.SecondaryEggGroup != null)
+                            {
+                                <th>Egg Groups</th>
+                            }
+                            else
+                            {
+                                <th>Egg Group</th>
+                            }
+                            <td>
+                                @item.PrimaryEggGroup.Name
+                                @if (item.SecondaryEggGroup != null)
+                                {
+                                    <br>
+                                    @item.SecondaryEggGroup.Name
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                           <th>Egg Cycles</th>
+                           <td>
+                               @item.Pokemon.EggCycle.CycleCount Cycles
+                               <br>
+                               (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         @if (item.Evolutions.Count > 0)
         {
-            <div class="pokemonInfo pokemonEvos pokemonTables">
+            <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
                 <h2>
                     @if(item.Evolutions.Count > 1)
                     {
