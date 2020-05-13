@@ -41,8 +41,8 @@
             {
                 <div class="radioButton">
                     <div class="col-md-8">
-                        @Html.RadioButtonFor(x => x.PageId, p.Id, new { @id = string.Concat(p.Name.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page") })
-                        @Html.Label(string.Concat(p.Name.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page"), p.Name)
+                        @Html.RadioButtonFor(x => x.PageId, p.Id, new { @id = string.Concat(p.Name.Replace("é", "e").Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page") })
+                        @Html.Label(string.Concat(p.Name.Replace("é", "e").Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page"), p.Name)
                     </div>
                     @if (p.Name == "Pokémon Page")
                     {
