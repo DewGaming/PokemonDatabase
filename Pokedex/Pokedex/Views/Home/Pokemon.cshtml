@@ -149,7 +149,7 @@
                                     inches -= 12;
                                 }
 
-                                height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name == "Gigantamax") ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name == "Gigantamax") ? "+" : string.Empty, " m)");
+                                height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
                             }
                             @height
                         </td>
