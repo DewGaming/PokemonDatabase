@@ -96,7 +96,7 @@
                 }
             </div>
         }
-        <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
+        <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
             <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
         </div>
         @if (Model.PokemonList.Count() > 1)

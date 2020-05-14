@@ -18,7 +18,7 @@
   line-height: 13px;
 }
 
-@media (max-width: 445px) {
+@media (max-width: 782px) {
   .differentForms {
     display: none;
   }
@@ -32,6 +32,15 @@
 @media (min-width: 783px) {
   .container {
     max-width: 762px !important;
+  }
+
+  .pokemonWithForms {
+    width: 21.418rem;
+  }
+  
+  .pokemonWithForms > img {
+    width: 300px;
+    height:300px;
   }
 }
 
