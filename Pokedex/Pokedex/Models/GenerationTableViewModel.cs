@@ -19,6 +19,11 @@ namespace Pokedex.Models
         public List<Pokemon> PokemonNoTypeList { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of pokemon that are alternate forms.
+        /// </summary>
+        public List<Pokemon> AltFormsList { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }

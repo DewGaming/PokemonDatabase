@@ -527,6 +527,7 @@ namespace Pokedex.Controllers
                 GenerationTableViewModel model = new GenerationTableViewModel()
                 {
                     PokemonNoTypeList = pokemonList,
+                    AltFormsList = altFormsList,
                     AppConfig = this.appConfig,
                 };
 
@@ -1327,6 +1328,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonWithTypes = typingList,
                     AllPokemon = pokemonList,
+                    AllAltForms = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList(),
                     AppConfig = this.appConfig,
                 };
 
@@ -1438,6 +1440,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonWithEggGroups = eggGroupList,
                     AllPokemon = pokemonList,
+                    AllAltForms = altFormsList,
                     AllOriginalPokemon = originalPokemon.ToList(),
                     AppConfig = this.appConfig,
                     SearchedPokemon = this.dataService.GetPokemonById(pokemonId),
