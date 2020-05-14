@@ -98,22 +98,22 @@
         }
         <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
             <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-        </div>
-        @if (Model.PokemonList.Count() > 1)
-        {
-            <div class="differentFormsMobile">
-                    <h2>Different Forms</h2>
-                    <div class="formButtons">
-                        @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
-                        {
-                            string iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
-                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")')">
-                                <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
-                            </button>
-                        }
+            @if (Model.PokemonList.Count() > 1)
+            {
+                <div class="differentFormsMobile">
+                        <h2>Different Forms</h2>
+                        <div class="formButtons">
+                            @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
+                            {
+                                string iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                                <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")')">
+                                    <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                                </button>
+                            }
+                        </div>
                     </div>
-                </div>
-        }
+            }
+        </div>
         <div class="pokemonInfo pokemonData pokemonTables">
             @if (this.User.IsInRole("Owner"))
             {
