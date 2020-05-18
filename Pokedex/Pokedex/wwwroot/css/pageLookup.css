@@ -57,7 +57,16 @@
 }
 
 .gameButton {
-  flex-basis: 26% !important;
+  flex-basis: 15% !important;
+}
+
+.pokemonCount {
+  justify-content: left !important;
+  margin: 1rem 0 !important;
+}
+
+.container {
+  max-width: 85% !important;
 }
 
 .pageButtons button:hover {
