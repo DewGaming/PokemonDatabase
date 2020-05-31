@@ -1812,7 +1812,30 @@ namespace Pokedex
 
         public List<CommentPage> GetCommentPages()
         {
-            return this.dataContext.CommentPages.ToList();
+            List<CommentPage> pages = this.dataContext.CommentPages.ToList();
+            List<CommentPage> pagesToBeMoved = pages.Where(x => x.Name.Contains("(Need to login to see)")).ToList();
+
+            foreach (var p in pagesToBeMoved)
+            {
+                pages.Remove(p);
+            }
+
+            pages.AddRange(pagesToBeMoved);
+
+            pagesToBeMoved = new List<CommentPage>
+            {
+                pages.Find(x => x.Name == "New Page"),
+                pages.Find(x => x.Name == "Other"),
+            };
+
+            foreach (var p in pagesToBeMoved)
+            {
+                pages.Remove(p);
+            }
+
+            pages.AddRange(pagesToBeMoved);
+
+            return pages;
         }
 
         public CommentPage GetCommentPage(int id)
