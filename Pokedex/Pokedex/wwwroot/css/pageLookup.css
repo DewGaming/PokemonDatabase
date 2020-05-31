@@ -22,7 +22,7 @@
   text-align: left;
 }
 
-.page th, td {
+.page th, .page td {
   border-width: 1px 0;
   border-style: solid;
   border-color: #dbdbdb;
