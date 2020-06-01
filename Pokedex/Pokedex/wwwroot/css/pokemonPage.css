@@ -43,9 +43,3 @@
     height:300px;
   }
 }
-
-@media (min-width: 950px) {
-  .container {
-    max-width: 85% !important;
-  }
-}
