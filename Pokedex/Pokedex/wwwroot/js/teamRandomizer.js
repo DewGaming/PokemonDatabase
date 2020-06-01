@@ -321,6 +321,8 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
                 data.pokemonTypes;
 
+                var typeId = $('input[name=typeSelection]:checked').val();
+
                 $('.typeRadioOption').remove();
         
                 var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
@@ -336,6 +338,8 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $(dropdownItem).append(dropdownInput).append(dropdownLabel);
                     $("#types").append($(dropdownItem));
                 });
+
+                $("input[name=typeSelection][value=" + typeId + "]").prop('checked', true);
 
                 megaCheck = checkMegaCheck();
                 altCheck = checkAltFormChecks();
