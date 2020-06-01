@@ -805,6 +805,13 @@ namespace Pokedex.Controllers
                     allPokemon = allPokemon.Where(x => altFormsList.Any(y => y.Id == x.Id)).ToList();
                 }
 
+                if (selectedType != 0)
+                {
+                    List<PokemonTypeDetail> allPokemonTypes = this.dataService.GetAllPokemonWithTypesWithAltForms().Where(x => allPokemon.Any(y => y.Id == x.PokemonId)).ToList();
+                    allPokemonTypes = allPokemonTypes.Where(x => x.PrimaryTypeId == selectedType || x.SecondaryTypeId == selectedType).ToList();
+                    allPokemon = allPokemon.Where(x => allPokemonTypes.Select(x => x.Pokemon).Any(y => y.Id == x.Id)).ToList();
+                }
+
                 if (!multipleMegas)
                 {
                     List<Pokemon> megaList = new List<Pokemon>();
@@ -893,13 +900,6 @@ namespace Pokedex.Controllers
                     }
 
                     allPokemon = newPokemon;
-                }
-
-                if (selectedType != 0)
-                {
-                    List<PokemonTypeDetail> allPokemonTypes = this.dataService.GetAllPokemonWithTypesWithAltForms().Where(x => allPokemon.Any(y => y.Id == x.PokemonId)).ToList();
-                    allPokemonTypes = allPokemonTypes.Where(x => x.PrimaryTypeId == selectedType || x.SecondaryTypeId == selectedType).ToList();
-                    allPokemon = allPokemonTypes.Select(x => x.Pokemon).ToList();
                 }
 
                 if (availablePokemon.Count() > 1)
