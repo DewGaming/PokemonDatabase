@@ -760,10 +760,10 @@ namespace Pokedex.Controllers
                 int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, @"[^0-9]+", string.Empty));
                 if (availableGames.Find(x => x.Id == genId) != null)
                 {
-                pokemonTeam.GameId = availableGames.Where(x => x.GenerationId == genId).Last().Id;
-            }
-            else
-            {
+                    pokemonTeam.GameId = availableGames.Where(x => x.GenerationId == genId).Last().Id;
+                }
+                else
+                {
                     pokemonTeam.GameId = availableGames.Last().Id;
                 }
             }
@@ -881,7 +881,9 @@ namespace Pokedex.Controllers
                     f.Name = f.Name.Replace(' ', '-');
                 }
 
-                Form form = forms.Find(x => pokemonName.Contains(x.Name));
+                string formName = pokemonName.Remove(0, pokemonName.IndexOf('-') + 1);
+
+                Form form = forms.Find(x => x.Name == formName);
 
                 if (form != null)
                 {
