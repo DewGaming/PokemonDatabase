@@ -371,11 +371,11 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         checkGigantamaxCheck();
         checkUltraBeasts();
         checkOtherOptions();
+        refreshGenerationsByGame();
+        generatorMenuCheck();
     };
 
 $(function () {
-    refreshGenerationsByGame();
-    generatorMenuCheck();
     updateDropdown();
 });
 
