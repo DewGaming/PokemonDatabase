@@ -859,6 +859,9 @@ namespace Pokedex.Controllers
             // Pokemon converter.
             Pokemon pokemon;
 
+            // Converts Pokemon Showdown's apostrophe to the database's apostrophe.
+            pokemonName = pokemonName.Replace('’', '\'');
+
             // Used to check for alternate form
             if (pokemonName.LastIndexOf('-') != -1)
             {
