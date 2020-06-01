@@ -839,20 +839,13 @@ namespace Pokedex.Controllers
 
                 if (!multipleGMax)
                 {
-                    List<Pokemon> megaList = new List<Pokemon>();
-                    List<PokemonFormDetail> altFormList = this.dataService.GetAllAltForms();
-                    foreach (var p in altFormList.Where(x => x.Form.Name.Contains("Gigantamax")).ToList())
-                    {
-                        if (allPokemon.Exists(x => x.Id == p.AltFormPokemonId))
-                        {
-                            megaList.Add(p.AltFormPokemon);
-                        }
-                    }
+                    List<Pokemon> altFormList = this.dataService.GetAllAltForms().Where(x => x.Form.Name.Contains("Gigantamax")).Select(x => x.AltFormPokemon).ToList();
+                    List<Pokemon> gigantamaxList = allPokemon.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList();
 
-                    if (megaList.Count > 0)
+                    if (gigantamaxList.Count > 0)
                     {
-                        Pokemon mega = megaList[rnd.Next(megaList.Count)];
-                        foreach (var p in megaList.Where(x => x.Id != mega.Id))
+                        Pokemon gigantamax = gigantamaxList[rnd.Next(gigantamaxList.Count)];
+                        foreach (var p in gigantamaxList.Where(x => x.Id != gigantamax.Id))
                         {
                             if (allPokemon.Exists(x => x.Id == p.Id))
                             {
