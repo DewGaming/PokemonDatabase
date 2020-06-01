@@ -758,7 +758,14 @@ namespace Pokedex.Controllers
                 int generationEnd = generationId.IndexOf("] ");
                 generationId = generationId.Substring(generationStart, generationEnd - generationStart);
                 int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, @"[^0-9]+", string.Empty));
+                if (availableGames.Find(x => x.Id == genId) != null)
+                {
                 pokemonTeam.GameId = availableGames.Where(x => x.GenerationId == genId).Last().Id;
+            }
+            else
+            {
+                    pokemonTeam.GameId = availableGames.Last().Id;
+                }
             }
             else
             {
