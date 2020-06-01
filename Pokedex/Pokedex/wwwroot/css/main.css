@@ -447,11 +447,11 @@ label {
   float: right
 }
 
-.surroundingPokemon, .evolutionPokemon {
+.evolutionPokemon {
   width: 100%
 }
 
-.surroundingPokemon a, .evolutionPokemon a, .surroundingPokemon a:hover, .evolutionPokemon a:hover {
+.evolutionPokemon a, .evolutionPokemon a:hover {
   color: grey !important;
   text-decoration: none
 }
@@ -483,12 +483,8 @@ label {
   margin: -10px
 }
 
-.surroundingPokemon img, .evolutionPokemon img {
+.evolutionPokemon img {
   margin: 0 -10px
-}
-
-.surroundingPokemon td {
-  border: 0
 }
 
 .evolutionPokemon a, .evolutionPokemon span {

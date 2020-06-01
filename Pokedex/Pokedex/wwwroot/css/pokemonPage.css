@@ -18,6 +18,23 @@
   line-height: 13px;
 }
 
+.surroundingPokemon {
+  width: 100%;
+}
+
+.surroundingPokemon td {
+  border: 0;
+}
+
+.surroundingPokemon img {
+  margin: 0 10px;
+}
+
+.surroundingPokemon a, .surroundingPokemon a:hover {
+  color: grey !important;
+  text-decoration: none;
+}
+
 @media (max-width: 782px) {
   .differentForms {
     display: none;
