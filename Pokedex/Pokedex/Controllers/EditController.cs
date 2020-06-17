@@ -374,7 +374,7 @@ namespace Pokedex.Controllers
             }
 
             Pokemon oldPokemon = this.dataService.GetPokemonById(pokemon.Id);
-            List<Pokemon> altForms = this.dataService.GetAltForms(pokemon.Id);
+            List<Pokemon> altForms = this.dataService.GetAltFormsNoIncludes(pokemon.Id);
             if (oldPokemon.PokedexNumber != pokemon.PokedexNumber)
             {
                 foreach (var p in altForms)

@@ -826,6 +826,24 @@ namespace Pokedex
             return pokemonList;
         }
 
+        public List<Pokemon> GetAltFormsNoIncludes(int pokemonId)
+        {
+            List<PokemonFormDetail> pokemonFormList = this.dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .OrderBy(x => x.AltFormPokemon.Game.ReleaseDate)
+                .ThenBy(x => x.AltFormPokemon.PokedexNumber)
+                .ThenBy(x => x.AltFormPokemon.Id)
+                .Where(x => x.OriginalPokemonId == pokemonId).ToList();
+            List<Pokemon> pokemonList = new List<Pokemon>();
+            foreach (var p in pokemonFormList)
+            {
+                pokemonList.Add(p.AltFormPokemon);
+            }
+
+            return pokemonList;
+        }
+
         public Pokemon GetAltFormWithFormName(int pokemonId)
         {
             PokemonFormDetail pokemonForm = this.dataContext.PokemonFormDetails
