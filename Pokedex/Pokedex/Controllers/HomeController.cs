@@ -322,9 +322,9 @@ namespace Pokedex.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(comment.PokemonName) && comment.Page.Name != "Pokemon Page")
+            if (!string.IsNullOrEmpty(comment.PokemonName) && comment.PageId != 3)
             {
-                comment.Page = this.dataService.GetCommentPageByName("Pokemon Page");
+                comment.Page = this.dataService.GetCommentPage(3);
             }
 
             if (this.User.Identity.Name != null)
@@ -391,7 +391,7 @@ namespace Pokedex.Controllers
 
                     using (var message = new MailMessage(fromAddress, toAddress)
                     {
-                        Subject = "New Comment for Pokemon Database",
+                        Subject = "New Comment for Pokémon Database",
                         Body = body,
                     })
                     {
