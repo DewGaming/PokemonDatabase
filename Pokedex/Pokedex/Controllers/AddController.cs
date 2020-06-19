@@ -837,7 +837,7 @@ namespace Pokedex.Controllers
                 MemoryStream strm = new MemoryStream();
                 IFormFile tempUpload = new FormFile(strm, 0, strm.Length, "image", "image.png");
 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, alternatePokemon.Id.ToString(), ".png"));
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, newPokemon.Id.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
