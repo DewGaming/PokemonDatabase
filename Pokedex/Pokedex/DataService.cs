@@ -513,6 +513,33 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<Pokemon> GetAllPokemonWithIncompleteWithFormNames()
+        {
+            List<Pokemon> pokemonList = this.dataContext.Pokemon
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Game)
+                    .Include("Game.Generation")
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
+                .OrderBy(x => x.PokedexNumber)
+                .ThenBy(x => x.Id)
+                .ToList();
+
+            List<Pokemon> altFormList = this.GetAllAltFormsWithIncompleteWithFormName();
+            Pokemon pokemon;
+
+            foreach (var a in altFormList)
+            {
+                pokemon = pokemonList.Find(x => x.Id == a.Id);
+                pokemon.Name = a.Name;
+            }
+
+            return pokemonList;
+        }
+
         public List<Pokemon> GetAllPokemonNoIncludes()
         {
             return this.dataContext.Pokemon
@@ -857,6 +884,24 @@ namespace Pokedex
             pokemon.Name = string.Concat(pokemon.Name, " (", pokemonForm.Form.Name, ")");
 
             return pokemon;
+        }
+
+        public List<Pokemon> GetAllAltFormsWithIncompleteWithFormName()
+        {
+            List<PokemonFormDetail> pokemonForm = this.dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .ToList();
+
+            List<Pokemon> pokemonList = pokemonForm.Select(x => x.AltFormPokemon).ToList();
+
+            foreach (var p in pokemonForm)
+            {
+                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
+                pokemonList.Add(p.AltFormPokemon);
+            }
+
+            return pokemonList;
         }
 
         public List<PokemonFormDetail> GetAllAltForms()

@@ -1,15 +1,15 @@
-function updateGameAvailability(gameId) {
-    var pokemon = [];
+function updateGameAvailability(pokemonId) {
+    var games = [];
     $('.gameAvailability input').each(function () {
         if ($(this).is(':checked')) {
-            pokemon.push(this.value);
+            games.push(this.value);
         }
     });
 
     $.ajax({
-        url: '/update-game-availability/',
+        url: '/update-pokemon-game-availability/',
         method: "POST",
-        data: { "gameId": gameId, "pokemonList": pokemon }
+        data: { "pokemonId": pokemonId, "games": games }
     })
         .done(function (data) {
             window.location = data;

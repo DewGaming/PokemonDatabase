@@ -833,7 +833,6 @@ namespace Pokedex.Controllers
                 };
 
                 byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
-                
                 MemoryStream strm = new MemoryStream();
                 IFormFile tempUpload = new FormFile(strm, 0, strm.Length, "image", "image.png");
 
@@ -1001,7 +1000,7 @@ namespace Pokedex.Controllers
                 };
 
                 byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
-                
+
                 MemoryStream strm = new MemoryStream();
                 IFormFile tempUpload = new FormFile(strm, 0, strm.Length, "image", "image.png");
 

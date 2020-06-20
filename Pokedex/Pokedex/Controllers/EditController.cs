@@ -155,6 +155,22 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Games", "Admin");
         }
 
+        [Route("edit_game_availability/{id:int}")]
+        public IActionResult GameAvailability(int id)
+        {
+            Game game = this.dataService.GetGame(id);
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithIncompleteWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
+            {
+                Game = game,
+                Games = this.dataService.GetGames(),
+                PokemonList = pokemonList,
+                GameAvailability = this.dataService.GetAllPokemonGameDetails(),
+            };
+
+            return this.View(model);
+        }
+
         [HttpGet]
         [Route("edit_battle_item/{id:int}")]
         public IActionResult BattleItem(int id)

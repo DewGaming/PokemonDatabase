@@ -1105,8 +1105,8 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("update-game-availability")]
-        public string UpdateGameAvailability(int pokemonId, List<int> games)
+        [Route("update-pokemon-game-availability")]
+        public string UpdatePokemonGameAvailability(int pokemonId, List<int> games)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1129,6 +1129,47 @@ namespace Pokedex.Controllers
                 }
 
                 return this.Json(this.Url.Action("Pokemon", "Admin")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("update-game-availability")]
+        public string UpdateGameAvailability(int gameId, List<int> pokemonList)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonGameDetail pokemonGameDetail;
+                List<PokemonGameDetail> existingGameDetails = this.dataService.GetPokemonGameDetailsByGame(gameId);
+
+                foreach (var p in pokemonList)
+                {
+                    if (existingGameDetails.Find(x => x.PokemonId == p && x.GameId == gameId) == null)
+                    {
+                        pokemonGameDetail = new PokemonGameDetail()
+                        {
+                            GameId = gameId,
+                            PokemonId = p,
+                        };
+                        this.dataService.AddPokemonGameDetail(pokemonGameDetail);
+                    }
+                    else
+                    {
+                        existingGameDetails.Remove(existingGameDetails.Find(x => x.PokemonId == p && x.GameId == gameId));
+                    }
+                }
+
+                foreach (var g in existingGameDetails)
+                {
+                    this.dataService.DeletePokemonGameDetail(g.Id);
+                }
+
+                return this.Json(this.Url.Action("GameAvailability", "Home")).Value.ToString();
             }
             else
             {

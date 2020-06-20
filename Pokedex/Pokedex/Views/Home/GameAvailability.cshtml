@@ -8,6 +8,12 @@
 {
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <style>
+        .totalPokemon {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
 }
 
 @section scripts
@@ -22,5 +28,11 @@
     }
 </div>
 <div class="page generation pokemonList">
+    <div class="totalPokemon">
+        @if (this.User.IsInRole("Owner"))
+        {
+            <div class="updater"></div>
+        }
+    </div>
     <div class="grid-container"></div>
 </div>

@@ -85,13 +85,15 @@ function lookupAvailableGame(gameId) {
     });
 
     $('.pokemonCount').remove();
+    $('.updateButton').remove();
 
     $('.pokemonList').removeClass('active');
     $('.pokemonList > .grid-container').empty();
     $('button#Game' + gameId).addClass('active');
 
     $('.grid-container').load('/get-available-pokemon-by-game/' + gameId, function () {
-      $('.pokemonList').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokémon: ' + $('.grid-container').children().length));
+      $('.totalPokemon').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokémon: ' + $('.grid-container').children().length));
+      $('.updater').append($('<a>').attr('href','admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
 
       $('.pokemonList').addClass('active');
     });
