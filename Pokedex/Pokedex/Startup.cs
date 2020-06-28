@@ -38,6 +38,8 @@ namespace Pokedex
         /// <param name="services">A collection of services for the application.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCompression();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -80,6 +82,8 @@ namespace Pokedex
         /// <param name="env">The web host's environment.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
+
             var cookiePolicyOptions = new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict,
