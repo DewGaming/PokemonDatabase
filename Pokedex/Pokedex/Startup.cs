@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.Net.Http.Headers;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex
@@ -99,8 +99,17 @@ namespace Pokedex
                 app.UseHsts();
             }
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    const int durationInSeconds = 60 * 60 * 24;
+                    ctx.Context.Response.Headers[HeaderNames.CacheControl] =
+                        "public,max-age=" + durationInSeconds;
+                }
+            });
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseCookiePolicy(cookiePolicyOptions);
             app.UseRouting();
             app.UseAuthentication();
