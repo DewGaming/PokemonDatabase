@@ -362,7 +362,7 @@ main {
   display: flex
 }
 
-.StrongAgainst {
+.StrongAgainst, .WeakAgainst {
   margin-right: 1rem
 }
 

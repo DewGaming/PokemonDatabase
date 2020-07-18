@@ -1,0 +1,57 @@
+@model Pokedex.Models.TypeEffectivenessViewModel;
+
+<div class="StrongAgainst">
+    <h2>Resistances</h2>
+    <table class="typing-table-strong typing-table">
+        @foreach (var type in Model.StrongAgainst)
+        {
+            <tr>
+                <td>
+                    @if (type.IndexOf("Quad") > -1)
+                    {
+                        <div class="pokemon-type type-icon type-@type.ToLower().Substring(0, type.IndexOf(' '))">@type.Substring(0, type.IndexOf(' '))</div>
+                        <div class="pokemon-type quad-icon quad-resist">Quad</div>
+                    }
+                    else
+                    {
+                        <div class="pokemon-type type-icon type-@type.ToLower()">@type</div>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div class="WeakAgainst">
+   <h2>Weaknesses</h2>
+   <table class="typing-table-weak typing-table">
+       @foreach (var type in Model.WeakAgainst)
+       {
+        <tr>
+            <td>
+                @if (type.IndexOf("Quad") > -1)
+                {
+                    <div class="pokemon-type type-icon type-@type.ToLower().Substring(0, type.IndexOf(' '))">@type.Substring(0, type.IndexOf(' '))</div>
+                    <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                }
+                else
+                {
+                    <div class="pokemon-type type-icon type-@type.ToLower()">@type</div>
+                }
+            </td>
+        </tr>
+       }
+   </table>
+</div>
+<div class="ImmuneTo">
+    <h2>Immunities</h2>
+    <table class="typing-table-immune typing-table">
+        @foreach (var type in Model.ImmuneTo)
+        {
+            <tr>
+                <td>
+                    <div class="pokemon-type type-icon type-@type.ToLower()">@type</div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

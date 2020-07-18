@@ -1280,6 +1280,22 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("get-typing-evaluator-chart")]
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return this.PartialView("_FillTypeEvaluatorChart", this.dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId));
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("get-generations")]
         public TeamRandomizerListViewModel GetGenerations(int selectedGame)
         {

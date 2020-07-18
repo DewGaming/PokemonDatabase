@@ -32,7 +32,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function () {
         if (primaryTypeID != '0' && secondaryTypeID != '100') {
             $('.effectivenessChart').empty();
 
-            $('.effectivenessChart').load('/get-typing-effectiveness/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function() {
+            $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function() {
                 if($('.typing-table-strong').children().length > 0)
                 {
                     $(".StrongAgainst").css("display", "block");
