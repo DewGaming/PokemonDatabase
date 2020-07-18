@@ -1423,7 +1423,7 @@ namespace Pokedex
                 typeChart = this.dataContext.TypeCharts
                     .Include(x => x.Attack)
                     .Include(x => x.Defend)
-                    .Where(x => x.Defend == type)
+                    .Where(x => x.Defend == type && x.GenerationId == 6)
                     .ToList();
                 foreach (var t in typeList)
                 {

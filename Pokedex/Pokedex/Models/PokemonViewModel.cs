@@ -81,7 +81,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets the pokemon's type chart.
         /// </summary>
-        public TypeEffectivenessViewModel Effectiveness { get; set; }
+        public List<TypeChart> Effectiveness { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon that surround the viewed pokemon in the pokedex.

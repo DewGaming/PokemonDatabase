@@ -335,13 +335,89 @@
                     }
                 </div>
                 <div class="effectivenessChart tableWithHeaders noRowBorders">
-                    @if (item.Effectiveness.StrongAgainst.Count > 0)
+                    @{
+                        var typeChart = item.Effectiveness;
+                        List<string> StrongAgainst = new List<string>();
+                        List<string> WeakAgainst = new List<string>();
+                        List<string> ImmuneTo = new List<string>();
+                        if (g == 1)
+                        {
+                            typeChart = typeChart.Where(x => x.GenerationId == 1).ToList();
+                        }
+                        else if (g >= 2 && g <= 5)
+                        {
+                            typeChart = typeChart.Where(x => x.GenerationId == 2).ToList();
+                        }
+                        else if (g >= 6)
+                        {
+                            typeChart = typeChart.Where(x => x.GenerationId == 6).ToList();
+                        }
+
+                        foreach(var t in typeChart)
+                        {
+                            if (t.Effective == 0)
+                            {
+                                ImmuneTo.Add(t.Attack.Name);
+                            }
+                            else if (t.Effective == 0.5m && !ImmuneTo.Contains(t.Attack.Name))
+                            {
+                                if (StrongAgainst.Contains(t.Attack.Name))
+                                {
+                                    StrongAgainst = StrongAgainst.Select(x => x.Replace(t.Attack.Name, t.Attack.Name + " Quad")).ToList();
+                                }
+                                else if (WeakAgainst.Contains(t.Attack.Name))
+                                {
+                                    WeakAgainst.Remove(t.Attack.Name);
+                                }
+                                else
+                                {
+                                    StrongAgainst.Add(t.Attack.Name);
+                                }
+                            }
+                            else if (t.Effective == 2 && !ImmuneTo.Contains(t.Attack.Name))
+                            {
+                                if (WeakAgainst.Contains(t.Attack.Name))
+                                {
+                                    WeakAgainst = WeakAgainst.Select(x => x.Replace(t.Attack.Name, t.Attack.Name + " Quad")).ToList();
+                                }
+                                else if (StrongAgainst.Contains(t.Attack.Name))
+                                {
+                                    StrongAgainst.Remove(t.Attack.Name);
+                                }
+                                else
+                                {
+                                    WeakAgainst.Add(t.Attack.Name);
+                                }
+                            }
+                        }
+
+                        StrongAgainst.Sort();
+                        WeakAgainst.Sort();
+                        ImmuneTo.Sort();
+
+                        var superStrong = StrongAgainst.Where(x => x.Contains("Quad")).ToList();
+                        foreach(var s in superStrong)
+                        {
+                            StrongAgainst.Remove(StrongAgainst.Find(x => x == s));
+                        }
+                        superStrong.AddRange(StrongAgainst);
+                        StrongAgainst = superStrong;
+
+                        var superWeak = WeakAgainst.Where(x => x.Contains("Quad")).ToList();
+                        foreach(var s in superWeak)
+                        {
+                            WeakAgainst.Remove(WeakAgainst.Find(x => x == s));
+                        }
+                        superWeak.AddRange(WeakAgainst);
+                        WeakAgainst = superWeak;
+                    }
+                    @if (StrongAgainst.Count > 0)
                     {
                         <div class="StrongAgainst">
                             <h2>Resistances</h2>
                             <table class="StrongAgainstTable">
                                 <tbody>
-                                    @foreach (string s in item.Effectiveness.StrongAgainst)
+                                    @foreach (string s in StrongAgainst)
                                     {
                                         <tr>
                                             @if (@s.IndexOf(" Quad") > -1)
@@ -369,13 +445,13 @@
                         style = "display: flex;";
                     }
                     <div style="@style" class="nonResistances">
-                        @if (item.Effectiveness.WeakAgainst.Count > 0)
+                        @if (WeakAgainst.Count > 0)
                         {
                             <div class="WeakAgainst">
                                 <h2>Weaknesses</h2>
                                 <table class="WeakAgainstTable">
                                     <tbody>
-                                        @foreach (string w in item.Effectiveness.WeakAgainst)
+                                        @foreach (string w in WeakAgainst)
                                         {
                                             <tr>
                                                 @if (@w.IndexOf(" Quad") > -1)
@@ -397,13 +473,13 @@
                                 </table>
                             </div>
                         }
-                        @if (item.Effectiveness.ImmuneTo.Count > 0)
+                        @if (ImmuneTo.Count > 0)
                         {
                             <div class="ImmuneTo">
                                 <h2>Immunities</h2>
                                 <table class="ImmuneToTable">
                                     <tbody>
-                                        @foreach (string i in item.Effectiveness.ImmuneTo)
+                                        @foreach (string i in ImmuneTo)
                                         {
                                             <tr>
                                                 <td>
