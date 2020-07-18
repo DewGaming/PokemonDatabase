@@ -168,7 +168,7 @@
                     <div class="differentFormsMobile">
                             <h2>Different Forms</h2>
                             <div class="formButtons">
-                                @foreach (var button in Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)))
+                                @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id && x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)))
                                 {
                                     iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
                                     <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
