@@ -13,6 +13,7 @@ namespace Pokedex.DataAccess.Models
         public int? PageId { get; set; }
         public CommentPage Page { get; set; }
         public string PokemonName { get; set; }
+        public string OtherPage { get; set; }
         public int? CommentorId { get; set; }
         public User Commentor { get; set; }
         [Required]
