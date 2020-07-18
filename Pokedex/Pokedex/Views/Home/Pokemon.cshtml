@@ -539,7 +539,7 @@
                 </table>
             </div>
             <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
-                @if (item.PreEvolution != null)
+                @if (item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId)
                 {
                     <div class="evolutions">
                         <h2>Pre-Evolution</h2>
@@ -610,7 +610,7 @@
                     </table>
                 </div>
             </div>
-            @if (item.Evolutions.Count > 0)
+            @if (item.Evolutions.Select(x => g >= x.EvolutionPokemon.Game.GenerationId).Count() > 0)
             {
                 <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
                     <h2>
@@ -627,32 +627,35 @@
                         <tbody class="evolutionPokemon">
                             @foreach (var evolution in item.Evolutions)
                             {
-                                <tr>
-                                    <th>
-                                        @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
-                                        {
-                                            <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                                                <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
-                                            </a>
-                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
-                                        }
-                                        else
-                                        {
-                                            <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                                                <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
-                                            </a>
-                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
-                                        }
-                                    </th>
-                                    <td>
-                                        @evolution.EvolutionMethod.Name
-                                        @if (@evolution.EvolutionDetails != null)
-                                        {
-                                            <br>
-                                            @(string.Concat(" (", @evolution.EvolutionDetails, ")"));
-                                        }
-                                    </td>
-                                </tr>
+                                if(g >= evolution.EvolutionPokemon.Game.GenerationId)
+                                {
+                                    <tr>
+                                        <th>
+                                            @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
+                                            {
+                                                <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                                </a>
+                                                <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                    <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                                </a>
+                                                <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                            }
+                                        </th>
+                                        <td>
+                                            @evolution.EvolutionMethod.Name
+                                            @if (@evolution.EvolutionDetails != null)
+                                            {
+                                                <br>
+                                                @(string.Concat(" (", @evolution.EvolutionDetails, ")"));
+                                            }
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

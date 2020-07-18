@@ -217,7 +217,9 @@ namespace Pokedex
         {
             return this.dataContext.Evolutions
                 .Include(x => x.PreevolutionPokemon)
+                    .Include("PreevolutionPokemon.Game")
                 .Include(x => x.EvolutionPokemon)
+                    .Include("EvolutionPokemon.Game")
                 .Include(x => x.EvolutionMethod)
                 .ToList();
         }
