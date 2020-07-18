@@ -1,10 +1,12 @@
 @using Pokedex.Models
+@using System.Collections.Generic;
 @model Pokedex.Models.AdminPokemonDropdownViewModel
 @{
     Layout = "_Layout";
     string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     AdminPokemonViewModel adminPokemon = null;
+    int[] generations = null;
     if (this.User.IsInRole("Owner"))
     {
         adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
@@ -37,7 +39,7 @@
             display: none;
             -ms-flex-wrap: wrap;
             flex-wrap: wrap;
-            margin: 10px 0;
+            margin-bottom: 10px;
         }
 
         .generations.active {
@@ -53,12 +55,23 @@
             margin: 0 0 -1px 0;
             padding: .25rem 1rem;
             border: 1px solid #dbdbdb;
+            border-top: 0;
             background-color: #f0f0f0;
             line-height: 1.2;
             text-align: center;
             color: #737373;
             -webkit-transition: color .2s, background-color .2s;
             transition: color .2s, background-color .2s;
+        }
+
+        .generations button.active {
+            background-color: #fff;
+            border-bottom-color: #fff;
+            color: #404040;
+        }
+
+        .generations button:focus {
+            outline-width: 0;
         }
     </style>
     @if (this.User.IsInRole("Owner"))
@@ -110,263 +123,232 @@
     </tr>
 </table>
 
+<hr style="margin-top: 0;margin-bottom: 0;">
+
 @foreach (var item in Model.PokemonList)
 {
+    string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
+    generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
     if (this.User.IsInRole("Owner"))
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
-    if(item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().Count() > 1)
+    if(generations.Count() > 1)
     {
         <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
             @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
             {
-                <button id="Generation@(g)">Generation @(g)</button>
+                <button class="@(@g == @generations.Last() ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
             }
         </div>
     }
-    else
-    {
-        <hr style="margin-top: 0;">
-    }
-    <div class="page pokemon@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
-        @if (Model.PokemonList.Count() > 1)
-        {
-            <div class="differentForms">
-                <h2 class="formHeader">Forms</h2>
-                @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
-                {
-                    string iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
-                    <div class="@button.Pokemon.Name">
-                        <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")')">
-                            <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
-                        </button>
-                    </div>
-                }
-            </div>
-        }
-        <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
-            <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-            @if (Model.PokemonList.Count() > 1)
-            {
-                <div class="differentFormsMobile">
-                        <h2>Different Forms</h2>
-                        <div class="formButtons">
-                            @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
-                            {
-                                string iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
-                                <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")')">
-                                    <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
-                                </button>
-                            }
-                        </div>
-                    </div>
-            }
-        </div>
-        <div class="pokemonInfo pokemonData pokemonTables">
-            @if (this.User.IsInRole("Owner"))
-            {
-                @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
-            }
-            <h2>Pokémon Data</h2>
-            <table class="pokedexNumber">
-                <tbody>
-                    <tr>
-                        <th>Pokémon Name</th>
-                        <td>
-                            @item.Pokemon.Name
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Pokedex Number</th>
-                        <td>@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0')</td>
-                    </tr>
-                    <tr>
-                        <th>Classification</th>
-                        <td>@item.Pokemon.Classification.Name</td>
-                    </tr>
-                    <tr>
-                        <th>Height</th>
-                        <td>
-                            @{
-                                string height;
-                                var feet = 0;
-                                var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m), 0);
-                                while(inches >= 12)
-                                {
-                                    feet++;
-                                    inches -= 12;
-                                }
 
-                                height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
-                            }
-                            @height
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Weight</th>
-                        <td>
-                            @{
-                                string weight;
-                                
-                                if (item.Pokemon.Weight != 0m)
-                                {
-                                    weight = string.Concat(Math.Round(@item.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####"), " lbs (", item.Pokemon.Weight.ToString("0.####"), " kg)");
-                                }
-                                else
-                                {
-                                    weight = "??? lbs (??? kg)";
-                                }
-                            }
-                            @weight
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            @if (item.SecondaryAbility == null && item.HiddenAbility == null)
-                            {
-                                @("Ability")
-                            }
-                            else
-                            {
-                                @("Abilities")
-                            }
-                        </th>
-                        <td>
-                            <span title="Description: @item.PrimaryAbility.Description">
-                                @item.PrimaryAbility.Name
-                            </span>
-                            @if (@item.SecondaryAbility != null)
-                            {
-                                <br>
-                                <span title="Description: @item.SecondaryAbility.Description">
-                                    @item.SecondaryAbility.Name
-                                </span>
-                            }
-                            @if (@item.HiddenAbility != null)
-                            {
-                                <br>
-                                <span title="Description: @item.HiddenAbility.Description">
-                                    @item.HiddenAbility.Name (Hidden)
-                                </span>
-                            }
-                            @if (@item.SpecialEventAbility != null)
-                            {
-                                <br>
-                                <span title="Description: @item.SpecialEventAbility.Description">
-                                    @item.SpecialEventAbility.Name (Special Ability)
-                                </span>
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Gender Ratio</th>
-                        <td>
-                            @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
-                            {
-                                @("Genderless");
-                            }
-                            else
-                            {
-                                if (item.Pokemon.GenderRatio.FemaleRatio == 0)
-                                {
-                                    <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
-                                }
-                                else if (item.Pokemon.GenderRatio.MaleRatio == 0)
-                                {
-                                    <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
-                                }
-                                else
-                                {
-                                    <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
-                                    @("/")
-                                    <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
-                                }
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            @if (item.Pokemon.Game.Name.IndexOf('/') > -1)
-                            {
-                                @("Games of Origin");
-                            }
-                            else
-                            {
-                                @("Game of Origin");
-                            }
-                        </th>
-                        <td>
-                            @item.Pokemon.Game.Name
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pokemonInfo pokemonTables">
-            <div class="typing">
-                <h2>Typing</h2>
-                <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                @if (@item.SecondaryType != null)
+    @foreach(var g in generations)
+    {
+        <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @generations.Last() ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+            @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
+            {
+                <div class="differentForms">
+                    <h2 class="formHeader">Forms</h2>
+                    @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id && x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)))
+                    {
+                        iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                        <div class="@button.Pokemon.Name">
+                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
+                                <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+            <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
+                <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
                 {
-                    <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                    <div class="differentFormsMobile">
+                            <h2>Different Forms</h2>
+                            <div class="formButtons">
+                                @foreach (var button in Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)))
+                                {
+                                    iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                                    <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
+                                        <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                                    </button>
+                                }
+                            </div>
+                        </div>
                 }
             </div>
-            <div class="effectivenessChart tableWithHeaders noRowBorders">
-                @if (item.Effectiveness.StrongAgainst.Count > 0)
+            <div class="pokemonInfo pokemonData pokemonTables">
+                @if (this.User.IsInRole("Owner"))
                 {
-                    <div class="StrongAgainst">
-                        <h2>Resistances</h2>
-                        <table class="StrongAgainstTable">
-                            <tbody>
-                                @foreach (string s in item.Effectiveness.StrongAgainst)
-                                {
-                                    <tr>
-                                        @if (@s.IndexOf(" Quad") > -1)
-                                        {
-                                            <td>
-                                                <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
-                                                <div class="pokemon-type quad-icon quad-resist">Quad</div>
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
-                                            </td>
-                                        }
-                                    </tr>
+                    @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
+                }
+                <h2>Pokémon Data</h2>
+                <table class="pokedexNumber">
+                    <tbody>
+                        <tr>
+                            <th>Pokémon Name</th>
+                            <td>
+                                @item.Pokemon.Name
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Pokedex Number</th>
+                            <td>@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0')</td>
+                        </tr>
+                        <tr>
+                            <th>Classification</th>
+                            <td>@item.Pokemon.Classification.Name</td>
+                        </tr>
+                        <tr>
+                            <th>Height</th>
+                            <td>
+                                @{
+                                    string height;
+                                    var feet = 0;
+                                    var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m), 0);
+                                    while(inches >= 12)
+                                    {
+                                        feet++;
+                                        inches -= 12;
+                                    }
+
+                                    height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
                                 }
-                            </tbody>
-                        </table>
-                    </div>
-                    style = string.Empty;
-                }
-                else
-                {
-                    style = "display: flex;";
-                }
-                <div style="@style" class="nonResistances">
-                    @if (item.Effectiveness.WeakAgainst.Count > 0)
+                                @height
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Weight</th>
+                            <td>
+                                @{
+                                    string weight;
+
+                                    if (item.Pokemon.Weight != 0m)
+                                    {
+                                        weight = string.Concat(Math.Round(@item.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####"), " lbs (", item.Pokemon.Weight.ToString("0.####"), " kg)");
+                                    }
+                                    else
+                                    {
+                                        weight = "??? lbs (??? kg)";
+                                    }
+                                }
+                                @weight
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                @if (item.SecondaryAbility == null && item.HiddenAbility == null)
+                                {
+                                    @("Ability")
+                                }
+                                else
+                                {
+                                    @("Abilities")
+                                }
+                            </th>
+                            <td>
+                                <span title="Description: @item.PrimaryAbility.Description">
+                                    @item.PrimaryAbility.Name
+                                </span>
+                                @if (@item.SecondaryAbility != null)
+                                {
+                                    <br>
+                                    <span title="Description: @item.SecondaryAbility.Description">
+                                        @item.SecondaryAbility.Name
+                                    </span>
+                                }
+                                @if (@item.HiddenAbility != null && @g >= 5)
+                                {
+                                    <br>
+                                    <span title="Description: @item.HiddenAbility.Description">
+                                        @item.HiddenAbility.Name (Hidden)
+                                    </span>
+                                }
+                                @if (@item.SpecialEventAbility != null)
+                                {
+                                    <br>
+                                    <span title="Description: @item.SpecialEventAbility.Description">
+                                        @item.SpecialEventAbility.Name (Special Ability)
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Gender Ratio</th>
+                            <td>
+                                @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                {
+                                    @("Genderless");
+                                }
+                                else
+                                {
+                                    if (item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                    {
+                                        <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
+                                    }
+                                    else if (item.Pokemon.GenderRatio.MaleRatio == 0)
+                                    {
+                                        <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    }
+                                    else
+                                    {
+                                        <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
+                                        @("/")
+                                        <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                @if (item.Pokemon.Game.Name.IndexOf('/') > -1)
+                                {
+                                    @("Games of Origin");
+                                }
+                                else
+                                {
+                                    @("Game of Origin");
+                                }
+                            </th>
+                            <td>
+                                @item.Pokemon.Game.Name
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pokemonInfo pokemonTables">
+                <div class="typing">
+                    <h2>Typing</h2>
+                    <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
+                    @if (@item.SecondaryType != null)
                     {
-                        <div class="WeakAgainst">
-                            <h2>Weaknesses</h2>
-                            <table class="WeakAgainstTable">
+                        <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                    }
+                </div>
+                <div class="effectivenessChart tableWithHeaders noRowBorders">
+                    @if (item.Effectiveness.StrongAgainst.Count > 0)
+                    {
+                        <div class="StrongAgainst">
+                            <h2>Resistances</h2>
+                            <table class="StrongAgainstTable">
                                 <tbody>
-                                    @foreach (string w in item.Effectiveness.WeakAgainst)
+                                    @foreach (string s in item.Effectiveness.StrongAgainst)
                                     {
                                         <tr>
-                                            @if (@w.IndexOf(" Quad") > -1)
+                                            @if (@s.IndexOf(" Quad") > -1)
                                             {
                                                 <td>
-                                                    <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
-                                                    <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                                                    <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
+                                                    <div class="pokemon-type quad-icon quad-resist">Quad</div>
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td>
-                                                    <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                                    <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
                                                 </td>
                                             }
                                         </tr>
@@ -374,277 +356,312 @@
                                 </tbody>
                             </table>
                         </div>
-                    }
-                    @if (item.Effectiveness.ImmuneTo.Count > 0)
-                    {
-                        <div class="ImmuneTo">
-                            <h2>Immunities</h2>
-                            <table class="ImmuneToTable">
-                                <tbody>
-                                    @foreach (string i in item.Effectiveness.ImmuneTo)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-        <div class="pokemonInfo pokemonGames pokemonTables">
-            <h2>Games Available In</h2>
-            <table>
-                <tbody>
-                    @for(var i = 0; i < item.GamesAvailableIn.Count; i+=2)
-                    {
-                        <tr>
-                            <td>@item.GamesAvailableIn[i].Name</td>
-                            @if(@item.GamesAvailableIn.Last() != @item.GamesAvailableIn[i])
-                            {
-                                <td>@item.GamesAvailableIn[i+1].Name</td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="pokemonInfo pokemonTraining pokemonTables">
-            <h2>Training</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>EV Yield</th>
-                        <td>
-                            @if (item.EVYields.Health != 0)
-                            {
-                                @item.EVYields.Health@(" Health");
-                                <br>
-                            }
-                            @if (item.EVYields.Attack != 0)
-                            {
-                                @item.EVYields.Attack@(" Attack");
-                                <br>
-                            }
-                            @if (item.EVYields.Defense != 0)
-                            {
-                                @item.EVYields.Defense@(" Defense");
-                                <br>
-                            }
-                            @if (item.EVYields.SpecialAttack != 0)
-                            {
-                                @item.EVYields.SpecialAttack@(" Sp. Attack");
-                                <br>
-                            }
-                            @if (item.EVYields.SpecialDefense != 0)
-                            {
-                                @item.EVYields.SpecialDefense@(" Sp. Defense");
-                                <br>
-                            }
-                            @if (item.EVYields.Speed != 0)
-                            {
-                                @item.EVYields.Speed@(" Speed");
-                                <br>
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Catch Rate</th>
-                        <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
-                    </tr>
-                    <tr>
-                        <th>Experience Growth</th>
-                        <td>
-                            @item.Pokemon.ExperienceGrowth.Name
-                            <br>
-                            (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Experience Yield</th>
-                        <td>@item.Pokemon.ExpYield</td>
-                    </tr>
-                    <tr>
-                        <th>Base Happiness</th>
-                        <td>@item.Pokemon.BaseHappiness.Happiness</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pokemonInfo pokemonStats pokemonTables">
-            <h2>Base Stats</h2>
-            <table class="baseStatTable">
-                <tbody>
-                    <tr>
-                        <th class="Health" scope="col">Health</th>
-                        <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.Health * 100 / 255m)%;"></div></td>
-                        <td class="Health">@item.BaseStats.Health</td>
-                    </tr>
-                    <tr>
-                        <th class="Attack" scope="col">Attack</th>
-                        <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.Attack * 100 / 255m)%;"></div></td>
-                        <td class="Attack">@item.BaseStats.Attack</td>
-                    </tr>
-                    <tr>
-                        <th class="Defense" scope="col">Defense</th>
-                        <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.Defense * 100 / 255m)%;"></div></td>
-                        <td class="Defense">@item.BaseStats.Defense</td>
-                    </tr>
-                    <tr>
-                        <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                        <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
-                        <td class="SpecialAttack">@item.BaseStats.SpecialAttack</td>
-                    </tr>
-                    <tr>
-                        <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                        <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
-                        <td class="SpecialDefense">@item.BaseStats.SpecialDefense</td>
-                    </tr>
-                    <tr>
-                        <th class="Speed" scope="col">Speed</th>
-                        <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.Speed * 100 / 255m)%;"></div></td>
-                        <td class="Speed">@item.BaseStats.Speed</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th class="baseStatTotal" scope="col">Total</th>
-                        <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.StatTotal</b></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
-            @if (item.PreEvolution != null)
-            {
-                <div class="evolutions">
-                    <h2>Pre-Evolution</h2>
-                    <table class="preEvolutionTable">
-                        <tbody class="evolutionPokemon">
-                            <tr>
-                                <th>
-                                    @if (@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
-                                    {
-                                        <a class="evolutionImage" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                                            <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
-                                        </a>
-                                        <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
-                                    }
-                                    else
-                                    {
-                                        <a class="evolutionImage" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                                            <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
-                                        </a>
-                                        <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
-                                    }
-                                </th>
-                                <td>
-                                    @item.PreEvolution.EvolutionMethod.Name
-                                    @if (@item.PreEvolution.EvolutionDetails != null)
-                                    {
-                                        <br>
-                                        @(string.Concat(" (", @item.PreEvolution.EvolutionDetails, ")"));
-                                    }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br class="preEvoBreak">
-            }
-            <div class="pokemonBreeding">
-                <h2>Breeding</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            @if (item.SecondaryEggGroup != null)
-                            {
-                                <th>Egg Groups</th>
-                            }
-                            else
-                            {
-                                <th>Egg Group</th>
-                            }
-                            <td>
-                                @item.PrimaryEggGroup.Name
-                                @if (item.SecondaryEggGroup != null)
-                                {
-                                    <br>
-                                    @item.SecondaryEggGroup.Name
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                           <th>Egg Cycles</th>
-                           <td>
-                               @item.Pokemon.EggCycle.CycleCount Cycles
-                               <br>
-                               (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        @if (item.Evolutions.Count > 0)
-        {
-            <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
-                <h2>
-                    @if(item.Evolutions.Count > 1)
-                    {
-                        @("Evolutions");
+                        style = string.Empty;
                     }
                     else
                     {
-                        @("Evolution");
+                        style = "display: flex;";
                     }
-                </h2>
-                <table class="evolutionTable">
-                    <tbody class="evolutionPokemon">
-                        @foreach (var evolution in item.Evolutions)
+                    <div style="@style" class="nonResistances">
+                        @if (item.Effectiveness.WeakAgainst.Count > 0)
+                        {
+                            <div class="WeakAgainst">
+                                <h2>Weaknesses</h2>
+                                <table class="WeakAgainstTable">
+                                    <tbody>
+                                        @foreach (string w in item.Effectiveness.WeakAgainst)
+                                        {
+                                            <tr>
+                                                @if (@w.IndexOf(" Quad") > -1)
+                                                {
+                                                    <td>
+                                                        <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
+                                                        <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        @if (item.Effectiveness.ImmuneTo.Count > 0)
+                        {
+                            <div class="ImmuneTo">
+                                <h2>Immunities</h2>
+                                <table class="ImmuneToTable">
+                                    <tbody>
+                                        @foreach (string i in item.Effectiveness.ImmuneTo)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="pokemonInfo pokemonGames pokemonTables">
+                <h2>Games Available In</h2>
+                <table>
+                    <tbody>
+                        @for(var i = 0; i < item.GamesAvailableIn.Count; i+=2)
                         {
                             <tr>
-                                <th>
-                                    @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
-                                    {
-                                        <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                                            <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
-                                        </a>
-                                        <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
-                                    }
-                                    else
-                                    {
-                                        <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                                            <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
-                                        </a>
-                                        <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
-                                    }
-                                </th>
-                                <td>
-                                    @evolution.EvolutionMethod.Name
-                                    @if (@evolution.EvolutionDetails != null)
-                                    {
-                                        <br>
-                                        @(string.Concat(" (", @evolution.EvolutionDetails, ")"));
-                                    }
-                                </td>
+                                <td>@item.GamesAvailableIn[i].Name</td>
+                                @if(@item.GamesAvailableIn.Last() != @item.GamesAvailableIn[i])
+                                {
+                                    <td>@item.GamesAvailableIn[i+1].Name</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-        }
-        else
-        {
-            <div class="pokemonInfo pokemonTables emptyDiv"></div>
-        }
-    </div>
+            <div class="pokemonInfo pokemonTraining pokemonTables">
+                <h2>Training</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>EV Yield</th>
+                            <td>
+                                @if (item.EVYields.Health != 0)
+                                {
+                                    @item.EVYields.Health@(" Health");
+                                    <br>
+                                }
+                                @if (item.EVYields.Attack != 0)
+                                {
+                                    @item.EVYields.Attack@(" Attack");
+                                    <br>
+                                }
+                                @if (item.EVYields.Defense != 0)
+                                {
+                                    @item.EVYields.Defense@(" Defense");
+                                    <br>
+                                }
+                                @if (item.EVYields.SpecialAttack != 0)
+                                {
+                                    @item.EVYields.SpecialAttack@(" Sp. Attack");
+                                    <br>
+                                }
+                                @if (item.EVYields.SpecialDefense != 0)
+                                {
+                                    @item.EVYields.SpecialDefense@(" Sp. Defense");
+                                    <br>
+                                }
+                                @if (item.EVYields.Speed != 0)
+                                {
+                                    @item.EVYields.Speed@(" Speed");
+                                    <br>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Catch Rate</th>
+                            <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
+                        </tr>
+                        <tr>
+                            <th>Experience Growth</th>
+                            <td>
+                                @item.Pokemon.ExperienceGrowth.Name
+                                <br>
+                                (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Experience Yield</th>
+                            <td>@item.Pokemon.ExpYield</td>
+                        </tr>
+                        <tr>
+                            <th>Base Happiness</th>
+                            <td>@item.Pokemon.BaseHappiness.Happiness</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pokemonInfo pokemonStats pokemonTables">
+                <h2>Base Stats</h2>
+                <table class="baseStatTable">
+                    <tbody>
+                        <tr>
+                            <th class="Health" scope="col">Health</th>
+                            <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.Health * 100 / 255m)%;"></div></td>
+                            <td class="Health">@item.BaseStats.Health</td>
+                        </tr>
+                        <tr>
+                            <th class="Attack" scope="col">Attack</th>
+                            <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.Attack * 100 / 255m)%;"></div></td>
+                            <td class="Attack">@item.BaseStats.Attack</td>
+                        </tr>
+                        <tr>
+                            <th class="Defense" scope="col">Defense</th>
+                            <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.Defense * 100 / 255m)%;"></div></td>
+                            <td class="Defense">@item.BaseStats.Defense</td>
+                        </tr>
+                        <tr>
+                            <th class="SpecialAttack" scope="col">Sp. Attack</th>
+                            <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
+                            <td class="SpecialAttack">@item.BaseStats.SpecialAttack</td>
+                        </tr>
+                        <tr>
+                            <th class="SpecialDefense" scope="col">Sp. Defense</th>
+                            <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
+                            <td class="SpecialDefense">@item.BaseStats.SpecialDefense</td>
+                        </tr>
+                        <tr>
+                            <th class="Speed" scope="col">Speed</th>
+                            <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.Speed * 100 / 255m)%;"></div></td>
+                            <td class="Speed">@item.BaseStats.Speed</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="baseStatTotal" scope="col">Total</th>
+                            <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.StatTotal</b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
+                @if (item.PreEvolution != null)
+                {
+                    <div class="evolutions">
+                        <h2>Pre-Evolution</h2>
+                        <table class="preEvolutionTable">
+                            <tbody class="evolutionPokemon">
+                                <tr>
+                                    <th>
+                                        @if (@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                                        {
+                                            <a class="evolutionImage" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                            </a>
+                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="evolutionImage" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                            </a>
+                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                        }
+                                    </th>
+                                    <td>
+                                        @item.PreEvolution.EvolutionMethod.Name
+                                        @if (@item.PreEvolution.EvolutionDetails != null)
+                                        {
+                                            <br>
+                                            @(string.Concat(" (", @item.PreEvolution.EvolutionDetails, ")"));
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br class="preEvoBreak">
+                }
+                <div class="pokemonBreeding">
+                    <h2>Breeding</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                @if (item.SecondaryEggGroup != null)
+                                {
+                                    <th>Egg Groups</th>
+                                }
+                                else
+                                {
+                                    <th>Egg Group</th>
+                                }
+                                <td>
+                                    @item.PrimaryEggGroup.Name
+                                    @if (item.SecondaryEggGroup != null)
+                                    {
+                                        <br>
+                                        @item.SecondaryEggGroup.Name
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                               <th>Egg Cycles</th>
+                               <td>
+                                   @item.Pokemon.EggCycle.CycleCount Cycles
+                                   <br>
+                                   (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @if (item.Evolutions.Count > 0)
+            {
+                <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
+                    <h2>
+                        @if(item.Evolutions.Count > 1)
+                        {
+                            @("Evolutions");
+                        }
+                        else
+                        {
+                            @("Evolution");
+                        }
+                    </h2>
+                    <table class="evolutionTable">
+                        <tbody class="evolutionPokemon">
+                            @foreach (var evolution in item.Evolutions)
+                            {
+                                <tr>
+                                    <th>
+                                        @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
+                                        {
+                                            <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                            </a>
+                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="evolutionImage"  href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                                                <img class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                            </a>
+                                            <a class="evolutionLink" href="@this.Url.Action("Pokemon", "Home", new { name = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@evolution.EvolutionPokemon.Name</a>
+                                        }
+                                    </th>
+                                    <td>
+                                        @evolution.EvolutionMethod.Name
+                                        @if (@evolution.EvolutionDetails != null)
+                                        {
+                                            <br>
+                                            @(string.Concat(" (", @evolution.EvolutionDetails, ")"));
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="pokemonInfo pokemonTables emptyDiv"></div>
+            }
+        </div>
+    }
 }

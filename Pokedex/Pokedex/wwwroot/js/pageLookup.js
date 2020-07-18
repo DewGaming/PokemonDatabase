@@ -9,15 +9,14 @@ function lookupPage(pageName) {
   $('#' + pageName).addClass('active');
 }
 
-function lookupPokemon(pageName, iconLink, pokemonName) {
+function lookupPokemon(pageName, iconLink, pokemonName, generation) {
   $('.active').each(function () {
     $(this).removeClass('active');
   })
 
   pokemonName = pokemonName.replace("&apos;", "\'");
 
-  $('.generations#' + pageName.replace('%', '\\%')).addClass('active');
-  $('.pokemon#' + pageName.replace('%', '\\%')).addClass('active');
+  $('button#Generation' + generation + ', .generations#' + pageName.replace('%', '\\%') + ', .generation' + generation + '#' + pageName.replace('%', '\\%')).addClass('active');
 
   $('.tabIcon').attr("href", iconLink);
   $('.pageTitle').text(pokemonName + " | Pokémon Database");
