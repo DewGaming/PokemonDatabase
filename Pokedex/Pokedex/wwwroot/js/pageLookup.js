@@ -9,6 +9,14 @@ function lookupPage(pageName) {
   $('#' + pageName).addClass('active');
 }
 
+function lookupTypeChart(generation) {
+  $('.active').each(function () {
+    $(this).removeClass('active');
+  })
+
+  $('button#Generation' + generation + ', .grid-row#Generation' + generation).addClass('active');
+}
+
 function lookupPokemon(pageName, iconLink, pokemonName, generation) {
   $('.active').each(function () {
     $(this).removeClass('active');

@@ -7,6 +7,7 @@
 @section styles
 {
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <style>
         main {
             max-width: 1220px !important;
@@ -14,55 +15,76 @@
     </style>
 }
 
-<div class="grid-row">
-    <div class="grid-col resp-scroll">
-        <div class="resp-scroll">
-            <table class="type-table">
-                <thead>
-                    <tr>
-                        <th class="cell-atkdef">
-                            DEFENSE →
-                            <br>
-                            ATTACK ↴
-                        </th>
-                        @foreach (var item in Model.Types)
-                        {
-                            <th>
-                                <span class="type-icon type-@item.Name.ToLower() type-cell type-abbr" title="@item.Name">@item.Name.Substring(0, 3)</span>
-                            </th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var atk in Model.Types)
-                    {
+@section scripts
+{
+    <script src="/js/pageLookup.js"></script>
+}
+
+<div class="generations">
+    @{
+        var generations = @Model.TypeChart.Select(x => x.GenerationId).Distinct().ToList();
+        generations.Sort();
+    }
+    @foreach(var g in generations)
+    {
+        <button class="@(@g == generations.Last() ? "active" : string.Empty)" onclick="lookupTypeChart('@g')" id="Generation@(g)">Generation @(g)</button>
+    }
+</div>
+
+@foreach(var g in generations)
+{
+    var types = Model.TypeChart.Where(x => x.GenerationId == g).Select(x => x.Attack.Name).Distinct().ToList();
+    types.Sort();
+    <div class="grid-row@(@g == generations.Last() ? " active" : string.Empty)" id="Generation@(g)">
+        <div class="grid-col resp-scroll">
+            <div class="resp-scroll">
+                <table class="type-table">
+                    <thead>
                         <tr>
-                            <th>
-                                <span class="type-icon type-@atk.Name.ToLower() type-cell">@atk.Name</span>
+                            <th class="cell-atkdef">
+                                DEFENSE →
+                                <br>
+                                ATTACK ↴
                             </th>
-                            @foreach (var def in Model.Types)
+                            @foreach (var item in types)
                             {
-                                @if (@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "0"))
-                                {
-                                    <td class="type-fx-cell type-fx-0" title="@atk.Name → @def.Name = No Efecct">0</td>
-                                }
-                                else if (@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "0.5"))
-                                {
-                                    <td class="type-fx-cell type-fx-50" title="@atk.Name → @def.Name = Not Very Effective">½</td>
-                                }
-                                else if (@Model.TypeChart.Exists(x => x.Attack.Name == atk.Name && x.Defend.Name == def.Name && x.Effective.ToString("0.####") == "2"))
-                                {
-                                    <td class="type-fx-cell type-fx-200" title="@atk.Name → @def.Name = Super Effective">2</td>
-                                }
-                                else
-                                {
-                                    <td class="type-fx-cell type-fx-100" title="@atk.Name → @def.Name = Normal Effectiveness"></td>
-                                }
+                                <th>
+                                    <span class="type-icon type-@item.ToLower() type-cell type-abbr" title="@item">@item.Substring(0, 3)</span>
+                                </th>
                             }
                         </tr>
-                    }
-                </tbody> 
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var atk in types)
+                        {
+                            <tr>
+                                <th>
+                                    <span class="type-icon type-@atk.ToLower() type-cell">@atk</span>
+                                </th>
+                                @foreach (var def in types)
+                                {
+                                    @if (@Model.TypeChart.Exists(x => x.GenerationId == g && x.Attack.Name == atk && x.Defend.Name == def && x.Effective.ToString("0.####") == "0"))
+                                    {
+                                        <td class="type-fx-cell type-fx-0" title="@atk → @def = No Efecct">0</td>
+                                    }
+                                    else if (@Model.TypeChart.Exists(x => x.GenerationId == g && x.Attack.Name == atk && x.Defend.Name == def && x.Effective.ToString("0.####") == "0.5"))
+                                    {
+                                        <td class="type-fx-cell type-fx-50" title="@atk → @def = Not Very Effective">½</td>
+                                    }
+                                    else if (@Model.TypeChart.Exists(x => x.GenerationId == g && x.Attack.Name == atk && x.Defend.Name == def && x.Effective.ToString("0.####") == "2"))
+                                    {
+                                        <td class="type-fx-cell type-fx-200" title="@atk → @def = Super Effective">2</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="type-fx-cell type-fx-100" title="@atk → @def = Normal Effectiveness"></td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    </tbody> 
+                </table>
+            </div>
         </div>
     </div>
-</div>
+}

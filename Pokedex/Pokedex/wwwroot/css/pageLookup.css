@@ -56,6 +56,44 @@
   transition: color .2s, background-color .2s;
 }
 
+.generations {
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.generations.active {
+  display: flex;
+}
+
+.generations button {
+  list-style: none;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 0px;
+  flex: 1 1 0;
+  min-width: auto;
+  margin: 0 0 -1px 0;
+  padding: .25rem 1rem;
+  border: 1px solid #dbdbdb;
+  background-color: #f0f0f0;
+  line-height: 1.2;
+  text-align: center;
+  color: #737373;
+  -webkit-transition: color .2s, background-color .2s;
+  transition: color .2s, background-color .2s;
+}
+
+.generations button.active {
+  background-color: #fff;
+  border-bottom-color: #fff;
+  color: #404040;
+}
+
+.generations button:focus {
+  outline-width: 0;
+}
+
 .gameButton {
   flex-basis: 15% !important;
 }

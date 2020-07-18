@@ -2,6 +2,14 @@
   overflow-x: auto;
 }
 
+.grid-row {
+  display: none;
+}
+
+.grid-row.active {
+  display: block;
+}
+
 .grid-col {
   padding: 0 1rem;
   width: 100%;
