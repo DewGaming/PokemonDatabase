@@ -19,6 +19,10 @@
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
+        .surroundingPokemon {
+            margin: 5px 0;
+        }
+
         .mb-4 {
             margin-bottom: 0 !important;
         }
@@ -26,12 +30,42 @@
         .effectivenessChart td {
             border-width: 0px;
         }
+
+        .generations {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: none;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .generations.active {
+            display: flex;
+        }
+
+        .generations button {
+            list-style: none;
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 0px;
+            flex: 1 1 0;
+            min-width: auto;
+            margin: 0 0 -1px 0;
+            padding: .25rem 1rem;
+            border: 1px solid #dbdbdb;
+            background-color: #f0f0f0;
+            line-height: 1.2;
+            text-align: center;
+            color: #737373;
+            -webkit-transition: color .2s, background-color .2s;
+            transition: color .2s, background-color .2s;
+        }
     </style>
     @if (this.User.IsInRole("Owner"))
     {
         <style>
             .btn-group {
-                margin: -10px 0 10px;
+                margin: 10px 0 10px;
             }
         </style>
     }
@@ -76,13 +110,24 @@
     </tr>
 </table>
 
-<hr style="margin-top: 0;">
-
 @foreach (var item in Model.PokemonList)
 {
     if (this.User.IsInRole("Owner"))
     {
         adminPokemon.Pokemon = item.Pokemon;
+    }
+    if(item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().Count() > 1)
+    {
+        <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+            @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
+            {
+                <button id="Generation@(g)">Generation @(g)</button>
+            }
+        </div>
+    }
+    else
+    {
+        <hr style="margin-top: 0;">
     }
     <div class="page pokemon@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
         @if (Model.PokemonList.Count() > 1)

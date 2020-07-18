@@ -16,7 +16,8 @@ function lookupPokemon(pageName, iconLink, pokemonName) {
 
   pokemonName = pokemonName.replace("&apos;", "\'");
 
-  $('#' + pageName.replace('%', '\\%')).addClass('active');
+  $('.generations#' + pageName.replace('%', '\\%')).addClass('active');
+  $('.pokemon#' + pageName.replace('%', '\\%')).addClass('active');
 
   $('.tabIcon').attr("href", iconLink);
   $('.pageTitle').text(pokemonName + " | Pokémon Database");
