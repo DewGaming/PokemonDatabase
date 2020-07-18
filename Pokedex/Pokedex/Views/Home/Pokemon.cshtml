@@ -161,7 +161,7 @@
                     }
                 </div>
             }
-            <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
+            <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1 ? " pokemonWithForms" : string.Empty)">
                 <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                 @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
                 {
@@ -674,12 +674,12 @@
                     </table>
                 </div>
             }
-            else if (g == 1 || !(item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId))
+            else
             {
                 <div class="pokemonInfo pokemonTables emptyDiv"></div>
-                <div class="pokemonInfo pokemonTables emptyDiv"></div>
             }
-            else
+
+            @if (g == 1 || !(item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId))
             {
                 <div class="pokemonInfo pokemonTables emptyDiv"></div>
             }
