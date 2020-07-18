@@ -50,6 +50,12 @@
                             @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
                         </div>
                     }
+                    @if (p.Name == "Other")
+                    {
+                        <div class="col-md-3">
+                            @Html.EditorFor(x => x.OtherPage, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
+                        </div>
+                    }
                 </div>
             }
         </div>

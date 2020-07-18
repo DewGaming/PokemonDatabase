@@ -57,6 +57,10 @@
                             {
                                 @(" (")<a href="@this.Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
                             }
+                            @if (@item.OtherPage != null)
+                            {
+                                @(" (" + item.OtherPage + ")")
+                            }
 
                             @if (item.Commentor != null)
                             {
