@@ -237,70 +237,76 @@
                                 @weight
                             </td>
                         </tr>
-                        <tr>
-                            <th>
-                                @if (item.SecondaryAbility == null && item.HiddenAbility == null)
-                                {
-                                    @("Ability")
-                                }
-                                else
-                                {
-                                    @("Abilities")
-                                }
-                            </th>
-                            <td>
-                                <span title="Description: @item.PrimaryAbility.Description">
-                                    @item.PrimaryAbility.Name
-                                </span>
-                                @if (@item.SecondaryAbility != null)
-                                {
-                                    <br>
-                                    <span title="Description: @item.SecondaryAbility.Description">
-                                        @item.SecondaryAbility.Name
-                                    </span>
-                                }
-                                @if (@item.HiddenAbility != null && @g >= 5)
-                                {
-                                    <br>
-                                    <span title="Description: @item.HiddenAbility.Description">
-                                        @item.HiddenAbility.Name (Hidden)
-                                    </span>
-                                }
-                                @if (@item.SpecialEventAbility != null)
-                                {
-                                    <br>
-                                    <span title="Description: @item.SpecialEventAbility.Description">
-                                        @item.SpecialEventAbility.Name (Special Ability)
-                                    </span>
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Gender Ratio</th>
-                            <td>
-                                @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
-                                {
-                                    @("Genderless");
-                                }
-                                else
-                                {
-                                    if (item.Pokemon.GenderRatio.FemaleRatio == 0)
+                        @if (g > 2)
+                        {
+                            <tr>
+                                <th>
+                                    @if (item.SecondaryAbility == null && (item.HiddenAbility == null || g < 5))
                                     {
-                                        <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
-                                    }
-                                    else if (item.Pokemon.GenderRatio.MaleRatio == 0)
-                                    {
-                                        <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                        @("Ability")
                                     }
                                     else
                                     {
-                                        <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
-                                        @("/")
-                                        <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                        @("Abilities")
                                     }
-                                }
-                            </td>
-                        </tr>
+                                </th>
+                                <td>
+                                    <span title="Description: @item.PrimaryAbility.Description">
+                                        @item.PrimaryAbility.Name
+                                    </span>
+                                    @if (@item.SecondaryAbility != null)
+                                    {
+                                        <br>
+                                        <span title="Description: @item.SecondaryAbility.Description">
+                                            @item.SecondaryAbility.Name
+                                        </span>
+                                    }
+                                    @if (@item.HiddenAbility != null && @g >= 5)
+                                    {
+                                        <br>
+                                        <span title="Description: @item.HiddenAbility.Description">
+                                            @item.HiddenAbility.Name (Hidden)
+                                        </span>
+                                    }
+                                    @if (@item.SpecialEventAbility != null)
+                                    {
+                                        <br>
+                                        <span title="Description: @item.SpecialEventAbility.Description">
+                                            @item.SpecialEventAbility.Name (Special Ability)
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @if (g != 1)
+                        {
+                            <tr>
+                                <th>Gender Ratio</th>
+                                <td>
+                                    @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                    {
+                                        @("Genderless");
+                                    }
+                                    else
+                                    {
+                                        if (item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                        {
+                                            <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
+                                        }
+                                        else if (item.Pokemon.GenderRatio.MaleRatio == 0)
+                                        {
+                                            <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                        }
+                                        else
+                                        {
+                                            <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
+                                            @("/")
+                                            <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
                         <tr>
                             <th>
                                 @if (item.Pokemon.Game.Name.IndexOf('/') > -1)
