@@ -422,13 +422,16 @@
                 <h2>Games Available In</h2>
                 <table>
                     <tbody>
-                        @for(var i = 0; i < item.GamesAvailableIn.Count; i+=2)
+                        @{
+                            var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g >= x.GenerationId).ToList();
+                        }
+                        @for(var i = 0; i < gamesAvailableInInGeneration.Count(); i+=2)
                         {
                             <tr>
-                                <td>@item.GamesAvailableIn[i].Name</td>
-                                @if(@item.GamesAvailableIn.Last() != @item.GamesAvailableIn[i])
+                                <td>@gamesAvailableInInGeneration[i].Name</td>
+                                @if(@gamesAvailableInInGeneration.Last() != @gamesAvailableInInGeneration[i])
                                 {
-                                    <td>@item.GamesAvailableIn[i+1].Name</td>
+                                    <td>@gamesAvailableInInGeneration[i+1].Name</td>
                                 }
                                 else
                                 {
