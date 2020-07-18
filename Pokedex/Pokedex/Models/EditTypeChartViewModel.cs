@@ -22,5 +22,10 @@ namespace Pokedex.Models
         /// Gets or sets the type id.
         /// </summary>
         public int TypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generation id.
+        /// </summary>
+        public int GenerationId { get; set; }
     }
 }

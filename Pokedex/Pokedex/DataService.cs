@@ -134,6 +134,24 @@ namespace Pokedex
             return this.dataContext.Types.OrderBy(x => x.Name).ToList();
         }
 
+        public List<Type> GetTypesByGen(int genId)
+        {
+            List<Type> types = this.dataContext.Types.OrderBy(x => x.Name).ToList();
+
+            if (genId == 1)
+            {
+                types.Remove(types.Find(x => x.Name == "Dark"));
+                types.Remove(types.Find(x => x.Name == "Steel"));
+            }
+
+            if (genId == 1 || genId == 2)
+            {
+                types.Remove(types.Find(x => x.Name == "Fairy"));
+            }
+
+            return types;
+        }
+
         public FormItem GetFormItem(int id)
         {
             return this.dataContext.FormItems
@@ -1326,7 +1344,7 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<TypeChart> GetTypeChartByAttackType(int id)
+        public List<TypeChart> GetAllTypeChartByAttackType(int id)
         {
             return this.dataContext.TypeCharts
                 .Include(x => x.Attack)
@@ -1337,7 +1355,7 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<TypeChart> GetTypeChartByDefendType(int id)
+        public List<TypeChart> GetAllTypeChartByDefendType(int id)
         {
             return this.dataContext.TypeCharts
                 .Include(x => x.Attack)
@@ -1348,93 +1366,37 @@ namespace Pokedex
                 .ToList();
         }
 
-        public TypeEffectivenessViewModel GetTypeChartPokemon(int pokemonId)
+        public List<TypeChart> GetTypeChartByDefendType(int id, int genId)
+        {
+            return this.dataContext.TypeCharts
+                .Include(x => x.Attack)
+                .Include(x => x.Defend)
+                .Where(x => x.DefendId == id && x.GenerationId == genId)
+                .OrderBy(x => x.AttackId)
+                .ThenBy(x => x.DefendId)
+                .ToList();
+        }
+
+        public List<TypeChart> GetTypeChartPokemon(int pokemonId)
         {
             List<Type> typeList = this.GetTypes();
             List<Type> pokemonTypes = this.GetPokemonTypes(pokemonId);
-            List<string> strongAgainst = new List<string>();
-            List<string> superStrongAgainst = new List<string>();
-            List<string> weakAgainst = new List<string>();
-            List<string> superWeakAgainst = new List<string>();
-            List<string> immuneTo = new List<string>();
-            List<TypeChart> typeChart;
-            string effectiveValue, attackType;
+            List<TypeChart> typeChart = this.GetTypeCharts();
+            List<TypeChart> secondaryTypeChart = new List<TypeChart>();
 
-            foreach (var type in pokemonTypes)
+            if (pokemonTypes.Count() > 1)
             {
-                typeChart = this.dataContext.TypeCharts
-                    .Include(x => x.Attack)
-                    .Include(x => x.Defend)
-                    .Where(x => x.Defend == type)
-                    .ToList();
-                foreach (var t in typeList)
-                {
-                    if (typeChart.Exists(x => x.Attack.Name == t.Name))
-                    {
-                        attackType = t.Name;
-                        effectiveValue = typeChart.Find(x => x.Attack.Name == attackType).Effective.ToString("0.####");
-                        if (effectiveValue == "0")
-                        {
-                            strongAgainst.Remove(attackType);
-                            weakAgainst.Remove(attackType);
-                            immuneTo.Add(attackType);
-                        }
-                        else if (effectiveValue == "0.5" && immuneTo.Where(x => x == attackType).ToList().Count() == 0)
-                        {
-                            if (strongAgainst.Exists(x => x == attackType))
-                            {
-                                strongAgainst.Remove(attackType);
-                                superStrongAgainst.Add(string.Concat(attackType, " Quad"));
-                            }
-                            else if (weakAgainst.Exists(x => x == attackType))
-                            {
-                                weakAgainst.Remove(attackType);
-                            }
-                            else
-                            {
-                                strongAgainst.Add(attackType);
-                            }
-                        }
-                        else if (effectiveValue == "2" && immuneTo.Where(x => x == attackType).ToList().Count() == 0)
-                        {
-                            if (weakAgainst.Exists(x => x == attackType))
-                            {
-                                weakAgainst.Remove(attackType);
-                                superWeakAgainst.Add(string.Concat(attackType, " Quad"));
-                            }
-                            else if (strongAgainst.Exists(x => x == attackType))
-                            {
-                                strongAgainst.Remove(attackType);
-                            }
-                            else
-                            {
-                                weakAgainst.Add(attackType);
-                            }
-                        }
-                    }
-                }
+                secondaryTypeChart = typeChart.Where(x => x.DefendId == pokemonTypes[1].Id).ToList();
             }
 
-            immuneTo.Sort();
-            strongAgainst.Sort();
-            superStrongAgainst.Sort();
-            weakAgainst.Sort();
-            superWeakAgainst.Sort();
+            typeChart = typeChart.Where(x => x.DefendId == pokemonTypes[0].Id).ToList();
 
-            List<string> strongAgainstList = superStrongAgainst;
-            strongAgainstList.AddRange(strongAgainst);
-
-            List<string> weakAgainstList = superWeakAgainst;
-            weakAgainstList.AddRange(weakAgainst);
-
-            TypeEffectivenessViewModel effectivenessChart = new TypeEffectivenessViewModel()
+            if (secondaryTypeChart.Count() > 0)
             {
-                ImmuneTo = immuneTo,
-                StrongAgainst = strongAgainstList,
-                WeakAgainst = weakAgainstList,
-            };
+                typeChart.AddRange(secondaryTypeChart);
+            }
 
-            return effectivenessChart;
+            return typeChart;
         }
 
         public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId)

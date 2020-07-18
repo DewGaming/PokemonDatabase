@@ -23,8 +23,21 @@
                 </td>
                 <td>
                     <a href="@(this.Url.Action("Type", "Edit", new { id = item.Id }))">Edit Name</a>
+                    @if(!new[] {"Dark", "Steel", "Fairy"}.Contains(item.Name))
+                    {
+                        @("|")
+                        <a href="@(this.Url.Action("TypeEffectiveness", "Edit", new { id = item.Id, genId = 1 }))">Edit Gen 1 Effectiveness</a>
+                    }
+
+                    @if(!new[] {"Fairy"}.Contains(item.Name))
+                    {
+                        @("|")
+                        <a href="@(this.Url.Action("TypeEffectiveness", "Edit", new { id = item.Id, genId = 2 }))">Edit Gen 2 Effectiveness</a>
+                    }
+                    
                     |
-                    <a href="@(this.Url.Action("TypeEffectiveness", "Edit", new { id = item.Id }))">Edit Effectiveness</a>
+                    <a href="@(this.Url.Action("TypeEffectiveness", "Edit", new { id = item.Id, genId = 6 }))">Edit Gen 6 Effectiveness</a>
+                    
                     @if (!(Model.AllPokemon.Exists(x => x.PrimaryType.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryType != null && x.SecondaryType.Id == item.Id)))
                     {
                         @('|')

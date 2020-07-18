@@ -1029,13 +1029,13 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("update-type-chart")]
-        public string UpdateTypeChart(int typeId, List<int> resistances, List<int> weaknesses, List<int> immunities)
+        public string UpdateTypeChart(int typeId, int genId, List<int> resistances, List<int> weaknesses, List<int> immunities)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 TypeChart typeChart;
                 List<int> duplicateIds = resistances.Where(x => weaknesses.Contains(x)).ToList();
-                List<TypeChart> existingCharts = this.dataService.GetTypeChartByDefendType(typeId);
+                List<TypeChart> existingCharts = this.dataService.GetTypeChartByDefendType(typeId, genId);
 
                 foreach (var t in duplicateIds)
                 {
@@ -1063,6 +1063,7 @@ namespace Pokedex.Controllers
                         AttackId = r,
                         DefendId = typeId,
                         Effective = 0.5m,
+                        GenerationId = genId,
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
@@ -1074,6 +1075,7 @@ namespace Pokedex.Controllers
                         AttackId = w,
                         DefendId = typeId,
                         Effective = 2m,
+                        GenerationId = genId,
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
@@ -1085,6 +1087,7 @@ namespace Pokedex.Controllers
                         AttackId = i,
                         DefendId = typeId,
                         Effective = 0m,
+                        GenerationId = genId,
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
