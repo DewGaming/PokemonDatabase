@@ -105,14 +105,14 @@
         <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
             @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
             {
-                <button class="@(@g == @generations.Last() ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
+                <button class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
             }
         </div>
     }
 
     @foreach(var g in generations)
     {
-        <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @generations.Last() ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+        <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
             @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
             {
                 <div class="differentForms">

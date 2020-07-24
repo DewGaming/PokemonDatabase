@@ -27,5 +27,10 @@ namespace Pokedex.Models
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generation of the game.
+        /// </summary>
+        public Generation Generation { get; set; }
     }
 }

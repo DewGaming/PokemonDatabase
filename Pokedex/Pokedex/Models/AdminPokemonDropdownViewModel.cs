@@ -21,5 +21,10 @@ namespace Pokedex.Models
         /// Gets or sets the pokemon's id that will be selected upon opening the page.
         /// </summary>
         public int PokemonId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generation's id that will be selected upon opening the page.
+        /// </summary>
+        public int GenerationId { get; set; }
     }
 }

@@ -529,6 +529,7 @@ namespace Pokedex.Controllers
                     PokemonNoTypeList = pokemonList,
                     AltFormsList = altFormsList,
                     AppConfig = this.appConfig,
+                    Generation = this.dataService.GetGenerationFromGame(gameId),
                 };
 
                 return this.PartialView("_FillAvailableGenerationTable", model);
