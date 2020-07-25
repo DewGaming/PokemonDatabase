@@ -499,7 +499,16 @@
                                 }
                                 @if (item.EVYields.Attack != 0)
                                 {
-                                    @item.EVYields.Attack@(" Attack");
+                                    @if(item.Pokemon.Name == "Watchog" && @g == 5)
+                                    {
+                                        @("1 Attack in BW")
+                                        <br>
+                                        @("2 Attack in B2W2")
+                                    }
+                                    else
+                                    {
+                                        @item.EVYields.Attack@(" Attack");
+                                    }
                                     <br>
                                 }
                                 @if (item.EVYields.Defense != 0)
