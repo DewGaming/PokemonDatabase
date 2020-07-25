@@ -211,7 +211,7 @@ namespace Pokedex.Controllers
 
             if (generationId == 0)
             {
-                generationId = this.dataService.GetGenerations().Last().Id;
+                generationId = this.dataService.GetPokemonGameDetails(pokemon.Id).Last().Game.GenerationId;
             }
 
             if (pokemon != null && pokemon.IsComplete)
