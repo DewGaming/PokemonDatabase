@@ -489,50 +489,53 @@
                 <h2>Training</h2>
                 <table>
                     <tbody>
-                        <tr>
-                            <th>EV Yield</th>
-                            <td>
-                                @if (item.EVYields.Health != 0)
-                                {
-                                    @item.EVYields.Health@(" Health");
-                                    <br>
-                                }
-                                @if (item.EVYields.Attack != 0)
-                                {
-                                    @if(item.Pokemon.Name == "Watchog" && @g == 5)
+                        @if(@g > 2)
+                        {
+                            <tr>
+                                <th>EV Yield</th>
+                                <td>
+                                    @if (item.EVYields.Health != 0)
                                     {
-                                        @("1 Attack in BW")
+                                        @item.EVYields.Health@(" Health");
                                         <br>
-                                        @("2 Attack in B2W2")
                                     }
-                                    else
+                                    @if (item.EVYields.Attack != 0)
                                     {
-                                        @item.EVYields.Attack@(" Attack");
+                                        @if(item.Pokemon.Name == "Watchog" && @g == 5)
+                                        {
+                                            @("1 Attack in BW")
+                                            <br>
+                                            @("2 Attack in B2W2")
+                                        }
+                                        else
+                                        {
+                                            @item.EVYields.Attack@(" Attack");
+                                        }
+                                        <br>
                                     }
-                                    <br>
-                                }
-                                @if (item.EVYields.Defense != 0)
-                                {
-                                    @item.EVYields.Defense@(" Defense");
-                                    <br>
-                                }
-                                @if (item.EVYields.SpecialAttack != 0)
-                                {
-                                    @item.EVYields.SpecialAttack@(" Sp. Attack");
-                                    <br>
-                                }
-                                @if (item.EVYields.SpecialDefense != 0)
-                                {
-                                    @item.EVYields.SpecialDefense@(" Sp. Defense");
-                                    <br>
-                                }
-                                @if (item.EVYields.Speed != 0)
-                                {
-                                    @item.EVYields.Speed@(" Speed");
-                                    <br>
-                                }
-                            </td>
-                        </tr>
+                                    @if (item.EVYields.Defense != 0)
+                                    {
+                                        @item.EVYields.Defense@(" Defense");
+                                        <br>
+                                    }
+                                    @if (item.EVYields.SpecialAttack != 0)
+                                    {
+                                        @item.EVYields.SpecialAttack@(" Sp. Attack");
+                                        <br>
+                                    }
+                                    @if (item.EVYields.SpecialDefense != 0)
+                                    {
+                                        @item.EVYields.SpecialDefense@(" Sp. Defense");
+                                        <br>
+                                    }
+                                    @if (item.EVYields.Speed != 0)
+                                    {
+                                        @item.EVYields.Speed@(" Speed");
+                                        <br>
+                                    }
+                                </td>
+                            </tr>
+                        }
                         <tr>
                             <th>Catch Rate</th>
                             <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
