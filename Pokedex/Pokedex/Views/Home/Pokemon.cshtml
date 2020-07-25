@@ -579,15 +579,27 @@
                             <td class="Defense">@item.BaseStats.Defense</td>
                         </tr>
                         <tr>
-                            <th class="SpecialAttack" scope="col">Sp. Attack</th>
+                            <th class="SpecialAttack" scope="col">
+                                @if(@g == 1)
+                                {
+                                    @("Special")
+                                }
+                                else
+                                {
+                                    @("Sp. Attack")
+                                }
+                            </th>
                             <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
                             <td class="SpecialAttack">@item.BaseStats.SpecialAttack</td>
                         </tr>
-                        <tr>
-                            <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                            <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
-                            <td class="SpecialDefense">@item.BaseStats.SpecialDefense</td>
-                        </tr>
+                        @if(@g != 1)
+                        {
+                            <tr>
+                                <th class="SpecialDefense" scope="col">Sp. Defense</th>
+                                <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
+                                <td class="SpecialDefense">@item.BaseStats.SpecialDefense</td>
+                            </tr>
+                        }
                         <tr>
                             <th class="Speed" scope="col">Speed</th>
                             <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.Speed * 100 / 255m)%;"></div></td>
