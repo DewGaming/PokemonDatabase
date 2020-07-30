@@ -1010,7 +1010,7 @@ namespace Pokedex
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
             List<int> pokemonIds = pokemonList.Select(x => x.PokemonId).Distinct().ToList();
 
-            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            pokemonList = pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             return pokemonList;
         }
@@ -1040,7 +1040,7 @@ namespace Pokedex
                                                         .Where(x => x.Pokemon.IsComplete == true)
                                                         .ToList();
 
-            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            pokemonList = pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             if (secondaryTypeId != 0 && secondaryTypeId != 100)
             {
@@ -1178,7 +1178,7 @@ namespace Pokedex
                 .Include(x => x.SecondaryEggGroup)
                 .ToList();
 
-            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            pokemonList = pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             List<PokemonEggGroupDetail> finalPokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
 
