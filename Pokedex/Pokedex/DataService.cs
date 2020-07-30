@@ -1047,6 +1047,8 @@ namespace Pokedex
                                                         .Where(x => x.Pokemon.IsComplete == true)
                                                         .ToList();
 
+            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();    
+
             if (secondaryTypeId != 0 && secondaryTypeId != 100)
             {
                 pokemonList = pokemonList.Where(x => (x.PrimaryTypeId == primaryTypeId && x.SecondaryTypeId == secondaryTypeId) || (x.PrimaryTypeId == secondaryTypeId && x.SecondaryTypeId == primaryTypeId)).ToList();
