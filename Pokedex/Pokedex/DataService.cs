@@ -181,27 +181,6 @@ namespace Pokedex
             return formItemList;
         }
 
-        public List<Type> GetPokemonTypes(int pokemonId)
-        {
-            PokemonTypeDetail typeDetail = this.dataContext.PokemonTypeDetails
-                                                .Include(x => x.Pokemon)
-                                                .Include(x => x.PrimaryType)
-                                                .Include(x => x.SecondaryType)
-                                                .ToList()
-                                                .Find(x => x.Pokemon.Id == pokemonId);
-            List<Type> types = new List<Type>
-            {
-                this.GetType(typeDetail.PrimaryType.Id),
-            };
-
-            if (typeDetail.SecondaryType != null)
-            {
-                types.Add(this.GetType(typeDetail.SecondaryType.Id));
-            }
-
-            return types;
-        }
-
         public EggGroup GetEggGroup(int id)
         {
             return this.dataContext.EggGroups
@@ -468,7 +447,6 @@ namespace Pokedex
 
         public PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form, AppConfig appConfig)
         {
-            PokemonTypeDetail pokemonTypes = this.GetPokemonWithTypes(pokemon.Id);
             PokemonAbilityDetail pokemonAbilities = this.GetPokemonWithAbilities(pokemon.Id);
             PokemonEggGroupDetail pokemonEggGroups = this.GetPokemonWithEggGroups(pokemon.Id);
 
@@ -477,8 +455,7 @@ namespace Pokedex
                 Pokemon = pokemon,
                 BaseStats = this.GetBaseStat(pokemon.Id),
                 EVYields = this.GetEVYields(pokemon.Id),
-                PrimaryType = pokemonTypes.PrimaryType,
-                SecondaryType = pokemonTypes.SecondaryType,
+                Typings = this.GetPokemonWithTypes(pokemon.Id),
                 PrimaryAbility = pokemonAbilities.PrimaryAbility,
                 SecondaryAbility = pokemonAbilities.SecondaryAbility,
                 HiddenAbility = pokemonAbilities.HiddenAbility,
@@ -1007,14 +984,15 @@ namespace Pokedex
                 .ToList();
         }
 
-        public PokemonTypeDetail GetPokemonWithTypes(int pokemonId)
+        public List<PokemonTypeDetail> GetPokemonWithTypes(int pokemonId)
         {
             return this.dataContext.PokemonTypeDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.PrimaryType)
                 .Include(x => x.SecondaryType)
-                .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
+                .Include(x => x.Generation)
+                .Where(x => x.Pokemon.Id == pokemonId)
+                .ToList();
         }
 
         public PokemonTypeDetail GetPokemonWithTypesNoIncludes(int pokemonId)
@@ -1037,6 +1015,9 @@ namespace Pokedex
                                                         .ToList();
             List<Pokemon> altFormList = this.dataContext.PokemonFormDetails.Select(x => x.AltFormPokemon).ToList();
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
+            List<int> pokemonIds = pokemonList.Select(x => x.PokemonId).Distinct().ToList();
+
+            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             return pokemonList;
         }
@@ -1370,26 +1351,37 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<TypeChart> GetTypeChartPokemon(int pokemonId)
+        public List<PokemonTypeChartViewModel> GetTypeChartPokemon(int pokemonId)
         {
             List<Type> typeList = this.GetTypes();
-            List<Type> pokemonTypes = this.GetPokemonTypes(pokemonId);
+            List<PokemonTypeDetail> pokemonTypes = this.GetPokemonWithTypes(pokemonId);
             List<TypeChart> typeChart = this.GetTypeCharts();
+            List<TypeChart> primaryTypeChart = new List<TypeChart>();
             List<TypeChart> secondaryTypeChart = new List<TypeChart>();
+            List<PokemonTypeChartViewModel> pokemonTypeCharts = new List<PokemonTypeChartViewModel>();
 
-            if (pokemonTypes.Count() > 1)
+            foreach(var t in pokemonTypes)
             {
-                secondaryTypeChart = typeChart.Where(x => x.DefendId == pokemonTypes[1].Id).ToList();
+                if (t.SecondaryType != null)
+                {
+                    secondaryTypeChart = typeChart.Where(x => x.DefendId == t.SecondaryTypeId).ToList();
+                }
+
+                primaryTypeChart = typeChart.Where(x => x.DefendId == t.PrimaryTypeId).ToList();
+
+                if (secondaryTypeChart.Count() > 0)
+                {
+                    primaryTypeChart.AddRange(secondaryTypeChart);
+                }
+
+                pokemonTypeCharts.Add(new PokemonTypeChartViewModel()
+                {
+                    TypeChart = primaryTypeChart,
+                    Generation = t.Generation,
+                });
             }
 
-            typeChart = typeChart.Where(x => x.DefendId == pokemonTypes[0].Id).ToList();
-
-            if (secondaryTypeChart.Count() > 0)
-            {
-                typeChart.AddRange(secondaryTypeChart);
-            }
-
-            return typeChart;
+            return pokemonTypeCharts;
         }
 
         public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId)

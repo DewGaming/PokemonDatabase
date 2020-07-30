@@ -170,10 +170,10 @@
     <div>
         <div class="pokemonInfo typing pokemonTables">
             <h2>Typing</h2>
-            <div class="pokemon-type type-icon type-@Model.PrimaryType.Name.ToLower()">@Model.PrimaryType.Name</div>
-            @if (@Model.SecondaryType != null)
+            <div class="pokemon-type type-icon type-@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryType.Name.ToLower()">@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryType.Name</div>
+            @if (@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryType != null)
             {
-                <div class="pokemon-type type-icon type-@Model.SecondaryType.Name.ToLower()">@Model.SecondaryType.Name</div>
+                <div class="pokemon-type type-icon type-@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryType.Name.ToLower()">@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryType.Name</div>
             }
         </div>
     </div>

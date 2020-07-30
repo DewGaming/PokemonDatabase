@@ -299,15 +299,15 @@
             <div class="pokemonInfo pokemonTables">
                 <div class="typing">
                     <h2>Typing</h2>
-                    <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                    @if (@item.SecondaryType != null)
+                    <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
+                    @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
                     {
-                        <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
+                        <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
                     }
                 </div>
                 <div class="effectivenessChart tableWithHeaders noRowBorders">
                     @{
-                        var typeChart = item.Effectiveness;
+                        var typeChart = item.Effectiveness.OrderByDescending(x => x.Generation.Id).First(x => x.Generation.Id <= g).TypeChart;
                         List<string> StrongAgainst = new List<string>();
                         List<string> WeakAgainst = new List<string>();
                         List<string> ImmuneTo = new List<string>();

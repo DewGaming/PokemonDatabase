@@ -520,10 +520,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_typing/{pokemonId:int}")]
-        public IActionResult Typing(int pokemonId)
+        [Route("edit_typing/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Typing(int pokemonId, int generationId)
         {
-            PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonId);
+            PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonId).Find(x => x.GenerationId == generationId);
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 Id = typeDetail.Id,
@@ -532,6 +532,7 @@ namespace Pokedex.Controllers
                 Pokemon = typeDetail.Pokemon,
                 PrimaryTypeId = typeDetail.PrimaryTypeId,
                 SecondaryTypeId = typeDetail.SecondaryTypeId,
+                GenerationId = typeDetail.GenerationId,
             };
 
             return this.View(model);
@@ -539,12 +540,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_typing/{id:int}")]
+        [Route("edit_typing/{id:int}/{generationId:int}")]
         public IActionResult Typing(PokemonTypeDetail pokemonTypeDetail)
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId);
+                PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId).Find(x => x.GenerationId == pokemonTypeDetail.GenerationId);
                 PokemonTypingViewModel model = new PokemonTypingViewModel()
                 {
                     Id = typeDetail.Id,
@@ -553,6 +554,7 @@ namespace Pokedex.Controllers
                     Pokemon = typeDetail.Pokemon,
                     PrimaryTypeId = typeDetail.PrimaryTypeId,
                     SecondaryTypeId = typeDetail.SecondaryTypeId,
+                    GenerationId = typeDetail.GenerationId,
                 };
 
                 return this.View(model);

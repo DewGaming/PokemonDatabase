@@ -29,14 +29,9 @@ namespace Pokedex.Models
         public List<EVYield> EVYields { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's primary type.
+        /// Gets or sets the pokemon's typings.
         /// </summary>
-        public Type PrimaryType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's secondary type, if applicable.
-        /// </summary>
-        public Type SecondaryType { get; set; }
+        public List<PokemonTypeDetail> Typings { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's primary ability.
@@ -81,7 +76,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets the pokemon's type chart.
         /// </summary>
-        public List<TypeChart> Effectiveness { get; set; }
+        public List<PokemonTypeChartViewModel> Effectiveness { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon that surround the viewed pokemon in the pokedex.

@@ -214,7 +214,6 @@ namespace Pokedex.Controllers
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {
-                PokemonTypeDetail pokemonTypes = this.dataService.GetPokemonWithTypes(pokemon.Id);
                 PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(pokemon.Id);
                 PokemonEggGroupDetail pokemonEggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.Id);
 
@@ -223,8 +222,7 @@ namespace Pokedex.Controllers
                     Pokemon = pokemon,
                     BaseStats = this.dataService.GetBaseStat(pokemon.Id),
                     EVYields = this.dataService.GetEVYields(pokemon.Id),
-                    PrimaryType = pokemonTypes.PrimaryType,
-                    SecondaryType = pokemonTypes.SecondaryType,
+                    Typings = this.dataService.GetPokemonWithTypes(pokemon.Id),
                     PrimaryAbility = pokemonAbilities.PrimaryAbility,
                     SecondaryAbility = pokemonAbilities.SecondaryAbility,
                     HiddenAbility = pokemonAbilities.HiddenAbility,

@@ -1048,14 +1048,15 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_typing/{pokemonId:int}")]
-        public IActionResult Typing(int pokemonId)
+        [Route("add_typing/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Typing(int pokemonId, int generationId)
         {
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 AllTypes = this.dataService.GetTypes(),
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -1063,7 +1064,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_typing/{pokemonId:int}")]
+        [Route("add_typing/{pokemonId:int}/{generationId:int}")]
         public IActionResult Typing(PokemonTypingViewModel typing)
         {
             if (!this.ModelState.IsValid)
@@ -1073,6 +1074,7 @@ namespace Pokedex.Controllers
                     AllTypes = this.dataService.GetTypes(),
                     PokemonId = typing.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(typing.PokemonId),
+                    GenerationId = typing.GenerationId,
                 };
 
                 return this.View(model);
@@ -1080,7 +1082,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonTyping(typing);
 
-            if (this.dataService.GetPokemonWithAbilities(typing.PokemonId) == null)
+            if (this.dataService.GetPokemonWithAbilities(typing.PokemonId) == null && !this.dataService.GetPokemonById(typing.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
             }
@@ -1291,7 +1293,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonEVYield(evYield);
 
-            if (this.User.IsInRole("Owner"))
+            if (this.User.IsInRole("Owner") && !this.dataService.GetPokemonById(evYield.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("Evolution", "Add", new { pokemonId = evYield.PokemonId });
             }
