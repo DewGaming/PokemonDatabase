@@ -245,39 +245,39 @@
             <tbody>
                 <tr>
                     <th class="Health" scope="col">Health</th>
-                    <td class="statData"><div class="health statBar" style="width: @(@Model.BaseStats.Health * 100 / 255m)%;"></div></td>
-                    <td class="Health">@Model.BaseStats.Health</td>
+                    <td class="statData"><div class="health statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health * 100 / 255m)%;"></div></td>
+                    <td class="Health">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health</td>
                 </tr>
                 <tr>
                     <th class="Attack" scope="col">Attack</th>
-                    <td class="statData"><div class="attack statBar" style="width: @(@Model.BaseStats.Attack * 100 / 255m)%;"></div></td>
-                    <td class="Attack">@Model.BaseStats.Attack</td>
+                    <td class="statData"><div class="attack statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack * 100 / 255m)%;"></div></td>
+                    <td class="Attack">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack</td>
                 </tr>
                 <tr>
                     <th class="Defense" scope="col">Defense</th>
-                    <td class="statData"><div class="defense statBar" style="width: @(@Model.BaseStats.Defense * 100 / 255m)%;"></div></td>
-                    <td class="Defense">@Model.BaseStats.Defense</td>
+                    <td class="statData"><div class="defense statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense * 100 / 255m)%;"></div></td>
+                    <td class="Defense">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense</td>
                 </tr>
                 <tr>
                     <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                    <td class="statData"><div class="specialAttack statBar" style="width: @(@Model.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
-                    <td class="SpecialAttack">@Model.BaseStats.SpecialAttack</td>
+                    <td class="statData"><div class="specialAttack statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack * 100 / 255m)%;"></div></td>
+                    <td class="SpecialAttack">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack</td>
                 </tr>
                 <tr>
                     <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                    <td class="statData"><div class="specialDefense statBar" style="width: @(@Model.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
-                    <td class="SpecialDefense">@Model.BaseStats.SpecialDefense</td>
+                    <td class="statData"><div class="specialDefense statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense * 100 / 255m)%;"></div></td>
+                    <td class="SpecialDefense">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense</td>
                 </tr>
                 <tr>
                     <th class="Speed" scope="col">Speed</th>
-                    <td class="statData"><div class="speed statBar" style="width: @(@Model.BaseStats.Speed * 100 / 255m)%;"></div></td>
-                    <td class="Speed">@Model.BaseStats.Speed</td>
+                    <td class="statData"><div class="speed statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed * 100 / 255m)%;"></div></td>
+                    <td class="Speed">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
                     <th class="baseStatTotal" scope="col">Total</th>
-                    <td colspan="2" class="baseStatTotal"><b>@Model.BaseStats.StatTotal</b></td>
+                    <td colspan="2" class="baseStatTotal"><b>@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).StatTotal</b></td>
                 </tr>
             </tfoot>
         </table>

@@ -569,18 +569,18 @@
                     <tbody>
                         <tr>
                             <th class="Health" scope="col">Health</th>
-                            <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.Health * 100 / 255m)%;"></div></td>
-                            <td class="Health">@item.BaseStats.Health</td>
+                            <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health * 100 / 255m)%;"></div></td>
+                            <td class="Health">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health</td>
                         </tr>
                         <tr>
                             <th class="Attack" scope="col">Attack</th>
-                            <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.Attack * 100 / 255m)%;"></div></td>
-                            <td class="Attack">@item.BaseStats.Attack</td>
+                            <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack * 100 / 255m)%;"></div></td>
+                            <td class="Attack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack</td>
                         </tr>
                         <tr>
                             <th class="Defense" scope="col">Defense</th>
-                            <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.Defense * 100 / 255m)%;"></div></td>
-                            <td class="Defense">@item.BaseStats.Defense</td>
+                            <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense * 100 / 255m)%;"></div></td>
+                            <td class="Defense">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense</td>
                         </tr>
                         <tr>
                             <th class="SpecialAttack" scope="col">
@@ -593,27 +593,27 @@
                                     @("Sp. Attack")
                                 }
                             </th>
-                            <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.SpecialAttack * 100 / 255m)%;"></div></td>
-                            <td class="SpecialAttack">@item.BaseStats.SpecialAttack</td>
+                            <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack * 100 / 255m)%;"></div></td>
+                            <td class="SpecialAttack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack</td>
                         </tr>
                         @if(@g != 1)
                         {
                             <tr>
                                 <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                                <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.SpecialDefense * 100 / 255m)%;"></div></td>
-                                <td class="SpecialDefense">@item.BaseStats.SpecialDefense</td>
+                                <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense * 100 / 255m)%;"></div></td>
+                                <td class="SpecialDefense">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense</td>
                             </tr>
                         }
                         <tr>
                             <th class="Speed" scope="col">Speed</th>
-                            <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.Speed * 100 / 255m)%;"></div></td>
-                            <td class="Speed">@item.BaseStats.Speed</td>
+                            <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed * 100 / 255m)%;"></div></td>
+                            <td class="Speed">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <th class="baseStatTotal" scope="col">Total</th>
-                            <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.StatTotal</b></td>
+                            <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).StatTotal</b></td>
                         </tr>
                     </tfoot>
                 </table>

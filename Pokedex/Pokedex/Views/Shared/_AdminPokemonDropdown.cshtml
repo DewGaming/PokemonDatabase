@@ -1,6 +1,6 @@
 @model Pokedex.Models.AdminPokemonViewModel;
 @{
-    bool everythingAdded = Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) && Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId);
+    bool everythingAdded = Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) && Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id) && Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId);
 }
 
 <div class="btn-group">
@@ -35,9 +35,9 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EggGroups", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Egg Groups</a></li>
         }
-        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("BaseStats", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Base Stats</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("BaseStats", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Base Stats</a></li>
         }
         @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
@@ -65,9 +65,9 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EggGroups", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Egg Groups</a></li>
         }
-        @if (Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if (Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("BaseStats", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Base Stats</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("BaseStats", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit Base Stats</a></li>
         }
         @if (Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {

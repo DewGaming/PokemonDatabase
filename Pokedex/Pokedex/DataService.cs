@@ -1232,13 +1232,6 @@ namespace Pokedex
             return ids;
         }
 
-        public PokemonEggGroupDetail GetPokemonWithEggGroupsNoIncludes(int pokemonId)
-        {
-            return this.dataContext.PokemonEggGroupDetails
-                .ToList()
-                .Find(x => x.PokemonId == pokemonId);
-        }
-
         public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroupsAndIncomplete()
         {
             return this.dataContext.PokemonEggGroupDetails
@@ -1248,19 +1241,12 @@ namespace Pokedex
                 .ToList();
         }
 
-        public BaseStat GetPokemonBaseStats(int pokemonId)
+        public BaseStat GetPokemonBaseStats(int pokemonId, int generationId)
         {
             return this.dataContext.BaseStats
                 .Include(x => x.Pokemon)
                 .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
-        }
-
-        public BaseStat GetPokemonBaseStatsNoIncludes(int pokemonId)
-        {
-            return this.dataContext.BaseStats
-                .ToList()
-                .Find(x => x.PokemonId == pokemonId);
+                .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
         public EVYield GetPokemonEVYields(int pokemonId, int generationId)
@@ -1278,12 +1264,12 @@ namespace Pokedex
                 .ToList();
         }
 
-        public BaseStat GetBaseStat(int pokemonId)
+        public List<BaseStat> GetBaseStat(int pokemonId)
         {
             return this.dataContext.BaseStats
                 .Include(x => x.Pokemon)
-                .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
+                .Where(x => x.Pokemon.Id == pokemonId)
+                .ToList();
         }
 
         public List<BaseStat> GetBaseStatsWithIncomplete()

@@ -661,22 +661,22 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_base_stats/{pokemonId:int}")]
-        public IActionResult BaseStats(int pokemonId)
+        [Route("edit_base_stats/{pokemonId:int}/{generationId:int}")]
+        public IActionResult BaseStats(int pokemonId, int generationId)
         {
-            BaseStat model = this.dataService.GetPokemonBaseStats(pokemonId);
+            BaseStat model = this.dataService.GetPokemonBaseStats(pokemonId, generationId);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_base_stats/{pokemonId:int}")]
+        [Route("edit_base_stats/{pokemonId:int}/{generationId:int}")]
         public IActionResult BaseStats(BaseStat baseStat)
         {
             if (!this.ModelState.IsValid)
             {
-                BaseStat model = this.dataService.GetPokemonBaseStats(baseStat.PokemonId);
+                BaseStat model = this.dataService.GetPokemonBaseStats(baseStat.PokemonId, baseStat.GenerationId);
 
                 return this.View(model);
             }

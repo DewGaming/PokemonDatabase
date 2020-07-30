@@ -21,7 +21,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets the pokemon's base stats.
         /// </summary>
-        public BaseStat BaseStats { get; set; }
+        public List<BaseStat> BaseStats { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's EV yields.

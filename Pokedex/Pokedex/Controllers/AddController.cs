@@ -1129,7 +1129,7 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
             }
-            else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId) == null)
+            else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId, this.dataService.GetGenerations().Last().Id) == null)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
             }
@@ -1178,7 +1178,7 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_egg_groups/{pokemonId:int}")]
+        [Route("add_egg_groups/{pokemonId:int}/{generationId:int}")]
         public IActionResult EggGroups(int pokemonId)
         {
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
@@ -1210,7 +1210,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonEggGroups(eggGroups);
 
-            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId) == null)
+            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, this.dataService.GetGenerations().Last().Id) == null)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
             }
@@ -1221,13 +1221,14 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_base_stats/{pokemonId:int}")]
-        public IActionResult BaseStats(int pokemonId)
+        [Route("add_base_stats/{pokemonId:int}/{generationId:int}")]
+        public IActionResult BaseStats(int pokemonId, int generationId)
         {
             BaseStat model = new BaseStat()
             {
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -1235,7 +1236,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_base_stats/{pokemonId:int}")]
+        [Route("add_base_stats/{pokemonId:int}/{generationId:int}")]
         public IActionResult BaseStats(BaseStat baseStat)
         {
             if (!this.ModelState.IsValid)
@@ -1244,6 +1245,7 @@ namespace Pokedex.Controllers
                 {
                     PokemonId = baseStat.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(baseStat.PokemonId),
+                    GenerationId = baseStat.GenerationId,
                 };
 
                 return this.View(model);
@@ -1251,7 +1253,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonBaseStat(baseStat);
 
-            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, this.dataService.GetGenerations().Last().Id) == null)
+            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, this.dataService.GetGenerations().Last().Id) == null && !baseStat.Pokemon.IsComplete)
             {
                 return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
             }
