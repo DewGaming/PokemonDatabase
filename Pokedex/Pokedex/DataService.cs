@@ -447,8 +447,6 @@ namespace Pokedex
 
         public PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form, AppConfig appConfig)
         {
-            PokemonEggGroupDetail pokemonEggGroups = this.GetPokemonWithEggGroups(pokemon.Id);
-
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
             {
                 Pokemon = pokemon,
@@ -456,8 +454,7 @@ namespace Pokedex
                 EVYields = this.GetEVYields(pokemon.Id),
                 Typings = this.GetPokemonWithTypes(pokemon.Id),
                 Abilities = this.GetPokemonWithAbilities(pokemon.Id),
-                PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
-                SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
+                EggGroups = this.GetPokemonWithEggGroups(pokemon.Id),
                 PreEvolution = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
@@ -1151,14 +1148,14 @@ namespace Pokedex
                 .ToList();
         }
 
-        public PokemonEggGroupDetail GetPokemonWithEggGroups(int pokemonId)
+        public List<PokemonEggGroupDetail> GetPokemonWithEggGroups(int pokemonId)
         {
             return this.dataContext.PokemonEggGroupDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.PrimaryEggGroup)
                 .Include(x => x.SecondaryEggGroup)
-                .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
+                .Where(x => x.Pokemon.Id == pokemonId)
+                .ToList();
         }
 
         public PokemonEggGroupDetail GetPokemonWithEggGroupsFromPokemonName(string pokemonName)
@@ -1169,7 +1166,7 @@ namespace Pokedex
                 .Include(x => x.PrimaryEggGroup)
                 .Include(x => x.SecondaryEggGroup)
                 .ToList()
-                .Find(x => x.Pokemon.Name == pokemonName);
+                .First(x => x.Pokemon.Name == pokemonName);
         }
 
         public List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int? secondaryEggGroupId)
@@ -1180,6 +1177,8 @@ namespace Pokedex
                 .Include(x => x.PrimaryEggGroup)
                 .Include(x => x.SecondaryEggGroup)
                 .ToList();
+
+            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             List<PokemonEggGroupDetail> finalPokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
 

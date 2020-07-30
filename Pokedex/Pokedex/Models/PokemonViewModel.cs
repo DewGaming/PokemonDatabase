@@ -39,14 +39,9 @@ namespace Pokedex.Models
         public List<PokemonAbilityDetail> Abilities { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's primary egg group.
+        /// Gets or sets the pokemon's egg groups.
         /// </summary>
-        public EggGroup PrimaryEggGroup { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's secondary egg group, if applicable.
-        /// </summary>
-        public EggGroup SecondaryEggGroup { get; set; }
+        public List<PokemonEggGroupDetail> EggGroups { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's pre evolution, if applicable.

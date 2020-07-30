@@ -619,10 +619,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_egg_groups/{pokemonId:int}")]
-        public IActionResult EggGroups(int pokemonId)
+        [Route("edit_egg_groups/{pokemonId:int}/{generationId:int}")]
+        public IActionResult EggGroups(int pokemonId, int generationId)
         {
-            PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonId);
+            PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonId).Find(x => x.GenerationId == generationId);
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
                 Id = eggGroupDetail.Id,
@@ -631,6 +631,7 @@ namespace Pokedex.Controllers
                 Pokemon = eggGroupDetail.Pokemon,
                 PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
                 SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId,
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -638,12 +639,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_egg_groups/{pokemonId:int}")]
+        [Route("edit_egg_groups/{pokemonId:int}/{generationId:int}")]
         public IActionResult EggGroups(PokemonEggGroupDetail pokemonEggGroupDetail)
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId);
+                PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId).Find(x => x.GenerationId == pokemonEggGroupDetail.GenerationId);
                 PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
                 {
                     Id = eggGroupDetail.Id,
@@ -652,6 +653,7 @@ namespace Pokedex.Controllers
                     Pokemon = eggGroupDetail.Pokemon,
                     PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
                     SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId,
+                    GenerationId = eggGroupDetail.GenerationId,
                 };
 
                 return this.View(model);

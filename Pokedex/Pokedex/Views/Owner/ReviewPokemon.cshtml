@@ -288,7 +288,7 @@
             <table>
                 <tbody>
                     <tr>
-                        @if (Model.SecondaryEggGroup != null)
+                        @if (Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryEggGroup != null)
                         {
                             <th>Egg Groups</th>
                         }
@@ -297,11 +297,11 @@
                             <th>Egg Group</th>
                         }
                         <td>
-                            @Model.PrimaryEggGroup.Name
-                            @if (Model.SecondaryEggGroup != null)
+                            @Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryEggGroup.Name
+                            @if (Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryEggGroup != null)
                             {
                                 <br>
-                                @Model.SecondaryEggGroup.Name
+                                @Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryEggGroup.Name
                             }
                         </td>
                     </tr>

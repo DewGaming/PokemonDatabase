@@ -214,8 +214,6 @@ namespace Pokedex.Controllers
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {
-                PokemonEggGroupDetail pokemonEggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.Id);
-
                 PokemonViewModel model = new PokemonViewModel()
                 {
                     Pokemon = pokemon,
@@ -223,8 +221,7 @@ namespace Pokedex.Controllers
                     EVYields = this.dataService.GetEVYields(pokemon.Id),
                     Typings = this.dataService.GetPokemonWithTypes(pokemon.Id),
                     Abilities = this.dataService.GetPokemonWithAbilities(pokemon.Id),
-                    PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
-                    SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
+                    EggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.Id),
                     PreEvolution = this.dataService.GetPreEvolutionIncludeIncomplete(pokemon.Id),
                     Evolutions = this.dataService.GetPokemonEvolutionsIncludeIncomplete(pokemon.Id),
                     Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),

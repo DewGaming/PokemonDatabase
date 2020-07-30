@@ -1021,7 +1021,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemon(alternatePokemon);
 
-            PokemonEggGroupDetail eggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId);
+            PokemonEggGroupDetail eggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
             {
                 PrimaryEggGroupId = eggGroups.PrimaryEggGroupId,
@@ -1181,13 +1181,14 @@ namespace Pokedex.Controllers
 
         [HttpGet]
         [Route("add_egg_groups/{pokemonId:int}/{generationId:int}")]
-        public IActionResult EggGroups(int pokemonId)
+        public IActionResult EggGroups(int pokemonId, int generationId)
         {
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
                 AllEggGroups = this.dataService.GetEggGroups(),
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -1195,7 +1196,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_egg_groups/{pokemonId:int}")]
+        [Route("add_egg_groups/{pokemonId:int}/{generationId:int}")]
         public IActionResult EggGroups(PokemonEggGroupsViewModel eggGroups)
         {
             if (!this.ModelState.IsValid)
@@ -1205,6 +1206,7 @@ namespace Pokedex.Controllers
                     AllEggGroups = this.dataService.GetEggGroups(),
                     PokemonId = eggGroups.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(eggGroups.PokemonId),
+                    GenerationId = eggGroups.GenerationId,
                 };
 
                 return this.View(model);
@@ -1212,7 +1214,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonEggGroups(eggGroups);
 
-            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, this.dataService.GetGenerations().Last().Id) == null && !this.dataService.GetPokemonById(eggGroups.PokemonId).IsComplete)
+            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, eggGroups.GenerationId) == null && !this.dataService.GetPokemonById(eggGroups.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
             }
@@ -1281,7 +1283,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_ev_yields/{pokemonId:int}")]
+        [Route("add_ev_yields/{pokemonId:int}/{generationId:int}")]
         public IActionResult EVYields(EVYield evYield)
         {
             if (!this.ModelState.IsValid)

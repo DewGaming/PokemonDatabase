@@ -666,7 +666,7 @@
                             <table>
                                 <tbody>
                                     <tr>
-                                        @if (item.SecondaryEggGroup != null)
+                                        @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
                                         {
                                             <th>Egg Groups</th>
                                         }
@@ -675,11 +675,11 @@
                                             <th>Egg Group</th>
                                         }
                                         <td>
-                                            @item.PrimaryEggGroup.Name
-                                            @if (item.SecondaryEggGroup != null)
+                                            @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryEggGroup.Name
+                                            @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
                                             {
                                                 <br>
-                                                @item.SecondaryEggGroup.Name
+                                                @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup.Name
                                             }
                                         </td>
                                     </tr>

@@ -14,5 +14,7 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Secondary Egg Group")]
         public int? SecondaryEggGroupId { get; set; }
         public EggGroup SecondaryEggGroup { get; set; }
+        public int GenerationId { get; set; }
+        public Generation Generation { get; set; }
     }
 }
