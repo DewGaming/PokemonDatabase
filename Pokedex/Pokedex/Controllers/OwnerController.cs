@@ -222,7 +222,7 @@ namespace Pokedex.Controllers
                 {
                     Pokemon = pokemon,
                     BaseStats = this.dataService.GetBaseStat(pokemon.Id),
-                    EVYields = this.dataService.GetEVYield(pokemon.Id),
+                    EVYields = this.dataService.GetEVYields(pokemon.Id),
                     PrimaryType = pokemonTypes.PrimaryType,
                     SecondaryType = pokemonTypes.SecondaryType,
                     PrimaryAbility = pokemonAbilities.PrimaryAbility,

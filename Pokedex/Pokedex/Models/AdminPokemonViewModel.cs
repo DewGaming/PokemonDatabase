@@ -16,5 +16,10 @@ namespace Pokedex.Models
         /// Gets or sets the pokemon.
         /// </summary>
         public Pokemon Pokemon { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Generation.
+        /// </summary>
+        public int GenerationId { get; set; }
     }
 }

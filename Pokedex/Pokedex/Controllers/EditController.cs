@@ -685,22 +685,22 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_ev_yields/{pokemonId:int}")]
-        public IActionResult EVYields(int pokemonId)
+        [Route("edit_ev_yields/{pokemonId:int}/{generationId:int}")]
+        public IActionResult EVYields(int pokemonId, int generationId)
         {
-            EVYield model = this.dataService.GetPokemonEVYields(pokemonId);
+            EVYield model = this.dataService.GetPokemonEVYields(pokemonId, generationId);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_ev_yields/{pokemonId:int}")]
+        [Route("edit_ev_yields/{pokemonId:int}/{generationId:int}")]
         public IActionResult EVYields(EVYield evYield)
         {
             if (!this.ModelState.IsValid)
             {
-                EVYield model = this.dataService.GetPokemonEVYields(evYield.PokemonId);
+                EVYield model = this.dataService.GetPokemonEVYields(evYield.PokemonId, evYield.GenerationId);
 
                 return this.View(model);
             }

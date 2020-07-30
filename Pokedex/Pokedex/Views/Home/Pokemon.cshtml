@@ -112,6 +112,10 @@
 
     @foreach(var g in generations)
     {
+        if (this.User.IsInRole("Owner"))
+        {
+            adminPokemon.GenerationId = g;
+        }
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
             @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
             {
@@ -494,12 +498,12 @@
                             <tr>
                                 <th>EV Yield</th>
                                 <td>
-                                    @if (item.EVYields.Health != 0)
+                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health != 0)
                                     {
-                                        @item.EVYields.Health@(" Health");
+                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health@(" Health");
                                         <br>
                                     }
-                                    @if (item.EVYields.Attack != 0)
+                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack != 0)
                                     {
                                         @if(item.Pokemon.Name == "Watchog" && @g == 5)
                                         {
@@ -509,28 +513,28 @@
                                         }
                                         else
                                         {
-                                            @item.EVYields.Attack@(" Attack");
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack@(" Attack");
                                         }
                                         <br>
                                     }
-                                    @if (item.EVYields.Defense != 0)
+                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense != 0)
                                     {
-                                        @item.EVYields.Defense@(" Defense");
+                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense@(" Defense");
                                         <br>
                                     }
-                                    @if (item.EVYields.SpecialAttack != 0)
+                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack != 0)
                                     {
-                                        @item.EVYields.SpecialAttack@(" Sp. Attack");
+                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack@(" Sp. Attack");
                                         <br>
                                     }
-                                    @if (item.EVYields.SpecialDefense != 0)
+                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense != 0)
                                     {
-                                        @item.EVYields.SpecialDefense@(" Sp. Defense");
+                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense@(" Sp. Defense");
                                         <br>
                                     }
-                                    @if (item.EVYields.Speed != 0)
+                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed != 0)
                                     {
-                                        @item.EVYields.Speed@(" Speed");
+                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed@(" Speed");
                                         <br>
                                     }
                                 </td>

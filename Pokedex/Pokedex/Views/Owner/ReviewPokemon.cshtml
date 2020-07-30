@@ -184,34 +184,34 @@
                 <tr>
                     <th>EV Yield</th>
                     <td>
-                        @if (Model.EVYields.Health != 0)
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health != 0)
                         {
-                            @Model.EVYields.Health@(" Health");
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health@(" Health");
                             <br>
                         }
-                        @if (Model.EVYields.Attack != 0)
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack != 0)
                         {
-                            @Model.EVYields.Attack@(" Attack");
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack@(" Attack");
                             <br>
                         }
-                        @if (Model.EVYields.Defense != 0)
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense != 0)
                         {
-                            @Model.EVYields.Defense@(" Defense");
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense@(" Defense");
                             <br>
                         }
-                        @if (Model.EVYields.SpecialAttack != 0)
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack != 0)
                         {
-                            @Model.EVYields.SpecialAttack@(" Sp. Attack");
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack@(" Sp. Attack");
                             <br>
                         }
-                        @if (Model.EVYields.SpecialDefense != 0)
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense != 0)
                         {
-                            @Model.EVYields.SpecialDefense@(" Sp. Defense");
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense@(" Sp. Defense");
                             <br>
                         }
-                        @if (Model.EVYields.Speed != 0)
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed != 0)
                         {
-                            @Model.EVYields.Speed@(" Speed");
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed@(" Speed");
                             <br>
                         }
                     </td>

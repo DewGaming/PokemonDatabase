@@ -26,7 +26,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets the pokemon's EV yields.
         /// </summary>
-        public EVYield EVYields { get; set; }
+        public List<EVYield> EVYields { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's primary type.

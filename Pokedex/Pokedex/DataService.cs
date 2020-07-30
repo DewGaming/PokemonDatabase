@@ -476,7 +476,7 @@ namespace Pokedex
             {
                 Pokemon = pokemon,
                 BaseStats = this.GetBaseStat(pokemon.Id),
-                EVYields = this.GetEVYield(pokemon.Id),
+                EVYields = this.GetEVYields(pokemon.Id),
                 PrimaryType = pokemonTypes.PrimaryType,
                 SecondaryType = pokemonTypes.SecondaryType,
                 PrimaryAbility = pokemonAbilities.PrimaryAbility,
@@ -1282,12 +1282,12 @@ namespace Pokedex
                 .Find(x => x.PokemonId == pokemonId);
         }
 
-        public EVYield GetPokemonEVYields(int pokemonId)
+        public EVYield GetPokemonEVYields(int pokemonId, int generationId)
         {
             return this.dataContext.EVYields
                 .Include(x => x.Pokemon)
                 .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
+                .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
         public List<Pokemon> GetAllPokemonWithClassificationsAndIncomplete()
@@ -1312,19 +1312,12 @@ namespace Pokedex
                 .ToList();
         }
 
-        public EVYield GetEVYield(int pokemonId)
+        public List<EVYield> GetEVYields(int pokemonId)
         {
             return this.dataContext.EVYields
                 .Include(x => x.Pokemon)
-                .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
-        }
-
-        public EVYield GetEVYieldNoIncludes(int pokemonId)
-        {
-            return this.dataContext.EVYields
-                .ToList()
-                .Find(x => x.PokemonId == pokemonId);
+                .Where(x => x.Pokemon.Id == pokemonId)
+                .ToList();
         }
 
         public List<EVYield> GetEVYieldsWithIncomplete()

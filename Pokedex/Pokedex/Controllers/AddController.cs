@@ -1249,7 +1249,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonBaseStat(baseStat);
 
-            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId) == null)
+            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, this.dataService.GetGenerations().Last().Id) == null)
             {
                 return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
             }
@@ -1260,13 +1260,14 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_ev_yields/{pokemonId:int}")]
-        public IActionResult EVYields(int pokemonId)
+        [Route("add_ev_yields/{pokemonId:int}/{generationId:int}")]
+        public IActionResult EVYields(int pokemonId, int generationId)
         {
             EVYield model = new EVYield()
             {
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
+                GenerationId = generationId,
             };
 
             return this.View(model);
