@@ -87,7 +87,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @if (Model.SecondaryAbility == null && Model.HiddenAbility == null)
+                        @if (Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility == null && Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility == null)
                         {
                             @("Ability")
                         }
@@ -97,28 +97,28 @@
                         }
                     </th>
                     <td>
-                        <span title="Description: @Model.PrimaryAbility.Description">
-                            @Model.PrimaryAbility.Name
+                        <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryAbility.Description">
+                            @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryAbility.Name
                         </span>
-                        @if (@Model.SecondaryAbility != null)
+                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility != null)
                         {
                             <br>
-                            <span title="Description: @Model.SecondaryAbility.Description">
-                                @Model.SecondaryAbility.Name
+                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility.Description">
+                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility.Name
                             </span>
                         }
-                        @if (@Model.HiddenAbility != null)
+                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility != null)
                         {
                             <br>
-                            <span title="Description: @Model.HiddenAbility.Description">
-                                @Model.HiddenAbility.Name (Hidden)
+                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility.Description">
+                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility.Name (Hidden)
                             </span>
                         }
-                        @if (@Model.SpecialEventAbility != null)
+                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialEventAbility != null)
                         {
                             <br>
-                            <span title="Description: @Model.SpecialEventAbility.Description">
-                                @Model.SpecialEventAbility.Name (Special Ability)
+                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialEventAbility.Description">
+                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialEventAbility.Name (Special Ability)
                             </span>
                         }
                     </td>

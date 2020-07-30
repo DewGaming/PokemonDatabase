@@ -34,24 +34,9 @@ namespace Pokedex.Models
         public List<PokemonTypeDetail> Typings { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's primary ability.
+        /// Gets or sets the pokemon's abilities.
         /// </summary>
-        public Ability PrimaryAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's secondary ability, if applicable.
-        /// </summary>
-        public Ability SecondaryAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's hidden ability, if applicable.
-        /// </summary>
-        public Ability HiddenAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's special event ability, if applicable.
-        /// </summary>
-        public Ability SpecialEventAbility { get; set; }
+        public List<PokemonAbilityDetail> Abilities { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's primary egg group.

@@ -27,9 +27,9 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("Typing", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Typing</a></li>
         }
-        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("Abilities", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Abilities</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("Abilities", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Abilities</a></li>
         }
         @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
@@ -57,9 +57,9 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("Typing", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit Typing</a></li>
         }
-        @if (Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if (Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("Abilities", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Abilities</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("Abilities", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit Abilities</a></li>
         }
         @if (Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {

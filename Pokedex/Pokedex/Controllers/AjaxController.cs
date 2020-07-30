@@ -961,12 +961,12 @@ namespace Pokedex.Controllers
                     model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id }));
                 }
 
-                if (randomAbility)
+                if (randomAbility && selectedGame != 1 && selectedGame != 2)
                 {
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
                         List<Ability> abilities = new List<Ability>();
-                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id);
+                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Find(x => x.GenerationId == this.dataService.GetGenerationFromGame(selectedGame).Id);
                         abilities.Add(pokemonAbilities.PrimaryAbility);
                         if (pokemonAbilities.SecondaryAbility != null)
                         {

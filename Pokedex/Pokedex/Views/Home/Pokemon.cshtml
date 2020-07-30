@@ -212,7 +212,7 @@
                         {
                             <tr>
                                 <th>
-                                    @if (item.SecondaryAbility == null && (item.HiddenAbility == null || g < 5))
+                                    @if (item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility == null && item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility == null && (item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility == null || g < 5))
                                     {
                                         @("Ability")
                                     }
@@ -222,28 +222,28 @@
                                     }
                                 </th>
                                 <td>
-                                    <span title="Description: @item.PrimaryAbility.Description">
-                                        @item.PrimaryAbility.Name
+                                    <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryAbility.Description">
+                                        @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryAbility.Name
                                     </span>
-                                    @if (@item.SecondaryAbility != null)
+                                    @if (@item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility != null)
                                     {
                                         <br>
-                                        <span title="Description: @item.SecondaryAbility.Description">
-                                            @item.SecondaryAbility.Name
+                                        <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility.Description">
+                                            @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility.Name
                                         </span>
                                     }
-                                    @if (@item.HiddenAbility != null && @g >= 5)
+                                    @if (@item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility != null && @g >= 5)
                                     {
                                         <br>
-                                        <span title="Description: @item.HiddenAbility.Description">
-                                            @item.HiddenAbility.Name (Hidden)
+                                        <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility.Description">
+                                            @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility.Name (Hidden)
                                         </span>
                                     }
-                                    @if (@item.SpecialEventAbility != null)
+                                    @if (@item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility != null)
                                     {
                                         <br>
-                                        <span title="Description: @item.SpecialEventAbility.Description">
-                                            @item.SpecialEventAbility.Name (Special Ability)
+                                        <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility.Description">
+                                            @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility.Name (Special Ability)
                                         </span>
                                     }
                                 </td>

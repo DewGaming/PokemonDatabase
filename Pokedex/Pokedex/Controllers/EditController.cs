@@ -571,10 +571,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_abilities/{pokemonId:int}")]
-        public IActionResult Abilities(int pokemonId)
+        [Route("edit_abilities/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Abilities(int pokemonId, int generationId)
         {
-            PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonId);
+            PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonId).Find(x => x.GenerationId == generationId);
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
                 Id = abilityDetail.Id,
@@ -584,6 +584,7 @@ namespace Pokedex.Controllers
                 PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
                 SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
                 HiddenAbilityId = abilityDetail.HiddenAbilityId,
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -591,12 +592,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_abilities/{pokemonId:int}")]
+        [Route("edit_abilities/{pokemonId:int}/{generationId:int}")]
         public IActionResult Abilities(PokemonAbilityDetail pokemonAbilityDetail)
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId);
+                PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId).Find(x => x.GenerationId == pokemonAbilityDetail.GenerationId);
                 PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
                 {
                     Id = abilityDetail.Id,
@@ -606,6 +607,7 @@ namespace Pokedex.Controllers
                     PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
                     SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
                     HiddenAbilityId = abilityDetail.HiddenAbilityId,
+                    GenerationId = abilityDetail.GenerationId,
                 };
 
                 return this.View(model);

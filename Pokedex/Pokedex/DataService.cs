@@ -447,7 +447,6 @@ namespace Pokedex
 
         public PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form, AppConfig appConfig)
         {
-            PokemonAbilityDetail pokemonAbilities = this.GetPokemonWithAbilities(pokemon.Id);
             PokemonEggGroupDetail pokemonEggGroups = this.GetPokemonWithEggGroups(pokemon.Id);
 
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
@@ -456,10 +455,7 @@ namespace Pokedex
                 BaseStats = this.GetBaseStat(pokemon.Id),
                 EVYields = this.GetEVYields(pokemon.Id),
                 Typings = this.GetPokemonWithTypes(pokemon.Id),
-                PrimaryAbility = pokemonAbilities.PrimaryAbility,
-                SecondaryAbility = pokemonAbilities.SecondaryAbility,
-                HiddenAbility = pokemonAbilities.HiddenAbility,
-                SpecialEventAbility = pokemonAbilities.SpecialEventAbility,
+                Abilities = this.GetPokemonWithAbilities(pokemon.Id),
                 PrimaryEggGroup = pokemonEggGroups.PrimaryEggGroup,
                 SecondaryEggGroup = pokemonEggGroups.SecondaryEggGroup,
                 PreEvolution = this.GetPreEvolution(pokemon.Id),
@@ -1047,7 +1043,7 @@ namespace Pokedex
                                                         .Where(x => x.Pokemon.IsComplete == true)
                                                         .ToList();
 
-            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();    
+            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             if (secondaryTypeId != 0 && secondaryTypeId != 100)
             {
@@ -1080,15 +1076,15 @@ namespace Pokedex
             return pokemonList;
         }
 
-        public PokemonAbilityDetail GetPokemonWithAbilities(int pokemonId)
+        public List<PokemonAbilityDetail> GetPokemonWithAbilities(int pokemonId)
         {
             return this.dataContext.PokemonAbilityDetails.Include(x => x.Pokemon)
                 .Include(x => x.PrimaryAbility)
                 .Include(x => x.SecondaryAbility)
                 .Include(x => x.HiddenAbility)
                 .Include(x => x.SpecialEventAbility)
-                .ToList()
-                .Find(x => x.Pokemon.Id == pokemonId);
+                .Where(x => x.Pokemon.Id == pokemonId)
+                .ToList();
         }
 
         public List<Ability> GetAbilitiesForPokemon(int pokemonId)
@@ -1121,11 +1117,11 @@ namespace Pokedex
             return abilityList;
         }
 
-        public PokemonAbilityDetail GetPokemonWithAbilitiesNoIncludes(int pokemonId)
+        public PokemonAbilityDetail GetPokemonWithAbilitiesNoIncludes(int pokemonId, int generationId)
         {
             return this.dataContext.PokemonAbilityDetails.Include(x => x.Pokemon)
                 .ToList()
-                .Find(x => x.PokemonId == pokemonId);
+                .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
         public List<PokemonLegendaryDetail> GetAllPokemonWithLegendaryTypes()
@@ -1348,7 +1344,7 @@ namespace Pokedex
             List<TypeChart> secondaryTypeChart = new List<TypeChart>();
             List<PokemonTypeChartViewModel> pokemonTypeCharts = new List<PokemonTypeChartViewModel>();
 
-            foreach(var t in pokemonTypes)
+            foreach (var t in pokemonTypes)
             {
                 if (t.SecondaryType != null)
                 {
