@@ -21,7 +21,11 @@ namespace Pokedex.DataAccess.Models
         public Int16 Speed { get; set; }
         [Required, NotMapped]
         public Int16 StatTotal { get { return (Int16)(Health + Attack + Defense + SpecialAttack + SpecialDefense + Speed); } }
+        [Required]
         public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
+        [Required]
+        public int GenerationId { get; set; }
+        public Generation Generation { get; set; }
     }
 }
