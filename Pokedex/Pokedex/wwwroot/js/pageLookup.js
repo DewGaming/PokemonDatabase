@@ -9,14 +9,22 @@ function lookupPage(pageName) {
   $('#' + pageName).addClass('active');
 }
 
-function lookupPokemon(pageName, iconLink, pokemonName) {
+function lookupTypeChart(generation) {
+  $('.active').each(function () {
+    $(this).removeClass('active');
+  })
+
+  $('button#Generation' + generation + ', .grid-row#Generation' + generation).addClass('active');
+}
+
+function lookupPokemon(pageName, iconLink, pokemonName, generation) {
   $('.active').each(function () {
     $(this).removeClass('active');
   })
 
   pokemonName = pokemonName.replace("&apos;", "\'");
 
-  $('#' + pageName.replace('%', '\\%')).addClass('active');
+  $('button#Generation' + generation + ', .generations#' + pageName.replace('%', '\\%') + ', .generation' + generation + '#' + pageName.replace('%', '\\%')).addClass('active');
 
   $('.tabIcon').attr("href", iconLink);
   $('.pageTitle').text(pokemonName + " | Pokémon Database");

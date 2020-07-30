@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200725003243_MadeGenerationAndPokemonRequired")]
+    partial class MadeGenerationAndPokemonRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +71,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<short>("Defense")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("GenerationId")
-                        .HasColumnType("int");
-
                     b.Property<short>("Health")
                         .HasColumnType("smallint");
 
@@ -88,8 +87,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("smallint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GenerationId");
 
                     b.HasIndex("PokemonId");
 
@@ -678,9 +675,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("GenerationId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("HiddenAbilityId")
                         .HasColumnType("int");
 
@@ -698,8 +692,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GenerationId");
 
                     b.HasIndex("HiddenAbilityId");
 
@@ -721,9 +713,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GenerationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PokemonId")
                         .HasColumnType("int");
 
@@ -735,8 +724,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GenerationId");
 
                     b.HasIndex("PokemonId");
 
@@ -1031,9 +1018,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("GenerationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PokemonId")
                         .HasColumnType("int");
 
@@ -1045,8 +1029,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GenerationId");
 
                     b.HasIndex("PokemonId");
 
@@ -1219,12 +1201,6 @@ namespace Pokedex.DataAccess.Migrations
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.BaseStat", b =>
                 {
-                    b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
-                        .WithMany()
-                        .HasForeignKey("GenerationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
                         .WithMany()
                         .HasForeignKey("PokemonId")
@@ -1393,12 +1369,6 @@ namespace Pokedex.DataAccess.Migrations
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonAbilityDetail", b =>
                 {
-                    b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
-                        .WithMany()
-                        .HasForeignKey("GenerationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Pokedex.DataAccess.Models.Ability", "HiddenAbility")
                         .WithMany()
                         .HasForeignKey("HiddenAbilityId");
@@ -1426,10 +1396,6 @@ namespace Pokedex.DataAccess.Migrations
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonEggGroupDetail", b =>
                 {
-                    b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
-                        .WithMany()
-                        .HasForeignKey("GenerationId");
-
                     b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
                         .WithMany()
                         .HasForeignKey("PokemonId")
@@ -1574,12 +1540,6 @@ namespace Pokedex.DataAccess.Migrations
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonTypeDetail", b =>
                 {
-                    b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
-                        .WithMany()
-                        .HasForeignKey("GenerationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
                         .WithMany()
                         .HasForeignKey("PokemonId")

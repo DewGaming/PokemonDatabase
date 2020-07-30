@@ -21,6 +21,8 @@ namespace Pokedex.Controllers
     {
         private static int selectedPokemonId = 0;
 
+        private static int selectedGenerationId = 0;
+
         private readonly DataService dataService;
 
         private readonly AppConfig appConfig;
@@ -182,10 +184,11 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("pokemon/{pokemonName}/{pokemonId:int}")]
-        public IActionResult PokemonWithId(string pokemonName, int pokemonId)
+        [Route("pokemon/{pokemonName}/{pokemonId:int}/{generationId:int}")]
+        public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
         {
             selectedPokemonId = pokemonId;
+            selectedGenerationId = generationId;
 
             return this.RedirectToAction("Pokemon", "Home", new { name = pokemonName });
         }
@@ -195,13 +198,20 @@ namespace Pokedex.Controllers
         public IActionResult Pokemon(string name)
         {
             int pokemonId = selectedPokemonId;
+            int generationId = selectedGenerationId;
             selectedPokemonId = 0;
+            selectedGenerationId = 0;
             name = this.dataService.FormatPokemonName(name);
 
             Pokemon pokemon = this.dataService.GetPokemon(name);
             if (pokemonId == 0)
             {
                 pokemonId = pokemon.Id;
+            }
+
+            if (generationId == 0)
+            {
+                generationId = this.dataService.GetPokemonGameDetails(pokemon.Id).Last().Game.GenerationId;
             }
 
             if (pokemon != null && pokemon.IsComplete)
@@ -239,6 +249,7 @@ namespace Pokedex.Controllers
                 {
                     PokemonList = pokemonList,
                     PokemonId = pokemonId,
+                    GenerationId = generationId,
                 };
 
                 if (this.User.IsInRole("Owner"))

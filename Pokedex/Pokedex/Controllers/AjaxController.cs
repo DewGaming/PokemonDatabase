@@ -529,6 +529,7 @@ namespace Pokedex.Controllers
                     PokemonNoTypeList = pokemonList,
                     AltFormsList = altFormsList,
                     AppConfig = this.appConfig,
+                    Generation = this.dataService.GetGenerationFromGame(gameId),
                 };
 
                 return this.PartialView("_FillAvailableGenerationTable", model);
@@ -960,12 +961,12 @@ namespace Pokedex.Controllers
                     model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id }));
                 }
 
-                if (randomAbility)
+                if (randomAbility && selectedGame != 1 && selectedGame != 2)
                 {
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
                         List<Ability> abilities = new List<Ability>();
-                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id);
+                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Find(x => x.GenerationId == this.dataService.GetGenerationFromGame(selectedGame).Id);
                         abilities.Add(pokemonAbilities.PrimaryAbility);
                         if (pokemonAbilities.SecondaryAbility != null)
                         {
@@ -1029,13 +1030,13 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("update-type-chart")]
-        public string UpdateTypeChart(int typeId, List<int> resistances, List<int> weaknesses, List<int> immunities)
+        public string UpdateTypeChart(int typeId, int genId, List<int> resistances, List<int> weaknesses, List<int> immunities)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 TypeChart typeChart;
                 List<int> duplicateIds = resistances.Where(x => weaknesses.Contains(x)).ToList();
-                List<TypeChart> existingCharts = this.dataService.GetTypeChartByDefendType(typeId);
+                List<TypeChart> existingCharts = this.dataService.GetTypeChartByDefendType(typeId, genId);
 
                 foreach (var t in duplicateIds)
                 {
@@ -1063,6 +1064,7 @@ namespace Pokedex.Controllers
                         AttackId = r,
                         DefendId = typeId,
                         Effective = 0.5m,
+                        GenerationId = genId,
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
@@ -1074,6 +1076,7 @@ namespace Pokedex.Controllers
                         AttackId = w,
                         DefendId = typeId,
                         Effective = 2m,
+                        GenerationId = genId,
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
@@ -1085,6 +1088,7 @@ namespace Pokedex.Controllers
                         AttackId = i,
                         DefendId = typeId,
                         Effective = 0m,
+                        GenerationId = genId,
                     };
                     this.dataService.AddTypeChart(typeChart);
                 }
@@ -1398,7 +1402,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetPokemonWithEggGroups(pokemonId);
+                PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetPokemonWithEggGroups(pokemonId).Last();
                 GenderRatio genderRatio = this.dataService.GetGenderRatio(searchedEggGroupDetails.Pokemon.GenderRatioId);
                 List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
                 List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();

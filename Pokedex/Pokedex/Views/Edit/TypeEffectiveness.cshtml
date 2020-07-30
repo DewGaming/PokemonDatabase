@@ -20,22 +20,9 @@
     </style>
 }
 
-<h2>Update @(typeName)'s Type Chart</h2>
+<h2>Update @(typeName)'s Type Chart for Generation @Model.GenerationId</h2>
 
 <div class="flexDiv">
-    <div class="resistance typeChart col-md-5">
-        <p>Resist To</p>
-        <ul>
-            @foreach (var t in Model.Types.OrderBy(x => x.Name))
-            {
-                var typeChart = @Model.TypeChart.Find(x => x.AttackId == t.Id);
-                <li>
-                    <input id="resistance@(t.Name)" type="checkbox" value="@t.Id" @(typeChart != null && typeChart.Effective == 0.5m ? "checked=checked" : "") />
-                    <label for="resistance@(t.Name)" class="generatorOptionTitle"><span class="type-icon type-@t.Name.ToLower() type-cell">@t.Name</span></label>
-                </li>
-            }
-        </ul>
-    </div>
     <div class="weakness typeChart col-md-5">
         <p>Weak To</p>
         <ul>
@@ -45,6 +32,19 @@
                 <li>
                     <input id="weakness@(t.Name)" type="checkbox" value="@t.Id" @(typeChart != null && typeChart.Effective == 2m ? "checked=checked" : "") />
                     <label for="weakness@(t.Name)" class="generatorOptionTitle"><span class="type-icon type-@t.Name.ToLower() type-cell">@t.Name</span></label>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="resistance typeChart col-md-5">
+        <p>Resist To</p>
+        <ul>
+            @foreach (var t in Model.Types.OrderBy(x => x.Name))
+            {
+                var typeChart = @Model.TypeChart.Find(x => x.AttackId == t.Id);
+                <li>
+                    <input id="resistance@(t.Name)" type="checkbox" value="@t.Id" @(typeChart != null && typeChart.Effective == 0.5m ? "checked=checked" : "") />
+                    <label for="resistance@(t.Name)" class="generatorOptionTitle"><span class="type-icon type-@t.Name.ToLower() type-cell">@t.Name</span></label>
                 </li>
             }
         </ul>
@@ -64,5 +64,5 @@
     </div>
 </div>
 <p>
-    <button onclick="updateTypeChart(@Model.TypeId)" class="btn btn-primary" role="button">Save</button>
+    <button onclick="updateTypeChart(@Model.TypeId, @Model.GenerationId)" class="btn btn-primary" role="button">Save</button>
 </p>

@@ -14,5 +14,8 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public int DefendId { get; set; }
         public Type Defend { get; set; }
+        [Required]
+        public int GenerationId { get; set; }
+        public Generation Generation { get; set; }
     }
 }

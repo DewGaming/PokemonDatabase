@@ -1,4 +1,4 @@
-function updateTypeChart(typeId) {
+function updateTypeChart(typeId, genId) {
     var resistances = [], weaknesses = [], immunities = [];
     $('.resistance input').each(function () {
         if ($(this).is(':checked')) {
@@ -18,10 +18,12 @@ function updateTypeChart(typeId) {
         }
     });
 
+    console.log(genId)
+
     $.ajax({
         url: '/update-type-chart/',
         method: "POST",
-        data: { "typeId": typeId, "resistances": resistances, "weaknesses": weaknesses, "immunities": immunities }
+        data: { "typeId": typeId, "genId": genId, "resistances": resistances, "weaknesses": weaknesses, "immunities": immunities }
     })
         .done(function (data) {
             window.location = data;

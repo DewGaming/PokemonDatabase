@@ -21,52 +21,27 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets the pokemon's base stats.
         /// </summary>
-        public BaseStat BaseStats { get; set; }
+        public List<BaseStat> BaseStats { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's EV yields.
         /// </summary>
-        public EVYield EVYields { get; set; }
+        public List<EVYield> EVYields { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's primary type.
+        /// Gets or sets the pokemon's typings.
         /// </summary>
-        public Type PrimaryType { get; set; }
+        public List<PokemonTypeDetail> Typings { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's secondary type, if applicable.
+        /// Gets or sets the pokemon's abilities.
         /// </summary>
-        public Type SecondaryType { get; set; }
+        public List<PokemonAbilityDetail> Abilities { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's primary ability.
+        /// Gets or sets the pokemon's egg groups.
         /// </summary>
-        public Ability PrimaryAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's secondary ability, if applicable.
-        /// </summary>
-        public Ability SecondaryAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's hidden ability, if applicable.
-        /// </summary>
-        public Ability HiddenAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's special event ability, if applicable.
-        /// </summary>
-        public Ability SpecialEventAbility { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's primary egg group.
-        /// </summary>
-        public EggGroup PrimaryEggGroup { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's secondary egg group, if applicable.
-        /// </summary>
-        public EggGroup SecondaryEggGroup { get; set; }
+        public List<PokemonEggGroupDetail> EggGroups { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's pre evolution, if applicable.
@@ -81,7 +56,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets the pokemon's type chart.
         /// </summary>
-        public TypeEffectivenessViewModel Effectiveness { get; set; }
+        public List<PokemonTypeChartViewModel> Effectiveness { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon that surround the viewed pokemon in the pokedex.

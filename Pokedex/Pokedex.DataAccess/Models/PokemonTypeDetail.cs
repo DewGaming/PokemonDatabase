@@ -14,5 +14,8 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Secondary Type")]
         public int? SecondaryTypeId { get; set; }
         public Type SecondaryType { get; set; }
+        [Required]
+        public int GenerationId { get; set; }
+        public Generation Generation { get; set; }
     }
 }

@@ -53,14 +53,15 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Users", "Owner");
         }
 
-        [Route("edit_type_effectiveness/{id:int}")]
-        public IActionResult TypeEffectiveness(int id)
+        [Route("edit_type_effectiveness/{id:int}/{genId:int}")]
+        public IActionResult TypeEffectiveness(int id, int genId)
         {
             EditTypeChartViewModel model = new EditTypeChartViewModel()
             {
-                TypeChart = this.dataService.GetTypeChartByDefendType(id),
-                Types = this.dataService.GetTypes(),
+                TypeChart = this.dataService.GetTypeChartByDefendType(id, genId),
+                Types = this.dataService.GetTypesByGen(genId),
                 TypeId = id,
+                GenerationId = genId,
             };
 
             return this.View(model);
@@ -519,10 +520,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_typing/{pokemonId:int}")]
-        public IActionResult Typing(int pokemonId)
+        [Route("edit_typing/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Typing(int pokemonId, int generationId)
         {
-            PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonId);
+            PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonId).Find(x => x.GenerationId == generationId);
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
                 Id = typeDetail.Id,
@@ -531,6 +532,7 @@ namespace Pokedex.Controllers
                 Pokemon = typeDetail.Pokemon,
                 PrimaryTypeId = typeDetail.PrimaryTypeId,
                 SecondaryTypeId = typeDetail.SecondaryTypeId,
+                GenerationId = typeDetail.GenerationId,
             };
 
             return this.View(model);
@@ -538,12 +540,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_typing/{id:int}")]
+        [Route("edit_typing/{id:int}/{generationId:int}")]
         public IActionResult Typing(PokemonTypeDetail pokemonTypeDetail)
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId);
+                PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemonTypeDetail.PokemonId).Find(x => x.GenerationId == pokemonTypeDetail.GenerationId);
                 PokemonTypingViewModel model = new PokemonTypingViewModel()
                 {
                     Id = typeDetail.Id,
@@ -552,6 +554,7 @@ namespace Pokedex.Controllers
                     Pokemon = typeDetail.Pokemon,
                     PrimaryTypeId = typeDetail.PrimaryTypeId,
                     SecondaryTypeId = typeDetail.SecondaryTypeId,
+                    GenerationId = typeDetail.GenerationId,
                 };
 
                 return this.View(model);
@@ -568,10 +571,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_abilities/{pokemonId:int}")]
-        public IActionResult Abilities(int pokemonId)
+        [Route("edit_abilities/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Abilities(int pokemonId, int generationId)
         {
-            PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonId);
+            PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonId).Find(x => x.GenerationId == generationId);
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
                 Id = abilityDetail.Id,
@@ -581,6 +584,7 @@ namespace Pokedex.Controllers
                 PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
                 SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
                 HiddenAbilityId = abilityDetail.HiddenAbilityId,
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -588,12 +592,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_abilities/{pokemonId:int}")]
+        [Route("edit_abilities/{pokemonId:int}/{generationId:int}")]
         public IActionResult Abilities(PokemonAbilityDetail pokemonAbilityDetail)
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId);
+                PokemonAbilityDetail abilityDetail = this.dataService.GetPokemonWithAbilities(pokemonAbilityDetail.PokemonId).Find(x => x.GenerationId == pokemonAbilityDetail.GenerationId);
                 PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
                 {
                     Id = abilityDetail.Id,
@@ -603,6 +607,7 @@ namespace Pokedex.Controllers
                     PrimaryAbilityId = abilityDetail.PrimaryAbilityId,
                     SecondaryAbilityId = abilityDetail.SecondaryAbilityId,
                     HiddenAbilityId = abilityDetail.HiddenAbilityId,
+                    GenerationId = abilityDetail.GenerationId,
                 };
 
                 return this.View(model);
@@ -614,10 +619,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_egg_groups/{pokemonId:int}")]
-        public IActionResult EggGroups(int pokemonId)
+        [Route("edit_egg_groups/{pokemonId:int}/{generationId:int}")]
+        public IActionResult EggGroups(int pokemonId, int generationId)
         {
-            PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonId);
+            PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonId).Find(x => x.GenerationId == generationId);
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
                 Id = eggGroupDetail.Id,
@@ -626,6 +631,7 @@ namespace Pokedex.Controllers
                 Pokemon = eggGroupDetail.Pokemon,
                 PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
                 SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId,
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -633,12 +639,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_egg_groups/{pokemonId:int}")]
+        [Route("edit_egg_groups/{pokemonId:int}/{generationId:int}")]
         public IActionResult EggGroups(PokemonEggGroupDetail pokemonEggGroupDetail)
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId);
+                PokemonEggGroupDetail eggGroupDetail = this.dataService.GetPokemonWithEggGroups(pokemonEggGroupDetail.PokemonId).Find(x => x.GenerationId == pokemonEggGroupDetail.GenerationId);
                 PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
                 {
                     Id = eggGroupDetail.Id,
@@ -647,6 +653,7 @@ namespace Pokedex.Controllers
                     Pokemon = eggGroupDetail.Pokemon,
                     PrimaryEggGroupId = eggGroupDetail.PrimaryEggGroupId,
                     SecondaryEggGroupId = eggGroupDetail.SecondaryEggGroupId,
+                    GenerationId = eggGroupDetail.GenerationId,
                 };
 
                 return this.View(model);
@@ -658,22 +665,22 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_base_stats/{pokemonId:int}")]
-        public IActionResult BaseStats(int pokemonId)
+        [Route("edit_base_stats/{pokemonId:int}/{generationId:int}")]
+        public IActionResult BaseStats(int pokemonId, int generationId)
         {
-            BaseStat model = this.dataService.GetPokemonBaseStats(pokemonId);
+            BaseStat model = this.dataService.GetPokemonBaseStats(pokemonId, generationId);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_base_stats/{pokemonId:int}")]
+        [Route("edit_base_stats/{pokemonId:int}/{generationId:int}")]
         public IActionResult BaseStats(BaseStat baseStat)
         {
             if (!this.ModelState.IsValid)
             {
-                BaseStat model = this.dataService.GetPokemonBaseStats(baseStat.PokemonId);
+                BaseStat model = this.dataService.GetPokemonBaseStats(baseStat.PokemonId, baseStat.GenerationId);
 
                 return this.View(model);
             }
@@ -684,22 +691,22 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_ev_yields/{pokemonId:int}")]
-        public IActionResult EVYields(int pokemonId)
+        [Route("edit_ev_yields/{pokemonId:int}/{generationId:int}")]
+        public IActionResult EVYields(int pokemonId, int generationId)
         {
-            EVYield model = this.dataService.GetPokemonEVYields(pokemonId);
+            EVYield model = this.dataService.GetPokemonEVYields(pokemonId, generationId);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_ev_yields/{pokemonId:int}")]
+        [Route("edit_ev_yields/{pokemonId:int}/{generationId:int}")]
         public IActionResult EVYields(EVYield evYield)
         {
             if (!this.ModelState.IsValid)
             {
-                EVYield model = this.dataService.GetPokemonEVYields(evYield.PokemonId);
+                EVYield model = this.dataService.GetPokemonEVYields(evYield.PokemonId, evYield.GenerationId);
 
                 return this.View(model);
             }
