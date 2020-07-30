@@ -1125,11 +1125,11 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonAbilities(abilities);
 
-            if (this.dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null)
+            if (this.dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null && !this.dataService.GetPokemonById(abilities.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
             }
-            else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId, this.dataService.GetGenerations().Last().Id) == null)
+            else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId, this.dataService.GetGenerations().Last().Id) == null && !this.dataService.GetPokemonById(abilities.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
             }
@@ -1210,7 +1210,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonEggGroups(eggGroups);
 
-            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, this.dataService.GetGenerations().Last().Id) == null)
+            if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, this.dataService.GetGenerations().Last().Id) == null && !this.dataService.GetPokemonById(eggGroups.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
             }
@@ -1253,7 +1253,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemonBaseStat(baseStat);
 
-            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, this.dataService.GetGenerations().Last().Id) == null && !baseStat.Pokemon.IsComplete)
+            if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, this.dataService.GetGenerations().Last().Id) == null && !this.dataService.GetPokemonById(baseStat.PokemonId).IsComplete)
             {
                 return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
             }
