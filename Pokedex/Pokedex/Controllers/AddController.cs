@@ -851,6 +851,8 @@ namespace Pokedex.Controllers
                 }
             }
 
+            Game game = this.dataService.GetGame(newPokemon.GameId);
+
             this.dataService.AddPokemon(newPokemon);
 
             this.dataService.AddPokemonGameDetail(new PokemonGameDetail()
@@ -859,7 +861,7 @@ namespace Pokedex.Controllers
                 GameId = newPokemon.GameId,
             });
 
-            return this.RedirectToAction("Typing", "Add", new { pokemonId = newPokemon.Id });
+            return this.RedirectToAction("Typing", "Add", new { pokemonId = newPokemon.Id, generationId = game.GenerationId });
         }
 
         [HttpGet]
@@ -1084,7 +1086,7 @@ namespace Pokedex.Controllers
 
             if (this.dataService.GetPokemonWithAbilities(typing.PokemonId) == null && !this.dataService.GetPokemonById(typing.PokemonId).IsComplete)
             {
-                return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId });
+                return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId, generationId = typing.GenerationId });
             }
             else
             {
@@ -1129,11 +1131,11 @@ namespace Pokedex.Controllers
 
             if (this.dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null && !this.dataService.GetPokemonById(abilities.PokemonId).IsComplete)
             {
-                return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId });
+                return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
             }
             else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId, abilities.GenerationId) == null && !this.dataService.GetPokemonById(abilities.PokemonId).IsComplete)
             {
-                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId });
+                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
             }
             else
             {
@@ -1143,12 +1145,13 @@ namespace Pokedex.Controllers
 
         [HttpGet]
         [Route("add_special_event_ability/{pokemonId:int}/{generationId:int}")]
-        public IActionResult SpecialEventAbility(int pokemonId)
+        public IActionResult SpecialEventAbility(int pokemonId, int generationId)
         {
             SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
             {
                 AllAbilities = this.dataService.GetAbilities(),
                 PokemonId = pokemonId,
+                GenerationId = generationId,
             };
 
             return this.View(model);
@@ -1216,7 +1219,7 @@ namespace Pokedex.Controllers
 
             if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, eggGroups.GenerationId) == null && !this.dataService.GetPokemonById(eggGroups.PokemonId).IsComplete)
             {
-                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId });
+                return this.RedirectToAction("BaseStats", "Add", new { pokemonId = eggGroups.PokemonId, generationId = eggGroups.GenerationId });
             }
             else
             {
@@ -1259,7 +1262,7 @@ namespace Pokedex.Controllers
 
             if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, baseStat.GenerationId) == null && !this.dataService.GetPokemonById(baseStat.PokemonId).IsComplete)
             {
-                return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId });
+                return this.RedirectToAction("EVYields", "Add", new { pokemonId = baseStat.PokemonId, generationId = baseStat.GenerationId });
             }
             else
             {
@@ -1301,7 +1304,7 @@ namespace Pokedex.Controllers
 
             if (this.User.IsInRole("Owner") && !this.dataService.GetPokemonById(evYield.PokemonId).IsComplete)
             {
-                return this.RedirectToAction("Evolution", "Add", new { pokemonId = evYield.PokemonId });
+                return this.RedirectToAction("Evolution", "Add", new { pokemonId = evYield.PokemonId, generationId = evYield.GenerationId });
             }
             else
             {

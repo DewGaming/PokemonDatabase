@@ -898,7 +898,9 @@ namespace Pokedex
         {
             return this.dataContext.PokemonFormDetails
                 .Include(x => x.AltFormPokemon)
+                    .Include("AltFormPokemon.Game")
                 .Include(x => x.OriginalPokemon)
+                    .Include("OriginalPokemon.Game")
                 .Include(x => x.Form)
                 .ToList();
         }

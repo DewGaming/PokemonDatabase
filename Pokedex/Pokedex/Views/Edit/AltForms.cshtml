@@ -45,7 +45,7 @@
                         <span>@('#')@item.PokedexNumber.ToString().PadLeft(3, '0') @item.Name</span>
                     }
                     <br>
-                    @await Html.PartialAsync("_AdminPokemonDropdown", new AdminPokemonViewModel() { DropdownViewModel = Model, Pokemon = item })
+                    @await Html.PartialAsync("_AdminPokemonDropdown", new AdminPokemonViewModel() { DropdownViewModel = Model, Pokemon = item, GenerationId = item.Game.GenerationId })
                 </div>
             </div>
         }

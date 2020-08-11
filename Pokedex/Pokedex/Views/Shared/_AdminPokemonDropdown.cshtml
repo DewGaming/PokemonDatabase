@@ -105,7 +105,7 @@
         <li><a class="dropdown-item" href="@(this.Url.Action("PokemonGameDetails", "Edit", new { pokemonId = Model.Pokemon.Id }))">Update Games Available In</a></li>
         @if (Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Special Event Ability</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Special Event Ability</a></li>
         }
         @if (!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
