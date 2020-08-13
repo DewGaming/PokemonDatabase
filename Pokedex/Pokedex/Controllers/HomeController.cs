@@ -160,6 +160,7 @@ namespace Pokedex.Controllers
             {
                 AllPokemonWithEggGroups = eggGroupDetails,
                 AppConfig = this.appConfig,
+                GenerationId = this.dataService.GetGenerations().Last().Id,
             };
 
             List<Pokemon> altForms = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();

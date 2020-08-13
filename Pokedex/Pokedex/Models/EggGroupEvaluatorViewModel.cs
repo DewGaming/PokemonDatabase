@@ -42,5 +42,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all pokemon egg groups.
         /// </summary>
         public List<EggGroup> PokemonEggGroups { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generation.
+        /// </summary>
+        public int GenerationId { get; set; }
     }
 }

@@ -6,7 +6,7 @@
 <div class="shadowed dayCarePokemon">
     @if(Model.AllAltForms.Any(x => x.Id == @Model.SearchedPokemon.Id))
     {
-        <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.SearchedPokemon.Id } )">
+        <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.SearchedPokemon.Id, generationId = Model.GenerationId } )">
             <img class="pokemonlistPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
         </a>
     }
@@ -31,11 +31,11 @@
         <div class="shadowed @eggGroups[i].Pokemon.Name">
             @if(Model.AllAltForms.Any(x => x.Id == @eggGroups[i].Pokemon.Id))
             {
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id } )">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">
                     <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, eggGroups[i].PokemonId, ".png")">
                 </a>
                 <div>
-                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
                 </div>
             }
             else

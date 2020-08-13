@@ -60,6 +60,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemon = allAdminPokemon,
                     AppConfig = this.appConfig,
+                    GenerationId = generationId,
                 };
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
@@ -88,6 +89,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemon = allAdminPokemon,
                     AppConfig = this.appConfig,
+                    GenerationId = this.dataService.GetGenerations().Last().Id,
                 };
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
@@ -955,10 +957,12 @@ namespace Pokedex.Controllers
                     model.AllPokemonOriginalNames.Add(this.dataService.GetPokemonById(p.Id));
                 }
 
+                int generationId = this.dataService.GetGenerationFromGame(selectedGame).Id;
+
                 model.PokemonURLs = new List<string>();
                 foreach (var p in model.AllPokemonOriginalNames)
                 {
-                    model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id }));
+                    model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = generationId }));
                 }
 
                 if (randomAbility && selectedGame != 1 && selectedGame != 2)
@@ -966,7 +970,7 @@ namespace Pokedex.Controllers
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
                         List<Ability> abilities = new List<Ability>();
-                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Find(x => x.GenerationId == this.dataService.GetGenerationFromGame(selectedGame).Id);
+                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Find(x => x.GenerationId == generationId);
                         abilities.Add(pokemonAbilities.PrimaryAbility);
                         if (pokemonAbilities.SecondaryAbility != null)
                         {
@@ -1384,6 +1388,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllAltForms = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList(),
                     AppConfig = this.appConfig,
+                    GenerationId = this.dataService.GetGenerations().Last().Id,
                 };
 
                 return this.PartialView("_FillTypingEvaluator", model);
@@ -1499,6 +1504,7 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                     SearchedPokemon = this.dataService.GetPokemonById(pokemonId),
                     PokemonEggGroups = pokemonEggGroupList,
+                    GenerationId = this.dataService.GetGenerations().Last().Id,
                 };
 
                 return this.PartialView("_FillDayCareEvaluator", model);
