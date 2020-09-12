@@ -1637,9 +1637,9 @@ namespace Pokedex
             return this.dataContext.Games.Where(x => x.GenerationId == generation.Id).ToList();
         }
 
-        public List<Game> GetGamesFromGenerationId(int id)
+        public List<Game> GetAvailableGamesFromPokemonId(int id)
         {
-            return this.dataContext.Games.Where(x => x.GenerationId == id).ToList();
+            return this.dataContext.PokemonGameDetails.Where(x => x.PokemonId == id).Select(x => x.Game).ToList();
         }
 
         public List<Generation> GetGenerations()

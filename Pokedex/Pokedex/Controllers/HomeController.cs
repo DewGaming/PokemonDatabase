@@ -189,7 +189,14 @@ namespace Pokedex.Controllers
         public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
         {
             selectedPokemonId = pokemonId;
-            selectedGenerationId = generationId;
+            if (generationId > this.dataService.GetAvailableGamesFromPokemonId(pokemonId).Last().GenerationId)
+            {
+                selectedGenerationId = 0;
+            }
+            else
+            {
+                selectedGenerationId = generationId;
+            }
 
             return this.RedirectToAction("Pokemon", "Home", new { name = pokemonName });
         }
