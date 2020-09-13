@@ -331,6 +331,7 @@ namespace Pokedex.Controllers
             {
                 MoveTypeId = typeId,
                 AllTypes = this.dataService.GetTypes(),
+                AllGames = this.dataService.GetGames(),
                 AllMoveCategories = this.dataService.GetMoveCategories(),
             };
 
@@ -348,6 +349,7 @@ namespace Pokedex.Controllers
                 {
                     MoveTypeId = move.MoveTypeId,
                     AllTypes = this.dataService.GetTypes(),
+                    AllGames = this.dataService.GetGames(),
                     AllMoveCategories = this.dataService.GetMoveCategories(),
                 };
 

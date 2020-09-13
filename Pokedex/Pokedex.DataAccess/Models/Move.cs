@@ -8,7 +8,8 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Description { get; set; }
+        public int GameId { get; set; }
+        public Game Game { get; set; }
         [Required]
         public int MoveCategoryId { get; set; }
         public MoveCategory MoveCategory { get; set; }

@@ -202,7 +202,10 @@ namespace Pokedex
 
         public List<Move> GetMoves()
         {
-            return this.dataContext.Moves.OrderBy(x => x.Name).ToList();
+            return this.dataContext.Moves
+                .Include(x => x.Game)
+                .OrderBy(x => x.Name)
+                .ToList();
         }
 
         public List<MoveCategory> GetMoveCategories()

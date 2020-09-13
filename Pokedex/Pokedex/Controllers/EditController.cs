@@ -1081,13 +1081,14 @@ namespace Pokedex.Controllers
             {
                 Id = move.Id,
                 Name = move.Name,
-                Description = move.Description,
+                GameId = move.GameId,
                 BasePower = move.BasePower,
                 PP = move.PP,
                 Accuracy = move.Accuracy,
                 MoveTypeId = move.MoveTypeId,
                 MoveCategoryId = move.MoveCategoryId,
                 AllTypes = this.dataService.GetTypes(),
+                AllGames = this.dataService.GetGames(),
                 AllMoveCategories = this.dataService.GetMoveCategories(),
             };
 
@@ -1106,13 +1107,14 @@ namespace Pokedex.Controllers
                 {
                     Id = moveReset.Id,
                     Name = moveReset.Name,
-                    Description = moveReset.Description,
+                    GameId = moveReset.GameId,
                     BasePower = moveReset.BasePower,
                     PP = moveReset.PP,
                     Accuracy = moveReset.Accuracy,
                     MoveTypeId = move.MoveTypeId,
                     MoveCategoryId = move.MoveCategoryId,
                     AllTypes = this.dataService.GetTypes(),
+                    AllGames = this.dataService.GetGames(),
                     AllMoveCategories = this.dataService.GetMoveCategories(),
                 };
 
