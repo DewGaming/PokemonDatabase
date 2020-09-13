@@ -957,20 +957,42 @@ namespace Pokedex.Controllers
                     model.AllPokemonOriginalNames.Add(this.dataService.GetPokemonById(p.Id));
                 }
 
-                int generationId = this.dataService.GetGenerationFromGame(selectedGame).Id;
+                int generationId = 0;
+                
+                if (selectedGame != 0)
+                {
+                    generationId = this.dataService.GetGenerationFromGame(selectedGame).Id;
+                }
 
                 model.PokemonURLs = new List<string>();
                 foreach (var p in model.AllPokemonOriginalNames)
                 {
-                    model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = generationId }));
+                    if (generationId != 0)
+                    {
+                        model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = generationId }));
+                    }
+                    else
+                    {
+                        model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = this.dataService.GetAvailableGamesFromPokemonId(p.Id).Last().Id }));
+                    }
                 }
 
                 if (randomAbility && selectedGame != 1 && selectedGame != 2)
                 {
+                    
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
+                        PokemonAbilityDetail pokemonAbilities;
                         List<Ability> abilities = new List<Ability>();
-                        PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Find(x => x.GenerationId == generationId);
+                        if (generationId != 0)
+                        {
+                            pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Where(x => x.GenerationId <= generationId).Last();
+                        }
+                        else
+                        {
+                            pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Last();
+                        }
+
                         abilities.Add(pokemonAbilities.PrimaryAbility);
                         if (pokemonAbilities.SecondaryAbility != null)
                         {
