@@ -204,7 +204,8 @@ namespace Pokedex
         {
             return this.dataContext.Moves
                 .Include(x => x.Game)
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.GameId)
+                .ThenBy(x => x.Name)
                 .ToList();
         }
 
