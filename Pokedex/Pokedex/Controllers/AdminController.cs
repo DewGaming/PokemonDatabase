@@ -139,7 +139,7 @@ namespace Pokedex.Controllers
             PokeballViewModel model = new PokeballViewModel()
             {
                 AllPokeballs = this.dataService.GetPokeballs(),
-                AllCatchModifiers = new List<PokeballCatchModifierDetail>(),
+                AllCatchModifiers = this.dataService.GetPokeballCatchModifierDetails(),
             };
 
             return this.View(model);

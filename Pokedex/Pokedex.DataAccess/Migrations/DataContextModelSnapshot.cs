@@ -622,6 +622,30 @@ namespace Pokedex.DataAccess.Migrations
                     b.ToTable("Pokeballs");
                 });
 
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokeballCatchModifierDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("CatchModifier")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Effect")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PokeballId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PokeballId");
+
+                    b.ToTable("PokeballCatchModifierDetails");
+                });
+
             modelBuilder.Entity("Pokedex.DataAccess.Models.Pokemon", b =>
                 {
                     b.Property<int>("Id")
@@ -1366,6 +1390,15 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.Type", "MoveType")
                         .WithMany()
                         .HasForeignKey("MoveTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokeballCatchModifierDetail", b =>
+                {
+                    b.HasOne("Pokedex.DataAccess.Models.Pokeball", "Pokeball")
+                        .WithMany()
+                        .HasForeignKey("PokeballId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

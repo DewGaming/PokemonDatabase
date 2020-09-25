@@ -1,0 +1,45 @@
+@model Pokedex.Models.PokeballViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<h2>Edit @Model.AllPokeballs.Find(x => x.Id == Model.PokeballId).Name Catch Modifiers</h2>
+
+<div class="catchModifierTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("PokeballCatchModifierDetail", "Add", new { id = Model.PokeballId })" role="button">Add Pokéball Catch Modifier</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Pokéball</th>
+            <th scope="col">Catch Modifier</th>
+            <th scope="col">Effect</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model.AllCatchModifiers.Where(x => x.PokeballId == Model.PokeballId))
+        {
+            <tr>
+                <td>
+                    @Model.AllPokeballs.Find(x => x.Id == Model.PokeballId).Name
+                </td>
+                <td>
+                    @item.CatchModifier
+                </td>
+                <td>
+                    @item.Effect
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("PokeballCatchModifierDetail", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("PokeballCatchModifierDetail", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -547,6 +547,31 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokeball_catch_modifier_detail/{id:int}")]
+        public IActionResult PokeballCatchModifierDetail(int id)
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokeball_catch_modifier_detail/{id:int}")]
+        public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail, int id)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            pokeballCatchModifierDetail.PokeballId = id;
+            pokeballCatchModifierDetail.Id = 0;
+
+            this.dataService.AddPokeballCatchModifierDetail(pokeballCatchModifierDetail);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_comment_page")]
         public IActionResult CommentPage()
         {

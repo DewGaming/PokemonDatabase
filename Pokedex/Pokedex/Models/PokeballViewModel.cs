@@ -9,6 +9,11 @@ namespace Pokedex.Models
     public class PokeballViewModel
     {
         /// <summary>
+        /// Gets or sets the current pokeball id.
+        /// </summary>
+        public int PokeballId { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokeballs.
         /// </summary>
         public List<Pokeball> AllPokeballs { get; set; }

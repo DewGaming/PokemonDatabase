@@ -502,6 +502,18 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public List<PokeballCatchModifierDetail> GetPokeballCatchModifierDetails()
+        {
+            return this.dataContext.PokeballCatchModifierDetails.ToList();
+        }
+
+        public PokeballCatchModifierDetail GetPokeballCatchModifierDetail(int id)
+        {
+            return this.dataContext.PokeballCatchModifierDetails
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
         public List<Pokemon> GetAllPokemon()
         {
             return this.dataContext.Pokemon
@@ -2175,6 +2187,18 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
+        {
+            this.dataContext.PokeballCatchModifierDetails.Add(pokeballCatchModifierDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
+        {
+            this.dataContext.PokeballCatchModifierDetails.Update(pokeballCatchModifierDetail);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdatePokeball(Pokeball pokeball)
         {
             this.dataContext.Pokeballs.Update(pokeball);
@@ -2543,6 +2567,13 @@ namespace Pokedex
         {
             Pokeball pokeball = this.GetPokeball(id);
             this.dataContext.Pokeballs.Remove(pokeball);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokeballCatchModifierDetail(int id)
+        {
+            PokeballCatchModifierDetail pokeballCatchModifier = this.GetPokeballCatchModifierDetail(id);
+            this.dataContext.PokeballCatchModifierDetails.Remove(pokeballCatchModifier);
             this.dataContext.SaveChanges();
         }
 

@@ -64,6 +64,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
+        public IActionResult PokeballCatchModifierDetail(int id)
+        {
+            PokeballCatchModifierDetail model = this.dataService.GetPokeballCatchModifierDetail(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
+        public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifier)
+        {
+            this.dataService.DeletePokeballCatchModifierDetail(pokeballCatchModifier.Id);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_game/{id:int}")]
         public IActionResult Game(int id)
         {

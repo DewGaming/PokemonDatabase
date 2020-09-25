@@ -3,7 +3,7 @@
     Layout = "_Layout";
 }
 
-<div class="abilityTable">
+<div class="pokeballTable">
     @if (this.User.IsInRole("Owner"))
     {
         <p>
@@ -24,11 +24,7 @@
                 <td>
                     <a href="@(this.Url.Action("Pokeball", "Edit", new { id = item.Id }))">Edit</a>
                     @('|')
-                    <a href="@(this.Url.Action("PokeballCatchModifierDetail", "Add", new { id = item.Id }))">Add Catch Modifier</a>
-                    @if (Model.AllCatchModifiers.Count() > 0)
-                    {
-                        <a href="@(this.Url.Action("PokeballCatchModifierDetail", "Edit", new { id = item.Id }))">Edit Catch Modifiers</a>
-                    }
+                    <a href="@(this.Url.Action("PokeballCatchModifiers", "Edit", new { pokeballId = item.Id }))">Edit Catch Modifiers</a>
                     @if (this.User.IsInRole("Owner"))
                     {
                         @('|')

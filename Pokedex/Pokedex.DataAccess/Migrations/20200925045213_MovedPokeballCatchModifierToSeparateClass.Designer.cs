@@ -10,7 +10,7 @@ using Pokedex.DataAccess.Models;
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200925042105_MovedPokeballCatchModifierToSeparateClass")]
+    [Migration("20200925045213_MovedPokeballCatchModifierToSeparateClass")]
     partial class MovedPokeballCatchModifierToSeparateClass
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -622,6 +622,30 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Pokeballs");
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokeballCatchModifierDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("CatchModifier")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Effect")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PokeballId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PokeballId");
+
+                    b.ToTable("PokeballCatchModifierDetails");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.Pokemon", b =>
@@ -1368,6 +1392,15 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.Type", "MoveType")
                         .WithMany()
                         .HasForeignKey("MoveTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokeballCatchModifierDetail", b =>
+                {
+                    b.HasOne("Pokedex.DataAccess.Models.Pokeball", "Pokeball")
+                        .WithMany()
+                        .HasForeignKey("PokeballId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

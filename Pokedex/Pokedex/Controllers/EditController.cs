@@ -1073,6 +1073,45 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
+        public IActionResult PokeballCatchModifierDetail(int id)
+        {
+            PokeballCatchModifierDetail model = this.dataService.GetPokeballCatchModifierDetail(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
+        public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokeballCatchModifierDetail model = this.dataService.GetPokeballCatchModifierDetail(pokeballCatchModifierDetail.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdatePokeballCatchModifierDetail(pokeballCatchModifierDetail);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [Route("pokeball_catch_modifier/{pokeballId:int}")]
+        public IActionResult PokeballCatchModifiers(int pokeballId)
+        {
+            PokeballViewModel model = new PokeballViewModel()
+            {
+                PokeballId = pokeballId,
+                AllPokeballs = this.dataService.GetPokeballs(),
+                AllCatchModifiers = this.dataService.GetPokeballCatchModifierDetails(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpGet]
         [Route("edit_nature/{id:int}")]
         public IActionResult Nature(int id)
         {
