@@ -305,6 +305,19 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("capture_calculator")]
+        public IActionResult CaptureCalculator()
+        {
+            CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
+            {
+                AllPokemon = this.dataService.GetAllPokemon(),
+                AllPokeballs = this.dataService.GetPokeballs(),
+            };
+
+            return this.View(model);
+        }
+
+        [AllowAnonymous]
         [HttpGet]
         [Route("comment")]
         public IActionResult Comment()

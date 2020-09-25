@@ -45,6 +45,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_pokeball/{id:int}")]
+        public IActionResult Pokeball(int id)
+        {
+            Pokeball model = this.dataService.GetPokeball(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_pokeball/{id:int}")]
+        public IActionResult Pokeball(Pokeball pokeball)
+        {
+            this.dataService.DeletePokeball(pokeball.Id);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_game/{id:int}")]
         public IActionResult Game(int id)
         {

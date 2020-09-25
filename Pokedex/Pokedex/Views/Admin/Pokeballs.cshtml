@@ -1,0 +1,41 @@
+@model Pokedex.Models.PokeballViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="abilityTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("Pokeball", "Add")" role="button">Add Pokéball</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model.AllPokeballs)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("Pokeball", "Edit", new { id = item.Id }))">Edit</a>
+                    @('|')
+                    <a href="@(this.Url.Action("PokeballCatchModifierDetail", "Add", new { id = item.Id }))">Add Catch Modifier</a>
+                    @if (Model.AllCatchModifiers.Count() > 0)
+                    {
+                        <a href="@(this.Url.Action("PokeballCatchModifierDetail", "Edit", new { id = item.Id }))">Edit Catch Modifiers</a>
+                    }
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("Pokeball", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

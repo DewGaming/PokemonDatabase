@@ -525,6 +525,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokeball")]
+        public IActionResult Pokeball()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokeball")]
+        public IActionResult Pokeball(Pokeball pokeball)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddPokeball(pokeball);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_comment_page")]
         public IActionResult CommentPage()
         {

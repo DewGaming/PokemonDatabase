@@ -490,6 +490,18 @@ namespace Pokedex
             };
         }
 
+        public List<Pokeball> GetPokeballs()
+        {
+            return this.dataContext.Pokeballs.ToList();
+        }
+
+        public Pokeball GetPokeball(int id)
+        {
+            return this.dataContext.Pokeballs
+                .ToList()
+                .Find(x => x.Id == id);
+        }
+
         public List<Pokemon> GetAllPokemon()
         {
             return this.dataContext.Pokemon
@@ -2157,6 +2169,18 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPokeball(Pokeball pokeball)
+        {
+            this.dataContext.Pokeballs.Add(pokeball);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokeball(Pokeball pokeball)
+        {
+            this.dataContext.Pokeballs.Update(pokeball);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdateCommentPage(CommentPage commentPage)
         {
             this.dataContext.CommentPages.Update(commentPage);
@@ -2512,6 +2536,13 @@ namespace Pokedex
         {
             CommentPage commentPage = this.GetCommentPage(id);
             this.dataContext.CommentPages.Remove(commentPage);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokeball(int id)
+        {
+            Pokeball pokeball = this.GetPokeball(id);
+            this.dataContext.Pokeballs.Remove(pokeball);
             this.dataContext.SaveChanges();
         }
 

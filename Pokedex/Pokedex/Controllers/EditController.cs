@@ -1047,6 +1047,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokeball/{id:int}")]
+        public IActionResult Pokeball(int id)
+        {
+            Pokeball model = this.dataService.GetPokeball(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokeball/{id:int}")]
+        public IActionResult Pokeball(Pokeball pokeball)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Pokeball model = this.dataService.GetPokeball(pokeball.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdatePokeball(pokeball);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_nature/{id:int}")]
         public IActionResult Nature(int id)
         {

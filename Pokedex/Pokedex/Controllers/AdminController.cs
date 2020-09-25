@@ -133,6 +133,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("pokeballs")]
+        public IActionResult Pokeballs()
+        {
+            PokeballViewModel model = new PokeballViewModel()
+            {
+                AllPokeballs = this.dataService.GetPokeballs(),
+                AllCatchModifiers = new List<PokeballCatchModifierDetail>(),
+            };
+
+            return this.View(model);
+        }
+
         [Route("moves")]
         public IActionResult Moves()
         {
