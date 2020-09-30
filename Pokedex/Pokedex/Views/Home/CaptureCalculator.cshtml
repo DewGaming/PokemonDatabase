@@ -1,0 +1,88 @@
+@model Pokedex.Models.CaptureCalculatorViewModel;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Capture Calculator";
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $('#healthVal').text($('.healthSlider').val() + '%');
+            $('.healthSlider').val($('.healthSlider').val());
+            calculateChange();
+        });
+
+        $('#Pokemon').on('input', function () {
+            calculateChange();
+        });
+
+        $('.healthSlider').on('input', function () {
+            $('#healthVal').text($(this).val() + '%');
+            calculateChange();
+        });
+
+        $('#Pokeball').on('input', function () {
+            calculateChange();
+        });
+
+        $('#Status').on('input', function () {
+            calculateChange();
+        });
+
+        var calculateChange = function() {
+            catchRate = Number($('#Pokemon').val());
+            healthPercentage = Number($('.healthSlider').val()) / 100;
+            pokeballEffect = Number($('#Pokeball').val());
+            statusEffect = Number($('#Status').val());
+            if (statusEffect == 0)
+            {
+                statusEffect = 1
+            }
+            catchValue = (1 - (2 * healthPercentage) / 3) * catchRate * pokeballEffect * statusEffect;
+            captureChance = Math.pow(Math.pow(catchValue / 255, 3 / 16), 4) * 100;
+            chanceText = captureChance.toFixed(2) + "% chance";
+            if (captureChance >= 100)
+            {
+                chanceText = "Quaranteed"
+            }
+            $('.calculatedChance').text(chanceText + " to catch " + $('#Pokemon option:selected').text() + " at " + $('.healthSlider').val() + "% health in a " + $('#Pokeball option:selected').text())
+        };
+    </script>
+}
+
+<div>
+    <div class="evaluator">
+        <div class="flexDiv">
+            <div class="pokemonList col-md-5">
+                @Html.Label("Pokemon", "Pokémon")
+                @Html.DropDownList("Pokemon", new SelectList(@Model.AllPokemon, "CaptureRate.CatchRate", "Name"), new { @class = "form-control" })
+            </div>
+            <div class="healthBar col-md-4">
+                <label for="Health">Health: <span id="healthVal"></span></label>
+                <div>
+                    <input class="healthSlider slider col-md-11" data-val-required="The Health field is required." id="Health" name="Health" type="range" min="1" max="100" value="100">
+                </div>
+            </div>
+        </div>
+        <div class="flexDiv">
+            <div class="pokemonList col-md-5">
+                @Html.Label("Pokeball", "Poké Ball")
+                @Html.DropDownList("Pokeball", new SelectList(@Model.AllPokeballs, "CatchModifier", "Pokeball.Name"), new { @class = "form-control" })
+            </div>
+            <div class="pokemonList col-md-4">
+                @Html.Label("Status")
+                @Html.DropDownList("Status", new SelectList(@Model.AllStatuses, "Effect", "Name"), "", new { @class = "form-control" })
+            </div>
+        </div>
+        <br>
+        <div class="col-md-12">
+            <h5 class="calculatedChance">
+        </div>
+    </div>
+</div>
