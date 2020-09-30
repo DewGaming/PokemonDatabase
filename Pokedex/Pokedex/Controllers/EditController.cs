@@ -1073,6 +1073,32 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_status/{id:int}")]
+        public IActionResult Status(int id)
+        {
+            Status model = this.dataService.GetStatus(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_status/{id:int}")]
+        public IActionResult Status(Status status)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Status model = this.dataService.GetStatus(status.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateStatus(status);
+
+            return this.RedirectToAction("Statuses", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
         public IActionResult PokeballCatchModifierDetail(int id)
         {

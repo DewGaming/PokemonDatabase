@@ -64,6 +64,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_status/{id:int}")]
+        public IActionResult Status(int id)
+        {
+            Status model = this.dataService.GetStatus(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_status/{id:int}")]
+        public IActionResult Status(Status status)
+        {
+            this.dataService.DeleteStatus(status.Id);
+
+            return this.RedirectToAction("Statuses", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
         public IActionResult PokeballCatchModifierDetail(int id)
         {

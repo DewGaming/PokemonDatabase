@@ -958,7 +958,7 @@ namespace Pokedex.Controllers
                 }
 
                 int generationId = 0;
-                
+
                 if (selectedGame != 0)
                 {
                     generationId = this.dataService.GetGenerationFromGame(selectedGame).Id;
@@ -979,7 +979,6 @@ namespace Pokedex.Controllers
 
                 if (randomAbility && selectedGame != 1 && selectedGame != 2)
                 {
-                    
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
                         PokemonAbilityDetail pokemonAbilities;

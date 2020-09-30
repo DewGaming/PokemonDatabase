@@ -1,0 +1,37 @@
+@model List<Pokedex.DataAccess.Models.Status>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="statusTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("Status", "Add")" role="button">Add Status</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Effect</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>@item.Effect</td>
+                <td>
+                    <a href="@(this.Url.Action("Status", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("Status", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

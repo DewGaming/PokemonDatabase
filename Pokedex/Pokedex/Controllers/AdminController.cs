@@ -133,6 +133,14 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("statuses")]
+        public IActionResult Statuses()
+        {
+            List<Status> model = this.dataService.GetStatuses();
+
+            return this.View(model);
+        }
+
         [Route("pokeballs")]
         public IActionResult Pokeballs()
         {

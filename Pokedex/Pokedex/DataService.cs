@@ -188,6 +188,16 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
+        public Status GetStatus(int id)
+        {
+            return this.dataContext.Statuses.ToList().Find(x => x.Id == id);
+        }
+
+        public List<Status> GetStatuses()
+        {
+            return this.dataContext.Statuses.OrderBy(x => x.Name).ToList();
+        }
+
         public List<EggGroup> GetEggGroups()
         {
             return this.dataContext.EggGroups.OrderBy(x => x.Name).ToList();
@@ -504,14 +514,34 @@ namespace Pokedex
 
         public List<PokeballCatchModifierDetail> GetPokeballCatchModifierDetails()
         {
-            return this.dataContext.PokeballCatchModifierDetails.ToList();
+            return this.dataContext.PokeballCatchModifierDetails
+                .Include(x => x.Pokeball)
+                .ToList();
         }
 
         public PokeballCatchModifierDetail GetPokeballCatchModifierDetail(int id)
         {
             return this.dataContext.PokeballCatchModifierDetails
+                .Include(x => x.Pokeball)
                 .ToList()
                 .Find(x => x.Id == id);
+        }
+
+        public List<PokeballCatchModifierDetail> GetPokeballCatchModifierDetailsForCaptureCalculator()
+        {
+            List<PokeballCatchModifierDetail> details = this.dataContext.PokeballCatchModifierDetails
+                .Include(x => x.Pokeball)
+                .ToList();
+
+            foreach(var d in details)
+            {
+                if (d.Effect != "No Special Effect")
+                {
+                    d.Pokeball.Name += " (" + d.Effect + ")";
+                }
+            }
+
+            return details;
         }
 
         public List<Pokemon> GetAllPokemon()
@@ -529,6 +559,49 @@ namespace Pokedex
                 .OrderBy(x => x.PokedexNumber)
                 .ThenBy(x => x.Id)
                 .ToList();
+        }
+
+        public List<Pokemon> GetAllPokemonForCaptureCalculator()
+        {
+            List<Pokemon> pokemonList = this.dataContext.Pokemon
+                .Include(x => x.EggCycle)
+                .Include(x => x.GenderRatio)
+                .Include(x => x.Classification)
+                .Include(x => x.Game)
+                    .Include("Game.Generation")
+                .Include(x => x.ExperienceGrowth)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.BaseHappiness)
+                .Where(x => x.IsComplete == true)
+                .OrderBy(x => x.PokedexNumber)
+                .ThenBy(x => x.Id)
+                .ToList();
+
+            List<Pokemon> altFormList = this.GetAllAltFormsForCaptureCalculator();
+            Pokemon pokemon;
+
+            foreach (var a in altFormList)
+            {
+                pokemon = pokemonList.Find(x => x.Id == a.Id);
+                pokemon.Name = a.Name;
+            }
+
+            pokemonList = pokemonList
+                .Where(x => !x.Name.Contains("Primal"))
+                .Where(x => !x.Name.Contains("Zen"))
+                .Where(x => !x.Name.Contains("Ash"))
+                .Where(x => !x.Name.Contains("Blade"))
+                .Where(x => !x.Name.Contains("Starter"))
+                .Where(x => !x.Name.Contains("Mega"))
+                .Where(x => !x.Name.Contains("Gigantamax"))
+                .Where(x => !x.Name.Contains("10%"))
+                .Where(x => !x.Name.Contains("Complete"))
+                .Where(x => !x.Name.Contains("Unbound"))
+                .Where(x => !x.Name.Contains("Eternamax"))
+                .Where(x => !x.Name.Contains("Ultra"))
+                .ToList();
+
+            return pokemonList;
         }
 
         public List<Pokemon> GetAllPokemonWithIncompleteWithFormNames()
@@ -902,6 +975,44 @@ namespace Pokedex
             pokemon.Name = string.Concat(pokemon.Name, " (", pokemonForm.Form.Name, ")");
 
             return pokemon;
+        }
+
+        public List<Pokemon> GetAllAltFormsWithFormName()
+        {
+            List<PokemonFormDetail> pokemonForm = this.dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .Where(x => x.AltFormPokemon.IsComplete == true)
+                .ToList();
+
+            List<Pokemon> pokemonList = pokemonForm.Select(x => x.AltFormPokemon).ToList();
+
+            foreach (var p in pokemonForm)
+            {
+                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
+                pokemonList.Add(p.AltFormPokemon);
+            }
+
+            return pokemonList;
+        }
+
+        public List<Pokemon> GetAllAltFormsForCaptureCalculator()
+        {
+            List<PokemonFormDetail> pokemonForm = this.dataContext.PokemonFormDetails
+                .Include(x => x.AltFormPokemon)
+                .Include(x => x.Form)
+                .Where(x => x.AltFormPokemon.IsComplete == true)
+                .ToList();
+
+            List<Pokemon> pokemonList = pokemonForm.Select(x => x.AltFormPokemon).ToList();
+
+            foreach (var p in pokemonForm)
+            {
+                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
+                pokemonList.Add(p.AltFormPokemon);
+            }
+
+            return pokemonList;
         }
 
         public List<Pokemon> GetAllAltFormsWithIncompleteWithFormName()
@@ -2193,6 +2304,18 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddStatus(Status status)
+        {
+            this.dataContext.Statuses.Add(status);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateStatus(Status status)
+        {
+            this.dataContext.Statuses.Update(status);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdatePokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
         {
             this.dataContext.PokeballCatchModifierDetails.Update(pokeballCatchModifierDetail);
@@ -2581,6 +2704,13 @@ namespace Pokedex
         {
             ExperienceGrowth experienceGrowth = this.GetExperienceGrowth(id);
             this.dataContext.ExperienceGrowths.Remove(experienceGrowth);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteStatus(int id)
+        {
+            Status status = this.GetStatus(id);
+            this.dataContext.Statuses.Remove(status);
             this.dataContext.SaveChanges();
         }
 

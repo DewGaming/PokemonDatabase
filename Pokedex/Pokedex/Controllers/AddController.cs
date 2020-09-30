@@ -648,6 +648,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_status")]
+        public IActionResult Status()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_status")]
+        public IActionResult Status(Status status)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddStatus(status);
+
+            return this.RedirectToAction("Statuses", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_battle_item")]
         public IActionResult BattleItem()
         {
