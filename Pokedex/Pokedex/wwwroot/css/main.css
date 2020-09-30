@@ -607,6 +607,10 @@ a {
   display: flex
 }
 
+.slider {
+  padding: 0;
+}
+
 .primaryList {
   margin-right: 10px
 }
