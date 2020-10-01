@@ -102,9 +102,7 @@ namespace Pokedex
             {
                 OnPrepareResponse = ctx =>
                 {
-                    const int durationInSeconds = 60 * 60 * 24 * 7;
-                    ctx.Context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.CacheControl] =
-                        "public,max-age=" + durationInSeconds;
+                    ctx.Context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.CacheControl] = "public,max-age=" + (60 * 60 * 24 * 7);
                 }
             });
 

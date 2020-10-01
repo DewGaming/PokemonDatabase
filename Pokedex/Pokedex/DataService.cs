@@ -533,7 +533,7 @@ namespace Pokedex
                 .Include(x => x.Pokeball)
                 .ToList();
 
-            foreach(var d in details)
+            foreach (var d in details)
             {
                 if (d.Effect != "No Special Effect")
                 {

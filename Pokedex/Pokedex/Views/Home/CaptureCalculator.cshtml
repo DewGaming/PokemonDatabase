@@ -44,8 +44,21 @@
             {
                 statusEffect = 1
             }
-            catchValue = (1 - (2 * healthPercentage) / 3) * catchRate * pokeballEffect * statusEffect;
-            captureChance = Math.pow(Math.pow(catchValue / 255, 3 / 16), 4) * 100;
+            if ($('#Pokeball option:selected').text().includes("Heavy Ball"))
+            {
+                catchRate = catchRate + pokeballEffect;
+                if (catchRate <= 0)
+                {
+                    catchRate = 1;
+                }
+            }
+            catchValue = (1 - (2 * healthPercentage) / 3) * catchRate * statusEffect;
+            if (!$('#Pokeball option:selected').text().includes("Heavy Ball"))
+            {
+                catchValue *= pokeballEffect;
+            }
+            
+            captureChance = Math.pow(catchValue / 255, 3 / 4) * 100;
             chanceText = captureChance.toFixed(2) + "% chance";
             if (captureChance >= 100)
             {
