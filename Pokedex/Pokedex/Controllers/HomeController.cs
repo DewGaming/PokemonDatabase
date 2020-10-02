@@ -311,7 +311,7 @@ namespace Pokedex.Controllers
             CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
             {
                 AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
-                AllPokeballs = this.dataService.GetPokeballCatchModifierDetailsForCaptureCalculator(),
+                AllPokeballs = this.dataService.GetPokeballsForCaptureCalculator(),
                 AllStatuses = this.dataService.GetStatuses(),
             };
 

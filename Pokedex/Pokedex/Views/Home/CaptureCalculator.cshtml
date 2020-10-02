@@ -15,87 +15,230 @@
         $(function () {
             $('#healthVal').text($('.healthSlider').val() + '%');
             $('.healthSlider').val($('.healthSlider').val());
-            calculateChange();
-        });
-
-        $('#Pokemon').on('input', function () {
-            calculateChange();
+            $('#encounterLevelVal').text($('.encounterLevelSlider').val());
+            $('.encounterLevelSlider').val($('.encounterLevelSlider').val());
+            $('#userLevelVal').text($('.userLevelSlider').val());
+            $('.userLevelSlider').val($('.userLevelSlider').val());
+            checkPokeball()
+            turnText = ''
+            if (Number($('.turnSlider').val()) == 11)
+            {
+                turnText = '11+'
+            }
+            else
+            {
+                turnText = $('.turnSlider').val()
+            }
+            $('#turnVal').text(turnText);
+            $('.turnSlider').val($('.turnSlider').val());
         });
 
         $('.healthSlider').on('input', function () {
-            $('#healthVal').text($(this).val() + '%');
-            calculateChange();
+            if (Number($('.turnSlider').val()) != 1)
+            {
+                $('#healthVal').text($(this).val() + '%');
+            }
+            else
+            {
+                $('#healthVal').text('100%');
+                $('.healthSlider').val(100);
+            }
+        });
+
+        $('.encounterLevelSlider').on('input', function () {
+            $('#encounterLevelVal').text($(this).val());
+        });
+
+        $('.userLevelSlider').on('input', function () {
+            $('#userLevelVal').text($(this).val());
+        });
+
+        $('.turnSlider').on('input', function () {
+            turnText = ''
+            if (Number($(this).val()) == 11)
+            {
+                turnText = '11+'
+            }
+            else
+            {
+                turnText = $(this).val()
+            }
+            $('#turnVal').text(turnText);
+            if (Number($(this).val()) == 1)
+            {
+                $('#healthVal').text('100%');
+                $('.healthSlider').val(100);
+            }
         });
 
         $('#Pokeball').on('input', function () {
-            calculateChange();
+            checkPokeball();
         });
 
-        $('#Status').on('input', function () {
-            calculateChange();
+        $('.calcutatorButton').on('click', function() {
+            $.ajax({
+                url: '/get-capture-chance/',
+                method: 'POST',
+                data: { 'pokemonId': $('#Pokemon').val(), 'healthPercentage': $('.healthSlider').val() / 100, 'pokeballId': $('#Pokeball').val(), 'statusId': $('#Status').val(), 'turnCount': $('.turnSlider').val(), 'encounterLevel': $('.encounterLevelSlider').val(), 'userLevel': $('.userLevelSlider').val(), 'surfing': $('#Surfing').is(':checked'), 'fishing': $('#Fishing').is(':checked'), 'previouslyCaught': $('#PreviouslyCaught').is(':checked'), 'caveOrNight': $('#CaveOrNight').is(':checked'), 'sameGender': $("input[name='Gender']:checked").val() }
+            })
+                .done(function (data) {
+                    $('.calculatedChance').text(data);
+                })
+                .fail(function () {
+                    alert("Failed to grab technique!");
+                });
         });
 
-        var calculateChange = function() {
-            catchRate = Number($('#Pokemon').val());
-            healthPercentage = Number($('.healthSlider').val()) / 100;
-            pokeballEffect = Number($('#Pokeball').val());
-            statusEffect = Number($('#Status').val());
-            if (statusEffect == 0)
-            {
-                statusEffect = 1
+        var checkPokeball = function() {
+            switch(Number($('#Pokeball').val())) {
+                case 7:
+                    $('.Surfing').css('display', 'block');
+                    $('.Fishing').css('display', 'none');
+                    $('#Fishing').prop('checked', false);
+                    $('.PreviouslyCaught').css('display', 'none');
+                    $('#PreviouslyCaught').prop('checked', false);
+                    $('.CaveOrNight').css('display', 'none');
+                    $('#CaveOrNight').prop('checked', false);
+                    $('.SameGender').css('display', 'none');
+                    $('#SameGender').prop('checked', false);
+                    break;
+                case 9:
+                    $('.Surfing').css('display', 'none');
+                    $('#Surfing').prop('checked', false);
+                    $('.Fishing').css('display', 'none');
+                    $('#Fishing').prop('checked', false);
+                    $('.PreviouslyCaught').css('display', 'block');
+                    $('.CaveOrNight').css('display', 'none');
+                    $('#CaveOrNight').prop('checked', false);
+                    $('.SameGender').css('display', 'none');
+                    $('#SameGender').prop('checked', false);
+                    break;
+                case 12:
+                    $('.Surfing').css('display', 'none');
+                    $('#Surfing').prop('checked', false);
+                    $('.Fishing').css('display', 'none');
+                    $('#Fishing').prop('checked', false);
+                    $('.PreviouslyCaught').css('display', 'none');
+                    $('#PreviouslyCaught').prop('checked', false);
+                    $('.CaveOrNight').css('display', 'block');
+                    $('.SameGender').css('display', 'none');
+                    $('#SameGender').prop('checked', false);
+                    break;
+                case 22:
+                    $('.Surfing').css('display', 'none');
+                    $('#Surfing').prop('checked', false);
+                    $('.Fishing').css('display', 'none');
+                    $('#Fishing').prop('checked', false);
+                    $('.PreviouslyCaught').css('display', 'none');
+                    $('#PreviouslyCaught').prop('checked', false);
+                    $('.CaveOrNight').css('display', 'none');
+                    $('#CaveOrNight').prop('checked', false);
+                    $('.SameGender').css('display', 'block');
+                    $('input#SameGender').prop('checked', true);
+                    break;
+                case 23:
+                    $('.Surfing').css('display', 'none');
+                    $('#Surfing').prop('checked', false);
+                    $('.Fishing').css('display', 'block');
+                    $('.PreviouslyCaught').css('display', 'none');
+                    $('#PreviouslyCaught').prop('checked', false);
+                    $('.CaveOrNight').css('display', 'none');
+                    $('#CaveOrNight').prop('checked', false);
+                    $('.SameGender').css('display', 'none');
+                    $('#SameGender').prop('checked', false);
+                    break;
+                default:
+                    $('.Surfing').css('display', 'none');
+                    $('#Surfing').prop('checked', false);
+                    $('.Fishing').css('display', 'none');
+                    $('#Fishing').prop('checked', false);
+                    $('.PreviouslyCaught').css('display', 'none');
+                    $('#PreviouslyCaught').prop('checked', false);
+                    $('.CaveOrNight').css('display', 'none');
+                    $('#CaveOrNight').prop('checked', false);
+                    $('.SameGender').css('display', 'none');
+                    $('#SameGender').prop('checked', false);
+                    break;
             }
-            if ($('#Pokeball option:selected').text().includes("Heavy Ball"))
-            {
-                catchRate = catchRate + pokeballEffect;
-                if (catchRate <= 0)
-                {
-                    catchRate = 1;
-                }
-            }
-            catchValue = (1 - (2 * healthPercentage) / 3) * catchRate * statusEffect;
-            if (!$('#Pokeball option:selected').text().includes("Heavy Ball"))
-            {
-                catchValue *= pokeballEffect;
-            }
-            
-            captureChance = Math.pow(catchValue / 255, 3 / 4) * 100;
-            chanceText = captureChance.toFixed(2) + "% chance";
-            if (captureChance >= 100)
-            {
-                chanceText = "Quaranteed"
-            }
-            $('.calculatedChance').text(chanceText + " to catch " + $('#Pokemon option:selected').text() + " at " + $('.healthSlider').val() + "% health in a " + $('#Pokeball option:selected').text())
-        };
+        }
     </script>
 }
 
 <div>
     <div class="evaluator">
         <div class="flexDiv">
-            <div class="pokemonList col-md-5">
+            <div class="pokemonList col-md-3">
                 @Html.Label("Pokemon", "Pokémon")
-                @Html.DropDownList("Pokemon", new SelectList(@Model.AllPokemon, "CaptureRate.CatchRate", "Name"), new { @class = "form-control" })
+                @Html.DropDownList("Pokemon", new SelectList(@Model.AllPokemon, "Id", "Name"), new { @class = "form-control" })
             </div>
-            <div class="healthBar col-md-4">
+            <div class="healthBar col-md-3">
                 <label for="Health">Health: <span id="healthVal"></span></label>
                 <div>
                     <input class="healthSlider slider col-md-11" data-val-required="The Health field is required." id="Health" name="Health" type="range" min="1" max="100" value="100">
                 </div>
             </div>
+            <div class="encounterLevelBar col-md-3">
+                <label for="EncounterLevel">Encounter Level: <span id="encounterLevelVal"></span></label>
+                <div>
+                    <input class="encounterLevelSlider slider col-md-11" data-val-required="The Level field is required." id="EncounterLevel" name="EncounterLevel" type="range" min="1" max="100" value="100">
+                </div>
+            </div>
+            <div class="userLevelBar col-md-3">
+                <label for="UserLevel">User Level: <span id="userLevelVal"></span></label>
+                <div>
+                    <input class="userLevelSlider slider col-md-11" data-val-required="The Level field is required." id="UserLevel" name="UserLevel" type="range" min="1" max="100" value="100">
+                </div>
+            </div>
         </div>
         <div class="flexDiv">
-            <div class="pokemonList col-md-5">
+            <div class="pokemonList col-md-3">
                 @Html.Label("Pokeball", "Poké Ball")
-                @Html.DropDownList("Pokeball", new SelectList(@Model.AllPokeballs, "CatchModifier", "Pokeball.Name"), new { @class = "form-control" })
+                @Html.DropDownList("Pokeball", new SelectList(@Model.AllPokeballs, "Id", "Name"), new { @class = "form-control" })
             </div>
-            <div class="pokemonList col-md-4">
+            <div class="pokemonList col-md-3">
                 @Html.Label("Status")
-                @Html.DropDownList("Status", new SelectList(@Model.AllStatuses, "Effect", "Name"), "", new { @class = "form-control" })
+                @Html.DropDownList("Status", new SelectList(@Model.AllStatuses, "Id", "Name"), "", new { @class = "form-control" })
+            </div>
+            <div class="turnBar col-md-3">
+                <label for="Turn">Turn: <span id="turnVal"></span></label>
+                <div>
+                    <input class="turnSlider slider col-md-11" data-val-required="The Turn field is required." id="Turn" name="Turn" type="range" min="1" max="11" value="1">
+                </div>
+            </div>
+            <div class="col-md-3 Surfing">
+                <label for="Surfing"><span>Surfing</span></label>
+                <br>
+                <input id="Surfing" type="checkbox" />
+            </div>
+            <div class="col-md-3 Fishing">
+                <label for="Fishing"><span>Fishing</span></label>
+                <br>
+                <input id="Fishing" type="checkbox" />
+            </div>
+            <div class="col-md-3 PreviouslyCaught">
+                <label for="PreviouslyCaught"><span>Previously Caught</span></label>
+                <br>
+                <input id="PreviouslyCaught" type="checkbox" />
+            </div>
+            <div class="col-md-3 CaveOrNight">
+                <label for="CaveOrNight"><span>In Cave Or Night</span></label>
+                <br>
+                <input id="CaveOrNight" type="checkbox" />
+            </div>
+            <div class="col-md-3 SameGender">
+                <span>Pokemon Genders</span>
+                <br>
+                <input type="radio" id="SameGender" name="Gender" value="true" />
+                <label for="SameGender"><span>Same Gender and Same Species</span></label>
+                <br>
+                <input type="radio" id="DifferentGender" name="Gender" value="false" />
+                <label for="DifferentGender"><span>Different Genders or Different Species</span></label>
             </div>
         </div>
         <br>
-        <div class="col-md-12">
-            <h5 class="calculatedChance">
-        </div>
+        <button class="btn btn-primary calcutatorButton">Calculate Chance</button>
+        <br>
+        <br>
+        <h5 class="calculatedChance col-md-12"></h5>
     </div>
 </div>

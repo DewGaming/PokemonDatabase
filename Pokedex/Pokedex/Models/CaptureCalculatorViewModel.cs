@@ -16,7 +16,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all pokeballs.
         /// </summary>
-        public List<PokeballCatchModifierDetail> AllPokeballs { get; set; }
+        public List<Pokeball> AllPokeballs { get; set; }
 
         /// <summary>
         /// Gets or sets a list of all statuses.

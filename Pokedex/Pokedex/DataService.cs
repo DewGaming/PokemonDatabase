@@ -112,7 +112,10 @@ namespace Pokedex
 
         public PokemonLegendaryDetail GetLegendaryDetail(int pokemonId)
         {
-            return this.dataContext.PokemonLegendaryDetails.ToList().Find(x => x.PokemonId == pokemonId);
+            return this.dataContext.PokemonLegendaryDetails
+                .Include(x => x.LegendaryType)
+                .ToList()
+                .Find(x => x.PokemonId == pokemonId);
         }
 
         public Type GetType(int id)
@@ -527,21 +530,18 @@ namespace Pokedex
                 .Find(x => x.Id == id);
         }
 
-        public List<PokeballCatchModifierDetail> GetPokeballCatchModifierDetailsForCaptureCalculator()
+        public List<Pokeball> GetPokeballsForCaptureCalculator()
         {
-            List<PokeballCatchModifierDetail> details = this.dataContext.PokeballCatchModifierDetails
-                .Include(x => x.Pokeball)
+            return this.dataContext.Pokeballs
+                .OrderBy(x => x.Name)
                 .ToList();
+        }
 
-            foreach (var d in details)
-            {
-                if (d.Effect != "No Special Effect")
-                {
-                    d.Pokeball.Name += " (" + d.Effect + ")";
-                }
-            }
-
-            return details;
+        public List<PokeballCatchModifierDetail> GetCatchModifiersForPokeball(int id)
+        {
+            return this.dataContext.PokeballCatchModifierDetails
+                .Where(x => x.PokeballId == id)
+                .ToList();
         }
 
         public List<Pokemon> GetAllPokemon()
