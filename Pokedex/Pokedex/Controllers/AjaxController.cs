@@ -569,7 +569,7 @@ namespace Pokedex.Controllers
                 {
                     case "Heavy Ball":
                         int heavyValue = 0;
-                        foreach(var w in pokeballDetails)
+                        foreach (var w in pokeballDetails)
                         {
                             if (pokemon.Weight < Convert.ToInt16(w.Effect))
                             {
@@ -588,7 +588,7 @@ namespace Pokedex.Controllers
                     case "Nest Ball":
                         if (encounterLevel <= 29)
                         {
-                            pokeballEffect = ((41.0f - encounterLevel) / 10.0f);
+                            pokeballEffect = (41f - encounterLevel) / 10f;
                         }
 
                         break;
@@ -632,7 +632,7 @@ namespace Pokedex.Controllers
                         pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == sameGender).CatchModifier;
                         break;
                     case "Timer Ball":
-                        pokeballEffect = (1f + (turnCount - 1) * (1229f / 4096f));
+                        pokeballEffect = 1f + ((turnCount - 1) * (1229f / 4096f));
                         if (pokeballEffect > 4)
                         {
                             pokeballEffect = 4;
@@ -666,7 +666,7 @@ namespace Pokedex.Controllers
                     pokeballEffect = 0.1f;
                 }
 
-                float catchValue = (1 - (2 * healthPercentage) / 3) * catchRate * statusEffect;
+                float catchValue = (1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect;
                 if (pokeball.Name != "Heavy Ball")
                 {
                     catchValue *= pokeballEffect;
@@ -679,7 +679,7 @@ namespace Pokedex.Controllers
                     chanceText = "Quaranteed";
                 }
 
-                return chanceText + " to catch " + pokemon.Name + " at " + healthPercentage * 100 + "% health in a " + pokeball.Name;
+                return chanceText + " to catch " + pokemon.Name + " at " + (healthPercentage * 100) + "% health in a " + pokeball.Name;
             }
             else
             {
