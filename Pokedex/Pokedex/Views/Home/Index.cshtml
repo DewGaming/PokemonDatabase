@@ -27,15 +27,25 @@
 <h4>Welcome to the Pokémon Database!</h4>
 <br>
 <p>This was created starting as a school project and then eventually being transformed into a website.  Please Enjoy!</p>
-<p>Want to do more then just view Pokémon stats?  Explore other options!</p>
+<h5>Site Features</h5>
 <div class="siteFeatures">
+    <div class="feature pokemonList">
+        <a href="@this.Url.Action("AllPokemon", "Home")"><p>Lookup Pokemon!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("AllPokemon", "Home")" alt="Pokemon List" title="Lookup different Pokémon stats, separated by different generations!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonList.png"))">
+    </div>
+    <div class="feature captureCalculator">
+        <a href="@this.Url.Action("CaptureCalculator", "Home")"><p>Calculate Chance of Capture!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("CaptureCalculator", "Home")" alt="Capture Calculator" title="Find out what the chances of catching a Pokémon depending on it's health, what pokeball you use, and various other options!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "captureCalculator.png"))">
+    </div>
     <div class="feature dayCareEvaluator">
         <a href="@this.Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokémon can be placed in a day care to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareEvaluator.png"))">
     </div>
+</div>
+<div class="siteFeatures">
     <div class="feature gameAvailability">
         <a href="@this.Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game!  Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
     </div>
     <div class="feature teamRandomizerFeature">
         <a href="@this.Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
