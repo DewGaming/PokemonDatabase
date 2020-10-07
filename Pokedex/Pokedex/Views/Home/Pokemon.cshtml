@@ -54,7 +54,6 @@
 @section scripts
 {
     <script src="/js/pageLookup.js"></script>
-    <script src="/js/calculateCaptureRate.js"></script>
 }
 
 <table class="surroundingPokemon pokemonPicture">
@@ -542,7 +541,7 @@
                         }
                         <tr>
                             <th>Catch Rate</th>
-                            <td class="catchRate" id=@item.Pokemon.CaptureRate.CatchRate></td>
+                            <td class="catchRate">@item.Pokemon.CaptureRate.CatchRate</td>
                         </tr>
                         <tr>
                             <th>Experience Growth</th>
