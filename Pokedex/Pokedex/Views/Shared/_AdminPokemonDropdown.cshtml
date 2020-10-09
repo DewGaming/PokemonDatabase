@@ -101,7 +101,8 @@
         }
         <hr class="adminOptionSeparator">
         <span class="adminMenuTitle">Other</span>
-        <li><a target="_blank" class="dropdown-item" href="@(this.Url.Action("PokemonImage", "Edit", new { id = Model.Pokemon.Id }))">Update Official Artwork</a></li>
+        <li><a target="_blank" class="dropdown-item" href="@(this.Url.Action("PokemonImage", "Edit", new { id = Model.Pokemon.Id }))">Update Home Render</a></li>
+        <li><a target="_blank" class="dropdown-item" href="@(this.Url.Action("ShinyPokemonImage", "Edit", new { id = Model.Pokemon.Id }))">Update Shiny Home Render</a></li>
         <li><a class="dropdown-item" href="@(this.Url.Action("PokemonGameDetails", "Edit", new { pokemonId = Model.Pokemon.Id }))">Update Games Available In</a></li>
         @if (Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null))
         {

@@ -520,6 +520,100 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_shiny_pokemon_image/{id:int}")]
+        public IActionResult ShinyPokemonImage(int id)
+        {
+            Pokemon model = this.dataService.GetPokemonById(id);
+
+            if (this.dataService.CheckIfAltForm(id))
+            {
+                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_shiny_pokemon_image/{id:int}")]
+        public async Task<IActionResult> ShinyPokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
+        {
+            if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
+            {
+                Pokemon model = this.dataService.GetPokemonById(id);
+
+                if (this.dataService.CheckIfAltForm(id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                }
+
+                return this.View(model);
+            }
+            else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
+            {
+                Pokemon model = this.dataService.GetPokemonById(id);
+
+                if (this.dataService.CheckIfAltForm(id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if ((fileUpload != null && !fileUpload.FileName.Contains(".png")) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
+            {
+                Pokemon model = this.dataService.GetPokemonById(id);
+
+                if (this.dataService.CheckIfAltForm(id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+
+            IFormFile upload;
+
+            if (fileUpload == null)
+            {
+                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
+
+                using (WebResponse webResponse = webRequest.GetResponse())
+                {
+                    Stream stream = webResponse.GetResponseStream();
+                    MemoryStream memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+
+                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
+                }
+            }
+            else
+            {
+                upload = fileUpload;
+            }
+
+            upload = this.dataService.TrimImage(upload);
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.ShinyPokemonImageFTPUrl, id.ToString(), ".png"));
+            request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
+
+            using (var requestStream = request.GetRequestStream())
+            {
+                await upload.CopyToAsync(requestStream);
+            }
+
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            {
+                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_typing/{pokemonId:int}/{generationId:int}")]
         public IActionResult Typing(int pokemonId, int generationId)
         {

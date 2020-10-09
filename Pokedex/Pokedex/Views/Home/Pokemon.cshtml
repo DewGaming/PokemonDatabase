@@ -40,6 +40,11 @@
         .generations button {
             border-top: 0;
         }
+
+        .pokemonImage h4 {
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
     @if (this.User.IsInRole("Owner"))
     {
@@ -53,7 +58,11 @@
 
 @section scripts
 {
+    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script src="/js/pageLookup.js"></script>
+    <script>
+        $('.pokemonImage').flip();
+    </script>
 }
 
 <table class="surroundingPokemon pokemonPicture">
@@ -99,15 +108,13 @@
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
-    if(generations.Count() > 1)
-    {
-        <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
-            @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
-            {
-                <button class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
-            }
-        </div>
-    }
+    
+    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+        @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
+        {
+            <button class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
+        }
+    </div>
 
     @foreach(var g in generations)
     {
@@ -132,7 +139,16 @@
                 </div>
             }
             <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1 ? " pokemonWithForms" : string.Empty)">
-                <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                <div class="pokemonImage">
+                    <div class="front">
+                        <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                        <h4>Normal</h4>
+                    </div>
+                    <div class="back">
+                        <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                        <h4>Shiny</h4>
+                    </div>
+                </div>
                 @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
                 {
                     <div class="differentFormsMobile">

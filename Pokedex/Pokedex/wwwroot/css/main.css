@@ -422,7 +422,7 @@ label {
   width: 24.5rem
 }
 
-.pokemonInfo>img {
+.pokemonImage img {
   width: 327px;
   height: 327px;
   -o-object-fit: contain;
