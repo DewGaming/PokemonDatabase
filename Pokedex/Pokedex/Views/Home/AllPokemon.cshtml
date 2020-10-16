@@ -8,19 +8,86 @@
 {
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <style>
+        .pokemonImages {
+            perspective: 720px;
+            position: relative;
+            height: 150px;
+        }
+
+        .front, .back {
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease-out 0s;
+        }
+
+        .front {
+            z-index: 1;
+            position: absolute;
+            transform: rotateY(0deg);
+        }
+
+        .back {
+            z-index: 0;
+            position: relative;
+            transform: rotateY(-180deg);
+        }
+
+        .pokemonlistPicture {
+            backface-visibility: hidden;
+        }
+    </style>
 }
 
 @section scripts
 {
     <script src="/js/pageLookup.js"></script>
+    <script>
+        var shiny = function() {
+        	$('.front').css('z-index: 0')
+        	$('.front').css('transform', 'rotateY(-180deg)')
+        	$('.back').css('z-index: 1')
+        	$('.back').css('transform', 'rotateY(0deg)')
+        }
+
+        var normal = function() {
+        	$('.back').css('z-index: 0')
+        	$('.back').css('transform', 'rotateY(-180deg)')
+        	$('.front').css('z-index: 1')
+        	$('.front').css('transform', 'rotateY(0deg)')
+        }
+
+        $('.turnShiny').on('click', function() {
+            if($($('.grid-container .pokemonImages')[0]).hasClass('shiny'))
+            {
+                normal()
+                $('.grid-container .pokemonImages').each(function () {
+                    $(this).removeClass('shiny')
+                })
+            }
+            else
+            {
+                shiny()
+                $('.grid-container .pokemonImages').each(function () {
+                    $(this).addClass('shiny')
+                })
+            }
+        })
+    </script>
 }
 
-@if (this.User.IsInRole("Owner"))
-{
-    <p>
+<p>
+    <button class="btn btn-primary turnShiny">Turn Shiny</button>
+    @if (this.User.IsInRole("Owner"))
+    {
         <a class="btn btn-primary" href="@this.Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>
-    </p>
-}
+    }
+</p>
+
+
 
 <div class="pageButtons">
     @foreach (var id in Model)

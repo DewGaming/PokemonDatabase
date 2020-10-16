@@ -45,6 +45,35 @@
             text-align: center;
             font-weight: bold;
         }
+        
+        .pokemonImage {
+            perspective: 720px;
+            position: relative;
+        }
+
+        .front, .back {
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease-out 0s;
+        }
+
+        .front {
+            z-index: 1;
+            position: absolute;
+            transform: rotateY(0deg);
+        }
+
+        .back {
+            z-index: 0;
+            position: relative;
+            transform: rotateY(-180deg);
+        }
+
+        .pokemonImage img {
+            backface-visibility: hidden;
+        }
     </style>
     @if (this.User.IsInRole("Owner"))
     {
@@ -58,10 +87,34 @@
 
 @section scripts
 {
-    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script src="/js/pageLookup.js"></script>
     <script>
-        $('.pokemonImage').flip();
+        var shiny = function() {
+        	$('.front').css('z-index: 0')
+        	$('.front').css('transform', 'rotateY(-180deg)')
+        	$('.back').css('z-index: 1')
+        	$('.back').css('transform', 'rotateY(0deg)')
+        }
+
+        var normal = function() {
+        	$('.back').css('z-index: 0')
+        	$('.back').css('transform', 'rotateY(-180deg)')
+        	$('.front').css('z-index: 1')
+        	$('.front').css('transform', 'rotateY(0deg)')
+        }
+
+        $('.pokemonImage').on('click', function() {
+            if($($(this)).hasClass('shiny'))
+            {
+                normal()
+                $(this).removeClass('shiny')
+            }
+            else
+            {
+                shiny()
+                $(this).addClass('shiny')
+            }
+        })
     </script>
 }
 
