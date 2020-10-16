@@ -676,7 +676,7 @@ namespace Pokedex.Controllers
                 string chanceText = Math.Round(captureChance, 2) + "% chance";
                 if (captureChance >= 100)
                 {
-                    chanceText = "Quaranteed";
+                    chanceText = "Guaranteed";
                 }
 
                 return chanceText + " to catch " + pokemon.Name + " at " + (healthPercentage * 100) + "% health in a " + pokeball.Name;

@@ -34,15 +34,7 @@
         });
 
         $('.healthSlider').on('input', function () {
-            if (Number($('.turnSlider').val()) != 1)
-            {
-                $('#healthVal').text($(this).val() + '%');
-            }
-            else
-            {
-                $('#healthVal').text('100%');
-                $('.healthSlider').val(100);
-            }
+            $('#healthVal').text($(this).val() + '%');
         });
 
         $('.encounterLevelSlider').on('input', function () {
@@ -64,11 +56,6 @@
                 turnText = $(this).val()
             }
             $('#turnVal').text(turnText);
-            if (Number($(this).val()) == 1)
-            {
-                $('#healthVal').text('100%');
-                $('.healthSlider').val(100);
-            }
         });
 
         $('#Pokeball').on('input', function () {
