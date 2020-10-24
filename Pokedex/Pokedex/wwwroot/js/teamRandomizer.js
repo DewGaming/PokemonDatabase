@@ -259,7 +259,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $("#Mega").prop('checked', false);
                 }
 
-                if ($.inArray(selectedGame, ['0', '14', '15']) != -1) {
+                if ($.inArray(selectedGame, ['0', '14', '15', '17']) != -1) {
                     if (!$('.ultraBeastCheckbox').is(':visible')) {
                         $(".ultraBeastCheckbox").show();
                         $("#UltraBeast").prop('checked', true);
