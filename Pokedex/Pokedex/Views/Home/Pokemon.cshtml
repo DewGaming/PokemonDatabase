@@ -104,15 +104,15 @@
         }
 
         $('.pokemonImage').on('click', function() {
-            if($($(this)).hasClass('shiny'))
+            if($($('.pokemonImage')).hasClass('shiny'))
             {
                 normal()
-                $(this).removeClass('shiny')
+                $('.pokemonImage').removeClass('shiny')
             }
             else
             {
                 shiny()
-                $(this).addClass('shiny')
+                $('.pokemonImage').addClass('shiny')
             }
         })
     </script>
