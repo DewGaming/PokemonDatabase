@@ -1498,9 +1498,17 @@ namespace Pokedex
                     primaryTypeChart.AddRange(secondaryTypeChart);
                 }
 
+                List<TypeChart> finalTypeChart = new List<TypeChart>();
+                finalTypeChart.AddRange(primaryTypeChart);
+
+                foreach(var i in primaryTypeChart.Where(x => x.Effective == 0))
+                {
+                    finalTypeChart.RemoveAll(x => x.AttackId == i.AttackId && x.Effective != 0);
+                }
+
                 pokemonTypeCharts.Add(new PokemonTypeChartViewModel()
                 {
-                    TypeChart = primaryTypeChart,
+                    TypeChart = finalTypeChart,
                     Generation = t.Generation,
                 });
             }
