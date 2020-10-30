@@ -103,15 +103,18 @@
         }
 
         $('.pokemonImage').on('click', function() {
-            if($($('.pokemonImage')).hasClass('shiny'))
+            if(!$(this).hasClass('gen1Image'))
             {
-                normal()
-                $('.pokemonImage').removeClass('shiny')
-            }
-            else
-            {
-                shiny()
-                $('.pokemonImage').addClass('shiny')
+                if($($('.pokemonImage')).hasClass('shiny'))
+                {
+                    normal()
+                    $('.pokemonImage').removeClass('shiny')
+                }
+                else
+                {
+                    shiny()
+                    $('.pokemonImage').addClass('shiny')
+                }
             }
         })
     </script>
@@ -191,16 +194,33 @@
                 </div>
             }
             <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1 ? " pokemonWithForms" : string.Empty)">
-                <div class="pokemonImage">
-                    <div class="front">
-                        <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-                        <h4>Normal</h4>
+                @if (g != 1)
+                {
+                    <div class="pokemonImage">
+                        <div class="front">
+                            <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                            <h4>← Normal →</h4>
+                        </div>
+                        <div class="back">
+                            <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                            <h4>← Shiny →</h4>
+                        </div>
                     </div>
-                    <div class="back">
-                        <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-                        <h4>Shiny</h4>
+                }
+                else
+                {
+                    <div class="pokemonImage gen1Image">
+                        <div class="front">
+                            <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                            <h4>Normal</h4>
+                        </div>
+                        <div class="back">
+                            <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                            <h4>Normal</h4>
+                        </div>
                     </div>
-                </div>
+                }
+
                 @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
                 {
                     <div class="differentFormsMobile">
