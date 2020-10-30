@@ -357,8 +357,9 @@ namespace Pokedex.Controllers
 
             if (!string.IsNullOrEmpty(comment.PokemonName) && comment.PageId != 3)
             {
-                comment.Page = this.dataService.GetCommentPage(3);
+                comment.PageId = 3;
             }
+
 
             if (this.User.Identity.Name != null)
             {
@@ -366,6 +367,9 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.AddComment(comment);
+
+            comment.Category = this.dataService.GetCommentCategory(comment.CategoryId);
+            comment.Page = this.dataService.GetCommentPage(comment.PageId);
 
             this.EmailComment(comment);
 
@@ -390,7 +394,7 @@ namespace Pokedex.Controllers
         {
             try
             {
-                if (comment.CommentorId != 1 || comment.CommentorId == null)
+                if (comment.CommentorId != 1)
                 {
                     MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
                     MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
@@ -408,6 +412,10 @@ namespace Pokedex.Controllers
                     if (comment.CommentorId != null)
                     {
                         body = string.Concat(body, " by ", this.dataService.GetUserById((int)comment.CommentorId).Username);
+                    }
+                    else
+                    {
+                        body = string.Concat(body, " by Anonymous User");
                     }
 
                     body = string.Concat(body, ": ", comment.Name);
