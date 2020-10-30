@@ -48,11 +48,7 @@
                 {
                     <tr>
                         <td>
-                            @item.Category.Name
-                            @if (@item.PageId != null)
-                            {
-                                 @(string.Concat(" for ", @item.Page.Name))
-                            }
+                            @(string.Concat(@item.Category.Name, " for ", @item.Page.Name))
                             @if (@item.PokemonName != null)
                             {
                                 @(" (")<a href="@this.Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")

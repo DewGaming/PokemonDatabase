@@ -360,7 +360,6 @@ namespace Pokedex.Controllers
                 comment.PageId = 3;
             }
 
-
             if (this.User.Identity.Name != null)
             {
                 comment.CommentorId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id;

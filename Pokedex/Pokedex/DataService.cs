@@ -1501,7 +1501,7 @@ namespace Pokedex
                 List<TypeChart> finalTypeChart = new List<TypeChart>();
                 finalTypeChart.AddRange(primaryTypeChart);
 
-                foreach(var i in primaryTypeChart.Where(x => x.Effective == 0))
+                foreach (var i in primaryTypeChart.Where(x => x.Effective == 0))
                 {
                     finalTypeChart.RemoveAll(x => x.AttackId == i.AttackId && x.Effective != 0);
                 }
