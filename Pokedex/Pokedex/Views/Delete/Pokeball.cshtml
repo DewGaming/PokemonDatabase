@@ -19,6 +19,11 @@
             @Html.DisplayFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" } })
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(x => x.GenerationId):
+            @Html.DisplayFor(x => x.GenerationId, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
         <p>
             <button type="submit" class="btn btn-danger" role="button">Delete</button>
         </p>

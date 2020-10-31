@@ -528,7 +528,12 @@ namespace Pokedex.Controllers
         [Route("add_pokeball")]
         public IActionResult Pokeball()
         {
-            return this.View();
+            PokeballAdminViewModel model = new PokeballAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetGenerations(),
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -538,7 +543,12 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                PokeballAdminViewModel model = new PokeballAdminViewModel()
+                {
+                    AllGenerations = this.dataService.GetGenerations(),
+                };
+
+                return this.View(model);
             }
 
             this.dataService.AddPokeball(pokeball);

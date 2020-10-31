@@ -1144,7 +1144,15 @@ namespace Pokedex.Controllers
         [Route("edit_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {
-            Pokeball model = this.dataService.GetPokeball(id);
+            Pokeball pokeball = this.dataService.GetPokeball(id);
+            PokeballAdminViewModel model = new PokeballAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetGenerations(),
+                Id = pokeball.Id,
+                Name = pokeball.Name,
+                GenerationId = pokeball.GenerationId,
+                Generation = pokeball.Generation,
+            };
 
             return this.View(model);
         }
@@ -1156,7 +1164,15 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Pokeball model = this.dataService.GetPokeball(pokeball.Id);
+                Pokeball newPokeball = this.dataService.GetPokeball(pokeball.Id);
+                PokeballAdminViewModel model = new PokeballAdminViewModel()
+                {
+                    AllGenerations = this.dataService.GetGenerations(),
+                    Id = newPokeball.Id,
+                    Name = newPokeball.Name,
+                    GenerationId = newPokeball.GenerationId,
+                    Generation = newPokeball.Generation,
+                };
 
                 return this.View(model);
             }

@@ -13,6 +13,7 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Region Introduced To Normal Gameplay</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllPokeballs)
@@ -20,6 +21,12 @@
             <tr>
                 <td>
                     @item.Name
+                </td>
+                <td>
+                    @if (@item.Generation != null)
+                    {
+                        @item.Generation.Region
+                    }
                 </td>
                 <td>
                     <a href="@(this.Url.Action("Pokeball", "Edit", new { id = item.Id }))">Edit</a>

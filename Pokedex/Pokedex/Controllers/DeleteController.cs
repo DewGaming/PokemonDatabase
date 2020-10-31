@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pokedex.Models;
 using Pokedex.DataAccess.Models;
 using System.Collections.Generic;
 
@@ -48,7 +49,15 @@ namespace Pokedex.Controllers
         [Route("delete_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {
-            Pokeball model = this.dataService.GetPokeball(id);
+            Pokeball pokeball = this.dataService.GetPokeball(id);
+            PokeballAdminViewModel model = new PokeballAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetGenerations(),
+                Id = pokeball.Id,
+                Name = pokeball.Name,
+                GenerationId = pokeball.GenerationId,
+                Generation = pokeball.Generation,
+            };
 
             return this.View(model);
         }

@@ -505,12 +505,17 @@ namespace Pokedex
 
         public List<Pokeball> GetPokeballs()
         {
-            return this.dataContext.Pokeballs.ToList();
+            return this.dataContext.Pokeballs
+                .Include(x => x.Generation)
+                .OrderBy(x => x.GenerationId)
+                .ThenBy(x => x.Name)
+                .ToList();
         }
 
         public Pokeball GetPokeball(int id)
         {
             return this.dataContext.Pokeballs
+                .Include(x => x.Generation)
                 .ToList()
                 .Find(x => x.Id == id);
         }
