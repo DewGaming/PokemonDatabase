@@ -44,6 +44,11 @@ namespace Pokedex.Models
         public List<PokemonEggGroupDetail> EggGroups { get; set; }
 
         /// <summary>
+        /// Gets or sets the pokemon's egg groups.
+        /// </summary>
+        public List<PokemonCaptureRateDetail> CaptureRates { get; set; }
+
+        /// <summary>
         /// Gets or sets the pokemon's pre evolution, if applicable.
         /// </summary>
         public Evolution PreEvolution { get; set; }

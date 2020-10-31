@@ -22,5 +22,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all statuses.
         /// </summary>
         public List<Status> AllStatuses { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all statuses.
+        /// </summary>
+        public List<Generation> AllGenerations { get; set; }
     }
 }

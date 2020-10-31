@@ -472,6 +472,7 @@ namespace Pokedex
                 Typings = this.GetPokemonWithTypes(pokemon.Id),
                 Abilities = this.GetPokemonWithAbilities(pokemon.Id),
                 EggGroups = this.GetPokemonWithEggGroups(pokemon.Id),
+                CaptureRates = this.GetPokemonWithCaptureRates(pokemon.Id),
                 PreEvolution = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
@@ -1311,6 +1312,26 @@ namespace Pokedex
                     .Include("Pokemon.GenderRatio")
                 .Include(x => x.PrimaryEggGroup)
                 .Include(x => x.SecondaryEggGroup)
+                .ToList()
+                .First(x => x.Pokemon.Name == pokemonName);
+        }
+
+        public List<PokemonCaptureRateDetail> GetPokemonWithCaptureRates(int pokemonId)
+        {
+            return this.dataContext.PokemonCaptureRateDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.Generation)
+                .Where(x => x.Pokemon.Id == pokemonId)
+                .ToList();
+        }
+
+        public PokemonCaptureRateDetail GetPokemonWithCaptureRatesFromPokemonName(string pokemonName)
+        {
+            return this.dataContext.PokemonCaptureRateDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.Generation)
                 .ToList()
                 .First(x => x.Pokemon.Name == pokemonName);
         }

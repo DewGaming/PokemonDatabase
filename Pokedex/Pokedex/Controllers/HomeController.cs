@@ -313,6 +313,7 @@ namespace Pokedex.Controllers
                 AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
                 AllPokeballs = this.dataService.GetPokeballsForCaptureCalculator(),
                 AllStatuses = this.dataService.GetStatuses(),
+                AllGenerations = this.dataService.GetGenerations(),
             };
 
             return this.View(model);

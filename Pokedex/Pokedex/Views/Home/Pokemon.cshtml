@@ -629,7 +629,7 @@
                         }
                         <tr>
                             <th>Catch Rate</th>
-                            <td class="catchRate">@item.Pokemon.CaptureRate.CatchRate</td>
+                            <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
                         </tr>
                         <tr>
                             <th>Experience Growth</th>
