@@ -52,5 +52,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all pokemon legendary details.
         /// </summary>
         public List<PokemonLegendaryDetail> AllLegendaryDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all pokemon capture rates.
+        /// </summary>
+        public List<PokemonCaptureRateDetail> AllPokemonCaptureRates { get; set; }
     }
 }

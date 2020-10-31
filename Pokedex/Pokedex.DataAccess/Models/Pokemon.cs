@@ -33,9 +33,6 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Experience Growth"), Required]
         public int ExperienceGrowthId { get; set; }
         public ExperienceGrowth ExperienceGrowth { get; set; }
-        [Display(Name = "Capture Rate"), Required]
-        public int CaptureRateId { get; set; }
-        public CaptureRate CaptureRate { get; set; }
         [Display(Name = "Base Happiness"), Required]
         public int BaseHappinessId { get; set; }
         public BaseHappiness BaseHappiness { get; set; }

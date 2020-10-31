@@ -6,16 +6,11 @@ namespace Pokedex.Models
     /// <summary>
     /// The class that is used to represent the capture rate view model.
     /// </summary>
-    public class CaptureRateViewModel
+    public class PokemonCaptureRateViewModel : PokemonCaptureRateDetail
     {
         /// <summary>
         /// Gets or sets a list of all capture rates.
         /// </summary>
         public List<CaptureRate> AllCaptureRates { get; set; }
-
-        /// <summary>
-        /// Gets or sets a list of all pokemon.
-        /// </summary>
-        public List<PokemonCaptureRateDetail> AllPokemonCaptureRates { get; set; }
     }
 }

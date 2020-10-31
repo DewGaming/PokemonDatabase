@@ -1209,6 +1209,46 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokemon_capture_rate/{pokemonId:int}/{generationId:int}")]
+        public IActionResult CaptureRates(int pokemonId, int generationId)
+        {
+            PokemonCaptureRateDetail captureRate = this.dataService.GetPokemonWithCaptureRatesFromGenerationId(pokemonId, generationId);
+            PokemonCaptureRateViewModel model = new PokemonCaptureRateViewModel()
+            {
+                Id = captureRate.Id,
+                PokemonId = captureRate.PokemonId,
+                GenerationId = captureRate.GenerationId,
+                AllCaptureRates = this.dataService.GetCaptureRates(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_capture_rate/{id:int}/{generationId:int}")]
+        public IActionResult CaptureRates(PokemonCaptureRateDetail pokemonCaptureRate)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonCaptureRateDetail captureRate = this.dataService.GetPokemonWithCaptureRatesFromGenerationId(pokemonCaptureRate.PokemonId, pokemonCaptureRate.GenerationId);
+                PokemonCaptureRateViewModel model = new PokemonCaptureRateViewModel()
+                {
+                    Id = captureRate.Id,
+                    PokemonId = captureRate.PokemonId,
+                    GenerationId = captureRate.GenerationId,
+                    AllCaptureRates = this.dataService.GetCaptureRates(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdatePokemonCaptureRateDetail(pokemonCaptureRate);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
         public IActionResult PokeballCatchModifierDetail(int id)
         {
@@ -1581,6 +1621,7 @@ namespace Pokedex.Controllers
                 AllBaseStats = this.dataService.GetBaseStatsWithIncomplete(),
                 AllEVYields = this.dataService.GetEVYieldsWithIncomplete(),
                 AllLegendaryDetails = this.dataService.GetAllPokemonWithLegendaryTypes(),
+                AllPokemonCaptureRates = this.dataService.GetAllPokemonWithCaptureRates(),
             };
 
             DropdownViewModel model = new DropdownViewModel()

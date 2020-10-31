@@ -442,7 +442,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
                 .ToList()
                 .Find(x => x.Id == id);
@@ -501,6 +500,7 @@ namespace Pokedex
                 AllBaseStats = this.GetBaseStatsWithIncomplete(),
                 AllEVYields = this.GetEVYieldsWithIncomplete(),
                 AllLegendaryDetails = this.GetAllPokemonWithLegendaryTypes(),
+                AllPokemonCaptureRates = this.GetAllPokemonWithCaptureRates(),
             };
         }
 
@@ -559,7 +559,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
                 .Where(x => x.IsComplete == true)
                 .OrderBy(x => x.PokedexNumber)
@@ -576,7 +575,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
                 .Where(x => x.IsComplete == true)
                 .OrderBy(x => x.PokedexNumber)
@@ -619,7 +617,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.PokedexNumber)
                 .ThenBy(x => x.Id)
@@ -705,7 +702,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Include(x => x.CaptureRate)
                 .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.PokedexNumber)
                 .ThenBy(x => x.Id)
@@ -934,7 +930,6 @@ namespace Pokedex
                     .Include("AltFormPokemon.Classification")
                     .Include("AltFormPokemon.Game")
                     .Include("AltFormPokemon.ExperienceGrowth")
-                    .Include("AltFormPokemon.CaptureRate")
                     .Include("AltFormPokemon.BaseHappiness")
                 .Include(x => x.Form)
                 .OrderBy(x => x.AltFormPokemon.Game.ReleaseDate)
@@ -1316,6 +1311,16 @@ namespace Pokedex
                 .First(x => x.Pokemon.Name == pokemonName);
         }
 
+        public List<PokemonCaptureRateDetail> GetAllPokemonWithCaptureRates()
+        {
+            return this.dataContext.PokemonCaptureRateDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.CaptureRate)
+                .Include(x => x.Generation)
+                .OrderByDescending(x => x.GenerationId)
+                .ToList();
+        }
+
         public List<PokemonCaptureRateDetail> GetPokemonWithCaptureRates(int pokemonId)
         {
             return this.dataContext.PokemonCaptureRateDetails
@@ -1323,17 +1328,18 @@ namespace Pokedex
                 .Include(x => x.CaptureRate)
                 .Include(x => x.Generation)
                 .Where(x => x.Pokemon.Id == pokemonId)
+                .OrderByDescending(x => x.GenerationId)
                 .ToList();
         }
 
-        public PokemonCaptureRateDetail GetPokemonWithCaptureRatesFromPokemonName(string pokemonName)
+        public PokemonCaptureRateDetail GetPokemonWithCaptureRatesFromGenerationId(int pokemonId, int generationId)
         {
             return this.dataContext.PokemonCaptureRateDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.CaptureRate)
                 .Include(x => x.Generation)
                 .ToList()
-                .First(x => x.Pokemon.Name == pokemonName);
+                .First(x => x.Pokemon.Id == pokemonId && x.Generation.Id == generationId);
         }
 
         public List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int? secondaryEggGroupId)
@@ -2341,6 +2347,18 @@ namespace Pokedex
         public void AddStatus(Status status)
         {
             this.dataContext.Statuses.Add(status);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddPokemonCaptureRateDetail(PokemonCaptureRateDetail pokemonCaptureRate)
+        {
+            this.dataContext.PokemonCaptureRateDetails.Add(pokemonCaptureRate);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonCaptureRateDetail(PokemonCaptureRateDetail pokemonCaptureRate)
+        {
+            this.dataContext.PokemonCaptureRateDetails.Update(pokemonCaptureRate);
             this.dataContext.SaveChanges();
         }
 

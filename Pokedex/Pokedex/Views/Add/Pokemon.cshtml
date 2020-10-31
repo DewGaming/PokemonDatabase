@@ -91,12 +91,6 @@
         </div>
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.CaptureRateId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.CaptureRateId, new SelectList(Model.AllCaptureRates, "Id", "CatchRate"), new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.CaptureRateId)
-        </div>
-
-        <div class="form-group row">
             @Html.LabelFor(x => x.BaseHappinessId, new { @class = "col-md-2" })
             @Html.DropDownListFor(x => x.BaseHappinessId, new SelectList(Model.AllBaseHappinesses, "Id", "Happiness"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.BaseHappinessId)

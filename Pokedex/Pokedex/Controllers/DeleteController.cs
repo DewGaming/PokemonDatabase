@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Pokedex.Models;
 using Pokedex.DataAccess.Models;
+using Pokedex.Models;
 using System.Collections.Generic;
 
 namespace Pokedex.Controllers

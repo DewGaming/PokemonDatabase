@@ -35,6 +35,10 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EggGroups", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Egg Groups</a></li>
         }
+        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllPokemonCaptureRates.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
+        {
+            <li><a class="dropdown-item" href="@(this.Url.Action("CaptureRates", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Capture Rate</a></li>
+        }
         @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("BaseStats", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Base Stats</a></li>
@@ -43,7 +47,7 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EVYields", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add EV Yields</a></li>
         }
-        @if (!Model.Pokemon.IsComplete && !everythingAdded)
+        @if (!everythingAdded)
         {
             <hr class="adminOptionSeparator">
         }
@@ -64,6 +68,10 @@
         @if (Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EggGroups", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit Egg Groups</a></li>
+        }
+        @if (Model.DropdownViewModel.AllPokemon.AllPokemonCaptureRates.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
+        {
+            <li><a class="dropdown-item" href="@(this.Url.Action("CaptureRates", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit Capture Rate</a></li>
         }
         @if (Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {

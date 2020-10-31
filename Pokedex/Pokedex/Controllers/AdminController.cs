@@ -232,7 +232,7 @@ namespace Pokedex.Controllers
             CaptureRateViewModel model = new CaptureRateViewModel()
             {
                 AllCaptureRates = this.dataService.GetCaptureRates(),
-                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
+                AllPokemonCaptureRates = this.dataService.GetAllPokemonWithCaptureRates(),
             };
 
             return this.View(model);

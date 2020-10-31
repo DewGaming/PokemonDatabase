@@ -1,0 +1,30 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonCaptureRateViewModel
+@{
+    Layout = "_layout";
+}
+
+<h2>Add Capture Rate</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+        @Html.HiddenFor(x => x.PokemonId)
+        @Html.HiddenFor(x => x.GenerationId)
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.CaptureRateId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.CaptureRateId, new SelectList(Model.AllCaptureRates, "Id", "CatchRate"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.CaptureRateId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

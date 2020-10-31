@@ -8,7 +8,7 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
-        [Required]
+        [Required, Display(Name = "Capture Rate")]
         public int CaptureRateId { get; set; }
         public CaptureRate CaptureRate { get; set; }
         [Required]

@@ -218,7 +218,7 @@
                 </tr>
                 <tr>
                     <th>Catch Rate</th>
-                    <td class="catchRate" id=@Model.Pokemon.CaptureRate.CatchRate></td>
+                    <td class="catchRate" id=@Model.CaptureRates.Last(x => x.PokemonId == @Model.Pokemon.Id).CaptureRate.CatchRate></td>
                 </tr>
                 <tr>
                     <th>Experience Growth</th>

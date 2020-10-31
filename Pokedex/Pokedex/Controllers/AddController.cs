@@ -680,6 +680,42 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokemon_capture_rate/{pokemonId:int}/{generationId:int}")]
+        public IActionResult CaptureRates(int pokemonId, int generationId)
+        {
+            PokemonCaptureRateViewModel model = new PokemonCaptureRateViewModel()
+            {
+                PokemonId = pokemonId,
+                GenerationId = generationId,
+                AllCaptureRates = this.dataService.GetCaptureRates(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokemon_capture_rate/{pokemonId:int}/{generationId:int}")]
+        public IActionResult CaptureRates(PokemonCaptureRateDetail pokemonCaptureRate)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonCaptureRateViewModel model = new PokemonCaptureRateViewModel()
+                {
+                    PokemonId = pokemonCaptureRate.PokemonId,
+                    GenerationId = pokemonCaptureRate.GenerationId,
+                    AllCaptureRates = this.dataService.GetCaptureRates(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.AddPokemonCaptureRateDetail(pokemonCaptureRate);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_battle_item")]
         public IActionResult BattleItem()
         {
