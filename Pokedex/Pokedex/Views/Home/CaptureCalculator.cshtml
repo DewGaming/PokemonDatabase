@@ -32,8 +32,13 @@
                 </select>
             </div>
             <div class="regionList col-md-6">
-                @Html.Label("Region")
-                @Html.DropDownList("Region", new SelectList(@Model.AllGenerations, "Id", "Region"), new { @class = "form-control" })
+                @Html.Label("Generation")
+                <select id="Generation" class="form-control" name="Generation">
+                    @foreach(var p in @Model.AllGenerations)
+                    {
+                        <option value='@p.Id'>Generation @p.Id</option>
+                    }
+                </select>
             </div>
         </div>
         <div class="flexDiv">

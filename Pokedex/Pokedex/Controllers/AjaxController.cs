@@ -565,6 +565,7 @@ namespace Pokedex.Controllers
                 {
                     statusEffect = 1;
                 }
+                
                 float heavyValue = 0f;
 
                 switch (pokeball.Name)
@@ -828,8 +829,8 @@ namespace Pokedex.Controllers
 
                     captureChance = Math.Pow(Math.Floor(65536 / Math.Pow(255 / catchValue, 3f / 16f)) / 65536, 4);
                 }
-
-                captureChance *= 100;
+                
+                captureChance = captureChance * 100;
                 chanceText = Math.Round(captureChance, 2) + "% chance";
                 if (captureChance >= 100)
                 {

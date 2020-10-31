@@ -16,6 +16,7 @@ $(function () {
     }
     $('#turnVal').text(turnText);
     $('.turnSlider').val($('.turnSlider').val());
+    $('#Generation').val($('#Generation option').last().val())
     updateIDs();
     checkPokemon();
     checkPokeball();
@@ -54,7 +55,7 @@ $('.calcutatorButton').on('click', function() {
     $.ajax({
         url: '/get-capture-chance/',
         method: 'POST',
-        data: { 'pokemonId': $('#Pokemon').val(), 'generationId': $('#Region').val(), 'healthPercentage': $('.healthSlider').val() / 100, 'pokeballId': $('#Pokeball').val(), 'statusId': $('#Status').val(), 'turnCount': $('.turnSlider').val(), 'encounterLevel': $('.encounterLevelSlider').val(), 'userLevel': $('.userLevelSlider').val(), 'surfing': $('#Surfing').is(':checked'), 'fishing': $('#Fishing').is(':checked'), 'previouslyCaught': $('#PreviouslyCaught').is(':checked'), 'caveOrNight': $('#CaveOrNight').is(':checked'), 'sameGender': $("input[name='Gender']:checked").val() }
+        data: { 'pokemonId': $('#Pokemon').val(), 'generationId': $('#Generation').val(), 'healthPercentage': $('.healthSlider').val() / 100, 'pokeballId': $('#Pokeball').val(), 'statusId': $('#Status').val(), 'turnCount': $('.turnSlider').val(), 'encounterLevel': $('.encounterLevelSlider').val(), 'userLevel': $('.userLevelSlider').val(), 'surfing': $('#Surfing').is(':checked'), 'fishing': $('#Fishing').is(':checked'), 'previouslyCaught': $('#PreviouslyCaught').is(':checked'), 'caveOrNight': $('#CaveOrNight').is(':checked'), 'sameGender': $("input[name='Gender']:checked").val() }
     })
         .done(function (data) {
             $('.calculatedChance').text(data);
