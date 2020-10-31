@@ -544,13 +544,14 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-capture-chance")]
-        public string GetCaptureChange(int pokemonId, float healthPercentage, int pokeballId, int statusId, float turnCount, float encounterLevel, float userLevel, bool surfing, bool fishing, bool previouslyCaught, bool caveOrNight, bool sameGender)
+        public string GetCaptureChange(int pokemonId, int generationId, float healthPercentage, int pokeballId, int statusId, float turnCount, float encounterLevel, float userLevel, bool surfing, bool fishing, bool previouslyCaught, bool caveOrNight, bool sameGender)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 Pokemon pokemon = this.dataService.GetPokemonById(pokemonId);
                 Pokeball pokeball = this.dataService.GetPokeball(pokeballId);
                 PokemonLegendaryDetail legendary = this.dataService.GetLegendaryDetail(pokemon.Id);
+                List<PokemonCaptureRateDetail> captureRates = this.dataService.GetPokemonWithCaptureRates(pokemonId).OrderBy(x => x.GenerationId).ToList();
                 List<PokeballCatchModifierDetail> pokeballDetails = this.dataService.GetCatchModifiersForPokeball(pokeballId);
                 float statusEffect = 1;
                 if (statusId != 0)
@@ -558,17 +559,17 @@ namespace Pokedex.Controllers
                     statusEffect = this.dataService.GetStatus(statusId).Effect;
                 }
 
-                float catchRate = pokemon.CaptureRate.CatchRate;
+                float catchRate = captureRates.First(x => x.GenerationId <= generationId).CaptureRate.CatchRate;
                 float pokeballEffect = 1;
                 if (statusEffect == 0)
                 {
                     statusEffect = 1;
                 }
+                float heavyValue = 0f;
 
                 switch (pokeball.Name)
                 {
                     case "Heavy Ball":
-                        int heavyValue = 0;
                         foreach (var w in pokeballDetails)
                         {
                             if (pokemon.Weight < Convert.ToInt16(w.Effect))
@@ -661,19 +662,175 @@ namespace Pokedex.Controllers
                         break;
                 }
 
-                if (legendary != null && legendary.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
+                float catchValue;
+                double captureChance;
+                string chanceText = string.Empty;
+
+                if (generationId == 1)
                 {
-                    pokeballEffect = 0.1f;
+                    float greatBallModifier = 12f;
+                    if (statusId == 1 || statusId == 2)
+                    {
+                        statusEffect = 25f;
+                    }
+                    else if (statusId == 3 || statusId == 4 || statusId == 5)
+                    {
+                        statusEffect = 12f;
+                    }
+                    else
+                    {
+                        statusEffect = 0f;
+                    }
+
+                    if (pokeballId == 1)
+                    {
+                        pokeballEffect = 256f;
+                    }
+                    else if (pokeballId == 2)
+                    {
+                        pokeballEffect = 201f;
+                        greatBallModifier = 8f;
+                    }
+                    else
+                    {
+                        pokeballEffect = 151f;
+                    }
+
+                    double hpFactor = Math.Floor(Math.Min(1020f / (greatBallModifier * healthPercentage), 255f));
+                    captureChance = (statusEffect + (Math.Min(catchRate + 1f, pokeballEffect - statusEffect) * ((hpFactor + 1) / 256))) / pokeballEffect;
+                }
+                else if (generationId == 2)
+                {
+                    if (pokeball.Id == 24)
+                    {
+                        pokeballEffect = 1f;
+                    }
+                    else if (pokeball.Id == 18)
+                    {
+                        if (pokemonId == 1347 || pokemonId == 46 || pokemonId == 148)
+                        {
+                            pokeballEffect = 4f;
+                        }
+                        else
+                        {
+                            pokeballEffect = 1f;
+                        }
+                    }
+                    else if (pokeball.Id == 20)
+                    {
+                        if (pokemon.Weight >= 409.6m)
+                        {
+                            heavyValue = 40f;
+                        }
+                        else if (pokemon.Weight >= 307.2m)
+                        {
+                            heavyValue = 30f;
+                        }
+                        else if (pokemon.Weight >= 204.8m)
+                        {
+                            heavyValue = 20f;
+                        }
+                        else if (pokemon.Weight < 102.4m)
+                        {
+                            heavyValue = -20f;
+                        }
+
+                        catchRate += heavyValue;
+                    }
+
+                    if (statusId == 1 || statusId == 2)
+                    {
+                        statusEffect = 10f;
+                    }
+                    else
+                    {
+                        statusEffect = 0f;
+                    }
+
+                    catchRate *= pokeballEffect;
+
+                    if (catchRate > 255f)
+                    {
+                        catchRate = 255f;
+                    }
+                    else if (catchRate < 0f)
+                    {
+                        catchRate = 1f;
+                    }
+
+                    captureChance = (Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f + statusEffect + 1) / 256;
+                }
+                else if (generationId == 3 || generationId == 4)
+                {
+                    if (statusId == 1 || statusId == 2)
+                    {
+                        statusEffect = 2f;
+                    }
+
+                    if (pokeball.Id == 20)
+                    {
+                        if (pokemon.Weight >= 409.6m)
+                        {
+                            heavyValue = 40f;
+                        }
+                        else if (pokemon.Weight >= 307.2m)
+                        {
+                            heavyValue = 30f;
+                        }
+                        else if (pokemon.Weight >= 204.8m)
+                        {
+                            heavyValue = 20f;
+                        }
+                        else if (pokemon.Weight < 102.4m)
+                        {
+                            heavyValue = -20f;
+                        }
+
+                        catchRate += heavyValue;
+                    }
+
+                    catchValue = (1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect;
+                    if (pokeball.Id != 20)
+                    {
+                        catchValue *= pokeballEffect;
+                        if (catchRate > 255f)
+                        {
+                            catchRate = 255f;
+                        }
+                        else if (catchRate < 0f)
+                        {
+                            catchRate = 1f;
+                        }
+                    }
+
+                    captureChance = Math.Pow(Math.Floor(1048560 / Math.Floor(Math.Sqrt(Math.Floor(Math.Sqrt(16711680 / catchValue))))) / 65536, 4);
+                }
+                else
+                {
+                    if (legendary != null && legendary.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
+                    {
+                        pokeballEffect = 0.1f;
+                    }
+
+                    catchValue = Math.Min((1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect, 255);
+                    if (pokeball.Name != "Heavy Ball")
+                    {
+                        catchValue *= pokeballEffect;
+                        if (catchRate > 255f)
+                        {
+                            catchRate = 255f;
+                        }
+                        else if (catchRate < 0f)
+                        {
+                            catchRate = 1f;
+                        }
+                    }
+
+                    captureChance = Math.Pow(Math.Floor(65536 / Math.Pow(255 / catchValue, 3f / 16f)) / 65536, 4);
                 }
 
-                float catchValue = (1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect;
-                if (pokeball.Name != "Heavy Ball")
-                {
-                    catchValue *= pokeballEffect;
-                }
-
-                double captureChance = Math.Pow(catchValue / 255.0, 3.0 / 4.0) * 100.0;
-                string chanceText = Math.Round(captureChance, 2) + "% chance";
+                captureChance *= 100;
+                chanceText = Math.Round(captureChance, 2) + "% chance";
                 if (captureChance >= 100)
                 {
                     chanceText = "Guaranteed";
