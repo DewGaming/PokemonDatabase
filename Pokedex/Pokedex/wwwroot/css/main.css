@@ -3,7 +3,8 @@
   height: 150px;
   -o-object-fit: contain;
   object-fit: contain;
-  margin: 5px
+  margin: 5px;
+  padding: 5px;
 }
 
 #importedTeams {
@@ -426,6 +427,7 @@ label {
 .pokemonImage img {
   width: 327px;
   height: 327px;
+  padding: 5px;
   -o-object-fit: contain;
   object-fit: contain;
 }
