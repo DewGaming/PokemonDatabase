@@ -897,29 +897,10 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    if (!selectedLegendaries.Contains("Legendary"))
+                    List<string> legendaryTypes = this.dataService.GetLegendaryTypes().Select(x => x.Type).ToList();
+                    foreach (var legendary in legendaryTypes.Except(selectedLegendaries).ToList())
                     {
-                        List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Legendary").ToList();
-
-                        foreach (var l in legendaryList)
-                        {
-                            allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
-                        }
-                    }
-
-                    if (!selectedLegendaries.Contains("Mythical"))
-                    {
-                        List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Mythical").ToList();
-
-                        foreach (var l in legendaryList)
-                        {
-                            allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
-                        }
-                    }
-
-                    if (!selectedLegendaries.Contains("UltraBeast"))
-                    {
-                        List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == "Ultra Beast").ToList();
+                        List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == legendary).ToList();
 
                         foreach (var l in legendaryList)
                         {
@@ -1633,7 +1614,6 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                TeamRandomizerListViewModel model = new TeamRandomizerListViewModel();
                 if (selectedGame != 0)
                 {
                     List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
@@ -1642,6 +1622,7 @@ namespace Pokedex.Controllers
                     Generation selectedGen = this.dataService.GetGenerationFromGame(selectedGame);
                     List<Generation> generationList = this.dataService.GetGenerations().Where(x => x.Id <= selectedGen.Id).ToList();
                     List<DataAccess.Models.Type> typesList = this.dataService.GetTypes();
+                    List<LegendaryType> legendaryTypes = this.dataService.GetLegendaryTypes();
                     List<Generation> availableGenerations = new List<Generation>();
                     Game game = this.dataService.GetGame(selectedGame);
 
@@ -1664,15 +1645,29 @@ namespace Pokedex.Controllers
                         typesList.Remove(typesList.Find(x => x.Name == "Fairy"));
                     }
 
-                    model.AllGenerations = availableGenerations;
-                    model.AllTypes = typesList;
+                    if (game.ReleaseDate < new DateTime(2016, 11, 18))
+                    {
+                        legendaryTypes.Remove(legendaryTypes.Find(x => x.Type == "Ultra Beast"));
+                    }
+
+                    TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
+                    {
+                        AllGenerations = availableGenerations,
+                        AllTypes = typesList,
+                        AllLegendaryTypes = legendaryTypes,
+                    };
 
                     return model;
                 }
                 else
                 {
-                    model.AllGenerations = this.dataService.GetGenerations().Where(x => this.dataService.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList();
-                    model.AllTypes = this.dataService.GetTypes();
+                    TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
+                    {
+                        AllGenerations = this.dataService.GetGenerations().Where(x => this.dataService.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
+                        AllTypes = this.dataService.GetTypes(),
+                        AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
+                    };
+
                     return model;
                 }
             }

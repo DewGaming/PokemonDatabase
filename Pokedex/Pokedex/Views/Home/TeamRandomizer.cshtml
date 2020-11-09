@@ -107,19 +107,14 @@
             }
         </section>
         <section class="generatorSection">
-            <span class="generationOptionTitle" id="legendaries">Legendaries</span>
-            <li class="dropdown-item generatorOption legendaryCheckbox">
-                <input id="Legendary" type="checkbox" value="Legendary" checked="checked" />
-                <label for="Legendary" class="generatorOptionTitle">Legendaries</label>
-            </li>
-            <li class="dropdown-item generatorOption legendaryCheckbox">
-                <input id="Mythical" type="checkbox" value="Mythical" checked="checked" />
-                <label for="Mythical" class="generatorOptionTitle">Mythicals</label>
-            </li>
-            <li class="dropdown-item generatorOption legendaryCheckbox ultraBeastCheckbox">
-                <input id="UltraBeast" type="checkbox" value="UltraBeast" checked="checked" />
-                <label for="UltraBeast" class="generatorOptionTitle">Ultra Beasts</label>
-            </li>
+            <span class="generationOptionTitle" id=legendary>Legendaries</span>
+            @foreach(var l in Model.AllLegendaryTypes)
+            {
+                <li class="dropdown-item generatorOption legendaryCheckbox@(l.Type == "Ultra Beast" ? " ultraBeastCheckbox" : String.Empty)">
+                    <input id=@l.Type.Replace(" ", @String.Empty) type="checkbox" value=@l.Type.Replace(" ", @String.Empty) checked="checked" />
+                    <label for=@l.Type.Replace(" ", @String.Empty) class="generatorOptionTitle">@(l.Type.Last() == 'y' ? @l.Type.Replace("y", "ies") : @l.Type += 's')</label>
+                </li>
+            }
             <span class="generationOptionTitle" id="otherOptions">Other Options</span>
             <li class="dropdown-item generatorOption otherOption randomAbilityCheckbox">
                 <input id="randomAbilityBool" type="checkbox" value="randomAbilityBool" checked="checked" />

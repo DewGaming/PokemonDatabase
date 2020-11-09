@@ -49,7 +49,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
         for (var i = 0; i < originalNames.length; i++) {
             $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + appConfig.pokemonImageUrl + pokemonList[i].id + '.png" /></a>');
-            if ($(randomAbilityBool).is(':checked')) {
+            if ($(randomAbilityBool).prop('checked')) {
                 $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
             }
         }
@@ -57,10 +57,10 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
         $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.exportTeamButton');
         refreshEvents();
-    }, checkLegendaryChecks = function () {
+    }, checkLegendaryChecks = function() {
         var boxChecked = false;
-        $('.legendaryCheckbox input').each(function () {
-            if ($(this).is(':checked')) {
+        $('.legendaryCheckbox input').each(function() {
+            if ($(this).prop('checked')) {
                 boxChecked = true;
                 return false;
             }
@@ -75,10 +75,10 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         else {
             $(".legendaryBoolCheckbox").show();
         }
-    }, checkAltFormChecks = function () {
+    }, checkAltFormChecks = function() {
         var boxChecked = false;
-        $('.alternateFormCheckbox input').each(function () {
-            if ($(this).is(':checked')) {
+        $('.alternateFormCheckbox input').each(function() {
+            if ($(this).prop('checked')) {
                 boxChecked = true;
                 return false;
             }
@@ -87,18 +87,21 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         if (!boxChecked) {
             if ($('.altFormBoolCheckbox').is(':visible')) {
                 $(".altFormBoolCheckbox").hide();
-                $(".oneAltFormBoolCheckbox").hide();
-                $("#oneAltFormBool").prop('checked', false);
                 $("#altFormBool").prop('checked', false);
+            }
+
+            if ($('.onePokemonFormBoolCheckbox').is(':visible')) {
+                $(".onePokemonFormBoolCheckbox").hide();
+                $("#onePokemonFormBool").prop('checked', false);
             }
         }
         else {
             $(".altFormBoolCheckbox").show();
-            $(".oneAltFormBoolCheckbox").show();
+            $(".onePokemonFormBoolCheckbox").show();
         }
-    }, checkMegaCheck = function () {
+    }, checkMegaCheck = function() {
         var boxChecked = false;
-        if ($('#Mega').is(':checked')) {
+        if ($('#Mega').prop('checked')) {
             boxChecked = true;
         }
 
@@ -111,9 +114,9 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         else {
             $(".multipleMegaBoolCheckbox").show();
         }
-    }, checkGigantamaxCheck = function () {
+    }, checkGigantamaxCheck = function() {
         var boxChecked = false;
-        if ($('#Gigantamax').is(':checked')) {
+        if ($('#Gigantamax').prop('checked')) {
             boxChecked = true;
         }
 
@@ -126,9 +129,9 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         else {
             $(".multipleGMaxBoolCheckbox").show();
         }
-    }, checkUltraBeasts = function () {
+    }, checkUltraBeasts = function() {
         var boxChecked = false;
-        if ($('#gen7').is(':checked')) {
+        if ($('#gen7').prop('checked')) {
             boxChecked = true;
         }
 
@@ -141,23 +144,23 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         else {
             $(".ultraBeastCheckbox").show();
         }
-    }, generatorMenuCheck = function () {
+    }, generatorMenuCheck = function() {
         if ($(window).width() < 768) {
             $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
         }
         else {
             $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
         }
-    }, removeEventButtons = function () {
+    }, removeEventButtons = function() {
         $('.exportTeamButton').remove();
         $('.saveTeamButton').remove();
-    }, refreshEvents = function () {
+    }, refreshEvents = function() {
         refreshExportEvent();
         refreshSaveEvent();
-    }, refreshExportEvent = function () {
+    }, refreshExportEvent = function() {
         $('.exportTeamButton').off();
 
-        $('.exportTeamButton').on('click', function () {
+        $('.exportTeamButton').on('click', function() {
             console.clear();
 
             var temp = $("<textarea>");
@@ -171,10 +174,10 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
             alert("Team has been copied to your clipboard!");
         });
-    }, refreshSaveEvent = function () {
+    }, refreshSaveEvent = function() {
         $('.saveTeamButton').off();
 
-        $('.saveTeamButton').on('click', function () {
+        $('.saveTeamButton').on('click', function() {
             var pokemonStringList = [], abilityIdList = [];
             var teamName = prompt("Please Enter Team Name");
             pokemonList.forEach(function (item) {
@@ -187,8 +190,8 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 });
             }
 
-            $('.gameRadio input').each(function () {
-                if ($(this).is(':checked')) {
+            $('.gameRadio input').each(function() {
+                if ($(this).prop('checked')) {
                     selectedGame = this.value;
                 }
             });
@@ -205,7 +208,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     alert(jqXHR.statusText);
                 });
         });
-    }, refreshGenerationsByGame = function () {
+    }, refreshGenerationsByGame = function() {
         var selectedGame = $('.gameRadioOption input:checked').val();
         $.ajax({
             url: '/get-generations/',
@@ -213,15 +216,26 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             data: { 'selectedGame': selectedGame }
         })
             .done(function (data) {
+                var gensChecked = []
+                $('.generationCheckbox').each(function() {
+                    if ($(this).find('input').prop('checked')) {
+                        gensChecked.push($(this).attr('class').split(' ').pop());
+                    }
+                })
+                
                 $(".generationCheckbox").remove();
 
-                $.each(data.allGenerations, function () {
+                $.each(data.allGenerations, function() {
                     var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
-                    var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id).attr("checked", "checked");
+                    var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id);
                     var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text("Generation " + this.id);
                     $(dropdownItem).append(dropdownInput).append(dropdownLabel);
                     $("#generations").append($(dropdownItem));
                 });
+
+                $.each(gensChecked, function(index, gen) {
+                    $('.' + gen + ' input').prop('checked', true);
+                })
 
                 if ($.inArray(selectedGame, ['1', '2']) != -1) {
                     $("#alternateForms").hide();
@@ -235,11 +249,8 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 else {
                     $("#alternateForms").show();
                     $(".randomAbilityCheckbox").show();
-                    $("#randomAbilityBool").prop('checked', true);
                     $(".otherFormCheckbox").show();
-                    $("#Other").prop('checked', true);
                     $(".onePokemonFormBoolCheckbox").show();
-                    $("#onePokemonFormBool").prop('checked', true);
                 }
 
                 if ($.inArray(selectedGame, ['0', '12', '13', '14', '15', '16']) != -1) {
@@ -249,7 +260,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
                     if (!$('.megaCheckbox').is(':visible')) {
                         $(".megaCheckbox").show();
-                        $("#Mega").prop('checked', true);
                     }
                 }
                 else {
@@ -262,10 +272,9 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 if ($.inArray(selectedGame, ['0', '14', '15', '17']) != -1) {
                     if (!$('.ultraBeastCheckbox').is(':visible')) {
                         $(".ultraBeastCheckbox").show();
-                        $("#UltraBeast").prop('checked', true);
                     }
 
-                    $('.gen7Checkbox').on('click', function () {
+                    $('.gen7Checkbox').on('click', function() {
                         checkUltraBeasts();
                         legendCheck = checkLegendaryChecks();
                     });
@@ -283,10 +292,9 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 if ($.inArray(selectedGame, ['0', '14', '15', '16', '17']) != -1) {
                     if (!$('.alolanFormCheckbox').is(':visible')) {
                         $(".alolanFormCheckbox").show();
-                        $("#Alolan").prop('checked', true);
                     }
 
-                    $('.gen1Checkbox').on('click', function () {
+                    $('.gen1Checkbox').on('click', function() {
                         altCheck = checkAltFormChecks();
                     });
                 }
@@ -298,15 +306,13 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 if ($.inArray(selectedGame, ['0', '17']) != -1) {
                     if (!$('.galarianFormCheckbox').is(':visible')) {
                         $(".galarianFormCheckbox").show();
-                        $("#Galarian").prop('checked', true);
                     }
                     
                     if (!$('.gigantamaxFormCheckbox').is(':visible')) {
                         $(".gigantamaxFormCheckbox").show();
-                        $("#Gigantamax").prop('checked', true);
                     }
 
-                    if (!$('.multipleGMaxBoolCheckbox').is(':visible')) {
+                    if ($('.gigantamaxFormCheckbox').prop('checked') && !$('.multipleGMaxBoolCheckbox').is(':visible')) {
                         $(".multipleGMaxBoolCheckbox").show();
                     }
                 }
@@ -346,13 +352,13 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 legendCheck = checkLegendaryChecks();
                 checkOtherOptions();
             })
-            .fail(function () {
+            .fail(function() {
                 alert("Failed To Get Generations!");
             });
-    }, checkOtherOptions = function () {
+    }, checkOtherOptions = function() {
         var isVisible = 0;
 
-        $('.otherOption').each(function () {
+        $('.otherOption').each(function() {
             if ($(this).css('display') != 'none') {
                 isVisible++;
             }
@@ -364,50 +370,50 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         else {
             $('#otherOptions').show();
         }
-    }, updateDropdown = function () {
+    }, updateDropdown = function() {
+        refreshGenerationsByGame();
         checkAltFormChecks();
         checkLegendaryChecks();
         checkMegaCheck();
         checkGigantamaxCheck();
         checkUltraBeasts();
         checkOtherOptions();
-        refreshGenerationsByGame();
         generatorMenuCheck();
     };
 
-$(function () {
+$(function() {
     updateDropdown();
 });
 
-$('.generatorDropdown').on('mouseover', function () {
+$('.generatorDropdown').on('mouseover', function() {
     updateDropdown();
 });
 
-$('.alternateFormCheckbox').on('click', function () {
+$('.alternateFormCheckbox').on('click', function() {
     checkAltFormChecks();
     checkOtherOptions();
 });
 
-$('.legendaryCheckbox').on('click', function () {
+$('.legendaryCheckbox').on('click', function() {
     checkLegendaryChecks();
     checkOtherOptions();
 });
 
-$('.megaCheckbox').on('click', function () {
+$('.megaCheckbox').on('click', function() {
     checkMegaCheck();
     checkOtherOptions();
 });
 
-$('.gigantamaxFormCheckbox').on('click', function () {
+$('.gigantamaxFormCheckbox').on('click', function() {
     checkGigantamaxCheck();
     checkOtherOptions();
 });
 
-$('.gameRadioOption input').on('click', function () {
+$('.gameRadioOption input').on('click', function() {
     refreshGenerationsByGame();
 });
 
-$(window).on('resize', function () {
+$(window).on('resize', function() {
     generatorMenuCheck();
 
     if (
@@ -420,40 +426,40 @@ $(window).on('resize', function () {
     }
 });
 
-$('.generatorButton').on('click', function () {
+$('.generatorButton').on('click', function() {
     var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions, selectedGame, selectedType;
-    $('.generationCheckbox input').each(function () {
-        if ($(this).is(':checked')) {
+    $('.generationCheckbox input').each(function() {
+        if ($(this).prop('checked')) {
             selectedGens.push(this.value);
         }
     });
 
-    $('.alternateFormCheckbox input').each(function () {
-        if ($(this).is(':checked')) {
+    $('.alternateFormCheckbox input').each(function() {
+        if ($(this).prop('checked')) {
             selectedForms.push(this.value);
         }
     });
 
-    $('.legendaryCheckbox input').each(function () {
-        if ($(this).is(':checked')) {
+    $('.legendaryCheckbox input').each(function() {
+        if ($(this).prop('checked')) {
             selectedLegendaries.push(this.value);
         }
     });
 
-    $('.evolutionRadio input').each(function () {
-        if ($(this).is(':checked')) {
+    $('.evolutionRadio input').each(function() {
+        if ($(this).prop('checked')) {
             selectedEvolutions = this.value;
         }
     });
 
-    $('.gameRadioOption input').each(function () {
-        if ($(this).is(':checked')) {
+    $('.gameRadioOption input').each(function() {
+        if ($(this).prop('checked')) {
             selectedGame = this.value;
         }
     });
 
-    $('.typeRadioOption input').each(function () {
-        if ($(this).is(':checked')) {
+    $('.typeRadioOption input').each(function() {
+        if ($(this).prop('checked')) {
             selectedType = this.value;
         }
     });
@@ -471,7 +477,7 @@ $('.generatorButton').on('click', function () {
             exportString = data.exportString;
             fillGeneratedTable(data.appConfig);
         })
-        .fail(function () {
+        .fail(function() {
             alert("Failed To Get Team!");
         });
 });
