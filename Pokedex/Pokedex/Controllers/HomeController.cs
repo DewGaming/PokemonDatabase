@@ -137,6 +137,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = games,
                 AllTypes = types,
+                AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
             };
 
             return this.View(model);

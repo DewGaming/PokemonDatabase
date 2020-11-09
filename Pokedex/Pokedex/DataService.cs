@@ -485,6 +485,13 @@ namespace Pokedex
                 pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
             }
 
+            PokemonLegendaryDetail legendaryType = this.GetLegendaryDetail(pokemon.Id);
+
+            if (legendaryType != null)
+            {
+                pokemonViewModel.LegendaryType = legendaryType.LegendaryType;
+            }
+
             return pokemonViewModel;
         }
 

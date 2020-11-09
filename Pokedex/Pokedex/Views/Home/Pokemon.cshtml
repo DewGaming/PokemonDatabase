@@ -259,6 +259,13 @@
                             <th>Classification</th>
                             <td>@item.Pokemon.Classification.Name</td>
                         </tr>
+                        @if (item.LegendaryType != null)
+                        {
+                            <tr>
+                                <th>Legendary Classification</th>
+                                <td>@item.LegendaryType.Type</td>
+                            </tr>
+                        }
                         <tr>
                             <th>Height</th>
                             <td>

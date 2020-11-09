@@ -19,6 +19,11 @@ namespace Pokedex.Models
         public Form Form { get; set; }
 
         /// <summary>
+        /// Gets or sets the pokemon's legendary type, if applicable.
+        /// </summary>
+        public LegendaryType LegendaryType { get; set; }
+
+        /// <summary>
         /// Gets or sets the pokemon's base stats.
         /// </summary>
         public List<BaseStat> BaseStats { get; set; }
