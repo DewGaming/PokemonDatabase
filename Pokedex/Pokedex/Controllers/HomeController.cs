@@ -220,7 +220,7 @@ namespace Pokedex.Controllers
 
             if (generationId == 0)
             {
-                generationId = this.dataService.GetPokemonGameDetails(pokemon.Id).Last().Game.GenerationId;
+                generationId = this.dataService.GetPokemonGameDetails(pokemonId).Last().Game.GenerationId;
             }
 
             if (pokemon != null && pokemon.IsComplete)
