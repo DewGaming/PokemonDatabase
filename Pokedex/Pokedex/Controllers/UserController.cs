@@ -188,6 +188,7 @@ namespace Pokedex.Controllers
                 InProgressHunts = shinyHunts.Where(x => !x.HuntComplete).ToList(),
                 CompletedHunts = shinyHunts.Where(x => x.HuntComplete && x.IsPokemonCaught).ToList(),
                 FailedHunts = shinyHunts.Where(x => x.HuntComplete && !x.IsPokemonCaught).ToList(),
+                PokemonImageLocation = string.Concat(this.appConfig.WebUrl, this.appConfig.PokemonImageUrl),
             };
 
             return this.View(model);

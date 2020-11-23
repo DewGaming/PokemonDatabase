@@ -22,5 +22,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of shiny hunts that were failed.
         /// </summary>
         public List<ShinyHunt> FailedHunts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pokemon image location.
+        /// </summary>
+        public string PokemonImageLocation { get; set; }
     }
 }

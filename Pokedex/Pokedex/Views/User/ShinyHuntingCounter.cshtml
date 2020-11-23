@@ -8,6 +8,21 @@
 @section styles
 {
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <style>
+        .shinyHunts {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            width: 130px;
+            margin: 2.5px 0;
+        }
+    </style>
 }
 
 @section scripts
@@ -27,63 +42,27 @@
     @if (Model.InProgressHunts.Count > 0)
     {
         huntCount = 0;
-        <table class="table pokemonHunt huntInProgressTable">
-            <tbody>
-                <tr>
-                    <th scope="col">Pokémon</th>
-                    <th scope="col">
-                        Game@{
-                            foreach (var hunt in Model.InProgressHunts)
-                            {
-                                if (hunt.Game.Name.Contains('/'))
-                                {
-                                    @("(s)");
-                                    break;
-                                }
-                            }
-                        }
-                    </th>
-                    <th scope="col">Technique</th>
-                    @{
-                        foreach (var hunt in Model.InProgressHunts)
-                        {
-                            if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
-                            {
-                                <th scope="col">Used Shiny Charm</th>
-                                break;
-                            }
-                        }
-                    }
-                    <th scope="col">Number of Attempts</th>
-                    <th scope="col">Actions</th>
-                </tr>
+        <div class="shinyHunts pokemonList">
+            <div class="grid-container">
                 @foreach (var hunts in Model.InProgressHunts)
                 {
                     huntCount++;
-                    <tr>
-                        <td>@hunts.Pokemon.Name</td>
-                        <td>@hunts.Game.Name</td>
-                        <td>@hunts.ShinyHuntingTechnique.Name</td>
-                        @{
-                            foreach (var hunt in Model.InProgressHunts)
-                            {
-                                if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
-                                {
-                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
-                                    break;
-                                }
-                            }
-                        }
-                        <td>@hunts.ShinyAttemptCount</td>
-                        <td>
-                            <a href="@this.Url.Action("ContinueHunt", "User", new { huntId = @huntCount })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
-                            |
-                            <a href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="InProgress" })">Delete Hunt</a>
-                        </td>
-                    </tr>
+                    <div class="shadowed @hunts.Pokemon.Name">
+                        <div class="pokemonImages">
+                            <img class="pokemonlistPicture" title="@hunts.Pokemon.Name" src="@Url.Content(string.Concat(@Model.PokemonImageLocation, @hunts.PokemonId, ".png").Replace("normal", "shiny"))">
+                        </div>
+                        <div class="description">
+                            @hunts.Pokemon.Name (@hunts.Game.Name)
+                            <br>
+                            @hunts.ShinyHuntingTechnique.Name (@hunts.ShinyAttemptCount Attempts)
+                            <br>
+                            <a class="btn btn-primary" href="@this.Url.Action("ContinueHunt", "User", new { huntId = @huntCount })">@(hunts.ShinyAttemptCount == 0 ? "Begin Hunt" : "Continue Hunt")</a>
+                            <a class="bottomBtn btn btn-danger" href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="InProgress" })">Delete Hunt</a>
+                        </div>
+                    </div>
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     }
     else
     {
@@ -94,61 +73,26 @@
     @if (Model.CompletedHunts.Count > 0)
     {
         huntCount = 0;
-        <table class="table pokemonHunt huntCompleteTable">
-            <tbody>
-                <tr>
-                    <th scope="col">Pokémon</th>
-                    <th scope="col">
-                        Game@{
-                            foreach (var hunt in Model.CompletedHunts)
-                            {
-                                if (hunt.Game.Name.Contains('/'))
-                                {
-                                    @("(s)");
-                                    break;
-                                }
-                            }
-                        }
-                    </th>
-                    <th scope="col">Technique</th>
-                    @{
-                        foreach (var hunt in Model.CompletedHunts)
-                        {
-                            if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
-                            {
-                                <th scope="col">Used Shiny Charm</th>
-                                break;
-                            }
-                        }
-                    }
-                    <th scope="col">Number of Attempts</th>
-                    <th scope="col">Actions</th>
-                </tr>
+        <div class="shinyHunts pokemonList">
+            <div class="grid-container">
                 @foreach (var hunts in Model.CompletedHunts)
                 {
                     huntCount++;
-                    <tr>
-                        <td>@hunts.Pokemon.Name</td>
-                        <td>@hunts.Game.Name</td>
-                        <td>@hunts.ShinyHuntingTechnique.Name</td>
-                        @{
-                            foreach (var hunt in Model.CompletedHunts)
-                            {
-                                if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
-                                {
-                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
-                                    break;
-                                }
-                            }
-                        }
-                        <td>@hunts.ShinyAttemptCount</td>
-                        <td>
-                            <a href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Completed" })">Delete Hunt</a>
-                        </td>
-                    </tr>
+                    <div class="shadowed @hunts.Pokemon.Name">
+                        <div class="pokemonImages">
+                            <img class="pokemonlistPicture" title="@hunts.Pokemon.Name" src="@Url.Content(string.Concat(@Model.PokemonImageLocation, @hunts.PokemonId, ".png").Replace("normal", "shiny"))">
+                        </div>
+                        <div class="description">
+                            @hunts.Pokemon.Name (@hunts.Game.Name)
+                            <br>
+                            @hunts.ShinyHuntingTechnique.Name (@hunts.ShinyAttemptCount Attempts)
+                            <br>
+                            <a class="btn btn-danger" href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Completed" })">Delete Hunt</a>
+                        </div>
+                    </div>
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     }
     else
     {
@@ -159,63 +103,27 @@
     @if (Model.FailedHunts.Count > 0)
     {
         huntCount = 0;
-        <table class="table pokemonHunt huntFailedTable">
-            <tbody>
-                <tr>
-                    <th scope="col">Pokémon</th>
-                    <th scope="col">
-                        Game@{
-                            foreach (var hunt in Model.FailedHunts)
-                            {
-                                if (hunt.Game.Name.Contains('/'))
-                                {
-                                    @("(s)");
-                                    break;
-                                }
-                            }
-                        }
-                    </th>
-                    <th scope="col">Technique</th>
-                    @{
-                        foreach (var hunt in Model.FailedHunts)
-                        {
-                            if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
-                            {
-                                <th scope="col">Used Shiny Charm</th>
-                                break;
-                            }
-                        }
-                    }
-                    <th scope="col">Number of Attempts</th>
-                    <th scope="col">Actions</th>
-                </tr>
+        <div class="shinyHunts pokemonList">
+            <div class="grid-container">
                 @foreach (var hunts in Model.FailedHunts)
                 {
                     huntCount++;
-                    <tr>
-                        <td>@hunts.Pokemon.Name</td>
-                        <td>@hunts.Game.Name</td>
-                        <td>@hunts.ShinyHuntingTechnique.Name</td>
-                        @{
-                            foreach (var hunt in Model.FailedHunts)
-                            {
-                                if (hunt.Game.ReleaseDate >= new DateTime(2012, 10, 7))
-                                {
-                                    <td>@(@hunts.HasShinyCharm ? "Yes" : "No")</td>
-                                    break;
-                                }
-                            }
-                        }
-                        <td>@hunts.ShinyAttemptCount</td>
-                        <td>
-                            <a href="@this.Url.Action("RetryHunt", "User", new { huntId = @huntCount })">Retry Hunt</a>
-                            @("|")
-                            <a href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Failed" })">Delete Hunt</a>
-                        </td>
-                    </tr>
+                    <div class="shadowed @hunts.Pokemon.Name">
+                        <div class="pokemonImages">
+                            <img class="pokemonlistPicture" title="@hunts.Pokemon.Name" src="@Url.Content(string.Concat(@Model.PokemonImageLocation, @hunts.PokemonId, ".png").Replace("normal", "shiny"))">
+                        </div>
+                        <div class="description">
+                            @hunts.Pokemon.Name (@hunts.Game.Name)
+                            <br>
+                            @hunts.ShinyHuntingTechnique.Name (@hunts.ShinyAttemptCount Attempts)
+                            <br>
+                            <a class="btn btn-success" href="@this.Url.Action("RetryHunt", "User", new { huntId = @huntCount })">Retry Hunt</a>
+                            <a class="btn btn-danger" href="@this.Url.Action("RemoveHunt", "User", new { huntId = @huntCount, huntProgress="Failed" })">Delete Hunt</a>
+                        </div>
+                    </div>
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     }
     else
     {

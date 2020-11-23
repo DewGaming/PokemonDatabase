@@ -20,10 +20,6 @@
     margin-top: 20px;
 }
 
-.shinyHunt .pokemonData, table.pokedexNumber, .shinyHuntButtons {
-    width: 353px;
-}
-
 .shinyCharmCheckBox.hidden {
     display: none;
 }
@@ -41,7 +37,6 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    margin-left: -3rem;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     -webkit-box-align: center;
