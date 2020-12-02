@@ -3,6 +3,8 @@
     Layout = "_Layout";
 }
 
+<a class="btn btn-primary" href="@this.Url.Action("SendMessageNoComment", "Owner")">Send Message</a>
+
 <div class="userTable">
     @if (Model.UserList.ToList().Count() > 0)
     {
