@@ -1,0 +1,63 @@
+@model Pokedex.Models.PokemonTeamsViewModel;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Delete Pokémon Teams";
+}
+
+@section scripts
+{
+    <script>
+        var url = "/js/pokemonTeam.js";
+        $.getScript(url);
+    </script>
+}
+
+<button onclick="deleteTeams()" class="btn btn-primary" role="button">Delete Selected Teams</button>
+
+<div>
+    <table class="table pokemonTeam">
+        <tbody>
+            <tr>
+                <th class="col-md-1" scope="col">Delete Team</th>
+                <th class="col-md-2" scope="col">Team Name</th>
+                <th class="col-md-5" scope="col">Pokémon</th>
+            </tr>
+            @foreach(var p in Model.AllPokemonTeams)
+            {
+                <tr>
+                    <td>
+                        <input id="team@p.Id" type="checkbox" value="@p.Id" />
+                    </td>
+                    <td>
+                        @p.PokemonTeamName
+                        <br>
+                        (@if (p.Game != null)
+                            {
+                                @p.Game.Name
+                            }
+                            else
+                            {
+                                @("No Game Selected");
+                            })
+                    </td>
+                    <td>
+                        <table class="pokemonTeamPokemonTable">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @foreach (var pd in p.GrabPokemonTeamDetails)
+                                        {
+                                            <div class="pokemonTeamGroup">
+                                                <img class="lightshadowed pokemonTeamPokemon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, pd.IsShiny ? @Model.AppConfig.ShinyPokemonImageUrl : @Model.AppConfig.PokemonImageUrl, pd.Pokemon.Id, ".png"))" />
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

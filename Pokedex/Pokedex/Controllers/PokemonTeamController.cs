@@ -192,6 +192,21 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Bulk deletes teams from a user's pokemon team list.
+        /// </summary>
+        [Route("delete_teams")]
+        public IActionResult DeleteTeams()
+        {
+            PokemonTeamsViewModel model = new PokemonTeamsViewModel()
+            {
+                AllPokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name),
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
         /// Edits a pokemon in a user's pokemon team.
         /// </summary>
         /// <param name="pokemonTeamId">The pokemon team id.</param>

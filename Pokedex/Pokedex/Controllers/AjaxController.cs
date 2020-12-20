@@ -1418,6 +1418,30 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("delete-pokemon-teams")]
+        public string DeletePokemonTeams(List<int> teamIds)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeamsByUserId(this.dataService.GetUserWithUsername(this.User.Identity.Name).Id);
+                pokemonTeams = pokemonTeams.Where(x => teamIds.Any(y => y == x.Id)).ToList();
+
+                foreach (var t in pokemonTeams)
+                {
+                    this.dataService.DeletePokemonTeam(t.Id);
+                }
+
+                return this.Json(this.Url.Action("PokemonTeams", "User")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("update-pokemon-game-availability")]
         public string UpdatePokemonGameAvailability(int pokemonId, List<int> games)
         {

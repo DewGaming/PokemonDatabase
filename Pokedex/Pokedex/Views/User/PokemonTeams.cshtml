@@ -14,6 +14,10 @@
 <p class="teamButtons">
     <a class="btn btn-primary" href="@this.Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
     <a class="btn btn-primary" href="@this.Url.Action("ImportTeams", "PokemonTeam")" role="button">Import Teams</a>
+    @if (Model.AllPokemonTeams.ToList().Count > 0)
+    {
+        <a class="btn btn-primary" href="@this.Url.Action("DeleteTeams", "PokemonTeam")" role="button">Delete Teams</a>
+    }
     <button class="pokemonTeamsButton btn btn-primary hide">Export All Teams</button>
 </p>
 
