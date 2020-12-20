@@ -74,8 +74,12 @@
                         $('.dropdown-item.messages').html($('.dropdown-item.messages').text() + ' <b>New!</b>');
                         $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data + '</span>')
                         console.log("Unread messages");
+                        alert("You have some unread messages! Click the \"View Messages\" option under Account to view it!")
                     }
-                    console.log("No new unread messages");
+                    else
+                    {
+                      console.log("No new unread messages");
+                    }
                 })
                 .fail(function (jqXHR) {
                     if (jqXHR.statusText != "error") {
