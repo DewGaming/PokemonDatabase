@@ -384,7 +384,7 @@
                                 }
                             </th>
                             <td>
-                                @item.Pokemon.Game.Name
+                                @String.Join(" / ", item.GamesAvailableIn.Where(x => x.ReleaseDate == item.Pokemon.Game.ReleaseDate).Select(x => x.Name))
                             </td>
                         </tr>
                     </tbody>
@@ -564,15 +564,16 @@
                 <table>
                     <tbody>
                         @{
-                            var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g >= x.GenerationId).ToList();
+                            var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g == x.GenerationId).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+                            var gamesAvailableInReleaseDates = gamesAvailableInInGeneration.Select(x => x.ReleaseDate).Distinct().ToArray();
                         }
-                        @for(var i = 0; i < gamesAvailableInInGeneration.Count(); i+=2)
+                        @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
                         {
                             <tr>
-                                <td>@gamesAvailableInInGeneration[i].Name</td>
-                                @if(@gamesAvailableInInGeneration.Last() != @gamesAvailableInInGeneration[i])
+                                <td>@string.Join(" / ", gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i]).Select(x => x.Name))</td>
+                                @if(@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
                                 {
-                                    <td>@gamesAvailableInInGeneration[i+1].Name</td>
+                                    <td>@string.Join(" / ", gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).Select(x => x.Name))</td>
                                 }
                                 else
                                 {

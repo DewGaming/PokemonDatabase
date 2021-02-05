@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
@@ -180,7 +180,20 @@ namespace Pokedex.Controllers
         [Route("game_availability")]
         public IActionResult GameAvailability()
         {
-            List<Game> model = this.dataService.GetGames();
+            List<Game> gameList = this.dataService.GetGames().OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+            List<Game> model = new ();
+
+            foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                model.Add(new Game()
+                {
+                    Id = gameList.First(x => x.ReleaseDate == r).Id,
+                    Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                    GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
+                    ReleaseDate = r,
+                    Abbreviation = string.Concat(gameList.Where(x => x.ReleaseDate == r).Select(x => x.Abbreviation)),
+                });
+            }
 
             return this.View(model);
         }
