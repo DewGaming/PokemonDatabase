@@ -94,7 +94,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    AllPokemonTypeViewModel viewModel = new ()
+                    AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel()
                     {
                         AllPokemon = model,
                         AppConfig = this.appConfig,
@@ -123,7 +123,7 @@ namespace Pokedex.Controllers
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetGenerations();
             List<DataAccess.Models.Type> types = this.dataService.GetTypes();
-            List<Game> games = new ();
+            List<Game> games = new List<Game>();
 
             foreach (var gen in generations)
             {
@@ -133,7 +133,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            TeamRandomizerListViewModel model = new ()
+            TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
             {
                 AllGames = games,
                 AllTypes = types,
@@ -157,7 +157,7 @@ namespace Pokedex.Controllers
         public IActionResult DayCareEvaluator()
         {
             List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon();
-            EggGroupEvaluatorViewModel model = new ()
+            EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
                 AllPokemonWithEggGroups = eggGroupDetails,
                 AppConfig = this.appConfig,
@@ -181,7 +181,7 @@ namespace Pokedex.Controllers
         public IActionResult GameAvailability()
         {
             List<Game> gameList = this.dataService.GetGames().OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
-            List<Game> model = new ();
+            List<Game> model = new List<Game>();
 
             foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
             {
@@ -238,7 +238,7 @@ namespace Pokedex.Controllers
 
             if (pokemon?.IsComplete == true)
             {
-                List<PokemonViewModel> pokemonList = new ();
+                List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
                 PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, null, this.appConfig);
                 pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemon.Id);
 
@@ -267,7 +267,7 @@ namespace Pokedex.Controllers
                     pokemonId = pokemon.Id;
                 }
 
-                AdminPokemonDropdownViewModel model = new ()
+                AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
                 {
                     PokemonList = pokemonList,
                     PokemonId = pokemonId,
@@ -277,12 +277,12 @@ namespace Pokedex.Controllers
                 if (this.User.IsInRole("Owner"))
                 {
                     AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
-                    DropdownViewModel dropdownViewModel = new ()
+                    DropdownViewModel dropdownViewModel = new DropdownViewModel()
                     {
                         AllPokemon = allAdminPokemon,
                         AppConfig = this.appConfig,
                     };
-                    AdminGenerationTableViewModel adminDropdown = new ()
+                    AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
                     {
                         PokemonList = new List<Pokemon>(),
                         DropdownViewModel = dropdownViewModel,
@@ -309,7 +309,7 @@ namespace Pokedex.Controllers
         [Route("type_chart")]
         public IActionResult TypeChart()
         {
-            TypeChartViewModel model = new ()
+            TypeChartViewModel model = new TypeChartViewModel()
             {
                 TypeChart = this.dataService.GetTypeCharts(),
                 Types = this.dataService.GetTypes(),
@@ -322,7 +322,7 @@ namespace Pokedex.Controllers
         [Route("capture_calculator")]
         public IActionResult CaptureCalculator()
         {
-            CaptureCalculatorViewModel model = new ()
+            CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
             {
                 AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
                 AllPokeballs = this.dataService.GetPokeballsForCaptureCalculator(),
@@ -338,7 +338,7 @@ namespace Pokedex.Controllers
         [Route("comment")]
         public IActionResult Comment()
         {
-            CommentViewModel model = new ()
+            CommentViewModel model = new CommentViewModel()
             {
                 AllCategories = this.dataService.GetCommentCategories(),
                 AllPages = this.dataService.GetCommentPages(),
@@ -353,7 +353,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                CommentViewModel model = new ()
+                CommentViewModel model = new CommentViewModel()
                 {
                     AllCategories = this.dataService.GetCommentCategories(),
                     AllPages = this.dataService.GetCommentPages(),
@@ -410,8 +410,8 @@ namespace Pokedex.Controllers
             {
                 if (comment.CommentorId != 1)
                 {
-                    MailAddress fromAddress = new (this.appConfig.EmailAddress, "Pokemon Database Website");
-                    MailAddress toAddress = new (this.appConfig.EmailAddress, "Pokemon Database Email");
+                    MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
                     string body = comment.Category.Name;
                     if (comment.Page != null)
                     {
@@ -434,7 +434,7 @@ namespace Pokedex.Controllers
 
                     body = string.Concat(body, ": ", comment.Name);
 
-                    SmtpClient smtp = new ()
+                    SmtpClient smtp = new SmtpClient()
                     {
                         Host = "smtp.gmail.com",
                         Port = 587,
