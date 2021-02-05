@@ -6,12 +6,10 @@ namespace Pokedex.DataAccess.Models
     {
         public int Id { get; set; }
         [StringLength(50), Required]
-        public string Location { get; set; }
-        [Required]
+        public string HowToObtain { get; set; }
+        public string Condition { get; set; }
         public byte Rarity { get; set; }
-        [Required]
         public byte MinLevel { get; set; }
-        [Required]
         public byte MaxLevel { get; set; }
         [Required]
         public int PokemonId { get; set; }
