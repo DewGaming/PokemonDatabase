@@ -98,6 +98,40 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokemon_location/{pokemonId:int}/{gameId:int}")]
+        public IActionResult PokemonLocation(int pokemonId, int gameId)
+        {
+            PokemonLocation model = new PokemonLocation()
+            {
+                PokemonId = pokemonId,
+                GameId = gameId,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokemon_location/{pokemonId:int}/{gameId:int}")]
+        public IActionResult PokemonLocation(PokemonLocation pokemonLocation)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLocation model = new PokemonLocation()
+                {
+                    PokemonId = pokemonLocation.PokemonId,
+                    GameId = pokemonLocation.GameId,
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.AddPokemonLocation(pokemonLocation);
+
+            return this.RedirectToAction("GameLocations", "Edit", new { pokemonId = pokemonLocation.PokemonId });
+        }
+
+        [HttpGet]
         [Route("add_shiny_hunting_technique")]
         public IActionResult ShinyHuntingTechnique()
         {

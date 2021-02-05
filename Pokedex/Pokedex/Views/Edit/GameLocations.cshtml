@@ -1,0 +1,99 @@
+@model Pokedex.Models.AdminGameLocationViewModel;
+@{
+    Layout = "_Layout";
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" game="text/css" />
+    <style>
+        .gameButton {
+            margin: 1rem auto 0 0;
+        }
+
+        .table th,
+        .table td {
+            color: #212529;
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table th {
+            font-weight: 700;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/pageLookup.js" game="text/javascript"></script>
+}
+
+<div class="pageButtons">
+    @foreach (var item in Model.AllGames)
+    {
+        <button id="Game@(item.Id)" onclick="lookupGames('@item.Id')">@item.Name</button>
+    }
+</div>
+<div class="gameTable">
+    @foreach (var game in Model.AllGames)
+    {
+        <div class="page game@(game.Id)">
+            @if (this.User.IsInRole("Owner"))
+            {
+                <a class="gameButton btn btn-primary" href="@this.Url.Action("PokemonLocation", "Add", new { pokemonId = @Model.PokemonId, gameId = @game.Id })" role="button">Add Game</a>
+            }
+            <table class="table gameTable">
+                <tr>
+                    <th scope="col">How To Obtain</th>
+                    <th scope="col">Rarity</th>
+                    <th scope="col">Minimum Level</th>
+                    <th scope="col">Maximum Level</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach (var item in Model.AllLocations.Where(x => x.PokemonId == Model.PokemonId && x.GameId == game.Id).ToList())
+                {
+                    <tr>
+                        <td>@item.HowToObtain@(!string.IsNullOrEmpty(item.Condition) ? " (" + item.Condition + ")" : string.Empty)</td>
+                        <td>
+                            @if (item.Rarity > 0)
+                            {
+                                @(item.Rarity.ToString() + '%')
+                            }
+                            else
+                            {
+                                @("N/A")
+                            }
+                        </td>
+                        <td>
+                            @if (item.MinLevel > 0)
+                            {
+                                @item.MinLevel
+                            }
+                            else
+                            {
+                                @("N/A")
+                            }
+                        </td>
+                        <td>
+                            @if (item.MaxLevel > 0)
+                            {
+                                @item.MaxLevel
+                            }
+                            else
+                            {
+                                @("N/A")
+                            }
+                        </td>
+                        <td>
+                            <a href="@(this.Url.Action("PokemonLocation", "Edit", new { id = item.Id }))">Edit</a>
+                            |
+                            <a href="@(this.Url.Action("PokemonLocation", "Delete", new { id = item.Id }))">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+</div>

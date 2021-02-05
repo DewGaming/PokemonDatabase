@@ -67,6 +67,44 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("game_locations/{pokemonId:int}")]
+        public IActionResult GameLocations(int pokemonId)
+        {
+            AdminGameLocationViewModel model = new AdminGameLocationViewModel()
+            {
+                PokemonId = pokemonId,
+                AllGames = this.dataService.GetPokemonGameDetails(pokemonId).Select(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
+                AllLocations = this.dataService.GetPokemonLocations(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpGet]
+        [Route("edit_pokemon_location/{id:int}")]
+        public IActionResult PokemonLocation(int id)
+        {
+            PokemonLocation model = this.dataService.GetPokemonLocation(id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("edit_pokemon_location/{id:int}")]
+        public IActionResult PokemonLocation(PokemonLocation pokemonLocation)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLocation model = this.dataService.GetPokemonLocation(pokemonLocation.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdatePokemonLocation(pokemonLocation);
+
+            return this.RedirectToAction("GameLocations", "Edit", new { pokemonId = pokemonLocation.PokemonId });
+        }
+
         [Route("game_availability/{pokemonId:int}")]
         public IActionResult PokemonGameDetails(int pokemonId)
         {

@@ -478,6 +478,7 @@ namespace Pokedex
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
                 GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
+                PokemonLocations = this.GetPokemonLocations(),
                 AppConfig = appConfig,
             };
 
@@ -1946,6 +1947,16 @@ namespace Pokedex
             return this.dataContext.Generations.ToList().Find(x => x.Id == id);
         }
 
+        public PokemonLocation GetPokemonLocation(int id)
+        {
+            return this.dataContext.PokemonLocations.ToList().Find(x => x.Id == id);
+        }
+
+        public List<PokemonLocation> GetPokemonLocations()
+        {
+            return this.dataContext.PokemonLocations.ToList();
+        }
+
         public Generation GetGenerationFromGame(int id)
         {
             return this.dataContext.Games
@@ -2365,6 +2376,18 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPokemonLocation(PokemonLocation pokemonLocation)
+        {
+            this.dataContext.PokemonLocations.Add(pokemonLocation);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonLocation(PokemonLocation pokemonLocation)
+        {
+            this.dataContext.PokemonLocations.Update(pokemonLocation);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdatePokemonCaptureRateDetail(PokemonCaptureRateDetail pokemonCaptureRate)
         {
             this.dataContext.PokemonCaptureRateDetails.Update(pokemonCaptureRate);
@@ -2702,6 +2725,13 @@ namespace Pokedex
         {
             TypeChart typeChart = this.GetTypeChart(id);
             this.dataContext.TypeCharts.Remove(typeChart);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonLocation(int id)
+        {
+            PokemonLocation pokemonLocation = this.GetPokemonLocation(id);
+            this.dataContext.PokemonLocations.Remove(pokemonLocation);
             this.dataContext.SaveChanges();
         }
 
