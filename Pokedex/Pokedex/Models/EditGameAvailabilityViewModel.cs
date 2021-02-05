@@ -14,7 +14,7 @@ namespace Pokedex.Models
         public List<Game> Games { get; set; }
 
         /// <summary>
-        /// Gets the game who's availability is being edited.
+        /// Gets or sets the game who's availability is being edited.
         /// </summary>
         public Game Game { get; set; }
 
