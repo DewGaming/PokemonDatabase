@@ -160,6 +160,7 @@ namespace Pokedex.Controllers
             {
                 AllMoves = this.dataService.GetMoves(),
                 AllTypes = this.dataService.GetTypes(),
+                AllGames = this.dataService.GetGames().OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
                 AllMoveCategories = this.dataService.GetMoveCategories(),
             };
 
