@@ -21,6 +21,11 @@
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
+        span[title] {
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+
         .surroundingPokemon {
             margin: 5px 0;
         }
@@ -116,6 +121,10 @@
                     $('.pokemonImage').addClass('shiny')
                 }
             }
+        })
+
+        $('span[title]').on('click', function() {
+            alert($(this).attr('title'))
         })
     </script>
 }
@@ -316,27 +325,31 @@
                                     }
                                 </th>
                                 <td>
-                                    <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryAbility.Description">
+                                    <span title="Ability Name: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryAbility.Name
+Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryAbility.Description">
                                         @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryAbility.Name
                                     </span>
                                     @if (@item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility != null)
                                     {
                                         <br>
-                                        <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility.Description">
+                                        <span title="Ability Name: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility.Name
+Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility.Description">
                                             @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility.Name
                                         </span>
                                     }
                                     @if (@item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility != null && @g >= 5)
                                     {
                                         <br>
-                                        <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility.Description">
+                                        <span title="Ability Name: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility.Name
+Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility.Description">
                                             @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility.Name (Hidden)
                                         </span>
                                     }
                                     @if (@item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility != null)
                                     {
                                         <br>
-                                        <span title="Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility.Description">
+                                        <span title="Ability Name: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility.Name
+Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility.Description">
                                             @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility.Name (Special Ability)
                                         </span>
                                     }
