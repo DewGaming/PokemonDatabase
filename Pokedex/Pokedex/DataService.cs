@@ -88,6 +88,8 @@ namespace Pokedex
         public List<Game> GetGames()
         {
             return this.dataContext.Games
+                .OrderBy(x => x.ReleaseDate)
+                .ThenBy(x => x.Id)
                 .ToList();
         }
 
@@ -475,7 +477,7 @@ namespace Pokedex
                 PreEvolution = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
-                GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).Select(x => x.Game).ToList(),
+                GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
                 AppConfig = appConfig,
             };
 
