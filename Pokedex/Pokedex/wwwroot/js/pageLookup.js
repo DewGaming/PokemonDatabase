@@ -145,3 +145,19 @@ function lookupMoveTypes(typeId) {
     $('.type' + typeId).addClass('active');
   }
 }
+
+function lookupGames(gameId) {
+  if (!$('.active').is($('#Game' + gameId))) {
+    $('button').each(function () {
+      $(this).removeClass('active');
+    });
+
+    $('.page').each(function () {
+      $(this).removeClass('active');
+    });
+
+    $('button#Game' + gameId).addClass('active');
+
+    $('.game' + gameId).addClass('active');
+  }
+}

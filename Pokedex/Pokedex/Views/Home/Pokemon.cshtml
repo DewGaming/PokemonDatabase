@@ -582,11 +582,63 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         }
                         @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
                         {
+                            var gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i]).ToList();
                             <tr>
-                                <td>@string.Join(" / ", gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i]).Select(x => x.Name))</td>
+                                <td>
+                                    @for(var j = 0; j < gameList.Count(); j++)
+                                    {
+                                        @if (j > 0)
+                                        {
+                                            @(" / ")
+                                        }
+                                        @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id) >= 0)
+                                        {
+                                            string gameTitle = string.Empty;
+                                            foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id))
+                                            {
+                                                gameTitle += string.Concat(l.HowToObtain,!string.IsNullOrEmpty(l.Condition) ? " (" + l.Condition + ")" : string.Empty, ": Rarity: ", l.Rarity, "% | Level ", l.MinLevel, "-", l.MaxLevel);
+                                                if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id).Last())
+                                                {
+                                                    gameTitle += "\n";
+                                                }
+                                            }
+                                            <b><span title="@gameTitle">@gameList[j].Name</span></b>
+                                        }
+                                        else
+                                        {
+                                            @gameList[j].Name
+                                        }
+                                    }
+                                </td>
                                 @if(@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
                                 {
-                                    <td>@string.Join(" / ", gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).Select(x => x.Name))</td>
+                                    gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).ToList();
+                                    <td>
+                                        @for(var j = 0; j < gameList.Count(); j++)
+                                        {
+                                            @if (j > 0)
+                                            {
+                                                @(" / ")
+                                            }
+                                            @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id) >= 0)
+                                            {
+                                                string gameTitle = string.Empty;
+                                                foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id))
+                                                {
+                                                    gameTitle += string.Concat(l.HowToObtain,!string.IsNullOrEmpty(l.Condition) ? " (" + l.Condition + ")" : string.Empty, ": Rarity: ", l.Rarity, "% | Level ", l.MinLevel, "-", l.MaxLevel);
+                                                    if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id).Last())
+                                                    {
+                                                        gameTitle += "\n";
+                                                    }
+                                                }
+                                                <b><span title="@gameTitle">@gameList[j].Name</span></b>
+                                            }
+                                            else
+                                            {
+                                                @gameList[j].Name
+                                            }
+                                        }
+                                    </td>
                                 }
                                 else
                                 {
