@@ -14,6 +14,9 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public byte MaxLevel { get; set; }
         [Required]
+        public int PokemonId { get; set; }
+        public Pokemon Pokemon { get; set; }
+        [Required]
         public int GameId { get; set; }
         public Game Game { get; set; }
     }
