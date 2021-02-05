@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class ShinyHuntingTechnique   
+    public class ShinyHuntingTechnique
     {
         public int Id { get; set; }
         [Display(Name = "Name of Technique"), Required]

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class BaseStat   
+    public class BaseStat
     {
         public int Id { get; set; }
         [Required]

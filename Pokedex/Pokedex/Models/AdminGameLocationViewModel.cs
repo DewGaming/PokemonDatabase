@@ -9,7 +9,7 @@ namespace Pokedex.Models
     public class AdminGameLocationViewModel
     {
         /// <summary>
-        // Gets or sets the pokemon's Id.
+        /// Gets or sets the pokemon's Id.
         /// </summary>
         public int PokemonId { get; set; }
 

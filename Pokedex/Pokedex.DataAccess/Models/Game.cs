@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class Game   
+    public class Game
     {
         public int Id { get; set; }
         [StringLength(50)]

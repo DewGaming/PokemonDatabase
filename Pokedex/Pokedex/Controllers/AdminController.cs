@@ -287,7 +287,7 @@ namespace Pokedex.Controllers
         public IActionResult BattleItems()
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;

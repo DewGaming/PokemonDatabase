@@ -444,7 +444,7 @@ namespace Pokedex.Controllers
                         Credentials = new NetworkCredential(fromAddress.Address, this.appConfig.EmailAddressPassword),
                     };
 
-                    using var message = new MailMessage(fromAddress, toAddress)
+                    using MailMessage message = new MailMessage(fromAddress, toAddress)
                     {
                         Subject = "New Comment for Pokémon Database",
                         Body = body,

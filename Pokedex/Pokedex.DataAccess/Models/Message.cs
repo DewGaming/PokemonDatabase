@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class Message   
+    public class Message
     {
         public int Id { get; set; }
         [StringLength(1000), Required, Display(Name = "Title")]

@@ -6,7 +6,7 @@ namespace Pokedex
     /// <summary>
     /// The class that is used to represent the Program.
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// The method that starts the program.
@@ -24,14 +24,6 @@ namespace Pokedex
         /// <returns>Returns the created host builder.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args) => Host
             .CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder
-                .ConfigureKestrel(serverOptions =>
-                {
-                    // Set properties and call methods on options
-                })
-                .UseStartup<Startup>();
-            });
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }

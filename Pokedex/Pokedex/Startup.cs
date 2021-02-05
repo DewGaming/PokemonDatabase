@@ -83,7 +83,7 @@ namespace Pokedex
         {
             app.UseResponseCompression();
 
-            var cookiePolicyOptions = new CookiePolicyOptions
+            CookiePolicyOptions cookiePolicyOptions = new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict,
             };
@@ -100,10 +100,7 @@ namespace Pokedex
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.CacheControl] = "public,max-age=" + (60 * 60 * 24 * 7);
-                },
+                OnPrepareResponse = ctx => ctx.Context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.CacheControl] = "public,max-age=" + (60 * 60 * 24 * 7),
             });
 
             app.UseHttpsRedirection();

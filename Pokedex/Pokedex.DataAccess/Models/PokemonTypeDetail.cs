@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class PokemonTypeDetail  
+    public class PokemonTypeDetail
     {
         public int Id { get; set; }
         [Required]

@@ -49,7 +49,7 @@ namespace Pokedex.Controllers
             };
 
             List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
@@ -74,7 +74,7 @@ namespace Pokedex.Controllers
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
                 };
                 List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                 foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
@@ -180,13 +180,13 @@ namespace Pokedex.Controllers
         public IActionResult FormItem()
         {
             FormItemViewModel model = new FormItemViewModel();
-            List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").Select(x => x.AltFormPokemon).ToList();
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Primal").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Origin").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Ultra").Select(x => x.AltFormPokemon).ToList());
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Crowned").Select(x => x.AltFormPokemon).ToList());
+            List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").ConvertAll(x => x.AltFormPokemon);
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").ConvertAll(x => x.AltFormPokemon));
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").ConvertAll(x => x.AltFormPokemon));
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Primal").ConvertAll(x => x.AltFormPokemon));
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Origin").ConvertAll(x => x.AltFormPokemon));
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Ultra").ConvertAll(x => x.AltFormPokemon));
+            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Crowned").ConvertAll(x => x.AltFormPokemon));
 
             foreach (var p in this.dataService.GetFormItems().Select(x => x.Pokemon))
             {
@@ -592,7 +592,7 @@ namespace Pokedex.Controllers
 
         [HttpGet]
         [Route("add_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail(int id)
+        public IActionResult PokeballCatchModifierDetail()
         {
             return this.View();
         }
@@ -754,7 +754,7 @@ namespace Pokedex.Controllers
         public IActionResult BattleItem()
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
@@ -928,14 +928,12 @@ namespace Pokedex.Controllers
             {
                 WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
 
-                using (WebResponse webResponse = webRequest.GetResponse())
-                {
-                    Stream stream = webResponse.GetResponseStream();
-                    MemoryStream memoryStream = new MemoryStream();
-                    stream.CopyTo(memoryStream);
+                using WebResponse webResponse = webRequest.GetResponse();
+                Stream stream = webResponse.GetResponseStream();
+                MemoryStream memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
 
-                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
-                }
+                upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
             }
             else
             {
@@ -950,9 +948,9 @@ namespace Pokedex.Controllers
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())
+                using (Stream requestStream = request.GetRequestStream())
                 {
-                    await upload.CopyToAsync(requestStream);
+                    await upload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -966,9 +964,9 @@ namespace Pokedex.Controllers
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())
+                using (Stream requestStream = request.GetRequestStream())
                 {
-                    await spriteUpload.CopyToAsync(requestStream);
+                    await spriteUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -978,12 +976,12 @@ namespace Pokedex.Controllers
             }
             else
             {
-                WebClient webRequest = new WebClient
-                {
-                    Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword),
-                };
+                // WebClient webRequest = new WebClient
+                // {
+                //     Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword),
+                // };
 
-                byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
+                // byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
                 MemoryStream strm = new MemoryStream();
                 IFormFile tempUpload = new FormFile(strm, 0, strm.Length, "image", "image.png");
 
@@ -991,15 +989,13 @@ namespace Pokedex.Controllers
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = ftpRequest.GetRequestStream())
+                using (Stream requestStream = ftpRequest.GetRequestStream())
                 {
-                    await tempUpload.CopyToAsync(requestStream);
+                    await tempUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
-                using (FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse())
-                {
-                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
+                using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
+                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
 
             Game game = this.dataService.GetGame(newPokemon.GameId);
@@ -1097,14 +1093,12 @@ namespace Pokedex.Controllers
             {
                 WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
 
-                using (WebResponse webResponse = webRequest.GetResponse())
-                {
-                    Stream stream = webResponse.GetResponseStream();
-                    MemoryStream memoryStream = new MemoryStream();
-                    stream.CopyTo(memoryStream);
+                using WebResponse webResponse = webRequest.GetResponse();
+                Stream stream = webResponse.GetResponseStream();
+                MemoryStream memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
 
-                    upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
-                }
+                upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
             }
             else
             {
@@ -1119,9 +1113,9 @@ namespace Pokedex.Controllers
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())
+                using (Stream requestStream = request.GetRequestStream())
                 {
-                    await upload.CopyToAsync(requestStream);
+                    await upload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -1135,9 +1129,9 @@ namespace Pokedex.Controllers
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = request.GetRequestStream())
+                using (Stream requestStream = request.GetRequestStream())
                 {
-                    await spriteUpload.CopyToAsync(requestStream);
+                    await spriteUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -1161,15 +1155,13 @@ namespace Pokedex.Controllers
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
 
-                using (var requestStream = ftpRequest.GetRequestStream())
+                using (Stream requestStream = ftpRequest.GetRequestStream())
                 {
-                    await tempUpload.CopyToAsync(requestStream);
+                    await tempUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
-                using (FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse())
-                {
-                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
+                using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
+                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
 
             this.dataService.AddPokemon(alternatePokemon);

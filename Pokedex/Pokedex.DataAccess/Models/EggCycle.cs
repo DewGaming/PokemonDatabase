@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class EggCycle   
+    public class EggCycle
     {
         public int Id { get; set; }
         [Required, Display(Name = "Egg Cycles")]
@@ -14,7 +14,7 @@ namespace Pokedex.DataAccess.Models
         {
             get
             {
-                return string.Concat(CycleCount.ToString(), " (", CycleCount * 257, "-", CycleCount * 257 + 256, ")");
+                return string.Concat(CycleCount.ToString(), " (", CycleCount * 257, "-", (CycleCount * 257) + 256, ")");
             }
         }
     }

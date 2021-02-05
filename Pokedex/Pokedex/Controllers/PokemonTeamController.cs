@@ -103,7 +103,7 @@ namespace Pokedex.Controllers
             }
 
             List<string> pokemonTeams = importedTeams.Split("\r\n===").ToList();
-            for (var i = 1; i < pokemonTeams.Count(); i++)
+            for (var i = 1; i < pokemonTeams.Count; i++)
             {
                 pokemonTeams[i] = string.Concat("===", pokemonTeams[i]);
             }
@@ -126,7 +126,7 @@ namespace Pokedex.Controllers
         public IActionResult CreatePokemon(int pokemonTeamId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId || pokemonTeams[pokemonTeamId - 1].SixthPokemonId != null)
+            if (pokemonTeams.Count < pokemonTeamId || pokemonTeams[pokemonTeamId - 1].SixthPokemonId != null)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -194,6 +194,7 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Bulk deletes teams from a user's pokemon team list.
         /// </summary>
+        /// <returns>The Delete Teams page.</returns>
         [Route("delete_teams")]
         public IActionResult DeleteTeams()
         {
@@ -217,7 +218,7 @@ namespace Pokedex.Controllers
         public IActionResult EditPokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId)
+            if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -295,7 +296,7 @@ namespace Pokedex.Controllers
         public IActionResult DeleteTeam(int pokemonTeamId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId)
+            if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -345,7 +346,7 @@ namespace Pokedex.Controllers
         public IActionResult EditEV(int pokemonTeamId, int pokemonTeamDetailId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId)
+            if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -429,7 +430,7 @@ namespace Pokedex.Controllers
         public IActionResult EditMoveset(int pokemonTeamId, int pokemonTeamDetailId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId)
+            if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -491,7 +492,7 @@ namespace Pokedex.Controllers
         public IActionResult EditIV(int pokemonTeamId, int pokemonTeamDetailId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId)
+            if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -557,7 +558,7 @@ namespace Pokedex.Controllers
         public IActionResult DeletePokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
             this.UpdatePokemonTeamList();
-            if (pokemonTeams.Count() < pokemonTeamId)
+            if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
             }
@@ -676,16 +677,14 @@ namespace Pokedex.Controllers
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
 
-            List<Pokemon> altForms = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altForms = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
 
             foreach (var p in pokemonList.Where(x => altForms.Any(y => y.Id == x.Id)).ToList())
             {
                 p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
-            pokemonList = pokemonList.OrderBy(x => x.Name).ToList();
-
-            return pokemonList;
+            return pokemonList.OrderBy(x => x.Name).ToList();
         }
 
         /// <summary>
@@ -729,7 +728,7 @@ namespace Pokedex.Controllers
             List<string> filteredPokemonList = new List<string>();
             foreach (var p in pokemonList)
             {
-                if (!string.IsNullOrEmpty(p) && filteredPokemonList.Count() < 6)
+                if (!string.IsNullOrEmpty(p) && filteredPokemonList.Count < 6)
                 {
                     filteredPokemonList.Add(p);
                 }
@@ -772,10 +771,10 @@ namespace Pokedex.Controllers
                 int generationStart = generationId.IndexOf(" [");
                 int generationEnd = generationId.IndexOf("] ");
                 generationId = generationId.Substring(generationStart, generationEnd - generationStart);
-                int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, @"[^0-9]+", string.Empty));
+                int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, "[^0-9]+", string.Empty));
                 if (availableGames.Find(x => x.Id == genId) != null)
                 {
-                    pokemonTeam.GameId = availableGames.Where(x => x.GenerationId == genId).Last().Id;
+                    pokemonTeam.GameId = availableGames.Last(x => x.GenerationId == genId).Id;
                 }
                 else
                 {
@@ -927,7 +926,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id).First();
+                ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id)[0];
             }
 
             pokemonTeamDetail.AbilityId = ability.Id;
@@ -1097,7 +1096,7 @@ namespace Pokedex.Controllers
 
                 foreach (var m in moves)
                 {
-                    if (!string.IsNullOrEmpty(m) && validMoves.Count() < 4)
+                    if (!string.IsNullOrEmpty(m) && validMoves.Count < 4)
                     {
                         validMoves.Add(m);
                     }

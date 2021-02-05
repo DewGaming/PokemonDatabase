@@ -5,7 +5,7 @@ namespace Pokedex.DataAccess.Models
     /// <summary>
     /// The class that is used to represent the form table in a database.
     /// </summary>
-    public class Form   
+    public class Form
     {
         /// <summary>
         /// Gets or sets the primary key of the table.
@@ -19,8 +19,9 @@ namespace Pokedex.DataAccess.Models
         public string Name { get; set; }
 
         [Display(Name="Part Of \"Other Forms\" In Randomize Team Page"), Required]
-        /// <sumnmary>
+        /// <summary>
         /// Gets or sets the ability to appear in the other forms category in the randomize team page.
+        /// </summary>
         public bool Randomizable { get; set; }
     }
 }

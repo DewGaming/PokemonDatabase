@@ -77,14 +77,14 @@ namespace Pokedex.Controllers
 
             this.dataService.AddUser(user);
 
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.IsOwner ? "Owner" : user.IsAdmin ? "Admin" : "User"),
             };
 
-            var claimsIdentity = new ClaimsIdentity(
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(
                 claims,
                 CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -95,7 +95,7 @@ namespace Pokedex.Controllers
                 {
                     IsPersistent = true,
                     AllowRefresh = true,
-                });
+                }).ConfigureAwait(false);
 
             return this.RedirectToAction("Index", "Home");
         }
@@ -150,14 +150,14 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            var claims = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.IsOwner ? "Owner" : user.IsAdmin ? "Admin" : "User"),
             };
 
-            var claimsIdentity = new ClaimsIdentity(
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(
                 claims,
                 CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -168,7 +168,7 @@ namespace Pokedex.Controllers
                 {
                     IsPersistent = true,
                     AllowRefresh = true,
-                });
+                }).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(returnUrl))
             {
@@ -188,8 +188,7 @@ namespace Pokedex.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
-            await this.HttpContext.SignOutAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
 
             return this.RedirectToAction("Index", "Home");
         }

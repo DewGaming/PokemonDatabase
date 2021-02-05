@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class GenderRatio   
+    public class GenderRatio
     {
         public int Id { get; set; }
         [Required, Display(Name = "Male Ratio")]

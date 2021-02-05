@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class Comment   
+    public class Comment
     {
         public int Id { get; set; }
         [StringLength(500), Required(ErrorMessage = "Comment is required"), Display(Name = "Comment")]

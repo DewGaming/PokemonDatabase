@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
 {
-    public class Evolution   
+    public class Evolution
     {
         public int Id { get; set; }
         [StringLength(200), Display(Name = "Evolution Details (If Any)")]

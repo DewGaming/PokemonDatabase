@@ -7,10 +7,10 @@ namespace Pokedex.DataAccess.Models
     public class PokemonTeam
     {
         public int Id { get; set; }
-        
+
         [Required, Display(Name = "Pokemon Team Name")]
         public string PokemonTeamName { get; set; }
-        
+
         [Display(Name = "Origin Game(s) (Optional)")]
         public int? GameId { get; set; }
 

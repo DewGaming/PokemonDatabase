@@ -176,7 +176,7 @@ namespace Pokedex.Controllers
         {
             Game game = this.dataService.GetGame(gameId);
             List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetPokemonGameDetailsByGame(gameId);
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel()
             {
                 PokemonList = this.dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList(),
@@ -200,7 +200,7 @@ namespace Pokedex.Controllers
                 PokemonTeam pokemonTeam = this.dataService.GetPokemonTeam(teamId);
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
                 List<PokemonTeamDetail> pokemonList = pokemonTeam.GrabPokemonTeamDetails;
-                if (pokemonList.Count() > 0)
+                if (pokemonList.Count > 0)
                 {
                     ExportPokemonViewModel pokemonTeamExport = new ExportPokemonViewModel()
                     {
@@ -215,7 +215,7 @@ namespace Pokedex.Controllers
 
                     pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, pokemonTeam.PokemonTeamName, " ===\n\n");
 
-                    for (var i = 0; i < pokemonList.Count(); i++)
+                    for (var i = 0; i < pokemonList.Count; i++)
                     {
                         if (i != 0)
                         {
@@ -250,7 +250,7 @@ namespace Pokedex.Controllers
                 foreach (var team in pokemonTeams)
                 {
                     pokemonList = team.GrabPokemonTeamDetails;
-                    if (pokemonList.Count() > 0)
+                    if (pokemonList.Count > 0)
                     {
                         ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel
                         {
@@ -265,7 +265,7 @@ namespace Pokedex.Controllers
 
                         pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, team.PokemonTeamName, " ===\n\n");
 
-                        for (var i = 0; i < pokemonList.Count(); i++)
+                        for (var i = 0; i < pokemonList.Count; i++)
                         {
                             if (i != 0)
                             {
@@ -520,7 +520,7 @@ namespace Pokedex.Controllers
                 List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetPokemonGameDetailsByGame(gameId);
                 List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete();
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
-                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                 foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     p.Name = string.Concat(p.Name, " (", this.dataService.GetFormByAltFormId(p.Id).Name, ")");
@@ -656,7 +656,7 @@ namespace Pokedex.Controllers
                         pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == moonStoneEvolve).CatchModifier;
                         break;
                     case "Beast Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (legendary != null && legendary.LegendaryType.Type == "Ultra Beast")).CatchModifier;
+                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (legendary?.LegendaryType.Type == "Ultra Beast")).CatchModifier;
                         break;
                     default:
                         pokeballEffect = pokeballDetails[0].CatchModifier;
@@ -808,7 +808,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    if (legendary != null && legendary.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
+                    if (legendary?.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
                     {
                         pokeballEffect = 0.1f;
                     }
@@ -830,7 +830,7 @@ namespace Pokedex.Controllers
                     captureChance = Math.Pow(Math.Floor(65536 / Math.Pow(255 / catchValue, 3f / 16f)) / 65536, 4);
                 }
 
-                captureChance = captureChance * 100;
+                captureChance *= 100;
                 chanceText = Math.Round(captureChance, 2) + "% chance";
                 if (captureChance >= 100)
                 {
@@ -886,25 +886,25 @@ namespace Pokedex.Controllers
                     allPokemon = allPokemon.Except(allPokemon.Where(x => x.Game.GenerationId == gen.Id)).ToList();
                 }
 
-                if (selectedLegendaries.Count() == 0)
+                if (selectedLegendaries.Count == 0)
                 {
                     List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes();
 
                     foreach (var p in legendaryList)
                     {
-                        allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == p.PokemonId));
+                        allPokemon.Remove(allPokemon.Find(x => x.Id == p.PokemonId));
                     }
                 }
                 else
                 {
-                    List<string> legendaryTypes = this.dataService.GetLegendaryTypes().Select(x => x.Type).ToList();
+                    List<string> legendaryTypes = this.dataService.GetLegendaryTypes().ConvertAll(x => x.Type);
                     foreach (var legendary in legendaryTypes.Except(selectedLegendaries).ToList())
                     {
                         List<PokemonLegendaryDetail> legendaryList = this.dataService.GetAllPokemonWithLegendaryTypes().Where(x => x.LegendaryType.Type == legendary).ToList();
 
                         foreach (var l in legendaryList)
                         {
-                            allPokemon.Remove(allPokemon.FirstOrDefault(x => x.Id == l.PokemonId));
+                            allPokemon.Remove(allPokemon.Find(x => x.Id == l.PokemonId));
                         }
                     }
                 }
@@ -925,7 +925,7 @@ namespace Pokedex.Controllers
                     allPokemon = legendaryList;
                 }
 
-                if (selectedForms.Count() != 0)
+                if (selectedForms.Count != 0)
                 {
                     List<Pokemon> altForms = new List<Pokemon>();
 
@@ -943,13 +943,13 @@ namespace Pokedex.Controllers
                                 a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
                             }
 
-                            if (altForm.Count() > 0)
+                            if (altForm.Count > 0)
                             {
                                 filteredFormList.AddRange(altForm);
                             }
                         }
 
-                        if (filteredFormList.Count() > 0)
+                        if (filteredFormList.Count > 0)
                         {
                             foreach (var p in filteredFormList)
                             {
@@ -972,13 +972,13 @@ namespace Pokedex.Controllers
                                 a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
                             }
 
-                            if (altForm.Count() > 0)
+                            if (altForm.Count > 0)
                             {
                                 filteredFormList.AddRange(altForm);
                             }
                         }
 
-                        if (filteredFormList.Count() > 0)
+                        if (filteredFormList.Count > 0)
                         {
                             foreach (var p in filteredFormList)
                             {
@@ -1001,13 +1001,13 @@ namespace Pokedex.Controllers
                                 a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
                             }
 
-                            if (altForm.Count() > 0)
+                            if (altForm.Count > 0)
                             {
                                 filteredFormList.AddRange(altForm);
                             }
                         }
 
-                        if (filteredFormList.Count() > 0)
+                        if (filteredFormList.Count > 0)
                         {
                             foreach (var p in filteredFormList)
                             {
@@ -1030,13 +1030,13 @@ namespace Pokedex.Controllers
                                 a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
                             }
 
-                            if (altForm.Count() > 0)
+                            if (altForm.Count > 0)
                             {
                                 filteredFormList.AddRange(altForm);
                             }
                         }
 
-                        if (filteredFormList.Count() > 0)
+                        if (filteredFormList.Count > 0)
                         {
                             foreach (var p in filteredFormList)
                             {
@@ -1049,7 +1049,7 @@ namespace Pokedex.Controllers
                     {
                         List<PokemonFormDetail> pokemonFormList = this.dataService.GetAllAltFormsOnlyComplete();
 
-                        List<Form> formsToRemove = this.dataService.GetForms().Where(x => x.Randomizable == false).ToList();
+                        List<Form> formsToRemove = this.dataService.GetForms().Where(x => !x.Randomizable).ToList();
 
                         foreach (var f in formsToRemove)
                         {
@@ -1066,13 +1066,13 @@ namespace Pokedex.Controllers
                                 a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
                             }
 
-                            if (altForm.Count() > 0)
+                            if (altForm.Count > 0)
                             {
                                 filteredFormList.AddRange(altForm);
                             }
                         }
 
-                        if (filteredFormList.Count() > 0)
+                        if (filteredFormList.Count > 0)
                         {
                             foreach (var p in filteredFormList)
                             {
@@ -1088,7 +1088,7 @@ namespace Pokedex.Controllers
 
                 if (onlyAltForms)
                 {
-                    List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                    List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                     allPokemon = allPokemon.Where(x => altFormsList.Any(y => y.Id == x.Id)).ToList();
                 }
 
@@ -1182,16 +1182,16 @@ namespace Pokedex.Controllers
                     allPokemon = newPokemon;
                 }
 
-                if (availablePokemon.Count() > 1)
+                if (availablePokemon.Count > 1)
                 {
                     allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                 }
 
-                if (allPokemon.Count() > 0)
+                if (allPokemon.Count > 0)
                 {
                     for (var i = 0; i < 6; i++)
                     {
-                        if (pokemonList.Count() >= allPokemon.Count())
+                        if (pokemonList.Count >= allPokemon.Count)
                         {
                             break;
                         }
@@ -1253,7 +1253,7 @@ namespace Pokedex.Controllers
                 {
                     if (generationId != 0)
                     {
-                        model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = generationId }));
+                        model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId }));
                     }
                     else
                     {
@@ -1269,7 +1269,7 @@ namespace Pokedex.Controllers
                         List<Ability> abilities = new List<Ability>();
                         if (generationId != 0)
                         {
-                            pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Where(x => x.GenerationId <= generationId).Last();
+                            pokemonAbilities = this.dataService.GetPokemonWithAbilities(p.Id).Last(x => x.GenerationId <= generationId);
                         }
                         else
                         {
@@ -1524,7 +1524,7 @@ namespace Pokedex.Controllers
             {
                 List<BattleItem> battleItems = new List<BattleItem>();
                 List<FormItem> formItems = this.dataService.GetFormItems().Where(x => x.PokemonId == pokemonId).ToList();
-                if (formItems.Count() == 0)
+                if (formItems.Count == 0)
                 {
                     Generation generation = this.dataService.GetGeneration(generationId);
                     List<BattleItem> allBattleItems = this.dataService.GetBattleItems();
@@ -1532,19 +1532,19 @@ namespace Pokedex.Controllers
                     if (generation != null)
                     {
                         battleItems = battleItems.Where(x => x.Generation.Id <= generation.Id).ToList();
-                        if (allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList().Count() > 0)
+                        if (allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList().Count > 0)
                         {
                             battleItems.AddRange(allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList());
                         }
 
-                        if (allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList().Count() > 0)
+                        if (allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList().Count > 0)
                         {
                             battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList());
                         }
                     }
                     else
                     {
-                        if (allBattleItems.Where(x => x.PokemonId == pokemonId).ToList().Count() > 0)
+                        if (allBattleItems.Where(x => x.PokemonId == pokemonId).ToList().Count > 0)
                         {
                             battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId).ToList());
                         }
@@ -1640,7 +1640,7 @@ namespace Pokedex.Controllers
             {
                 if (selectedGame != 0)
                 {
-                    List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                    List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                     List<PokemonGameDetail> availablePokemon = this.dataService.GetPokemonGameDetailsByGame(selectedGame).Where(x => !altFormsList.Any(y => y.Id == x.PokemonId)).ToList();
                     List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     Generation selectedGen = this.dataService.GetGenerationFromGame(selectedGame);
@@ -1652,7 +1652,7 @@ namespace Pokedex.Controllers
 
                     foreach (var gen in generationList)
                     {
-                        if (allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count() != 0)
+                        if (allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count != 0)
                         {
                             availableGenerations.Add(gen);
                         }
@@ -1729,7 +1729,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonWithTypes = typingList,
                     AllPokemon = pokemonList,
-                    AllAltForms = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList(),
+                    AllAltForms = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon),
                     AppConfig = this.appConfig,
                     GenerationId = this.dataService.GetGenerations().Last().Id,
                 };
@@ -1752,7 +1752,7 @@ namespace Pokedex.Controllers
             {
                 PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetPokemonWithEggGroups(pokemonId).Last();
                 GenderRatio genderRatio = this.dataService.GetGenderRatio(searchedEggGroupDetails.Pokemon.GenderRatioId);
-                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).ToList();
+                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                 List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 List<Pokemon> originalPokemon = new List<Pokemon>();
@@ -1787,18 +1787,18 @@ namespace Pokedex.Controllers
                     eggGroupList = this.dataService.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
                     List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon();
                     eggGroupList.Add(this.dataService.GetPokemonWithEggGroupsFromPokemonName("Ditto"));
-                    if (eggGroupList.Where(x => x.Pokemon.Name == "Manaphy").Count() > 0)
+                    if (eggGroupList.Any(x => x.Pokemon.Name == "Manaphy"))
                     {
                         eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Manaphy"));
                     }
 
-                    if (eggGroupList.Where(x => x.Pokemon.Name == "Phione").Count() > 0)
+                    if (eggGroupList.Any(x => x.Pokemon.Name == "Phione"))
                     {
                         eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Phione"));
                     }
 
                     eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
-                    originalPokemon = eggGroupList.Select(x => x.Pokemon).ToList();
+                    originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                     List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
 
                     foreach (var p in eggGroupList)
@@ -1821,12 +1821,7 @@ namespace Pokedex.Controllers
                     eggGroupList = finalEggGroupList;
                 }
 
-                if (originalPokemon == null)
-                {
-                    originalPokemon = eggGroupList.Select(x => x.Pokemon).ToList();
-                }
-
-                originalPokemon.RemoveAll(x => !eggGroupList.Select(y => y.PokemonId).Contains(x.Id));
+                (originalPokemon ??= eggGroupList.ConvertAll(x => x.Pokemon)).RemoveAll(x => !eggGroupList.Select(y => y.PokemonId).Contains(x.Id));
 
                 List<EggGroup> pokemonEggGroupList = new List<EggGroup>
                 {
@@ -1865,7 +1860,7 @@ namespace Pokedex.Controllers
             string evString = string.Empty;
             if (evs.EVTotal == 0)
             {
-                evString = "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
+                return "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe";
             }
             else
             {
@@ -1924,10 +1919,8 @@ namespace Pokedex.Controllers
                     evString = string.Concat(evString, evs.Speed.ToString(), " Spe");
                 }
 
-                evString = string.Concat("\nEVs: ", evString);
+                return string.Concat("\nEVs: ", evString);
             }
-
-            return evString;
         }
 
         private string FillIVs(PokemonTeamIV ivs)
@@ -2026,9 +2019,7 @@ namespace Pokedex.Controllers
         {
             string form = string.Empty, itemName = string.Empty;
             List<string> formDetails = new List<string>();
-            PokemonFormDetail pokemonFormDetail;
-
-            pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+            PokemonFormDetail pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
 
             form = string.Concat(form, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
 
@@ -2091,9 +2082,7 @@ namespace Pokedex.Controllers
         private string GetFormDetails(int pokemonId)
         {
             string formDetails = string.Empty, itemName = string.Empty;
-            PokemonFormDetail pokemonFormDetail;
-
-            pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+            PokemonFormDetail pokemonFormDetail = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
 
             formDetails = string.Concat(formDetails, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
 
@@ -2115,22 +2104,22 @@ namespace Pokedex.Controllers
         {
             Random rnd = new Random();
             List<Pokemon> pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
-            while (pumpkabooCount.Count() > 1)
+            while (pumpkabooCount.Count > 1)
             {
                 pokemonList.Remove(pumpkabooCount[rnd.Next(pumpkabooCount.Count)]);
                 pumpkabooCount = pokemonList.Where(x => x.PokedexNumber == 710).ToList();
             }
 
             List<Pokemon> gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
-            while (gourgeistCount.Count() > 1)
+            while (gourgeistCount.Count > 1)
             {
                 pokemonList.Remove(gourgeistCount[rnd.Next(gourgeistCount.Count)]);
                 gourgeistCount = pokemonList.Where(x => x.PokedexNumber == 711).ToList();
             }
 
-            List<Pokemon> starterForms = this.dataService.GetPokemonFormDetailsByFormName("Starter").Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> starterForms = this.dataService.GetPokemonFormDetailsByFormName("Starter").ConvertAll(x => x.AltFormPokemon);
             List<Pokemon> lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
-            while (lgpeStarterCount.Count() > 1)
+            while (lgpeStarterCount.Count > 1)
             {
                 pokemonList.Remove(lgpeStarterCount[rnd.Next(lgpeStarterCount.Count)]);
                 lgpeStarterCount = pokemonList.Where(x => starterForms.Any(y => y.Id == x.Id)).ToList();
