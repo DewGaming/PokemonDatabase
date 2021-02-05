@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Pokedex.Models
 {
     /// <summary>
-    /// The class that is used to represent the ability view model.
+    /// The class that is used to represent the edit game availability view model.
     /// </summary>
     public class EditGameAvailabilityViewModel
     {

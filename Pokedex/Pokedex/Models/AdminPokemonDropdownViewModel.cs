@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Pokedex.Models
 {
     /// <summary>
-    /// The class that is sued to represent the pokemon dropdown view model.
+    /// The class that is used to represent the pokemon dropdown view model.
     /// </summary>
     public class AdminPokemonDropdownViewModel
     {

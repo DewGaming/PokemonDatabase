@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Pokedex.Models
 {
     /// <summary>
-    /// The class that is used to represent the Day Care Evaluator page view model.
+    /// The class that is used to represent the Egg Group Evaluator page view model.
     /// </summary>
     public class EggGroupEvaluatorViewModel
     {
