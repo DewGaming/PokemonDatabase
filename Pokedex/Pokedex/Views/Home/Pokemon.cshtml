@@ -591,13 +591,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             @(" / ")
                                         }
-                                        @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id) >= 0)
+                                        @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
                                         {
                                             string gameTitle = "Catchable Locations\n\n";
-                                            foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id))
+                                            foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id))
                                             {
                                                 gameTitle += string.Concat(l.HowToObtain,!string.IsNullOrEmpty(l.Condition) ? " (" + l.Condition + ")" : string.Empty, ": Rarity: ", (l.Rarity != 0 ? string.Concat(l.Rarity, "%") : "?"), " | Level ", (l.MinLevel != l.MaxLevel ? string.Concat(l.MinLevel, "-", l.MaxLevel) : l.MinLevel.ToString()));
-                                                if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id).Last())
+                                                if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id).Last())
                                                 {
                                                     gameTitle += "\n";
                                                 }
@@ -620,13 +620,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 @(" / ")
                                             }
-                                            @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id) >= 0)
+                                            @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
                                             {
                                                 string gameTitle = "Catchable Locations\n\n";
-                                                foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id))
+                                                foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id))
                                                 {
                                                     gameTitle += string.Concat(l.HowToObtain,!string.IsNullOrEmpty(l.Condition) ? " (" + l.Condition + ")" : string.Empty, ": Rarity: ", (l.Rarity != 0 ? string.Concat(l.Rarity, "%") : "?"), " | Level ", (l.MinLevel != l.MaxLevel ? string.Concat(l.MinLevel, "-", l.MaxLevel) : l.MinLevel.ToString()));
-                                                    if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id).Last())
+                                                    if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id).Last())
                                                     {
                                                         gameTitle += "\n";
                                                     }
