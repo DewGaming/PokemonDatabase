@@ -3,7 +3,7 @@
     Layout = "_Layout";
     ViewBag.Title = "Typing Evaluator";
     
-    var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
+    var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
     var secondaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
     var generations = Model.AllGenerations;
     foreach(var g in generations)
