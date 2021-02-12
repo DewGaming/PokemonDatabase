@@ -250,14 +250,6 @@
   margin-top: 1rem;
 }
 
-.primaryList>label, .secondaryList>label {
-  margin-bottom: 7.5px;
-}
-
-.primaryList, .primaryList>select, .secondaryList, .secondarylist>select {
-  width: 7.5rem;
-}
-
 @media (min-width: 820px) {
   .type-cell, .type-fx-cell, .type-fx-icon {
     height: 36px;
