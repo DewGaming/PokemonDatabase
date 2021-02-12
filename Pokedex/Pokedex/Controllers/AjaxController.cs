@@ -1705,11 +1705,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-typing")]
-        public IActionResult GetPokemon(int primaryTypeId, int secondaryTypeId)
+        public IActionResult GetPokemon(int primaryTypeId, int secondaryTypeId, int generationId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonTypeDetail> typingList = this.dataService.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId);
+                List<PokemonTypeDetail> typingList = this.dataService.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId, generationId);
                 List<Pokemon> pokemonList = new List<Pokemon>();
 
                 foreach (var p in typingList)

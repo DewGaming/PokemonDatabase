@@ -1,8 +1,9 @@
-var primaryTypeID, secondaryTypeID, updateIDs = function () {
+var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
     primaryTypeID = $('.primaryList > select').val();
     secondaryTypeID = $('.secondaryList > select').val();
+    generationID = $('.generationList > select').val();
 }, checkTypings = function () {
-    if (primaryTypeID != $('.primaryList > select').val() || secondaryTypeID != $('.secondaryList > select').val()) {
+    if (primaryTypeID != $('.primaryList > select').val() || secondaryTypeID != $('.secondaryList > select').val() || generationID != $('.generationList > select').val()) {
         updateIDs();
         $('.secondaryList option').each(function() {
             if(!$(this).is(':visible'))
@@ -72,7 +73,7 @@ var primaryTypeID, secondaryTypeID, updateIDs = function () {
         $('.pokemonWithTyping').css('display', 'none');
         $('.effectivenessChart').css('display', 'none');
         $('.pokemonList').empty();
-        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function () {
+        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID, 'generationId': generationID }, function () {
             if ($('.pokemonList').children().length > 0) {
                 $('.pokemonWithTyping').css('display', 'block');
             }

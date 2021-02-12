@@ -1181,13 +1181,15 @@ namespace Pokedex
             return pokemonList;
         }
 
-        public List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId)
+        public List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, int generationId)
         {
             List<PokemonTypeDetail> pokemonList = this.dataContext.PokemonTypeDetails
                                                         .Include(x => x.Pokemon)
                                                             .Include("Pokemon.Game")
                                                         .Include(x => x.PrimaryType)
                                                         .Include(x => x.SecondaryType)
+                                                        .Where(x => x.Pokemon.Game.GenerationId <= generationId)
+                                                        .Where(x => x.GenerationId <= generationId)
                                                         .Where(x => x.Pokemon.IsComplete)
                                                         .ToList();
 

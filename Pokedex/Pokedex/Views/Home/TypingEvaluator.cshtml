@@ -1,10 +1,15 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Type>
+@model Pokedex.Models.TypeEvaluatorViewModel
 @{
     Layout = "_Layout";
     ViewBag.Title = "Typing Evaluator";
     
-    var primaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
-    var secondaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
+    var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
+    var secondaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
+    var generations = Model.AllGenerations;
+    foreach(var g in generations)
+    {
+        g.Region = string.Concat("Generation ", g.Id);
+    }
     secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
 }
 
@@ -33,11 +38,11 @@
           margin-right: 10px
         }
 
-        .primaryList>label, .secondaryList>label {
+        .primaryList>label, .secondaryList>label, .generationList>label {
           margin-bottom: 7.5px;
         }
 
-        .primaryList, .primaryList>select, .secondaryList, .secondaryList>select {
+        .primaryList, .primaryList>select, .secondaryList, .secondaryList>select, .generationList, .generationList>select {
           width: 12rem;
         }
     </style>
@@ -58,6 +63,10 @@
             <div class="secondaryList">
                 @Html.Label("Secondary Type")
                 @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+            </div>
+            <div class="generationList">
+                @Html.Label("Up to What Generation")
+                @Html.DropDownList("Generation List", new SelectList(@generations, "Id", "Region"), new { @class = "form-control typingSelectList" })
             </div>
         </div>
 

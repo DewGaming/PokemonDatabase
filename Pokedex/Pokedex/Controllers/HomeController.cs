@@ -147,7 +147,11 @@ namespace Pokedex.Controllers
         [Route("typing_evaluator")]
         public IActionResult TypingEvaluator()
         {
-            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetTypes();
+            TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
+            {
+                AllTypes = this.dataService.GetTypes(),
+                AllGenerations = this.dataService.GetGenerations(),
+            };
 
             return this.View(model);
         }
