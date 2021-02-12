@@ -21,9 +21,15 @@
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
-        span[title] {
+        a.pokemonLocations, span[Title] {
             text-decoration: underline;
             text-decoration-style: dotted;
+            color: black;
+        }
+        
+        a.pokemonNoLocations {
+            text-decoration: none;
+            color: black;
         }
 
         .surroundingPokemon {
@@ -579,6 +585,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         @{
                             var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g == x.GenerationId).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
                             var gamesAvailableInReleaseDates = gamesAvailableInInGeneration.Select(x => x.ReleaseDate).Distinct().ToArray();
+                            string pokemonName = string.Empty;
                         }
                         @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
                         {
@@ -591,22 +598,21 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             @(" / ")
                                         }
-                                        @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
+                                        @if(item.Pokemon.Name.Contains(" ("))
                                         {
-                                            string gameTitle = "Catchable Locations\n\n";
-                                            foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id))
-                                            {
-                                                gameTitle += string.Concat(l.HowToObtain,!string.IsNullOrEmpty(l.Condition) ? " (" + l.Condition + ")" : string.Empty, ": Rarity: ", (l.Rarity != 0 ? string.Concat(l.Rarity, "%") : "?"), " | Level ", (l.MinLevel != l.MaxLevel ? string.Concat(l.MinLevel, "-", l.MaxLevel) : l.MinLevel.ToString()));
-                                                if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id).Last())
-                                                {
-                                                    gameTitle += "\n";
-                                                }
-                                            }
-                                            <b><span title="@gameTitle">@gameList[j].Name</span></b>
+                                            pokemonName = item.Pokemon.Name.Substring(0, item.Pokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
                                         }
                                         else
                                         {
-                                            @gameList[j].Name
+                                            pokemonName = item.Pokemon.Name.ToLower();
+                                        }
+                                        @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
+                                        {
+                                            <b><a target="_blank" class="pokemonLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a></b>
+                                        }
+                                        else
+                                        {
+                                            <a target="_blank" class="pokemonNoLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a>
                                         }
                                     }
                                 </td>

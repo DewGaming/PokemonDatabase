@@ -1,0 +1,241 @@
+@using System.Collections.Generic;
+@model Pokedex.Models.AdminPokemonDropdownViewModel
+@{
+    Layout = "_Layout";
+    string style = string.Empty;
+    ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
+    int[] generations = null;
+    Pokedex.DataAccess.Models.PokemonLocation[] conditionNames = null;
+    Pokedex.DataAccess.Models.Game[] games = null;
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
+
+    <style>
+        .surroundingPokemon {
+            margin: 5px 0;
+        }
+
+        .pokemonLocations table {
+            margin-bottom: 10px;
+        }
+
+        .page th, .page td {
+            border-width: 1px !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 0 !important;
+        }
+
+        .generations {
+            display: none;
+        }
+
+        .generations button {
+            border-top: 0;
+        }
+        
+        .pokemonImage {
+            perspective: 720px;
+            position: relative;
+        }
+
+        .pokemonImage img {
+            backface-visibility: hidden;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/pageLookup.js"></script>
+}
+
+<table class="surroundingPokemon pokemonPicture">
+    <tr>
+        <td class="previousPokemon">
+            <table>
+                <tr>
+                    <td>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
+                    </td>
+                    <td>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.PokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[0].Id, ".png"))" />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td class="nextPokemon">
+            <table>
+                <tr>
+                    <td>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.PokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[1].Id, ".png"))" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<hr style="margin-top: 0;margin-bottom: 0;">
+
+@foreach (var item in Model.PokemonList)
+{
+    string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
+    generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
+    
+    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+        @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
+        {
+            <button class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
+        }
+    </div>
+
+    @foreach(var g in generations)
+    {
+        games = item.GamesAvailableIn.Where(x => x.GenerationId == g).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToArray();
+        <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
+            @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
+            {
+                <div class="differentForms">
+                    <h2 class="formHeader">Forms</h2>
+                    @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id && x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)))
+                    {
+                        iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                        <div class="@button.Pokemon.Name">
+                            <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
+                                <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+            <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1 ? " pokemonWithForms" : string.Empty)">
+                <div class="pokemonImage">
+                    <img title="@item.Pokemon.Name@(@item.Form != null ? string.Concat(" (", @item.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                </div>
+
+                @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
+                {
+                    <div class="differentFormsMobile">
+                            <h2>Different Forms</h2>
+                            <div class="formButtons">
+                                @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id && x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)))
+                                {
+                                    iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                                    <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@button.Form != null ? @button.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
+                                        <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.PokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                }
+            </div>
+            <div class="pokemonLocations">
+                <h2>Pokémon Locations</h2>
+                @{
+                    string[][] locations = new string[games.Count()][];
+                    List<string> reusedGames = new List<string>();
+                    for(var i = 0; i < games.Count(); i++)
+                    {
+                        locations[i] = item.PokemonLocations.Where(x => x.GameId == games[i].Id && x.PokemonId == item.Pokemon.Id).Select(x => x.HowToObtain).ToArray();
+                    }
+                }
+                @for(var i = 0; i < games.Count(); i++)
+                {
+                    <div>
+                        @if (i < games.Count() - 1 && locations[i].SequenceEqual(locations[i + 1]) && !reusedGames.Contains(games[i].Name))
+                        {
+                            <h3>
+                                @games[i].Name
+                                @{
+                                    reusedGames = new List<string>();
+                                    for(var j = i + 1; j < games.Count(); j++)
+                                    {
+                                        if (locations[i].SequenceEqual(locations[j]))
+                                        {
+                                            @(string.Concat(" / ", games[j].Name));
+                                            reusedGames.Add(games[j].Name);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            </h3>
+                        }
+                        else if (i == 0 || !locations[i].SequenceEqual(locations[i - 1]))
+                        {
+                            <h3>@games[i].Name</h3>
+                        }
+                        @if (!(i != 0 && locations[i].SequenceEqual(locations[i - 1])))
+                        {
+                            if (locations[i].Count() > 0)
+                            {
+                                <table>
+                                    <tr>
+                                        <td>Where To Obtain</td>
+                                        <td>Condition To Obtain</td>
+                                        <td>Rarity</td>
+                                        <td>Level Span</td>
+                                    </tr>
+                                    @foreach(var location in locations[i].Distinct())
+                                    {
+                                        conditionNames = item.PokemonLocations.Where(x => x.GameId == games[i].Id && x.PokemonId == item.Pokemon.Id && x.HowToObtain == location).ToArray();
+                                        @foreach(var condition in conditionNames)
+                                        {
+                                            <tr>
+                                                @if (condition == conditionNames.First())
+                                                {
+                                                    <th rowspan="@conditionNames.Count()">@location</th>
+                                                }
+                                                <td>@condition.Condition</td>
+                                                <td>
+                                                    @if (condition.Rarity != 0)
+                                                    {
+                                                        @(string.Concat(@condition.Rarity, "%"))
+                                                    }
+                                                    else
+                                                    {
+                                                        @('?')
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (condition.MinLevel == condition.MaxLevel)
+                                                    {
+                                                        @condition.MinLevel
+                                                    }
+                                                    else
+                                                    {
+                                                        @(string.Concat("Level ", @condition.MinLevel, "-", @condition.MaxLevel))
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            }
+                            else
+                            {
+                                <p>This Pokémon is not available in this game.</p>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}

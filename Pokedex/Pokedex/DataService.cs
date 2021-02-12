@@ -498,6 +498,25 @@ namespace Pokedex
             return pokemonViewModel;
         }
 
+        public PokemonViewModel GetPokemonLocationDetails(Pokemon pokemon, Form form, AppConfig appConfig)
+        {
+            PokemonViewModel pokemonViewModel = new PokemonViewModel()
+            {
+                Pokemon = pokemon,
+                GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
+                PokemonLocations = this.GetPokemonLocations(),
+                AppConfig = appConfig,
+            };
+
+            if (form != null)
+            {
+                pokemonViewModel.Form = form;
+                pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
+            }
+
+            return pokemonViewModel;
+        }
+
         public AllAdminPokemonViewModel GetAllAdminPokemonDetails()
         {
             return new AllAdminPokemonViewModel()
