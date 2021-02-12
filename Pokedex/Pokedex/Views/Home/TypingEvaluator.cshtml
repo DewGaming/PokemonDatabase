@@ -5,12 +5,12 @@
     
     var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
     var secondaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
+    secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
     var generations = Model.AllGenerations;
     foreach(var g in generations)
     {
         g.Region = string.Concat("Generation ", g.Id);
     }
-    secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "" });
 }
 
 @section styles
