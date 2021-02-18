@@ -626,22 +626,21 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 @(" / ")
                                             }
-                                            @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
+                                            @if(item.Pokemon.Name.Contains(" ("))
                                             {
-                                                string gameTitle = "Catchable Locations\n\n";
-                                                foreach(var l in item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id))
-                                                {
-                                                    gameTitle += string.Concat(l.HowToObtain,!string.IsNullOrEmpty(l.Condition) ? " (" + l.Condition + ")" : string.Empty, ": Rarity: ", (l.Rarity != 0 ? string.Concat(l.Rarity, "%") : "?"), " | Level ", (l.MinLevel != l.MaxLevel ? string.Concat(l.MinLevel, "-", l.MaxLevel) : l.MinLevel.ToString()));
-                                                    if (l != item.PokemonLocations.Where(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id).Last())
-                                                    {
-                                                        gameTitle += "\n";
-                                                    }
-                                                }
-                                                <b><span title="@gameTitle">@gameList[j].Name</span></b>
+                                                pokemonName = item.Pokemon.Name.Substring(0, item.Pokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
                                             }
                                             else
                                             {
-                                                @gameList[j].Name
+                                                pokemonName = item.Pokemon.Name.ToLower();
+                                            }
+                                            @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
+                                            {
+                                                <b><a target="_blank" class="pokemonLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a></b>
+                                            }
+                                            else
+                                            {
+                                                <a target="_blank" class="pokemonNoLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a>
                                             }
                                         }
                                     </td>
