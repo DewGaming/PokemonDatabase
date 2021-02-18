@@ -62,10 +62,10 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
+                        <a href="@this.Url.Action("PokemonLocations", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">← @Model.PokemonList.First().SurroundingPokemon[0].Name</a>
                     </td>
                     <td>
-                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                        <a href="@this.Url.Action("PokemonLocations", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                             <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.PokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[0].Id, ".png"))" />
                         </a>
                     </td>
@@ -76,12 +76,12 @@
             <table>
                 <tr>
                     <td>
-                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                        <a href="@this.Url.Action("PokemonLocations", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
                             <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.PokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[1].Id, ".png"))" />
                         </a>
                     </td>
                     <td>
-                        <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
+                        <a href="@this.Url.Action("PokemonLocations", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@Model.PokemonList.First().SurroundingPokemon[1].Name →</a>
                     </td>
                 </tr>
             </table>
