@@ -69,7 +69,7 @@
             })
                 .done(function (data) {
                     console.log("Checked for unread messages");
-                    if(data != 0)
+                    if (data != 0)
                     {
                         $('.dropdown-item.messages').html($('.dropdown-item.messages').text() + ' <b>New!</b>');
                         $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data + '</span>')

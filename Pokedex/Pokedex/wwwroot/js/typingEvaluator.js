@@ -6,7 +6,7 @@ var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
     if (primaryTypeID != $('.primaryList > select').val() || secondaryTypeID != $('.secondaryList > select').val() || generationID != $('.generationList > select').val()) {
         updateIDs();
         $('.secondaryList option').each(function() {
-            if(!$(this).is(':visible'))
+            if (!$(this).is(':visible'))
             {
                 $(this).css('display', 'block');
             }
@@ -34,7 +34,7 @@ var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
             $('.effectivenessChart').empty();
 
             $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function() {
-                if($('.typing-table-strong').children().length > 0)
+                if ($('.typing-table-strong').children().length > 0)
                 {
                     $(".StrongAgainst").css("display", "block");
                 }
@@ -43,7 +43,7 @@ var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
                     $(".StrongAgainst").css("display", "none");
                 }
 
-                if($('.typing-table-weak').children().length > 0)
+                if ($('.typing-table-weak').children().length > 0)
                 {
                     $(".WeakAgainst").css("display", "block");
                 }
@@ -52,7 +52,7 @@ var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
                     $(".WeakAgainst").css("display", "none");
                 }
 
-                if($('.typing-table-immune').children().length > 0)
+                if ($('.typing-table-immune').children().length > 0)
                 {
                     $(".ImmuneTo").css("display", "block");
                 }
@@ -81,7 +81,7 @@ var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
                 $('.pokemonWithTyping').css('display', 'none');
             }
 
-            if($('.secondaryList > select').val() == '')
+            if ($('.secondaryList > select').val() == '')
             {
                 $('.effectivenessChart').css('display', 'flex');
             }

@@ -77,7 +77,7 @@ var generationId, pokemonId, pokeballId, updateIDs = function () {
     pokeballId = $('.pokeballList > select').val();
 }, checkPokemon = function () {
     $('.pokemonList option').each(function() {
-        if(Number($(this).attr('id')) <= Number(generationId))
+        if (Number($(this).attr('id')) <= Number(generationId))
         {
             $(this).css('display', 'block');
         }
@@ -87,13 +87,13 @@ var generationId, pokemonId, pokeballId, updateIDs = function () {
         }
     });
 
-    if(!$('.pokemonList option[value="' + pokemonId + '"]').is(':visible'))
+    if (!$('.pokemonList option[value="' + pokemonId + '"]').is(':visible'))
     {
         $('.pokemonList #Pokemon').val(1);
     }
 }, checkPokeball = function() {
     $('.pokeballList option').each(function() {
-        if(Number($(this).attr('id')) <= Number(generationId))
+        if (Number($(this).attr('id')) <= Number(generationId))
         {
             $(this).css('display', 'block');
         }
@@ -103,7 +103,7 @@ var generationId, pokemonId, pokeballId, updateIDs = function () {
         }
     });
 
-    if(!$('.pokeballList option[value="' + pokeballId + '"]').is(':visible'))
+    if (!$('.pokeballList option[value="' + pokeballId + '"]').is(':visible'))
     {
         $('.pokeballList #Pokeball').val(1);
     }

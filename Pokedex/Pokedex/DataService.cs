@@ -402,7 +402,7 @@ namespace Pokedex
             return this.dataContext.PokemonGameDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.Game)
-                .Include("Game.Generation")
+                    .Include("Game.Generation")
                 .Where(x => x.Game.GenerationId == generationId)
                 .ToList();
         }

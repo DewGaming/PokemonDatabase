@@ -114,9 +114,9 @@
         }
 
         $('.pokemonImage').on('click', function() {
-            if(!$(this).hasClass('gen1Image'))
+            if (!$(this).hasClass('gen1Image'))
             {
-                if($($('.pokemonImage')).hasClass('shiny'))
+                if ($($('.pokemonImage')).hasClass('shiny'))
                 {
                     normal()
                     $('.pokemonImage').removeClass('shiny')
@@ -598,7 +598,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             @(" / ")
                                         }
-                                        @if(item.Pokemon.Name.Contains(" ("))
+                                        @if (item.Pokemon.Name.Contains(" ("))
                                         {
                                             pokemonName = item.Pokemon.Name.Substring(0, item.Pokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
                                         }
@@ -616,7 +616,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         }
                                     }
                                 </td>
-                                @if(@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
+                                @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
                                 {
                                     gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).ToList();
                                     <td>
@@ -626,7 +626,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 @(" / ")
                                             }
-                                            @if(item.Pokemon.Name.Contains(" ("))
+                                            @if (item.Pokemon.Name.Contains(" ("))
                                             {
                                                 pokemonName = item.Pokemon.Name.Substring(0, item.Pokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
                                             }
@@ -658,7 +658,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 <h2>Training</h2>
                 <table>
                     <tbody>
-                        @if(@g > 2)
+                        @if (@g > 2)
                         {
                             <tr>
                                 <th>EV Yield</th>
@@ -670,7 +670,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                     }
                                     @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack != 0)
                                     {
-                                        @if(item.Pokemon.Name == "Watchog" && @g == 5)
+                                        @if (item.Pokemon.Name == "Watchog" && @g == 5)
                                         {
                                             @("1 Attack in BW")
                                             <br>
@@ -749,7 +749,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         </tr>
                         <tr>
                             <th class="SpecialAttack" scope="col">
-                                @if(@g == 1)
+                                @if (@g == 1)
                                 {
                                     @("Special")
                                 }
@@ -761,7 +761,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack * 100 / 255m)%;"></div></td>
                             <td class="SpecialAttack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack</td>
                         </tr>
-                        @if(@g != 1)
+                        @if (@g != 1)
                         {
                             <tr>
                                 <th class="SpecialDefense" scope="col">Sp. Defense</th>
@@ -783,7 +783,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </tfoot>
                 </table>
             </div>
-            @if(g != 1 || (item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId))
+            @if (g != 1 || (item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId))
             {
                 <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
                     @if (item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId)
@@ -866,7 +866,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
             {
                 <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
                     <h2>
-                        @if(item.Evolutions.Count > 1)
+                        @if (item.Evolutions.Count > 1)
                         {
                             @("Evolutions");
                         }
@@ -879,7 +879,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         <tbody class="evolutionPokemon">
                             @foreach (var evolution in item.Evolutions)
                             {
-                                if(g >= evolution.EvolutionPokemon.Game.GenerationId)
+                                if (g >= evolution.EvolutionPokemon.Game.GenerationId)
                                 {
                                     <tr>
                                         <th>
