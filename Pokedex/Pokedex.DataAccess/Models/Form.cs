@@ -23,5 +23,17 @@ namespace Pokedex.DataAccess.Models
         /// Gets or sets the ability to appear in the other forms category in the randomize team page.
         /// </summary>
         public bool Randomizable { get; set; }
+
+        [Display(Name="Able To Be Caught"), Required]
+        /// <summary>
+        /// Gets or sets the ability to appear in the capture calculator page.
+        /// </summary>
+        public bool Catchable { get; set; }
+
+        [Display(Name="Requires An item To Use"), Required]
+        /// <summary>
+        /// Gets or sets the necessity of an item.
+        /// </summary>
+        public bool NeedsItem { get; set; }
     }
 }
