@@ -610,16 +610,23 @@ namespace Pokedex
                 .ThenBy(x => x.Id)
                 .ToList();
 
-            List<Pokemon> altFormList = this.GetAllAltFormsForCaptureCalculator();
+            List<PokemonFormDetail> altFormList = this.GetAllAltFormsForCaptureCalculator();
             Pokemon pokemon;
 
             foreach (var a in altFormList)
             {
-                pokemon = pokemonList.Find(x => x.Id == a.Id);
-                pokemon.Name = a.Name;
+                pokemon = pokemonList.Find(x => x.Id == a.AltFormPokemonId);
+                if (a.Form.Catchable)
+                {
+                    pokemon.Name = a.AltFormPokemon.Name;
+                }
+                else
+                {
+                    pokemonList.Remove(pokemon);
+                }
             }
 
-            return pokemonList.Where(x => !x.Name.Contains("Primal") && !x.Name.Contains("Zen") && !x.Name.Contains("Ash") && !x.Name.Contains("Blade") && !x.Name.Contains("Starter") && !x.Name.Contains("Mega") && !x.Name.Contains("Gigantamax") && !x.Name.Contains("10%") && !x.Name.Contains("Complete") && !x.Name.Contains("Unbound") && !x.Name.Contains("Eternamax") && !x.Name.Contains("Ultra")).ToList();
+            return pokemonList;
         }
 
         public List<Pokemon> GetAllPokemonWithIncompleteWithFormNames()
@@ -1008,7 +1015,7 @@ namespace Pokedex
             return pokemonList;
         }
 
-        public List<Pokemon> GetAllAltFormsForCaptureCalculator()
+        public List<PokemonFormDetail> GetAllAltFormsForCaptureCalculator()
         {
             List<PokemonFormDetail> pokemonForm = this.dataContext.PokemonFormDetails
                 .Include(x => x.AltFormPokemon)
@@ -1016,12 +1023,12 @@ namespace Pokedex
                 .Where(x => x.AltFormPokemon.IsComplete)
                 .ToList();
 
-            List<Pokemon> pokemonList = pokemonForm.ConvertAll(x => x.AltFormPokemon);
+            List<PokemonFormDetail> pokemonList = new List<PokemonFormDetail>();
 
             foreach (var p in pokemonForm)
             {
                 p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
-                pokemonList.Add(p.AltFormPokemon);
+                pokemonList.Add(p);
             }
 
             return pokemonList;

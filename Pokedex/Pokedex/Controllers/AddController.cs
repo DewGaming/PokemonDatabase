@@ -158,13 +158,7 @@ namespace Pokedex.Controllers
         public IActionResult FormItem()
         {
             FormItemViewModel model = new FormItemViewModel();
-            List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").ConvertAll(x => x.AltFormPokemon);
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Primal").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Origin").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Ultra").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Crowned").ConvertAll(x => x.AltFormPokemon));
+            List<Pokemon> altForms = this.dataService.GetPokemonFormDetails().Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
 
             foreach (var p in this.dataService.GetFormItems().Select(x => x.Pokemon))
             {
