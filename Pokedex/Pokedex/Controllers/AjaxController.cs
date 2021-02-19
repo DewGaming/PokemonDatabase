@@ -115,62 +115,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpPost]
-        [Route("get-shiny-hunting-technique")]
-        public ShinyHuntingTechnique GetShinyHuntTechnique(int id)
-        {
-            ShinyHuntingTechnique technique = this.dataService.GetShinyHuntingTechnique(id);
-
-            return technique;
-        }
-
-        [HttpPost]
-        [Route("add-hunt-attempt/{huntId:int}")]
-        public int AddShinyCounter(int huntId)
-        {
-            ShinyHunt hunt = this.dataService.GetShinyHunt(huntId);
-            hunt.ShinyAttemptCount++;
-            this.dataService.UpdateShinyHunt(hunt);
-            return hunt.ShinyAttemptCount;
-        }
-
-        [HttpPost]
-        [Route("subtract-hunt-attempt/{huntId:int}")]
-        public int SubtractShinyCounter(int huntId)
-        {
-            ShinyHunt hunt = this.dataService.GetShinyHunt(huntId);
-            if (hunt.ShinyAttemptCount > 0)
-            {
-                hunt.ShinyAttemptCount--;
-                this.dataService.UpdateShinyHunt(hunt);
-            }
-            else
-            {
-                hunt.ShinyAttemptCount = 0;
-            }
-
-            return hunt.ShinyAttemptCount;
-        }
-
-        [HttpPost]
-        [Route("update-hunt-attempt/{huntId:int}/{attemptCount:int}")]
-        public int UpdateShinyCounter(int huntId, int attemptCount)
-        {
-            ShinyHunt hunt = this.dataService.GetShinyHunt(huntId);
-            if (attemptCount > 0)
-            {
-                hunt.ShinyAttemptCount = attemptCount;
-                this.dataService.UpdateShinyHunt(hunt);
-            }
-            else
-            {
-                hunt.ShinyAttemptCount = 0;
-                this.dataService.UpdateShinyHunt(hunt);
-            }
-
-            return hunt.ShinyAttemptCount;
-        }
-
-        [HttpPost]
         [Route("update-pokemon-list/{gameId}")]
         public UpdatePokemonListViewModel UpdatePokemonList(int gameId)
         {

@@ -949,32 +949,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_shiny_hunting_technique/{id:int}")]
-        public IActionResult ShinyHuntingTechnique(int id)
-        {
-            ShinyHuntingTechnique model = this.dataService.GetShinyHuntingTechnique(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_shiny_hunting_technique/{id:int}")]
-        public IActionResult ShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                ShinyHuntingTechnique model = this.dataService.GetShinyHuntingTechnique(shinyHuntingTechnique.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateShinyHuntingTechnique(shinyHuntingTechnique);
-
-            return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
-        }
-
-        [HttpGet]
         [Route("edit_egg_group/{id:int}")]
         public IActionResult EggGroup(int id)
         {
@@ -1460,32 +1434,6 @@ namespace Pokedex.Controllers
             this.dataService.UpdateClassification(classification);
 
             return this.RedirectToAction("Classifications", "Admin");
-        }
-
-        [HttpGet]
-        [Route("edit_shiny_hunt/{id:int}")]
-        public IActionResult ShinyHunt(int id)
-        {
-            ShinyHunt model = this.dataService.GetShinyHunt(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_shiny_hunt/{id:int}")]
-        public IActionResult ShinyHunt(ShinyHunt shinyHunt)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                ShinyHunt model = this.dataService.GetShinyHunt(shinyHunt.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateShinyHunt(shinyHunt);
-
-            return this.RedirectToAction("ShinyHunts", "Admin");
         }
 
         [HttpGet]

@@ -271,18 +271,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("shiny_hunting_technique")]
-        public IActionResult ShinyHuntingTechniques()
-        {
-            ShinyHuntViewModel model = new ShinyHuntViewModel()
-            {
-                AllShinyHunters = this.dataService.GetShinyHunters(),
-                AllShinyHuntingTechniques = this.dataService.GetShinyHuntingTechniques(),
-            };
-
-            return this.View(model);
-        }
-
         [Route("battle_item")]
         public IActionResult BattleItems()
         {

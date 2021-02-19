@@ -14,11 +14,6 @@ namespace Pokedex.Models
         public List<User> UserList { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of users with shiny hunts.
-        /// </summary>
-        public List<User> UsersWithShinyHunts { get; set; }
-
-        /// <summary>
         /// Gets or sets the list of users with pokemon teams.
         /// </summary>
         public List<User> UsersWithPokemonTeams { get; set; }

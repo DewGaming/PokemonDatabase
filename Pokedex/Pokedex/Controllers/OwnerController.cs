@@ -41,20 +41,13 @@ namespace Pokedex.Controllers
             UserViewModel model = new UserViewModel()
             {
                 UserList = this.dataService.GetUsers().OrderByDescending(x => x.LastVisit).ThenBy(x => x.Id).ToList(),
-                UsersWithShinyHunts = new List<User>(),
                 UsersWithPokemonTeams = new List<User>(),
             };
 
-            List<ShinyHunt> shinyHunts = this.dataService.GetShinyHunters();
             List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams();
 
             foreach (var u in model.UserList)
             {
-                if (shinyHunts.Where(x => x.UserId == u.Id).ToList().Count > 0)
-                {
-                    model.UsersWithShinyHunts.Add(u);
-                }
-
                 if (pokemonTeams.Where(x => x.UserId == u.Id).ToList().Count > 0)
                 {
                     model.UsersWithPokemonTeams.Add(u);
@@ -307,19 +300,6 @@ namespace Pokedex.Controllers
             this.dataService.UpdatePokemon(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
-        }
-
-        /// <summary>
-        /// Opens the page to view a specific shiny hunt.
-        /// </summary>
-        /// <param name="id">The shiny hunt's id.</param>
-        /// <returns>The shiny hunt page.</returns>
-        [Route("shiny_hunting_counter/{id:int}")]
-        public IActionResult ShinyHuntingCounter(int id)
-        {
-            List<ShinyHunt> model = this.dataService.GetShinyHunterById(id);
-
-            return this.View(model);
         }
 
         /// <summary>

@@ -24,17 +24,13 @@
                         {
                             <a href="@this.Url.Action("User", "Edit", new { id = item.Id })">Edit</a>
                         }
-                        @if (Model.UsersWithShinyHunts.Find(x => x.Id == item.Id) != null)
+                        @if (Model.UsersWithPokemonTeams.Find(x => x.Id == item.Id) != null)
                         {
-                            @if (item.Id != 1)
+                            if (item.Id != 1)
                             {
                                 @("|")
                             }
-                            <a href="@this.Url.Action("ShinyHuntingCounter", "Owner", new { id = item.Id })">View Shiny Hunts</a>
-                        }
-                        @if (Model.UsersWithPokemonTeams.Find(x => x.Id == item.Id) != null)
-                        {
-                            @("|")
+                            
                             <a href="@this.Url.Action("PokemonTeams", "Owner", new { id = item.Id })">View Pokémon Teams</a>
                         }
                     </td>

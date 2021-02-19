@@ -132,28 +132,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_shiny_hunting_technique")]
-        public IActionResult ShinyHuntingTechnique()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_shiny_hunting_technique")]
-        public IActionResult ShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddShinyHuntingTechnique(shinyHuntingTechnique);
-
-            return this.RedirectToAction("ShinyHuntingTechniques", "Admin");
-        }
-
-        [HttpGet]
         [Route("add_generation")]
         public IActionResult Generation()
         {

@@ -1659,16 +1659,6 @@ namespace Pokedex
             return this.dataContext.BaseHappiness.OrderBy(x => x.Happiness).ToList();
         }
 
-        public ShinyHuntingTechnique GetShinyHuntingTechnique(int id)
-        {
-            return this.dataContext.ShinyHuntingTechniques.ToList().Find(x => x.Id == id);
-        }
-
-        public List<ShinyHuntingTechnique> GetShinyHuntingTechniques()
-        {
-            return this.dataContext.ShinyHuntingTechniques.ToList();
-        }
-
         public Classification GetClassification(int id)
         {
             return this.dataContext.Classifications.ToList().Find(x => x.Id == id);
@@ -1692,50 +1682,6 @@ namespace Pokedex
         public List<Nature> GetNatures()
         {
             return this.dataContext.Natures.OrderBy(x => x.Name).ToList();
-        }
-
-        public ShinyHunt GetShinyHunt(int id)
-        {
-            return this.dataContext.ShinyHunts
-                .Include(x => x.User)
-                .Include(x => x.Pokemon)
-                .Include(x => x.Game)
-                .Include(x => x.ShinyHuntingTechnique)
-                .ToList()
-                .Find(x => x.Id == id);
-        }
-
-        public List<ShinyHunt> GetShinyHunter(string username)
-        {
-            return this.dataContext.ShinyHunts
-                .Include(x => x.User)
-                .Include(x => x.Pokemon)
-                .Include(x => x.Game)
-                .Include(x => x.ShinyHuntingTechnique)
-                .Where(x => x.User.Username == username)
-                .ToList();
-        }
-
-        public List<ShinyHunt> GetShinyHunterById(int id)
-        {
-            return this.dataContext.ShinyHunts
-                .Include(x => x.User)
-                .Include(x => x.Pokemon)
-                .Include(x => x.Game)
-                .Include(x => x.ShinyHuntingTechnique)
-                .Where(x => x.User.Id == id)
-                .ToList();
-        }
-
-        public List<ShinyHunt> GetShinyHunters()
-        {
-            return this.dataContext.ShinyHunts
-                .Include(x => x.User)
-                .Include(x => x.Pokemon)
-                .Include(x => x.Game)
-                .Include(x => x.ShinyHuntingTechnique)
-                .OrderBy(x => x.User.Username)
-                .ToList();
         }
 
         public List<BattleItem> GetBattleItems()
@@ -2154,18 +2100,6 @@ namespace Pokedex
         public void AddLegendaryType(LegendaryType legendaryType)
         {
             this.dataContext.LegendaryTypes.Add(legendaryType);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
-        {
-            this.dataContext.ShinyHuntingTechniques.Add(shinyHuntingTechnique);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddShinyHunt(ShinyHunt shinyHunt)
-        {
-            this.dataContext.ShinyHunts.Add(shinyHunt);
             this.dataContext.SaveChanges();
         }
 
@@ -2603,12 +2537,6 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void UpdateShinyHunt(ShinyHunt shinyHunt)
-        {
-            this.dataContext.ShinyHunts.Update(shinyHunt);
-            this.dataContext.SaveChanges();
-        }
-
         public void UpdateGeneration(Generation generation)
         {
             this.dataContext.Generations.Update(generation);
@@ -2648,12 +2576,6 @@ namespace Pokedex
         public void UpdateAbility(Ability ability)
         {
             this.dataContext.Abilities.Update(ability);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateShinyHuntingTechnique(ShinyHuntingTechnique shinyHuntingTechnique)
-        {
-            this.dataContext.ShinyHuntingTechniques.Update(shinyHuntingTechnique);
             this.dataContext.SaveChanges();
         }
 
@@ -3019,20 +2941,6 @@ namespace Pokedex
         {
             Nature nature = this.GetNature(id);
             this.dataContext.Natures.Remove(nature);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteShinyHuntingTechnique(int id)
-        {
-            ShinyHuntingTechnique shinyHuntingTechnique = this.GetShinyHuntingTechnique(id);
-            this.dataContext.ShinyHuntingTechniques.Remove(shinyHuntingTechnique);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteShinyHunt(int id)
-        {
-            ShinyHunt shinyHunt = this.GetShinyHunt(id);
-            this.dataContext.ShinyHunts.Remove(shinyHunt);
             this.dataContext.SaveChanges();
         }
 
