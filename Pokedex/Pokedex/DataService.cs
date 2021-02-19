@@ -93,6 +93,25 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<Game> GetGamesForEachReleaseDate()
+        {
+            List<Game> gameList = this.GetGames();
+            List<Game> games = new List<Game>();
+            foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                games.Add(new Game()
+                {
+                    Id = gameList.First(x => x.ReleaseDate == r).Id,
+                    Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                    GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
+                    ReleaseDate = r,
+                    Abbreviation = string.Concat(gameList.Where(x => x.ReleaseDate == r).Select(x => x.Abbreviation)),
+                });
+            }
+
+            return games;
+        }
+
         /// <summary>
         /// Gets a specific legendary type.
         /// </summary>
@@ -1749,11 +1768,6 @@ namespace Pokedex
         public EvolutionMethod GetEvolutionMethod(int id)
         {
             return this.dataContext.EvolutionMethods.ToList().Find(x => x.Id == id);
-        }
-
-        public List<Game> GetGamesFromGeneration(Generation generation)
-        {
-            return this.dataContext.Games.Where(x => x.GenerationId == generation.Id).ToList();
         }
 
         public List<Game> GetAvailableGamesFromPokemonId(int id)
