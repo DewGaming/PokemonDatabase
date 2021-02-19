@@ -59,9 +59,7 @@
                     <tr>
                         <td>@item.Name</td>
                         <td>@Model.AllMoveCategories.Find(x => x.Id == item.MoveCategoryId).Category</td>
-                        <td>
-                            @string.Join(" / ", Model.AllGames.Where(x => x.ReleaseDate == item.Game.ReleaseDate).Select(x => x.Name))
-                        </td>
+                        <td>@string.Join(" / ", Model.AllGames.Where(x => x.ReleaseDate == item.Game.ReleaseDate).Select(x => x.Name))</td>
                         <td>
                             @if (item.BasePower != null)
                             {
