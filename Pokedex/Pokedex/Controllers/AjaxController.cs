@@ -1589,7 +1589,7 @@ namespace Pokedex.Controllers
                     List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     Generation selectedGen = this.dataService.GetGenerationFromGame(selectedGame);
                     List<Generation> generationList = this.dataService.GetGenerations().Where(x => x.Id <= selectedGen.Id).ToList();
-                    List<DataAccess.Models.Type> typesList = this.dataService.GetTypes();
+                    List<DataAccess.Models.Type> typesList = this.dataService.GetTypes().Where(x => x.GenerationId <= selectedGen.Id).ToList();
                     List<LegendaryType> legendaryTypes = this.dataService.GetLegendaryTypes();
                     List<Generation> availableGenerations = new List<Generation>();
                     Game game = this.dataService.GetGame(selectedGame);
@@ -1600,17 +1600,6 @@ namespace Pokedex.Controllers
                         {
                             availableGenerations.Add(gen);
                         }
-                    }
-
-                    if (selectedGame == 1)
-                    {
-                        typesList.Remove(typesList.Find(x => x.Name == "Dark"));
-                        typesList.Remove(typesList.Find(x => x.Name == "Steel"));
-                    }
-
-                    if (game.ReleaseDate < new DateTime(2013, 10, 12))
-                    {
-                        typesList.Remove(typesList.Find(x => x.Name == "Fairy"));
                     }
 
                     if (game.ReleaseDate < new DateTime(2016, 11, 18))

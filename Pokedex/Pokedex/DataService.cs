@@ -139,24 +139,6 @@ namespace Pokedex
             return this.dataContext.Types.OrderBy(x => x.Name).ToList();
         }
 
-        public List<Type> GetTypesByGen(int genId)
-        {
-            List<Type> types = this.dataContext.Types.OrderBy(x => x.Name).ToList();
-
-            if (genId == 1)
-            {
-                types.Remove(types.Find(x => x.Name == "Dark"));
-                types.Remove(types.Find(x => x.Name == "Steel"));
-            }
-
-            if (genId == 1 || genId == 2)
-            {
-                types.Remove(types.Find(x => x.Name == "Fairy"));
-            }
-
-            return types;
-        }
-
         public FormItem GetFormItem(int id)
         {
             return this.dataContext.FormItems
@@ -1782,6 +1764,17 @@ namespace Pokedex
         public List<Generation> GetGenerations()
         {
             return this.dataContext.Generations.ToList();
+        }
+
+        public List<Generation> GetGenerationsForRazor()
+        {
+            List<Generation> generations = this.dataContext.Generations.ToList();
+            foreach (var g in generations)
+            {
+                g.Region = string.Concat("Generation ", g.Id);
+            }
+
+            return generations;
         }
 
         public List<Game> GetAvailableGames(int pokemonTeamId)

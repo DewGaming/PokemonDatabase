@@ -201,7 +201,12 @@ namespace Pokedex.Controllers
         [Route("add_type")]
         public IActionResult Type()
         {
-            return this.View();
+            TypeGenerationViewModel model = new TypeGenerationViewModel()
+            {
+                AllGenerations = this.dataService.GetGenerationsForRazor(),
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -211,7 +216,12 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                TypeGenerationViewModel model = new TypeGenerationViewModel()
+                {
+                    AllGenerations = this.dataService.GetGenerationsForRazor(),
+                };
+
+                return this.View(model);
             }
 
             this.dataService.AddType(type);

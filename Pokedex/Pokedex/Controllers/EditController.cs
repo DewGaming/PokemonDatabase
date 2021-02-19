@@ -59,7 +59,7 @@ namespace Pokedex.Controllers
             EditTypeChartViewModel model = new EditTypeChartViewModel()
             {
                 TypeChart = this.dataService.GetTypeChartByDefendType(id, genId),
-                Types = this.dataService.GetTypesByGen(genId),
+                Types = this.dataService.GetTypes().Where(x => x.GenerationId <= genId).ToList(),
                 TypeId = id,
                 GenerationId = genId,
             };
@@ -848,7 +848,13 @@ namespace Pokedex.Controllers
         [Route("edit_type/{id:int}")]
         public IActionResult Type(int id)
         {
-            Type model = this.dataService.GetType(id);
+            Type type = this.dataService.GetType(id);
+            TypeGenerationViewModel model = new TypeGenerationViewModel()
+            {
+                Name = type.Name,
+                GenerationId = type.GenerationId,
+                AllGenerations = this.dataService.GetGenerationsForRazor(),
+            };
 
             return this.View(model);
         }
@@ -860,9 +866,13 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Type model = this.dataService.GetType(type.Id);
-
-                return this.View(model);
+                Type newType = this.dataService.GetType(type.Id);
+                TypeGenerationViewModel model = new TypeGenerationViewModel()
+                {
+                    Name = newType.Name,
+                    GenerationId = newType.GenerationId,
+                    AllGenerations = this.dataService.GetGenerationsForRazor(),
+                };
             }
 
             this.dataService.UpdateType(type);
@@ -985,13 +995,7 @@ namespace Pokedex.Controllers
                 Name = item.Name,
             };
 
-            List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").ConvertAll(x => x.AltFormPokemon);
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Primal").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Origin").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Ultra").ConvertAll(x => x.AltFormPokemon));
-            altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Crowned").ConvertAll(x => x.AltFormPokemon));
+            List<Pokemon> altForms = this.dataService.GetPokemonFormDetails().Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
 
             altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
 
@@ -1019,13 +1023,7 @@ namespace Pokedex.Controllers
                     Name = item.Name,
                 };
 
-                List<Pokemon> altForms = this.dataService.GetPokemonFormDetailsByFormName("Mega").ConvertAll(x => x.AltFormPokemon);
-                altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega X").ConvertAll(x => x.AltFormPokemon));
-                altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Mega Y").ConvertAll(x => x.AltFormPokemon));
-                altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Primal").ConvertAll(x => x.AltFormPokemon));
-                altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Origin").ConvertAll(x => x.AltFormPokemon));
-                altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Ultra").ConvertAll(x => x.AltFormPokemon));
-                altForms.AddRange(this.dataService.GetPokemonFormDetailsByFormName("Crowned").ConvertAll(x => x.AltFormPokemon));
+                List<Pokemon> altForms = this.dataService.GetPokemonFormDetails().Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
 
                 altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
 

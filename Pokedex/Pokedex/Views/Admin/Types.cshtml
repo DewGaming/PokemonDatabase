@@ -22,14 +22,14 @@
                     @item.Name
                 </td>
                 <td>
-                    <a href="@(this.Url.Action("Type", "Edit", new { id = item.Id }))">Edit Name</a>
-                    @if(!new[] {"Dark", "Steel", "Fairy"}.Contains(item.Name))
+                    <a href="@(this.Url.Action("Type", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (item.GenerationId <= 1)
                     {
                         @("|")
                         <a href="@(this.Url.Action("TypeEffectiveness", "Edit", new { id = item.Id, genId = 1 }))">Edit Gen 1 Effectiveness</a>
                     }
 
-                    @if(!new[] {"Fairy"}.Contains(item.Name))
+                    @if (item.GenerationId <= 2)
                     {
                         @("|")
                         <a href="@(this.Url.Action("TypeEffectiveness", "Edit", new { id = item.Id, genId = 2 }))">Edit Gen 2 Effectiveness</a>
