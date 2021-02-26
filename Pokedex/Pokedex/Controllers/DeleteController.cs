@@ -46,25 +46,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_pokemon_location/{id:int}")]
-        public IActionResult PokemonLocation(int id)
-        {
-            PokemonLocation model = this.dataService.GetPokemonLocation(id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_pokemon_location/{id:int}")]
-        public IActionResult PokemonLocation(PokemonLocation pokemonLocation)
-        {
-            this.dataService.DeletePokemonLocation(pokemonLocation.Id);
-
-            return this.RedirectToAction("PokemonLocations", "Admin");
-        }
-
-        [HttpGet]
         [Route("delete_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {

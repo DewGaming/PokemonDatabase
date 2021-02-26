@@ -66,6 +66,5 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Status> Statuses { get; set; }
         public DbSet<PokeballCatchModifierDetail> PokeballCatchModifierDetails { get; set; }
         public DbSet<PokemonCaptureRateDetail> PokemonCaptureRateDetails { get; set; }
-        public DbSet<PokemonLocation> PokemonLocations { get; set; }
     }
 }

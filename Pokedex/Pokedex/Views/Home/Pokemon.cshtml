@@ -21,17 +21,6 @@
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
-        a.pokemonLocations, span[Title] {
-            text-decoration: underline;
-            text-decoration-style: dotted;
-            color: black;
-        }
-        
-        a.pokemonNoLocations {
-            text-decoration: none;
-            color: black;
-        }
-
         .surroundingPokemon {
             margin: 5px 0;
         }
@@ -606,14 +595,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             pokemonName = item.Pokemon.Name.ToLower();
                                         }
-                                        @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
-                                        {
-                                            <b><a target="_blank" class="pokemonLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a></b>
-                                        }
-                                        else
-                                        {
-                                            <a target="_blank" class="pokemonNoLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a>
-                                        }
+                                        @gameList[j].Name
                                     }
                                 </td>
                                 @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
@@ -634,14 +616,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 pokemonName = item.Pokemon.Name.ToLower();
                                             }
-                                            @if (item.PokemonLocations.FindIndex(x => x.GameId == gameList[j].Id && x.PokemonId == item.Pokemon.Id) >= 0)
-                                            {
-                                                <b><a target="_blank" class="pokemonLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a></b>
-                                            }
-                                            else
-                                            {
-                                                <a target="_blank" class="pokemonNoLocations" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName, pokemonId = item.Pokemon.Id, generationId = @g })">@gameList[j].Name</a>
-                                            }
+                                            @gameList[j].Name
                                         }
                                     </td>
                                 }
