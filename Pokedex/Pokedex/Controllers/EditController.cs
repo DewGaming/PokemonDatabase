@@ -1282,60 +1282,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_move/{id:int}")]
-        public IActionResult Move(int id)
-        {
-            Move move = this.dataService.GetMove(id);
-            MoveViewModel model = new MoveViewModel()
-            {
-                Id = move.Id,
-                Name = move.Name,
-                GameId = move.GameId,
-                BasePower = move.BasePower,
-                PP = move.PP,
-                Accuracy = move.Accuracy,
-                MoveTypeId = move.MoveTypeId,
-                MoveCategoryId = move.MoveCategoryId,
-                AllTypes = this.dataService.GetTypes(),
-                AllGames = this.dataService.GetGames(),
-                AllMoveCategories = this.dataService.GetMoveCategories(),
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_move/{id:int}")]
-        public IActionResult Move(Move move)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Move moveReset = this.dataService.GetMove(move.Id);
-                MoveViewModel model = new MoveViewModel()
-                {
-                    Id = moveReset.Id,
-                    Name = moveReset.Name,
-                    GameId = moveReset.GameId,
-                    BasePower = moveReset.BasePower,
-                    PP = moveReset.PP,
-                    Accuracy = moveReset.Accuracy,
-                    MoveTypeId = move.MoveTypeId,
-                    MoveCategoryId = move.MoveCategoryId,
-                    AllTypes = this.dataService.GetTypes(),
-                    AllGames = this.dataService.GetGames(),
-                    AllMoveCategories = this.dataService.GetMoveCategories(),
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateMove(move);
-
-            return this.RedirectToAction("Moves", "Admin");
-        }
-
-        [HttpGet]
         [Route("edit_legendary_type/{id:int}")]
         public IActionResult LegendaryType(int id)
         {

@@ -306,44 +306,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_move/{typeId:int}")]
-        public IActionResult Move(int typeId)
-        {
-            MoveViewModel model = new MoveViewModel()
-            {
-                MoveTypeId = typeId,
-                AllTypes = this.dataService.GetTypes(),
-                AllGames = this.dataService.GetGames(),
-                AllMoveCategories = this.dataService.GetMoveCategories(),
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_move/{typeId:int}")]
-        public IActionResult Move(Move move)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                MoveViewModel model = new MoveViewModel()
-                {
-                    MoveTypeId = move.MoveTypeId,
-                    AllTypes = this.dataService.GetTypes(),
-                    AllGames = this.dataService.GetGames(),
-                    AllMoveCategories = this.dataService.GetMoveCategories(),
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.AddMove(move);
-
-            return this.RedirectToAction("Moves", "Admin");
-        }
-
-        [HttpGet]
         [Route("add_classification")]
         public IActionResult Classification()
         {

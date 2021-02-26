@@ -209,27 +209,6 @@ namespace Pokedex
             return this.dataContext.EggGroups.OrderBy(x => x.Name).ToList();
         }
 
-        public Move GetMove(int id)
-        {
-            return this.dataContext.Moves
-                .ToList()
-                .Find(x => x.Id == id);
-        }
-
-        public List<Move> GetMoves()
-        {
-            return this.dataContext.Moves
-                .Include(x => x.Game)
-                .OrderBy(x => x.GameId)
-                .ThenBy(x => x.Name)
-                .ToList();
-        }
-
-        public List<MoveCategory> GetMoveCategories()
-        {
-            return this.dataContext.MoveCategories.ToList();
-        }
-
         public List<Evolution> GetEvolutions()
         {
             return this.dataContext.Evolutions
@@ -2099,12 +2078,6 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void AddMove(Move move)
-        {
-            this.dataContext.Moves.Add(move);
-            this.dataContext.SaveChanges();
-        }
-
         public void AddAbility(Ability ability)
         {
             this.dataContext.Abilities.Add(ability);
@@ -2563,12 +2536,6 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void UpdateMove(Move move)
-        {
-            this.dataContext.Moves.Update(move);
-            this.dataContext.SaveChanges();
-        }
-
         public void UpdateLegendaryType(LegendaryType legendaryType)
         {
             this.dataContext.LegendaryTypes.Update(legendaryType);
@@ -2733,13 +2700,6 @@ namespace Pokedex
         {
             Form form = this.GetForm(id);
             this.dataContext.Forms.Remove(form);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteMove(int id)
-        {
-            Move move = this.GetMove(id);
-            this.dataContext.Moves.Remove(move);
             this.dataContext.SaveChanges();
         }
 

@@ -153,20 +153,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("moves")]
-        public IActionResult Moves()
-        {
-            AdminMoveViewModel model = new AdminMoveViewModel()
-            {
-                AllMoves = this.dataService.GetMoves(),
-                AllTypes = this.dataService.GetTypes(),
-                AllGames = this.dataService.GetGames().OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
-                AllMoveCategories = this.dataService.GetMoveCategories(),
-            };
-
-            return this.View(model);
-        }
-
         [Route("ability")]
         public IActionResult Abilities()
         {
