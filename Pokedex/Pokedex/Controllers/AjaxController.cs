@@ -703,7 +703,14 @@ namespace Pokedex.Controllers
                         catchRate = 1f;
                     }
 
-                    captureChance = ((Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f) + statusEffect + 1) / 256;
+                    if (pokeball.Id == 21)
+                    {
+                        captureChance = ((Math.Floor(Math.Max(catchRate, 1f)) % 256f) + statusEffect + 1) / 256;
+                    }
+                    else
+                    {
+                        captureChance = ((Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f) + statusEffect + 1) / 256;
+                    }
                 }
                 else if (generationId == 3 || generationId == 4)
                 {
