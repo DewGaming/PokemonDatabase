@@ -1553,11 +1553,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-typing-evaluator-chart")]
-        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId, int generationId)
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int generationID)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.PartialView("_FillTypeEvaluatorChart", this.dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId, generationId));
+                return this.PartialView("_FillTypeEvaluatorChart", this.dataService.GetTypeChartTyping(primaryTypeID, secondaryTypeID, generationID));
             }
             else
             {
@@ -1629,11 +1629,11 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-typing")]
-        public IActionResult GetPokemon(int primaryTypeId, int secondaryTypeId, int generationId)
+        public IActionResult GetPokemon(int primaryTypeID, int secondaryTypeID, int generationID)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonTypeDetail> typingList = this.dataService.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId, generationId);
+                List<PokemonTypeDetail> typingList = this.dataService.GetAllPokemonWithSpecificTypes(primaryTypeID, secondaryTypeID, generationID);
                 List<Pokemon> pokemonList = new List<Pokemon>();
 
                 foreach (var p in typingList)
@@ -1777,6 +1777,14 @@ namespace Pokedex.Controllers
             }
 
             return null;
+        }
+
+        [AllowAnonymous]
+        [Route("get-types-by-generation")]
+        public IActionResult GrabTypingEvaluatorTypes(int generationID)
+        {
+            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetTypes().Where(x => x.GenerationId <= generationID).ToList();
+            return this.PartialView("_FillTypingEvaluatorTypes", model);
         }
 
         private string FillEVs(PokemonTeamEV evs)
@@ -2050,12 +2058,6 @@ namespace Pokedex.Controllers
             }
 
             return pokemonList;
-        }
-
-        private List<Pokedex.DataAccess.Models.Type> GrabTypingEvaluatorTypes(int generationId)
-        {
-            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetTypes();
-            return model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" }).ToList();
         }
     }
 }

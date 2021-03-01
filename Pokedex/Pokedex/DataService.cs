@@ -1520,7 +1520,7 @@ namespace Pokedex
             return pokemonTypeCharts;
         }
 
-        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId)
+        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId)
         {
             List<Type> typeList = this.GetTypes();
             List<Type> pokemonTypes = new List<Type>();
@@ -1544,8 +1544,12 @@ namespace Pokedex
                 typeChart = this.dataContext.TypeCharts
                     .Include(x => x.Attack)
                     .Include(x => x.Defend)
-                    .Where(x => x.Defend == type && x.GenerationId == 6)
+                    .Where(x => x.Defend == type)
                     .ToList();
+
+                List<int> generations = typeChart.Select(x => x.GenerationId).Distinct().OrderByDescending(x => x).ToList();
+                typeChart = typeChart.Where(x => x.GenerationId == generations.First(x => x <= generationId)).ToList();
+
                 foreach (var t in typeList)
                 {
                     if (typeChart.Exists(x => x.Attack.Name == t.Name))

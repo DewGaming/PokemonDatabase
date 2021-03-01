@@ -1,79 +1,71 @@
-var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
-    primaryTypeID = $('.primaryList > select').val();
-    secondaryTypeID = $('.secondaryList > select').val();
-    generationID = $('.generationList > select').val();
-}, checkTypings = function () {
-    if (primaryTypeID != $('.primaryList > select').val() || secondaryTypeID != $('.secondaryList > select').val() || generationID != $('.generationList > select').val()) {
-        updateIDs();
-        $('.secondaryList option').each(function() {
-            if (!$(this).is(':visible'))
-            {
-                $(this).css('display', 'block');
-            }
-        });
-
-        $('.secondaryList option[value="' + primaryTypeID + '"]').css('display', 'none');
-
-        if (primaryTypeID == '0' && secondaryTypeID != '0') {
-            if ($('.secondaryList > select').val() == '100') {
-                $('.primaryList > select').val('0');
-            }
-            else {
-                $('.primaryList > select').val(secondaryTypeID);
-            }
-
-            $('.secondaryList > select').val('0');
-            updateIDs();
+var checkTypings = function () {
+    $('.secondaryList option').each(function() {
+        if (!$(this).is(':visible'))
+        {
+            $(this).css('display', 'block');
         }
-        else if (primaryTypeID == secondaryTypeID) {
-            $('.secondaryList > select').val('0');
-            updateIDs();
-        }
+    });
 
-        if (primaryTypeID != '0' && secondaryTypeID != '100') {
-            $('.effectivenessChart').empty();
+    $('.secondaryList option[value="' + $('.primaryList > select').val() + '"]').css('display', 'none');
 
-            $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID }, function() {
-                if ($('.typing-table-strong').children().length > 0)
-                {
-                    $(".StrongAgainst").css("display", "block");
-                }
-                else
-                {
-                    $(".StrongAgainst").css("display", "none");
-                }
-
-                if ($('.typing-table-weak').children().length > 0)
-                {
-                    $(".WeakAgainst").css("display", "block");
-                }
-                else
-                {
-                    $(".WeakAgainst").css("display", "none");
-                }
-
-                if ($('.typing-table-immune').children().length > 0)
-                {
-                    $(".ImmuneTo").css("display", "block");
-                }
-                else
-                {
-                    $(".ImmuneTo").css("display", "none");
-                }
-
-                $('.effectivenessChart').css('display', 'flex');
-            });
+    if ($('.primaryList > select').val() == '0' && $('.secondaryList > select').val() != '0') {
+        if ($('.secondaryList > select').val() == '100') {
+            $('.primaryList > select').val('0');
         }
         else {
-            $('.effectivenessChart').css('display', 'none');
+            $('.primaryList > select').val($('.secondaryList > select').val());
         }
+
+        $('.secondaryList > select').val('0');
+    }
+    else if ($('.primaryList > select').val() == $('.secondaryList > select').val()) {
+        $('.secondaryList > select').val('0');
+    }
+
+    if ($('.primaryList > select').val() != '0' && $('.secondaryList > select').val() != '100') {
+        $('.effectivenessChart').empty();
+
+        $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': $('.primaryList > select').val(), 'secondaryTypeID': $('.secondaryList > select').val(), 'generationID': $('.generationList > select').val() }, function() {
+            if ($('.typing-table-strong').children().length > 0)
+            {
+                $(".StrongAgainst").css("display", "block");
+            }
+            else
+            {
+                $(".StrongAgainst").css("display", "none");
+            }
+
+            if ($('.typing-table-weak').children().length > 0)
+            {
+                $(".WeakAgainst").css("display", "block");
+            }
+            else
+            {
+                $(".WeakAgainst").css("display", "none");
+            }
+
+            if ($('.typing-table-immune').children().length > 0)
+            {
+                $(".ImmuneTo").css("display", "block");
+            }
+            else
+            {
+                $(".ImmuneTo").css("display", "none");
+            }
+
+            $('.effectivenessChart').css('display', 'flex');
+        });
+    }
+    else {
+        $('.effectivenessChart').css('display', 'none');
     }
 }, grabPokemon = function () {
-    if (primaryTypeID != '') {
+    checkTypings();
+    if ($('.primaryList > select').val() != '') {
         $('.pokemonWithTyping').css('display', 'none');
         $('.effectivenessChart').css('display', 'none');
         $('.pokemonList').empty();
-        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': primaryTypeID, 'secondaryTypeID': secondaryTypeID, 'generationId': generationID }, function () {
+        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': $('.primaryList > select').val(), 'secondaryTypeID': $('.secondaryList > select').val(), 'generationID': $('.generationList > select').val() }, function () {
             if ($('.pokemonList').children().length > 0) {
                 $('.pokemonWithTyping').css('display', 'block');
             }
@@ -90,14 +82,42 @@ var primaryTypeID, secondaryTypeID, generationId, updateIDs = function () {
     else {
         $('.pokemonWithTyping').css('display', 'none');
     }
-}
+}, grabTypes = function (generationID) {
+    var primaryTypeID = $('.primaryList > select').val(), secondaryTypeID = $('.secondaryList > select').val();
+    $('.typeLists').load('/get-types-by-generation/', { 'generationID': generationID }, function () {
+        if ($('.primaryList option[value=' + primaryTypeID + ']').length != 0)
+        {
+            $('.primaryList > select').val(primaryTypeID);
+        }
+        else
+        {
+            $('.primaryList > select').val(0);
+        }
+
+        if ($('.secondaryList option[value=' + secondaryTypeID + ']').length != 0)
+        {
+            $('.secondaryList > select').val(secondaryTypeID);
+        }
+        else
+        {
+            $('.secondaryList > select').val(0);
+        }
+
+        $('.typingSelectList').off();
+
+        $('.typingSelectList').on('change', function () {
+            grabPokemon();
+        });
+
+        grabPokemon();
+    });
+};
 
 $(function () {
-    checkTypings();
-    grabPokemon();
+    $('.generationList > select').val($('.generationList option:last-child').val());
+    grabTypes($('.generationList > select').val());
 });
 
-$('.typingSelectList').on('change', function () {
-    checkTypings();
-    grabPokemon();
+$(".generationSelectList").on('change', function () {
+    grabTypes($('.generationList > select').val());
 });

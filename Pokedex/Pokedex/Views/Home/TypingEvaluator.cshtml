@@ -34,11 +34,11 @@
             min-width: 216.75px;
         }
 
-        .primaryList, .secondaryList {
+        .primaryList, .generationList {
           margin-right: 10px
         }
 
-        .primaryList>label, .secondaryList>label, .generationList>label {
+        .flexDiv label {
           margin-bottom: 7.5px;
         }
 
@@ -56,17 +56,19 @@
 <div>
     <div class="evaluator">
         <div class="flexDiv">
-            <div class="primaryList">
-                @Html.Label("Primary Type")
-                @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
-            </div>
-            <div class="secondaryList">
-                @Html.Label("Secondary Type")
-                @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
-            </div>
             <div class="generationList">
                 @Html.Label("Up to What Generation")
-                @Html.DropDownList("Generation List", new SelectList(@generations, "Id", "Region"), new { @class = "form-control typingSelectList" })
+                @Html.DropDownList("Generation List", new SelectList(@generations, "Id", "Region"), new { @class = "form-control generationSelectList" })
+            </div>
+            <div class="typeLists flexDiv">
+                <div class="primaryList">
+                    @Html.Label("Primary Type")
+                    @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+                </div>
+                <div class="secondaryList">
+                    @Html.Label("Secondary Type")
+                    @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+                </div>
             </div>
         </div>
 

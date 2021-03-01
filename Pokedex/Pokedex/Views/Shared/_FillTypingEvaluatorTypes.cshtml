@@ -1,0 +1,15 @@
+@model List<Pokedex.DataAccess.Models.Type>;
+@{
+    var primaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
+    var secondaryItems = Model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
+    secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
+}
+
+<div class="primaryList">
+    @Html.Label("Primary Type")
+    @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+</div>
+<div class="secondaryList">
+    @Html.Label("Secondary Type")
+    @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+</div>
