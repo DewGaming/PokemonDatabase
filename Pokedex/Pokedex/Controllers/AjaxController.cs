@@ -1552,28 +1552,12 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("get-typing-effectiveness")]
-        public IActionResult GetTypingTypeChart(int primaryTypeId, int secondaryTypeId)
-        {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                return this.PartialView("_FillTypeEffectiveness", this.dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId));
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
-
-            return null;
-        }
-
-        [AllowAnonymous]
         [Route("get-typing-evaluator-chart")]
-        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId)
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId, int generationId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.PartialView("_FillTypeEvaluatorChart", this.dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId));
+                return this.PartialView("_FillTypeEvaluatorChart", this.dataService.GetTypeChartTyping(primaryTypeId, secondaryTypeId, generationId));
             }
             else
             {
@@ -2066,6 +2050,12 @@ namespace Pokedex.Controllers
             }
 
             return pokemonList;
+        }
+
+        private List<Pokedex.DataAccess.Models.Type> GrabTypingEvaluatorTypes(int generationId)
+        {
+            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetTypes();
+            return model.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" }).ToList();
         }
     }
 }
