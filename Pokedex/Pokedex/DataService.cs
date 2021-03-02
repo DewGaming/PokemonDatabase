@@ -2020,6 +2020,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPokemonGameDetails(List<PokemonGameDetail> details)
+        {
+            this.dataContext.PokemonGameDetails.AddRange(details);
+            this.dataContext.SaveChanges();
+        }
+
         public void AddEvolutionMethod(EvolutionMethod evolutionMethod)
         {
             this.dataContext.EvolutionMethods.Add(evolutionMethod);
@@ -2581,6 +2587,12 @@ namespace Pokedex
         {
             PokemonGameDetail pokemonGameDetail = this.GetPokemonGameDetail(id);
             this.dataContext.PokemonGameDetails.Remove(pokemonGameDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonGameDetails(List<PokemonGameDetail> details)
+        {
+            this.dataContext.PokemonGameDetails.RemoveRange(this.dataContext.PokemonGameDetails.Where(x => details.Select(y => y.Id).Contains(x.Id)));
             this.dataContext.SaveChanges();
         }
 

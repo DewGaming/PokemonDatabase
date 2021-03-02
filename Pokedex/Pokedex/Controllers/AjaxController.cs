@@ -1432,29 +1432,39 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                PokemonGameDetail pokemonGameDetail;
-                List<PokemonGameDetail> existingGameDetails = this.dataService.GetPokemonGameDetailsByGame(gameId);
+                List<PokemonGameDetail> existingGameDetails = new List<PokemonGameDetail>();
+                List<PokemonGameDetail> newGameDetails = new List<PokemonGameDetail>();
+                List<Game> games = this.dataService.GetGames();
+                DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
+                games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
 
-                foreach (var p in pokemonList)
+                if (gameId == 4 || gameId == 5)
                 {
-                    if (existingGameDetails.Find(x => x.PokemonId == p && x.GameId == gameId) == null)
-                    {
-                        pokemonGameDetail = new PokemonGameDetail()
-                        {
-                            GameId = gameId,
-                            PokemonId = p,
-                        };
-                        this.dataService.AddPokemonGameDetail(pokemonGameDetail);
-                    }
-                    else
-                    {
-                        existingGameDetails.Remove(existingGameDetails.Find(x => x.PokemonId == p && x.GameId == gameId));
-                    }
+                    games = games.Where(x => x.Id == gameId).ToList();
                 }
 
-                foreach (var g in existingGameDetails)
+                foreach (var game in games.ConvertAll(x => x.Id))
                 {
-                    this.dataService.DeletePokemonGameDetail(g.Id);
+                    existingGameDetails = this.dataService.GetPokemonGameDetailsByGame(game);
+
+                    foreach (var p in pokemonList)
+                    {
+                        if (existingGameDetails.Find(x => x.PokemonId == p && x.GameId == game) == null)
+                        {
+                            newGameDetails.Add(new PokemonGameDetail()
+                            {
+                                GameId = game,
+                                PokemonId = p,
+                            });
+                        }
+                        else
+                        {
+                            existingGameDetails.Remove(existingGameDetails.Find(x => x.PokemonId == p && x.GameId == game));
+                        }
+                    }
+
+                    this.dataService.AddPokemonGameDetails(newGameDetails);
+                    this.dataService.DeletePokemonGameDetails(existingGameDetails);
                 }
 
                 return this.Json(this.Url.Action("GameAvailability", "Home")).Value.ToString();
