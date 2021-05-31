@@ -132,7 +132,7 @@ namespace Pokedex.Controllers
                 if (pokemonInGen.Count != 0)
                 {
                     List<Game> uniqueGames = pokemonInGen.Select(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).GroupBy(y => y.Id).Select(z => z.First()).ToList();
-                    List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
+                    List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id && DateTime.Compare(DateTime.Today, x.ReleaseDate) >= 0).ToList();
                     for (var i = 0; i < uniqueGames.Count; i++)
                     {
                         if (i == uniqueGames.Count - 1)
