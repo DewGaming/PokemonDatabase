@@ -1517,7 +1517,7 @@ namespace Pokedex
 
                 foreach (var i in primaryTypeChart.Where(x => x.Effective == 0))
                 {
-                    finalTypeChart.RemoveAll(x => x.AttackId == i.AttackId && x.Effective != 0);
+                    finalTypeChart.RemoveAll(x => x.AttackId == i.AttackId && x.Effective != 0 && x.GenerationId == i.GenerationId);
                 }
 
                 pokemonTypeCharts.Add(new PokemonTypeChartViewModel()
