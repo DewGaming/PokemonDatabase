@@ -352,7 +352,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeamEV pokemonEV = this.dataService.GetPokemonTeamEV((int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamEVId);
+                PokemonTeamEV pokemonEV = this.dataService.GetObjectById<PokemonTeamEV>((int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamEVId);
                 PokemonTeamEVViewModel model = new PokemonTeamEVViewModel()
                 {
                     Id = pokemonEV.Id,
@@ -380,7 +380,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonTeamEV pokemon = this.dataService.GetPokemonTeamEV(pokemonTeamEV.PokemonId);
+                PokemonTeamEV pokemon = this.dataService.GetObjectById<PokemonTeamEV>(pokemonTeamEV.PokemonId);
                 PokemonTeamEVViewModel model = new PokemonTeamEVViewModel()
                 {
                     Id = pokemon.Id,
@@ -397,7 +397,7 @@ namespace Pokedex.Controllers
             }
             else if (pokemonTeamEV.EVTotal > 510)
             {
-                PokemonTeamEV pokemon = this.dataService.GetPokemonTeamEV(pokemonTeamEV.PokemonId);
+                PokemonTeamEV pokemon = this.dataService.GetObjectById<PokemonTeamEV>(pokemonTeamEV.PokemonId);
                 PokemonTeamEVViewModel model = new PokemonTeamEVViewModel()
                 {
                     Id = pokemon.Id,
@@ -436,7 +436,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeamMoveset pokemonMoveset = this.dataService.GetPokemonTeamMoveset((int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamMovesetId);
+                PokemonTeamMoveset pokemonMoveset = this.dataService.GetObjectById<PokemonTeamMoveset>((int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamMovesetId);
                 PokemonTeamMovesetViewModel model = new PokemonTeamMovesetViewModel()
                 {
                     Id = pokemonMoveset.Id,
@@ -462,7 +462,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonTeamMoveset pokemon = this.dataService.GetPokemonTeamMoveset(pokemonTeamMoveset.PokemonId);
+                PokemonTeamMoveset pokemon = this.dataService.GetObjectById<PokemonTeamMoveset>(pokemonTeamMoveset.PokemonId);
                 PokemonTeamMovesetViewModel model = new PokemonTeamMovesetViewModel()
                 {
                     Id = pokemon.Id,
@@ -498,7 +498,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeamIV pokemonIV = this.dataService.GetPokemonTeamIV((int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamIVId);
+                PokemonTeamIV pokemonIV = this.dataService.GetObjectById<PokemonTeamIV>((int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamIVId);
                 PokemonTeamIVViewModel model = new PokemonTeamIVViewModel()
                 {
                     Id = pokemonIV.Id,
@@ -526,7 +526,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonTeamEV pokemon = this.dataService.GetPokemonTeamEV(pokemonTeamIV.PokemonId);
+                PokemonTeamEV pokemon = this.dataService.GetObjectById<PokemonTeamEV>(pokemonTeamIV.PokemonId);
                 PokemonTeamIVViewModel model = new PokemonTeamIVViewModel()
                 {
                     Id = pokemon.Id,
@@ -626,7 +626,7 @@ namespace Pokedex.Controllers
         [Route("edit_team/{pokemonTeamId:int}")]
         public IActionResult EditTeam(PokemonTeam newPokemonTeam)
         {
-            PokemonTeam originalPokemonTeam = this.dataService.GetPokemonTeamNoIncludes(newPokemonTeam.Id);
+            PokemonTeam originalPokemonTeam = this.dataService.GetObjectById<PokemonTeam>(newPokemonTeam.Id);
             if (!this.ModelState.IsValid)
             {
                 UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel()

@@ -40,7 +40,7 @@ namespace Pokedex.Controllers
         {
             UserViewModel model = new UserViewModel()
             {
-                UserList = this.dataService.GetUsers().OrderByDescending(x => x.LastVisit).ThenBy(x => x.Id).ToList(),
+                UserList = this.dataService.GetObjects<User>().OrderByDescending(x => x.LastVisit).ThenBy(x => x.Id).ToList(),
                 UsersWithPokemonTeams = new List<User>(),
             };
 
@@ -66,7 +66,7 @@ namespace Pokedex.Controllers
         [Route("send_message/{commentId:int}")]
         public IActionResult SendMessage(int commentId)
         {
-            Comment comment = this.dataService.GetComment(commentId);
+            Comment comment = this.dataService.GetObjectById<Comment>(commentId);
 
             Message model = new Message()
             {
@@ -90,7 +90,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Comment comment = this.dataService.GetComment(commentId);
+                Comment comment = this.dataService.GetObjectById<Comment>(commentId);
 
                 Message model = new Message()
                 {
@@ -115,7 +115,7 @@ namespace Pokedex.Controllers
         [Route("send_message")]
         public IActionResult SendMessageNoComment()
         {
-            List<User> users = this.dataService.GetUsers();
+            List<User> users = this.dataService.GetObjects<User>();
             users.Remove(users.Find(x => x.Username == this.User.Identity.Name));
 
             MessageViewModel model = new MessageViewModel()
@@ -138,7 +138,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                List<User> users = this.dataService.GetUsers();
+                List<User> users = this.dataService.GetObjects<User>();
                 users.Remove(users.Find(x => x.Username == this.User.Identity.Name));
 
                 MessageViewModel model = new MessageViewModel()
@@ -165,7 +165,7 @@ namespace Pokedex.Controllers
             AllCommentsViewModel model = new AllCommentsViewModel()
             {
                 AllComments = this.dataService.GetComments(),
-                AllCategories = this.dataService.GetCommentCategories(),
+                AllCategories = this.dataService.GetObjects<CommentCategory>(),
             };
 
             return this.View(model);
@@ -179,7 +179,7 @@ namespace Pokedex.Controllers
         [Route("complete_comment/{id:int}")]
         public IActionResult CompleteComment(int id)
         {
-            Comment comment = this.dataService.GetComment(id);
+            Comment comment = this.dataService.GetObjectById<Comment>(id);
             comment.IsCompleted = true;
 
             this.dataService.UpdateComment(comment);
@@ -238,17 +238,16 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Marks a newly finished pokemon as reviewed.
         /// </summary>
-        /// <param name="pokemon">The newly finished pokemon. Variable not used.</param>
-        /// <param name="pokemonId">The newly finished pokemon's id'.</param>
+        /// <param name="pokemon">The newly finished pokemon.</param>
         /// <returns>The admin pokemon page.</returns>
         [HttpPost]
         [Route("review_pokemon/{pokemonId:int}")]
-        public IActionResult ReviewPokemon(Pokemon pokemon, int pokemonId)
+        public IActionResult ReviewPokemon(Pokemon pokemon)
         {
-            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemonId);
+            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemon.Id);
             if (reviewedPokemon == null)
             {
-                reviewedPokemon = new ReviewedPokemon() { PokemonId = pokemonId };
+                reviewedPokemon = new ReviewedPokemon() { PokemonId = pokemon.Id };
                 this.dataService.AddReviewedPokemon(reviewedPokemon);
             }
 
@@ -278,7 +277,7 @@ namespace Pokedex.Controllers
             Pokemon pokemon;
             foreach (var r in reviewedPokemonList)
             {
-                pokemon = this.dataService.GetPokemonByIdNoIncludes(r.PokemonId);
+                pokemon = this.dataService.GetObjectById<Pokemon>(r.PokemonId);
                 pokemon.IsComplete = true;
                 this.dataService.UpdatePokemon(pokemon);
                 this.dataService.DeleteReviewedPokemon(r.Id);
@@ -295,7 +294,7 @@ namespace Pokedex.Controllers
         [Route("complete_pokemon/{pokemonId:int}")]
         public IActionResult CompletePokemon(int pokemonId)
         {
-            Pokemon pokemon = this.dataService.GetPokemonByIdNoIncludes(pokemonId);
+            Pokemon pokemon = this.dataService.GetObjectById<Pokemon>(pokemonId);
             pokemon.IsComplete = true;
             this.dataService.UpdatePokemon(pokemon);
 

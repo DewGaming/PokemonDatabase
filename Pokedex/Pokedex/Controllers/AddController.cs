@@ -474,7 +474,7 @@ namespace Pokedex.Controllers
         {
             PokeballAdminViewModel model = new PokeballAdminViewModel()
             {
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
             return this.View(model);
@@ -489,7 +489,7 @@ namespace Pokedex.Controllers
             {
                 PokeballAdminViewModel model = new PokeballAdminViewModel()
                 {
-                    AllGenerations = this.dataService.GetGenerations(),
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
                 };
 
                 return this.View(model);
@@ -575,7 +575,7 @@ namespace Pokedex.Controllers
         {
             GameViewModel model = new GameViewModel()
             {
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
             return this.View(model);
@@ -590,7 +590,7 @@ namespace Pokedex.Controllers
             {
                 GameViewModel model = new GameViewModel()
                 {
-                    AllGenerations = this.dataService.GetGenerations(),
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
                 };
 
                 return this.View(model);
@@ -672,7 +672,7 @@ namespace Pokedex.Controllers
 
             BattleItemViewModel model = new BattleItemViewModel()
             {
-                AllGenerations = this.dataService.GetGenerations().Where(x => x.Id > 1).ToList(),
+                AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id > 1).ToList(),
                 AllPokemon = pokemonList,
             };
 
@@ -709,7 +709,7 @@ namespace Pokedex.Controllers
                 AllGames = this.dataService.GetGames(),
             };
 
-            foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
+            foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
             {
                 GenderRatioViewModel viewModel = new GenderRatioViewModel()
                 {
@@ -759,7 +759,7 @@ namespace Pokedex.Controllers
                     AllGames = this.dataService.GetGames(),
                 };
 
-                foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
+                foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
                 {
                     GenderRatioViewModel viewModel = new GenderRatioViewModel()
                     {
@@ -801,7 +801,7 @@ namespace Pokedex.Controllers
                     AllGames = this.dataService.GetGames(),
                 };
 
-                foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
+                foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
                 {
                     GenderRatioViewModel viewModel = new GenderRatioViewModel()
                     {
@@ -908,7 +908,7 @@ namespace Pokedex.Controllers
                 Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
 
-            Game game = this.dataService.GetGame(newPokemon.GameId);
+            Game game = this.dataService.GetObjectById<Game>(newPokemon.GameId);
 
             this.dataService.AddPokemon(newPokemon);
 
@@ -986,10 +986,10 @@ namespace Pokedex.Controllers
                 }
             }
 
-            Pokemon alternatePokemon = this.dataService.GetPokemonNoIncludesById(pokemon.OriginalPokemonId);
+            Pokemon alternatePokemon = this.dataService.GetObjectById<Pokemon>(pokemon.OriginalPokemonId);
 
             alternatePokemon.Id = 0;
-            alternatePokemon.PokedexNumber = this.dataService.GetPokemonByIdNoIncludes(pokemon.OriginalPokemonId).PokedexNumber;
+            alternatePokemon.PokedexNumber = this.dataService.GetObjectById<Pokemon>(pokemon.OriginalPokemonId).PokedexNumber;
             alternatePokemon.Height = pokemon.Height;
             alternatePokemon.Weight = pokemon.Weight;
             alternatePokemon.ExpYield = pokemon.ExpYield;

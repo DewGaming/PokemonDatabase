@@ -31,7 +31,7 @@ namespace Pokedex.Controllers
         [Route("edit_user/{id:int}")]
         public new IActionResult User(int id)
         {
-            User model = this.dataService.GetUserById(id);
+            User model = this.dataService.GetObjectById<User>(id);
 
             return this.View(model);
         }
@@ -90,7 +90,7 @@ namespace Pokedex.Controllers
         [Route("edit_generation/{id:int}")]
         public IActionResult Generation(int id)
         {
-            Generation model = this.dataService.GetGeneration(id);
+            Generation model = this.dataService.GetObjectById<Generation>(id);
 
             return this.View(model);
         }
@@ -102,7 +102,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Generation model = this.dataService.GetGeneration(generation.Id);
+                Generation model = this.dataService.GetObjectById<Generation>(generation.Id);
 
                 return this.View(model);
             }
@@ -116,7 +116,7 @@ namespace Pokedex.Controllers
         [Route("edit_game/{id:int}")]
         public IActionResult Game(int id)
         {
-            Game game = this.dataService.GetGame(id);
+            Game game = this.dataService.GetObjectById<Game>(id);
             GameViewModel model = new GameViewModel()
             {
                 Id = game.Id,
@@ -124,7 +124,7 @@ namespace Pokedex.Controllers
                 Abbreviation = game.Abbreviation,
                 ReleaseDate = game.ReleaseDate,
                 GenerationId = game.GenerationId,
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
             return this.View(model);
@@ -137,7 +137,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Game oldGame = this.dataService.GetGame(game.Id);
+                Game oldGame = this.dataService.GetObjectById<Game>(game.Id);
                 GameViewModel model = new GameViewModel()
                 {
                     Id = oldGame.Id,
@@ -145,7 +145,7 @@ namespace Pokedex.Controllers
                     Abbreviation = oldGame.Abbreviation,
                     ReleaseDate = oldGame.ReleaseDate,
                     GenerationId = oldGame.GenerationId,
-                    AllGenerations = this.dataService.GetGenerations(),
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
                 };
 
                 return this.View(model);
@@ -159,7 +159,7 @@ namespace Pokedex.Controllers
         [Route("edit_game_availability/{id:int}")]
         public IActionResult GameAvailability(int id)
         {
-            Game game = this.dataService.GetGame(id);
+            Game game = this.dataService.GetObjectById<Game>(id);
             List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithIncompleteWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
             EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
             {
@@ -183,13 +183,13 @@ namespace Pokedex.Controllers
                 p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
             }
 
-            BattleItem battleItem = this.dataService.GetBattleItem(id);
+            BattleItem battleItem = this.dataService.GetObjectById<BattleItem>(id);
             BattleItemViewModel model = new BattleItemViewModel()
             {
                 Id = battleItem.Id,
                 Name = battleItem.Name,
                 GenerationId = battleItem.GenerationId,
-                AllGenerations = this.dataService.GetGenerations().Where(x => x.Id >= 1).ToList(),
+                AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 1).ToList(),
                 AllPokemon = pokemonList,
             };
 
@@ -210,13 +210,13 @@ namespace Pokedex.Controllers
                     p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
                 }
 
-                BattleItem item = this.dataService.GetBattleItem(battleItem.Id);
+                BattleItem item = this.dataService.GetObjectById<BattleItem>(battleItem.Id);
                 BattleItemViewModel model = new BattleItemViewModel()
                 {
                     Id = item.Id,
                     Name = item.Name,
                     GenerationId = item.GenerationId,
-                    AllGenerations = this.dataService.GetGenerations().Where(x => x.Id >= 1).ToList(),
+                    AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 1).ToList(),
                     AllPokemon = pokemonList,
                 };
 
@@ -245,7 +245,7 @@ namespace Pokedex.Controllers
             model.AllExperienceGrowths = this.dataService.GetExperienceGrowths();
             model.AllGenderRatios = new List<GenderRatioViewModel>();
 
-            foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
+            foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
             {
                 GenderRatioViewModel viewModel = new GenderRatioViewModel()
                 {
@@ -302,7 +302,7 @@ namespace Pokedex.Controllers
                     model.AllExperienceGrowths = this.dataService.GetExperienceGrowths();
                     model.AllGenderRatios = new List<GenderRatioViewModel>();
 
-                    foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
+                    foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
                     {
                         GenderRatioViewModel viewModel = new GenderRatioViewModel()
                         {
@@ -353,7 +353,7 @@ namespace Pokedex.Controllers
                     model.AllExperienceGrowths = this.dataService.GetExperienceGrowths();
                     model.AllGenderRatios = new List<GenderRatioViewModel>();
 
-                    foreach (GenderRatio genderRatio in this.dataService.GetGenderRatios())
+                    foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
                     {
                         GenderRatioViewModel viewModel = new GenderRatioViewModel()
                         {
@@ -810,7 +810,7 @@ namespace Pokedex.Controllers
         [Route("edit_type/{id:int}")]
         public IActionResult Type(int id)
         {
-            Type type = this.dataService.GetType(id);
+            Type type = this.dataService.GetObjectById<Type>(id);
             TypeGenerationViewModel model = new TypeGenerationViewModel()
             {
                 Name = type.Name,
@@ -828,13 +828,15 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Type newType = this.dataService.GetType(type.Id);
+                Type newType = this.dataService.GetObjectById<Type>(type.Id);
                 TypeGenerationViewModel model = new TypeGenerationViewModel()
                 {
                     Name = newType.Name,
                     GenerationId = newType.GenerationId,
                     AllGenerations = this.dataService.GetGenerationsForRazor(),
                 };
+
+                return this.View(model);
             }
 
             this.dataService.UpdateType(type);
@@ -846,7 +848,7 @@ namespace Pokedex.Controllers
         [Route("edit_egg_cycle/{id:int}")]
         public IActionResult EggCycle(int id)
         {
-            EggCycle model = this.dataService.GetEggCycle(id);
+            EggCycle model = this.dataService.GetObjectById<EggCycle>(id);
 
             return this.View(model);
         }
@@ -858,7 +860,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                EggCycle model = this.dataService.GetEggCycle(eggCycle.Id);
+                EggCycle model = this.dataService.GetObjectById<EggCycle>(eggCycle.Id);
 
                 return this.View(model);
             }
@@ -872,7 +874,7 @@ namespace Pokedex.Controllers
         [Route("edit_experience_growth/{id:int}")]
         public IActionResult ExperienceGrowth(int id)
         {
-            ExperienceGrowth model = this.dataService.GetExperienceGrowth(id);
+            ExperienceGrowth model = this.dataService.GetObjectById<ExperienceGrowth>(id);
 
             return this.View(model);
         }
@@ -884,7 +886,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                ExperienceGrowth model = this.dataService.GetExperienceGrowth(experienceGrowth.Id);
+                ExperienceGrowth model = this.dataService.GetObjectById<ExperienceGrowth>(experienceGrowth.Id);
 
                 return this.View(model);
             }
@@ -898,7 +900,7 @@ namespace Pokedex.Controllers
         [Route("edit_gender_ratio/{id:int}")]
         public IActionResult GenderRatio(int id)
         {
-            GenderRatio model = this.dataService.GetGenderRatio(id);
+            GenderRatio model = this.dataService.GetObjectById<GenderRatio>(id);
 
             return this.View(model);
         }
@@ -910,7 +912,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                GenderRatio model = this.dataService.GetGenderRatio(genderRatio.Id);
+                GenderRatio model = this.dataService.GetObjectById<GenderRatio>(genderRatio.Id);
 
                 return this.View(model);
             }
@@ -924,7 +926,7 @@ namespace Pokedex.Controllers
         [Route("edit_egg_group/{id:int}")]
         public IActionResult EggGroup(int id)
         {
-            EggGroup model = this.dataService.GetEggGroup(id);
+            EggGroup model = this.dataService.GetObjectById<EggGroup>(id);
 
             return this.View(model);
         }
@@ -936,7 +938,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                EggGroup model = this.dataService.GetEggGroup(eggGroup.Id);
+                EggGroup model = this.dataService.GetObjectById<EggGroup>(eggGroup.Id);
 
                 return this.View(model);
             }
@@ -950,7 +952,7 @@ namespace Pokedex.Controllers
         [Route("edit_form_item/{id:int}")]
         public IActionResult FormItem(int id)
         {
-            FormItem item = this.dataService.GetFormItem(id);
+            FormItem item = this.dataService.GetObjectById<FormItem>(id);
             FormItemViewModel model = new FormItemViewModel()
             {
                 PokemonId = item.PokemonId,
@@ -978,7 +980,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                FormItem item = this.dataService.GetFormItem(formItem.Id);
+                FormItem item = this.dataService.GetObjectById<FormItem>(formItem.Id);
                 FormItemViewModel model = new FormItemViewModel()
                 {
                     PokemonId = item.PokemonId,
@@ -1008,7 +1010,7 @@ namespace Pokedex.Controllers
         [Route("edit_form/{id:int}")]
         public IActionResult Form(int id)
         {
-            Form model = this.dataService.GetForm(id);
+            Form model = this.dataService.GetObjectById<Form>(id);
 
             return this.View(model);
         }
@@ -1020,7 +1022,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Form model = this.dataService.GetForm(form.Id);
+                Form model = this.dataService.GetObjectById<Form>(form.Id);
 
                 return this.View(model);
             }
@@ -1034,7 +1036,7 @@ namespace Pokedex.Controllers
         [Route("edit_evolution_method/{id:int}")]
         public IActionResult EvolutionMethod(int id)
         {
-            EvolutionMethod model = this.dataService.GetEvolutionMethod(id);
+            EvolutionMethod model = this.dataService.GetObjectById<EvolutionMethod>(id);
 
             return this.View(model);
         }
@@ -1046,7 +1048,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                EvolutionMethod model = this.dataService.GetEvolutionMethod(evolutionMethod.Id);
+                EvolutionMethod model = this.dataService.GetObjectById<EvolutionMethod>(evolutionMethod.Id);
 
                 return this.View(model);
             }
@@ -1060,7 +1062,7 @@ namespace Pokedex.Controllers
         [Route("edit_capture_rate/{id:int}")]
         public IActionResult CaptureRate(int id)
         {
-            CaptureRate model = this.dataService.GetCaptureRate(id);
+            CaptureRate model = this.dataService.GetObjectById<CaptureRate>(id);
 
             return this.View(model);
         }
@@ -1072,7 +1074,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                CaptureRate model = this.dataService.GetCaptureRate(captureRate.Id);
+                CaptureRate model = this.dataService.GetObjectById<CaptureRate>(captureRate.Id);
 
                 return this.View(model);
             }
@@ -1086,7 +1088,7 @@ namespace Pokedex.Controllers
         [Route("edit_base_happiness/{id:int}")]
         public IActionResult BaseHappiness(int id)
         {
-            BaseHappiness model = this.dataService.GetBaseHappiness(id);
+            BaseHappiness model = this.dataService.GetObjectById<BaseHappiness>(id);
 
             return this.View(model);
         }
@@ -1098,7 +1100,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                BaseHappiness model = this.dataService.GetBaseHappiness(baseHappiness.Id);
+                BaseHappiness model = this.dataService.GetObjectById<BaseHappiness>(baseHappiness.Id);
 
                 return this.View(model);
             }
@@ -1115,7 +1117,7 @@ namespace Pokedex.Controllers
             Pokeball pokeball = this.dataService.GetPokeball(id);
             PokeballAdminViewModel model = new PokeballAdminViewModel()
             {
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
                 Id = pokeball.Id,
                 Name = pokeball.Name,
                 GenerationId = pokeball.GenerationId,
@@ -1135,7 +1137,7 @@ namespace Pokedex.Controllers
                 Pokeball newPokeball = this.dataService.GetPokeball(pokeball.Id);
                 PokeballAdminViewModel model = new PokeballAdminViewModel()
                 {
-                    AllGenerations = this.dataService.GetGenerations(),
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
                     Id = newPokeball.Id,
                     Name = newPokeball.Name,
                     GenerationId = newPokeball.GenerationId,
@@ -1154,7 +1156,7 @@ namespace Pokedex.Controllers
         [Route("edit_status/{id:int}")]
         public IActionResult Status(int id)
         {
-            Status model = this.dataService.GetStatus(id);
+            Status model = this.dataService.GetObjectById<Status>(id);
 
             return this.View(model);
         }
@@ -1166,7 +1168,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Status model = this.dataService.GetStatus(status.Id);
+                Status model = this.dataService.GetObjectById<Status>(status.Id);
 
                 return this.View(model);
             }
@@ -1259,7 +1261,7 @@ namespace Pokedex.Controllers
         [Route("edit_nature/{id:int}")]
         public IActionResult Nature(int id)
         {
-            Nature model = this.dataService.GetNature(id);
+            Nature model = this.dataService.GetObjectById<Nature>(id);
 
             return this.View(model);
         }
@@ -1271,7 +1273,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Nature model = this.dataService.GetNature(nature.Id);
+                Nature model = this.dataService.GetObjectById<Nature>(nature.Id);
 
                 return this.View(model);
             }
@@ -1285,7 +1287,7 @@ namespace Pokedex.Controllers
         [Route("edit_legendary_type/{id:int}")]
         public IActionResult LegendaryType(int id)
         {
-            LegendaryType model = this.dataService.GetLegendaryType(id);
+            LegendaryType model = this.dataService.GetObjectById<LegendaryType>(id);
 
             return this.View(model);
         }
@@ -1297,7 +1299,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                LegendaryType model = this.dataService.GetLegendaryType(legendaryType.Id);
+                LegendaryType model = this.dataService.GetObjectById<LegendaryType>(legendaryType.Id);
 
                 return this.View(model);
             }
@@ -1311,7 +1313,7 @@ namespace Pokedex.Controllers
         [Route("edit_classification/{id:int}")]
         public IActionResult Classification(int id)
         {
-            Classification model = this.dataService.GetClassification(id);
+            Classification model = this.dataService.GetObjectById<Classification>(id);
 
             return this.View(model);
         }
@@ -1323,7 +1325,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Classification model = this.dataService.GetClassification(classification.Id);
+                Classification model = this.dataService.GetObjectById<Classification>(classification.Id);
 
                 return this.View(model);
             }
@@ -1346,7 +1348,7 @@ namespace Pokedex.Controllers
         [Route("edit_ability/{id:int}")]
         public IActionResult Ability(int id)
         {
-            Ability model = this.dataService.GetAbility(id);
+            Ability model = this.dataService.GetObjectById<Ability>(id);
 
             return this.View(model);
         }
@@ -1358,7 +1360,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Ability model = this.dataService.GetAbility(ability.Id);
+                Ability model = this.dataService.GetObjectById<Ability>(ability.Id);
 
                 return this.View(model);
             }
@@ -1372,7 +1374,7 @@ namespace Pokedex.Controllers
         [Route("edit_comment_page/{id:int}")]
         public IActionResult CommentPage(int id)
         {
-            CommentPage model = this.dataService.GetCommentPage(id);
+            CommentPage model = this.dataService.GetObjectById<CommentPage>(id);
 
             return this.View(model);
         }
@@ -1384,7 +1386,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                CommentPage model = this.dataService.GetCommentPage(page.Id);
+                CommentPage model = this.dataService.GetObjectById<CommentPage>(page.Id);
 
                 return this.View(model);
             }
@@ -1398,7 +1400,7 @@ namespace Pokedex.Controllers
         [Route("edit_comment_category/{id:int}")]
         public IActionResult CommentCategory(int id)
         {
-            CommentCategory model = this.dataService.GetCommentCategory(id);
+            CommentCategory model = this.dataService.GetObjectById<CommentCategory>(id);
 
             return this.View(model);
         }
@@ -1410,7 +1412,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                CommentCategory model = this.dataService.GetCommentCategory(category.Id);
+                CommentCategory model = this.dataService.GetObjectById<CommentCategory>(category.Id);
 
                 return this.View(model);
             }

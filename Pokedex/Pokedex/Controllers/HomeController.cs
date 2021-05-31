@@ -121,7 +121,7 @@ namespace Pokedex.Controllers
         public IActionResult TeamRandomizer()
         {
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
-            List<Generation> generations = this.dataService.GetGenerations();
+            List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetTypes();
             List<Game> gamesList = this.dataService.GetGames();
             List<Game> selectableGames = new List<Game>();
@@ -182,7 +182,7 @@ namespace Pokedex.Controllers
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetTypes(),
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
             return this.View(model);
@@ -197,7 +197,7 @@ namespace Pokedex.Controllers
             {
                 AllPokemonWithEggGroups = eggGroupDetails,
                 AppConfig = this.appConfig,
-                GenerationId = this.dataService.GetGenerations().Last().Id,
+                GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
             };
 
             List<Pokemon> altForms = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
@@ -350,7 +350,7 @@ namespace Pokedex.Controllers
                 AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
                 AllPokeballs = this.dataService.GetPokeballsForCaptureCalculator(),
                 AllStatuses = this.dataService.GetStatuses(),
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
             return this.View(model);
@@ -363,7 +363,7 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                AllCategories = this.dataService.GetCommentCategories(),
+                AllCategories = this.dataService.GetObjects<CommentCategory>(),
                 AllPages = this.dataService.GetCommentPages(),
             };
             return this.View(model);
@@ -378,7 +378,7 @@ namespace Pokedex.Controllers
             {
                 CommentViewModel model = new CommentViewModel()
                 {
-                    AllCategories = this.dataService.GetCommentCategories(),
+                    AllCategories = this.dataService.GetObjects<CommentCategory>(),
                     AllPages = this.dataService.GetCommentPages(),
                 };
                 return this.View(model);
@@ -405,8 +405,8 @@ namespace Pokedex.Controllers
 
             this.dataService.AddComment(comment);
 
-            comment.Category = this.dataService.GetCommentCategory(comment.CategoryId);
-            comment.Page = this.dataService.GetCommentPage(comment.PageId);
+            comment.Category = this.dataService.GetObjectById<CommentCategory>(comment.CategoryId);
+            comment.Page = this.dataService.GetObjectById<CommentPage>(comment.PageId);
 
             this.EmailComment(comment);
 
@@ -448,7 +448,7 @@ namespace Pokedex.Controllers
 
                     if (comment.CommentorId != null)
                     {
-                        body = string.Concat(body, " by ", this.dataService.GetUserById((int)comment.CommentorId).Username);
+                        body = string.Concat(body, " by ", this.dataService.GetObjectById<User>((int)comment.CommentorId).Username);
                     }
                     else
                     {

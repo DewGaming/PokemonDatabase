@@ -32,7 +32,7 @@ namespace Pokedex.Controllers
         {
             GenerationViewModel model = new GenerationViewModel()
             {
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
                 AllGames = this.dataService.GetGames(),
             };
 
@@ -57,7 +57,7 @@ namespace Pokedex.Controllers
             CommentViewModel model = new CommentViewModel()
             {
                 AllComments = this.dataService.GetComments(),
-                AllCategories = this.dataService.GetCommentCategories(),
+                AllCategories = this.dataService.GetObjects<CommentCategory>(),
                 AllPages = this.dataService.GetCommentPages(),
             };
 
@@ -70,7 +70,7 @@ namespace Pokedex.Controllers
             CommentViewModel model = new CommentViewModel()
             {
                 AllComments = this.dataService.GetComments(),
-                AllCategories = this.dataService.GetCommentCategories(),
+                AllCategories = this.dataService.GetObjects<CommentCategory>(),
                 AllPages = this.dataService.GetCommentPages(),
             };
 
@@ -118,7 +118,7 @@ namespace Pokedex.Controllers
         {
             GenderRatiosViewModel model = new GenderRatiosViewModel()
             {
-                AllGenderRatios = this.dataService.GetGenderRatios(),
+                AllGenderRatios = this.dataService.GetObjects<GenderRatio>(),
                 AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 

@@ -30,7 +30,7 @@ namespace Pokedex.Controllers
         [Route("delete_generation/{id:int}")]
         public IActionResult Generation(int id)
         {
-            Generation model = this.dataService.GetGeneration(id);
+            Generation model = this.dataService.GetObjectById<Generation>(id);
 
             return this.View(model);
         }
@@ -52,7 +52,7 @@ namespace Pokedex.Controllers
             Pokeball pokeball = this.dataService.GetPokeball(id);
             PokeballAdminViewModel model = new PokeballAdminViewModel()
             {
-                AllGenerations = this.dataService.GetGenerations(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
                 Id = pokeball.Id,
                 Name = pokeball.Name,
                 GenerationId = pokeball.GenerationId,
@@ -76,7 +76,7 @@ namespace Pokedex.Controllers
         [Route("delete_status/{id:int}")]
         public IActionResult Status(int id)
         {
-            Status model = this.dataService.GetStatus(id);
+            Status model = this.dataService.GetObjectById<Status>(id);
 
             return this.View(model);
         }
@@ -114,7 +114,7 @@ namespace Pokedex.Controllers
         [Route("delete_game/{id:int}")]
         public IActionResult Game(int id)
         {
-            Game model = this.dataService.GetGame(id);
+            Game model = this.dataService.GetObjectById<Game>(id);
 
             return this.View(model);
         }
@@ -133,7 +133,7 @@ namespace Pokedex.Controllers
         [Route("delete_type/{id:int}")]
         public IActionResult Type(int id)
         {
-            Type model = this.dataService.GetType(id);
+            Type model = this.dataService.GetObjectById<Type>(id);
 
             return this.View(model);
         }
@@ -159,7 +159,7 @@ namespace Pokedex.Controllers
         [Route("delete_nature/{id:int}")]
         public IActionResult Nature(int id)
         {
-            Nature model = this.dataService.GetNature(id);
+            Nature model = this.dataService.GetObjectById<Nature>(id);
 
             return this.View(model);
         }
@@ -178,7 +178,7 @@ namespace Pokedex.Controllers
         [Route("delete_egg_cycle/{id:int}")]
         public IActionResult EggCycle(int id)
         {
-            EggCycle model = this.dataService.GetEggCycle(id);
+            EggCycle model = this.dataService.GetObjectById<EggCycle>(id);
 
             return this.View(model);
         }
@@ -197,7 +197,7 @@ namespace Pokedex.Controllers
         [Route("delete_experience_growth/{id:int}")]
         public IActionResult ExperienceGrowth(int id)
         {
-            ExperienceGrowth model = this.dataService.GetExperienceGrowth(id);
+            ExperienceGrowth model = this.dataService.GetObjectById<ExperienceGrowth>(id);
 
             return this.View(model);
         }
@@ -216,7 +216,7 @@ namespace Pokedex.Controllers
         [Route("delete_gender_ratio/{id:int}")]
         public IActionResult GenderRatio(int id)
         {
-            GenderRatio model = this.dataService.GetGenderRatio(id);
+            GenderRatio model = this.dataService.GetObjectById<GenderRatio>(id);
 
             return this.View(model);
         }
@@ -235,7 +235,7 @@ namespace Pokedex.Controllers
         [Route("delete_capture_rate/{id:int}")]
         public IActionResult CaptureRate(int id)
         {
-            CaptureRate model = this.dataService.GetCaptureRate(id);
+            CaptureRate model = this.dataService.GetObjectById<CaptureRate>(id);
 
             return this.View(model);
         }
@@ -254,7 +254,7 @@ namespace Pokedex.Controllers
         [Route("delete_base_happiness/{id:int}")]
         public IActionResult BaseHappiness(int id)
         {
-            BaseHappiness model = this.dataService.GetBaseHappiness(id);
+            BaseHappiness model = this.dataService.GetObjectById<BaseHappiness>(id);
 
             return this.View(model);
         }
@@ -273,7 +273,7 @@ namespace Pokedex.Controllers
         [Route("delete_evolution_method/{id:int}")]
         public IActionResult EvolutionMethod(int id)
         {
-            EvolutionMethod model = this.dataService.GetEvolutionMethod(id);
+            EvolutionMethod model = this.dataService.GetObjectById<EvolutionMethod>(id);
 
             return this.View(model);
         }
@@ -292,7 +292,7 @@ namespace Pokedex.Controllers
         [Route("delete_battle_item/{id:int}")]
         public IActionResult BattleItem(int id)
         {
-            BattleItem model = this.dataService.GetBattleItem(id);
+            BattleItem model = this.dataService.GetObjectById<BattleItem>(id);
 
             return this.View(model);
         }
@@ -311,7 +311,7 @@ namespace Pokedex.Controllers
         [Route("delete_ability/{id:int}")]
         public IActionResult Ability(int id)
         {
-            Ability model = this.dataService.GetAbility(id);
+            Ability model = this.dataService.GetObjectById<Ability>(id);
 
             return this.View(model);
         }
@@ -330,7 +330,7 @@ namespace Pokedex.Controllers
         [Route("delete_comment_page/{id:int}")]
         public IActionResult CommentPage(int id)
         {
-            CommentPage model = this.dataService.GetCommentPage(id);
+            CommentPage model = this.dataService.GetObjectById<CommentPage>(id);
 
             return this.View(model);
         }
@@ -349,7 +349,7 @@ namespace Pokedex.Controllers
         [Route("delete_comment_category/{id:int}")]
         public IActionResult CommentCategory(int id)
         {
-            CommentCategory model = this.dataService.GetCommentCategory(id);
+            CommentCategory model = this.dataService.GetObjectById<CommentCategory>(id);
 
             return this.View(model);
         }
@@ -368,7 +368,7 @@ namespace Pokedex.Controllers
         [Route("delete_form/{id:int}")]
         public IActionResult Form(int id)
         {
-            Form model = this.dataService.GetForm(id);
+            Form model = this.dataService.GetObjectById<Form>(id);
 
             return this.View(model);
         }
@@ -387,7 +387,7 @@ namespace Pokedex.Controllers
         [Route("delete_legendary_type/{id:int}")]
         public IActionResult LegendaryType(int id)
         {
-            LegendaryType model = this.dataService.GetLegendaryType(id);
+            LegendaryType model = this.dataService.GetObjectById<LegendaryType>(id);
 
             return this.View(model);
         }
@@ -406,7 +406,7 @@ namespace Pokedex.Controllers
         [Route("delete_comment/{id:int}")]
         public IActionResult Comment(int id)
         {
-            Comment comment = this.dataService.GetComment(id);
+            Comment comment = this.dataService.GetObjectById<Comment>(id);
             this.dataService.DeleteComment(comment.Id);
 
             return this.RedirectToAction("Comments", "Owner");
@@ -416,7 +416,7 @@ namespace Pokedex.Controllers
         [Route("delete_egg_group/{id:int}")]
         public IActionResult EggGroup(int id)
         {
-            EggGroup model = this.dataService.GetEggGroup(id);
+            EggGroup model = this.dataService.GetObjectById<EggGroup>(id);
 
             return this.View(model);
         }
@@ -435,7 +435,7 @@ namespace Pokedex.Controllers
         [Route("delete_form_item/{id:int}")]
         public IActionResult FormItem(int id)
         {
-            FormItem model = this.dataService.GetFormItem(id);
+            FormItem model = this.dataService.GetObjectById<FormItem>(id);
 
             return this.View(model);
         }
@@ -454,7 +454,7 @@ namespace Pokedex.Controllers
         [Route("delete_classification/{id:int}")]
         public IActionResult Classification(int id)
         {
-            Classification model = this.dataService.GetClassification(id);
+            Classification model = this.dataService.GetObjectById<Classification>(id);
 
             return this.View(model);
         }
