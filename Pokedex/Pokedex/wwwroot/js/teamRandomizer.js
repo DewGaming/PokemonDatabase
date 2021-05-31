@@ -190,7 +190,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 });
             }
 
-            $('.gameRadio input').each(function() {
+            $('.gameRadioOption input').each(function() {
                 if ($(this).prop('checked')) {
                     selectedGame = this.value;
                 }
