@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace Pokedex
 {
@@ -24,6 +25,48 @@ namespace Pokedex
         public DataService(DataContext dataContext)
         {
             this.dataContext = dataContext;
+        }
+
+        /// <summary>
+        /// Returns a list of objects from the passed-through TEntity class.
+        /// </summary>
+        /// <typeparam name="TEntity">The generic type parameter.</typeparam>
+        /// <param name="orderedProperty">The property that is used if an order is needed. Separate properties by commas for multiples.</param>
+        /// <returns>Returns the list of the class requested.</returns>
+        public List<TEntity> GetObjects<TEntity>(string orderedProperty = "")
+            where TEntity : class
+        {
+            IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
+            if (!string.IsNullOrEmpty(orderedProperty))
+            {
+                objects = objects.OrderBy(orderedProperty);
+            }
+
+            return objects.ToList();
+        }
+
+        /// <summary>
+        /// Returns an object based off the passed-through TEntity class and the variable we are finding.
+        /// </summary>
+        /// <typeparam name="TEntity">The generic type parameter.</typeparam>
+        /// <param name="property">The property the object will be searched for.</param>
+        /// <param name="propertyValue">The property's value.</param>
+        /// <returns>Returns the object with the correct class and id.</returns>
+        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue)
+            where TEntity : class
+        {
+            IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
+            string searchString = string.Concat("x => x.", property, " == ");
+            if (propertyValue is string)
+            {
+                searchString = string.Concat(searchString, '"', propertyValue, '"');
+            }
+            else
+            {
+                searchString = string.Concat(searchString, propertyValue);
+            }
+
+            return objects.First(searchString);
         }
 
         /// <summary>
@@ -1493,24 +1536,6 @@ namespace Pokedex
             };
 
             return effectivenessChart;
-        }
-
-        /// <summary>
-        /// Returns a list of objects from the passed-through TEntity class.
-        /// </summary>
-        public List<TEntity> GetObjects<TEntity>()
-            where TEntity : class
-        {
-            return this.dataContext.Set<TEntity>().ToList();
-        }
-
-        /// <summary>
-        /// Returns an object based off the passed-through TEntity class and the variable we are finding.
-        /// </summary>
-        public TEntity GetObjectById<TEntity>(int variable)
-            where TEntity : class
-        {
-            return this.dataContext.Set<TEntity>().Find(variable);
         }
 
         public List<BaseHappiness> GetBaseHappinesses()
