@@ -78,43 +78,9 @@ namespace Pokedex
         {
             return this.dataContext.PokemonFormDetails.ToList().Exists(x => x.AltFormPokemonId == id);
         }
-
-        /// <summary>
-        /// Gets the ability with the given ability name.
-        /// </summary>
-        /// <param name="name">The ability's name.</param>
-        /// <returns>The requested ability.</returns>
-        public Ability GetAbilityByName(string name)
-        {
-            return this.dataContext.Abilities
-                .ToList()
-                .Find(x => x.Name == name);
-        }
-
-        /// <summary>
-        /// Gets a list of abilities, ordered by the ability names.
-        /// </summary>
-        /// <returns>The list of all abilities.</returns>
-        public List<Ability> GetAbilities()
-        {
-            return this.dataContext.Abilities.OrderBy(x => x.Name).ToList();
-        }
-
-        /// <summary>
-        /// Gets all games.
-        /// </summary>
-        /// <returns>A list of all games.</returns>
-        public List<Game> GetGames()
-        {
-            return this.dataContext.Games
-                .OrderBy(x => x.ReleaseDate)
-                .ThenBy(x => x.Id)
-                .ToList();
-        }
-
         public List<Game> GetGamesForEachReleaseDate()
         {
-            List<Game> gameList = this.GetGames();
+            List<Game> gameList = this.GetObjects<Game>("ReleaseDate, Id");
             List<Game> games = new List<Game>();
             foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
             {
@@ -141,33 +107,12 @@ namespace Pokedex
             return games;
         }
 
-        /// <summary>
-        /// Gets all legendary types.
-        /// </summary>
-        /// <returns>A list of all legendary types.</returns>
-        public List<LegendaryType> GetLegendaryTypes()
-        {
-            return this.dataContext.LegendaryTypes.OrderBy(x => x.Type).ToList();
-        }
-
         public PokemonLegendaryDetail GetLegendaryDetail(int pokemonId)
         {
             return this.dataContext.PokemonLegendaryDetails
                 .Include(x => x.LegendaryType)
                 .ToList()
                 .Find(x => x.PokemonId == pokemonId);
-        }
-
-        public List<Type> GetTypes()
-        {
-            return this.dataContext.Types.OrderBy(x => x.Name).ToList();
-        }
-
-        public FormItem GetFormItemByPokemonId(int id)
-        {
-            return this.dataContext.FormItems
-                .ToList()
-                .Find(x => x.PokemonId == id);
         }
 
         public List<FormItem> GetFormItems()
@@ -183,16 +128,6 @@ namespace Pokedex
             }
 
             return formItemList;
-        }
-
-        public List<Status> GetStatuses()
-        {
-            return this.dataContext.Statuses.OrderBy(x => x.Name).ToList();
-        }
-
-        public List<EggGroup> GetEggGroups()
-        {
-            return this.dataContext.EggGroups.OrderBy(x => x.Name).ToList();
         }
 
         public List<Evolution> GetEvolutions()
@@ -233,13 +168,6 @@ namespace Pokedex
             }
 
             return preEvolution;
-        }
-
-        public Evolution GetPreEvolutionNoEdit(int pokemonId)
-        {
-            return this.dataContext.Evolutions
-                .ToList()
-                .Find(x => x.EvolutionPokemonId == pokemonId);
         }
 
         public List<Evolution> GetPokemonEvolutions(int pokemonId)
@@ -284,18 +212,6 @@ namespace Pokedex
             return this.dataContext.Evolutions
                 .Where(x => x.PreevolutionPokemonId == pokemonId)
                 .ToList();
-        }
-
-        public List<Form> GetForms()
-        {
-            return this.dataContext.Forms
-                .OrderBy(x => x.Name)
-                .ToList();
-        }
-
-        public Form GetFormByName(string formName)
-        {
-            return this.dataContext.Forms.ToList().Find(x => x.Name == formName);
         }
 
         public List<PokemonFormDetail> GetPokemonForms(int pokemonId)
@@ -370,15 +286,7 @@ namespace Pokedex
 
         public Pokemon GetPokemon(string name)
         {
-            return this.GetAllPokemon()
-                .Find(x => x.Name == name);
-        }
-
-        public Pokemon GetPokemonByPokedexNumber(int pokedexNumber)
-        {
-            return this.dataContext.Pokemon
-                .ToList()
-                .Find(x => x.PokedexNumber == pokedexNumber);
+            return this.GetAllPokemon().Find(x => x.Name == name);
         }
 
         public Pokemon GetPokemonFromNameAndFormName(string pokemonName, string formName)
@@ -481,13 +389,6 @@ namespace Pokedex
                 .Include(x => x.Pokeball)
                 .ToList()
                 .Find(x => x.Id == id);
-        }
-
-        public List<Pokeball> GetPokeballsForCaptureCalculator()
-        {
-            return this.dataContext.Pokeballs
-                .OrderBy(x => x.Name)
-                .ToList();
         }
 
         public List<PokeballCatchModifierDetail> GetCatchModifiersForPokeball(int id)
@@ -626,7 +527,6 @@ namespace Pokedex
             eggGroupDetails = eggGroupDetails.Where(x => !formDetails.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => !unbreedablePokemon.Any(y => y.Id == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => x.Pokemon.IsComplete).ToList();
-
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
 
             return eggGroupDetails;
@@ -1279,8 +1179,8 @@ namespace Pokedex
                 nextId = pokemonIds[index + 1];
             }
 
-            surroundingPokemon.Add(this.GetObjectById<Pokemon>(previousId));
-            surroundingPokemon.Add(this.GetObjectById<Pokemon>(nextId));
+            surroundingPokemon.Add(this.GetObjectByPropertyValue<Pokemon>("Id", previousId));
+            surroundingPokemon.Add(this.GetObjectByPropertyValue<Pokemon>("Id", nextId));
 
             return surroundingPokemon;
         }
@@ -1399,7 +1299,7 @@ namespace Pokedex
 
         public List<PokemonTypeChartViewModel> GetTypeChartPokemon(int pokemonId)
         {
-            List<Type> typeList = this.GetTypes();
+            List<Type> typeList = this.GetObjects<Type>("Name");
             List<PokemonTypeDetail> pokemonTypes = this.GetPokemonWithTypes(pokemonId);
             List<TypeChart> typeChart = this.GetTypeCharts();
             List<TypeChart> primaryTypeChart = new List<TypeChart>();
@@ -1440,7 +1340,7 @@ namespace Pokedex
 
         public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId)
         {
-            List<Type> typeList = this.GetTypes();
+            List<Type> typeList = this.GetObjects<Type>("Name");
             List<Type> pokemonTypes = new List<Type>();
             List<string> strongAgainst = new List<string>();
             List<string> superStrongAgainst = new List<string>();
@@ -1450,11 +1350,11 @@ namespace Pokedex
             List<TypeChart> typeChart;
             string effectiveValue, attackType;
 
-            pokemonTypes.Add(this.GetObjectById<Type>(primaryTypeId));
+            pokemonTypes.Add(this.GetObjectByPropertyValue<Type>("Id", primaryTypeId));
 
             if (secondaryTypeId != 0)
             {
-                pokemonTypes.Add(this.GetObjectById<Type>(secondaryTypeId));
+                pokemonTypes.Add(this.GetObjectByPropertyValue<Type>("Id", secondaryTypeId));
             }
 
             foreach (var type in pokemonTypes)
@@ -1538,26 +1438,6 @@ namespace Pokedex
             return effectivenessChart;
         }
 
-        public List<BaseHappiness> GetBaseHappinesses()
-        {
-            return this.dataContext.BaseHappiness.OrderBy(x => x.Happiness).ToList();
-        }
-
-        public List<Classification> GetClassifications()
-        {
-            return this.dataContext.Classifications.OrderBy(x => x.Name).ToList();
-        }
-
-        public Nature GetNatureByName(string name)
-        {
-            return this.dataContext.Natures.ToList().Find(x => x.Name == name);
-        }
-
-        public List<Nature> GetNatures()
-        {
-            return this.dataContext.Natures.OrderBy(x => x.Name).ToList();
-        }
-
         public List<BattleItem> GetBattleItems()
         {
             return this.dataContext.BattleItems
@@ -1568,37 +1448,12 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<CaptureRate> GetCaptureRates()
-        {
-            return this.dataContext.CaptureRates.OrderBy(x => x.CatchRate).ToList();
-        }
-
-        public List<EggCycle> GetEggCycles()
-        {
-            return this.dataContext.EggCycles.OrderBy(x => x.CycleCount).ToList();
-        }
-
-        public List<ExperienceGrowth> GetExperienceGrowths()
-        {
-            return this.dataContext.ExperienceGrowths.OrderBy(x => x.Name).ToList();
-        }
-
         public List<ReviewedPokemon> GetAllReviewedPokemon()
         {
             return this.dataContext.ReviewedPokemons
                 .Include(x => x.Pokemon)
                 .OrderBy(x => x.Pokemon.PokedexNumber)
                 .ToList();
-        }
-
-        public ReviewedPokemon GetReviewedPokemonByPokemonId(int id)
-        {
-            return this.dataContext.ReviewedPokemons.ToList().Find(x => x.PokemonId == id);
-        }
-
-        public List<EvolutionMethod> GetEvolutionMethods()
-        {
-            return this.dataContext.EvolutionMethods.OrderBy(x => x.Name).ToList();
         }
 
         public List<Game> GetAvailableGamesFromPokemonId(int id)
@@ -1619,7 +1474,7 @@ namespace Pokedex
 
         public List<Game> GetAvailableGames(int pokemonTeamId)
         {
-            PokemonTeam pokemonTeam = this.GetObjectById<PokemonTeam>(pokemonTeamId);
+            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", pokemonTeamId);
             List<Game> availableGames = new List<Game>();
             if (pokemonTeam.FirstPokemonId != null)
             {
@@ -1732,21 +1587,6 @@ namespace Pokedex
                 .Generation;
         }
 
-        public BattleItem GetBattleItemByName(string name)
-        {
-            return this.dataContext.BattleItems.ToList().Find(x => x.Name == name);
-        }
-
-        public Generation GetGenerationByPokemon(int id)
-        {
-            return this.GetObjectById<Generation>(this.GetPokemonById(id).Game.GenerationId);
-        }
-
-        public User GetUserWithUsername(string username)
-        {
-            return this.dataContext.Users.ToList().Find(x => x.Username == username);
-        }
-
         public List<Message> GetMessagesToUser(int id)
         {
             return this.dataContext.Messages.Where(x => x.ReceiverId == id).ToList();
@@ -1778,16 +1618,6 @@ namespace Pokedex
             pages.AddRange(pagesToBeMoved);
 
             return pages;
-        }
-
-        public CommentPage GetCommentPageByName(string name)
-        {
-            return this.dataContext.CommentPages.ToList().Find(x => x.Name == name);
-        }
-
-        public CommentCategory GetCommentCategoryByName(string name)
-        {
-            return this.dataContext.CommentCategories.ToList().Find(x => x.Name == name);
         }
 
         public List<Comment> GetComments()
@@ -2374,21 +2204,21 @@ namespace Pokedex
 
         public void DeleteGeneration(int id)
         {
-            Generation generation = this.GetObjectById<Generation>(id);
+            Generation generation = this.GetObjectByPropertyValue<Generation>("Id", id);
             this.dataContext.Generations.Remove(generation);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteGame(int id)
         {
-            Game game = this.GetObjectById<Game>(id);
+            Game game = this.GetObjectByPropertyValue<Game>("Id", id);
             this.dataContext.Games.Remove(game);
             this.dataContext.SaveChanges();
         }
 
         public void DeletePokemonGameDetail(int id)
         {
-            PokemonGameDetail pokemonGameDetail = this.GetObjectById<PokemonGameDetail>(id);
+            PokemonGameDetail pokemonGameDetail = this.GetObjectByPropertyValue<PokemonGameDetail>("Id", id);
             this.dataContext.PokemonGameDetails.Remove(pokemonGameDetail);
             this.dataContext.SaveChanges();
         }
@@ -2401,56 +2231,56 @@ namespace Pokedex
 
         public void DeleteType(int id)
         {
-            Type type = this.GetObjectById<Type>(id);
+            Type type = this.GetObjectByPropertyValue<Type>("Id", id);
             this.dataContext.Types.Remove(type);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteTypeChart(int id)
         {
-            TypeChart typeChart = this.GetObjectById<TypeChart>(id);
+            TypeChart typeChart = this.GetObjectByPropertyValue<TypeChart>("Id", id);
             this.dataContext.TypeCharts.Remove(typeChart);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteBattleItem(int id)
         {
-            BattleItem battleItem = this.GetObjectById<BattleItem>(id);
+            BattleItem battleItem = this.GetObjectByPropertyValue<BattleItem>("Id", id);
             this.dataContext.BattleItems.Remove(battleItem);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteAbility(int id)
         {
-            Ability ability = this.GetObjectById<Ability>(id);
+            Ability ability = this.GetObjectByPropertyValue<Ability>("Id", id);
             this.dataContext.Abilities.Remove(ability);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteLegendaryType(int id)
         {
-            LegendaryType legendaryType = this.GetObjectById<LegendaryType>(id);
+            LegendaryType legendaryType = this.GetObjectByPropertyValue<LegendaryType>("Id", id);
             this.dataContext.LegendaryTypes.Remove(legendaryType);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteEggCycle(int id)
         {
-            EggCycle eggCycle = this.GetObjectById<EggCycle>(id);
+            EggCycle eggCycle = this.GetObjectByPropertyValue<EggCycle>("Id", id);
             this.dataContext.EggCycles.Remove(eggCycle);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteCommentCategory(int id)
         {
-            CommentCategory commentCategory = this.GetObjectById<CommentCategory>(id);
+            CommentCategory commentCategory = this.GetObjectByPropertyValue<CommentCategory>("Id", id);
             this.dataContext.CommentCategories.Remove(commentCategory);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteCommentPage(int id)
         {
-            CommentPage commentPage = this.GetObjectById<CommentPage>(id);
+            CommentPage commentPage = this.GetObjectByPropertyValue<CommentPage>("Id", id);
             this.dataContext.CommentPages.Remove(commentPage);
             this.dataContext.SaveChanges();
         }
@@ -2471,91 +2301,91 @@ namespace Pokedex
 
         public void DeleteExperienceGrowth(int id)
         {
-            ExperienceGrowth experienceGrowth = this.GetObjectById<ExperienceGrowth>(id);
+            ExperienceGrowth experienceGrowth = this.GetObjectByPropertyValue<ExperienceGrowth>("Id", id);
             this.dataContext.ExperienceGrowths.Remove(experienceGrowth);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteStatus(int id)
         {
-            Status status = this.GetObjectById<Status>(id);
+            Status status = this.GetObjectByPropertyValue<Status>("Id", id);
             this.dataContext.Statuses.Remove(status);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteGenderRatio(int id)
         {
-            GenderRatio genderRatio = this.GetObjectById<GenderRatio>(id);
+            GenderRatio genderRatio = this.GetObjectByPropertyValue<GenderRatio>("Id", id);
             this.dataContext.GenderRatios.Remove(genderRatio);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteCaptureRate(int id)
         {
-            CaptureRate captureRate = this.GetObjectById<CaptureRate>(id);
+            CaptureRate captureRate = this.GetObjectByPropertyValue<CaptureRate>("Id", id);
             this.dataContext.CaptureRates.Remove(captureRate);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteComment(int id)
         {
-            Comment comment = this.GetObjectById<Comment>(id);
+            Comment comment = this.GetObjectByPropertyValue<Comment>("Id", id);
             this.dataContext.Comments.Remove(comment);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteEggGroup(int id)
         {
-            EggGroup eggGroup = this.GetObjectById<EggGroup>(id);
+            EggGroup eggGroup = this.GetObjectByPropertyValue<EggGroup>("Id", id);
             this.dataContext.EggGroups.Remove(eggGroup);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteFormItem(int id)
         {
-            FormItem formItem = this.GetObjectById<FormItem>(id);
+            FormItem formItem = this.GetObjectByPropertyValue<FormItem>("Id", id);
             this.dataContext.FormItems.Remove(formItem);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteEvolutionMethod(int id)
         {
-            EvolutionMethod evolutionMethod = this.GetObjectById<EvolutionMethod>(id);
+            EvolutionMethod evolutionMethod = this.GetObjectByPropertyValue<EvolutionMethod>("Id", id);
             this.dataContext.EvolutionMethods.Remove(evolutionMethod);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteForm(int id)
         {
-            Form form = this.GetObjectById<Form>(id);
+            Form form = this.GetObjectByPropertyValue<Form>("Id", id);
             this.dataContext.Forms.Remove(form);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteBaseHappiness(int id)
         {
-            BaseHappiness baseHappiness = this.GetObjectById<BaseHappiness>(id);
+            BaseHappiness baseHappiness = this.GetObjectByPropertyValue<BaseHappiness>("Id", id);
             this.dataContext.BaseHappiness.Remove(baseHappiness);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteReviewedPokemon(int id)
         {
-            ReviewedPokemon reviewedPokemon = this.GetObjectById<ReviewedPokemon>(id);
+            ReviewedPokemon reviewedPokemon = this.GetObjectByPropertyValue<ReviewedPokemon>("Id", id);
             this.dataContext.ReviewedPokemons.Remove(reviewedPokemon);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteMessage(int id)
         {
-            Message message = this.GetObjectById<Message>(id);
+            Message message = this.GetObjectByPropertyValue<Message>("Id", id);
             this.dataContext.Messages.Remove(message);
             this.dataContext.SaveChanges();
         }
 
         public void DeletePokemonTeam(int id)
         {
-            PokemonTeam pokemonTeam = this.GetObjectById<PokemonTeam>(id);
+            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
             List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
             this.dataContext.PokemonTeams.Remove(pokemonTeam);
             this.dataContext.SaveChanges();
@@ -2634,7 +2464,7 @@ namespace Pokedex
 
         public void DeletePokemonTeamDetail(int id)
         {
-            PokemonTeamDetail pokemonTeamDetail = this.GetObjectById<PokemonTeamDetail>(id);
+            PokemonTeamDetail pokemonTeamDetail = this.GetObjectByPropertyValue<PokemonTeamDetail>("Id", id);
             PokemonTeam pokemonTeam = this.GetPokemonTeamFromPokemonNoIncludes(pokemonTeamDetail.Id);
             if (pokemonTeam != null)
             {
@@ -2665,35 +2495,35 @@ namespace Pokedex
 
         public void DeletePokemonTeamEV(int id)
         {
-            PokemonTeamEV pokemonTeamDetailEV = this.GetObjectById<PokemonTeamEV>(id);
+            PokemonTeamEV pokemonTeamDetailEV = this.GetObjectByPropertyValue<PokemonTeamEV>("Id", id);
             this.dataContext.PokemonTeamEVs.Remove(pokemonTeamDetailEV);
             this.dataContext.SaveChanges();
         }
 
         public void DeletePokemonTeamIV(int id)
         {
-            PokemonTeamIV pokemonTeamDetailIV = this.GetObjectById<PokemonTeamIV>(id);
+            PokemonTeamIV pokemonTeamDetailIV = this.GetObjectByPropertyValue<PokemonTeamIV>("Id", id);
             this.dataContext.PokemonTeamIVs.Remove(pokemonTeamDetailIV);
             this.dataContext.SaveChanges();
         }
 
         public void DeletePokemonTeamMoveset(int id)
         {
-            PokemonTeamMoveset pokemonTeamDetailMoveset = this.GetObjectById<PokemonTeamMoveset>(id);
+            PokemonTeamMoveset pokemonTeamDetailMoveset = this.GetObjectByPropertyValue<PokemonTeamMoveset>("Id", id);
             this.dataContext.PokemonTeamMovesets.Remove(pokemonTeamDetailMoveset);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteClassification(int id)
         {
-            Classification classification = this.GetObjectById<Classification>(id);
+            Classification classification = this.GetObjectByPropertyValue<Classification>("Id", id);
             this.dataContext.Classifications.Remove(classification);
             this.dataContext.SaveChanges();
         }
 
         public void DeleteNature(int id)
         {
-            Nature nature = this.GetObjectById<Nature>(id);
+            Nature nature = this.GetObjectByPropertyValue<Nature>("Id", id);
             this.dataContext.Natures.Remove(nature);
             this.dataContext.SaveChanges();
         }

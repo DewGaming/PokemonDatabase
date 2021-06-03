@@ -122,8 +122,8 @@ namespace Pokedex.Controllers
         {
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
-            List<DataAccess.Models.Type> types = this.dataService.GetTypes();
-            List<Game> gamesList = this.dataService.GetGames();
+            List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id");
             List<Game> selectableGames = new List<Game>();
 
             foreach (var gen in generations)
@@ -169,7 +169,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = selectableGames,
                 AllTypes = types,
-                AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
+                AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
             };
 
             return this.View(model);
@@ -181,7 +181,7 @@ namespace Pokedex.Controllers
         {
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
-                AllTypes = this.dataService.GetTypes(),
+                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                 AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
@@ -335,7 +335,7 @@ namespace Pokedex.Controllers
             TypeChartViewModel model = new TypeChartViewModel()
             {
                 TypeChart = this.dataService.GetTypeCharts(),
-                Types = this.dataService.GetTypes(),
+                Types = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
             };
 
             return this.View(model);
@@ -348,8 +348,8 @@ namespace Pokedex.Controllers
             CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
             {
                 AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
-                AllPokeballs = this.dataService.GetPokeballsForCaptureCalculator(),
-                AllStatuses = this.dataService.GetStatuses(),
+                AllPokeballs = this.dataService.GetObjects<Pokeball>("Name"),
+                AllStatuses = this.dataService.GetObjects<Status>("Name"),
                 AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
@@ -400,13 +400,13 @@ namespace Pokedex.Controllers
 
             if (this.User.Identity.Name != null)
             {
-                comment.CommentorId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id;
+                comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
             }
 
             this.dataService.AddComment(comment);
 
-            comment.Category = this.dataService.GetObjectById<CommentCategory>(comment.CategoryId);
-            comment.Page = this.dataService.GetObjectById<CommentPage>(comment.PageId);
+            comment.Category = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", comment.CategoryId);
+            comment.Page = this.dataService.GetObjectByPropertyValue<CommentPage>("Id", comment.PageId);
 
             this.EmailComment(comment);
 
@@ -448,7 +448,7 @@ namespace Pokedex.Controllers
 
                     if (comment.CommentorId != null)
                     {
-                        body = string.Concat(body, " by ", this.dataService.GetObjectById<User>((int)comment.CommentorId).Username);
+                        body = string.Concat(body, " by ", this.dataService.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
                     }
                     else
                     {

@@ -59,7 +59,7 @@ namespace Pokedex.Controllers
 
             registerViewModel.Username = registerViewModel.Username.Trim();
 
-            User existingUser = this.dataService.GetUserWithUsername(registerViewModel.Username);
+            User existingUser = this.dataService.GetObjectByPropertyValue<User>("Username", registerViewModel.Username);
             if (existingUser != null)
             {
                 this.ModelState.AddModelError("Error", "An account already exists with that username.");
@@ -128,7 +128,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            User user = this.dataService.GetUserWithUsername(loginViewModel.Username);
+            User user = this.dataService.GetObjectByPropertyValue<User>("Username", loginViewModel.Username);
 
             if (user == null)
             {

@@ -43,7 +43,7 @@ namespace Pokedex.Controllers
             Pokemon evolutionPokemon = this.dataService.GetPokemonById(pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
             {
-                AllEvolutionMethods = this.dataService.GetEvolutionMethods(),
+                AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
                 EvolutionPokemon = evolutionPokemon,
                 EvolutionPokemonId = evolutionPokemon.Id,
             };
@@ -69,7 +69,7 @@ namespace Pokedex.Controllers
             {
                 EvolutionViewModel model = new EvolutionViewModel()
                 {
-                    AllEvolutionMethods = this.dataService.GetEvolutionMethods(),
+                    AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
                     EvolutionPokemon = evolution.EvolutionPokemon,
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
                 };
@@ -631,7 +631,7 @@ namespace Pokedex.Controllers
             {
                 PokemonId = pokemonId,
                 GenerationId = generationId,
-                AllCaptureRates = this.dataService.GetCaptureRates(),
+                AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
             };
 
             return this.View(model);
@@ -648,7 +648,7 @@ namespace Pokedex.Controllers
                 {
                     PokemonId = pokemonCaptureRate.PokemonId,
                     GenerationId = pokemonCaptureRate.GenerationId,
-                    AllCaptureRates = this.dataService.GetCaptureRates(),
+                    AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
                 };
 
                 return this.View(model);
@@ -700,13 +700,13 @@ namespace Pokedex.Controllers
         {
             BasePokemonViewModel model = new BasePokemonViewModel()
             {
-                AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
-                AllClassifications = this.dataService.GetClassifications(),
-                AllCaptureRates = this.dataService.GetCaptureRates(),
-                AllEggCycles = this.dataService.GetEggCycles(),
-                AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
+                AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
+                AllClassifications = this.dataService.GetObjects<Classification>("Name"),
+                AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
+                AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
+                AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
                 AllGenderRatios = new List<GenderRatioViewModel>(),
-                AllGames = this.dataService.GetGames(),
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
             };
 
             foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
@@ -736,7 +736,7 @@ namespace Pokedex.Controllers
                 model.AllGenderRatios.Add(viewModel);
             }
 
-            model.GameId = this.dataService.GetGames().Last().Id;
+            model.GameId = this.dataService.GetObjects<Game>("ReleaseDate, Id").Last().Id;
 
             return this.View(model);
         }
@@ -750,13 +750,13 @@ namespace Pokedex.Controllers
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
-                    AllClassifications = this.dataService.GetClassifications(),
-                    AllCaptureRates = this.dataService.GetCaptureRates(),
-                    AllEggCycles = this.dataService.GetEggCycles(),
-                    AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
+                    AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
+                    AllClassifications = this.dataService.GetObjects<Classification>("Name"),
+                    AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
+                    AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
+                    AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
                     AllGenderRatios = new List<GenderRatioViewModel>(),
-                    AllGames = this.dataService.GetGames(),
+                    AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
                 foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
@@ -788,17 +788,17 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            else if (this.dataService.GetPokemonByPokedexNumber(newPokemon.PokedexNumber) != null)
+            else if (this.dataService.GetObjectByPropertyValue<Pokemon>("PokedexNumber", newPokemon.PokedexNumber) != null)
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    AllBaseHappinesses = this.dataService.GetBaseHappinesses(),
-                    AllClassifications = this.dataService.GetClassifications(),
-                    AllCaptureRates = this.dataService.GetCaptureRates(),
-                    AllEggCycles = this.dataService.GetEggCycles(),
-                    AllExperienceGrowths = this.dataService.GetExperienceGrowths(),
+                    AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
+                    AllClassifications = this.dataService.GetObjects<Classification>("Name"),
+                    AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
+                    AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
+                    AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
                     AllGenderRatios = new List<GenderRatioViewModel>(),
-                    AllGames = this.dataService.GetGames(),
+                    AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
                 foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
@@ -908,7 +908,7 @@ namespace Pokedex.Controllers
                 Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
 
-            Game game = this.dataService.GetObjectById<Game>(newPokemon.GameId);
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", newPokemon.GameId);
 
             this.dataService.AddPokemon(newPokemon);
 
@@ -926,18 +926,18 @@ namespace Pokedex.Controllers
         public IActionResult AltForm(int pokemonId)
         {
             Pokemon originalPokemon = this.dataService.GetPokemonById(pokemonId);
-            List<Game> games = this.dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+            List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
 
             AlternateFormViewModel model = new AlternateFormViewModel()
             {
-                AllForms = this.dataService.GetForms(),
-                AllClassifications = this.dataService.GetClassifications(),
+                AllForms = this.dataService.GetObjects<Form>("Name"),
+                AllClassifications = this.dataService.GetObjects<Classification>("Name"),
                 AllGames = games,
                 OriginalPokemon = originalPokemon,
                 OriginalPokemonId = originalPokemon.Id,
             };
 
-            model.GameId = this.dataService.GetGames().Last().Id;
+            model.GameId = this.dataService.GetObjects<Game>("ReleaseDate, Id").Last().Id;
 
             return this.View(model);
         }
@@ -951,12 +951,12 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 Pokemon originalPokemon = this.dataService.GetPokemonById(pokemon.OriginalPokemonId);
-                List<Game> games = this.dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
 
                 AlternateFormViewModel model = new AlternateFormViewModel()
                 {
-                    AllForms = this.dataService.GetForms(),
-                    AllClassifications = this.dataService.GetClassifications(),
+                    AllForms = this.dataService.GetObjects<Form>("Name"),
+                    AllClassifications = this.dataService.GetObjects<Classification>("Name"),
                     AllGames = games,
                     OriginalPokemon = originalPokemon,
                     OriginalPokemonId = originalPokemon.Id,
@@ -970,12 +970,12 @@ namespace Pokedex.Controllers
                 if (p.FormId == pokemon.FormId)
                 {
                     Pokemon originalPokemon = this.dataService.GetPokemonById(pokemon.OriginalPokemonId);
-                    List<Game> games = this.dataService.GetGames().Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+                    List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
 
                     AlternateFormViewModel model = new AlternateFormViewModel()
                     {
-                        AllForms = this.dataService.GetForms(),
-                        AllClassifications = this.dataService.GetClassifications(),
+                        AllForms = this.dataService.GetObjects<Form>("Name"),
+                        AllClassifications = this.dataService.GetObjects<Classification>("Name"),
                         AllGames = games,
                         OriginalPokemon = originalPokemon,
                         OriginalPokemonId = originalPokemon.Id,
@@ -986,10 +986,10 @@ namespace Pokedex.Controllers
                 }
             }
 
-            Pokemon alternatePokemon = this.dataService.GetObjectById<Pokemon>(pokemon.OriginalPokemonId);
+            Pokemon alternatePokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.OriginalPokemonId);
 
             alternatePokemon.Id = 0;
-            alternatePokemon.PokedexNumber = this.dataService.GetObjectById<Pokemon>(pokemon.OriginalPokemonId).PokedexNumber;
+            alternatePokemon.PokedexNumber = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.OriginalPokemonId).PokedexNumber;
             alternatePokemon.Height = pokemon.Height;
             alternatePokemon.Weight = pokemon.Weight;
             alternatePokemon.ExpYield = pokemon.ExpYield;
@@ -1108,7 +1108,7 @@ namespace Pokedex.Controllers
         {
             PokemonTypingViewModel model = new PokemonTypingViewModel()
             {
-                AllTypes = this.dataService.GetTypes(),
+                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
                 GenerationId = generationId,
@@ -1126,7 +1126,7 @@ namespace Pokedex.Controllers
             {
                 PokemonTypingViewModel model = new PokemonTypingViewModel()
                 {
-                    AllTypes = this.dataService.GetTypes(),
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     PokemonId = typing.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(typing.PokemonId),
                     GenerationId = typing.GenerationId,
@@ -1153,7 +1153,7 @@ namespace Pokedex.Controllers
         {
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
-                AllAbilities = this.dataService.GetAbilities(),
+                AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
                 GenerationId = generationId,
@@ -1171,7 +1171,7 @@ namespace Pokedex.Controllers
             {
                 PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
                 {
-                    AllAbilities = this.dataService.GetAbilities(),
+                    AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     PokemonId = abilities.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(abilities.PokemonId),
                     GenerationId = abilities.GenerationId,
@@ -1202,7 +1202,7 @@ namespace Pokedex.Controllers
         {
             SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
             {
-                AllAbilities = this.dataService.GetAbilities(),
+                AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                 PokemonId = pokemonId,
                 GenerationId = generationId,
             };
@@ -1219,7 +1219,7 @@ namespace Pokedex.Controllers
             {
                 SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
                 {
-                    AllAbilities = this.dataService.GetAbilities(),
+                    AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     PokemonId = ability.PokemonId,
                 };
 
@@ -1241,7 +1241,7 @@ namespace Pokedex.Controllers
         {
             PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
             {
-                AllEggGroups = this.dataService.GetEggGroups(),
+                AllEggGroups = this.dataService.GetObjects<EggGroup>("Name"),
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
                 GenerationId = generationId,
@@ -1259,7 +1259,7 @@ namespace Pokedex.Controllers
             {
                 PokemonEggGroupsViewModel model = new PokemonEggGroupsViewModel()
                 {
-                    AllEggGroups = this.dataService.GetEggGroups(),
+                    AllEggGroups = this.dataService.GetObjects<EggGroup>("Name"),
                     PokemonId = eggGroups.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(eggGroups.PokemonId),
                     GenerationId = eggGroups.GenerationId,
@@ -1371,7 +1371,7 @@ namespace Pokedex.Controllers
         {
             PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
             {
-                AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
+                AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
                 PokemonId = pokemonId,
                 Pokemon = this.dataService.GetPokemonById(pokemonId),
             };
@@ -1388,7 +1388,7 @@ namespace Pokedex.Controllers
             {
                 PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
                 {
-                    AllLegendaryTypes = this.dataService.GetLegendaryTypes(),
+                    AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
                     PokemonId = pokemonLegendaryDetails.PokemonId,
                     Pokemon = this.dataService.GetPokemonById(pokemonLegendaryDetails.PokemonId),
                 };

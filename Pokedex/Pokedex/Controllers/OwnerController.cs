@@ -66,11 +66,11 @@ namespace Pokedex.Controllers
         [Route("send_message/{commentId:int}")]
         public IActionResult SendMessage(int commentId)
         {
-            Comment comment = this.dataService.GetObjectById<Comment>(commentId);
+            Comment comment = this.dataService.GetObjectByPropertyValue<Comment>("Id", commentId);
 
             Message model = new Message()
             {
-                SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 ReceiverId = comment.CommentorId,
                 MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\" "),
             };
@@ -90,11 +90,11 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Comment comment = this.dataService.GetObjectById<Comment>(commentId);
+                Comment comment = this.dataService.GetObjectByPropertyValue<Comment>("Id", commentId);
 
                 Message model = new Message()
                 {
-                    SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                    SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                     ReceiverId = comment.CommentorId,
                     MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\""),
                 };
@@ -120,7 +120,7 @@ namespace Pokedex.Controllers
 
             MessageViewModel model = new MessageViewModel()
             {
-                SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 AllUsers = users,
             };
 
@@ -143,7 +143,7 @@ namespace Pokedex.Controllers
 
                 MessageViewModel model = new MessageViewModel()
                 {
-                    SenderId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                    SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                     AllUsers = users,
                 };
 
@@ -179,7 +179,7 @@ namespace Pokedex.Controllers
         [Route("complete_comment/{id:int}")]
         public IActionResult CompleteComment(int id)
         {
-            Comment comment = this.dataService.GetObjectById<Comment>(id);
+            Comment comment = this.dataService.GetObjectByPropertyValue<Comment>("Id", id);
             comment.IsCompleted = true;
 
             this.dataService.UpdateComment(comment);
@@ -244,7 +244,7 @@ namespace Pokedex.Controllers
         [Route("review_pokemon/{pokemonId:int}")]
         public IActionResult ReviewPokemon(Pokemon pokemon)
         {
-            ReviewedPokemon reviewedPokemon = this.dataService.GetReviewedPokemonByPokemonId(pokemon.Id);
+            ReviewedPokemon reviewedPokemon = this.dataService.GetObjectByPropertyValue<ReviewedPokemon>("PokemonId", pokemon.Id);
             if (reviewedPokemon == null)
             {
                 reviewedPokemon = new ReviewedPokemon() { PokemonId = pokemon.Id };
@@ -277,7 +277,7 @@ namespace Pokedex.Controllers
             Pokemon pokemon;
             foreach (var r in reviewedPokemonList)
             {
-                pokemon = this.dataService.GetObjectById<Pokemon>(r.PokemonId);
+                pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", r.PokemonId);
                 pokemon.IsComplete = true;
                 this.dataService.UpdatePokemon(pokemon);
                 this.dataService.DeleteReviewedPokemon(r.Id);
@@ -294,7 +294,7 @@ namespace Pokedex.Controllers
         [Route("complete_pokemon/{pokemonId:int}")]
         public IActionResult CompletePokemon(int pokemonId)
         {
-            Pokemon pokemon = this.dataService.GetObjectById<Pokemon>(pokemonId);
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
             pokemon.IsComplete = true;
             this.dataService.UpdatePokemon(pokemon);
 

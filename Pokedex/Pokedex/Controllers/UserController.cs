@@ -132,7 +132,7 @@ namespace Pokedex.Controllers
         {
             NewPasswordViewModel model = new NewPasswordViewModel()
             {
-                UserId = this.dataService.GetUserWithUsername(this.User.Identity.Name).Id,
+                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
             };
 
             return this.View(model);
@@ -147,7 +147,7 @@ namespace Pokedex.Controllers
         [Route("edit_password")]
         public IActionResult EditPassword(NewPasswordViewModel newPasswordViewModel)
         {
-            User user = this.dataService.GetObjectById<User>(newPasswordViewModel.UserId);
+            User user = this.dataService.GetObjectByPropertyValue<User>("UserId", newPasswordViewModel.UserId);
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
             PasswordVerificationResult passwordVerificationResult =
                 passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
