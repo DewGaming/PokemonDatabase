@@ -78,6 +78,7 @@ namespace Pokedex
         {
             return this.dataContext.PokemonFormDetails.ToList().Exists(x => x.AltFormPokemonId == id);
         }
+
         public List<Game> GetGamesForEachReleaseDate()
         {
             List<Game> gameList = this.GetObjects<Game>("ReleaseDate, Id");
