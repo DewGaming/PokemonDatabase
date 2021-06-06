@@ -1,0 +1,64 @@
+@model Pokedex.Models.AbilityEvaluatorViewModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Ability Evaluator";
+    
+    var abilities = Model.AllAbilities.Prepend(new Pokedex.DataAccess.Models.Ability { Id = 0, Name = "No Ability Selected" });
+    var generations = Model.AllGenerations;
+    foreach(var g in generations)
+    {
+        g.Region = string.Concat("Generation ", g.Id);
+    }
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <style>
+        .generationList {
+            margin-right: 10px;
+        }
+
+        .flexDiv {
+            padding: 0 0 1rem;
+        }
+
+        .flexDiv label {
+          margin-bottom: 7.5px;
+        }
+
+        .abilityList, .abilityList>select, .generationList, .generationList>select {
+          width: 12rem;
+        }
+
+        .abilityClassifier {
+            margin: 0.5rem auto;
+            background-color: gray;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 3px;
+            max-width: 200px;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/abilityEvaluator.js"></script>
+}
+
+<div>
+    <div class="evaluator">
+        <div class="flexDiv">
+            <div class="generationList">
+                @Html.Label("Generation")
+                @Html.DropDownList("Generation List", new SelectList(@generations, "Id", "Region"), new { @class = "form-control generationSelectList" })
+            </div>
+            <div class="abilityList">
+                @Html.Label("Ability")
+                @Html.DropDownList("Ability", new SelectList(@abilities, "Id", "Name"), new { @class = "form-control abilitySelectList" })
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" class="pokemonWithAbility"></div>
+</div>

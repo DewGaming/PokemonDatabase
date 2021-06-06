@@ -1,0 +1,9 @@
+@model List<Pokedex.DataAccess.Models.Ability>;
+@{
+    var abilities = Model.Prepend(new Pokedex.DataAccess.Models.Ability { Id = 0, Name = "No Ability Selected" });
+}
+
+<div class="abilityList">
+    @Html.Label("Ability")
+    @Html.DropDownList("Ability", new SelectList(abilities, "Id", "Name"), new { @class = "form-control typingSelectList" })
+</div>

@@ -189,6 +189,22 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("ability_evaluator")]
+        public IActionResult AbilityEvaluator()
+        {
+            AbilityEvaluatorViewModel model = new AbilityEvaluatorViewModel()
+            {
+                AllAbilities = this.dataService.GetObjects<Ability>("Name"),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+            };
+
+            // Removes the first and second generation from the list, as abilities were introduced in the third generation.
+            model.AllGenerations.RemoveRange(0, 2);
+
+            return this.View(model);
+        }
+
+        [AllowAnonymous]
         [Route("day_care_evaluator")]
         public IActionResult DayCareEvaluator()
         {

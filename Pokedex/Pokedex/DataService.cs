@@ -1056,6 +1056,28 @@ namespace Pokedex
             return abilityList;
         }
 
+        public List<PokemonAbilityDetail> GetPokemonByAbility(int abilityId, int generationId)
+        {
+            List<PokemonAbilityDetail> pokemonList = this.dataContext.PokemonAbilityDetails
+                .Include(x => x.Pokemon)
+                    .Include("Pokemon.Game")
+                .Where(x => x.Pokemon.Game.GenerationId <= generationId)
+                .Where(x => x.GenerationId <= generationId)
+                .Where(x => x.Pokemon.IsComplete)
+                .ToList();
+
+            pokemonList = pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+
+            List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.GetPokemonGameDetailsByGeneration(generationId).Select(x => x.PokemonId)).ToList();
+
+            foreach (var pokemon in exclusionList)
+            {
+                pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+            }
+
+            return pokemonList.Where(x => x.PrimaryAbilityId == abilityId || x.SecondaryAbilityId == abilityId || x.HiddenAbilityId == abilityId || x.SpecialEventAbilityId == abilityId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+        }
+
         public PokemonAbilityDetail GetPokemonWithAbilitiesNoIncludes(int pokemonId, int generationId)
         {
             return this.dataContext.PokemonAbilityDetails.Include(x => x.Pokemon)
@@ -1077,6 +1099,18 @@ namespace Pokedex
             return this.dataContext.PokemonLegendaryDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.LegendaryType)
+                .ToList();
+        }
+
+        public List<PokemonAbilityDetail> GetAllPokemonWithAbilities()
+        {
+            return this.dataContext.PokemonAbilityDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.PrimaryAbility)
+                .Include(x => x.SecondaryAbility)
+                .Include(x => x.HiddenAbility)
+                .Include(x => x.SpecialEventAbility)
+                .Where(x => x.Pokemon.IsComplete)
                 .ToList();
         }
 

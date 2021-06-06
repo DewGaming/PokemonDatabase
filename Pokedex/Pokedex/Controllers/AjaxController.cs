@@ -1639,7 +1639,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-by-typing")]
-        public IActionResult GetPokemon(int primaryTypeID, int secondaryTypeID, int generationID)
+        public IActionResult GetPokemonByTyping(int primaryTypeID, int secondaryTypeID, int generationID)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1668,6 +1668,47 @@ namespace Pokedex.Controllers
                 };
 
                 return this.PartialView("_FillTypingEvaluator", model);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [Route("get-pokemon-by-ability")]
+        public IActionResult GetPokemonByAbility(int abilityID, int generationID)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonAbilityDetail> abilityList = this.dataService.GetPokemonByAbility(abilityID, generationID);
+                List<Pokemon> pokemonList = new List<Pokemon>();
+
+                foreach (var p in abilityList)
+                {
+                    if (this.dataService.CheckIfAltForm(p.PokemonId))
+                    {
+                        Pokemon pokemon = this.dataService.GetAltFormWithFormName(p.PokemonId);
+                        pokemonList.Add(pokemon);
+                    }
+                    else
+                    {
+                        pokemonList.Add(p.Pokemon);
+                    }
+                }
+
+                AbilityEvaluatorPageViewModel model = new AbilityEvaluatorPageViewModel()
+                {
+                    AllPokemonWithAbility = abilityList,
+                    AllPokemon = pokemonList,
+                    AppConfig = this.appConfig,
+                    GenerationId = generationID,
+                    Ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityID),
+                };
+
+                return this.PartialView("_FillAbilityEvaluator", model);
             }
             else
             {
@@ -1794,6 +1835,14 @@ namespace Pokedex.Controllers
         {
             List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= generationID).ToList();
             return this.PartialView("_FillTypingEvaluatorTypes", model);
+        }
+
+        [AllowAnonymous]
+        [Route("get-abilities-by-generation")]
+        public IActionResult GrabAbilityEvaluatorAbilities(int generationID)
+        {
+            List<Ability> model = this.dataService.GetObjects<Ability>("Name").Where(x => x.GenerationId <= generationID).ToList();
+            return this.PartialView("_FillAbilityEvaluatorAbilities", model);
         }
 
         private string FillEVs(PokemonTeamEV evs)
