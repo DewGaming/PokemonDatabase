@@ -10,7 +10,6 @@
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <style>
         .totalPokemon {
-            margin-bottom: 20px;
             text-align: center;
         }
     </style>
@@ -28,7 +27,7 @@
     }
 </div>
 <div class="page generation pokemonList">
-    <div class="totalPokemon">
+    <div class="totalPokemon" style="@((this.User.IsInRole("Owner") ? "margin-bottom: 20px;" : ""))">
         @if (this.User.IsInRole("Owner"))
         {
             <div class="updater"></div>
