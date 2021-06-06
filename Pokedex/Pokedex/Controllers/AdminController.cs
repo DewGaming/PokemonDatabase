@@ -158,7 +158,7 @@ namespace Pokedex.Controllers
         {
             AbilityViewModel model = new AbilityViewModel()
             {
-                AllAbilities = this.dataService.GetObjects<Ability>("Name"),
+                AllAbilities = this.dataService.GetObjects<Ability>("GenerationId, Name"),
                 AllPokemon = this.dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
             };
 

@@ -14,15 +14,15 @@
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
+            <th scope="col">Debut Generation</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllAbilities)
         {
             <tr>
-                <td>
-                    @item.Name
-                </td>
+                <td>@item.Name</td>
                 <td>@item.Description</td>
+                <td>@item.GenerationId</td>
                 <td>
                     <a href="@(this.Url.Action("Ability", "Edit", new { id = item.Id }))">Edit</a>
                     @if (this.User.IsInRole("Owner") && !(Model.AllPokemon.Exists(x => x.PrimaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SecondaryAbility != null && x.SecondaryAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.HiddenAbility != null && x.HiddenAbility.Id == item.Id) || Model.AllPokemon.Exists(x => x.SpecialEventAbility != null && x.SpecialEventAbility.Id == item.Id)))
