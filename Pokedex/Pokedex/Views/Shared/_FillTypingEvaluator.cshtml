@@ -7,23 +7,11 @@
 @for(var i = 0; i < typing.Count(); i++)
 {
     <div class="shadowed @typing[i].Pokemon.Name">
-        @if (Model.AllAltForms.Any(x => x.Id == typing[i].Pokemon.Id))
-        {
-            <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">
-                <img class="pokemonListPicture" title="@Model.AllPokemon[i].Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, typing[i].PokemonId, ".png")>
-            </a>
-            <div>
-                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
-            </div>
-        }
-        else
-        {
-            <a href="@this.Url.Action("Pokemon", "Home", new { name = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                <img class="pokemonListPicture" title="@Model.AllPokemon[i].Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, typing[i].PokemonId, ".png")>
-            </a>
-            <div>
-                <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
-            </div>
-        }
+        <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">
+            <img class="pokemonListPicture" title="@Model.AllPokemon[i].Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, typing[i].PokemonId, ".png")>
+        </a>
+        <div>
+            <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+        </div>
     </div>
 }

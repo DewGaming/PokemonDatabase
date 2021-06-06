@@ -1663,7 +1663,6 @@ namespace Pokedex.Controllers
                 {
                     AllPokemonWithTypes = typingList,
                     AllPokemon = pokemonList,
-                    AllAltForms = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon),
                     AppConfig = this.appConfig,
                     GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
                 };
