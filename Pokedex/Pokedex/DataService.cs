@@ -1068,6 +1068,7 @@ namespace Pokedex
             return this.dataContext.PokemonLegendaryDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.LegendaryType)
+                .Where(x => x.Pokemon.IsComplete)
                 .ToList();
         }
 
