@@ -994,6 +994,13 @@ namespace Pokedex
                 pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
             }
 
+            List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.GetPokemonGameDetailsByGeneration(generationId).Select(x => x.PokemonId)).ToList();
+
+            foreach (var pokemon in exclusionList)
+            {
+                pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+            }
+
             return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
         }
 
