@@ -1664,7 +1664,7 @@ namespace Pokedex.Controllers
                     AllPokemonWithTypes = typingList,
                     AllPokemon = pokemonList,
                     AppConfig = this.appConfig,
-                    GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
+                    GenerationId = generationID,
                 };
 
                 return this.PartialView("_FillTypingEvaluator", model);
