@@ -9,7 +9,8 @@ namespace Pokedex.DataAccess.Models
         public string Name { get; set; }
         [StringLength(300), Required]
         public string Description { get; set; }
-        public int? GenerationId { get; set; }
+        [Required]
+        public int GenerationId { get; set; }
         public Generation Generation { get; set; }
     }
 }
