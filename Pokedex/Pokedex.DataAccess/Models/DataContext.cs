@@ -62,6 +62,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<CommentPage> CommentPages { get; set; }
         public DbSet<Pokeball> Pokeballs { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Region> Regions { get; set; }
         public DbSet<PokeballCatchModifierDetail> PokeballCatchModifierDetails { get; set; }
         public DbSet<PokemonCaptureRateDetail> PokemonCaptureRateDetails { get; set; }
     }
