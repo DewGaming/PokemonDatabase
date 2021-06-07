@@ -87,32 +87,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_generation/{id:int}")]
-        public IActionResult Generation(int id)
-        {
-            Generation model = this.dataService.GetObjectByPropertyValue<Generation>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_generation/{id:int}")]
-        public IActionResult Generation(Generation generation)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Generation model = this.dataService.GetObjectByPropertyValue<Generation>("Id", generation.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateGeneration(generation);
-
-            return this.RedirectToAction("Generations", "Admin");
-        }
-
-        [HttpGet]
         [Route("edit_game/{id:int}")]
         public IActionResult Game(int id)
         {

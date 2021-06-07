@@ -9,7 +9,5 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
         [Required, NotMapped]
         public string GenerationName { get { return string.Concat("Generation ", Id); } }
-        [Required, StringLength(10)]
-        public string Region { get; set; }
     }
 }

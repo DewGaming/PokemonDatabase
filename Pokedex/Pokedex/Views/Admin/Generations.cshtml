@@ -13,20 +13,20 @@
     <table class="table">
         <tr>
             <th scope="col">Generation</th>
-            <th scope="col">Region</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllGenerations)
         {
             <tr>
                 <td>@item.GenerationName</td>
-                <td>@item.Region</td>
                 <td>
-                    <a href="@(this.Url.Action("Generation", "Edit", new { id = item.Id }))">Edit</a>
                     @if (!Model.AllGames.Exists(x => x.GenerationId == item.Id))
                     {
-                        @("|")
                         <a href="@(this.Url.Action("Generation", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                    else
+                    {
+                        @("No Actions Possible")
                     }
                 </td>
             </tr>

@@ -97,24 +97,10 @@ namespace Pokedex.Controllers
             }
         }
 
-        [HttpGet]
         [Route("add_generation")]
         public IActionResult Generation()
         {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_generation")]
-        public IActionResult Generation(Generation generation)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddGeneration(generation);
+            this.dataService.AddGeneration();
 
             return this.RedirectToAction("Generations", "Admin");
         }
