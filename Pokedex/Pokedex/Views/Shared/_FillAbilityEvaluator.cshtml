@@ -7,35 +7,40 @@
 <h2>Description</h2>
 <h4 class="abilityDescription">@Model.Ability.Description</h4>
 <br>
-<h2>Pokémon With Ability</h2>
-<div class="grid-container pokemonList">
-    @for(var i = 0; i < ability.Count(); i++)
-    {
-        <div class="shadowed @ability[i].Pokemon.Name">
-            <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = ability[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">
-                <img class="pokemonListPicture" title="@Model.AllPokemon[i].Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, ability[i].PokemonId, ".png")>
-            </a>
-            <div>
-                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = ability[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
-                <p class="abilityClassifier">
-                    @if(ability[i].PrimaryAbilityId == Model.Ability.Id)
-                    {
-                        @("Primary Ability")
-                    }
-                    else if (ability[i].SecondaryAbilityId == Model.Ability.Id)
-                    {
-                        @("Secondary Ability")
-                    }
-                    else if (ability[i].HiddenAbilityId == Model.Ability.Id)
-                    {
-                        @("Hidden Ability")
-                    }
-                    else if (ability[i].SpecialEventAbilityId == Model.Ability.Id)
-                    {
-                        @("Special Event Ability")
-                    }
-                </p>
+<div class="pokemonList">
+    <h2>Pokémon With Ability</h2>
+    <div class="grid-container">
+        @for(var i = 0; i < ability.Count(); i++)
+        {
+            <div class="shadowed @ability[i].Pokemon.Name">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = ability[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">
+                    <img class="pokemonListPicture" title="@Model.AllPokemon[i].Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, ability[i].PokemonId, ".png")>
+                </a>
+                <div>
+                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = ability[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+                    <p class="abilityClassifier">
+                        @if(ability[i].PrimaryAbilityId == Model.Ability.Id)
+                        {
+                            @("Primary Ability")
+                        }
+                        else if (ability[i].SecondaryAbilityId == Model.Ability.Id)
+                        {
+                            @("Secondary Ability")
+                        }
+                        else if (ability[i].HiddenAbilityId == Model.Ability.Id)
+                        {
+                            @("Hidden Ability")
+                        }
+                        else if (ability[i].SpecialEventAbilityId == Model.Ability.Id)
+                        {
+                            @("Special Event Ability")
+                        }
+                    </p>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
+</div>
+<div class="noPokemon">
+    <h2>No Pokémon have this ability in this generation.</h2>
 </div>

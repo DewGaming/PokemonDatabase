@@ -65,11 +65,14 @@ var checkTypings = function () {
         $('.pokemonWithAbility').css('display', 'none');
         $('.pokemonWithAbility').empty();
         $('.pokemonWithAbility').load('/get-pokemon-by-ability/', { 'abilityId': $('.abilityList > select').val(), 'generationID': $('.generationList > select').val() }, function () {
-            if ($('.pokemonList').children().length > 0) {
-                $('.pokemonWithAbility').css('display', 'block');
+            $('.pokemonWithAbility').css('display', 'block');
+            if ($('.grid-container').children().length > 0) {
+                $('.pokemonList').css('display', 'block');
+                $('.noPokemon').css('display', 'none');
             }
             else {
-                $('.pokemonWithAbility').css('display', 'none');
+                $('.pokemonList').css('display', 'none');
+                $('.noPokemon').css('display', 'block');
             }
         });
     }
