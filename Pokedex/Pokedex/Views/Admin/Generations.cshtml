@@ -12,14 +12,14 @@
     }
     <table class="table">
         <tr>
-            <th scope="col">Generation ID</th>
+            <th scope="col">Generation</th>
             <th scope="col">Region</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllGenerations)
         {
             <tr>
-                <td>@item.Id</td>
+                <td>@item.GenerationName</td>
                 <td>@item.Region</td>
                 <td>
                     <a href="@(this.Url.Action("Generation", "Edit", new { id = item.Id }))">Edit</a>
