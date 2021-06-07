@@ -13,7 +13,7 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
-            <th scope="col">Region Introduced To Normal Gameplay</th>
+            <th scope="col">Generation Introduced To Normal Gameplay</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllPokeballs)
@@ -25,7 +25,7 @@
                 <td>
                     @if (@item.Generation != null)
                     {
-                        @item.Generation.Region
+                        @item.Generation.GenerationName
                     }
                 </td>
                 <td>

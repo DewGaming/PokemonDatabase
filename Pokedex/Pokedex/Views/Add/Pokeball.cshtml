@@ -22,7 +22,7 @@
 
         <div class="form-group row">
             @Html.LabelFor(x => x.GenerationId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.GenerationId, new SelectList(Model.AllGenerations, "Id", "Region"), "", new { @class = "form-control col-md-8" })
+            @Html.DropDownListFor(x => x.GenerationId, new SelectList(Model.AllGenerations, "Id", "GenerationName"), "", new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.GenerationId)
         </div>
 
