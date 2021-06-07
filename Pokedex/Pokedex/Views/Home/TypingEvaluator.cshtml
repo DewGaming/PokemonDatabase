@@ -6,11 +6,6 @@
     var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
     var secondaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });
     secondaryItems = secondaryItems.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
-    var generations = Model.AllGenerations;
-    foreach(var g in generations)
-    {
-        g.Region = string.Concat("Generation ", g.Id);
-    }
 }
 
 @section styles
@@ -60,7 +55,7 @@
         <div class="flexDiv">
             <div class="generationList">
                 @Html.Label("Generation")
-                @Html.DropDownList("Generation List", new SelectList(@generations, "Id", "Region"), new { @class = "form-control generationSelectList" })
+                @Html.DropDownList("Generation List", new SelectList(@Model.AllGenerations, "Id", "GenerationName"), new { @class = "form-control generationSelectList" })
             </div>
             <div class="typeLists flexDiv">
                 <div class="primaryList">

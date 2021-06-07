@@ -815,7 +815,7 @@ namespace Pokedex.Controllers
             {
                 Name = type.Name,
                 GenerationId = type.GenerationId,
-                AllGenerations = this.dataService.GetGenerationsForRazor(),
+                AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
             return this.View(model);
@@ -833,7 +833,7 @@ namespace Pokedex.Controllers
                 {
                     Name = newType.Name,
                     GenerationId = newType.GenerationId,
-                    AllGenerations = this.dataService.GetGenerationsForRazor(),
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
                 };
 
                 return this.View(model);

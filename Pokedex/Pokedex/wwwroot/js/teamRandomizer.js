@@ -228,7 +228,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 $.each(data.allGenerations, function() {
                     var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
                     var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id);
-                    var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text("Generation " + this.id);
+                    var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text(this.generationName);
                     $(dropdownItem).append(dropdownInput).append(dropdownLabel);
                     $("#generations").append($(dropdownItem));
                 });

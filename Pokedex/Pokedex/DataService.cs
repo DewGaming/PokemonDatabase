@@ -1504,17 +1504,6 @@ namespace Pokedex
             return this.dataContext.PokemonGameDetails.Where(x => x.PokemonId == id).Select(x => x.Game).ToList();
         }
 
-        public List<Generation> GetGenerationsForRazor()
-        {
-            List<Generation> generations = this.GetObjects<Generation>();
-            foreach (var g in generations)
-            {
-                g.Region = string.Concat("Generation ", g.Id);
-            }
-
-            return generations;
-        }
-
         public List<Game> GetAvailableGames(int pokemonTeamId)
         {
             PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", pokemonTeamId);

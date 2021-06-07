@@ -4,11 +4,6 @@
     ViewBag.Title = "Ability Evaluator";
     
     var abilities = Model.AllAbilities.Prepend(new Pokedex.DataAccess.Models.Ability { Id = 0, Name = "No Ability Selected" });
-    var generations = Model.AllGenerations;
-    foreach(var g in generations)
-    {
-        g.Region = string.Concat("Generation ", g.Id);
-    }
 }
 
 @section styles
@@ -56,7 +51,7 @@
         <div class="flexDiv">
             <div class="generationList">
                 @Html.Label("Generation")
-                @Html.DropDownList("Generation List", new SelectList(@generations, "Id", "Region"), new { @class = "form-control generationSelectList" })
+                @Html.DropDownList("Generation List", new SelectList(@Model.AllGenerations, "Id", "GenerationName"), new { @class = "form-control generationSelectList" })
             </div>
             <div class="abilityList">
                 @Html.Label("Ability")
