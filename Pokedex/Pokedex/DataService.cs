@@ -1711,7 +1711,7 @@ namespace Pokedex
 
         public void AddGeneration()
         {
-            this.dataContext.Generations.Add();
+            this.dataContext.Generations.Add(new Generation());
             this.dataContext.SaveChanges();
         }
 
