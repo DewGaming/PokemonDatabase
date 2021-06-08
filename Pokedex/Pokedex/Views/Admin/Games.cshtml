@@ -22,7 +22,7 @@
             <tr>
                 <td>@item.Name (@item.Abbreviation)</td>
                 <td>@item.ReleaseDate.ToString("MMMM dd, yyyy")</td>
-                <td>Generation @item.GenerationId</td>
+                <td>@item.Generation.GenerationName</td>
                 <td>
                     <a href="@(this.Url.Action("Game", "Edit", new { id = item.Id }))">Edit</a>
                     @if (!Model.AllPokemon.Exists(x => x.Game.Id == item.Id))

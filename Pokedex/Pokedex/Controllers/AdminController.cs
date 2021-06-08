@@ -55,7 +55,7 @@ namespace Pokedex.Controllers
         {
             AdminGameViewModel model = new AdminGameViewModel()
             {
-                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").OrderBy(x => x.ReleaseDate).ToList(),
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id", "Generation, Region").ToList(),
                 AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
             };
 
