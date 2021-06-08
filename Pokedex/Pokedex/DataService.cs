@@ -45,7 +45,10 @@ namespace Pokedex
 
             if (!string.IsNullOrEmpty(includes))
             {
-                objects = objects.Include(includes);
+                foreach (var i in includes.Split(", "))
+                {
+                    objects = objects.Include(i);
+                }
             }
 
             return objects.ToList();
