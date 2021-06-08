@@ -81,7 +81,14 @@ namespace Pokedex
                 searchString = string.Concat(searchString, propertyValue);
             }
 
-            return objects.First(searchString);
+            try
+            {
+                return objects.First(searchString);
+            }
+            catch
+            {
+                return default;
+            }
         }
 
         /// <summary>
