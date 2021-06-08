@@ -1917,6 +1917,78 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
+        {
+            this.dataContext.PokemonLocationDetails.Add(pokemonLocationDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddLocation(Location location)
+        {
+            this.dataContext.Locations.Add(location);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddCaptureMethod(CaptureMethod captureMethod)
+        {
+            this.dataContext.CaptureMethods.Add(captureMethod);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddSeason(Season season)
+        {
+            this.dataContext.Seasons.Add(season);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddTime(Time time)
+        {
+            this.dataContext.Times.Add(time);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddWeather(Weather weather)
+        {
+            this.dataContext.Weathers.Add(weather);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateWeather(Weather weather)
+        {
+            this.dataContext.Weathers.Update(weather);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateTime(Time time)
+        {
+            this.dataContext.Times.Update(time);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateSeason(Season season)
+        {
+            this.dataContext.Seasons.Update(season);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateCaptureMethod(CaptureMethod captureMethod)
+        {
+            this.dataContext.CaptureMethods.Update(captureMethod);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateLocation(Location location)
+        {
+            this.dataContext.Locations.Update(location);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
+        {
+            this.dataContext.PokemonLocationDetails.Update(pokemonLocationDetail);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdatePokemonCaptureRateDetail(PokemonCaptureRateDetail pokemonCaptureRate)
         {
             this.dataContext.PokemonCaptureRateDetails.Update(pokemonCaptureRate);
@@ -2263,6 +2335,48 @@ namespace Pokedex
         {
             Ability ability = this.GetObjectByPropertyValue<Ability>("Id", id);
             this.dataContext.Abilities.Remove(ability);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteLocation(int id)
+        {
+            Location location = this.GetObjectByPropertyValue<Location>("Id", id);
+            this.dataContext.Locations.Remove(location);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteCaptureMethod(int id)
+        {
+            CaptureMethod captureMethod = this.GetObjectByPropertyValue<CaptureMethod>("Id", id);
+            this.dataContext.CaptureMethods.Remove(captureMethod);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteSeason(int id)
+        {
+            Season season = this.GetObjectByPropertyValue<Season>("Id", id);
+            this.dataContext.Seasons.Remove(season);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteTime(int id)
+        {
+            Time time = this.GetObjectByPropertyValue<Time>("Id", id);
+            this.dataContext.Times.Remove(time);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteWeather(int id)
+        {
+            Weather weather = this.GetObjectByPropertyValue<Weather>("Id", id);
+            this.dataContext.Weathers.Remove(weather);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonLocationDetail(int id)
+        {
+            PokemonLocationDetail pokemonLocationDetail = this.GetObjectByPropertyValue<PokemonLocationDetail>("Id", id);
+            this.dataContext.PokemonLocationDetails.Remove(pokemonLocationDetail);
             this.dataContext.SaveChanges();
         }
 
