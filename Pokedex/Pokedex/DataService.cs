@@ -66,9 +66,13 @@ namespace Pokedex
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
+
             if (!string.IsNullOrEmpty(includes))
             {
-                objects = objects.Include(includes);
+                foreach (var i in includes.Split(", "))
+                {
+                    objects = objects.Include(i);
+                }
             }
 
             string searchString = string.Concat("x => x.", property, " == ");
