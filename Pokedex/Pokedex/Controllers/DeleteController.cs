@@ -73,6 +73,33 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_region/{id:int}")]
+        public IActionResult Region(int id)
+        {
+            Region region = this.dataService.GetObjectByPropertyValue<Region>("Id", id, "Generation");
+            RegionAdminViewModel model = new RegionAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+                Id = region.Id,
+                Name = region.Name,
+                GenerationId = region.GenerationId,
+                Generation = region.Generation,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_region/{id:int}")]
+        public IActionResult Region(Region region)
+        {
+            this.dataService.DeleteRegion(region.Id);
+
+            return this.RedirectToAction("Regions", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_status/{id:int}")]
         public IActionResult Status(int id)
         {

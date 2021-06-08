@@ -27,7 +27,7 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("generation")]
+        [Route("generations")]
         public IActionResult Generations()
         {
             GenerationViewModel model = new GenerationViewModel()
@@ -39,7 +39,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("game")]
+        [Route("regions")]
+        public IActionResult Regions()
+        {
+            RegionViewModel model = new RegionViewModel()
+            {
+                AllRegions = this.dataService.GetObjects<Region>(includes: "Generation"),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("games")]
         public IActionResult Games()
         {
             AdminGameViewModel model = new AdminGameViewModel()

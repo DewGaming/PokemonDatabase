@@ -106,6 +106,38 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_region")]
+        public IActionResult Region()
+        {
+            RegionAdminViewModel model = new RegionAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_region")]
+        public IActionResult Region(Region region)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                RegionAdminViewModel model = new RegionAdminViewModel()
+                {
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.AddRegion(region);
+
+            return this.RedirectToAction("Regions", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_form_item")]
         public IActionResult FormItem()
         {

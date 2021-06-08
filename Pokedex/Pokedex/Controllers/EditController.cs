@@ -1127,6 +1127,48 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_region/{id:int}")]
+        public IActionResult Region(int id)
+        {
+            Region region = this.dataService.GetObjectByPropertyValue<Region>("Id", id, "Generation");
+            RegionAdminViewModel model = new RegionAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+                Id = region.Id,
+                Name = region.Name,
+                GenerationId = region.GenerationId,
+                Generation = region.Generation,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_region/{id:int}")]
+        public IActionResult Region(Region region)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Region newRegion = this.dataService.GetObjectByPropertyValue<Region>("Id", region.Id, "Generation");
+                RegionAdminViewModel model = new RegionAdminViewModel()
+                {
+                    AllGenerations = this.dataService.GetObjects<Generation>(),
+                    Id = newRegion.Id,
+                    Name = newRegion.Name,
+                    GenerationId = newRegion.GenerationId,
+                    Generation = newRegion.Generation,
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateRegion(region);
+
+            return this.RedirectToAction("Regions", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_status/{id:int}")]
         public IActionResult Status(int id)
         {

@@ -1727,6 +1727,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddRegion(Region region)
+        {
+            this.dataContext.Regions.Add(region);
+            this.dataContext.SaveChanges();
+        }
+
         public void AddGame(Game game)
         {
             this.dataContext.Games.Add(game);
@@ -2179,9 +2185,9 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void UpdateGeneration(Generation generation)
+        public void UpdateRegion(Region region)
         {
-            this.dataContext.Generations.Update(generation);
+            this.dataContext.Regions.Update(region);
             this.dataContext.SaveChanges();
         }
 
@@ -2250,6 +2256,13 @@ namespace Pokedex
         {
             Generation generation = this.GetObjectByPropertyValue<Generation>("Id", id);
             this.dataContext.Generations.Remove(generation);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteRegion(int id)
+        {
+            Region region = this.GetObjectByPropertyValue<Region>("Id", id);
+            this.dataContext.Regions.Remove(region);
             this.dataContext.SaveChanges();
         }
 
