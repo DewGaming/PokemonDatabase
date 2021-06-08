@@ -218,7 +218,7 @@ namespace Pokedex.Controllers
             EvolutionMethodViewModel model = new EvolutionMethodViewModel()
             {
                 AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
-                AllEvolutions = this.dataService.GetEvolutions(),
+                AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
             };
 
             return this.View(model);

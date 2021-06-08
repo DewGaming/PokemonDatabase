@@ -1444,7 +1444,7 @@ namespace Pokedex.Controllers
         [Route("edit_evolution/{pokemonId:int}")]
         public IActionResult Evolution(int pokemonId)
         {
-            Evolution preEvolution = this.dataService.GetEvolutions().Find(x => x.EvolutionPokemonId == pokemonId);
+            Evolution preEvolution = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemonId == pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
             {
                 AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
@@ -1477,7 +1477,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Evolution preEvolution = this.dataService.GetEvolutions().Find(x => x.EvolutionPokemonId == evolution.EvolutionPokemonId);
+                Evolution preEvolution = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemonId == evolution.EvolutionPokemonId);
                 EvolutionViewModel model = new EvolutionViewModel()
                 {
                     AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
@@ -1522,7 +1522,7 @@ namespace Pokedex.Controllers
             {
                 AllPokemon = altFormList,
                 AllAltForms = this.dataService.GetAllAltForms(),
-                AllEvolutions = this.dataService.GetEvolutions(),
+                AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
                 AllTypings = this.dataService.GetAllPokemonWithTypesAndIncomplete(),
                 AllAbilities = this.dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
                 AllEggGroups = this.dataService.GetAllPokemonWithEggGroupsAndIncomplete(),

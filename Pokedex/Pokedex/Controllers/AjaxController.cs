@@ -494,7 +494,7 @@ namespace Pokedex.Controllers
             {
                 Pokemon pokemon = this.dataService.GetPokemonById(pokemonId);
                 Pokeball pokeball = this.dataService.GetPokeball(pokeballId);
-                PokemonLegendaryDetail legendary = this.dataService.GetLegendaryDetail(pokemon.Id);
+                PokemonLegendaryDetail legendary = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
                 List<PokemonCaptureRateDetail> captureRates = this.dataService.GetPokemonWithCaptureRates(pokemonId).OrderBy(x => x.GenerationId).ToList();
                 List<PokeballCatchModifierDetail> pokeballDetails = this.dataService.GetCatchModifiersForPokeball(pokeballId);
                 float statusEffect = 1;
@@ -829,7 +829,7 @@ namespace Pokedex.Controllers
                 }
 
                 List<Pokemon> allPokemon = this.dataService.GetAllPokemonWithoutForms();
-                List<Evolution> allEvolutions = this.dataService.GetEvolutions();
+                List<Evolution> allEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod");
                 Random rnd = new Random();
 
                 foreach (var gen in unselectedGens)
