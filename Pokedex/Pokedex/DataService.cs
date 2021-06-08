@@ -32,14 +32,20 @@ namespace Pokedex
         /// </summary>
         /// <typeparam name="TEntity">The generic type parameter.</typeparam>
         /// <param name="orderedProperty">The property that is used if an order is needed. Separate properties by commas for multiples.</param>
+        /// <param name="includes">The property that is used if an include is needed. Separate includes by commas for multiples.</param>
         /// <returns>Returns the list of the class requested.</returns>
-        public List<TEntity> GetObjects<TEntity>(string orderedProperty = "")
+        public List<TEntity> GetObjects<TEntity>(string orderedProperty = "", string includes = "")
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
             if (!string.IsNullOrEmpty(orderedProperty))
             {
                 objects = objects.OrderBy(orderedProperty);
+            }
+
+            if (!string.IsNullOrEmpty(includes))
+            {
+                objects = objects.Include(includes);
             }
 
             return objects.ToList();
@@ -51,11 +57,17 @@ namespace Pokedex
         /// <typeparam name="TEntity">The generic type parameter.</typeparam>
         /// <param name="property">The property the object will be searched for.</param>
         /// <param name="propertyValue">The property's value.</param>
+        /// <param name="includes">The property that is used if an include is needed. Separate includes by commas for multiples.</param>
         /// <returns>Returns the object with the correct class and id.</returns>
-        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue)
+        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue, string includes = "")
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
+            if (!string.IsNullOrEmpty(includes))
+            {
+                objects = objects.Include(includes);
+            }
+
             string searchString = string.Concat("x => x.", property, " == ");
             if (propertyValue is string)
             {
