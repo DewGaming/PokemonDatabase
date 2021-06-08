@@ -38,10 +38,6 @@ namespace Pokedex
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
-            if (!string.IsNullOrEmpty(orderedProperty))
-            {
-                objects = objects.OrderBy(orderedProperty);
-            }
 
             if (!string.IsNullOrEmpty(includes))
             {
@@ -49,6 +45,11 @@ namespace Pokedex
                 {
                     objects = objects.Include(i);
                 }
+            }
+
+            if (!string.IsNullOrEmpty(orderedProperty))
+            {
+                objects = objects.OrderBy(orderedProperty);
             }
 
             return objects.ToList();
