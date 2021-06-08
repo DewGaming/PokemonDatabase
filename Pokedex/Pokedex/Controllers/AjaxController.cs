@@ -94,7 +94,7 @@ namespace Pokedex.Controllers
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
-                    PokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => !x.IsComplete).ToList(),
+                    PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => !x.IsComplete).ToList(),
                     ReviewedPokemon = new List<ReviewedPokemon>(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
@@ -462,7 +462,7 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetPokemonGameDetailsByGame(gameId);
-                List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete();
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
                 List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                 foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
@@ -825,7 +825,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    availablePokemon = this.dataService.GetAllPokemonGameDetails();
+                    availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game");
                 }
 
                 List<Pokemon> allPokemon = this.dataService.GetAllPokemonWithoutForms();

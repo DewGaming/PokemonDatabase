@@ -56,7 +56,7 @@ namespace Pokedex.Controllers
             AdminGameViewModel model = new AdminGameViewModel()
             {
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id", "Generation, Region").ToList(),
-                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
+                AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
             };
 
             return this.View(model);
@@ -106,7 +106,7 @@ namespace Pokedex.Controllers
             EggCycleViewModel model = new EggCycleViewModel()
             {
                 AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
-                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
+                AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
             };
 
             return this.View(model);
@@ -118,7 +118,7 @@ namespace Pokedex.Controllers
             ExperienceGrowthViewModel model = new ExperienceGrowthViewModel()
             {
                 AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
-                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
+                AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
             };
 
             return this.View(model);
@@ -130,7 +130,7 @@ namespace Pokedex.Controllers
             GenderRatiosViewModel model = new GenderRatiosViewModel()
             {
                 AllGenderRatios = this.dataService.GetObjects<GenderRatio>(),
-                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
+                AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
             };
 
             return this.View(model);
@@ -157,8 +157,8 @@ namespace Pokedex.Controllers
         {
             PokeballViewModel model = new PokeballViewModel()
             {
-                AllPokeballs = this.dataService.GetPokeballs(),
-                AllCatchModifiers = this.dataService.GetPokeballCatchModifierDetails(),
+                AllPokeballs = this.dataService.GetObjects<Pokeball>("GenerationId, Name", "Generation"),
+                AllCatchModifiers = this.dataService.GetObjects<PokeballCatchModifierDetail>(includes: "Pokeball"),
             };
 
             return this.View(model);
@@ -242,7 +242,7 @@ namespace Pokedex.Controllers
             BaseHappinessViewModel model = new BaseHappinessViewModel()
             {
                 AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
-                AllPokemon = this.dataService.GetAllPokemonIncludeIncomplete(),
+                AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
             };
 
             return this.View(model);

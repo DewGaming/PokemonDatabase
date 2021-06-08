@@ -48,7 +48,7 @@ namespace Pokedex.Controllers
                 EvolutionPokemonId = evolutionPokemon.Id,
             };
 
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != pokemonId).ToList();
             List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
@@ -73,7 +73,7 @@ namespace Pokedex.Controllers
                     EvolutionPokemon = evolution.EvolutionPokemon,
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
                 };
-                List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
                 List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
                 foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {

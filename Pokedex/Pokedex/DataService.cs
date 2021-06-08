@@ -265,14 +265,6 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<PokemonGameDetail> GetAllPokemonGameDetails()
-        {
-            return this.dataContext.PokemonGameDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.Game)
-                .ToList();
-        }
-
         public List<PokemonGameDetail> GetPokemonGameDetailsByGeneration(int generationId)
         {
             return this.dataContext.PokemonGameDetails
@@ -367,28 +359,12 @@ namespace Pokedex
             };
         }
 
-        public List<Pokeball> GetPokeballs()
-        {
-            return this.dataContext.Pokeballs
-                .Include(x => x.Generation)
-                .OrderBy(x => x.GenerationId)
-                .ThenBy(x => x.Name)
-                .ToList();
-        }
-
         public Pokeball GetPokeball(int id)
         {
             return this.dataContext.Pokeballs
                 .Include(x => x.Generation)
                 .ToList()
                 .Find(x => x.Id == id);
-        }
-
-        public List<PokeballCatchModifierDetail> GetPokeballCatchModifierDetails()
-        {
-            return this.dataContext.PokeballCatchModifierDetails
-                .Include(x => x.Pokeball)
-                .ToList();
         }
 
         public PokeballCatchModifierDetail GetPokeballCatchModifierDetail(int id)
@@ -524,11 +500,7 @@ namespace Pokedex
                 formDetails.AddRange(this.GetPokemonFormDetailsByFormName(n));
             }
 
-            List<PokemonEggGroupDetail> eggGroupDetails = this.dataContext.PokemonEggGroupDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.PrimaryEggGroup)
-                .Include(x => x.SecondaryEggGroup)
-                .ToList();
+            List<PokemonEggGroupDetail> eggGroupDetails = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
 
             List<Pokemon> unbreedablePokemon = this.GetAllPokemon().Where(x => !eggGroupDetails.Any(y => y.PokemonId == x.Id && y.PrimaryEggGroup.Name != "Undiscovered")).ToList();
 
@@ -540,21 +512,6 @@ namespace Pokedex
             return eggGroupDetails;
         }
 
-        public List<Pokemon> GetAllPokemonIncludeIncomplete()
-        {
-            return this.dataContext.Pokemon
-                .Include(x => x.EggCycle)
-                .Include(x => x.GenderRatio)
-                .Include(x => x.Classification)
-                .Include(x => x.Game)
-                    .Include("Game.Generation")
-                .Include(x => x.ExperienceGrowth)
-                .Include(x => x.BaseHappiness)
-                .OrderBy(x => x.PokedexNumber)
-                .ThenBy(x => x.Id)
-                .ToList();
-        }
-
         public List<Pokemon> GetAllPokemonWithoutForms()
         {
             List<Pokemon> pokemonList = this.GetAllPokemon();
@@ -564,7 +521,7 @@ namespace Pokedex
 
         public List<Pokemon> GetAllPokemonWithoutFormsWithIncomplete()
         {
-            List<Pokemon> pokemonList = this.GetAllPokemonIncludeIncomplete();
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
             List<Pokemon> altFormList = this.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             return pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
         }
@@ -582,7 +539,7 @@ namespace Pokedex
 
         public List<int> GetGenerationsFromPokemonWithIncomplete()
         {
-            List<Pokemon> pokemonList = this.GetAllPokemonIncludeIncomplete();
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
             List<Pokemon> altFormList = this.dataContext.PokemonFormDetails.Select(x => x.AltFormPokemon).ToList();
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
 

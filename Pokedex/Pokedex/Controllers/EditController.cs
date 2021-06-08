@@ -142,7 +142,7 @@ namespace Pokedex.Controllers
                 Game = game,
                 Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 PokemonList = pokemonList,
-                GameAvailability = this.dataService.GetAllPokemonGameDetails(),
+                GameAvailability = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game"),
             };
 
             return this.View(model);
@@ -1268,8 +1268,8 @@ namespace Pokedex.Controllers
             PokeballViewModel model = new PokeballViewModel()
             {
                 PokeballId = pokeballId,
-                AllPokeballs = this.dataService.GetPokeballs(),
-                AllCatchModifiers = this.dataService.GetPokeballCatchModifierDetails(),
+                AllPokeballs = this.dataService.GetObjects<Pokeball>("GenerationId, Name", "Generation"),
+                AllCatchModifiers = this.dataService.GetObjects<PokeballCatchModifierDetail>(includes: "Pokeball"),
             };
 
             return this.View(model);
@@ -1458,7 +1458,7 @@ namespace Pokedex.Controllers
                 EvolutionPokemon = preEvolution.EvolutionPokemon,
             };
 
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemonIncludeIncomplete().Where(x => x.Id != pokemonId).ToList();
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != pokemonId).ToList();
             List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
             foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
