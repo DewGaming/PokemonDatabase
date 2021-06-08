@@ -249,7 +249,6 @@ namespace Pokedex
         {
             PokemonFormDetail formDetail = this.dataContext.PokemonFormDetails
                 .Include(x => x.Form)
-                .Include(x => x.OriginalPokemon)
                 .Include(x => x.AltFormPokemon)
                 .ToList()
                 .Find(x => x.AltFormPokemon.Id == pokemonId);
