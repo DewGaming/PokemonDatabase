@@ -99,6 +99,7 @@ namespace Pokedex.Controllers
                 ReleaseDate = game.ReleaseDate,
                 GenerationId = game.GenerationId,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
+                AllRegions = this.dataService.GetObjects<Region>(),
             };
 
             return this.View(model);
@@ -120,6 +121,7 @@ namespace Pokedex.Controllers
                     ReleaseDate = oldGame.ReleaseDate,
                     GenerationId = oldGame.GenerationId,
                     AllGenerations = this.dataService.GetObjects<Generation>(),
+                    AllRegions = this.dataService.GetObjects<Region>(),
                 };
 
                 return this.View(model);

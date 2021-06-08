@@ -12,5 +12,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all generations.
         /// </summary>
         public List<Generation> AllGenerations { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all regions.
+        /// </summary>
+        public List<Region> AllRegions { get; set; }
     }
 }

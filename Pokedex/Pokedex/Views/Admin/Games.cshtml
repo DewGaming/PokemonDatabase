@@ -15,6 +15,7 @@
             <th scope="col">Games</th>
             <th scope="col">Release Date</th>
             <th scope="col">Generation</th>
+            <th scope="col">Region</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllGames)
@@ -23,6 +24,7 @@
                 <td>@item.Name (@item.Abbreviation)</td>
                 <td>@item.ReleaseDate.ToString("MMMM dd, yyyy")</td>
                 <td>@item.Generation.GenerationName</td>
+                <td>@item.Region.Name</td>
                 <td>
                     <a href="@(this.Url.Action("Game", "Edit", new { id = item.Id }))">Edit</a>
                     @if (!Model.AllPokemon.Exists(x => x.Game.Id == item.Id))

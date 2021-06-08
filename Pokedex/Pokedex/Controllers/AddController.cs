@@ -594,6 +594,7 @@ namespace Pokedex.Controllers
             GameViewModel model = new GameViewModel()
             {
                 AllGenerations = this.dataService.GetObjects<Generation>(),
+                AllRegions = this.dataService.GetObjects<Region>(),
             };
 
             return this.View(model);
@@ -609,6 +610,7 @@ namespace Pokedex.Controllers
                 GameViewModel model = new GameViewModel()
                 {
                     AllGenerations = this.dataService.GetObjects<Generation>(),
+                    AllRegions = this.dataService.GetObjects<Region>(),
                 };
 
                 return this.View(model);
