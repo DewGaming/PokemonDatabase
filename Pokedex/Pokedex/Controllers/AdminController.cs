@@ -94,6 +94,14 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("pokemon_availability")]
+        public IActionResult PokemonLocationDetails(int id)
+        {
+            List<PokemonLocationDetail> model = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod, Time, Season, Weather").Where(x => x.LocationId == id).ToList();
+
+            return this.View(model);
+        }
+
         [Route("games")]
         public IActionResult Games()
         {
