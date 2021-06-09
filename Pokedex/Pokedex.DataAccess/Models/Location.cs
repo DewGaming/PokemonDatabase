@@ -7,7 +7,7 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
+        [Display(Name = "Region"), Required]
         public int RegionId { get; set; }
         public Region Region { get; set; }
     }

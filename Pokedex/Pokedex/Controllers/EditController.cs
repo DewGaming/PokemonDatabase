@@ -1087,6 +1087,110 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_season/{id:int}")]
+        public IActionResult Season(int id)
+        {
+            Season model = this.dataService.GetObjectByPropertyValue<Season>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_season/{id:int}")]
+        public IActionResult Season(Season season)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Season model = this.dataService.GetObjectByPropertyValue<Season>("Id", season.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateSeason(season);
+
+            return this.RedirectToAction("Seasons", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_weather/{id:int}")]
+        public IActionResult Weather(int id)
+        {
+            Weather model = this.dataService.GetObjectByPropertyValue<Weather>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_weather/{id:int}")]
+        public IActionResult Weather(Weather weather)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Weather model = this.dataService.GetObjectByPropertyValue<Weather>("Id", weather.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateWeather(weather);
+
+            return this.RedirectToAction("Weathers", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_capture_method/{id:int}")]
+        public IActionResult CaptureMethod(int id)
+        {
+            CaptureMethod model = this.dataService.GetObjectByPropertyValue<CaptureMethod>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_capture_method/{id:int}")]
+        public IActionResult CaptureMethod(CaptureMethod captureMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                CaptureMethod model = this.dataService.GetObjectByPropertyValue<CaptureMethod>("Id", captureMethod.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateCaptureMethod(captureMethod);
+
+            return this.RedirectToAction("CaptureMethods", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_time/{id:int}")]
+        public IActionResult Time(int id)
+        {
+            Time model = this.dataService.GetObjectByPropertyValue<Time>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_time/{id:int}")]
+        public IActionResult Time(Time time)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Time model = this.dataService.GetObjectByPropertyValue<Time>("Id", time.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateTime(time);
+
+            return this.RedirectToAction("Times", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {
@@ -1194,6 +1298,48 @@ namespace Pokedex.Controllers
             this.dataService.UpdateStatus(status);
 
             return this.RedirectToAction("Statuses", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_location/{id:int}")]
+        public IActionResult Location(int id)
+        {
+            Location location = this.dataService.GetObjectByPropertyValue<Location>("Id", id);
+            LocationViewModel model = new LocationViewModel()
+            {
+                Id = location.Id,
+                Name = location.Name,
+                RegionId = location.RegionId,
+                Region = location.Region,
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId"),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_location/{id:int}")]
+        public IActionResult Location(Location location)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Location newLocation = this.dataService.GetObjectByPropertyValue<Location>("Id", location.Id);
+                LocationViewModel model = new LocationViewModel()
+                {
+                    Id = newLocation.Id,
+                    Name = newLocation.Name,
+                    RegionId = newLocation.RegionId,
+                    Region = newLocation.Region,
+                    AllRegions = this.dataService.GetObjects<Region>("GenerationId"),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateLocation(location);
+
+            return this.RedirectToAction("Locations", "Admin");
         }
 
         [HttpGet]

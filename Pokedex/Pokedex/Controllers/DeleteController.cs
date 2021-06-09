@@ -100,6 +100,109 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_location/{id:int}")]
+        public IActionResult Location(int id)
+        {
+            Location location = this.dataService.GetObjectByPropertyValue<Location>("Id", id, "Region");
+            LocationViewModel model = new LocationViewModel()
+            {
+                AllRegions = this.dataService.GetObjects<Region>(),
+                Id = location.Id,
+                Name = location.Name,
+                RegionId = location.RegionId,
+                Region = location.Region,
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_location/{id:int}")]
+        public IActionResult Location(Location location)
+        {
+            this.dataService.DeleteLocation(location.Id);
+
+            return this.RedirectToAction("Locations", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_time/{id:int}")]
+        public IActionResult Time(int id)
+        {
+            Time model = this.dataService.GetObjectByPropertyValue<Time>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_time/{id:int}")]
+        public IActionResult Time(Time time)
+        {
+            this.dataService.DeleteTime(time.Id);
+
+            return this.RedirectToAction("Times", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_capture_method/{id:int}")]
+        public IActionResult CaptureMethod(int id)
+        {
+            CaptureMethod model = this.dataService.GetObjectByPropertyValue<CaptureMethod>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_capture_method/{id:int}")]
+        public IActionResult CaptureMethod(CaptureMethod captureMethod)
+        {
+            this.dataService.DeleteCaptureMethod(captureMethod.Id);
+
+            return this.RedirectToAction("CaptureMethods", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_weather/{id:int}")]
+        public IActionResult Weather(int id)
+        {
+            Weather model = this.dataService.GetObjectByPropertyValue<Weather>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_weather/{id:int}")]
+        public IActionResult Weather(Weather weather)
+        {
+            this.dataService.DeleteWeather(weather.Id);
+
+            return this.RedirectToAction("Weathers", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_season/{id:int}")]
+        public IActionResult Season(int id)
+        {
+            Season model = this.dataService.GetObjectByPropertyValue<Season>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_season/{id:int}")]
+        public IActionResult Season(Season season)
+        {
+            this.dataService.DeleteSeason(season.Id);
+
+            return this.RedirectToAction("Seasons", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_status/{id:int}")]
         public IActionResult Status(int id)
         {

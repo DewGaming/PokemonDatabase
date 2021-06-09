@@ -421,6 +421,72 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_season")]
+        public IActionResult Season()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_season")]
+        public IActionResult Season(Season season)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddSeason(season);
+
+            return this.RedirectToAction("Seasons", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_weather")]
+        public IActionResult Weather()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_weather")]
+        public IActionResult Weather(Weather weather)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddWeather(weather);
+
+            return this.RedirectToAction("Weathers", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_time")]
+        public IActionResult Time()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_time")]
+        public IActionResult Time(Time time)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddTime(time);
+
+            return this.RedirectToAction("Times", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_capture_rate")]
         public IActionResult CaptureRate()
         {
@@ -440,6 +506,60 @@ namespace Pokedex.Controllers
             this.dataService.AddCaptureRate(captureRate);
 
             return this.RedirectToAction("CaptureRates", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_capture_method")]
+        public IActionResult CaptureMethod()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_capture_method")]
+        public IActionResult CaptureMethod(CaptureMethod captureMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddCaptureMethod(captureMethod);
+
+            return this.RedirectToAction("CaptureMethods", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_location")]
+        public IActionResult Location()
+        {
+            LocationViewModel model = new LocationViewModel()
+            {
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId"),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_location")]
+        public IActionResult Location(Location location)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                LocationViewModel model = new LocationViewModel()
+                {
+                    AllRegions = this.dataService.GetObjects<Region>("GenerationId"),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.AddLocation(location);
+
+            return this.RedirectToAction("Locations", "Admin");
         }
 
         [HttpGet]
