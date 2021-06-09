@@ -50,6 +50,50 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("locations")]
+        public IActionResult Locations()
+        {
+            LocationAdminViewModel model = new LocationAdminViewModel()
+            {
+                AllLocations = this.dataService.GetObjects<Location>("RegionId, Name", "Region"),
+                AllPokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>(),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("capture_methods")]
+        public IActionResult CaptureMethods()
+        {
+            List<CaptureMethod> model = this.dataService.GetObjects<CaptureMethod>("Name");
+
+            return this.View(model);
+        }
+
+        [Route("times")]
+        public IActionResult Times()
+        {
+            List<Time> model = this.dataService.GetObjects<Time>("Name");
+
+            return this.View(model);
+        }
+
+        [Route("weathers")]
+        public IActionResult Weathers()
+        {
+            List<Weather> model = this.dataService.GetObjects<Weather>("Name");
+
+            return this.View(model);
+        }
+
+        [Route("seasons")]
+        public IActionResult Seasons()
+        {
+            List<Season> model = this.dataService.GetObjects<Season>();
+
+            return this.View(model);
+        }
+
         [Route("games")]
         public IActionResult Games()
         {

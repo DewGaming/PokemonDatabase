@@ -1,0 +1,35 @@
+@model IEnumerable<Pokedex.DataAccess.Models.CaptureMethod>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="captureMethodTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("CaptureMethod", "Add")" role="button">Add Capture Method</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Capture Method</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("CaptureMethod", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("CaptureMethod", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
