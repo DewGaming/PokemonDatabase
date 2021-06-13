@@ -241,6 +241,26 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_pokemon_availability/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationDetail(int pokemonLocationDetailId)
+        {
+            PokemonLocationDetail model = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod");
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_pokemon_availability/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
+        {
+            int locationId = pokemonLocationDetail.LocationId;
+            this.dataService.DeletePokemonLocationDetail(pokemonLocationDetail.Id);
+
+            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { id = locationId });
+        }
+
+        [HttpGet]
         [Route("delete_game/{id:int}")]
         public IActionResult Game(int id)
         {
