@@ -5,6 +5,7 @@ namespace Pokedex.DataAccess.Models
     public class PokemonLocationDetail
     {
         public int Id { get; set; }
+        [Display(Name = "Chance of Encounter")]
         public double ChanceOfEncounter { get; set; }
         [Display(Name = "Minimum Level"), Required]
         public int MinimumLevel { get; set; }
