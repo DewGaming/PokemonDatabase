@@ -563,6 +563,52 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokemon_availability/{locationId:int}")]
+        public IActionResult PokemonLocationDetail(int locationId)
+        {
+            Location location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId);
+            PokemonLocationDetailViewModel model = new PokemonLocationDetailViewModel()
+            {
+                LocationId = location.Id,
+                AllPokemon = this.dataService.GetPokemonForLocation(location.Id),
+                AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
+                AllWeathers = this.dataService.GetObjects<Weather>("Name"),
+                AllTimes = this.dataService.GetObjects<Time>("Name"),
+                AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == location.RegionId).ToList(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokemon_availability/{locationId:int}")]
+        public IActionResult PokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail, int locationId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Location location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId);
+                PokemonLocationDetailViewModel model = new PokemonLocationDetailViewModel()
+                {
+                    LocationId = location.Id,
+                    AllPokemon = this.dataService.GetPokemonForLocation(location.Id),
+                    AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
+                    AllWeathers = this.dataService.GetObjects<Weather>("Name"),
+                    AllTimes = this.dataService.GetObjects<Time>("Name"),
+                    AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                    AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == location.RegionId).ToList(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.AddPokemonLocationDetail(pokemonLocationDetail);
+
+            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { id = locationId });
+        }
+
+        [HttpGet]
         [Route("add_ability")]
         public IActionResult Ability()
         {

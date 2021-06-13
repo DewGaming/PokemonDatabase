@@ -458,13 +458,31 @@ namespace Pokedex
             return pokemonList;
         }
 
-        public List<Pokemon> GetAllPokemonNoIncludes()
+        public List<Pokemon> GetPokemonForLocation(int locationId)
         {
-            return this.dataContext.Pokemon
-                .Where(x => x.IsComplete)
-                .OrderBy(x => x.PokedexNumber)
-                .ThenBy(x => x.Id)
-                .ToList();
+            Region region = this.GetObjectByPropertyValue<Location>("Id", locationId, "Region").Region;
+            List<Game> games = this.GetObjects<Game>().Where(x => x.RegionId == region.Id).ToList();
+            List<Pokemon> pokemonList = new List<Pokemon>();
+            foreach (var g in games)
+            {
+                pokemonList.AddRange(this.GetPokemonGameDetailsByGame(g.Id).Select(x => x.Pokemon).ToList());
+            }
+
+            pokemonList = pokemonList.GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.PokedexNumber).ToList();
+
+            List<Pokemon> altFormList = this.GetAllAltFormsWithFormName();
+            Pokemon pokemon;
+
+            foreach (var a in altFormList)
+            {
+                if (pokemonList.Find(x => x.Id == a.Id) != null)
+                {
+                    pokemon = pokemonList.Find(x => x.Id == a.Id);
+                    pokemon.Name = a.Name;
+                }
+            }
+
+            return pokemonList;
         }
 
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon()
