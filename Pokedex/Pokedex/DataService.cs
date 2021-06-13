@@ -1953,15 +1953,51 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void AddLocationGameDetail(LocationGameDetail locationGameDetail)
+        public void AddPokemonLocationGameDetail(PokemonLocationGameDetail locationGameDetail)
         {
-            this.dataContext.LocationGameDetails.Add(locationGameDetail);
+            this.dataContext.PokemonLocationGameDetails.Add(locationGameDetail);
             this.dataContext.SaveChanges();
         }
 
-        public void UpdateLocationGameDetail(LocationGameDetail locationGameDetail)
+        public void AddPokemonLocationWeatherDetail(PokemonLocationWeatherDetail locationWeatherDetail)
         {
-            this.dataContext.LocationGameDetails.Update(locationGameDetail);
+            this.dataContext.PokemonLocationWeatherDetails.Add(locationWeatherDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddPokemonLocationSeasonDetail(PokemonLocationSeasonDetail locationSeasonDetail)
+        {
+            this.dataContext.PokemonLocationSeasonDetails.Add(locationSeasonDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void AddPokemonLocationTimeDetail(PokemonLocationTimeDetail locationTimeDetail)
+        {
+            this.dataContext.PokemonLocationTimeDetails.Add(locationTimeDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonLocationTimeDetail(PokemonLocationTimeDetail locationTimeDetail)
+        {
+            this.dataContext.PokemonLocationTimeDetails.Update(locationTimeDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonLocationSeasonDetail(PokemonLocationSeasonDetail locationSeasonDetail)
+        {
+            this.dataContext.PokemonLocationSeasonDetails.Update(locationSeasonDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonLocationWeatherDetail(PokemonLocationWeatherDetail locationWeatherDetail)
+        {
+            this.dataContext.PokemonLocationWeatherDetails.Update(locationWeatherDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdatePokemonLocationGameDetail(PokemonLocationGameDetail locationGameDetail)
+        {
+            this.dataContext.PokemonLocationGameDetails.Update(locationGameDetail);
             this.dataContext.SaveChanges();
         }
 
@@ -2309,10 +2345,31 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void DeleteLocationGameDetail(int id)
+        public void DeletePokemonLocationGameDetail(int id)
         {
-            LocationGameDetail locationGameDetail = this.GetObjectByPropertyValue<LocationGameDetail>("Id", id);
-            this.dataContext.LocationGameDetails.Remove(locationGameDetail);
+            PokemonLocationGameDetail locationGameDetail = this.GetObjectByPropertyValue<PokemonLocationGameDetail>("Id", id);
+            this.dataContext.PokemonLocationGameDetails.Remove(locationGameDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonLocationWeatherDetail(int id)
+        {
+            PokemonLocationWeatherDetail locationWeatherDetail = this.GetObjectByPropertyValue<PokemonLocationWeatherDetail>("Id", id);
+            this.dataContext.PokemonLocationWeatherDetails.Remove(locationWeatherDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonLocationSeasonDetail(int id)
+        {
+            PokemonLocationSeasonDetail locationSeasonDetail = this.GetObjectByPropertyValue<PokemonLocationSeasonDetail>("Id", id);
+            this.dataContext.PokemonLocationSeasonDetails.Remove(locationSeasonDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonLocationTimeDetail(int id)
+        {
+            PokemonLocationTimeDetail locationTimeDetail = this.GetObjectByPropertyValue<PokemonLocationTimeDetail>("Id", id);
+            this.dataContext.PokemonLocationTimeDetails.Remove(locationTimeDetail);
             this.dataContext.SaveChanges();
         }
 

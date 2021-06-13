@@ -6,25 +6,20 @@ namespace Pokedex.DataAccess.Models
     {
         public int Id { get; set; }
         public double ChanceOfEncounter { get; set; }
-        [Required]
+        [Display(Name = "Minimum Level"), Required]
         public int MinimumLevel { get; set; }
-        [Required]
+        [Display(Name = "Maximum Level"), Required]
         public int MaximumLevel { get; set; }
-        [Required]
+        [Display(Name = "Pokemon"), Required]
         public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
         [Required]
         public int LocationId { get; set; }
         public Location Location { get; set; }
-        [Required]
+        [Display(Name = "Capture Method"), Required]
         public int CaptureMethodId { get; set; }
         public CaptureMethod CaptureMethod { get; set; }
-        public int? TimeId { get; set; }
-        public Time Time { get; set; }
-        public int? SeasonId { get; set; }
-        public Season Season { get; set; }
-        public int? WeatherId { get; set; }
-        public Weather Weather { get; set; }
+        [Display(Name = "Only Encounterable Thru SOS Battles")]
         public bool SOSBattleOnly { get; set; }
     }
 }

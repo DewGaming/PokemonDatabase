@@ -66,7 +66,10 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Location> Locations { get; set; }
         public DbSet<Season> Seasons { get; set; }
         public DbSet<CaptureMethod> CaptureMethods { get; set; }
-        public DbSet<LocationGameDetail> LocationGameDetails { get; set; }
+        public DbSet<PokemonLocationGameDetail> PokemonLocationGameDetails { get; set; }
+        public DbSet<PokemonLocationWeatherDetail> PokemonLocationWeatherDetails { get; set; }
+        public DbSet<PokemonLocationSeasonDetail> PokemonLocationSeasonDetails { get; set; }
+        public DbSet<PokemonLocationTimeDetail> PokemonLocationTimeDetails { get; set; }
         public DbSet<Time> Times { get; set; }
         public DbSet<Weather> Weathers { get; set; }
         public DbSet<PokemonLocationDetail> PokemonLocationDetails { get; set; }
