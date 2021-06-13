@@ -1953,6 +1953,18 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddLocationGameDetail(LocationGameDetail locationGameDetail)
+        {
+            this.dataContext.LocationGameDetails.Add(locationGameDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateLocationGameDetail(LocationGameDetail locationGameDetail)
+        {
+            this.dataContext.LocationGameDetails.Update(locationGameDetail);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdateWeather(Weather weather)
         {
             this.dataContext.Weathers.Update(weather);
@@ -2294,6 +2306,13 @@ namespace Pokedex
         {
             Game game = this.GetObjectByPropertyValue<Game>("Id", id);
             this.dataContext.Games.Remove(game);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteLocationGameDetail(int id)
+        {
+            LocationGameDetail locationGameDetail = this.GetObjectByPropertyValue<LocationGameDetail>("Id", id);
+            this.dataContext.LocationGameDetails.Remove(locationGameDetail);
             this.dataContext.SaveChanges();
         }
 
