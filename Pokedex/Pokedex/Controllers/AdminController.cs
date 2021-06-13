@@ -100,6 +100,10 @@ namespace Pokedex.Controllers
             PokemonLocationDetailAdminViewModel model = new PokemonLocationDetailAdminViewModel()
             {
                 AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == id).ToList(),
+                AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game"),
+                AllPokemonLocationWeatherDetails = this.dataService.GetObjects<PokemonLocationWeatherDetail>(includes: "Weather"),
+                AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season"),
+                AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time"),
                 LocationId = id,
             };
 

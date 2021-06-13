@@ -1,4 +1,5 @@
 @model Pokedex.Models.PokemonLocationDetailAdminViewModel;
+@using Pokedex.DataAccess.Models;
 @{
     Layout = "_Layout";
 }
@@ -16,7 +17,26 @@
             <th scope="col">Levels Available</th>
             <th scope="col">Capture Method</th>
             <th scope="col">Chance of Encounter</th>
-            <th scope="col">SOS Summonable Only</th>
+            @if (Model.AllPokemon.Find(x => x.SOSBattleOnly == true) != null)
+            {
+                <th scope="col">SOS Summonable Only</th>
+            }
+            @if (Model.AllPokemonLocationGameDetails.Count > 0)
+            {
+                <th scope="col">Games Available</th>
+            }
+            @if (Model.AllPokemonLocationWeatherDetails.Count > 0)
+            {
+                <th scope="col">Weather Available</th>
+            }
+            @if (Model.AllPokemonLocationSeasonDetails.Count > 0)
+            {
+                <th scope="col">Seasons Available</th>
+            }
+            @if (Model.AllPokemonLocationTimeDetails.Count > 0)
+            {
+                <th scope="col">Times Available</th>
+            }
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllPokemon)
@@ -35,14 +55,64 @@
                 </td>
                 <td>@item.CaptureMethod.Name</td>
                 <td>@string.Concat(item.ChanceOfEncounter, '%')</td>
-                <td>@item.SOSBattleOnly</td>
+                @if (item.SOSBattleOnly)
+                {
+                    <td>@item.SOSBattleOnly</td>
+                }
+                else if (Model.AllPokemon.Find(x => x.SOSBattleOnly == true) != null)
+                {
+                    <td></td>
+                }
+                @if (Model.AllPokemonLocationGameDetails.Find(x => x.PokemonLocationDetailId == item.Id) != null)
+                {
+                    <td>@string.Join(", ", Model.AllPokemonLocationGameDetails.Where(x => x.PokemonLocationDetailId == item.Id).Select(x => x.Game.Name))</td>
+                }
+                else if (Model.AllPokemonLocationGameDetails.Count > 0)
+                {
+                    <td></td>
+                }
+                @if (Model.AllPokemonLocationWeatherDetails.Find(x => x.PokemonLocationDetailId == item.Id) != null)
+                {
+                    <td>@string.Join(", ", Model.AllPokemonLocationWeatherDetails.Where(x => x.PokemonLocationDetailId == item.Id).Select(x => x.Weather.Name))</td>
+                }
+                else if (Model.AllPokemonLocationWeatherDetails.Count > 0)
+                {
+                    <td></td>
+                }
+                @if (Model.AllPokemonLocationSeasonDetails.Find(x => x.PokemonLocationDetailId == item.Id) != null)
+                {
+                    <td>@string.Join(", ", Model.AllPokemonLocationSeasonDetails.Where(x => x.PokemonLocationDetailId == item.Id).Select(x => x.Season.Name))</td>
+                }
+                else if (Model.AllPokemonLocationSeasonDetails.Count > 0)
+                {
+                    <td></td>
+                }
+                @if (Model.AllPokemonLocationTimeDetails.Find(x => x.PokemonLocationDetailId == item.Id) != null)
+                {
+                    <td>@string.Join(", ", Model.AllPokemonLocationTimeDetails.Where(x => x.PokemonLocationDetailId == item.Id).Select(x => x.Time.Name))</td>
+                }
+                else if (Model.AllPokemonLocationTimeDetails.Count > 0)
+                {
+                    <td></td>
+                }
                 <td>
-                    <a href="@(this.Url.Action("Location", "Edit", new { id = item.Id }))">Edit</a>
-                    @if (this.User.IsInRole("Owner"))
-                    {
+                    <div>
+                        <a href="@(this.Url.Action("PokemonLocationDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit</a>
                         @('|')
-                        <a href="@(this.Url.Action("Location", "Delete", new { id = item.Id }))">Delete</a>
-                    }
+                        <a href="@(this.Url.Action("PokemonLocationGameDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Games</a>
+                        @('|')
+                        <a href="@(this.Url.Action("PokemonLocationWeatherDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Weather</a>
+                    </div>
+                    <div>
+                        <a href="@(this.Url.Action("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Seasons</a>
+                        @('|')
+                        <a href="@(this.Url.Action("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Times</a>
+                        @if (this.User.IsInRole("Owner"))
+                        {
+                            @('|')
+                            <a href="@(this.Url.Action("PokemonLocationDetail", "Delete", new { pokemonLocationDetailId = item.Id }))">Delete</a>
+                        }
+                    </div>
                 </td>
             </tr>
         }
