@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.PokemonLocationDetail>;
+@model Pokedex.Models.PokemonLocationDetailAdminViewModel;
 @{
     Layout = "_Layout";
 }
@@ -7,7 +7,7 @@
     @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@this.Url.Action("PokemonLocationDetail", "Add")" role="button">Add Pokemon Availablility</a>
+            <a class="btn btn-primary" href="@this.Url.Action("PokemonLocationDetail", "Add", new { locationId = @Model.LocationId })" role="button">Add Pokemon Availablility</a>
         </p>
     }
     <table class="table">
@@ -16,13 +16,10 @@
             <th scope="col">Levels Available</th>
             <th scope="col">Capture Method</th>
             <th scope="col">Chance of Encounter</th>
-            <th scope="col">Time of Day</th>
-            <th scope="col">Season</th>
-            <th scope="col">Weather</th>
             <th scope="col">SOS Summonable Only</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach (var item in Model)
+        @foreach (var item in Model.AllPokemon)
         {
             <tr>
                 <td>@item.Pokemon.Name</td>
@@ -38,30 +35,7 @@
                 </td>
                 <td>@item.CaptureMethod.Name</td>
                 <td>@string.Concat(item.ChanceOfEncounter, '%')</td>
-                <td>
-                    @if (item.Time != null)
-                    {
-                        @item.Time.Name;
-                    }
-                </td>
-                <td>
-                    @if (item.Season != null)
-                    {
-                        @item.Season.Name;
-                    }
-                </td>
-                <td
-                >@if (item.Weather != null)
-                    {
-                        @item.Weather.Name;
-                    }
-                </td>
-                <td>
-                    @if (item.CaptureMethod != null)
-                    {
-                        @item.CaptureMethod.Name;
-                    }
-                </td>
+                <td>@item.SOSBattleOnly</td>
                 <td>
                     <a href="@(this.Url.Action("Location", "Edit", new { id = item.Id }))">Edit</a>
                     @if (this.User.IsInRole("Owner"))
