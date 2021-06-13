@@ -1474,6 +1474,64 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokemon_availability/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationDetail(int pokemonLocationDetailId)
+        {
+            PokemonLocationDetail pokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Location");
+            PokemonLocationDetailViewModel model = new PokemonLocationDetailViewModel()
+            {
+                Id = pokemonLocationDetail.Id,
+                PokemonId = pokemonLocationDetail.PokemonId,
+                MinimumLevel = pokemonLocationDetail.MinimumLevel,
+                MaximumLevel = pokemonLocationDetail.MaximumLevel,
+                ChanceOfEncounter = pokemonLocationDetail.ChanceOfEncounter,
+                CaptureMethodId = pokemonLocationDetail.CaptureMethodId,
+                LocationId = pokemonLocationDetail.LocationId,
+                AllPokemon = this.dataService.GetPokemonForLocation(pokemonLocationDetail.Id),
+                AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
+                AllWeathers = this.dataService.GetObjects<Weather>("Name"),
+                AllTimes = this.dataService.GetObjects<Time>("Name"),
+                AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == pokemonLocationDetail.Location.RegionId).ToList(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_availability/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLocationDetail newPokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetail.Id, "Location");
+                PokemonLocationDetailViewModel model = new PokemonLocationDetailViewModel()
+                {
+                    Id = newPokemonLocationDetail.Id,
+                    PokemonId = newPokemonLocationDetail.PokemonId,
+                    MinimumLevel = newPokemonLocationDetail.MinimumLevel,
+                    MaximumLevel = newPokemonLocationDetail.MaximumLevel,
+                    ChanceOfEncounter = newPokemonLocationDetail.ChanceOfEncounter,
+                    CaptureMethodId = newPokemonLocationDetail.CaptureMethodId,
+                    LocationId = newPokemonLocationDetail.Id,
+                    AllPokemon = this.dataService.GetPokemonForLocation(newPokemonLocationDetail.Id),
+                    AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
+                    AllWeathers = this.dataService.GetObjects<Weather>("Name"),
+                    AllTimes = this.dataService.GetObjects<Time>("Name"),
+                    AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                    AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == newPokemonLocationDetail.Location.RegionId).ToList(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdatePokemonLocationDetail(pokemonLocationDetail);
+
+            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { id = pokemonLocationDetail.LocationId });
+        }
+
+        [HttpGet]
         [Route("edit_classification/{id:int}")]
         public IActionResult Classification(int id)
         {
