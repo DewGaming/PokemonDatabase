@@ -21,6 +21,10 @@
             {
                 <th scope="col">SOS Summonable Only</th>
             }
+            @if (Model.AllPokemon.Find(x => x.SpecialSpawn == true) != null)
+            {
+                <th scope="col">Special Spawn Only</th>
+            }
             @if (Model.AllPokemonLocationGameDetails.Count > 0)
             {
                 <th scope="col">Games Available</th>
@@ -54,10 +58,23 @@
                     }
                 </td>
                 <td>@item.CaptureMethod.Name</td>
-                <td>@string.Concat(item.ChanceOfEncounter, '%')</td>
-                @if (item.SOSBattleOnly)
+                <td>
+                    @if (item.ChanceOfEncounter != 0)
+                    {
+                        @string.Concat(item.ChanceOfEncounter, '%')
+                    }
+                    else
+                    {
+                        @("--")
+                    }
+                </td>
+                @if (Model.AllPokemon.Find(x => x.SOSBattleOnly == true) != null)
                 {
                     <td>@item.SOSBattleOnly</td>
+                }
+                @if (Model.AllPokemon.Find(x => x.SpecialSpawn == true) != null)
+                {
+                    <td>@item.SpecialSpawn</td>
                 }
                 else if (Model.AllPokemon.Find(x => x.SOSBattleOnly == true) != null)
                 {

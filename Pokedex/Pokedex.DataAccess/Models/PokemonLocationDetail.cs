@@ -22,5 +22,7 @@ namespace Pokedex.DataAccess.Models
         public CaptureMethod CaptureMethod { get; set; }
         [Display(Name = "Only Encounterable Thru SOS Battles")]
         public bool SOSBattleOnly { get; set; }
+        [Display(Name = "Only Available Thru Special Spawns")]
+        public bool SpecialSpawn { get; set; }
     }
 }
