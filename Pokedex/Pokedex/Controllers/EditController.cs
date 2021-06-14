@@ -1526,6 +1526,11 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            if (pokemonLocationDetail.SpecialSpawn && pokemonLocationDetail.ChanceOfEncounter > 0)
+            {
+                pokemonLocationDetail.ChanceOfEncounter = 0;
+            }
+
             this.dataService.UpdatePokemonLocationDetail(pokemonLocationDetail);
 
             return this.RedirectToAction("PokemonLocationDetails", "Admin", new { id = pokemonLocationDetail.LocationId });

@@ -603,6 +603,11 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            if (pokemonLocationDetail.SpecialSpawn && pokemonLocationDetail.ChanceOfEncounter > 0)
+            {
+                pokemonLocationDetail.ChanceOfEncounter = 0;
+            }
+
             this.dataService.AddPokemonLocationDetail(pokemonLocationDetail);
 
             return this.RedirectToAction("PokemonLocationGameDetail", "Edit", new { pokemonLocationDetailId = pokemonLocationDetail.Id });
