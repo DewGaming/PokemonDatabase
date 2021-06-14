@@ -1532,6 +1532,57 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokemon_game_availability/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationGameDetail(int pokemonLocationDetailId)
+        {
+            Region region = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Location, Location.Region").Location.Region;
+            PokemonLocationGameDetailViewModel model = new PokemonLocationGameDetailViewModel()
+            {
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.RegionId == region.Id).ToList(),
+                PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_game_availability/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationGameDetail(List<int> gameIds, int pokemonLocationDetailId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Region region = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Location, Location.Region").Location.Region;
+                PokemonLocationGameDetailViewModel model = new PokemonLocationGameDetailViewModel()
+                {
+                    AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.RegionId == region.Id).ToList(),
+                    PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+                };
+
+                return this.View(model);
+            }
+
+            PokemonLocationGameDetail pokemonLocationGameDetail;
+            List<PokemonLocationGameDetail> existingEntries = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+            foreach (var g in gameIds)
+            {
+                pokemonLocationGameDetail = new PokemonLocationGameDetail()
+                {
+                    PokemonLocationDetailId = pokemonLocationDetailId,
+                    GameId = g,
+                };
+                this.dataService.AddPokemonLocationGameDetail(pokemonLocationGameDetail);
+            }
+
+            foreach (var e in existingEntries)
+            {
+                this.dataService.DeletePokemonLocationGameDetail(e.Id);
+            }
+
+            return this.RedirectToAction("PokemonLocationWeatherDetail", "Add", new { pokemonLocationDetailId });
+        }
+
+        [HttpGet]
         [Route("edit_classification/{id:int}")]
         public IActionResult Classification(int id)
         {
