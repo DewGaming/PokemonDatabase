@@ -99,7 +99,7 @@ namespace Pokedex.Controllers
         {
             PokemonLocationDetailAdminViewModel model = new PokemonLocationDetailAdminViewModel()
             {
-                AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == id).ToList(),
+                AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == id).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
                 AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game"),
                 AllPokemonLocationWeatherDetails = this.dataService.GetObjects<PokemonLocationWeatherDetail>(includes: "Weather"),
                 AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season"),
