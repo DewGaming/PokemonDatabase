@@ -124,7 +124,7 @@
                         <a href="@(this.Url.Action("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Seasons</a>
                         @('|')
                         <a href="@(this.Url.Action("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Times</a>
-                        @if (this.User.IsInRole("Owner"))
+                        @if (this.User.IsInRole("Owner") && Model.AllPokemonLocationGameDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationWeatherDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationSeasonDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationTimeDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null)
                         {
                             @('|')
                             <a href="@(this.Url.Action("PokemonLocationDetail", "Delete", new { pokemonLocationDetailId = item.Id }))">Delete</a>
