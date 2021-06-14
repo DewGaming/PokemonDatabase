@@ -574,7 +574,6 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         @{
                             var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g == x.GenerationId).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
                             var gamesAvailableInReleaseDates = gamesAvailableInInGeneration.Select(x => x.ReleaseDate).Distinct().ToArray();
-                            string pokemonName = string.Empty;
                         }
                         @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
                         {
@@ -587,15 +586,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             @(" / ")
                                         }
-                                        @if (item.Pokemon.Name.Contains(" ("))
+                                        @if (item.PokemonLocationGameDetails.Find(x => x.GameId == gameList[j].Id) != null)
                                         {
-                                            pokemonName = item.Pokemon.Name.Substring(0, item.Pokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
+                                            <b>@gameList[j].Name</b>
                                         }
                                         else
                                         {
-                                            pokemonName = item.Pokemon.Name.ToLower();
+                                            @gameList[j].Name
                                         }
-                                        @gameList[j].Name
                                     }
                                 </td>
                                 @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
@@ -608,15 +606,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 @(" / ")
                                             }
-                                            @if (item.Pokemon.Name.Contains(" ("))
+                                            @if (item.PokemonLocationGameDetails.Find(x => x.GameId == gameList[j].Id) != null)
                                             {
-                                                pokemonName = item.Pokemon.Name.Substring(0, item.Pokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
+                                                <b>@gameList[j].Name</b>
                                             }
                                             else
                                             {
-                                                pokemonName = item.Pokemon.Name.ToLower();
+                                                @gameList[j].Name
                                             }
-                                            @gameList[j].Name
                                         }
                                     </td>
                                 }

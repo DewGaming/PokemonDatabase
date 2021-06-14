@@ -79,6 +79,11 @@ namespace Pokedex.Models
         public List<Game> GamesAvailableIn { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of pokemon location game details.
+        /// </summary>
+        public List<PokemonLocationGameDetail> PokemonLocationGameDetails { get; set; }
+
+        /// <summary>
         /// Gets or sets the pokemon before any edits.
         /// </summary>
         public Pokemon OriginalPokemon { get; set; }

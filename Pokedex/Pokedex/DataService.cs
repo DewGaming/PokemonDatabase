@@ -311,6 +311,7 @@ namespace Pokedex
 
         public PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form, AppConfig appConfig)
         {
+            List<PokemonLocationDetail> pokemonLocationDetails = this.GetObjects<PokemonLocationDetail>().Where(x => x.PokemonId == pokemon.Id).ToList();
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
             {
                 Pokemon = pokemon,
@@ -324,6 +325,7 @@ namespace Pokedex
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
                 GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
+                PokemonLocationGameDetails = this.GetObjects<PokemonLocationGameDetail>().Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
                 AppConfig = appConfig,
             };
 
