@@ -4,6 +4,24 @@
     Layout = "_layout";
 }
 
+@section styles
+{
+    <style>
+        .gameList {
+            display: inline-block;
+            border: solid #343a40 1px;
+            overflow: hidden;
+        }
+
+        #GameIds {
+            overflow: hidden;
+            padding: 10px;
+            border: none;
+            width: 100%;
+        }
+    </style>
+}
+
 <h2>Update Pokemon Location Games</h2>
 
 <div>
@@ -40,7 +58,7 @@
 
         @Html.ValidationSummary()
 
-        <div class="form-group row">
+        <div class="form-group gameList">
             @Html.Label("Games", "", new { @class = "col-md-2" })
             @Html.ListBoxFor(x => x.GameIds, new SelectList(Model.AllGames, "Id", "Name"), new { size = Model.AllGames.Count(), htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
         </div>
