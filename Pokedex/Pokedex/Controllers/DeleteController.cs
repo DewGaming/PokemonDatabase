@@ -257,7 +257,7 @@ namespace Pokedex.Controllers
             int locationId = pokemonLocationDetail.LocationId;
             this.dataService.DeletePokemonLocationDetail(pokemonLocationDetail.Id);
 
-            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { id = locationId });
+            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId });
         }
 
         [HttpGet]

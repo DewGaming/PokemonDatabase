@@ -1548,7 +1548,7 @@ namespace Pokedex.Controllers
 
             this.dataService.UpdatePokemonLocationDetail(pokemonLocationDetail);
 
-            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { id = pokemonLocationDetail.LocationId });
+            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId = pokemonLocationDetail.LocationId });
         }
 
         [HttpGet]

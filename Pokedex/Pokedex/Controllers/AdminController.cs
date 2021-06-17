@@ -94,17 +94,17 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("pokemon_availability/{id:int}")]
-        public IActionResult PokemonLocationDetails(int id)
+        [Route("pokemon_availability/{locationId:int}")]
+        public IActionResult PokemonLocationDetails(int locationId)
         {
             PokemonLocationDetailAdminViewModel model = new PokemonLocationDetailAdminViewModel()
             {
-                AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == id).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
+                AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
                 AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game"),
                 AllPokemonLocationWeatherDetails = this.dataService.GetObjects<PokemonLocationWeatherDetail>(includes: "Weather"),
                 AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season"),
                 AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time"),
-                Location = this.dataService.GetObjectByPropertyValue<Location>("Id", id, "Region"),
+                Location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId, "Region"),
             };
 
             return this.View(model);

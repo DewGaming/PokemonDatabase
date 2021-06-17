@@ -24,7 +24,7 @@
                 <td>
                     <a href="@(this.Url.Action("Location", "Edit", new { id = item.Id }))">Edit</a>
                     @('|')
-                    <a href="@(this.Url.Action("PokemonLocationDetails", "Admin", new { id = item.Id }))">Edit Pokemon Availability</a>
+                    <a href="@(this.Url.Action("PokemonLocationDetails", "Admin", new { locationId = item.Id }))">Edit Pokemon Availability</a>
                     @if (this.User.IsInRole("Owner"))
                     {
                         @if (!(Model.AllPokemonLocationDetails.Exists(x => x.LocationId == item.Id)))
