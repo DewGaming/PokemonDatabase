@@ -104,7 +104,7 @@ namespace Pokedex.Controllers
                 AllPokemonLocationWeatherDetails = this.dataService.GetObjects<PokemonLocationWeatherDetail>(includes: "Weather"),
                 AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season"),
                 AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time"),
-                LocationId = id,
+                Location = this.dataService.GetObjectByPropertyValue<Location>("Id", id, "Region"),
             };
 
             return this.View(model);

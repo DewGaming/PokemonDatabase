@@ -34,8 +34,8 @@ namespace Pokedex.Models
         public List<PokemonLocationTimeDetail> AllPokemonLocationTimeDetails { get; set; }
 
         /// <summary>
-        /// Gets or sets the location id.
+        /// Gets or sets the location.
         /// </summary>
-        public int LocationId { get; set; }
+        public Location Location { get; set; }
     }
 }

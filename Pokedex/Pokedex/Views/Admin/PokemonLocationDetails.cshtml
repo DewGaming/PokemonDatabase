@@ -1,14 +1,16 @@
 @model Pokedex.Models.PokemonLocationDetailAdminViewModel;
-@using Pokedex.DataAccess.Models;
 @{
     Layout = "_Layout";
 }
+
+<h4><b>Update Pokemon Availablility for @Model.Location.Name in @Model.Location.Region.Name</b></h4>
+<br>
 
 <div class="locationTable">
     @if (this.User.IsInRole("Owner"))
     {
         <p>
-            <a class="btn btn-primary" href="@this.Url.Action("PokemonLocationDetail", "Add", new { locationId = @Model.LocationId })" role="button">Add Pokemon Availablility</a>
+            <a class="btn btn-primary" href="@this.Url.Action("PokemonLocationDetail", "Add", new { locationId = @Model.Location.Id })" role="button">Add Pokemon Availablility</a>
         </p>
     }
     <table class="table">
