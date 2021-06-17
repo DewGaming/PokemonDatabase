@@ -14,6 +14,11 @@ namespace Pokedex.Models
         public List<Game> AllGames { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all game region details.
+        /// </summary>
+        public List<GameRegionDetail> AllGameRegionDetails { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokemon.
         /// </summary>
         public List<Pokemon> AllPokemon { get; set; }

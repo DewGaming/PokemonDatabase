@@ -463,7 +463,7 @@ namespace Pokedex
         public List<Pokemon> GetPokemonForLocation(int locationId)
         {
             Region region = this.GetObjectByPropertyValue<Location>("Id", locationId, "Region").Region;
-            List<Game> games = this.GetObjects<Game>().Where(x => x.RegionId == region.Id).ToList();
+            List<Game> games = this.GetObjects<GameRegionDetail>(includes: "Game").Where(x => x.RegionId == region.Id).Select(x => x.Game).ToList();
             List<Pokemon> pokemonList = new List<Pokemon>();
             foreach (var g in games)
             {
@@ -1997,6 +1997,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddGameRegionDetail(GameRegionDetail gameRegionDetail)
+        {
+            this.dataContext.GameRegionDetails.Add(gameRegionDetail);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdatePokemonLocationTimeDetail(PokemonLocationTimeDetail locationTimeDetail)
         {
             this.dataContext.PokemonLocationTimeDetails.Update(locationTimeDetail);
@@ -2361,7 +2367,20 @@ namespace Pokedex
         public void DeleteGame(int id)
         {
             Game game = this.GetObjectByPropertyValue<Game>("Id", id);
+            List<GameRegionDetail> gameRegionDetails = this.GetObjects<GameRegionDetail>().Where(x => x.GameId == id).ToList();
+            foreach (var r in gameRegionDetails)
+            {
+                this.dataContext.GameRegionDetails.Remove(r);
+            }
+
             this.dataContext.Games.Remove(game);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeleteGameRegionDetail(int id)
+        {
+            GameRegionDetail gameRegionDetail = this.GetObjectByPropertyValue<GameRegionDetail>("Id", id);
+            this.dataContext.GameRegionDetails.Remove(gameRegionDetail);
             this.dataContext.SaveChanges();
         }
 

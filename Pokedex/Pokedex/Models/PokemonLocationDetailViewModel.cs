@@ -32,10 +32,5 @@ namespace Pokedex.Models
         /// Gets or sets a list of all seasons.
         /// </summary>
         public List<Season> AllSeasons { get; set; }
-
-        /// <summary>
-        /// Gets or sets a list of all games.
-        /// </summary>
-        public List<Game> AllGames { get; set; }
     }
 }

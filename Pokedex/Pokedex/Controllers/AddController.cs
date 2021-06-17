@@ -575,7 +575,6 @@ namespace Pokedex.Controllers
                 AllWeathers = this.dataService.GetObjects<Weather>("Name"),
                 AllTimes = this.dataService.GetObjects<Time>("Name"),
                 AllSeasons = this.dataService.GetObjects<Season>("Name"),
-                AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == location.RegionId).ToList(),
             };
 
             return this.View(model);
@@ -597,7 +596,6 @@ namespace Pokedex.Controllers
                     AllWeathers = this.dataService.GetObjects<Weather>("Name"),
                     AllTimes = this.dataService.GetObjects<Time>("Name"),
                     AllSeasons = this.dataService.GetObjects<Season>("Name"),
-                    AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == location.RegionId).ToList(),
                 };
 
                 return this.View(model);
@@ -878,7 +876,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_game")]
-        public IActionResult Game(Game game)
+        public IActionResult Game(Game game, List<int> regionIds)
         {
             if (!this.ModelState.IsValid)
             {
@@ -892,6 +890,17 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.AddGame(game);
+
+            foreach (var r in regionIds)
+            {
+                GameRegionDetail gameRegionDetail = new GameRegionDetail()
+                {
+                    GameId = game.Id,
+                    RegionId = r,
+                };
+
+                this.dataService.AddGameRegionDetail(gameRegionDetail);
+            }
 
             return this.RedirectToAction("Games", "Admin");
         }

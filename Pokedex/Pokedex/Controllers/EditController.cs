@@ -108,7 +108,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit_game/{id:int}")]
-        public IActionResult Game(Game game)
+        public IActionResult Game(Game game, List<int> regionIds)
         {
             if (!this.ModelState.IsValid)
             {
@@ -125,6 +125,23 @@ namespace Pokedex.Controllers
                 };
 
                 return this.View(model);
+            }
+
+            GameRegionDetail gameRegionDetail;
+            List<GameRegionDetail> existingEntries = this.dataService.GetObjects<GameRegionDetail>().Where(x => x.GameId == game.Id).ToList();
+            foreach (var r in regionIds)
+            {
+                gameRegionDetail = new GameRegionDetail()
+                {
+                    RegionId = r,
+                    GameId = game.Id,
+                };
+                this.dataService.AddGameRegionDetail(gameRegionDetail);
+            }
+
+            foreach (var e in existingEntries)
+            {
+                this.dataService.DeleteGameRegionDetail(e.Id);
             }
 
             this.dataService.UpdateGame(game);
@@ -1492,7 +1509,6 @@ namespace Pokedex.Controllers
                 AllWeathers = this.dataService.GetObjects<Weather>("Name"),
                 AllTimes = this.dataService.GetObjects<Time>("Name"),
                 AllSeasons = this.dataService.GetObjects<Season>("Name"),
-                AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == pokemonLocationDetail.Location.RegionId).ToList(),
             };
 
             return this.View(model);
@@ -1520,7 +1536,6 @@ namespace Pokedex.Controllers
                     AllWeathers = this.dataService.GetObjects<Weather>("Name"),
                     AllTimes = this.dataService.GetObjects<Time>("Name"),
                     AllSeasons = this.dataService.GetObjects<Season>("Name"),
-                    AllGames = this.dataService.GetObjects<Game>("Name").Where(x => x.RegionId == newPokemonLocationDetail.Location.RegionId).ToList(),
                 };
 
                 return this.View(model);
@@ -1543,7 +1558,7 @@ namespace Pokedex.Controllers
             Region region = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Location, Location.Region").Location.Region;
             PokemonLocationGameDetailViewModel model = new PokemonLocationGameDetailViewModel()
             {
-                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.RegionId == region.Id).ToList(),
+                AllGames = this.dataService.GetObjects<GameRegionDetail>("Game.ReleaseDate, Game.Id", "Game").Where(x => x.RegionId == region.Id).Select(x => x.Game).ToList(),
                 PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
             };
 
@@ -1560,7 +1575,7 @@ namespace Pokedex.Controllers
                 Region region = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Location, Location.Region").Location.Region;
                 PokemonLocationGameDetailViewModel model = new PokemonLocationGameDetailViewModel()
                 {
-                    AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.RegionId == region.Id).ToList(),
+                    AllGames = this.dataService.GetObjects<GameRegionDetail>("Game.ReleaseDate, Game.Id", "Game").Where(x => x.RegionId == region.Id).Select(x => x.Game).ToList(),
                     PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
                 };
 

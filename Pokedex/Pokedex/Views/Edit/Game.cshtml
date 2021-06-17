@@ -4,6 +4,24 @@
     Layout = "_layout";
 }
 
+@section styles
+{
+    <style>
+        .regionList {
+            display: inline-block;
+            border: solid #343a40 1px;
+            overflow: hidden;
+        }
+
+        #RegionIds {
+            overflow: hidden;
+            padding: 10px;
+            border: none;
+            width: 100%;
+        }
+    </style>
+}
+
 @section scripts
 {
     <script>
@@ -62,10 +80,9 @@
             @Html.ValidationMessageFor(x => x.GenerationId)
         </div>
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.RegionId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.RegionId, new SelectList(Model.AllRegions, "Id", "Name"), "", new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.RegionId)
+        <div class="form-group regionList">
+            @Html.Label("Regions", "", new { @class = "col-md-2" })
+            @Html.ListBoxFor(x => x.RegionIds, new SelectList(Model.AllRegions, "Id", "Name"), new { size = Model.AllRegions.Count(), htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
         </div>
 
         <p>

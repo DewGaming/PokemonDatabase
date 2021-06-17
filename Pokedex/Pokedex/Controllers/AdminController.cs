@@ -115,7 +115,8 @@ namespace Pokedex.Controllers
         {
             AdminGameViewModel model = new AdminGameViewModel()
             {
-                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id", "Generation, Region").ToList(),
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id", "Generation").ToList(),
+                AllGameRegionDetails = this.dataService.GetObjects<GameRegionDetail>(includes: "Region").ToList(),
                 AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
             };
 

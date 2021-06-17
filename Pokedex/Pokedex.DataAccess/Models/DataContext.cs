@@ -70,6 +70,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<PokemonLocationWeatherDetail> PokemonLocationWeatherDetails { get; set; }
         public DbSet<PokemonLocationSeasonDetail> PokemonLocationSeasonDetails { get; set; }
         public DbSet<PokemonLocationTimeDetail> PokemonLocationTimeDetails { get; set; }
+        public DbSet<GameRegionDetail> GameRegionDetails { get; set; }
         public DbSet<Time> Times { get; set; }
         public DbSet<Weather> Weathers { get; set; }
         public DbSet<PokemonLocationDetail> PokemonLocationDetails { get; set; }

@@ -18,8 +18,5 @@ namespace Pokedex.DataAccess.Models
         [Required, Display(Name = "Generation")]
         public int GenerationId { get; set; }
         public Generation Generation { get; set; }
-        [Display(Name = "Region"), Required]
-        public int RegionId { get; set; }
-        public Region Region { get; set; }
     }
 }
