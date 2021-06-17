@@ -1,0 +1,70 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.PokemonLocationWeatherDetailViewModel
+@{
+    Layout = "_layout";
+}
+
+@section styles
+{
+    <style>
+        .weatherList {
+            display: inline-block;
+            border: solid #343a40 1px;
+            overflow: hidden;
+        }
+
+        #WeatherIds {
+            overflow: hidden;
+            padding: 10px;
+            border: none;
+            width: 100%;
+        }
+    </style>
+}
+
+<h2>Update Pokemon Location Weathers</h2>
+
+<div>
+    <table class="table">
+        <tr>
+            <th scope="col">Pokemon</th>
+            <th scope="col">Levels Available</th>
+            <th scope="col">Capture Method</th>
+            <th scope="col">Chance of Encounter</th>
+        </tr>
+        <tr>
+            <td>@Model.PokemonLocationDetail.Pokemon.Name</td>
+            <td>
+                @if(Model.PokemonLocationDetail.MinimumLevel == Model.PokemonLocationDetail.MaximumLevel)
+                {
+                    @string.Concat("Level ", Model.PokemonLocationDetail.MaximumLevel);
+                }
+                else
+                {
+                    @string.Concat("Level ", Model.PokemonLocationDetail.MinimumLevel, '-', Model.PokemonLocationDetail.MaximumLevel);
+                }
+            </td>
+            <td>@Model.PokemonLocationDetail.CaptureMethod.Name</td>
+            <td>@string.Concat(Model.PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+        </tr>
+    </table>
+</div>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {      
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary()
+
+        <div class="form-group weatherList">
+            @Html.Label("Weathers", "", new { @class = "col-md-2" })
+            @Html.ListBoxFor(x => x.WeatherIds, new SelectList(Model.AllWeathers, "Id", "Name"), new { size = Model.AllWeathers.Count(), htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+        </div>
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Save</button>
+            <a class="btn btn-primary" href="@(this.Url.Action("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId = Model.PokemonLocationDetail.Id }))">Skip</a>
+        </p>
+    }
+</div>

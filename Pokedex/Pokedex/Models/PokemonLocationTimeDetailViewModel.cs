@@ -6,7 +6,7 @@ namespace Pokedex.Models
     /// <summary>
     /// The class that is used to represent the pokemon location time view model.
     /// </summary>
-    public class PokemonLocationTimeDetailViewModel : PokemonLocationTimeDetail
+    public class PokemonLocationTimeDetailViewModel
     {
         /// <summary>
         /// Gets or sets a list of all times.
@@ -14,8 +14,13 @@ namespace Pokedex.Models
         public List<Time> AllTimes { get; set; }
 
         /// <summary>
-        /// Gets or sets the location id.
+        /// Gets or sets a list of all pokemon locaiton detail.
         /// </summary>
-        public int LocationId { get; set; }
+        public PokemonLocationDetail PokemonLocationDetail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected time id.
+        /// </summary>
+        public List<int> TimeIds { get; set; }
     }
 }

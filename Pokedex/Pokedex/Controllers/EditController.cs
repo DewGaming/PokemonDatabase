@@ -1605,7 +1605,154 @@ namespace Pokedex.Controllers
                 this.dataService.DeletePokemonLocationGameDetail(e.Id);
             }
 
-            return this.RedirectToAction("PokemonLocationWeatherDetail", "Add", new { pokemonLocationDetailId });
+            return this.RedirectToAction("PokemonLocationWeatherDetail", "Edit", new { pokemonLocationDetailId });
+        }
+
+        [HttpGet]
+        [Route("edit_pokemon_availability_weather/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationWeatherDetail(int pokemonLocationDetailId)
+        {
+            PokemonLocationWeatherDetailViewModel model = new PokemonLocationWeatherDetailViewModel()
+            {
+                AllWeathers = this.dataService.GetObjects<Weather>("Name"),
+                PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_availability_weather/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationWeatherDetail(List<int> weatherIds, int pokemonLocationDetailId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLocationWeatherDetailViewModel model = new PokemonLocationWeatherDetailViewModel()
+                {
+                    AllWeathers = this.dataService.GetObjects<Weather>("Name"),
+                    PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+                };
+
+                return this.View(model);
+            }
+
+            PokemonLocationWeatherDetail pokemonLocationWeatherDetail;
+            List<PokemonLocationWeatherDetail> existingEntries = this.dataService.GetObjects<PokemonLocationWeatherDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+            foreach (var w in weatherIds)
+            {
+                pokemonLocationWeatherDetail = new PokemonLocationWeatherDetail()
+                {
+                    PokemonLocationDetailId = pokemonLocationDetailId,
+                    WeatherId = w,
+                };
+                this.dataService.AddPokemonLocationWeatherDetail(pokemonLocationWeatherDetail);
+            }
+
+            foreach (var e in existingEntries)
+            {
+                this.dataService.DeletePokemonLocationWeatherDetail(e.Id);
+            }
+
+            return this.RedirectToAction("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId });
+        }
+
+        [HttpGet]
+        [Route("edit_pokemon_availability_season/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationSeasonDetail(int pokemonLocationDetailId)
+        {
+            PokemonLocationSeasonDetailViewModel model = new PokemonLocationSeasonDetailViewModel()
+            {
+                AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_availability_season/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationSeasonDetail(List<int> seasonIds, int pokemonLocationDetailId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLocationSeasonDetailViewModel model = new PokemonLocationSeasonDetailViewModel()
+                {
+                    AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                    PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+                };
+
+                return this.View(model);
+            }
+
+            PokemonLocationSeasonDetail pokemonLocationSeasonDetail;
+            List<PokemonLocationSeasonDetail> existingEntries = this.dataService.GetObjects<PokemonLocationSeasonDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+            foreach (var s in seasonIds)
+            {
+                pokemonLocationSeasonDetail = new PokemonLocationSeasonDetail()
+                {
+                    PokemonLocationDetailId = pokemonLocationDetailId,
+                    SeasonId = s,
+                };
+                this.dataService.AddPokemonLocationSeasonDetail(pokemonLocationSeasonDetail);
+            }
+
+            foreach (var e in existingEntries)
+            {
+                this.dataService.DeletePokemonLocationSeasonDetail(e.Id);
+            }
+
+            return this.RedirectToAction("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId });
+        }
+
+        [HttpGet]
+        [Route("edit_pokemon_availability_time/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationTimeDetail(int pokemonLocationDetailId)
+        {
+            PokemonLocationTimeDetailViewModel model = new PokemonLocationTimeDetailViewModel()
+            {
+                AllTimes = this.dataService.GetObjects<Time>(),
+                PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokemon_availability_time/{pokemonLocationDetailId:int}")]
+        public IActionResult PokemonLocationTimeDetail(List<int> timeIds, int pokemonLocationDetailId)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                PokemonLocationTimeDetailViewModel model = new PokemonLocationTimeDetailViewModel()
+                {
+                    AllTimes = this.dataService.GetObjects<Time>(),
+                    PokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod"),
+                };
+
+                return this.View(model);
+            }
+
+            PokemonLocationTimeDetail pokemonLocationTimeDetail;
+            List<PokemonLocationTimeDetail> existingEntries = this.dataService.GetObjects<PokemonLocationTimeDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+            foreach (var t in timeIds)
+            {
+                pokemonLocationTimeDetail = new PokemonLocationTimeDetail()
+                {
+                    PokemonLocationDetailId = pokemonLocationDetailId,
+                    TimeId = t,
+                };
+                this.dataService.AddPokemonLocationTimeDetail(pokemonLocationTimeDetail);
+            }
+
+            foreach (var e in existingEntries)
+            {
+                this.dataService.DeletePokemonLocationTimeDetail(e.Id);
+            }
+
+            return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId).LocationId });
         }
 
         [HttpGet]
