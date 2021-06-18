@@ -86,6 +86,20 @@ function lookupGeneration(generationId) {
   });
 }
 
+function lookupRegion(regionId) {
+  $('button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.locationList').removeClass('active');
+  $('.locationList > .grid-container').empty();
+  $('button#Region' + regionId).addClass('active');
+
+  $('.grid-container').load('/get-location-by-region/' + regionId, function () {
+    $('.locationList').addClass('active');
+  });
+}
+
 function lookupAvailableGame(gameId) {
   if (!$('.active').is($('#Game' + gameId))) {
     $('button').each(function () {

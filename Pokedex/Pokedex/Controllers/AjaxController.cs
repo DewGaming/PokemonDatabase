@@ -1427,6 +1427,28 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("get-location-by-region/{regionId:int}")]
+        public IActionResult GetLocationByRegion(int regionId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                LocationAdminViewModel model = new LocationAdminViewModel()
+                {
+                    AllLocations = this.dataService.GetObjects<Location>("RegionId, Name", "Region").Where(x => x.RegionId == regionId).ToList(),
+                    AllPokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>(),
+                };
+
+                return this.PartialView("_FillRegionLocations", model);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("update-game-availability")]
         public string UpdateGameAvailability(int gameId, List<int> pokemonList)
         {

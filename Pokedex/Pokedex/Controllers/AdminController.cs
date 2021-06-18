@@ -53,11 +53,7 @@ namespace Pokedex.Controllers
         [Route("locations")]
         public IActionResult Locations()
         {
-            LocationAdminViewModel model = new LocationAdminViewModel()
-            {
-                AllLocations = this.dataService.GetObjects<Location>("RegionId, Name", "Region"),
-                AllPokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>(),
-            };
+            List<Region> model = this.dataService.GetObjects<Region>();
 
             return this.View(model);
         }
