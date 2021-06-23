@@ -85,12 +85,13 @@ namespace Pokedex.Controllers
         [Route("pokemon_availability/{locationId:int}")]
         public IActionResult PokemonLocationDetails(int locationId)
         {
+            List<PokemonLocationDetail> pokemonList = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
             PokemonLocationDetailAdminViewModel model = new PokemonLocationDetailAdminViewModel()
             {
-                AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
-                AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game"),
-                AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season"),
-                AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time"),
+                AllPokemon = pokemonList,
+                AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
+                AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
+                AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
                 Location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId, "Region"),
             };
 
