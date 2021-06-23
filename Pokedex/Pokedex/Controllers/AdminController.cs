@@ -74,14 +74,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("weathers")]
-        public IActionResult Weathers()
-        {
-            List<Weather> model = this.dataService.GetObjects<Weather>("Name");
-
-            return this.View(model);
-        }
-
         [Route("seasons")]
         public IActionResult Seasons()
         {
@@ -97,7 +89,6 @@ namespace Pokedex.Controllers
             {
                 AllPokemon = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
                 AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game"),
-                AllPokemonLocationWeatherDetails = this.dataService.GetObjects<PokemonLocationWeatherDetail>(includes: "Weather"),
                 AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season"),
                 AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time"),
                 Location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId, "Region"),

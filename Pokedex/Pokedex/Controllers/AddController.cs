@@ -443,28 +443,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_weather")]
-        public IActionResult Weather()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_weather")]
-        public IActionResult Weather(Weather weather)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddWeather(weather);
-
-            return this.RedirectToAction("Weathers", "Admin");
-        }
-
-        [HttpGet]
         [Route("add_time")]
         public IActionResult Time()
         {
@@ -572,7 +550,6 @@ namespace Pokedex.Controllers
                 LocationId = location.Id,
                 AllPokemon = this.dataService.GetPokemonForLocation(location.Id),
                 AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
-                AllWeathers = this.dataService.GetObjects<Weather>("Name"),
                 AllTimes = this.dataService.GetObjects<Time>("Name"),
                 AllSeasons = this.dataService.GetObjects<Season>("Name"),
             };
@@ -593,7 +570,6 @@ namespace Pokedex.Controllers
                     LocationId = location.Id,
                     AllPokemon = this.dataService.GetPokemonForLocation(location.Id),
                     AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
-                    AllWeathers = this.dataService.GetObjects<Weather>("Name"),
                     AllTimes = this.dataService.GetObjects<Time>("Name"),
                     AllSeasons = this.dataService.GetObjects<Season>("Name"),
                 };

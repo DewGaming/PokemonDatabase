@@ -19,11 +19,6 @@ namespace Pokedex.Models
         public List<CaptureMethod> AllCaptureMethods { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all weathers.
-        /// </summary>
-        public List<Weather> AllWeathers { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of all times.
         /// </summary>
         public List<Time> AllTimes { get; set; }

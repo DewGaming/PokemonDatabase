@@ -1967,21 +1967,9 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void AddWeather(Weather weather)
-        {
-            this.dataContext.Weathers.Add(weather);
-            this.dataContext.SaveChanges();
-        }
-
         public void AddPokemonLocationGameDetail(PokemonLocationGameDetail locationGameDetail)
         {
             this.dataContext.PokemonLocationGameDetails.Add(locationGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLocationWeatherDetail(PokemonLocationWeatherDetail locationWeatherDetail)
-        {
-            this.dataContext.PokemonLocationWeatherDetails.Add(locationWeatherDetail);
             this.dataContext.SaveChanges();
         }
 
@@ -2015,21 +2003,9 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void UpdatePokemonLocationWeatherDetail(PokemonLocationWeatherDetail locationWeatherDetail)
-        {
-            this.dataContext.PokemonLocationWeatherDetails.Update(locationWeatherDetail);
-            this.dataContext.SaveChanges();
-        }
-
         public void UpdatePokemonLocationGameDetail(PokemonLocationGameDetail locationGameDetail)
         {
             this.dataContext.PokemonLocationGameDetails.Update(locationGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateWeather(Weather weather)
-        {
-            this.dataContext.Weathers.Update(weather);
             this.dataContext.SaveChanges();
         }
 
@@ -2391,13 +2367,6 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
-        public void DeletePokemonLocationWeatherDetail(int id)
-        {
-            PokemonLocationWeatherDetail locationWeatherDetail = this.GetObjectByPropertyValue<PokemonLocationWeatherDetail>("Id", id);
-            this.dataContext.PokemonLocationWeatherDetails.Remove(locationWeatherDetail);
-            this.dataContext.SaveChanges();
-        }
-
         public void DeletePokemonLocationSeasonDetail(int id)
         {
             PokemonLocationSeasonDetail locationSeasonDetail = this.GetObjectByPropertyValue<PokemonLocationSeasonDetail>("Id", id);
@@ -2478,13 +2447,6 @@ namespace Pokedex
         {
             Time time = this.GetObjectByPropertyValue<Time>("Id", id);
             this.dataContext.Times.Remove(time);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteWeather(int id)
-        {
-            Weather weather = this.GetObjectByPropertyValue<Weather>("Id", id);
-            this.dataContext.Weathers.Remove(weather);
             this.dataContext.SaveChanges();
         }
 
