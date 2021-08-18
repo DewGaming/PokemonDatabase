@@ -1173,6 +1173,8 @@ namespace Pokedex.Controllers
             alternatePokemon.ClassificationId = pokemon.ClassificationId;
             alternatePokemon.IsComplete = false;
 
+            this.dataService.AddPokemon(alternatePokemon);
+
             IFormFile upload;
 
             if (fileUpload == null && urlUpload != null)
@@ -1209,7 +1211,7 @@ namespace Pokedex.Controllers
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                IFormFile spriteUpload = this.dataService.FormatFavIcon(upload);
+                upload = this.dataService.FormatFavIcon(upload);
 
                 request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, alternatePokemon.Id.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
@@ -1217,7 +1219,7 @@ namespace Pokedex.Controllers
 
                 using (Stream requestStream = request.GetRequestStream())
                 {
-                    await spriteUpload.CopyToAsync(requestStream).ConfigureAwait(false);
+                    await upload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -1249,8 +1251,6 @@ namespace Pokedex.Controllers
                 using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
                 Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
-
-            this.dataService.AddPokemon(alternatePokemon);
 
             PokemonEggGroupDetail eggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
