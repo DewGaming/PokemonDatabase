@@ -1258,6 +1258,7 @@ namespace Pokedex.Controllers
                 PrimaryEggGroupId = eggGroups.PrimaryEggGroupId,
                 SecondaryEggGroupId = eggGroups.SecondaryEggGroupId,
                 PokemonId = alternatePokemon.Id,
+                GenerationId = this.dataService.GetObjectByPropertyValue<Game>("Id", alternatePokemon.GameId).GenerationId,
             };
             this.dataService.AddPokemonEggGroups(alternatePokemonEggGroups);
 
@@ -1275,7 +1276,7 @@ namespace Pokedex.Controllers
                 GameId = alternatePokemon.GameId,
             });
 
-            return this.RedirectToAction("Typing", "Add", new { pokemonId = alternatePokemon.Id });
+            return this.RedirectToAction("Typing", "Add", new { pokemonId = alternatePokemon.Id, generationId = alternatePokemonEggGroups.GenerationId });
         }
 
         [HttpGet]
