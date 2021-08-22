@@ -15,18 +15,26 @@
         @Html.ValidationSummary()
 
         <div class="form-group row">
-            <label for="OfficialArtwork" class="col-md-2">Official Artwork File</label>
-            <div class="col-md-8 addPokemonImage">
-                <input type="file" accept="image/png" id="OfficialArtwork" name="upload" />
+            <label for="NormalArtwork" class="col-md-2">Normal Artwork File</label>
+            <div class="col-md-3 addPokemonImage">
+                <input style="width: 100%" type="file" accept="image/png" id="NormalArtwork" name="normalUpload" />
+            </div>
+            <p>Or</p>
+            <label for="NormalArtworkUrl" class="col-md-2">Normal Artwork URL</label>
+            <div class="col-md-3 addPokemonImage">
+                <input style="width: 100%" type="text" accept="image/png" id="NormalArtworkUrl" name="normalUrlUpload" />
             </div>
         </div>
 
-        <p>Or</p>
-
         <div class="form-group row">
-            <label for="OfficialArtworkUrl" class="col-md-2">Official Artwork URL</label>
-            <div class="col-md-8 addPokemonImage">
-                <input type="text" accept="image/png" id="OfficialArtworkUrl" name="urlUpload" />
+            <label for="ShinyArtwork" class="col-md-2">Shiny Artwork File</label>
+            <div class="col-md-3 addPokemonImage">
+                <input style="width: 100%" type="file" accept="image/png" id="ShinyArtwork" name="shinyUpload" />
+            </div>
+            <p>Or</p>
+            <label for="ShinyArtworkUrl" class="col-md-2">Shiny Artwork URL</label>
+            <div class="col-md-3 addPokemonImage">
+                <input style="width: 100%" type="text" accept="image/png" id="ShinyArtworkUrl" name="shinyUrlUpload" />
             </div>
         </div>
 

@@ -920,7 +920,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokemon")]
-        public IActionResult Pokemon(BasePokemonViewModel newPokemon, IFormFile fileUpload, string urlUpload)
+        public IActionResult Pokemon(BasePokemonViewModel newPokemon, IFormFile normalUpload, string normalUrlUpload, IFormFile shinyUpload, string shinyUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -1008,11 +1008,12 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.UploadImages(fileUpload, urlUpload, newPokemon);
-
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", newPokemon.GameId);
 
             this.dataService.AddPokemon(newPokemon);
+
+            this.UploadImages(normalUpload, normalUrlUpload, newPokemon);
+            this.UploadImages(shinyUpload, shinyUrlUpload, newPokemon);
 
             this.dataService.AddPokemonGameDetail(new PokemonGameDetail()
             {
@@ -1047,9 +1048,8 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_alternate_form/{pokemonId:int}")]
-        public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile fileUpload, string urlUpload)
+        public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile normalUpload, string normalUrlUpload, IFormFile shinyUpload, string shinyUrlUpload)
         {
-            List<PokemonFormDetail> originalPokemonForms = this.dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
             if (!this.ModelState.IsValid)
             {
                 Pokemon originalPokemon = this.dataService.GetPokemonById(pokemon.OriginalPokemonId);
@@ -1066,6 +1066,8 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
+
+            List<PokemonFormDetail> originalPokemonForms = this.dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
 
             foreach (var p in originalPokemonForms)
             {
@@ -1101,7 +1103,8 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPokemon(alternatePokemon);
 
-            this.UploadImages(fileUpload, urlUpload, alternatePokemon);
+            this.UploadImages(normalUpload, normalUrlUpload, alternatePokemon);
+            this.UploadImages(shinyUpload, shinyUrlUpload, alternatePokemon);
 
             PokemonEggGroupDetail eggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
