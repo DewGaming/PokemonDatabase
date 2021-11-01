@@ -1490,7 +1490,7 @@ namespace Pokedex
 
         public List<Game> GetAvailableGames(int pokemonTeamId)
         {
-            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", pokemonTeamId);
+            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", pokemonTeamId, "FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon, Game");
             List<Game> availableGames = new List<Game>();
             if (pokemonTeam.FirstPokemonId != null)
             {
