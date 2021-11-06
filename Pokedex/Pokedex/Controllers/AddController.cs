@@ -1048,7 +1048,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_alternate_form/{pokemonId:int}")]
-        public async Task<IActionResult> AltForm(AlternateFormViewModel pokemon, IFormFile normalUpload, string normalUrlUpload, IFormFile shinyUpload, string shinyUrlUpload)
+        public IActionResult AltForm(AlternateFormViewModel pokemon, IFormFile normalUpload, string normalUrlUpload, IFormFile shinyUpload, string shinyUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
