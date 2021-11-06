@@ -51,7 +51,7 @@ $('#Pokeball').on('input', function () {
     checkSpecialPokeball();
 });
 
-$('.calcutatorButton').on('click', function() {
+$('.calculatorButton').on('click', function() {
     $.ajax({
         url: '/get-capture-chance/',
         method: 'POST',
