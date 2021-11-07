@@ -492,6 +492,19 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                bool isColosseum = false;
+                bool isGaleOfDarkness = false;
+                if (generationId == 99)
+                {
+                    isColosseum = true;
+                    generationId = 3;
+                }
+                else if (generationId == 100)
+                {
+                    isGaleOfDarkness = true;
+                    generationId = 3;
+                }
+
                 Pokemon pokemon = this.dataService.GetPokemonById(pokemonId);
                 Pokeball pokeball = this.dataService.GetPokeball(pokeballId);
                 PokemonLegendaryDetail legendary = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
@@ -503,271 +516,266 @@ namespace Pokedex.Controllers
                     statusEffect = this.dataService.GetObjectByPropertyValue<Status>("Id", statusId).Effect;
                 }
 
-                float catchRate = captureRates.First(x => x.GenerationId <= generationId).CaptureRate.CatchRate;
-                float pokeballEffect = 1;
-                if (statusEffect == 0)
-                {
-                    statusEffect = 1;
-                }
-
-                float heavyValue = 0f;
-
-                switch (pokeball.Name)
-                {
-                    case "Heavy Ball":
-                        foreach (var w in pokeballDetails)
-                        {
-                            if (pokemon.Weight < Convert.ToInt16(w.Effect))
-                            {
-                                heavyValue = (int)w.CatchModifier;
-                                break;
-                            }
-                        }
-
-                        catchRate += heavyValue;
-                        if (catchRate <= 0)
-                        {
-                            catchRate = 1;
-                        }
-
-                        break;
-                    case "Nest Ball":
-                        if (encounterLevel <= 29)
-                        {
-                            pokeballEffect = (41f - encounterLevel) / 10f;
-                        }
-
-                        break;
-                    case "Repeat Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == previouslyCaught).CatchModifier;
-                        break;
-                    case "Dusk Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == caveOrNight).CatchModifier;
-                        break;
-                    case "Quick Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (turnCount == 1)).CatchModifier;
-                        break;
-                    case "Net Ball":
-                        PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemon.Id).Last();
-                        bool netBallCondition = false;
-                        if (typeDetail.PrimaryType.Name == "Bug" || typeDetail.PrimaryType.Name == "Water" || typeDetail.SecondaryType.Name == "Bug" || typeDetail.SecondaryType.Name == "Water")
-                        {
-                            netBallCondition = true;
-                        }
-
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == netBallCondition).CatchModifier;
-                        break;
-                    case "Dive Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == surfing).CatchModifier;
-                        break;
-                    case "Lure Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == fishing).CatchModifier;
-                        break;
-                    case "Dream Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (statusId == 2)).CatchModifier;
-                        break;
-                    case "Fast Ball":
-                        BaseStat baseStats = this.dataService.GetBaseStat(pokemon.Id).Last();
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (baseStats.Speed >= 100)).CatchModifier;
-                        break;
-                    case "Level Ball":
-                        float multiple = userLevel / encounterLevel;
-                        pokeballEffect = pokeballDetails.Find(x => Convert.ToDouble(x.Effect) < multiple).CatchModifier;
-                        break;
-                    case "Love Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == sameGender).CatchModifier;
-                        break;
-                    case "Timer Ball":
-                        pokeballEffect = 1f + ((turnCount - 1) * (1229f / 4096f));
-                        if (pokeballEffect > 4)
-                        {
-                            pokeballEffect = 4;
-                        }
-
-                        break;
-                    case "Moon Ball":
-                        List<Evolution> evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id);
-                        bool moonStoneEvolve = false;
-                        foreach (var e in evolutions)
-                        {
-                            if (e.EvolutionMethod.Name == "Evolutionary Item" && e.EvolutionDetails == "Moon Stone")
-                            {
-                                moonStoneEvolve = true;
-                                break;
-                            }
-                        }
-
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == moonStoneEvolve).CatchModifier;
-                        break;
-                    case "Beast Ball":
-                        pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (legendary?.LegendaryType.Type == "Ultra Beast")).CatchModifier;
-                        break;
-                    default:
-                        pokeballEffect = pokeballDetails[0].CatchModifier;
-                        break;
-                }
-
-                float catchValue;
                 double captureChance;
                 string chanceText = string.Empty;
 
-                if (generationId == 1)
+                if ((isColosseum && pokemon.Name == "Makuhita") || (isGaleOfDarkness && pokemon.Name == "Teddiursa"))
                 {
-                    float greatBallModifier = 12f;
-                    if (statusId == 1 || statusId == 2)
-                    {
-                        statusEffect = 25f;
-                    }
-                    else if (statusId == 3 || statusId == 4 || statusId == 5)
-                    {
-                        statusEffect = 12f;
-                    }
-                    else
-                    {
-                        statusEffect = 0f;
-                    }
-
-                    if (pokeballId == 1)
-                    {
-                        pokeballEffect = 256f;
-                    }
-                    else if (pokeballId == 2)
-                    {
-                        pokeballEffect = 201f;
-                        greatBallModifier = 8f;
-                    }
-                    else
-                    {
-                        pokeballEffect = 151f;
-                    }
-
-                    double hpFactor = Math.Floor(Math.Min(1020f / (greatBallModifier * healthPercentage), 255f));
-                    captureChance = (statusEffect + (Math.Min(catchRate + 1f, pokeballEffect - statusEffect) * ((hpFactor + 1) / 256))) / pokeballEffect;
-                }
-                else if (generationId == 2)
-                {
-                    if (pokeball.Id == 24)
-                    {
-                        pokeballEffect = 1f;
-                    }
-                    else if (pokeball.Id == 18)
-                    {
-                        if (pokemonId == 1347 || pokemonId == 46 || pokemonId == 148)
-                        {
-                            pokeballEffect = 4f;
-                        }
-                        else
-                        {
-                            pokeballEffect = 1f;
-                        }
-                    }
-                    else if (pokeball.Id == 20)
-                    {
-                        if (pokemon.Weight >= 409.6m)
-                        {
-                            heavyValue = 40f;
-                        }
-                        else if (pokemon.Weight >= 307.2m)
-                        {
-                            heavyValue = 30f;
-                        }
-                        else if (pokemon.Weight >= 204.8m)
-                        {
-                            heavyValue = 20f;
-                        }
-                        else if (pokemon.Weight < 102.4m)
-                        {
-                            heavyValue = -20f;
-                        }
-
-                        catchRate += heavyValue;
-                    }
-
-                    if (statusId == 1 || statusId == 2)
-                    {
-                        statusEffect = 10f;
-                    }
-                    else
-                    {
-                        statusEffect = 0f;
-                    }
-
-                    catchRate *= pokeballEffect;
-
-                    if (catchRate > 255f)
-                    {
-                        catchRate = 255f;
-                    }
-                    else if (catchRate < 0f)
-                    {
-                        catchRate = 1f;
-                    }
-
-                    if (pokeball.Id == 21)
-                    {
-                        captureChance = ((Math.Floor(Math.Max(catchRate, 1f)) % 256f) + statusEffect + 1) / 256;
-                    }
-                    else
-                    {
-                        captureChance = ((Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f) + statusEffect + 1) / 256;
-                    }
-                }
-                else if (generationId == 3 || generationId == 4)
-                {
-                    if (statusId == 1 || statusId == 2)
-                    {
-                        statusEffect = 2f;
-                    }
-
-                    if (pokeball.Id == 20)
-                    {
-                        if (pokemon.Weight >= 409.6m)
-                        {
-                            heavyValue = 40f;
-                        }
-                        else if (pokemon.Weight >= 307.2m)
-                        {
-                            heavyValue = 30f;
-                        }
-                        else if (pokemon.Weight >= 204.8m)
-                        {
-                            heavyValue = 20f;
-                        }
-                        else if (pokemon.Weight < 102.4m)
-                        {
-                            heavyValue = -20f;
-                        }
-
-                        catchRate += heavyValue;
-                    }
-
-                    catchValue = (1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect;
-                    if (pokeball.Id != 20)
-                    {
-                        catchValue *= pokeballEffect;
-                        if (catchRate > 255f)
-                        {
-                            catchRate = 255f;
-                        }
-                        else if (catchRate < 0f)
-                        {
-                            catchRate = 1f;
-                        }
-                    }
-
-                    captureChance = Math.Pow(Math.Floor(1048560 / Math.Floor(Math.Sqrt(Math.Floor(Math.Sqrt(16711680 / catchValue))))) / 65536, 4);
+                    captureChance = 101;
                 }
                 else
                 {
-                    if (legendary?.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
+                    float catchRate = 0;
+
+                    if (isColosseum)
                     {
-                        pokeballEffect = 0.1f;
+                        switch (pokemon.Name)
+                        {
+                            case "Bayleef": case "Croconaw": case "Quilava":
+                                catchRate = 180;
+                                break;
+                            case "Mantine": case "Misdreavus":
+                                catchRate = 90;
+                                break;
+                            case "Togetic": case "Tropius":
+                                catchRate = 45;
+                                break;
+                            case "Entei": case "Metagross": case "Raikou": case "Skarmory": case "Suicune":
+                                catchRate = 15;
+                                break;
+                            case "Tyranitar":
+                                catchRate = 10;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else if (isGaleOfDarkness)
+                    {
+                        switch (pokemon.Name)
+                        {
+                            case "Houndour":
+                                catchRate = 255;
+                                break;
+                            case "Delcatty": case "Golduck": case "Magcargo": case "Mawile": case "Venomoth":
+                                catchRate = 120;
+                                break;
+                            case "Magneton": case "Marowak": case "Rapidash": case "Starmie":
+                                catchRate = 110;
+                                break;
+                            case "Dugtrio": case "Lunatone": case "Rhydon":
+                                catchRate = 100;
+                                break;
+                            case "Banette": case "Beedrill": case "Butterfree": case "Dodrio": case "Electabuzz": case "Hitmonchan": case "Hitmonlee": case "Kangaskhan": case "Lickitung": case "Magmar": case "Mr. Mime": case "Pinsir": case "Poliwrath": case "Sableye": case "Scyther": case "Solrock": case "Swellow": case "Tangela":
+                                catchRate = 90;
+                                break;
+                            case "Altaria": case "Exeggutor": case "Farfetch'd": case "Hypno": case "Lapras": case "Manectric": case "Primeape": case "Salamence": case "Tauros":
+                                catchRate = 80;
+                                break;
+                            case "Chansey": case "Snorlax":
+                                catchRate = 70;
+                                break;
+                            case "Articuno": case "Moltres": case "Zapdos ":
+                                catchRate = 25;
+                                break;
+                            default:
+                                break;
+                        }
                     }
 
-                    catchValue = Math.Min((1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect, 255);
-                    if (pokeball.Name != "Heavy Ball")
+                    if (catchRate == 0)
                     {
-                        catchValue *= pokeballEffect;
+                        catchRate = captureRates.First(x => x.GenerationId <= generationId).CaptureRate.CatchRate;
+                    }
+
+                    float pokeballEffect = 1;
+                    if (statusEffect == 0)
+                    {
+                        statusEffect = 1;
+                    }
+
+                    float heavyValue = 0f;
+
+                    switch (pokeball.Name)
+                    {
+                        case "Heavy Ball":
+                            foreach (var w in pokeballDetails)
+                            {
+                                if (pokemon.Weight < Convert.ToInt16(w.Effect))
+                                {
+                                    heavyValue = (int)w.CatchModifier;
+                                    break;
+                                }
+                            }
+
+                            catchRate += heavyValue;
+                            if (catchRate <= 0)
+                            {
+                                catchRate = 1;
+                            }
+
+                            break;
+                        case "Nest Ball":
+                            if (encounterLevel <= 29)
+                            {
+                                pokeballEffect = (41f - encounterLevel) / 10f;
+                            }
+
+                            break;
+                        case "Repeat Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == previouslyCaught).CatchModifier;
+                            break;
+                        case "Dusk Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == caveOrNight).CatchModifier;
+                            break;
+                        case "Quick Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (turnCount == 1)).CatchModifier;
+                            break;
+                        case "Net Ball":
+                            PokemonTypeDetail typeDetail = this.dataService.GetPokemonWithTypes(pokemon.Id).Last();
+                            bool netBallCondition = false;
+                            if (typeDetail.PrimaryType.Name == "Bug" || typeDetail.PrimaryType.Name == "Water" || typeDetail.SecondaryType.Name == "Bug" || typeDetail.SecondaryType.Name == "Water")
+                            {
+                                netBallCondition = true;
+                            }
+
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == netBallCondition).CatchModifier;
+                            break;
+                        case "Dive Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == surfing).CatchModifier;
+                            break;
+                        case "Lure Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == fishing).CatchModifier;
+                            break;
+                        case "Dream Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (statusId == 2)).CatchModifier;
+                            break;
+                        case "Fast Ball":
+                            BaseStat baseStats = this.dataService.GetBaseStat(pokemon.Id).Last();
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (baseStats.Speed >= 100)).CatchModifier;
+                            break;
+                        case "Level Ball":
+                            float multiple = userLevel / encounterLevel;
+                            pokeballEffect = pokeballDetails.Find(x => Convert.ToDouble(x.Effect) < multiple).CatchModifier;
+                            break;
+                        case "Love Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == sameGender).CatchModifier;
+                            break;
+                        case "Timer Ball":
+                            pokeballEffect = 1f + ((turnCount - 1) * (1229f / 4096f));
+                            if (pokeballEffect > 4)
+                            {
+                                pokeballEffect = 4;
+                            }
+
+                            break;
+                        case "Moon Ball":
+                            List<Evolution> evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id);
+                            bool moonStoneEvolve = false;
+                            foreach (var e in evolutions)
+                            {
+                                if (e.EvolutionMethod.Name == "Evolutionary Item" && e.EvolutionDetails == "Moon Stone")
+                                {
+                                    moonStoneEvolve = true;
+                                    break;
+                                }
+                            }
+
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == moonStoneEvolve).CatchModifier;
+                            break;
+                        case "Beast Ball":
+                            pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (legendary?.LegendaryType.Type == "Ultra Beast")).CatchModifier;
+                            break;
+                        default:
+                            pokeballEffect = pokeballDetails[0].CatchModifier;
+                            break;
+                    }
+
+                    float catchValue;
+
+                    if (generationId == 1)
+                    {
+                        float greatBallModifier = 12f;
+                        if (statusId == 1 || statusId == 2)
+                        {
+                            statusEffect = 25f;
+                        }
+                        else if (statusId == 3 || statusId == 4 || statusId == 5)
+                        {
+                            statusEffect = 12f;
+                        }
+                        else
+                        {
+                            statusEffect = 0f;
+                        }
+
+                        if (pokeballId == 1)
+                        {
+                            pokeballEffect = 256f;
+                        }
+                        else if (pokeballId == 2)
+                        {
+                            pokeballEffect = 201f;
+                            greatBallModifier = 8f;
+                        }
+                        else
+                        {
+                            pokeballEffect = 151f;
+                        }
+
+                        double hpFactor = Math.Floor(Math.Min(1020f / (greatBallModifier * healthPercentage), 255f));
+                        captureChance = (statusEffect + (Math.Min(catchRate + 1f, pokeballEffect - statusEffect) * ((hpFactor + 1) / 256))) / pokeballEffect;
+                    }
+                    else if (generationId == 2)
+                    {
+                        if (pokeball.Id == 24)
+                        {
+                            pokeballEffect = 1f;
+                        }
+                        else if (pokeball.Id == 18)
+                        {
+                            if (pokemonId == 1347 || pokemonId == 46 || pokemonId == 148)
+                            {
+                                pokeballEffect = 4f;
+                            }
+                            else
+                            {
+                                pokeballEffect = 1f;
+                            }
+                        }
+                        else if (pokeball.Id == 20)
+                        {
+                            if (pokemon.Weight >= 409.6m)
+                            {
+                                heavyValue = 40f;
+                            }
+                            else if (pokemon.Weight >= 307.2m)
+                            {
+                                heavyValue = 30f;
+                            }
+                            else if (pokemon.Weight >= 204.8m)
+                            {
+                                heavyValue = 20f;
+                            }
+                            else if (pokemon.Weight < 102.4m)
+                            {
+                                heavyValue = -20f;
+                            }
+
+                            catchRate += heavyValue;
+                        }
+
+                        if (statusId == 1 || statusId == 2)
+                        {
+                            statusEffect = 10f;
+                        }
+                        else
+                        {
+                            statusEffect = 0f;
+                        }
+
+                        catchRate *= pokeballEffect;
+
                         if (catchRate > 255f)
                         {
                             catchRate = 255f;
@@ -776,13 +784,89 @@ namespace Pokedex.Controllers
                         {
                             catchRate = 1f;
                         }
+
+                        if (pokeball.Id == 21)
+                        {
+                            captureChance = ((Math.Floor(Math.Max(catchRate, 1f)) % 256f) + statusEffect + 1) / 256;
+                        }
+                        else
+                        {
+                            captureChance = ((Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f) + statusEffect + 1) / 256;
+                        }
+                    }
+                    else if (generationId == 3 || generationId == 4)
+                    {
+                        if (statusId == 1 || statusId == 2)
+                        {
+                            statusEffect = 2f;
+                        }
+
+                        if (pokeball.Id == 20)
+                        {
+                            if (pokemon.Weight >= 409.6m)
+                            {
+                                heavyValue = 40f;
+                            }
+                            else if (pokemon.Weight >= 307.2m)
+                            {
+                                heavyValue = 30f;
+                            }
+                            else if (pokemon.Weight >= 204.8m)
+                            {
+                                heavyValue = 20f;
+                            }
+                            else if (pokemon.Weight < 102.4m)
+                            {
+                                heavyValue = -20f;
+                            }
+
+                            catchRate += heavyValue;
+                        }
+
+                        catchValue = (1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect;
+                        if (pokeball.Id != 20)
+                        {
+                            catchValue *= pokeballEffect;
+                            if (catchRate > 255f)
+                            {
+                                catchRate = 255f;
+                            }
+                            else if (catchRate < 0f)
+                            {
+                                catchRate = 1f;
+                            }
+                        }
+
+                        captureChance = Math.Pow(Math.Floor(1048560 / Math.Floor(Math.Sqrt(Math.Floor(Math.Sqrt(16711680 / catchValue))))) / 65536, 4);
+                    }
+                    else
+                    {
+                        if (legendary?.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
+                        {
+                            pokeballEffect = 0.1f;
+                        }
+
+                        catchValue = Math.Min((1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect, 255);
+                        if (pokeball.Name != "Heavy Ball")
+                        {
+                            catchValue *= pokeballEffect;
+                            if (catchRate > 255f)
+                            {
+                                catchRate = 255f;
+                            }
+                            else if (catchRate < 0f)
+                            {
+                                catchRate = 1f;
+                            }
+                        }
+
+                        captureChance = Math.Pow(Math.Floor(65536 / Math.Pow(255 / catchValue, 3f / 16f)) / 65536, 4);
                     }
 
-                    captureChance = Math.Pow(Math.Floor(65536 / Math.Pow(255 / catchValue, 3f / 16f)) / 65536, 4);
+                    captureChance *= 100;
+                    chanceText = Math.Round(captureChance, 3) + "% chance";
                 }
 
-                captureChance *= 100;
-                chanceText = Math.Round(captureChance, 2) + "% chance";
                 if (captureChance >= 100)
                 {
                     chanceText = "Guaranteed";

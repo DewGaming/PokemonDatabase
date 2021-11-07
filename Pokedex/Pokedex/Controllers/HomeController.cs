@@ -369,6 +369,9 @@ namespace Pokedex.Controllers
                 AllGenerations = this.dataService.GetObjects<Generation>(),
             };
 
+            model.AllGenerations.Insert(3, new Generation() { Id = 99 });
+            model.AllGenerations.Insert(4, new Generation() { Id = 100 });
+
             return this.View(model);
         }
 

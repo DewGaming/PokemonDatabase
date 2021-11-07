@@ -71,8 +71,11 @@ $('.regionList').on('change', function() {
     checkPokeball();
 })
 
-var generationId, pokemonId, pokeballId, updateIDs = function () {
+var generationId, actualGenerationId, pokemonId, pokeballId, updateIDs = function () {
     generationId = $('.regionList > select').val();
+    if (generationId == 99 || generationId == 100) {
+        generationId = 3;
+    }
     pokemonId = $('.pokemonList > select').val();
     pokeballId = $('.pokeballList > select').val();
 }, checkPokemon = function () {

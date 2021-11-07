@@ -40,7 +40,21 @@
                 <select id="Generation" class="form-control" name="Generation">
                     @foreach(var p in @Model.AllGenerations)
                     {
-                        <option value='@p.Id'>Generation @p.Id</option>
+                        <option value='@p.Id'>
+                            @if (p.Id == 99)
+                            {
+                                @("Generation 3 (Colosseum)")
+                            }
+                            else if (p.Id == 100)
+                            {
+                                
+                                @("Generation 3 (XD: Gale of Darkness)")
+                            }
+                            else
+                            {
+                                @string.Concat("Generation ", p.Id)
+                            }
+                        </option>
                     }
                 </select>
             </div>
