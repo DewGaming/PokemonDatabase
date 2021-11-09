@@ -516,12 +516,13 @@ namespace Pokedex.Controllers
                     statusEffect = this.dataService.GetObjectByPropertyValue<Status>("Id", statusId).Effect;
                 }
 
-                double captureChance;
+                double successfulCapture;
+                List<double> wobbles = new List<double>();
                 string chanceText = string.Empty;
 
                 if ((isColosseum && pokemon.Name == "Makuhita") || (isGaleOfDarkness && pokemon.Name == "Teddiursa"))
                 {
-                    captureChance = 101;
+                    successfulCapture = 101;
                 }
                 else
                 {
@@ -691,7 +692,7 @@ namespace Pokedex.Controllers
                             break;
                     }
 
-                    float catchValue;
+                    double catchValue;
 
                     if (generationId == 1)
                     {
@@ -724,7 +725,7 @@ namespace Pokedex.Controllers
                         }
 
                         double hpFactor = Math.Floor(Math.Min(1020f / (greatBallModifier * healthPercentage), 255f));
-                        captureChance = (statusEffect + (Math.Min(catchRate + 1f, pokeballEffect - statusEffect) * ((hpFactor + 1) / 256))) / pokeballEffect;
+                        successfulCapture = (statusEffect + (Math.Min(catchRate + 1f, pokeballEffect - statusEffect) * ((hpFactor + 1) / 256))) / pokeballEffect;
                     }
                     else if (generationId == 2)
                     {
@@ -787,11 +788,11 @@ namespace Pokedex.Controllers
 
                         if (pokeball.Id == 21)
                         {
-                            captureChance = ((Math.Floor(Math.Max(catchRate, 1f)) % 256f) + statusEffect + 1) / 256;
+                            successfulCapture = ((Math.Floor(Math.Max(catchRate, 1f)) % 256f) + statusEffect + 1) / 256;
                         }
                         else
                         {
-                            captureChance = ((Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f) + statusEffect + 1) / 256;
+                            successfulCapture = ((Math.Floor(Math.Max(catchRate * (3f - (2f * healthPercentage)) / 3f, 1f)) % 256f) + statusEffect + 1) / 256;
                         }
                     }
                     else if (generationId == 3 || generationId == 4)
@@ -823,7 +824,7 @@ namespace Pokedex.Controllers
                             catchRate += heavyValue;
                         }
 
-                        catchValue = (1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect;
+                        catchValue = Math.Floor((1 - ((2 * healthPercentage) / 3)) * catchRate * statusEffect);
                         if (pokeball.Id != 20)
                         {
                             catchValue *= pokeballEffect;
@@ -837,7 +838,22 @@ namespace Pokedex.Controllers
                             }
                         }
 
-                        captureChance = Math.Pow(Math.Floor(1048560 / Math.Floor(Math.Sqrt(Math.Floor(Math.Sqrt(16711680 / catchValue))))) / 65536, 4);
+                        double captureChance = Math.Floor(1048560 / Math.Floor(Math.Sqrt(Math.Floor(Math.Sqrt(16711680 / catchValue))))) / 65536;
+                        double chanceInverse = 1 - captureChance;
+
+                        successfulCapture = Math.Pow(captureChance, 4);
+                        wobbles = new List<double>()
+                        {
+                            chanceInverse,
+                            captureChance * chanceInverse,
+                            Math.Pow(captureChance, 2) * chanceInverse,
+                            Math.Pow(captureChance, 3) * chanceInverse,
+                        };
+
+                        for (var i = 0; i < 4; i++)
+                        {
+                            wobbles[i] = Math.Round(wobbles[i] * 100, 3);
+                        }
                     }
                     else
                     {
@@ -846,33 +862,62 @@ namespace Pokedex.Controllers
                             pokeballEffect = 0.1f;
                         }
 
-                        catchValue = Math.Min((1f - ((2f * healthPercentage) / 3f)) * catchRate * statusEffect, 255);
+                        catchValue = Math.Min((1d - ((2d * healthPercentage) / 3d)) * catchRate * statusEffect, 255);
                         if (pokeball.Name != "Heavy Ball")
                         {
                             catchValue *= pokeballEffect;
-                            if (catchRate > 255f)
+                            if (catchValue > 255f)
                             {
-                                catchRate = 255f;
+                                catchValue = 255f;
                             }
-                            else if (catchRate < 0f)
+                            else if (catchValue < 0f)
                             {
-                                catchRate = 1f;
+                                catchValue = 1f;
                             }
                         }
 
-                        captureChance = Math.Pow(Math.Floor(65536 / Math.Pow(255 / catchValue, 3f / 16f)) / 65536, 4);
+                        double captureChance = Math.Floor(65536f / Math.Sqrt(Math.Sqrt(255f / catchValue))) / 65536;
+                        double chanceInverse = 1 - captureChance;
+
+                        successfulCapture = Math.Pow(captureChance, 3);
+                        wobbles = new List<double>()
+                        {
+                            chanceInverse,
+                            captureChance * chanceInverse,
+                            0,
+                            Math.Pow(captureChance, 2) * chanceInverse,
+                        };
+
+                        for (var i = 0; i < 4; i++)
+                        {
+                            wobbles[i] = Math.Round(wobbles[i] * 100, 3);
+                        }
                     }
 
-                    captureChance *= 100;
-                    chanceText = Math.Round(captureChance, 3) + "% chance";
+                    successfulCapture *= 100;
+                    chanceText = Math.Round(successfulCapture, 3) + "% chance";
                 }
 
-                if (captureChance >= 100)
+                if (successfulCapture >= 100)
                 {
-                    chanceText = "Guaranteed";
+                    return string.Concat("Guaranteed to catch ", pokemon.Name, " at ", (healthPercentage * 100).ToString(), "% health in a ", pokeball.Name);
                 }
+                else
+                {
+                    string successString = string.Concat(chanceText, " to catch ", pokemon.Name, " at ", (healthPercentage * 100).ToString(), "% health in a ", pokeball.Name, ".");
+                    if (wobbles.Count > 0)
+                    {
+                        successString = string.Concat(successString, "|", wobbles[3].ToString(), "% chance of it wobbling 3 times", ".|");
+                        if (wobbles[2] > 0)
+                        {
+                            successString = string.Concat(successString, wobbles[2].ToString(), "% chance of it wobbling 2 times", ".|");
+                        }
 
-                return chanceText + " to catch " + pokemon.Name + " at " + (healthPercentage * 100) + "% health in a " + pokeball.Name;
+                        successString = string.Concat(successString, wobbles[1].ToString(), "% chance of it wobbling 1 time", ".|", wobbles[0].ToString(), "% chance of it not wobbling at all.");
+                    }
+
+                    return successString;
+                }
             }
             else
             {

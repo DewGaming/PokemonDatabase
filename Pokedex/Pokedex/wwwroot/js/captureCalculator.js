@@ -58,7 +58,12 @@ $('.calculatorButton').on('click', function() {
         data: { 'pokemonId': $('#Pokemon').val(), 'generationId': $('#Generation').val(), 'healthPercentage': $('.healthSlider').val() / 100, 'pokeballId': $('#Pokeball').val(), 'statusId': $('#Status').val(), 'turnCount': $('.turnSlider').val(), 'encounterLevel': $('.encounterLevelSlider').val(), 'userLevel': $('.userLevelSlider').val(), 'surfing': $('#Surfing').is(':checked'), 'fishing': $('#Fishing').is(':checked'), 'previouslyCaught': $('#PreviouslyCaught').is(':checked'), 'caveOrNight': $('#CaveOrNight').is(':checked'), 'sameGender': $("input[name='Gender']:checked").val() }
     })
         .done(function (data) {
-            $('.calculatedChance').text(data);
+            var calculatedChanceOutput = '';
+            $.each(data.split("|"), function()
+            {
+                calculatedChanceOutput += '<div>' + this + '</div>';
+            })
+            $('.calculatedChance').html(calculatedChanceOutput);
         })
         .fail(function () {
             alert("Failed to grab technique!");
