@@ -576,7 +576,7 @@ namespace Pokedex.Controllers
                             case "Chansey": case "Snorlax":
                                 catchRate = 70;
                                 break;
-                            case "Articuno": case "Moltres": case "Zapdos ":
+                            case "Articuno": case "Moltres": case "Zapdos":
                                 catchRate = 25;
                                 break;
                             default:
