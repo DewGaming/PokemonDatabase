@@ -54,9 +54,9 @@ namespace Pokedex.Models
         public List<PokemonCaptureRateDetail> CaptureRates { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's pre evolution, if applicable.
+        /// Gets or sets the pokemon's pre evolutions, if applicable.
         /// </summary>
-        public Evolution PreEvolution { get; set; }
+        public List<Evolution> PreEvolutions { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon's evolutions, if applicable.

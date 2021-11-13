@@ -16,6 +16,7 @@
 
         @Html.HiddenFor(x => x.Id)
         @Html.HiddenFor(x => x.EvolutionPokemonId)
+        @Html.HiddenFor(x => x.GenerationId)
 
         <div class="form-group row">
             @Html.LabelFor(x => x.PreevolutionPokemonId, string.Concat("Pre-Evolution Of ", @Model.EvolutionPokemon.Name), new { @class = "col-md-3" })

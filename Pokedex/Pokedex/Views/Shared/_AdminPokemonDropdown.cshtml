@@ -81,14 +81,14 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit EV Yields</a></li>
         }
-        @if (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id)))
+        @if (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id)))
         {
             <hr class="adminOptionSeparator">
             <span class="adminMenuTitle">Add Relations</span>
         }
-        @if (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
+        @if (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Pre-Evolution</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Pre-Evolution</a></li>
         }
         @if (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
@@ -99,9 +99,9 @@
             <hr class="adminOptionSeparator">
             <span class="adminMenuTitle">Edit Relations</span>
         }
-        @if (Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id))
+        @if (Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
-            <li><a class="dropdown-item" href="@(this.Url.Action("Evolution", "Edit", new { pokemonId = Model.Pokemon.Id }))">Edit Pre-Evolution</a></li>
+            <li><a class="dropdown-item" href="@(this.Url.Action("Evolution", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit Pre-Evolution</a></li>
         }
         @if (Model.DropdownViewModel.AllPokemon.AllAltForms.Exists(x => x.OriginalPokemonId == Model.Pokemon.Id) && Model.Pokemon.Name.IndexOf(" (") < 0)
         {

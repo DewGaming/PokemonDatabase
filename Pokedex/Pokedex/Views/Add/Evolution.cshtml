@@ -15,6 +15,7 @@
         @Html.ValidationSummary()
 
         @Html.HiddenFor(x => x.EvolutionPokemonId)
+        @Html.HiddenFor(x => x.GenerationId)
 
         <div class="form-group row">
             @Html.LabelFor(x => x.PreevolutionPokemonId, string.Concat("Pre-Evolution Of ", @Model.EvolutionPokemon.Name), new { @class = "col-md-3" })
@@ -33,7 +34,6 @@
             @Html.EditorFor(x => x.EvolutionDetails, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.EvolutionDetails)
         </div>
-
         <p>
             <button type="submit" class="btn btn-primary" role="button">Add</button>
             @if (!Model.EvolutionPokemon.IsComplete && this.User.IsInRole("Owner"))

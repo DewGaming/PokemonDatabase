@@ -216,7 +216,7 @@ namespace Pokedex.Controllers
                     Abilities = this.dataService.GetPokemonWithAbilities(pokemon.Id),
                     EggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.Id),
                     CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
-                    PreEvolution = this.dataService.GetPreEvolutionIncludeIncomplete(pokemon.Id),
+                    PreEvolutions = this.dataService.GetPreEvolutionIncludeIncomplete(pokemon.Id),
                     Evolutions = this.dataService.GetPokemonEvolutionsIncludeIncomplete(pokemon.Id),
                     Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
                     AppConfig = this.appConfig,

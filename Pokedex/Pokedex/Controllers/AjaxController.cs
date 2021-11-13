@@ -671,7 +671,7 @@ namespace Pokedex.Controllers
 
                             break;
                         case "Moon Ball":
-                            List<Evolution> evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id);
+                            List<Evolution> evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id).Where(x => x.GenerationId == generationId).ToList();
                             bool moonStoneEvolve = false;
                             foreach (var e in evolutions)
                             {

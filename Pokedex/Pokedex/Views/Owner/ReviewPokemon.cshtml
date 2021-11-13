@@ -1,6 +1,13 @@
+@using Pokedex.DataAccess.Models;
 @model Pokedex.Models.PokemonViewModel
 @{
     Layout = "_Layout";
+    Evolution preEvolution = null;
+    if (Model.PreEvolutions.Count() > 0)
+    {
+        preEvolution = Model.PreEvolutions.Find(x => x.GenerationId == Model.Pokemon.Game.GenerationId);
+    }
+
     ViewBag.Title = string.Concat("Review ", @Model.Pokemon.Name);
 }
 
@@ -316,11 +323,11 @@
                 </tbody>
             </table>
         </div>
-        @if (Model.PreEvolution != null || Model.Evolutions.Count > 0)
+        @if (preEvolution != null || Model.Evolutions.Count > 0)
         {
             <br>
             <div class="evolutions">
-                @if (Model.PreEvolution != null)
+                @if (preEvolution != null)
                 {
                     <table class="preEvolutionTable tableWithHeaders">
                         <thead>
@@ -332,15 +339,15 @@
                         <tbody class="evolutionPokemon">
                             <tr>
                                 <th>
-                                    <img class="lightshadowed" title="@Model.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
-                                    <span class="evolutionLink">@Model.PreEvolution.PreevolutionPokemon.Name</span>
+                                    <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                    <span class="evolutionLink">@preEvolution.PreevolutionPokemon.Name</span>
                                 </th>
                                 <td>
-                                    @Model.PreEvolution.EvolutionMethod.Name
-                                    @if (@Model.PreEvolution.EvolutionDetails != null)
+                                    @preEvolution.EvolutionMethod.Name
+                                    @if (@preEvolution.EvolutionDetails != null)
                                     {
                                         <br>
-                                        @(string.Concat(" (", @Model.PreEvolution.EvolutionDetails, ")"));
+                                        @(string.Concat(" (", @preEvolution.EvolutionDetails, ")"));
                                     }
                                 </td>
                             </tr>

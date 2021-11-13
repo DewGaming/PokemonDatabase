@@ -16,5 +16,8 @@ namespace Pokedex.DataAccess.Models
         [Required, Display(Name = "Pokedex Number of Evolution")]
         public int EvolutionPokemonId { get; set; }
         public Pokemon EvolutionPokemon { get; set; }
+        [Required, Display(Name = "Generation Evolution Takes Effect")]
+        public int GenerationId { get; set; }
+        public Generation Generation { get; set; }
     }
 }

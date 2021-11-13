@@ -37,8 +37,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_evolution/{pokemonId:int}")]
-        public IActionResult Evolution(int pokemonId)
+        [Route("add_evolution/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Evolution(int pokemonId, int generationId)
         {
             Pokemon evolutionPokemon = this.dataService.GetPokemonById(pokemonId);
             EvolutionViewModel model = new EvolutionViewModel()
@@ -46,6 +46,7 @@ namespace Pokedex.Controllers
                 AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
                 EvolutionPokemon = evolutionPokemon,
                 EvolutionPokemonId = evolutionPokemon.Id,
+                GenerationId = generationId,
             };
 
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != pokemonId).ToList();
@@ -62,7 +63,7 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_evolution/{pokemonId:int}")]
+        [Route("add_evolution/{pokemonId:int}/{generationId:int}")]
         public IActionResult Evolution(Evolution evolution)
         {
             if (!this.ModelState.IsValid)
@@ -72,6 +73,7 @@ namespace Pokedex.Controllers
                     AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
                     EvolutionPokemon = evolution.EvolutionPokemon,
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
+                    GenerationId = evolution.GenerationId,
                 };
                 List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
                 List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);

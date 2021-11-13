@@ -150,13 +150,16 @@ namespace Pokedex
             return formItemList;
         }
 
-        public Evolution GetPreEvolution(int pokemonId)
+        public List<Evolution> GetPreEvolution(int pokemonId)
         {
-            Evolution preEvolution = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemon.Id == pokemonId && x.PreevolutionPokemon.IsComplete);
+            List<Evolution> preEvolution = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Where(x => x.EvolutionPokemon.Id == pokemonId && x.PreevolutionPokemon.IsComplete).ToList();
 
-            if (preEvolution != null && this.CheckIfAltForm(preEvolution.PreevolutionPokemonId))
+            foreach (var p in preEvolution)
             {
-                preEvolution.PreevolutionPokemon.Name = string.Concat(preEvolution.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(preEvolution.PreevolutionPokemonId), ")");
+                if (this.CheckIfAltForm(p.PreevolutionPokemonId))
+                {
+                    p.PreevolutionPokemon.Name = string.Concat(p.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(p.PreevolutionPokemonId), ")");
+                }
             }
 
             return preEvolution;
@@ -167,13 +170,16 @@ namespace Pokedex
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
         /// <returns>Returns the pre evolution.</returns>
-        public Evolution GetPreEvolutionIncludeIncomplete(int pokemonId)
+        public List<Evolution> GetPreEvolutionIncludeIncomplete(int pokemonId)
         {
-            Evolution preEvolution = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemon.Id == pokemonId);
+            List<Evolution> preEvolution = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Where(x => x.EvolutionPokemon.Id == pokemonId).ToList();
 
-            if (preEvolution != null && this.CheckIfAltForm(preEvolution.PreevolutionPokemonId))
+            foreach (var p in preEvolution)
             {
-                preEvolution.PreevolutionPokemon.Name = string.Concat(preEvolution.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(preEvolution.PreevolutionPokemonId), ")");
+                if (this.CheckIfAltForm(p.PreevolutionPokemonId))
+                {
+                    p.PreevolutionPokemon.Name = string.Concat(p.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(p.PreevolutionPokemonId), ")");
+                }
             }
 
             return preEvolution;
@@ -321,7 +327,7 @@ namespace Pokedex
                 Abilities = this.GetPokemonWithAbilities(pokemon.Id),
                 EggGroups = this.GetPokemonWithEggGroups(pokemon.Id),
                 CaptureRates = this.GetPokemonWithCaptureRates(pokemon.Id),
-                PreEvolution = this.GetPreEvolution(pokemon.Id),
+                PreEvolutions = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
                 GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
@@ -350,7 +356,7 @@ namespace Pokedex
             return new AllAdminPokemonViewModel()
             {
                 AllAltForms = this.GetAllAltForms(),
-                AllEvolutions = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
+                AllEvolutions = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod, Generation"),
                 AllTypings = this.GetAllPokemonWithTypesAndIncomplete(),
                 AllAbilities = this.GetAllPokemonWithAbilitiesAndIncomplete(),
                 AllEggGroups = this.GetAllPokemonWithEggGroupsAndIncomplete(),

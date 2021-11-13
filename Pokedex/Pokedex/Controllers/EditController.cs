@@ -1792,10 +1792,10 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_evolution/{pokemonId:int}")]
-        public IActionResult Evolution(int pokemonId)
+        [Route("edit_evolution/{pokemonId:int}/{generationId:int}")]
+        public IActionResult Evolution(int pokemonId, int generationId)
         {
-            Evolution preEvolution = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemonId == pokemonId);
+            Evolution preEvolution = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemonId == pokemonId && x.GenerationId == generationId);
             EvolutionViewModel model = new EvolutionViewModel()
             {
                 AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
@@ -1807,6 +1807,7 @@ namespace Pokedex.Controllers
                 PreevolutionPokemonId = preEvolution.PreevolutionPokemonId,
                 EvolutionPokemonId = preEvolution.EvolutionPokemonId,
                 EvolutionPokemon = preEvolution.EvolutionPokemon,
+                GenerationId = preEvolution.GenerationId,
             };
 
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != pokemonId).ToList();
@@ -1823,12 +1824,12 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_evolution/{pokemonId:int}")]
+        [Route("edit_evolution/{pokemonId:int}/{generationId:int}")]
         public IActionResult Evolution(EvolutionViewModel evolution)
         {
             if (!this.ModelState.IsValid)
             {
-                Evolution preEvolution = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemonId == evolution.EvolutionPokemonId);
+                Evolution preEvolution = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod").Find(x => x.EvolutionPokemonId == evolution.EvolutionPokemonId && x.GenerationId == evolution.GenerationId);
                 EvolutionViewModel model = new EvolutionViewModel()
                 {
                     AllEvolutionMethods = this.dataService.GetObjects<EvolutionMethod>("Name"),
@@ -1840,6 +1841,7 @@ namespace Pokedex.Controllers
                     PreevolutionPokemonId = preEvolution.PreevolutionPokemonId,
                     EvolutionPokemonId = preEvolution.EvolutionPokemonId,
                     EvolutionPokemon = preEvolution.EvolutionPokemon,
+                    GenerationId = preEvolution.GenerationId,
                 };
 
                 List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();

@@ -1,4 +1,5 @@
-@using Pokedex.Models
+@using Pokedex.Models;
+@using Pokedex.DataAccess.Models;
 @using System.Collections.Generic;
 @model Pokedex.Models.AdminPokemonDropdownViewModel
 @{
@@ -6,6 +7,7 @@
     string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     AdminPokemonViewModel adminPokemon = null;
+    Evolution preEvolution = null;
     int[] generations = null;
     if (this.User.IsInRole("Owner"))
     {
@@ -177,10 +179,17 @@
 
     @foreach(var g in generations)
     {
+        preEvolution = null;
+        if (item.PreEvolutions.Count() > 0)
+        {
+            preEvolution = item.PreEvolutions.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g);
+        }
+
         if (this.User.IsInRole("Owner"))
         {
             adminPokemon.GenerationId = g;
         }
+
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)@(@item.Form != null ? @item.Form.Name.Replace("'", string.Empty).Replace(" ", string.Empty) : string.Empty)">
             @if (Model.PokemonList.Where(x => x.GamesAvailableIn.Select(y => y.GenerationId).Contains(@g)).Count() > 1)
             {
@@ -755,10 +764,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </tfoot>
                 </table>
             </div>
-            @if (g != 1 || (item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId))
+            @if (g != 1 || (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId))
             {
                 <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
-                    @if (item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId)
+                    @if (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId)
                     {
                         <div class="evolutions">
                             <h2>Pre-Evolution</h2>
@@ -766,27 +775,27 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 <tbody class="evolutionPokemon">
                                     <tr>
                                         <th>
-                                            @if (@item.PreEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                                            @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                             {
-                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = item.PreEvolution.PreevolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
+                                                    <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
                                                 </a>
-                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = item.PreEvolution.PreevolutionPokemon.Name.Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, item.PreEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = item.PreEvolution.PreevolutionPokemonId, generationId = @g })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
                                             }
                                             else
                                             {
-                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = item.PreEvolution.PreevolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" title="@item.PreEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @item.PreEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
+                                                    <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
                                                 </a>
-                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = item.PreEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = item.PreEvolution.PreevolutionPokemonId, generationId = @g })">@item.PreEvolution.PreevolutionPokemon.Name</a>
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
                                             }
                                         </th>
                                         <td>
-                                            @item.PreEvolution.EvolutionMethod.Name
-                                            @if (@item.PreEvolution.EvolutionDetails != null)
+                                            @preEvolution.EvolutionMethod.Name
+                                            @if (@preEvolution.EvolutionDetails != null)
                                             {
                                                 <br>
-                                                @(string.Concat(" (", @item.PreEvolution.EvolutionDetails, ")"));
+                                                @(string.Concat(" (", @preEvolution.EvolutionDetails, ")"));
                                             }
                                         </td>
                                     </tr>
@@ -890,7 +899,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 <div class="pokemonInfo pokemonTables emptyDiv"></div>
             }
 
-            @if (g == 1 || !(item.PreEvolution != null && g >= item.PreEvolution.PreevolutionPokemon.Game.GenerationId))
+            @if (g == 1 || !(preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId))
             {
                 <div class="pokemonInfo pokemonTables emptyDiv"></div>
             }
