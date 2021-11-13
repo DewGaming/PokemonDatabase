@@ -526,7 +526,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    float catchRate = 0;
+                    double catchRate = 0;
 
                     if (isColosseum)
                     {
@@ -589,13 +589,13 @@ namespace Pokedex.Controllers
                         catchRate = captureRates.First(x => x.GenerationId <= generationId).CaptureRate.CatchRate;
                     }
 
-                    float pokeballEffect = 1;
+                    double pokeballEffect = 1;
                     if (statusEffect == 0)
                     {
                         statusEffect = 1;
                     }
 
-                    float heavyValue = 0f;
+                    double heavyValue = 0;
 
                     switch (pokeball.Name)
                     {
@@ -625,9 +625,19 @@ namespace Pokedex.Controllers
                             break;
                         case "Repeat Ball":
                             pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == previouslyCaught).CatchModifier;
+                            if (generationId == 6)
+                            {
+                                pokeballEffect -= .5;
+                            }
+
                             break;
                         case "Dusk Ball":
                             pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == caveOrNight).CatchModifier;
+                            if (generationId == 6)
+                            {
+                                pokeballEffect += .5;
+                            }
+                            
                             break;
                         case "Quick Ball":
                             pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (turnCount == 1)).CatchModifier;
@@ -641,6 +651,11 @@ namespace Pokedex.Controllers
                             }
 
                             pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == netBallCondition).CatchModifier;
+                            if (generationId == 6)
+                            {
+                                pokeballEffect -= .5;
+                            }
+
                             break;
                         case "Dive Ball":
                             pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == surfing).CatchModifier;

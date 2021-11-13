@@ -10,7 +10,7 @@ namespace Pokedex.DataAccess.Models
         public Pokeball Pokeball { get; set; }
         [Display(Name = "Effect"), Required]
         public string Effect { get; set; }
-        [Display(Name = "Catch Modifer"), Required]
-        public float CatchModifier { get; set; }
+        [Display(Name = "Catch Modifier"), Required]
+        public double CatchModifier { get; set; }
     }
 }
