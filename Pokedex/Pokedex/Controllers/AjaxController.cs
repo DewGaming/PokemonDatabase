@@ -619,7 +619,7 @@ namespace Pokedex.Controllers
                         case "Nest Ball":
                             if (encounterLevel <= 29)
                             {
-                                pokeballEffect = (41f - encounterLevel) / 10f;
+                                pokeballEffect = (41f - encounterLevel) / 10;
                             }
 
                             break;
@@ -637,7 +637,7 @@ namespace Pokedex.Controllers
                             {
                                 pokeballEffect += .5;
                             }
-                            
+
                             break;
                         case "Quick Ball":
                             pokeballEffect = pokeballDetails.Find(x => bool.Parse(x.Effect) == (turnCount == 1)).CatchModifier;
@@ -711,32 +711,32 @@ namespace Pokedex.Controllers
 
                     if (generationId == 1)
                     {
-                        float greatBallModifier = 12f;
+                        double greatBallModifier = 12;
                         if (statusId == 1 || statusId == 2)
                         {
-                            statusEffect = 25f;
+                            statusEffect = 25;
                         }
                         else if (statusId == 3 || statusId == 4 || statusId == 5)
                         {
-                            statusEffect = 12f;
+                            statusEffect = 12;
                         }
                         else
                         {
-                            statusEffect = 0f;
+                            statusEffect = 0;
                         }
 
                         if (pokeballId == 1)
                         {
-                            pokeballEffect = 256f;
+                            pokeballEffect = 256;
                         }
                         else if (pokeballId == 2)
                         {
-                            pokeballEffect = 201f;
-                            greatBallModifier = 8f;
+                            pokeballEffect = 201;
+                            greatBallModifier = 8;
                         }
                         else
                         {
-                            pokeballEffect = 151f;
+                            pokeballEffect = 151;
                         }
 
                         double hpFactor = Math.Floor(Math.Min(1020f / (greatBallModifier * healthPercentage), 255f));
@@ -746,36 +746,36 @@ namespace Pokedex.Controllers
                     {
                         if (pokeball.Id == 24)
                         {
-                            pokeballEffect = 1f;
+                            pokeballEffect = 1;
                         }
                         else if (pokeball.Id == 18)
                         {
                             if (pokemonId == 1347 || pokemonId == 46 || pokemonId == 148)
                             {
-                                pokeballEffect = 4f;
+                                pokeballEffect = 4;
                             }
                             else
                             {
-                                pokeballEffect = 1f;
+                                pokeballEffect = 1;
                             }
                         }
                         else if (pokeball.Id == 20)
                         {
                             if (pokemon.Weight >= 409.6m)
                             {
-                                heavyValue = 40f;
+                                heavyValue = 40;
                             }
                             else if (pokemon.Weight >= 307.2m)
                             {
-                                heavyValue = 30f;
+                                heavyValue = 30;
                             }
                             else if (pokemon.Weight >= 204.8m)
                             {
-                                heavyValue = 20f;
+                                heavyValue = 20;
                             }
                             else if (pokemon.Weight < 102.4m)
                             {
-                                heavyValue = -20f;
+                                heavyValue = -20;
                             }
 
                             catchRate += heavyValue;
@@ -783,22 +783,22 @@ namespace Pokedex.Controllers
 
                         if (statusId == 1 || statusId == 2)
                         {
-                            statusEffect = 10f;
+                            statusEffect = 10;
                         }
                         else
                         {
-                            statusEffect = 0f;
+                            statusEffect = 0;
                         }
 
                         catchRate *= pokeballEffect;
 
                         if (catchRate > 255f)
                         {
-                            catchRate = 255f;
+                            catchRate = 255;
                         }
                         else if (catchRate < 0f)
                         {
-                            catchRate = 1f;
+                            catchRate = 1;
                         }
 
                         if (pokeball.Id == 21)
@@ -814,26 +814,26 @@ namespace Pokedex.Controllers
                     {
                         if (statusId == 1 || statusId == 2)
                         {
-                            statusEffect = 2f;
+                            statusEffect = 2;
                         }
 
                         if (pokeball.Id == 20)
                         {
                             if (pokemon.Weight >= 409.6m)
                             {
-                                heavyValue = 40f;
+                                heavyValue = 40;
                             }
                             else if (pokemon.Weight >= 307.2m)
                             {
-                                heavyValue = 30f;
+                                heavyValue = 30;
                             }
                             else if (pokemon.Weight >= 204.8m)
                             {
-                                heavyValue = 20f;
+                                heavyValue = 20;
                             }
                             else if (pokemon.Weight < 102.4m)
                             {
-                                heavyValue = -20f;
+                                heavyValue = -20;
                             }
 
                             catchRate += heavyValue;
@@ -845,11 +845,11 @@ namespace Pokedex.Controllers
                             catchValue *= pokeballEffect;
                             if (catchRate > 255f)
                             {
-                                catchRate = 255f;
+                                catchRate = 255;
                             }
                             else if (catchRate < 0f)
                             {
-                                catchRate = 1f;
+                                catchRate = 1;
                             }
                         }
 
@@ -874,7 +874,7 @@ namespace Pokedex.Controllers
                     {
                         if (legendary?.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
                         {
-                            pokeballEffect = 0.1f;
+                            pokeballEffect = 0.10009765625;
                         }
 
                         catchValue = Math.Min((1d - ((2d * healthPercentage) / 3d)) * catchRate * statusEffect, 255);
@@ -883,11 +883,11 @@ namespace Pokedex.Controllers
                             catchValue *= pokeballEffect;
                             if (catchValue > 255f)
                             {
-                                catchValue = 255f;
+                                catchValue = 255;
                             }
                             else if (catchValue < 0f)
                             {
-                                catchValue = 1f;
+                                catchValue = 1;
                             }
                         }
 
