@@ -36,6 +36,12 @@ namespace Pokedex.Controllers
             this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// Adds an evolution for a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's Id.</param>
+        /// <param name="generationId">The generation's Id.</param>
+        /// <returns>The view to add the pokemon's evolution.</returns>
         [HttpGet]
         [Route("add_evolution/{pokemonId:int}/{generationId:int}")]
         public IActionResult Evolution(int pokemonId, int generationId)
@@ -61,6 +67,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Adds an evolution for a pokemon.
+        /// </summary>
+        /// <param name="evolution">The generated evolution.</param>
+        /// <returns>The admin pokemon view.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_evolution/{pokemonId:int}/{generationId:int}")]
@@ -99,6 +110,10 @@ namespace Pokedex.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds an generation.
+        /// </summary>
+        /// <returns>The view to add the generation.</returns>
         [Route("add_generation")]
         public IActionResult Generation()
         {

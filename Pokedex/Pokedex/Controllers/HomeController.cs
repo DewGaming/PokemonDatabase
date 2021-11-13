@@ -38,6 +38,10 @@ namespace Pokedex.Controllers
             this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// The home page of the website.
+        /// </summary>
+        /// <returns>The view for the home page.</returns>
         [AllowAnonymous]
         [Route("")]
         public IActionResult Index()
@@ -45,6 +49,11 @@ namespace Pokedex.Controllers
             return this.View(this.appConfig);
         }
 
+        /// <summary>
+        /// Searchs for the pokemon that contains the searched text.
+        /// </summary>
+        /// <param name="searchText">The text being searched.</param>
+        /// <returns>Returns the all pokemon page if no pokemon fits the search, or continues to do a more in-depth search.</returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("search")]
@@ -62,6 +71,11 @@ namespace Pokedex.Controllers
             }
         }
 
+        /// <summary>
+        /// Searchs for the pokemon that contains the searched text.
+        /// </summary>
+        /// <param name="search">The text being searched.</param>
+        /// <returns>Returns the pokemon's page if only one pokemon fits the search, or shows all pokemon with the given text.</returns>
         [AllowAnonymous]
         [Route("search/{search}")]
         public IActionResult SearchRedirect(string search)
