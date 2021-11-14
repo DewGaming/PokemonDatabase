@@ -86,6 +86,18 @@ namespace Pokedex.Controllers
         public IActionResult PokemonLocationDetails(int locationId)
         {
             List<PokemonLocationDetail> pokemonList = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName();
+            Pokemon pokemon;
+
+            foreach (var a in altFormList)
+            {
+                if (pokemonList.Find(x => x.PokemonId == a.Id) != null)
+                {
+                    pokemon = pokemonList.Find(x => x.PokemonId == a.Id).Pokemon;
+                    pokemon.Name = a.Name;
+                }
+            }
+
             PokemonLocationDetailAdminViewModel model = new PokemonLocationDetailAdminViewModel()
             {
                 AllPokemon = pokemonList,
