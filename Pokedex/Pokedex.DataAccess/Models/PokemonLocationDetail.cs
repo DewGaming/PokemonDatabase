@@ -24,7 +24,7 @@ namespace Pokedex.DataAccess.Models
         public bool SOSBattleOnly { get; set; }
         [Display(Name = "Only Available Thru Special Spawns")]
         public bool SpecialSpawn { get; set; }
-        [Display(Name = "Only Available Thru Special Spawns")]
+        [Display(Name = "Only Available After Failed Snag")]
         public bool FailedSnag { get; set; }
     }
 }
