@@ -2,6 +2,7 @@
 @model Pokedex.Models.PokemonLocationDetailViewModel
 @{
     Layout = "_layout";
+    string columnWidth = string.Empty;
 }
 
 @section styles
@@ -112,13 +113,22 @@
         </div>
 
         <div class="form-group row">
-            <div class="form-group row col-md-3">
+            @if (Model.Region.Name == "Alola" || Model.Region.Name == "Kanto")
+            {
+                columnWidth = "col-md-4";
+            }
+            else
+            {
+                columnWidth = "col-md-6";
+            }
+
+            <div class="form-group row @columnWidth">
                 @Html.LabelFor(x => x.CaptureMethodId, new { @class = "col-md-8" })
                 @Html.DropDownListFor(x => x.CaptureMethodId, new SelectList(Model.AllCaptureMethods, "Id", "Name"), "", new { @class = "form-control col-md-11" })
                 @Html.ValidationMessageFor(x => x.CaptureMethodId)
             </div>
 
-            <div class="chanceOfEncounterBar form-group row col-md-3">
+            <div class="chanceOfEncounterBar form-group row @columnWidth">
                 <label for="ChanceOfEncounter" class="col-md-8">Chance of Encounter: <span id="chanceOfEncounterVal"></span></label>
                 <input class="chanceOfEncounterSlider slider col-md-11" data-val-required="The Health field is required." id="ChanceOfEncounter" name="ChanceOfEncounter" type="range" min="0" max="100" value="100" list="tickmarks">
                 <div class="col-md-11" id="tickmarks">
@@ -136,17 +146,23 @@
                 </div>
             </div>
 
-            <div class="form-group row col-md-3">
-                @Html.LabelFor(x => x.SOSBattleOnly, new { @class = "col-md-12" })
-                @Html.CheckBoxFor(x => x.SOSBattleOnly, new { @class = "form-control col-md-9" })
-                @Html.ValidationMessageFor(x => x.SOSBattleOnly)
-            </div>
+            @if (Model.Region.Name == "Alola")
+            {
+                <div class="form-group row @columnWidth">
+                    @Html.LabelFor(x => x.SOSBattleOnly, new { @class = "col-md-12" })
+                    @Html.CheckBoxFor(x => x.SOSBattleOnly, new { @class = "form-control col-md-9" })
+                    @Html.ValidationMessageFor(x => x.SOSBattleOnly)
+                </div>
+            }
 
-            <div class="form-group row col-md-3">
-                @Html.LabelFor(x => x.SpecialSpawn, new { @class = "col-md-12" })
-                @Html.CheckBoxFor(x => x.SpecialSpawn, new { @class = "form-control col-md-9" })
-                @Html.ValidationMessageFor(x => x.SpecialSpawn)
-            </div>
+            @if (Model.Region.Name == "Kanto")
+            {
+                <div class="form-group row @columnWidth">
+                    @Html.LabelFor(x => x.SpecialSpawn, new { @class = "col-md-12" })
+                    @Html.CheckBoxFor(x => x.SpecialSpawn, new { @class = "form-control col-md-9" })
+                    @Html.ValidationMessageFor(x => x.SpecialSpawn)
+                </div>
+            }
         </div>
 
         <p>

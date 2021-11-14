@@ -1482,6 +1482,7 @@ namespace Pokedex.Controllers
                 AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
                 AllTimes = this.dataService.GetObjects<Time>("Name"),
                 AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                Region = this.dataService.GetObjectByPropertyValue<Region>("Id", pokemonLocationDetail.Location.RegionId),
             };
 
             return this.View(model);
@@ -1508,6 +1509,7 @@ namespace Pokedex.Controllers
                     AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
                     AllTimes = this.dataService.GetObjects<Time>("Name"),
                     AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                    Region = this.dataService.GetObjectByPropertyValue<Region>("Id", newPokemonLocationDetail.Location.RegionId),
                 };
 
                 return this.View(model);
@@ -1577,7 +1579,20 @@ namespace Pokedex.Controllers
                 this.dataService.DeletePokemonLocationGameDetail(e.Id);
             }
 
-            return this.RedirectToAction("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId });
+            List<Generation> generations = this.dataService.GetObjects<Game>(includes: "Generation").Where(x => gameIds.Any(y => y == x.Id)).Select(x => x.Generation).ToList();
+
+            if (generations.Find(x => x.Id == 5) != null)
+            {
+                return this.RedirectToAction("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId });
+            }
+            else if (generations.Find(x => x.Id != 1 && x.Id != 3 && x.Id != 5 && x.Id != 6) != null)
+            {
+                return this.RedirectToAction("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId });
+            }
+            else
+            {
+                return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId).LocationId });
+            }
         }
 
         [HttpGet]
@@ -1626,7 +1641,18 @@ namespace Pokedex.Controllers
                 this.dataService.DeletePokemonLocationSeasonDetail(e.Id);
             }
 
-            return this.RedirectToAction("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId });
+            List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
+
+            List<Generation> generations = this.dataService.GetObjects<Game>(includes: "Generation").Where(x => games.Any(y => y.GenerationId == x.GenerationId)).Select(x => x.Generation).ToList();
+
+            if (generations.Find(x => x.Id != 1 && x.Id != 3 && x.Id != 5 && x.Id != 6) != null)
+            {
+                return this.RedirectToAction("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId });
+            }
+            else
+            {
+                return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId).LocationId });
+            }
         }
 
         [HttpGet]

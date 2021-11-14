@@ -569,6 +569,7 @@ namespace Pokedex.Controllers
                 AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
                 AllTimes = this.dataService.GetObjects<Time>("Name"),
                 AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                Region = this.dataService.GetObjectByPropertyValue<Region>("Id", location.RegionId),
             };
 
             return this.View(model);
@@ -589,6 +590,7 @@ namespace Pokedex.Controllers
                     AllCaptureMethods = this.dataService.GetObjects<CaptureMethod>("Name"),
                     AllTimes = this.dataService.GetObjects<Time>("Name"),
                     AllSeasons = this.dataService.GetObjects<Season>("Name"),
+                    Region = this.dataService.GetObjectByPropertyValue<Region>("Id", location.RegionId),
                 };
 
                 return this.View(model);
