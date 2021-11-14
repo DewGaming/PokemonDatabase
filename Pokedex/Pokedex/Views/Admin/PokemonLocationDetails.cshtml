@@ -27,6 +27,10 @@
             {
                 <th scope="col">Special Spawn Only</th>
             }
+            @if (Model.AllPokemon.Find(x => x.FailedSnag == true) != null)
+            {
+                <th scope="col">After Failed Snag Only</th>
+            }
             @if (Model.AllPokemonLocationGameDetails.Count > 0)
             {
                 <th scope="col">Games Available</th>
@@ -74,9 +78,9 @@
                 {
                     <td>@item.SpecialSpawn</td>
                 }
-                else if (Model.AllPokemon.Find(x => x.SOSBattleOnly == true) != null)
+                @if (Model.AllPokemon.Find(x => x.FailedSnag == true) != null)
                 {
-                    <td></td>
+                    <td>@item.FailedSnag</td>
                 }
                 @if (Model.AllPokemonLocationGameDetails.Find(x => x.PokemonLocationDetailId == item.Id) != null)
                 {
