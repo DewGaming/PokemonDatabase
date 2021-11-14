@@ -44,7 +44,7 @@ namespace Pokedex.Controllers
         {
             RegionViewModel model = new RegionViewModel()
             {
-                AllRegions = this.dataService.GetObjects<Region>(includes: "Generation"),
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id", "Generation"),
             };
 
             return this.View(model);

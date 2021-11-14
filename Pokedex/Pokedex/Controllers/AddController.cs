@@ -756,7 +756,7 @@ namespace Pokedex.Controllers
             GameViewModel model = new GameViewModel()
             {
                 AllGenerations = this.dataService.GetObjects<Generation>(),
-                AllRegions = this.dataService.GetObjects<Region>(),
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
             };
 
             return this.View(model);
