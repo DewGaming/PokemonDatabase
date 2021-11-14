@@ -268,6 +268,9 @@ namespace Pokedex
                     .Include("Pokemon.Game")
                 .Include(x => x.Game)
                 .Where(x => x.PokemonId == pokemonId)
+                .OrderBy(x => x.Game.GenerationId)
+                .ThenBy(x => x.GameId)
+                .ThenBy(x => x.Id)
                 .ToList();
         }
 
