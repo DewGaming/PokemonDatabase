@@ -106,7 +106,7 @@ namespace Pokedex.Controllers
             Location location = this.dataService.GetObjectByPropertyValue<Location>("Id", id, "Region");
             LocationViewModel model = new LocationViewModel()
             {
-                AllRegions = this.dataService.GetObjects<Region>(),
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
                 Id = location.Id,
                 Name = location.Name,
                 RegionId = location.RegionId,

@@ -53,7 +53,7 @@ namespace Pokedex.Controllers
         [Route("locations")]
         public IActionResult Locations()
         {
-            List<Region> model = this.dataService.GetObjects<Region>();
+            List<Region> model = this.dataService.GetObjects<Region>("GenerationId, Id");
 
             return this.View(model);
         }

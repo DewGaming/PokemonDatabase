@@ -99,7 +99,7 @@ namespace Pokedex.Controllers
                 ReleaseDate = game.ReleaseDate,
                 GenerationId = game.GenerationId,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
-                AllRegions = this.dataService.GetObjects<Region>(),
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
             };
 
             return this.View(model);
@@ -121,7 +121,7 @@ namespace Pokedex.Controllers
                     ReleaseDate = oldGame.ReleaseDate,
                     GenerationId = oldGame.GenerationId,
                     AllGenerations = this.dataService.GetObjects<Generation>(),
-                    AllRegions = this.dataService.GetObjects<Region>(),
+                    AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
                 };
 
                 return this.View(model);
@@ -1302,7 +1302,7 @@ namespace Pokedex.Controllers
                 Name = location.Name,
                 RegionId = location.RegionId,
                 Region = location.Region,
-                AllRegions = this.dataService.GetObjects<Region>("GenerationId"),
+                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
             };
 
             return this.View(model);
@@ -1322,7 +1322,7 @@ namespace Pokedex.Controllers
                     Name = newLocation.Name,
                     RegionId = newLocation.RegionId,
                     Region = newLocation.Region,
-                    AllRegions = this.dataService.GetObjects<Region>("GenerationId"),
+                    AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
                 };
 
                 return this.View(model);
