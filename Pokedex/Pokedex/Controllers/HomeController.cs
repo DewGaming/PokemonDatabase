@@ -359,6 +359,68 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("pokemon_locations/{pokemonName}/{pokemonId:int}/{generationId:int}")]
+        public IActionResult PokemonLocationsWithId(string pokemonName, int pokemonId, int generationId)
+        {
+            selectedPokemonId = pokemonId;
+            if (generationId > this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Last().GenerationId)
+            {
+                selectedGenerationId = 0;
+            }
+            else
+            {
+                selectedGenerationId = generationId;
+            }
+
+            return this.RedirectToAction("PokemonLocations", "Home", new { name = pokemonName });
+        }
+
+        [AllowAnonymous]
+        [Route("pokemon_locations/{name}")]
+        public IActionResult PokemonLocations(string name)
+        {
+            int pokemonId = selectedPokemonId;
+            int generationId = selectedGenerationId;
+            selectedPokemonId = 0;
+            selectedGenerationId = 0;
+            name = this.dataService.FormatPokemonName(name);
+
+            Pokemon pokemon = this.dataService.GetPokemon(name);
+            if (pokemonId == 0)
+            {
+                pokemonId = pokemon.Id;
+            }
+
+            if (generationId == 0)
+            {
+                generationId = this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Last().GenerationId;
+            }
+
+            if (pokemon?.IsComplete == true)
+            {
+                List<PokemonLocationDetail> pokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>().Where(x => x.PokemonId == pokemon.Id).ToList();
+                List<Game> gamesAvailableIn = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).Select(x => x.Game).ToList();
+                gamesAvailableIn = gamesAvailableIn.GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+                List<PokemonLocationGameDetail> pokemonLocation = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "PokemonLocationDetail, PokemonLocationDetail.Location, PokemonLocationDetail.CaptureMethod").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList();
+                PokemonLocationViewModel model = new PokemonLocationViewModel()
+                {
+                    Pokemon = pokemon,
+                    GamesAvailableIn = gamesAvailableIn,
+                    PokemonLocations = pokemonLocation,
+                    PokemonId = pokemonId,
+                    GenerationId = generationId,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.View(model);
+            }
+            else
+            {
+                return this.RedirectToAction("AllPokemon", "Home");
+            }
+        }
+
+        [AllowAnonymous]
         [Route("type_chart")]
         public IActionResult TypeChart()
         {

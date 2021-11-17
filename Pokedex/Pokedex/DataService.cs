@@ -1497,6 +1497,11 @@ namespace Pokedex
             return this.dataContext.PokemonGameDetails.Where(x => x.PokemonId == id).Select(x => x.Game).ToList();
         }
 
+        public List<Game> GetGamesCatchableInFromPokemonId(int id)
+        {
+            return this.dataContext.PokemonLocationGameDetails.Include(x => x.PokemonLocationDetail).Where(x => x.PokemonLocationDetail.PokemonId == id).Select(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+        }
+
         public List<Game> GetAvailableGames(int pokemonTeamId)
         {
             PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", pokemonTeamId, "FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon, Game");

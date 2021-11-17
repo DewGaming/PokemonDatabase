@@ -55,18 +55,25 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations {
+.generations, .games {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+}
+
+.generations {
   margin-bottom: 10px;
 }
 
-.generations.active {
+.games {
+  margin: -10px 0 10px;
+}
+
+.generations.active, .games.active {
   display: flex;
 }
 
-.generations button {
+.generations button, .games button {
   list-style: none;
   -webkit-box-flex: 1;
   -ms-flex: 1 1 0px;
@@ -89,7 +96,13 @@
   color: #404040;
 }
 
-.generations button:focus {
+.games button.active {
+  background-color: #fff;
+  border-top-color: #fff;
+  color: #404040;
+}
+
+.generations button:focus, .games button:focus {
   outline-width: 0;
 }
 
