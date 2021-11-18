@@ -18,24 +18,30 @@
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = ability[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
-                    <p class="abilityClassifier">
                         @if(ability[i].PrimaryAbilityId == Model.Ability.Id)
                         {
-                            @("Primary Ability")
+                            <p class="abilityClassifier primaryAbility">
+                                @("Primary Ability")
+                            </p>
                         }
                         else if (ability[i].SecondaryAbilityId == Model.Ability.Id)
                         {
-                            @("Secondary Ability")
+                            <p class="abilityClassifier secondaryAbility">
+                                @("Secondary Ability")
+                            </p>
                         }
                         else if (ability[i].HiddenAbilityId == Model.Ability.Id)
                         {
-                            @("Hidden Ability")
+                            <p class="abilityClassifier hiddenAbility">
+                                @("Hidden Ability")
+                            </p>
                         }
                         else if (ability[i].SpecialEventAbilityId == Model.Ability.Id)
                         {
-                            @("Special Event Ability")
+                            <p class="abilityClassifier specialAbility">
+                                @("Special Event Ability")
+                            </p>
                         }
-                    </p>
                 </div>
             </div>
         }
