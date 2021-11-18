@@ -1,5 +1,3 @@
-@using Pokedex.Models;
-@using Pokedex.DataAccess.Models;
 @using System.Collections.Generic;
 @model Pokedex.Models.PokemonLocationViewModel;
 @{
@@ -12,23 +10,8 @@
 {
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pokemonLocations.css" rel="stylesheet" type="text/css" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
-
-    <style>
-        .generations, .games {
-            display: none;
-        }
-
-        .generations button {
-            border-top: 0;
-        }
-
-        .gameLocation, .locationDiv {
-            width: 100%;
-            max-width: 33.5rem;
-            margin: 0 15px 10px;
-        }
-    </style>
 }
 
 @section scripts
@@ -88,6 +71,10 @@
     </div>
 }
 
+<div class="pokemonLocationData">
+    <div>
+        <img class="pokemonImage" title="@Model.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+    </div>
 @foreach(var g in Model.GamesAvailableIn)
 {
     int locationCount = Model.PokemonLocations.Where(x => x.GameId == g.Id).Select(x => x.PokemonLocationDetail.Location).GroupBy(x => x.Id).Select(x => x.First()).Count();
@@ -166,4 +153,4 @@
         }
     </div>
 }
-            
+</div>
