@@ -383,9 +383,18 @@ namespace Pokedex.Controllers
             int generationId = selectedGenerationId;
             selectedPokemonId = 0;
             selectedGenerationId = 0;
+            Pokemon pokemon;
             name = this.dataService.FormatPokemonName(name);
 
-            Pokemon pokemon = this.dataService.GetPokemon(name);
+            if (name.Contains('(') && !name.Contains("Nidoran"))
+            {
+                string[] names = name.Split(" (");
+                pokemon = this.dataService.GetPokemonFromNameAndFormName(names[0], names[1].Replace(")", string.Empty));
+            }
+            else
+            {
+                pokemon = this.dataService.GetPokemon(name);
+            }
             if (pokemonId == 0)
             {
                 pokemonId = pokemon.Id;
