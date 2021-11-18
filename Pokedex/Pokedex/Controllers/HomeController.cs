@@ -395,6 +395,7 @@ namespace Pokedex.Controllers
             {
                 pokemon = this.dataService.GetPokemon(name);
             }
+
             if (pokemonId == 0)
             {
                 pokemonId = pokemon.Id;

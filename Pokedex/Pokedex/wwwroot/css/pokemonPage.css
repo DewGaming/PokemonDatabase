@@ -1,5 +1,6 @@
 .typing div {
   width: 25%;
+  min-width: 66px;
 }
 
 .WeakAgainst {
@@ -33,6 +34,13 @@
 .surroundingPokemon a, .surroundingPokemon a:hover {
   color: grey !important;
   text-decoration: none;
+}
+
+@media (max-width: 391px) {
+  .effectivenessChart {
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 782px) {
