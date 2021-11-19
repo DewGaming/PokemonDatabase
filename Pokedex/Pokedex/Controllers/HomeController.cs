@@ -138,6 +138,7 @@ namespace Pokedex.Controllers
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+            gamesList = gamesList.Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness").ToList();
             List<Game> selectableGames = new List<Game>();
 
             foreach (var gen in generations)
