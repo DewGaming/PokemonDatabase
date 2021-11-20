@@ -4,6 +4,7 @@
     Layout = "_Layout";
     string style = string.Empty;
     ViewBag.Title = string.Concat(Model.Pokemon.Name, " In-Game Locations");
+    ViewBag.Image = @Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.PokemonId, ".png"));
     ViewBag.Description = string.Concat("View the In-Game Locations for the Pokémon ", Model.Pokemon.Name);
 }
 
