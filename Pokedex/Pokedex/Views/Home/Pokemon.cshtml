@@ -167,7 +167,9 @@
 </table>
 
 <hr style="margin-top: 0;margin-bottom: 0;">
-
+@{
+    List<Evolution> evolutions = new List<Evolution>();
+}
 @foreach (var item in Model.PokemonList)
 {
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
@@ -187,10 +189,21 @@
     @foreach(var g in generations)
     {
         preEvolution = null;
+        evolutions = new List<Evolution>();
         catchable = false;
-        if (item.PreEvolutions.Count() > 0)
+        if (item.PreEvolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g).Count() > 0)
         {
             preEvolution = item.PreEvolutions.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g);
+        }
+        if (item.Evolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g).Count() > 0)
+        {
+            foreach (var e in item.Evolutions.OrderByDescending(x => x.GenerationId).GroupBy(x => x.EvolutionPokemonId).Select(y => y.First()))
+            {
+                if (item.Evolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g && x.EvolutionPokemonId == e.EvolutionPokemonId).Count() > 0)
+                {
+                    evolutions.Add(item.Evolutions.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g && x.EvolutionPokemonId == e.EvolutionPokemonId));
+                }
+            }
         }
 
         if (this.User.IsInRole("Owner"))
@@ -857,11 +870,11 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     }
                 </div>
             }
-            @if (item.Evolutions.Where(x => g >= x.EvolutionPokemon.Game.GenerationId).Count() > 0)
+            @if (evolutions.Count() > 0)
             {
                 <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
                     <h2>
-                        @if (item.Evolutions.Count > 1)
+                        @if (evolutions.Count() > 1)
                         {
                             @("Evolutions");
                         }
@@ -872,7 +885,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </h2>
                     <table class="evolutionTable">
                         <tbody class="evolutionPokemon">
-                            @foreach (var evolution in item.Evolutions)
+                            @foreach (var evolution in evolutions)
                             {
                                 if (g >= evolution.EvolutionPokemon.Game.GenerationId)
                                 {
