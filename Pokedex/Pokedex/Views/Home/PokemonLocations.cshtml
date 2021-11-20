@@ -80,7 +80,7 @@
 {
     int locationCount = Model.PokemonLocations.Where(x => x.GameId == g.Id).Select(x => x.PokemonLocationDetail.Location).GroupBy(x => x.Id).Select(x => x.First()).Count();
     <div class="page game@(g.Id)">
-        @foreach(var l in Model.PokemonLocations.Where(x => x.GameId == g.Id).Select(x => x.PokemonLocationDetail.Location).GroupBy(x => x.Id).Select(x => x.First()))
+        @foreach(var l in Model.PokemonLocations.Where(x => x.GameId == g.Id).Select(x => x.PokemonLocationDetail.Location).GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.Name))
         {
             <div class="locationDiv">
                 <h2>@l.Name</h2>
