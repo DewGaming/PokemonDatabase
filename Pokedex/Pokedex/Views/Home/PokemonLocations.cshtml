@@ -57,6 +57,7 @@
 
 @if (Model.GamesAvailableIn.Count() > 0)
 {
+    <hr style="margin: auto 0px;">
     <div class="generations@(@Model.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@Model.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
         @foreach(var gen in Model.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
         {
