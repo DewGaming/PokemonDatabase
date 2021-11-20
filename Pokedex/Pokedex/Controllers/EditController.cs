@@ -1630,17 +1630,21 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonLocationSeasonDetail pokemonLocationSeasonDetail;
-            List<PokemonLocationSeasonDetail> existingEntries = this.dataService.GetObjects<PokemonLocationSeasonDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
-            foreach (var s in seasonIds)
+            if (seasonIds.Count() != this.dataService.GetObjects<Season>().Count())
             {
-                pokemonLocationSeasonDetail = new PokemonLocationSeasonDetail()
+                PokemonLocationSeasonDetail pokemonLocationSeasonDetail;
+                foreach (var s in seasonIds)
                 {
-                    PokemonLocationDetailId = pokemonLocationDetailId,
-                    SeasonId = s,
-                };
-                this.dataService.AddPokemonLocationSeasonDetail(pokemonLocationSeasonDetail);
+                    pokemonLocationSeasonDetail = new PokemonLocationSeasonDetail()
+                    {
+                        PokemonLocationDetailId = pokemonLocationDetailId,
+                        SeasonId = s,
+                    };
+                    this.dataService.AddPokemonLocationSeasonDetail(pokemonLocationSeasonDetail);
+                }
             }
+
+            List<PokemonLocationSeasonDetail> existingEntries = this.dataService.GetObjects<PokemonLocationSeasonDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
 
             foreach (var e in existingEntries)
             {
@@ -1690,18 +1694,22 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonLocationTimeDetail pokemonLocationTimeDetail;
-            List<PokemonLocationTimeDetail> existingEntries = this.dataService.GetObjects<PokemonLocationTimeDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
-            foreach (var t in timeIds)
+            if (timeIds.Count() != this.dataService.GetObjects<Time>().Count())
             {
-                pokemonLocationTimeDetail = new PokemonLocationTimeDetail()
+                PokemonLocationTimeDetail pokemonLocationTimeDetail;
+                foreach (var t in timeIds)
                 {
-                    PokemonLocationDetailId = pokemonLocationDetailId,
-                    TimeId = t,
-                };
-                this.dataService.AddPokemonLocationTimeDetail(pokemonLocationTimeDetail);
+                    pokemonLocationTimeDetail = new PokemonLocationTimeDetail()
+                    {
+                        PokemonLocationDetailId = pokemonLocationDetailId,
+                        TimeId = t,
+                    };
+                    this.dataService.AddPokemonLocationTimeDetail(pokemonLocationTimeDetail);
+                }
             }
 
+            List<PokemonLocationTimeDetail> existingEntries = this.dataService.GetObjects<PokemonLocationTimeDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+                
             foreach (var e in existingEntries)
             {
                 this.dataService.DeletePokemonLocationTimeDetail(e.Id);
