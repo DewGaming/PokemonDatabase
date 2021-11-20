@@ -402,7 +402,7 @@ namespace Pokedex.Controllers
                 pokemonId = pokemon.Id;
             }
 
-            if (generationId == 0)
+            if (generationId == 0 && this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Count() > 0)
             {
                 generationId = this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Last().GenerationId;
             }
