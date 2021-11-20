@@ -25,9 +25,20 @@
         var generations = @Model.TypeChart.Select(x => x.GenerationId).Distinct().ToList();
         generations.Sort();
     }
-    @foreach(var g in generations)
+    @for (var i = 0; i < generations.Count(); i++)
     {
-        <button class="@(@g == generations.Last() ? "active" : string.Empty)" onclick="lookupTypeChart('@g')" id="Generation@(g)">Generation @(g)</button>
+        if (generations[i] == generations.Last())
+        {
+            <button class="active" onclick="lookupTypeChart('@generations[i]')" id="Generation@(generations[i])">Generation @(generations[i])@(@Model.AllGenerations.Last().Id != generations.Last() ? string.Concat(" - ", Model.AllGenerations.Last().Id) : string.Empty)</button>
+        }
+        else if (generations[i] != generations[i + 1] - 1)
+        {
+            <button onclick="lookupTypeChart('@generations[i]')" id="Generation@(generations[i])">Generation @(generations[i]) - @(generations[i + 1] - 1)</button>
+        }
+        else
+        {
+            <button onclick="lookupTypeChart('@generations[i]')" id="Generation@(generations[i])">Generation @(generations[i])</button>
+        }
     }
 </div>
 

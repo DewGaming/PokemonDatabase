@@ -16,6 +16,11 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of types.
         /// </summary>
-        public List<Type> Types { get; set; }
+        public List<Type> AllTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of types.
+        /// </summary>
+        public List<Generation> AllGenerations { get; set; }
     }
 }

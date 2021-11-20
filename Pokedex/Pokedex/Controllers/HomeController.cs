@@ -438,7 +438,8 @@ namespace Pokedex.Controllers
             TypeChartViewModel model = new TypeChartViewModel()
             {
                 TypeChart = this.dataService.GetTypeCharts(),
-                Types = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
+                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
+                AllGenerations = this.dataService.GetObjects<Generation>("Id"),
             };
 
             return this.View(model);
