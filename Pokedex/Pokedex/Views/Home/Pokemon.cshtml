@@ -6,6 +6,8 @@
     Layout = "_Layout";
     string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
+    ViewBag.Description = string.Concat("View the information for the Pokémon ", @Model.PokemonList.FirstOrDefault().Pokemon.Name, "!");
+    ViewBag.Image = @Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.PokemonImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"));
     AdminPokemonViewModel adminPokemon = null;
     Evolution preEvolution = null;
     bool catchable = false;

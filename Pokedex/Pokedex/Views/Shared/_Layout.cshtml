@@ -1,6 +1,10 @@
 @{
   string defaultTitle = "Pokémon Database";
-	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle :  string.Concat(ViewBag.Title, " | ", defaultTitle);
+  string defaultDescription = "Welcome to the Pokémon Database!";
+  string defaultImage = "https://pokemondatabase.azurewebsites.net/images/general/defaultIcon.png";
+	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle : string.Concat(ViewBag.Title, " | ", defaultTitle);
+  ViewBag.Description = string.IsNullOrEmpty(ViewBag.Description as string) ? defaultDescription : ViewBag.Description;
+  ViewBag.Image = string.IsNullOrEmpty(ViewBag.Image as string) ? defaultImage : ViewBag.Image;
 }
 
 <html>
@@ -10,6 +14,14 @@
     <link href="/css/main.css" rel="stylesheet" type="text/css">
     @RenderSection("styles", required: false)
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="og:title" content="@ViewBag.Title">
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="@ViewBag.Image">
+    <meta name="og:description" content="@ViewBag.Description">
+    <meta name="twitter:title" content="@ViewBag.Title">
+    <meta name="twitter:type" content="website">
+    <meta name="twitter:image" content="@ViewBag.Image">
+    <meta name="twitter:description" content="@ViewBag.Description">
 </head>
 <body>
     <nav class="fixed-nav navbar navbar-expand-custom navbar-dark bg-dark mb-4">
