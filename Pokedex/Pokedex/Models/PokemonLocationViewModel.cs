@@ -19,6 +19,16 @@ namespace Pokedex.Models
         public List<PokemonLocationGameDetail> PokemonLocations { get; set; }
 
         /// <summary>
+        /// Gets or sets the pokemon's location time details.
+        /// </summary>
+        public List<PokemonLocationTimeDetail> PokemonTimes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pokemon's location season details.
+        /// </summary>
+        public List<PokemonLocationSeasonDetail> PokemonSeasons { get; set; }
+
+        /// <summary>
         /// Gets or sets the games this pokemon is available in.
         /// </summary>
         public List<Game> GamesAvailableIn { get; set; }

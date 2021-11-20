@@ -418,6 +418,8 @@ namespace Pokedex.Controllers
                     Pokemon = pokemon,
                     GamesAvailableIn = gamesAvailableIn,
                     PokemonLocations = pokemonLocation,
+                    PokemonTimes = this.dataService.GetObjects<PokemonLocationTimeDetail>("TimeId", "PokemonLocationDetail, Time").Where(x => x.PokemonLocationDetail.PokemonId == pokemon.Id).ToList(),
+                    PokemonSeasons = this.dataService.GetObjects<PokemonLocationSeasonDetail>("SeasonId", "PokemonLocationDetail, Season").Where(x => x.PokemonLocationDetail.PokemonId == pokemon.Id).ToList(),
                     PokemonId = pokemonId,
                     GenerationId = generationId,
                     AppConfig = this.appConfig,

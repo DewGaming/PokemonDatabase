@@ -1709,7 +1709,7 @@ namespace Pokedex.Controllers
             }
 
             List<PokemonLocationTimeDetail> existingEntries = this.dataService.GetObjects<PokemonLocationTimeDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
-                
+
             foreach (var e in existingEntries)
             {
                 this.dataService.DeletePokemonLocationTimeDetail(e.Id);
