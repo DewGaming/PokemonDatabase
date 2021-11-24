@@ -1543,6 +1543,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = games,
                 PokemonLocationDetail = pokemonLocationDetail,
+                GameIds = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.GameId).ToList(),
             };
 
             return this.View(model);

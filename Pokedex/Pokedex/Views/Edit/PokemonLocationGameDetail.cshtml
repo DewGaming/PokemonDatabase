@@ -22,6 +22,17 @@
     </style>
 }
 
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $.each(@Model.GameIds, function() {
+                $('#GameIds option[value="' + this + '"').prop('selected', true);
+            })
+        })
+    </script>
+}
+
 <h2>Update Pokemon Location Games</h2>
 
 <div>
