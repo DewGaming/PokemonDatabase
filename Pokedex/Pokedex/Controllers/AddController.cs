@@ -601,7 +601,25 @@ namespace Pokedex.Controllers
                 pokemonLocationDetail.ChanceOfEncounter = 0;
             }
 
-            this.dataService.AddPokemonLocationDetail(pokemonLocationDetail);
+            PokemonLocationDetail existingEntry = this.dataService.GetObjects<PokemonLocationDetail>()
+                .Find(x => x.ChanceOfEncounter == pokemonLocationDetail.ChanceOfEncounter
+                && x.MinimumLevel == pokemonLocationDetail.MinimumLevel
+                && x.MaximumLevel == pokemonLocationDetail.MaximumLevel
+                && x.PokemonId == pokemonLocationDetail.PokemonId
+                && x.LocationId == pokemonLocationDetail.LocationId
+                && x.CaptureMethodId == pokemonLocationDetail.CaptureMethodId
+                && x.SOSBattleOnly == pokemonLocationDetail.SOSBattleOnly
+                && x.SpecialSpawn == pokemonLocationDetail.SpecialSpawn
+                && x.FailedSnag == pokemonLocationDetail.FailedSnag);
+
+            if (existingEntry != null)
+            {
+                pokemonLocationDetail.Id = existingEntry.Id;
+            }
+            else
+            {
+                this.dataService.AddPokemonLocationDetail(pokemonLocationDetail);
+            }
 
             return this.RedirectToAction("PokemonLocationGameDetail", "Edit", new { pokemonLocationDetailId = pokemonLocationDetail.Id });
         }
