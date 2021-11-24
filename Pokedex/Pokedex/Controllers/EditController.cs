@@ -1631,6 +1631,8 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            List<PokemonLocationSeasonDetail> existingEntries = this.dataService.GetObjects<PokemonLocationSeasonDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+
             if (seasonIds.Count() != this.dataService.GetObjects<Season>().Count())
             {
                 PokemonLocationSeasonDetail pokemonLocationSeasonDetail;
@@ -1644,8 +1646,6 @@ namespace Pokedex.Controllers
                     this.dataService.AddPokemonLocationSeasonDetail(pokemonLocationSeasonDetail);
                 }
             }
-
-            List<PokemonLocationSeasonDetail> existingEntries = this.dataService.GetObjects<PokemonLocationSeasonDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
 
             foreach (var e in existingEntries)
             {
@@ -1695,6 +1695,8 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            List<PokemonLocationTimeDetail> existingEntries = this.dataService.GetObjects<PokemonLocationTimeDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+
             if (timeIds.Count() != this.dataService.GetObjects<Time>().Count())
             {
                 PokemonLocationTimeDetail pokemonLocationTimeDetail;
@@ -1708,8 +1710,6 @@ namespace Pokedex.Controllers
                     this.dataService.AddPokemonLocationTimeDetail(pokemonLocationTimeDetail);
                 }
             }
-
-            List<PokemonLocationTimeDetail> existingEntries = this.dataService.GetObjects<PokemonLocationTimeDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
 
             foreach (var e in existingEntries)
             {
