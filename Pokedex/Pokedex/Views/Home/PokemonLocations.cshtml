@@ -91,23 +91,23 @@
                                 <th>Level Range</th>
                                 <th>Capture Method</th>
                                 <th>Chance of Encounter</th>
-                                @if(Model.PokemonTimes.Count() != 0)
+                                @if(Model.PokemonTimes.Where(x => Model.PokemonLocations.Where(y => y.PokemonLocationDetail.LocationId == l.Id && y.GameId == g.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).Count() != 0)
                                 {
                                     <th>Times Available</th>
                                 }
-                                @if(Model.PokemonSeasons.Count() != 0)
+                                @if(Model.PokemonSeasons.Where(x => Model.PokemonLocations.Where(y => y.PokemonLocationDetail.LocationId == l.Id && y.GameId == g.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).Count() != 0)
                                 {
                                     <th>Seasons Available</th>
                                 }
-                                @if(Model.PokemonLocations.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
+                                @if(Model.PokemonLocations.Where(x => x.GameId == g.Id && x.PokemonLocationDetail.LocationId == l.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
                                 {
                                     <th>Only Encounterable Thru SOS Battles</th>
                                 }
-                                @if(Model.PokemonLocations.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SpecialSpawn) != null)
+                                @if(Model.PokemonLocations.Where(x => x.GameId == g.Id && x.PokemonLocationDetail.LocationId == l.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SpecialSpawn) != null)
                                 {
                                     <th>Only Available Thru Special Spawns</th>
                                 }
-                                @if(Model.PokemonLocations.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.FailedSnag) != null)
+                                @if(Model.PokemonLocations.Where(x => x.GameId == g.Id && x.PokemonLocationDetail.LocationId == l.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.FailedSnag) != null)
                                 {
                                     <th>Only Available After Failed Snag</th>
                                 }
@@ -132,32 +132,44 @@
                                         <td>
                                             @string.Concat(pl.ChanceOfEncounter, '%')
                                         </td>
-                                        @if(Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == l.Id).Count() != 0)
+                                        @if(Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
                                         {
                                             <td>
-                                                @for (var i = 0; i < Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == l.Id).Count(); i++)
+                                                @for (var i = 0; i < Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).Count(); i++)
                                                 {
                                                     if (@i != 0)
                                                     {
                                                         @(" / ")
                                                     }
 
-                                                    @Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == l.Id).ToList()[i].Time.Name;
+                                                    @Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).ToList()[i].Time.Name;
                                                 }
                                             </td>
                                         }
-                                        @if(Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == l.Id).Count() != 0)
+                                        else if(Model.PokemonTimes.Where(x => Model.PokemonLocations.Where(y => y.PokemonLocationDetail.LocationId == l.Id && y.GameId == g.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).Count() != 0)
                                         {
                                             <td>
-                                                @for (var i = 0; i < Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == l.Id).Count(); i++)
+                                                @("Available At All Times")
+                                            </td>
+                                        }
+                                        @if(Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
+                                        {
+                                            <td>
+                                                @for (var i = 0; i < Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).Count(); i++)
                                                 {
                                                     if (@i != 0)
                                                     {
                                                         @(" / ")
                                                     }
 
-                                                    @Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == l.Id).ToList()[i].Season.Name;
+                                                    @Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).ToList()[i].Season.Name;
                                                 }
+                                            </td>
+                                        }
+                                        else if(Model.PokemonSeasons.Where(x => Model.PokemonLocations.Where(y => y.PokemonLocationDetail.LocationId == l.Id && y.GameId == g.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).Count() != 0)
+                                        {
+                                            <td>
+                                                @("Available During Any Season")
                                             </td>
                                         }
                                         @if(Model.PokemonLocations.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
