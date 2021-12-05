@@ -2,6 +2,10 @@
 @model Pokedex.Models.PokemonLocationGameDetailViewModel
 @{
     Layout = "_layout";
+    foreach (var g in @Model.GameIds)
+    {
+        <input id="PriorGameIds" value="@g" />
+    }
 }
 
 @section styles
@@ -19,15 +23,25 @@
             border: none;
             width: 100%;
         }
+
+        #PriorGameIds {
+            display: none;
+        }
     </style>
 }
 
 @section scripts
 {
     <script>
-        $(document).ready(function() {
-            $.each(@Model.GameIds, function() {
+        $(document).ready(function(index, value) {
+            $('#PriorGameIds').each(function() {
                 $('#GameIds option[value="' + this + '"').prop('selected', true);
+            })
+        })
+
+        $('.clearGames').on('click', function() {
+            $('#GameIds option').each(function() {
+                $(this).prop('selected', false);
             })
         })
     </script>
@@ -77,4 +91,8 @@
             <button type="submit" class="btn btn-primary" role="button">Save</button>
         </p>
     }
+
+    <p>
+        <button class="clearGames btn btn-primary" role="button">Clear Games</button>
+    </p>
 </div>
