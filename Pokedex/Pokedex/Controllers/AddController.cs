@@ -482,6 +482,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_weather")]
+        public IActionResult Weather()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_weather")]
+        public IActionResult Weather(Weather weather)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddWeather(weather);
+
+            return this.RedirectToAction("Weathers", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_capture_rate")]
         public IActionResult CaptureRate()
         {

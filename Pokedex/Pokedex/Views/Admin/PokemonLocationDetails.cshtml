@@ -43,6 +43,10 @@
             {
                 <th scope="col">Times Available</th>
             }
+            @if (Model.AllPokemonLocationWeatherDetails.Count > 0)
+            {
+                <th scope="col">Times Available</th>
+            }
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllPokemon)
@@ -106,17 +110,27 @@
                 {
                     <td></td>
                 }
+                @if (Model.AllPokemonLocationWeatherDetails.Find(x => x.PokemonLocationDetailId == item.Id) != null)
+                {
+                    <td>@string.Join(", ", Model.AllPokemonLocationWeatherDetails.Where(x => x.PokemonLocationDetailId == item.Id).Select(x => x.Weather.Name))</td>
+                }
+                else if (Model.AllPokemonLocationWeatherDetails.Count > 0)
+                {
+                    <td></td>
+                }
                 <td>
                     <div>
                         <a href="@(this.Url.Action("PokemonLocationDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit</a>
                         @('|')
                         <a href="@(this.Url.Action("PokemonLocationGameDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Games</a>
+                        @('|')
+                        <a href="@(this.Url.Action("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Seasons</a>
                     </div>
                     <div>
-                        <a href="@(this.Url.Action("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Seasons</a>
-                        @('|')
                         <a href="@(this.Url.Action("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Times</a>
-                        @if (this.User.IsInRole("Owner") && Model.AllPokemonLocationGameDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationSeasonDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationTimeDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null)
+                        @('|')
+                        <a href="@(this.Url.Action("PokemonLocationWeatherDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Weathers</a>
+                        @if (this.User.IsInRole("Owner") && Model.AllPokemonLocationGameDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationSeasonDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationTimeDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null && Model.AllPokemonLocationWeatherDetails.Find(x => x.PokemonLocationDetailId == item.Id) == null)
                         {
                             @('|')
                             <a href="@(this.Url.Action("PokemonLocationDetail", "Delete", new { pokemonLocationDetailId = item.Id }))">Delete</a>

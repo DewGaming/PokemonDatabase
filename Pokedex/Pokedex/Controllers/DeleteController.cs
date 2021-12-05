@@ -146,6 +146,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_weather/{id:int}")]
+        public IActionResult Weather(int id)
+        {
+            Weather model = this.dataService.GetObjectByPropertyValue<Weather>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_weather/{id:int}")]
+        public IActionResult Weather(Weather weather)
+        {
+            this.dataService.DeleteWeather(weather.Id);
+
+            return this.RedirectToAction("Weathers", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_capture_method/{id:int}")]
         public IActionResult CaptureMethod(int id)
         {

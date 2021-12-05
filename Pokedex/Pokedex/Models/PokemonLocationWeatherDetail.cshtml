@@ -1,53 +1,28 @@
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
-@model Pokedex.Models.PokemonLocationGameDetailViewModel
+@model Pokedex.Models.PokemonLocationWeatherDetailViewModel
 @{
     Layout = "_layout";
-    foreach (var g in @Model.GameIds)
-    {
-        <input id="PriorGameIds" value="@g" />
-    }
 }
 
 @section styles
 {
     <style>
-        .gameList {
+        .weatherList {
             display: inline-block;
             border: solid #343a40 1px;
             overflow: hidden;
         }
 
-        #GameIds {
+        #WeatherIds {
             overflow: hidden;
             padding: 10px;
             border: none;
             width: 100%;
         }
-
-        #PriorGameIds {
-            display: none;
-        }
     </style>
 }
 
-@section scripts
-{
-    <script>
-        $(document).ready(function(index, value) {
-            $('#PriorGameIds').each(function() {
-                $('#GameIds option[value="' + this + '"').prop('selected', true);
-            })
-        })
-
-        $('.clearGames').on('click', function() {
-            $('#GameIds option').each(function() {
-                $(this).prop('selected', false);
-            })
-        })
-    </script>
-}
-
-<h2>Update Pokemon Location Games</h2>
+<h2>Update Pokemon Location Weathers</h2>
 
 <div>
     <table class="table">
@@ -83,13 +58,13 @@
 
         @Html.ValidationSummary()
 
-        <div class="form-group gameList">
-            @Html.Label("Games", "", new { @class = "col-md-2" })
-            @Html.ListBoxFor(x => x.GameIds, new SelectList(Model.AllGames, "Id", "Name"), new { size = Model.AllGames.Count(), htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+        <div class="form-group weatherList">
+            @Html.Label("Weathers", "", new { @class = "col-md-2" })
+            @Html.ListBoxFor(x => x.WeatherIds, new SelectList(Model.AllWeathers, "Id", "Name"), new { size = Model.AllWeathers.Count(), htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
         </div>
         <p>
             <button type="submit" class="btn btn-primary" role="button">Save</button>
-            <button class="clearGames btn btn-primary" role="button">Clear Games</button>
+            <a class="btn btn-primary" href="@(this.Url.Action("PokemonLocationDetails", "Admin", new { locationId = Model.PokemonLocationDetail.LocationId }))">Skip</a>
         </p>
     }
 </div>

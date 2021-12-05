@@ -29,6 +29,11 @@ namespace Pokedex.Models
         public List<PokemonLocationTimeDetail> AllPokemonLocationTimeDetails { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all pokemon location weather details.
+        /// </summary>
+        public List<PokemonLocationWeatherDetail> AllPokemonLocationWeatherDetails { get; set; }
+
+        /// <summary>
         /// Gets or sets the location.
         /// </summary>
         public Location Location { get; set; }

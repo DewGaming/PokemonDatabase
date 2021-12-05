@@ -1743,6 +1743,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddWeather(Weather weather)
+        {
+            this.dataContext.Weathers.Add(weather);
+            this.dataContext.SaveChanges();
+        }
+
         public void AddTypeChart(TypeChart typeChart)
         {
             this.dataContext.TypeCharts.Add(typeChart);
@@ -1999,6 +2005,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPokemonLocationWeatherDetail(PokemonLocationWeatherDetail locationWeatherDetail)
+        {
+            this.dataContext.PokemonLocationWeatherDetails.Add(locationWeatherDetail);
+            this.dataContext.SaveChanges();
+        }
+
         public void AddGameRegionDetail(GameRegionDetail gameRegionDetail)
         {
             this.dataContext.GameRegionDetails.Add(gameRegionDetail);
@@ -2026,6 +2038,12 @@ namespace Pokedex
         public void UpdateTime(Time time)
         {
             this.dataContext.Times.Update(time);
+            this.dataContext.SaveChanges();
+        }
+
+        public void UpdateWeather(Weather weather)
+        {
+            this.dataContext.Weathers.Update(weather);
             this.dataContext.SaveChanges();
         }
 
@@ -2388,10 +2406,24 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void DeleteWeather(int id)
+        {
+            Weather weather = this.GetObjectByPropertyValue<Weather>("Id", id);
+            this.dataContext.Weathers.Remove(weather);
+            this.dataContext.SaveChanges();
+        }
+
         public void DeletePokemonLocationTimeDetail(int id)
         {
             PokemonLocationTimeDetail locationTimeDetail = this.GetObjectByPropertyValue<PokemonLocationTimeDetail>("Id", id);
             this.dataContext.PokemonLocationTimeDetails.Remove(locationTimeDetail);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePokemonLocationWeatherDetail(int id)
+        {
+            PokemonLocationWeatherDetail locationWeatherDetail = this.GetObjectByPropertyValue<PokemonLocationWeatherDetail>("Id", id);
+            this.dataContext.PokemonLocationWeatherDetails.Remove(locationWeatherDetail);
             this.dataContext.SaveChanges();
         }
 
