@@ -659,7 +659,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 </table>
                 @if (catchable)
                 {
-                    <a class="locationButton btn btn-primary" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Pokemon.Id, generationId = @g })" role="button">View In-Game Locations</a>
+                    <a target="_blank" class="locationButton btn btn-primary" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Pokemon.Id, generationId = @g })" role="button">View In-Game Locations</a>
                 }
             </div>
             <div class="pokemonInfo pokemonTraining pokemonTables">
