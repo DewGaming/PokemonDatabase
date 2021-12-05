@@ -1569,7 +1569,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = games,
                 PokemonLocationDetail = pokemonLocationDetail,
-                GameIds = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.GameId).ToList(),
+                GameIds = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.GameId).ToList(),
             };
 
             return this.View(model);
@@ -1596,7 +1596,7 @@ namespace Pokedex.Controllers
             }
 
             PokemonLocationGameDetail pokemonLocationGameDetail;
-            List<PokemonLocationGameDetail> existingEntries = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
+            List<PokemonLocationGameDetail> existingEntries = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).ToList();
             foreach (var g in gameIds)
             {
                 pokemonLocationGameDetail = new PokemonLocationGameDetail()
@@ -1678,7 +1678,7 @@ namespace Pokedex.Controllers
                 this.dataService.DeletePokemonLocationSeasonDetail(e.Id);
             }
 
-            List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
+            List<Game> games = includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
 
             List<Generation> generations = this.dataService.GetObjects<Game>(includes: "Generation").Where(x => games.Any(y => y.GenerationId == x.GenerationId)).Select(x => x.Generation).ToList();
 
@@ -1742,7 +1742,7 @@ namespace Pokedex.Controllers
                 this.dataService.DeletePokemonLocationTimeDetail(e.Id);
             }
 
-            List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>().Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
+            List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
 
             List<Generation> generations = this.dataService.GetObjects<Game>(includes: "Generation").Where(x => games.Any(y => y.GenerationId == x.GenerationId)).Select(x => x.Generation).ToList();
 
