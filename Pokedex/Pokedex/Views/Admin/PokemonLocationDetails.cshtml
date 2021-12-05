@@ -125,8 +125,7 @@
                         <a href="@(this.Url.Action("PokemonLocationGameDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Games</a>
                         @('|')
                         <a href="@(this.Url.Action("PokemonLocationSeasonDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Seasons</a>
-                    </div>
-                    <div>
+                        @('|')
                         <a href="@(this.Url.Action("PokemonLocationTimeDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Times</a>
                         @('|')
                         <a href="@(this.Url.Action("PokemonLocationWeatherDetail", "Edit", new { pokemonLocationDetailId = item.Id }))">Edit Weathers</a>
