@@ -1678,7 +1678,7 @@ namespace Pokedex.Controllers
                 this.dataService.DeletePokemonLocationSeasonDetail(e.Id);
             }
 
-            List<Game> games = includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
+            List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
 
             List<Generation> generations = this.dataService.GetObjects<Game>(includes: "Generation").Where(x => games.Any(y => y.GenerationId == x.GenerationId)).Select(x => x.Generation).ToList();
 
