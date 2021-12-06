@@ -46,7 +46,6 @@ namespace Pokedex.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            this.dataService.AddPageView("Home Page", this.User.IsInRole("Owner"));
             return this.View(this.appConfig);
         }
 
