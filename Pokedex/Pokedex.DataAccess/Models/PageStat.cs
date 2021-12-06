@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pokedex.DataAccess.Models
@@ -9,5 +10,8 @@ namespace Pokedex.DataAccess.Models
         public string Name { get; set; }
         [Required]
         public int ViewCount { get; set; }
+
+        [Required]
+        public DateTime LastVisit { get; set; }
     }
 }

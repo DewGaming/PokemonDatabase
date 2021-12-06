@@ -12,6 +12,7 @@
             <tr>
                 <th scope="col">Page Name</th>
                 <th scope="col">View Count</th>
+                <th scope="col">Last Visit</th>
                 <th scope="col">Actions</th>
             </tr>
             @foreach (var item in Model.OrderByDescending(x => x.ViewCount).ThenBy(x => x.Name))
@@ -19,6 +20,7 @@
                 <tr>
                     <td>@item.Name</td>
                     <td>@item.ViewCount</td>
+                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.LastVisit, TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")).ToString("MMMM dd yyyy h:mm tt")</td>
                     <td><a href="@this.Url.Action("PageStat", "Delete", new { id = item.Id })">Delete</a></td>
                 </tr>
             }

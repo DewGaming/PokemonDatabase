@@ -41,11 +41,12 @@ namespace Pokedex
                 if (pageStat != null)
                 {
                     pageStat.ViewCount += 1;
+                    pageStat.LastVisit = System.DateTime.Now.ToUniversalTime();
                     this.UpdatePageStat(pageStat);
                 }
                 else
                 {
-                    this.AddPageStat(new PageStat() { Name = pageName, ViewCount = 1 });
+                    this.AddPageStat(new PageStat() { Name = pageName, ViewCount = 1, LastVisit = System.DateTime.Now.ToUniversalTime() });
                 }
             }
         }
