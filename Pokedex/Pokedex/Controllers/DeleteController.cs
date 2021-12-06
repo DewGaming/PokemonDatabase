@@ -165,6 +165,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_pageStat/{id:int}")]
+        public IActionResult PageStat(int id)
+        {
+            PageStat model = this.dataService.GetObjectByPropertyValue<PageStat>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_pageStat/{id:int}")]
+        public IActionResult PageStat(PageStat pageStat)
+        {
+            this.dataService.DeletePageStat(pageStat.Id);
+
+            return this.RedirectToAction("PageStats", "Owner");
+        }
+
+        [HttpGet]
         [Route("delete_capture_method/{id:int}")]
         public IActionResult CaptureMethod(int id)
         {

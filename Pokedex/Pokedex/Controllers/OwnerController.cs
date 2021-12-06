@@ -156,6 +156,30 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Opens the page to view the stats of all pages.
+        /// </summary>
+        /// <returns>The page stat page.</returns>
+        [Route("page_stats")]
+        public IActionResult PageStats()
+        {
+            List<PageStat> model = this.dataService.GetObjects<PageStat>();
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Clears the view count of all pages and then returns owner to home page.
+        /// </summary>
+        /// <returns>The home page.</returns>
+        [Route("clear_page_views")]
+        public IActionResult ClearPageViews()
+        {
+            this.dataService.ClearPageViews();
+
+            return this.RedirectToAction("PageStats", "Owner");
+        }
+
+        /// <summary>
         /// Opens the page to view comments left by users.
         /// </summary>
         /// <returns>The comments page.</returns>

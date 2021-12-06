@@ -46,6 +46,7 @@ namespace Pokedex.Controllers
         [Route("")]
         public IActionResult Index()
         {
+            this.dataService.AddPageView("Home Page", this.User.IsInRole("Owner"));
             return this.View(this.appConfig);
         }
 
@@ -80,6 +81,7 @@ namespace Pokedex.Controllers
         [Route("search/{search}")]
         public IActionResult SearchRedirect(string search)
         {
+            this.dataService.AddPageView("Search Page", this.User.IsInRole("Owner"));
             search = HttpUtility.UrlDecode(search);
 
             if (!string.IsNullOrEmpty(search))
@@ -125,6 +127,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
+            this.dataService.AddPageView("All Pokemon Page", this.User.IsInRole("Owner"));
             List<int> model = this.dataService.GetGenerationsFromPokemon();
 
             return this.View(model);
@@ -134,6 +137,7 @@ namespace Pokedex.Controllers
         [Route("team_randomizer")]
         public IActionResult TeamRandomizer()
         {
+            this.dataService.AddPageView("Team Randomizer Page", this.User.IsInRole("Owner"));
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
@@ -194,6 +198,7 @@ namespace Pokedex.Controllers
         [Route("typing_evaluator")]
         public IActionResult TypingEvaluator()
         {
+            this.dataService.AddPageView("Typing Evaluator Page", this.User.IsInRole("Owner"));
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
@@ -207,6 +212,7 @@ namespace Pokedex.Controllers
         [Route("ability_evaluator")]
         public IActionResult AbilityEvaluator()
         {
+            this.dataService.AddPageView("Ability Evalutator Page", this.User.IsInRole("Owner"));
             AbilityEvaluatorViewModel model = new AbilityEvaluatorViewModel()
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("Name"),
@@ -223,6 +229,7 @@ namespace Pokedex.Controllers
         [Route("day_care_evaluator")]
         public IActionResult DayCareEvaluator()
         {
+            this.dataService.AddPageView("Day Care Evaluator Page", this.User.IsInRole("Owner"));
             List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon();
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
@@ -247,6 +254,7 @@ namespace Pokedex.Controllers
         [Route("game_availability")]
         public IActionResult GameAvailability()
         {
+            this.dataService.AddPageView("Game Availability Page", this.User.IsInRole("Owner"));
             List<Game> model = this.dataService.GetGamesForEachReleaseDate();
 
             return this.View(model);
@@ -273,6 +281,7 @@ namespace Pokedex.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
+            this.dataService.AddPageView("Pokemon Page", this.User.IsInRole("Owner"));
             int pokemonId = selectedPokemonId;
             int generationId = selectedGenerationId;
             selectedPokemonId = 0;
@@ -380,6 +389,7 @@ namespace Pokedex.Controllers
         [Route("pokemon_locations/{name}")]
         public IActionResult PokemonLocations(string name)
         {
+            this.dataService.AddPageView("Pokemon Locations Page", this.User.IsInRole("Owner"));
             int pokemonId = selectedPokemonId;
             int generationId = selectedGenerationId;
             selectedPokemonId = 0;
@@ -437,6 +447,7 @@ namespace Pokedex.Controllers
         [Route("type_chart")]
         public IActionResult TypeChart()
         {
+            this.dataService.AddPageView("Type Chart Page", this.User.IsInRole("Owner"));
             TypeChartViewModel model = new TypeChartViewModel()
             {
                 TypeChart = this.dataService.GetTypeCharts(),
@@ -451,6 +462,7 @@ namespace Pokedex.Controllers
         [Route("capture_calculator")]
         public IActionResult CaptureCalculator()
         {
+            this.dataService.AddPageView("Capture Calculator Page", this.User.IsInRole("Owner"));
             CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
             {
                 AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
@@ -470,6 +482,7 @@ namespace Pokedex.Controllers
         [Route("comment")]
         public IActionResult Comment()
         {
+            this.dataService.AddPageView("Comment Page", this.User.IsInRole("Owner"));
             CommentViewModel model = new CommentViewModel()
             {
                 AllCategories = this.dataService.GetObjects<CommentCategory>(),
@@ -523,16 +536,10 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("about")]
-        public IActionResult About()
-        {
-            return this.View();
-        }
-
-        [AllowAnonymous]
         [Route("error")]
         public IActionResult Error()
         {
+            this.dataService.AddPageView("Error Page", this.User.IsInRole("Owner"));
             return this.View();
         }
 

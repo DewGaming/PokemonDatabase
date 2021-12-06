@@ -1,0 +1,31 @@
+@model List<Pokedex.DataAccess.Models.PageStat>;
+@{
+    Layout = "_Layout";
+}
+
+<a class="btn btn-primary" href="@this.Url.Action("ClearPageViews", "Owner")">Clear Page Views</a>
+
+<div class="pageStatTable">
+    @if (Model.Count() > 0)
+    {
+        <table class="table">
+            <tr>
+                <th scope="col">Page Name</th>
+                <th scope="col">View Count</th>
+                <th scope="col">Actions</th>
+            </tr>
+            @foreach (var item in Model.OrderByDescending(x => x.ViewCount).ThenBy(x => x.Name))
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.ViewCount</td>
+                    <td><a href="@this.Url.Action("PageStat", "Delete", new { id = item.Id })">Delete</a></td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div class="noStats">There are no stats for any page!</div>
+    }
+</div>

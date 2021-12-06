@@ -28,6 +28,41 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Records a page's view.
+        /// </summary>
+        /// <param name="pageName">The name of the page the view is being counted for.</param>
+        /// <param name="isOwner">A check to ensure the user is not the owner.</param>
+        public void AddPageView(string pageName, bool isOwner)
+        {
+            if (!isOwner)
+            {
+                PageStat pageStat = this.GetObjects<PageStat>().Find(x => x.Name == pageName);
+
+                if (pageStat != null)
+                {
+                    pageStat.ViewCount += 1;
+                    this.UpdatePageStat(pageStat);
+                }
+                else
+                {
+                    this.AddPageStat(new PageStat() { Name = pageName, ViewCount = 1 });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resets the view counts of all current pages.
+        /// </summary>
+        public void ClearPageViews()
+        {
+            foreach (var p in this.GetObjects<PageStat>())
+            {
+                p.ViewCount = 0;
+                this.UpdatePageStat(p);
+            }
+        }
+
+        /// <summary>
         /// Returns a list of objects from the passed-through TEntity class.
         /// </summary>
         /// <typeparam name="TEntity">The generic type parameter.</typeparam>
@@ -1677,6 +1712,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void AddPageStat(PageStat pageStat)
+        {
+            this.dataContext.PageStats.Add(pageStat);
+            this.dataContext.SaveChanges();
+        }
+
         public void AddPokemonGameDetail(PokemonGameDetail pokemonGameDetail)
         {
             this.dataContext.PokemonGameDetails.Add(pokemonGameDetail);
@@ -2197,6 +2238,12 @@ namespace Pokedex
             this.dataContext.SaveChanges();
         }
 
+        public void UpdatePageStat(PageStat pageStat)
+        {
+            this.dataContext.PageStats.Update(pageStat);
+            this.dataContext.SaveChanges();
+        }
+
         public void UpdatePokemonTeamIV(PokemonTeamIV pokemonTeamIVs)
         {
             this.dataContext.PokemonTeamIVs.Update(pokemonTeamIVs);
@@ -2493,6 +2540,13 @@ namespace Pokedex
         {
             Time time = this.GetObjectByPropertyValue<Time>("Id", id);
             this.dataContext.Times.Remove(time);
+            this.dataContext.SaveChanges();
+        }
+
+        public void DeletePageStat(int id)
+        {
+            PageStat pageStat = this.GetObjectByPropertyValue<PageStat>("Id", id);
+            this.dataContext.PageStats.Remove(pageStat);
             this.dataContext.SaveChanges();
         }
 
