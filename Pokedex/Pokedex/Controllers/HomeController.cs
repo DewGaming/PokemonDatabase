@@ -539,7 +539,23 @@ namespace Pokedex.Controllers
         public IActionResult Error()
         {
             this.dataService.AddPageView("Error Page", this.User.IsInRole("Owner"));
-            return this.View();
+            var exceptionHandlerFeature = this.HttpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>() !;
+
+            if (this.User.IsInRole("Owner"))
+            {
+                this.EmailComment(new Comment()
+                {
+                    CategoryId = 1,
+                    Category = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", 1),
+                    Name = string.Concat(exceptionHandlerFeature.Error.Message, exceptionHandlerFeature.Error.StackTrace),
+                });
+
+                return this.View();
+            }
+            else
+            {
+                return this.Problem(detail: exceptionHandlerFeature.Error.StackTrace, title: exceptionHandlerFeature.Error.Message);
+            }
         }
 
         private void EmailComment(Comment comment)
