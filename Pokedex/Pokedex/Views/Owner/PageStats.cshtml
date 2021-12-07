@@ -15,7 +15,7 @@
                 <th scope="col">Last Visit</th>
                 <th scope="col">Actions</th>
             </tr>
-            @foreach (var item in Model.OrderByDescending(x => x.LastVisit).ThenBy(x => x.PageCount))
+            @foreach (var item in Model.OrderByDescending(x => x.LastVisit).ThenBy(x => x.ViewCount))
             {
                 <tr>
                     <td>@item.Name</td>
