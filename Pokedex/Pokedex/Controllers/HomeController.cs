@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
@@ -541,7 +541,7 @@ namespace Pokedex.Controllers
             this.dataService.AddPageView("Error Page", this.User.IsInRole("Owner"));
             var exceptionHandlerFeature = this.HttpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>() !;
 
-            if (this.User.IsInRole("Owner"))
+            if (!this.User.IsInRole("Owner"))
             {
                 this.EmailComment(new Comment()
                 {
