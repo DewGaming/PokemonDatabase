@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
@@ -539,23 +539,42 @@ namespace Pokedex.Controllers
         public IActionResult Error()
         {
             this.dataService.AddPageView("Error Page", this.User.IsInRole("Owner"));
-            var exceptionHandlerFeature = this.HttpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>() !;
+            Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature exceptionHandlerFeature = this.HttpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>() !;
 
-            if (!this.User.IsInRole("Owner"))
+            if (!this.User.IsInRole("Owner") && exceptionHandlerFeature != null)
             {
-                this.EmailComment(new Comment()
+                Comment comment = new Comment()
                 {
                     CategoryId = 1,
-                    Category = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", 1),
-                    Name = string.Concat(exceptionHandlerFeature.Error.Message, exceptionHandlerFeature.Error.StackTrace),
-                });
+                    PageId = 13,
+                    Name = string.Concat(exceptionHandlerFeature.Error.GetType().ToString(), " (", exceptionHandlerFeature.Error.Message, ")"),
+                };
 
-                return this.View();
+                if (exceptionHandlerFeature.Error.InnerException != null)
+                {
+                    comment.Name = string.Concat(comment.Name, " (", exceptionHandlerFeature.Error.InnerException.Message, ")");
+                }
+
+                comment.Name = string.Concat(comment.Name, exceptionHandlerFeature.Error.StackTrace.Replace("   ", " "));
+
+                this.dataService.AddComment(comment);
+
+                this.EmailComment(comment);
             }
-            else
+            else if (exceptionHandlerFeature != null)
             {
-                return this.Problem(detail: exceptionHandlerFeature.Error.StackTrace, title: exceptionHandlerFeature.Error.Message);
+                string name = string.Concat(exceptionHandlerFeature.Error.GetType().ToString(), " (", exceptionHandlerFeature.Error.Message, ")");
+
+                if (exceptionHandlerFeature.Error.InnerException != null)
+                {
+                    name = string.Concat(name, " (", exceptionHandlerFeature.Error.InnerException.Message, ")");
+                }
+
+                name = string.Concat(name, exceptionHandlerFeature.Error.StackTrace.Replace("   ", " "));
+                return this.Problem(detail: name, title: exceptionHandlerFeature.Error.Message);
             }
+
+            return this.View();
         }
 
         private void EmailComment(Comment comment)
@@ -566,10 +585,12 @@ namespace Pokedex.Controllers
                 {
                     MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
                     MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
-                    string body = comment.Category.Name;
-                    if (comment.Page != null)
+                    string body = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", comment.CategoryId).Name;
+                    body = string.Concat(body, " for ", this.dataService.GetObjectByPropertyValue<CommentPage>("Id", comment.PageId).Name);
+
+                    if (comment.OtherPage != null)
                     {
-                        body = string.Concat(body, " for ", comment.Page.Name);
+                        body = string.Concat(body, " (", comment.OtherPage, ")");
                     }
 
                     if (comment.PokemonName != null)
