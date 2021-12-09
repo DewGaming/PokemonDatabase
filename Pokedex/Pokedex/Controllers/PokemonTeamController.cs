@@ -16,8 +16,6 @@ namespace Pokedex.Controllers
     [Route("")]
     public class PokemonTeamController : Controller
     {
-        private static List<PokemonTeam> pokemonTeams;
-
         private readonly DataService dataService;
 
         private readonly AppConfig appConfig;
@@ -125,7 +123,7 @@ namespace Pokedex.Controllers
         [Route("create_pokemon/{pokemonTeamId:int}")]
         public IActionResult CreatePokemon(int pokemonTeamId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId || pokemonTeams[pokemonTeamId - 1].SixthPokemonId != null)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -162,7 +160,7 @@ namespace Pokedex.Controllers
             {
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
-                    AllPokemon = this.FillPokemonList(pokemonTeams[pokemonTeamId - 1]),
+                    AllPokemon = this.FillPokemonList(this.dataService.GetAllPokemonTeams(this.User.Identity.Name)[pokemonTeamId - 1]),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                     GameId = pokemonTeamDetail.GameId,
@@ -173,7 +171,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.dataService.GetAllPokemonTeams(this.User.Identity.Name)[pokemonTeamId - 1];
 
             Pokemon pokemon = this.dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
 
@@ -217,7 +215,7 @@ namespace Pokedex.Controllers
         [Route("update_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditPokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -295,7 +293,7 @@ namespace Pokedex.Controllers
         [Route("delete_team/{pokemonTeamId:int}")]
         public IActionResult DeleteTeam(int pokemonTeamId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -345,7 +343,7 @@ namespace Pokedex.Controllers
         [Route("update_ev/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditEV(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -429,7 +427,7 @@ namespace Pokedex.Controllers
         [Route("update_moveset/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditMoveset(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -491,7 +489,7 @@ namespace Pokedex.Controllers
         [Route("update_iv/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditIV(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -557,7 +555,7 @@ namespace Pokedex.Controllers
         [Route("delete_team_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult DeletePokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            this.UpdatePokemonTeamList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -601,9 +599,7 @@ namespace Pokedex.Controllers
         [Route("edit_team/{pokemonTeamId:int}")]
         public IActionResult EditTeam(int pokemonTeamId)
         {
-            this.UpdatePokemonTeamList();
-
-            PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.dataService.GetAllPokemonTeams(this.User.Identity.Name)[pokemonTeamId - 1];
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel()
             {
@@ -654,14 +650,6 @@ namespace Pokedex.Controllers
             this.dataService.UpdatePokemonTeam(originalPokemonTeam);
 
             return this.RedirectToAction("PokemonTeams", "User");
-        }
-
-        /// <summary>
-        /// Updates the static list with the given user's username.
-        /// </summary>
-        private void UpdatePokemonTeamList()
-        {
-            pokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name);
         }
 
         /// <summary>
