@@ -23,7 +23,7 @@
                 </td>
                 <td>
                     <a href="@(this.Url.Action("ExperienceGrowth", "Edit", new { id = item.Id }))">Edit</a>
-                    @if (!(Model.AllPokemon.Exists(x => x.EggCycleId == item.Id)))
+                    @if (!(Model.AllPokemon.Exists(x => x.ExperienceGrowthId == item.Id)))
                     {
                         @('|')
                         <a href="@(this.Url.Action("ExperienceGrowth", "Delete", new { id = item.Id }))">Delete</a>
