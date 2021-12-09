@@ -1867,7 +1867,7 @@ namespace Pokedex.Controllers
 
                 AbilityEvaluatorPageViewModel model = new AbilityEvaluatorPageViewModel()
                 {
-                    AllPokemonWithAbility = abilityList,
+                    AllPokemonWithAbility = abilityList ?? new List<PokemonAbilityDetail>(),
                     AllPokemon = pokemonList,
                     AppConfig = this.appConfig,
                     GenerationId = generationID,
