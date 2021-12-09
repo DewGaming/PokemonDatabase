@@ -40,7 +40,7 @@ namespace Pokedex.Controllers
         [Route("delete_generation/{id:int}")]
         public IActionResult Generation(Generation generation)
         {
-            this.dataService.DeleteGeneration(generation.Id);
+            this.dataService.DeleteObject<Generation>(generation.Id);
 
             return this.RedirectToAction("Generations", "Admin");
         }
@@ -67,7 +67,7 @@ namespace Pokedex.Controllers
         [Route("delete_pokeball/{id:int}")]
         public IActionResult Pokeball(Pokeball pokeball)
         {
-            this.dataService.DeletePokeball(pokeball.Id);
+            this.dataService.DeleteObject<Pokeball>(pokeball.Id);
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -94,7 +94,7 @@ namespace Pokedex.Controllers
         [Route("delete_region/{id:int}")]
         public IActionResult Region(Region region)
         {
-            this.dataService.DeleteRegion(region.Id);
+            this.dataService.DeleteObject<Region>(region.Id);
 
             return this.RedirectToAction("Regions", "Admin");
         }
@@ -159,7 +159,7 @@ namespace Pokedex.Controllers
         [Route("delete_weather/{id:int}")]
         public IActionResult Weather(Weather weather)
         {
-            this.dataService.DeleteWeather(weather.Id);
+            this.dataService.DeleteObject<Weather>(weather.Id);
 
             return this.RedirectToAction("Weathers", "Admin");
         }

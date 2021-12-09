@@ -102,7 +102,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddMessage(message);
+            this.dataService.AddObject(message);
 
             return this.RedirectToAction("Comments", "Owner");
         }
@@ -150,7 +150,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddMessage(message);
+            this.dataService.AddObject(message);
 
             return this.RedirectToAction("ViewMessages", "User");
         }
@@ -272,7 +272,7 @@ namespace Pokedex.Controllers
             if (reviewedPokemon == null)
             {
                 reviewedPokemon = new ReviewedPokemon() { PokemonId = pokemon.Id };
-                this.dataService.AddReviewedPokemon(reviewedPokemon);
+                this.dataService.AddObject(reviewedPokemon);
             }
 
             return this.RedirectToAction("Pokemon", "Admin");

@@ -524,7 +524,7 @@ namespace Pokedex.Controllers
                 comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
             }
 
-            this.dataService.AddComment(comment);
+            this.dataService.AddObject(comment);
 
             comment.Category = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", comment.CategoryId);
             comment.Page = this.dataService.GetObjectByPropertyValue<CommentPage>("Id", comment.PageId);
@@ -557,7 +557,7 @@ namespace Pokedex.Controllers
 
                 comment.Name = string.Concat(comment.Name, exceptionHandlerFeature.Error.StackTrace.Replace("   ", " "));
 
-                this.dataService.AddComment(comment);
+                this.dataService.AddObject(comment);
 
                 this.EmailComment(comment);
             }

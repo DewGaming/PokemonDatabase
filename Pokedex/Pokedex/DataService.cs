@@ -42,11 +42,11 @@ namespace Pokedex
                 {
                     pageStat.ViewCount += 1;
                     pageStat.LastVisit = System.DateTime.Now.ToUniversalTime();
-                    this.UpdatePageStat(pageStat);
+                    this.UpdateObject<PageStat>(pageStat);
                 }
                 else
                 {
-                    this.AddPageStat(new PageStat() { Name = pageName, ViewCount = 1, LastVisit = System.DateTime.Now.ToUniversalTime() });
+                    this.AddObject(new PageStat() { Name = pageName, ViewCount = 1, LastVisit = System.DateTime.Now.ToUniversalTime() });
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace Pokedex
             foreach (var p in this.GetObjects<PageStat>())
             {
                 p.ViewCount = 0;
-                this.UpdatePageStat(p);
+                this.UpdateObject<PageStat>(p);
             }
         }
 
@@ -1695,147 +1695,25 @@ namespace Pokedex
                 .ToList();
         }
 
-        public void AddComment(Comment comment)
+        public void AddObject<TEntity>(TEntity entity)
+            where TEntity : class
         {
-            this.dataContext.Comments.Add(comment);
+            this.dataContext.Set<TEntity>().Add(entity);
             this.dataContext.SaveChanges();
         }
 
-        public void AddMessage(Message message)
+        public void UpdateObject<TEntity>(TEntity entity)
+            where TEntity : class
         {
-            this.dataContext.Messages.Add(message);
+            this.dataContext.Set<TEntity>().Update(entity);
             this.dataContext.SaveChanges();
         }
 
-        public void AddUser(User user)
+        public void DeleteObject<TEntity>(int id)
+            where TEntity : class
         {
-            this.dataContext.Users.Add(user);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPageStat(PageStat pageStat)
-        {
-            this.dataContext.PageStats.Add(pageStat);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonGameDetail(PokemonGameDetail pokemonGameDetail)
-        {
-            this.dataContext.PokemonGameDetails.Add(pokemonGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonGameDetails(List<PokemonGameDetail> details)
-        {
-            this.dataContext.PokemonGameDetails.AddRange(details);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddEvolutionMethod(EvolutionMethod evolutionMethod)
-        {
-            this.dataContext.EvolutionMethods.Add(evolutionMethod);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddCaptureRate(CaptureRate captureRate)
-        {
-            this.dataContext.CaptureRates.Add(captureRate);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddBaseHappiness(BaseHappiness baseHappiness)
-        {
-            this.dataContext.BaseHappiness.Add(baseHappiness);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddGeneration()
-        {
-            this.dataContext.Generations.Add(new Generation());
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddRegion(Region region)
-        {
-            this.dataContext.Regions.Add(region);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddGame(Game game)
-        {
-            this.dataContext.Games.Add(game);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddFormItem(FormItem formItem)
-        {
-            this.dataContext.FormItems.Add(formItem);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddEvolution(Evolution evolution)
-        {
-            this.dataContext.Evolutions.Add(evolution);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddType(Type type)
-        {
-            this.dataContext.Types.Add(type);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddWeather(Weather weather)
-        {
-            this.dataContext.Weathers.Add(weather);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddTypeChart(TypeChart typeChart)
-        {
-            this.dataContext.TypeCharts.Add(typeChart);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddLegendaryType(LegendaryType legendaryType)
-        {
-            this.dataContext.LegendaryTypes.Add(legendaryType);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddReviewedPokemon(ReviewedPokemon reviewedPokemon)
-        {
-            this.dataContext.ReviewedPokemons.Add(reviewedPokemon);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddEggGroup(EggGroup eggGroup)
-        {
-            this.dataContext.EggGroups.Add(eggGroup);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddAbility(Ability ability)
-        {
-            this.dataContext.Abilities.Add(ability);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddBattleItem(BattleItem battleItem)
-        {
-            this.dataContext.BattleItems.Add(battleItem);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemon(Pokemon pokemon)
-        {
-            this.dataContext.Pokemon.Add(pokemon);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonTeam(PokemonTeam pokemonTeam)
-        {
-            this.dataContext.PokemonTeams.Add(pokemonTeam);
+            var entity = this.GetObjectByPropertyValue<TEntity>("Id", id);
+            this.dataContext.Set<TEntity>().Remove(entity);
             this.dataContext.SaveChanges();
         }
 
@@ -1843,20 +1721,23 @@ namespace Pokedex
         {
             if (pokemonTeamDetail.PokemonTeamEVId == null)
             {
-                int pokemonTeamEVId = this.AddPokemonTeamEV(new PokemonTeamEV());
-                pokemonTeamDetail.PokemonTeamEVId = pokemonTeamEVId;
+                PokemonTeamEV pokemonTeamEV = new PokemonTeamEV();
+                this.AddObject(pokemonTeamEV);
+                pokemonTeamDetail.PokemonTeamEVId = pokemonTeamEV.Id;
             }
 
             if (pokemonTeamDetail.PokemonTeamIVId == null)
             {
-                int pokemonTeamIVId = this.AddPokemonTeamIV(new PokemonTeamIV());
-                pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIVId;
+                PokemonTeamIV pokemonTeamIV = new PokemonTeamIV();
+                this.AddObject(pokemonTeamIV);
+                pokemonTeamDetail.PokemonTeamIVId = pokemonTeamIV.Id;
             }
 
             if (pokemonTeamDetail.PokemonTeamMovesetId == null)
             {
-                int pokemonTeamMovesetId = this.AddPokemonTeamMoveset(new PokemonTeamMoveset());
-                pokemonTeamDetail.PokemonTeamMovesetId = pokemonTeamMovesetId;
+                PokemonTeamMoveset pokemonTeamMoveset = new PokemonTeamMoveset();
+                this.AddObject(pokemonTeamMoveset);
+                pokemonTeamDetail.PokemonTeamMovesetId = pokemonTeamMoveset.Id;
             }
 
             this.dataContext.PokemonTeamDetails.Add(pokemonTeamDetail);
@@ -1864,398 +1745,16 @@ namespace Pokedex
             return pokemonTeamDetail.Id;
         }
 
-        public int AddPokemonTeamEV(PokemonTeamEV pokemonTeamEV)
-        {
-            this.dataContext.PokemonTeamEVs.Add(pokemonTeamEV);
-            this.dataContext.SaveChanges();
-            return pokemonTeamEV.Id;
-        }
-
-        public int AddPokemonTeamIV(PokemonTeamIV pokemonTeamIV)
-        {
-            this.dataContext.PokemonTeamIVs.Add(pokemonTeamIV);
-            this.dataContext.SaveChanges();
-            return pokemonTeamIV.Id;
-        }
-
-        public int AddPokemonTeamMoveset(PokemonTeamMoveset pokemonTeamMoveset)
-        {
-            this.dataContext.PokemonTeamMovesets.Add(pokemonTeamMoveset);
-            this.dataContext.SaveChanges();
-            return pokemonTeamMoveset.Id;
-        }
-
-        public void AddPokemonFormDetails(PokemonFormDetail pokemonFormDetail)
-        {
-            this.dataContext.PokemonFormDetails.Add(pokemonFormDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonTyping(PokemonTypeDetail typing)
-        {
-            this.dataContext.PokemonTypeDetails.Add(typing);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddEggCycle(EggCycle eggCycle)
-        {
-            this.dataContext.EggCycles.Add(eggCycle);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddExperienceGrowth(ExperienceGrowth experienceGrowth)
-        {
-            this.dataContext.ExperienceGrowths.Add(experienceGrowth);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddGenderRatio(GenderRatio genderRatio)
-        {
-            this.dataContext.GenderRatios.Add(genderRatio);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLegendaryDetails(PokemonLegendaryDetail pokemonLegendaryDetail)
-        {
-            this.dataContext.PokemonLegendaryDetails.Add(pokemonLegendaryDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonAbilities(PokemonAbilityDetail abilities)
-        {
-            this.dataContext.PokemonAbilityDetails.Add(abilities);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonEggGroups(PokemonEggGroupDetail eggGroups)
-        {
-            this.dataContext.PokemonEggGroupDetails.Add(eggGroups);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonBaseStat(BaseStat baseStat)
-        {
-            this.dataContext.BaseStats.Add(baseStat);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonEVYield(EVYield evYield)
-        {
-            this.dataContext.EVYields.Add(evYield);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddClassification(Classification classification)
-        {
-            this.dataContext.Classifications.Add(classification);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddNature(Nature nature)
-        {
-            this.dataContext.Natures.Add(nature);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddForm(Form form)
-        {
-            this.dataContext.Forms.Add(form);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddCommentCategory(CommentCategory commentCategory)
-        {
-            this.dataContext.CommentCategories.Add(commentCategory);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddCommentPage(CommentPage commentPage)
-        {
-            this.dataContext.CommentPages.Add(commentPage);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokeball(Pokeball pokeball)
-        {
-            this.dataContext.Pokeballs.Add(pokeball);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
-        {
-            this.dataContext.PokeballCatchModifierDetails.Add(pokeballCatchModifierDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddStatus(Status status)
-        {
-            this.dataContext.Statuses.Add(status);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonCaptureRateDetail(PokemonCaptureRateDetail pokemonCaptureRate)
-        {
-            this.dataContext.PokemonCaptureRateDetails.Add(pokemonCaptureRate);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
-        {
-            this.dataContext.PokemonLocationDetails.Add(pokemonLocationDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddLocation(Location location)
-        {
-            this.dataContext.Locations.Add(location);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddCaptureMethod(CaptureMethod captureMethod)
-        {
-            this.dataContext.CaptureMethods.Add(captureMethod);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddSeason(Season season)
-        {
-            this.dataContext.Seasons.Add(season);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddTime(Time time)
-        {
-            this.dataContext.Times.Add(time);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLocationGameDetail(PokemonLocationGameDetail locationGameDetail)
-        {
-            this.dataContext.PokemonLocationGameDetails.Add(locationGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLocationSeasonDetail(PokemonLocationSeasonDetail locationSeasonDetail)
-        {
-            this.dataContext.PokemonLocationSeasonDetails.Add(locationSeasonDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLocationTimeDetail(PokemonLocationTimeDetail locationTimeDetail)
-        {
-            this.dataContext.PokemonLocationTimeDetails.Add(locationTimeDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddPokemonLocationWeatherDetail(PokemonLocationWeatherDetail locationWeatherDetail)
-        {
-            this.dataContext.PokemonLocationWeatherDetails.Add(locationWeatherDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void AddGameRegionDetail(GameRegionDetail gameRegionDetail)
-        {
-            this.dataContext.GameRegionDetails.Add(gameRegionDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonLocationTimeDetail(PokemonLocationTimeDetail locationTimeDetail)
-        {
-            this.dataContext.PokemonLocationTimeDetails.Update(locationTimeDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonLocationSeasonDetail(PokemonLocationSeasonDetail locationSeasonDetail)
-        {
-            this.dataContext.PokemonLocationSeasonDetails.Update(locationSeasonDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonLocationGameDetail(PokemonLocationGameDetail locationGameDetail)
-        {
-            this.dataContext.PokemonLocationGameDetails.Update(locationGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateTime(Time time)
-        {
-            this.dataContext.Times.Update(time);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateWeather(Weather weather)
-        {
-            this.dataContext.Weathers.Update(weather);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateSeason(Season season)
-        {
-            this.dataContext.Seasons.Update(season);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateCaptureMethod(CaptureMethod captureMethod)
-        {
-            this.dataContext.CaptureMethods.Update(captureMethod);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateLocation(Location location)
-        {
-            this.dataContext.Locations.Update(location);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
-        {
-            this.dataContext.PokemonLocationDetails.Update(pokemonLocationDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonCaptureRateDetail(PokemonCaptureRateDetail pokemonCaptureRate)
-        {
-            this.dataContext.PokemonCaptureRateDetails.Update(pokemonCaptureRate);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateStatus(Status status)
-        {
-            this.dataContext.Statuses.Update(status);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
-        {
-            this.dataContext.PokeballCatchModifierDetails.Update(pokeballCatchModifierDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokeball(Pokeball pokeball)
-        {
-            this.dataContext.Pokeballs.Update(pokeball);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateCommentPage(CommentPage commentPage)
-        {
-            this.dataContext.CommentPages.Update(commentPage);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateCommentCategory(CommentCategory commentCategories)
-        {
-            this.dataContext.CommentCategories.Update(commentCategories);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateUser(User user)
-        {
-            this.dataContext.Users.Update(user);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateComment(Comment comment)
-        {
-            this.dataContext.Comments.Update(comment);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateMessage(Message message)
-        {
-            this.dataContext.Messages.Update(message);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonTypeDetail(PokemonTypeDetail pokemonTypeDetail)
-        {
-            this.dataContext.PokemonTypeDetails.Update(pokemonTypeDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateEvolutionMethod(EvolutionMethod evolutionMethod)
-        {
-            this.dataContext.EvolutionMethods.Update(evolutionMethod);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonAbilityDetail(PokemonAbilityDetail pokemonAbilityDetail)
-        {
-            this.dataContext.PokemonAbilityDetails.Update(pokemonAbilityDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonTeam(PokemonTeam pokemonTeam)
-        {
-            this.dataContext.PokemonTeams.Update(pokemonTeam);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonTeamDetail(PokemonTeamDetail pokemonTeamDetail)
-        {
-            this.dataContext.PokemonTeamDetails.Update(pokemonTeamDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonEggGroupDetail(PokemonEggGroupDetail pokemonEggGroupDetail)
-        {
-            this.dataContext.PokemonEggGroupDetails.Update(pokemonEggGroupDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateBaseStat(BaseStat baseStats)
-        {
-            this.dataContext.BaseStats.Update(baseStats);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateEggCycle(EggCycle eggCycle)
-        {
-            this.dataContext.EggCycles.Update(eggCycle);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateExperienceGrowth(ExperienceGrowth experienceGrowth)
-        {
-            this.dataContext.ExperienceGrowths.Update(experienceGrowth);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateGenderRatio(GenderRatio genderRatio)
-        {
-            this.dataContext.GenderRatios.Update(genderRatio);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateBaseHappiness(BaseHappiness baseHappiness)
-        {
-            this.dataContext.BaseHappiness.Update(baseHappiness);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonTeamEV(PokemonTeamEV pokemonTeamEVs)
-        {
-            this.dataContext.PokemonTeamEVs.Update(pokemonTeamEVs);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePageStat(PageStat pageStat)
-        {
-            this.dataContext.PageStats.Update(pageStat);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonTeamIV(PokemonTeamIV pokemonTeamIVs)
-        {
-            this.dataContext.PokemonTeamIVs.Update(pokemonTeamIVs);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonTeamMoveset(PokemonTeamMoveset pokemonTeamMoveset)
-        {
-            pokemonTeamMoveset = this.SortMoveset(pokemonTeamMoveset);
-
-            this.dataContext.PokemonTeamMovesets.Update(pokemonTeamMoveset);
+        public void DeleteGame(int id)
+        {
+            Game game = this.GetObjectByPropertyValue<Game>("Id", id);
+            List<GameRegionDetail> gameRegionDetails = this.GetObjects<GameRegionDetail>().Where(x => x.GameId == id).ToList();
+            foreach (var r in gameRegionDetails)
+            {
+                this.dataContext.GameRegionDetails.Remove(r);
+            }
+
+            this.dataContext.Games.Remove(game);
             this.dataContext.SaveChanges();
         }
 
@@ -2303,175 +1802,10 @@ namespace Pokedex
             return moveset;
         }
 
-        public void UpdateEVYield(EVYield evYields)
-        {
-            this.dataContext.EVYields.Update(evYields);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateEvolution(Evolution evolution)
-        {
-            this.dataContext.Evolutions.Update(evolution);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateFormItem(FormItem formItem)
-        {
-            this.dataContext.FormItems.Update(formItem);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateCaptureRate(CaptureRate captureRate)
-        {
-            this.dataContext.CaptureRates.Update(captureRate);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemon(Pokemon pokemon)
-        {
-            this.dataContext.Pokemon.Update(pokemon);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdatePokemonFormDetail(PokemonFormDetail pokemonFormDetail)
-        {
-            this.dataContext.PokemonFormDetails.Update(pokemonFormDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateRegion(Region region)
-        {
-            this.dataContext.Regions.Update(region);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateGame(Game game)
-        {
-            this.dataContext.Games.Update(game);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateType(Type type)
-        {
-            this.dataContext.Types.Update(type);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateEggGroup(EggGroup eggGroup)
-        {
-            this.dataContext.EggGroups.Update(eggGroup);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateForm(Form form)
-        {
-            this.dataContext.Forms.Update(form);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateBattleItem(BattleItem battleItem)
-        {
-            this.dataContext.BattleItems.Update(battleItem);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateAbility(Ability ability)
-        {
-            this.dataContext.Abilities.Update(ability);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateClassification(Classification nature)
-        {
-            this.dataContext.Classifications.Update(nature);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateNature(Nature classification)
-        {
-            this.dataContext.Natures.Update(classification);
-            this.dataContext.SaveChanges();
-        }
-
-        public void UpdateLegendaryType(LegendaryType legendaryType)
-        {
-            this.dataContext.LegendaryTypes.Update(legendaryType);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemon(int id)
-        {
-            Pokemon pokemon = this.GetPokemonById(id);
-            this.dataContext.Pokemon.Remove(pokemon);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteGeneration(int id)
-        {
-            Generation generation = this.GetObjectByPropertyValue<Generation>("Id", id);
-            this.dataContext.Generations.Remove(generation);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteRegion(int id)
-        {
-            Region region = this.GetObjectByPropertyValue<Region>("Id", id);
-            this.dataContext.Regions.Remove(region);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteGame(int id)
-        {
-            Game game = this.GetObjectByPropertyValue<Game>("Id", id);
-            List<GameRegionDetail> gameRegionDetails = this.GetObjects<GameRegionDetail>().Where(x => x.GameId == id).ToList();
-            foreach (var r in gameRegionDetails)
-            {
-                this.dataContext.GameRegionDetails.Remove(r);
-            }
-
-            this.dataContext.Games.Remove(game);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteGameRegionDetail(int id)
-        {
-            GameRegionDetail gameRegionDetail = this.GetObjectByPropertyValue<GameRegionDetail>("Id", id);
-            this.dataContext.GameRegionDetails.Remove(gameRegionDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonLocationGameDetail(int id)
-        {
-            PokemonLocationGameDetail locationGameDetail = this.GetObjectByPropertyValue<PokemonLocationGameDetail>("Id", id);
-            this.dataContext.PokemonLocationGameDetails.Remove(locationGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonLocationSeasonDetail(int id)
-        {
-            PokemonLocationSeasonDetail locationSeasonDetail = this.GetObjectByPropertyValue<PokemonLocationSeasonDetail>("Id", id);
-            this.dataContext.PokemonLocationSeasonDetails.Remove(locationSeasonDetail);
-            this.dataContext.SaveChanges();
-        }
-
         public void DeleteWeather(int id)
         {
             Weather weather = this.GetObjectByPropertyValue<Weather>("Id", id);
             this.dataContext.Weathers.Remove(weather);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonLocationTimeDetail(int id)
-        {
-            PokemonLocationTimeDetail locationTimeDetail = this.GetObjectByPropertyValue<PokemonLocationTimeDetail>("Id", id);
-            this.dataContext.PokemonLocationTimeDetails.Remove(locationTimeDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonLocationWeatherDetail(int id)
-        {
-            PokemonLocationWeatherDetail locationWeatherDetail = this.GetObjectByPropertyValue<PokemonLocationWeatherDetail>("Id", id);
-            this.dataContext.PokemonLocationWeatherDetails.Remove(locationWeatherDetail);
             this.dataContext.SaveChanges();
         }
 
@@ -2725,7 +2059,7 @@ namespace Pokedex
             }
 
             team = this.ShiftPokemonTeam(team);
-            this.UpdatePokemonTeam(team);
+            this.UpdateObject<PokemonTeam>(team);
         }
 
         public PokemonTeam ShiftPokemonTeam(PokemonTeam pokemonTeam)

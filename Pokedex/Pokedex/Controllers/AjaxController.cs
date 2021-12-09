@@ -383,7 +383,7 @@ namespace Pokedex.Controllers
                         pokemonTeam.InsertPokemon(pokemonTeamDetail);
                     }
 
-                    this.dataService.AddPokemonTeam(pokemonTeam);
+                    this.dataService.AddObject(pokemonTeam);
 
                     return string.Concat("Team \"", pokemonTeam.PokemonTeamName, "\" has been added successfully!");
                 }
@@ -1470,7 +1470,7 @@ namespace Pokedex.Controllers
                         Effective = 0.5m,
                         GenerationId = genId,
                     };
-                    this.dataService.AddTypeChart(typeChart);
+                    this.dataService.AddObject(typeChart);
                 }
 
                 foreach (var w in weaknesses)
@@ -1482,7 +1482,7 @@ namespace Pokedex.Controllers
                         Effective = 2m,
                         GenerationId = genId,
                     };
-                    this.dataService.AddTypeChart(typeChart);
+                    this.dataService.AddObject(typeChart);
                 }
 
                 foreach (var i in immunities)
@@ -1494,7 +1494,7 @@ namespace Pokedex.Controllers
                         Effective = 0m,
                         GenerationId = genId,
                     };
-                    this.dataService.AddTypeChart(typeChart);
+                    this.dataService.AddObject(typeChart);
                 }
 
                 foreach (var t in existingCharts)
@@ -1552,7 +1552,7 @@ namespace Pokedex.Controllers
                         PokemonId = pokemonId,
                         GameId = g,
                     };
-                    this.dataService.AddPokemonGameDetail(pokemonGameDetail);
+                    this.dataService.AddObject(pokemonGameDetail);
                 }
 
                 foreach (var g in existingGameDetails)
@@ -1629,7 +1629,7 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    this.dataService.AddPokemonGameDetails(newGameDetails);
+                    this.dataService.AddObject(newGameDetails);
                     this.dataService.DeletePokemonGameDetails(existingGameDetails);
                 }
 

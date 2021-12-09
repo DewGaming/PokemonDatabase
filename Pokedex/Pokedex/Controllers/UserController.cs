@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -117,7 +117,7 @@ namespace Pokedex.Controllers
             }
 
             message.Id = 0;
-            this.dataService.AddMessage(message);
+            this.dataService.AddObject(message);
 
             return this.RedirectToAction("ViewMessages", "User");
         }

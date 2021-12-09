@@ -69,7 +69,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonTeam(pokemonTeam);
+            this.dataService.AddObject(pokemonTeam);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -734,17 +734,20 @@ namespace Pokedex.Controllers
             {
                 if (p.EVs != null)
                 {
-                    p.PokemonTeamEVId = this.dataService.AddPokemonTeamEV(p.EVs);
+                    this.dataService.AddObject(p.EVs);
+                    p.PokemonTeamEVId = p.EVs.Id;
                 }
 
                 if (p.IVs != null)
                 {
-                    p.PokemonTeamIVId = this.dataService.AddPokemonTeamIV(p.IVs);
+                    this.dataService.AddObject(p.IVs);
+                    p.PokemonTeamIVId = p.IVs.Id;
                 }
 
                 if (p.Moveset != null)
                 {
-                    p.PokemonTeamMovesetId = this.dataService.AddPokemonTeamMoveset(p.Moveset);
+                    this.dataService.AddObject(p.Moveset);
+                    p.PokemonTeamMovesetId = p.Moveset.Id;
                 }
 
                 int pokemonId = this.dataService.AddPokemonTeamDetail(p);
@@ -805,7 +808,7 @@ namespace Pokedex.Controllers
                 pokemonTeam.SixthPokemon = null;
             }
 
-            this.dataService.AddPokemonTeam(pokemonTeam);
+            this.dataService.AddObject(pokemonTeam);
         }
 
         /// <summary>

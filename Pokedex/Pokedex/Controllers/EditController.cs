@@ -136,12 +136,12 @@ namespace Pokedex.Controllers
                     RegionId = r,
                     GameId = game.Id,
                 };
-                this.dataService.AddGameRegionDetail(gameRegionDetail);
+                this.dataService.AddObject(gameRegionDetail);
             }
 
             foreach (var e in existingEntries)
             {
-                this.dataService.DeleteGameRegionDetail(e.Id);
+                this.dataService.DeleteObject<GameRegionDetail>(e.Id);
             }
 
             this.dataService.UpdateObject<Game>(game);
@@ -1604,12 +1604,12 @@ namespace Pokedex.Controllers
                     PokemonLocationDetailId = pokemonLocationDetailId,
                     GameId = g,
                 };
-                this.dataService.AddPokemonLocationGameDetail(pokemonLocationGameDetail);
+                this.dataService.AddObject(pokemonLocationGameDetail);
             }
 
             foreach (var e in existingEntries)
             {
-                this.dataService.DeletePokemonLocationGameDetail(e.Id);
+                this.dataService.DeleteObject<PokemonLocationGameDetail>(e.Id);
             }
 
             List<Generation> generations = this.dataService.GetObjects<Game>(includes: "Generation").Where(x => gameIds.Any(y => y == x.Id)).Select(x => x.Generation).ToList();
@@ -1669,13 +1669,13 @@ namespace Pokedex.Controllers
                         PokemonLocationDetailId = pokemonLocationDetailId,
                         SeasonId = s,
                     };
-                    this.dataService.AddPokemonLocationSeasonDetail(pokemonLocationSeasonDetail);
+                    this.dataService.AddObject(pokemonLocationSeasonDetail);
                 }
             }
 
             foreach (var e in existingEntries)
             {
-                this.dataService.DeletePokemonLocationSeasonDetail(e.Id);
+                this.dataService.DeleteObject<PokemonLocationSeasonDetail>(e.Id);
             }
 
             List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
@@ -1733,13 +1733,13 @@ namespace Pokedex.Controllers
                         PokemonLocationDetailId = pokemonLocationDetailId,
                         TimeId = t,
                     };
-                    this.dataService.AddPokemonLocationTimeDetail(pokemonLocationTimeDetail);
+                    this.dataService.AddObject(pokemonLocationTimeDetail);
                 }
             }
 
             foreach (var e in existingEntries)
             {
-                this.dataService.DeletePokemonLocationTimeDetail(e.Id);
+                this.dataService.DeleteObject<PokemonLocationTimeDetail>(e.Id);
             }
 
             List<Game> games = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => x.PokemonLocationDetailId == pokemonLocationDetailId).Select(x => x.Game).ToList();
@@ -1797,13 +1797,13 @@ namespace Pokedex.Controllers
                         PokemonLocationDetailId = pokemonLocationDetailId,
                         WeatherId = t,
                     };
-                    this.dataService.AddPokemonLocationWeatherDetail(pokemonLocationWeatherDetail);
+                    this.dataService.AddObject(pokemonLocationWeatherDetail);
                 }
             }
 
             foreach (var e in existingEntries)
             {
-                this.dataService.DeletePokemonLocationWeatherDetail(e.Id);
+                this.dataService.DeleteObject<PokemonLocationWeatherDetail>(e.Id);
             }
 
             return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId).LocationId });

@@ -98,7 +98,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddEvolution(evolution);
+            this.dataService.AddObject(evolution);
 
             if (this.dataService.GetPokemonById(evolution.EvolutionPokemonId).IsComplete)
             {
@@ -117,7 +117,7 @@ namespace Pokedex.Controllers
         [Route("add_generation")]
         public IActionResult Generation()
         {
-            this.dataService.AddGeneration();
+            this.dataService.AddObject(new DataAccess.Models.Generation());
 
             return this.RedirectToAction("Generations", "Admin");
         }
@@ -149,7 +149,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddRegion(region);
+            this.dataService.AddObject(region);
 
             return this.RedirectToAction("Regions", "Admin");
         }
@@ -193,7 +193,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddFormItem(formItem);
+            this.dataService.AddObject(formItem);
 
             return this.RedirectToAction("FormItems", "Admin");
         }
@@ -225,7 +225,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddType(type);
+            this.dataService.AddObject(type);
 
             return this.RedirectToAction("Types", "Admin");
         }
@@ -247,7 +247,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddEggCycle(eggCycle);
+            this.dataService.AddObject(eggCycle);
 
             return this.RedirectToAction("EggCycles", "Admin");
         }
@@ -269,7 +269,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddExperienceGrowth(experienceGrowth);
+            this.dataService.AddObject(experienceGrowth);
 
             return this.RedirectToAction("ExperienceGrowths", "Admin");
         }
@@ -291,7 +291,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddGenderRatio(genderRatio);
+            this.dataService.AddObject(genderRatio);
 
             return this.RedirectToAction("GenderRatios", "Admin");
         }
@@ -313,7 +313,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddLegendaryType(legendaryType);
+            this.dataService.AddObject(legendaryType);
 
             return this.RedirectToAction("LegendaryTypes", "Admin");
         }
@@ -335,7 +335,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddEggGroup(eggGroup);
+            this.dataService.AddObject(eggGroup);
 
             return this.RedirectToAction("EggGroups", "Admin");
         }
@@ -366,7 +366,7 @@ namespace Pokedex.Controllers
                 classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
             }
 
-            this.dataService.AddClassification(classification);
+            this.dataService.AddObject(classification);
 
             return this.RedirectToAction("Classifications", "Admin");
         }
@@ -388,7 +388,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddNature(nature);
+            this.dataService.AddObject(nature);
 
             return this.RedirectToAction("Natures", "Admin");
         }
@@ -410,7 +410,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddForm(form);
+            this.dataService.AddObject(form);
 
             return this.RedirectToAction("Forms", "Admin");
         }
@@ -432,7 +432,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddEvolutionMethod(evolutionMethod);
+            this.dataService.AddObject(evolutionMethod);
 
             return this.RedirectToAction("EvolutionMethods", "Admin");
         }
@@ -454,7 +454,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddSeason(season);
+            this.dataService.AddObject(season);
 
             return this.RedirectToAction("Seasons", "Admin");
         }
@@ -476,7 +476,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddTime(time);
+            this.dataService.AddObject(time);
 
             return this.RedirectToAction("Times", "Admin");
         }
@@ -498,7 +498,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddWeather(weather);
+            this.dataService.AddObject(weather);
 
             return this.RedirectToAction("Weathers", "Admin");
         }
@@ -520,7 +520,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddCaptureRate(captureRate);
+            this.dataService.AddObject(captureRate);
 
             return this.RedirectToAction("CaptureRates", "Admin");
         }
@@ -542,7 +542,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddCaptureMethod(captureMethod);
+            this.dataService.AddObject(captureMethod);
 
             return this.RedirectToAction("CaptureMethods", "Admin");
         }
@@ -574,7 +574,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddLocation(location);
+            this.dataService.AddObject(location);
 
             return this.RedirectToAction("Locations", "Admin");
         }
@@ -640,7 +640,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.dataService.AddPokemonLocationDetail(pokemonLocationDetail);
+                this.dataService.AddObject(pokemonLocationDetail);
             }
 
             return this.RedirectToAction("PokemonLocationGameDetail", "Edit", new { pokemonLocationDetailId = pokemonLocationDetail.Id });
@@ -663,7 +663,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddAbility(ability);
+            this.dataService.AddObject(ability);
 
             return this.RedirectToAction("Abilities", "Admin");
         }
@@ -685,7 +685,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddCommentCategory(commentCategory);
+            this.dataService.AddObject(commentCategory);
 
             return this.RedirectToAction("CommentCategories", "Admin");
         }
@@ -717,7 +717,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokeball(pokeball);
+            this.dataService.AddObject(pokeball);
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -742,7 +742,7 @@ namespace Pokedex.Controllers
             pokeballCatchModifierDetail.PokeballId = id;
             pokeballCatchModifierDetail.Id = 0;
 
-            this.dataService.AddPokeballCatchModifierDetail(pokeballCatchModifierDetail);
+            this.dataService.AddObject(pokeballCatchModifierDetail);
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -764,7 +764,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddCommentPage(commentPage);
+            this.dataService.AddObject(commentPage);
 
             return this.RedirectToAction("CommentPages", "Admin");
         }
@@ -786,7 +786,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddBaseHappiness(baseHappiness);
+            this.dataService.AddObject(baseHappiness);
 
             return this.RedirectToAction("BaseHappinesses", "Admin");
         }
@@ -820,7 +820,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddGame(game);
+            this.dataService.AddObject(game);
 
             foreach (var r in regionIds)
             {
@@ -830,7 +830,7 @@ namespace Pokedex.Controllers
                     RegionId = r,
                 };
 
-                this.dataService.AddGameRegionDetail(gameRegionDetail);
+                this.dataService.AddObject(gameRegionDetail);
             }
 
             return this.RedirectToAction("Games", "Admin");
@@ -853,7 +853,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddStatus(status);
+            this.dataService.AddObject(status);
 
             return this.RedirectToAction("Statuses", "Admin");
         }
@@ -889,7 +889,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonCaptureRateDetail(pokemonCaptureRate);
+            this.dataService.AddObject(pokemonCaptureRate);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -924,7 +924,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            this.dataService.AddBattleItem(battleItem);
+            this.dataService.AddObject(battleItem);
 
             return this.RedirectToAction("BattleItems", "Admin");
         }
@@ -1069,12 +1069,12 @@ namespace Pokedex.Controllers
 
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", newPokemon.GameId);
 
-            this.dataService.AddPokemon(newPokemon);
+            this.dataService.AddObject(newPokemon);
 
             this.UploadImages(normalUpload, normalUrlUpload, newPokemon);
             this.UploadImages(shinyUpload, shinyUrlUpload, newPokemon);
 
-            this.dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            this.dataService.AddObject(new PokemonGameDetail()
             {
                 PokemonId = newPokemon.Id,
                 GameId = newPokemon.GameId,
@@ -1160,7 +1160,7 @@ namespace Pokedex.Controllers
             alternatePokemon.ClassificationId = pokemon.ClassificationId;
             alternatePokemon.IsComplete = false;
 
-            this.dataService.AddPokemon(alternatePokemon);
+            this.dataService.AddObject(alternatePokemon);
 
             this.UploadImages(normalUpload, normalUrlUpload, alternatePokemon);
             this.UploadImages(shinyUpload, shinyUrlUpload, alternatePokemon);
@@ -1173,7 +1173,7 @@ namespace Pokedex.Controllers
                 PokemonId = alternatePokemon.Id,
                 GenerationId = this.dataService.GetObjectByPropertyValue<Game>("Id", alternatePokemon.GameId).GenerationId,
             };
-            this.dataService.AddPokemonEggGroups(alternatePokemonEggGroups);
+            this.dataService.AddObject(alternatePokemonEggGroups);
 
             PokemonFormDetail alternateForm = new PokemonFormDetail()
             {
@@ -1181,9 +1181,9 @@ namespace Pokedex.Controllers
                 AltFormPokemonId = alternatePokemon.Id,
                 FormId = pokemon.FormId,
             };
-            this.dataService.AddPokemonFormDetails(alternateForm);
+            this.dataService.AddObject(alternateForm);
 
-            this.dataService.AddPokemonGameDetail(new PokemonGameDetail()
+            this.dataService.AddObject(new PokemonGameDetail()
             {
                 PokemonId = alternatePokemon.Id,
                 GameId = alternatePokemon.GameId,
@@ -1225,7 +1225,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonTyping(typing);
+            this.dataService.AddObject(typing);
 
             if (this.dataService.GetPokemonWithAbilities(typing.PokemonId) == null && !this.dataService.GetPokemonById(typing.PokemonId).IsComplete)
             {
@@ -1270,7 +1270,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonAbilities(abilities);
+            this.dataService.AddObject(abilities);
 
             if (this.dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null && !this.dataService.GetPokemonById(abilities.PokemonId).IsComplete)
             {
@@ -1358,7 +1358,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonEggGroups(eggGroups);
+            this.dataService.AddObject(eggGroups);
 
             if (this.dataService.GetPokemonBaseStats(eggGroups.PokemonId, eggGroups.GenerationId) == null && !this.dataService.GetPokemonById(eggGroups.PokemonId).IsComplete)
             {
@@ -1401,7 +1401,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonBaseStat(baseStat);
+            this.dataService.AddObject(baseStat);
 
             if (this.dataService.GetPokemonEVYields(baseStat.PokemonId, baseStat.GenerationId) == null && !this.dataService.GetPokemonById(baseStat.PokemonId).IsComplete)
             {
@@ -1443,7 +1443,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonEVYield(evYield);
+            this.dataService.AddObject(evYield);
 
             if (this.User.IsInRole("Owner") && !this.dataService.GetPokemonById(evYield.PokemonId).IsComplete)
             {
@@ -1486,7 +1486,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.AddPokemonLegendaryDetails(pokemonLegendaryDetails);
+            this.dataService.AddObject(pokemonLegendaryDetails);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

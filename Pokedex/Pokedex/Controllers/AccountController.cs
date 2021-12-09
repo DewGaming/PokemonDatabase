@@ -75,7 +75,7 @@ namespace Pokedex.Controllers
                 PasswordHash = passwordHasher.HashPassword(null, registerViewModel.Password),
             };
 
-            this.dataService.AddUser(user);
+            this.dataService.AddObject(user);
 
             List<Claim> claims = new List<Claim>
             {
