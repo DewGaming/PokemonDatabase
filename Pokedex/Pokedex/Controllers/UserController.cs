@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -167,7 +167,7 @@ namespace Pokedex.Controllers
 
             user.PasswordHash = passwordHasher.HashPassword(null, newPasswordViewModel.NewPassword);
 
-            this.dataService.UpdateUser(user);
+            this.dataService.UpdateObject<User>(user);
 
             return this.RedirectToAction("Index", "Home");
         }

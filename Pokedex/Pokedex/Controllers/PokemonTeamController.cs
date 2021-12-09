@@ -184,7 +184,7 @@ namespace Pokedex.Controllers
 
             pokemonTeam.InsertPokemon(this.dataService.GetPokemonTeamDetail(pokemonTeamDetailId));
 
-            this.dataService.UpdatePokemonTeam(pokemonTeam);
+            this.dataService.UpdateObject<PokemonTeam>(pokemonTeam);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -279,7 +279,7 @@ namespace Pokedex.Controllers
                 pokemonTeamDetail.Gender = null;
             }
 
-            this.dataService.UpdatePokemonTeamDetail(pokemonTeamDetail);
+            this.dataService.UpdateObject<PokemonTeamDetail>(pokemonTeamDetail);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -412,7 +412,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdatePokemonTeamEV(pokemonTeamEV);
+            this.dataService.UpdateObject<PokemonTeamEV>(pokemonTeamEV);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -474,7 +474,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdatePokemonTeamMoveset(pokemonTeamMoveset);
+            this.dataService.UpdateObject<PokemonTeamMoveset>(pokemonTeamMoveset);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -540,7 +540,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdatePokemonTeamIV(pokemonTeamIV);
+            this.dataService.UpdateObject<PokemonTeamIV>(pokemonTeamIV);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -647,7 +647,7 @@ namespace Pokedex.Controllers
                 originalPokemonTeam.GameId = newPokemonTeam.GameId;
             }
 
-            this.dataService.UpdatePokemonTeam(originalPokemonTeam);
+            this.dataService.UpdateObject<PokemonTeam>(originalPokemonTeam);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }

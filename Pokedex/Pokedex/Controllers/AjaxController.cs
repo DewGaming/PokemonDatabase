@@ -31,7 +31,7 @@ namespace Pokedex.Controllers
             foreach (var m in messages.Where(x => !x.IsRead))
             {
                 m.IsRead = true;
-                this.dataService.UpdateMessage(m);
+                this.dataService.UpdateObject<Message>(m);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Pokedex.Controllers
         {
             User user = this.dataService.GetObjectByPropertyValue<User>("Id", Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
             user.LastVisit = DateTime.Now.ToUniversalTime();
-            this.dataService.UpdateUser(user);
+            this.dataService.UpdateObject<User>(user);
         }
 
         [Route("get-pokemon-by-generation-admin/{generationId}")]
