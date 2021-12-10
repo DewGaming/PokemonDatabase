@@ -48,7 +48,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<User>(user);
+            this.dataService.UpdateObject(user);
 
             return this.RedirectToAction("Users", "Owner");
         }
@@ -144,7 +144,7 @@ namespace Pokedex.Controllers
                 this.dataService.DeleteObject<GameRegionDetail>(e.Id);
             }
 
-            this.dataService.UpdateObject<Game>(game);
+            this.dataService.UpdateObject(game);
 
             return this.RedirectToAction("Games", "Admin");
         }
@@ -216,7 +216,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<BattleItem>(battleItem);
+            this.dataService.UpdateObject(battleItem);
 
             return this.RedirectToAction("BattleItems", "Admin");
         }
@@ -392,12 +392,12 @@ namespace Pokedex.Controllers
                     if (p.PokedexNumber != pokemon.PokedexNumber)
                     {
                         p.PokedexNumber = pokemon.PokedexNumber;
-                        this.dataService.UpdateObject<Pokemon>(p);
+                        this.dataService.UpdateObject(p);
                     }
                 }
             }
 
-            this.dataService.UpdateObject<Pokemon>(pokemon);
+            this.dataService.UpdateObject(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -648,7 +648,7 @@ namespace Pokedex.Controllers
                 pokemonTypeDetail.SecondaryTypeId = null;
             }
 
-            this.dataService.UpdateObject<PokemonTypeDetail>(pokemonTypeDetail);
+            this.dataService.UpdateObject(pokemonTypeDetail);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -696,7 +696,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonAbilityDetail>(pokemonAbilityDetail);
+            this.dataService.UpdateObject(pokemonAbilityDetail);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -742,7 +742,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonEggGroupDetail>(pokemonEggGroupDetail);
+            this.dataService.UpdateObject(pokemonEggGroupDetail);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -768,7 +768,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<BaseStat>(baseStat);
+            this.dataService.UpdateObject(baseStat);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -794,7 +794,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<EVYield>(evYield);
+            this.dataService.UpdateObject(evYield);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -832,7 +832,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Type>(type);
+            this.dataService.UpdateObject(type);
 
             return this.RedirectToAction("Types", "Admin");
         }
@@ -858,7 +858,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<EggCycle>(eggCycle);
+            this.dataService.UpdateObject(eggCycle);
 
             return this.RedirectToAction("EggCycles", "Admin");
         }
@@ -884,7 +884,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<ExperienceGrowth>(experienceGrowth);
+            this.dataService.UpdateObject(experienceGrowth);
 
             return this.RedirectToAction("ExperienceGrowths", "Admin");
         }
@@ -910,7 +910,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<GenderRatio>(genderRatio);
+            this.dataService.UpdateObject(genderRatio);
 
             return this.RedirectToAction("GenderRatios", "Admin");
         }
@@ -936,7 +936,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<EggGroup>(eggGroup);
+            this.dataService.UpdateObject(eggGroup);
 
             return this.RedirectToAction("EggGroups", "Admin");
         }
@@ -994,7 +994,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<FormItem>(formItem);
+            this.dataService.UpdateObject(formItem);
 
             return this.RedirectToAction("FormItems", "Admin");
         }
@@ -1020,7 +1020,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Form>(form);
+            this.dataService.UpdateObject(form);
 
             return this.RedirectToAction("Forms", "Admin");
         }
@@ -1046,7 +1046,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<EvolutionMethod>(evolutionMethod);
+            this.dataService.UpdateObject(evolutionMethod);
 
             return this.RedirectToAction("EvolutionMethods", "Admin");
         }
@@ -1072,7 +1072,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<CaptureRate>(captureRate);
+            this.dataService.UpdateObject(captureRate);
 
             return this.RedirectToAction("CaptureRates", "Admin");
         }
@@ -1098,7 +1098,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<BaseHappiness>(baseHappiness);
+            this.dataService.UpdateObject(baseHappiness);
 
             return this.RedirectToAction("BaseHappinesses", "Admin");
         }
@@ -1124,7 +1124,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Season>(season);
+            this.dataService.UpdateObject(season);
 
             return this.RedirectToAction("Seasons", "Admin");
         }
@@ -1150,7 +1150,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<CaptureMethod>(captureMethod);
+            this.dataService.UpdateObject(captureMethod);
 
             return this.RedirectToAction("CaptureMethods", "Admin");
         }
@@ -1176,7 +1176,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Time>(time);
+            this.dataService.UpdateObject(time);
 
             return this.RedirectToAction("Times", "Admin");
         }
@@ -1202,7 +1202,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Weather>(weather);
+            this.dataService.UpdateObject(weather);
 
             return this.RedirectToAction("Weathers", "Admin");
         }
@@ -1244,7 +1244,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Pokeball>(pokeball);
+            this.dataService.UpdateObject(pokeball);
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -1286,7 +1286,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Region>(region);
+            this.dataService.UpdateObject(region);
 
             return this.RedirectToAction("Regions", "Admin");
         }
@@ -1312,7 +1312,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Status>(status);
+            this.dataService.UpdateObject(status);
 
             return this.RedirectToAction("Statuses", "Admin");
         }
@@ -1354,7 +1354,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Location>(location);
+            this.dataService.UpdateObject(location);
 
             return this.RedirectToAction("Locations", "Admin");
         }
@@ -1394,7 +1394,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonCaptureRateDetail>(pokemonCaptureRate);
+            this.dataService.UpdateObject(pokemonCaptureRate);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -1420,7 +1420,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokeballCatchModifierDetail>(pokeballCatchModifierDetail);
+            this.dataService.UpdateObject(pokeballCatchModifierDetail);
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -1459,7 +1459,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Nature>(nature);
+            this.dataService.UpdateObject(nature);
 
             return this.RedirectToAction("Natures", "Admin");
         }
@@ -1485,7 +1485,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<LegendaryType>(legendaryType);
+            this.dataService.UpdateObject(legendaryType);
 
             return this.RedirectToAction("LegendaryTypes", "Admin");
         }
@@ -1552,7 +1552,7 @@ namespace Pokedex.Controllers
                 pokemonLocationDetail.ChanceOfEncounter = 0;
             }
 
-            this.dataService.UpdateObject<PokemonLocationDetail>(pokemonLocationDetail);
+            this.dataService.UpdateObject(pokemonLocationDetail);
 
             return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId = pokemonLocationDetail.LocationId });
         }
@@ -1839,7 +1839,7 @@ namespace Pokedex.Controllers
                 classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
             }
 
-            this.dataService.UpdateObject<Classification>(classification);
+            this.dataService.UpdateObject(classification);
 
             return this.RedirectToAction("Classifications", "Admin");
         }
@@ -1865,7 +1865,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Ability>(ability);
+            this.dataService.UpdateObject(ability);
 
             return this.RedirectToAction("Abilities", "Admin");
         }
@@ -1891,7 +1891,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<CommentPage>(page);
+            this.dataService.UpdateObject(page);
 
             return this.RedirectToAction("CommentPages", "Admin");
         }
@@ -1917,7 +1917,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<CommentCategory>(category);
+            this.dataService.UpdateObject(category);
 
             return this.RedirectToAction("CommentCategories", "Admin");
         }
@@ -1987,7 +1987,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<Evolution>(evolution);
+            this.dataService.UpdateObject(evolution);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -2056,7 +2056,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonFormDetail>(pokemonFormDetail);
+            this.dataService.UpdateObject(pokemonFormDetail);
 
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
         }

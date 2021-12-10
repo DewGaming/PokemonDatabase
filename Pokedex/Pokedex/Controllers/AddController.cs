@@ -1320,7 +1320,7 @@ namespace Pokedex.Controllers
 
             pokemonAbilities.SpecialEventAbilityId = ability.AbilityId;
 
-            this.dataService.UpdateObject<PokemonAbilityDetail>(pokemonAbilities);
+            this.dataService.UpdateObject(pokemonAbilities);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

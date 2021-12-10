@@ -42,7 +42,7 @@ namespace Pokedex
                 {
                     pageStat.ViewCount += 1;
                     pageStat.LastVisit = System.DateTime.Now.ToUniversalTime();
-                    this.UpdateObject<PageStat>(pageStat);
+                    this.UpdateObject(pageStat);
                 }
                 else
                 {
@@ -59,7 +59,7 @@ namespace Pokedex
             foreach (var p in this.GetObjects<PageStat>())
             {
                 p.ViewCount = 0;
-                this.UpdateObject<PageStat>(p);
+                this.UpdateObject(p);
             }
         }
 
@@ -729,6 +729,7 @@ namespace Pokedex
                 .Include(x => x.PokemonTeamMoveset)
                 .Include(x => x.BattleItem)
                 .Include(x => x.Nature)
+                .AsNoTracking()
                 .ToList()
                 .Find(x => x.Id == id);
         }
@@ -1843,7 +1844,7 @@ namespace Pokedex
             }
 
             team = this.ShiftPokemonTeam(team);
-            this.UpdateObject<PokemonTeam>(team);
+            this.UpdateObject(team);
         }
 
         public PokemonTeam ShiftPokemonTeam(PokemonTeam pokemonTeam)

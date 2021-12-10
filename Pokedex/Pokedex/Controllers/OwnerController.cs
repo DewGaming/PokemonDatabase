@@ -206,7 +206,7 @@ namespace Pokedex.Controllers
             Comment comment = this.dataService.GetObjectByPropertyValue<Comment>("Id", id);
             comment.IsCompleted = true;
 
-            this.dataService.UpdateObject<Comment>(comment);
+            this.dataService.UpdateObject(comment);
 
             return this.RedirectToAction("Comments", "Owner");
         }
@@ -303,7 +303,7 @@ namespace Pokedex.Controllers
             {
                 pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", r.PokemonId);
                 pokemon.IsComplete = true;
-                this.dataService.UpdateObject<Pokemon>(pokemon);
+                this.dataService.UpdateObject(pokemon);
                 this.dataService.DeleteObject<ReviewedPokemon>(r.Id);
             }
 
@@ -320,7 +320,7 @@ namespace Pokedex.Controllers
         {
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
             pokemon.IsComplete = true;
-            this.dataService.UpdateObject<Pokemon>(pokemon);
+            this.dataService.UpdateObject(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

@@ -182,9 +182,9 @@ namespace Pokedex.Controllers
 
             int pokemonTeamDetailId = this.dataService.AddPokemonTeamDetail(pokemonTeamDetail);
 
-            pokemonTeam.InsertPokemon(this.dataService.GetPokemonTeamDetail(pokemonTeamDetailId));
+            pokemonTeam.InsertPokemon(this.dataService.GetObjectByPropertyValue<PokemonTeamDetail>("Id", pokemonTeamDetailId));
 
-            this.dataService.UpdateObject<PokemonTeam>(pokemonTeam);
+            this.dataService.UpdateObject(pokemonTeam);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -279,7 +279,7 @@ namespace Pokedex.Controllers
                 pokemonTeamDetail.Gender = null;
             }
 
-            this.dataService.UpdateObject<PokemonTeamDetail>(pokemonTeamDetail);
+            this.dataService.UpdateObject(pokemonTeamDetail);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -412,7 +412,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonTeamEV>(pokemonTeamEV);
+            this.dataService.UpdateObject(pokemonTeamEV);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -474,7 +474,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonTeamMoveset>(pokemonTeamMoveset);
+            this.dataService.UpdateObject(pokemonTeamMoveset);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -540,7 +540,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject<PokemonTeamIV>(pokemonTeamIV);
+            this.dataService.UpdateObject(pokemonTeamIV);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -647,7 +647,7 @@ namespace Pokedex.Controllers
                 originalPokemonTeam.GameId = newPokemonTeam.GameId;
             }
 
-            this.dataService.UpdateObject<PokemonTeam>(originalPokemonTeam);
+            this.dataService.UpdateObject(originalPokemonTeam);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }

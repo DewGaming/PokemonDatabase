@@ -167,7 +167,7 @@ namespace Pokedex.Controllers
 
             user.PasswordHash = passwordHasher.HashPassword(null, newPasswordViewModel.NewPassword);
 
-            this.dataService.UpdateObject<User>(user);
+            this.dataService.UpdateObject(user);
 
             return this.RedirectToAction("Index", "Home");
         }
