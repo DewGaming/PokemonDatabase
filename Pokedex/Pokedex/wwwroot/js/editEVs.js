@@ -1,7 +1,7 @@
 var checkTotalEVs = function (slider, label) {
     var totalEVs = Number($('.healthSlider').val()) + Number($('.attackSlider').val()) + Number($('.defenseSlider').val()) + Number($('.specialAttackSlider').val()) + Number($('.specialDefenseSlider').val()) + Number($('.speedSlider').val());
 
-    if (totalEVs > 508) {
+    if (totalEVs > 510) {
         var otherEVTotal = 0;
         if (!$(slider).hasClass('healthSlider')) {
             otherEVTotal += Number($('.healthSlider').val());
@@ -26,9 +26,13 @@ var checkTotalEVs = function (slider, label) {
             otherEVTotal += Number($('.speedSlider').val());
         }
 
-        var remainingEVs = Number(508) - Number(otherEVTotal);
+        var remainingEVs = Number(510) - Number(otherEVTotal);
         $(slider).val(remainingEVs);
         $(label).text($(slider).val());
+        $('.evsRemaining').text("Total EVs Remaining: 0");
+    } else {
+        var remainingEVs = Number(510) - Number($('.healthSlider').val()) - Number($('.attackSlider').val()) - Number($('.defenseSlider').val()) - Number($('.specialAttackSlider').val()) - Number($('.specialDefenseSlider').val()) - Number($('.speedSlider').val());
+        $('.evsRemaining').text("Total EVs Remaining: " + remainingEVs);
     }
 }, setupLabels = function (health, attack, defense, specialAttack, specialDefense, speed) {
     $('#healthVal').text(health);
