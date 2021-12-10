@@ -1499,7 +1499,7 @@ namespace Pokedex.Controllers
 
                 foreach (var t in existingCharts)
                 {
-                    this.dataService.DeleteTypeChart(t.Id);
+                    this.dataService.DeleteObject<TypeChart>(t.Id);
                 }
 
                 return this.Json(this.Url.Action("Types", "Admin")).Value.ToString();
@@ -1557,7 +1557,7 @@ namespace Pokedex.Controllers
 
                 foreach (var g in existingGameDetails)
                 {
-                    this.dataService.DeletePokemonGameDetail(g.Id);
+                    this.dataService.DeleteObject<PokemonGameDetail>(g.Id);
                 }
 
                 return this.Json(this.Url.Action("Pokemon", "Admin")).Value.ToString();
@@ -1629,8 +1629,15 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    this.dataService.AddObject(newGameDetails);
-                    this.dataService.DeletePokemonGameDetails(existingGameDetails);
+                    foreach (var g in newGameDetails)
+                    {
+                        this.dataService.AddObject(g);
+                    }
+
+                    foreach (var g in existingGameDetails)
+                    {
+                        this.dataService.DeleteObject<PokemonGameDetail>(g.Id);
+                    }
                 }
 
                 return this.Json(this.Url.Action("GameAvailability", "Home")).Value.ToString();

@@ -67,7 +67,7 @@ namespace Pokedex.Controllers
         [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(Message message)
         {
-            this.dataService.DeleteMessage(message.Id);
+            this.dataService.DeleteObject<Message>(message.Id);
 
             return this.RedirectToAction("ViewMessages", "User");
         }

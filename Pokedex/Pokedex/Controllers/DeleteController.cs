@@ -21,7 +21,7 @@ namespace Pokedex.Controllers
         [Route("delete_reviewed_pokemon/{id:int}")]
         public IActionResult ReviewedPokemon(int id)
         {
-            this.dataService.DeleteReviewedPokemon(id);
+            this.dataService.DeleteObject<ReviewedPokemon>(id);
 
             return this.RedirectToAction("ReviewedPokemon", "Owner");
         }
@@ -121,7 +121,7 @@ namespace Pokedex.Controllers
         [Route("delete_location/{id:int}")]
         public IActionResult Location(Location location)
         {
-            this.dataService.DeleteLocation(location.Id);
+            this.dataService.DeleteObject<Location>(location.Id);
 
             return this.RedirectToAction("Locations", "Admin");
         }
@@ -140,7 +140,7 @@ namespace Pokedex.Controllers
         [Route("delete_time/{id:int}")]
         public IActionResult Time(Time time)
         {
-            this.dataService.DeleteTime(time.Id);
+            this.dataService.DeleteObject<Time>(time.Id);
 
             return this.RedirectToAction("Times", "Admin");
         }
@@ -178,7 +178,7 @@ namespace Pokedex.Controllers
         [Route("delete_pageStat/{id:int}")]
         public IActionResult PageStat(PageStat pageStat)
         {
-            this.dataService.DeletePageStat(pageStat.Id);
+            this.dataService.DeleteObject<PageStat>(pageStat.Id);
 
             return this.RedirectToAction("PageStats", "Owner");
         }
@@ -197,7 +197,7 @@ namespace Pokedex.Controllers
         [Route("delete_capture_method/{id:int}")]
         public IActionResult CaptureMethod(CaptureMethod captureMethod)
         {
-            this.dataService.DeleteCaptureMethod(captureMethod.Id);
+            this.dataService.DeleteObject<CaptureMethod>(captureMethod.Id);
 
             return this.RedirectToAction("CaptureMethods", "Admin");
         }
@@ -216,7 +216,7 @@ namespace Pokedex.Controllers
         [Route("delete_season/{id:int}")]
         public IActionResult Season(Season season)
         {
-            this.dataService.DeleteSeason(season.Id);
+            this.dataService.DeleteObject<Season>(season.Id);
 
             return this.RedirectToAction("Seasons", "Admin");
         }
@@ -235,7 +235,7 @@ namespace Pokedex.Controllers
         [Route("delete_status/{id:int}")]
         public IActionResult Status(Status status)
         {
-            this.dataService.DeleteStatus(status.Id);
+            this.dataService.DeleteObject<Status>(status.Id);
 
             return this.RedirectToAction("Statuses", "Admin");
         }
@@ -254,7 +254,7 @@ namespace Pokedex.Controllers
         [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
         public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifier)
         {
-            this.dataService.DeletePokeballCatchModifierDetail(pokeballCatchModifier.Id);
+            this.dataService.DeleteObject<PokeballCatchModifierDetail>(pokeballCatchModifier.Id);
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -274,7 +274,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonLocationDetail(PokemonLocationDetail pokemonLocationDetail)
         {
             int locationId = pokemonLocationDetail.LocationId;
-            this.dataService.DeletePokemonLocationDetail(pokemonLocationDetail.Id);
+            this.dataService.DeleteObject<PokemonLocationDetail>(pokemonLocationDetail.Id);
 
             return this.RedirectToAction("PokemonLocationDetails", "Admin", new { locationId });
         }
@@ -316,10 +316,10 @@ namespace Pokedex.Controllers
             typeCharts.AddRange(this.dataService.GetAllTypeChartByAttackType(type.Id));
             foreach (var t in typeCharts)
             {
-                this.dataService.DeleteTypeChart(t.Id);
+                this.dataService.DeleteObject<TypeChart>(t.Id);
             }
 
-            this.dataService.DeleteType(type.Id);
+            this.dataService.DeleteObject<Type>(type.Id);
 
             return this.RedirectToAction("Types", "Admin");
         }
@@ -338,7 +338,7 @@ namespace Pokedex.Controllers
         [Route("delete_nature/{id:int}")]
         public IActionResult Nature(Nature nature)
         {
-            this.dataService.DeleteNature(nature.Id);
+            this.dataService.DeleteObject<Nature>(nature.Id);
 
             return this.RedirectToAction("Natures", "Admin");
         }
@@ -357,7 +357,7 @@ namespace Pokedex.Controllers
         [Route("delete_egg_cycle/{id:int}")]
         public IActionResult EggCycle(EggCycle eggCycle)
         {
-            this.dataService.DeleteEggCycle(eggCycle.Id);
+            this.dataService.DeleteObject<EggCycle>(eggCycle.Id);
 
             return this.RedirectToAction("EggCycles", "Admin");
         }
@@ -376,7 +376,7 @@ namespace Pokedex.Controllers
         [Route("delete_experience_growth/{id:int}")]
         public IActionResult ExperienceGrowth(ExperienceGrowth experienceGrowth)
         {
-            this.dataService.DeleteExperienceGrowth(experienceGrowth.Id);
+            this.dataService.DeleteObject<ExperienceGrowth>(experienceGrowth.Id);
 
             return this.RedirectToAction("ExperienceGrowths", "Admin");
         }
@@ -395,7 +395,7 @@ namespace Pokedex.Controllers
         [Route("delete_gender_ratio/{id:int}")]
         public IActionResult GenderRatio(GenderRatio genderRatio)
         {
-            this.dataService.DeleteGenderRatio(genderRatio.Id);
+            this.dataService.DeleteObject<GenderRatio>(genderRatio.Id);
 
             return this.RedirectToAction("GenderRatios", "Admin");
         }
@@ -414,7 +414,7 @@ namespace Pokedex.Controllers
         [Route("delete_capture_rate/{id:int}")]
         public IActionResult CaptureRate(CaptureRate captureRate)
         {
-            this.dataService.DeleteCaptureRate(captureRate.Id);
+            this.dataService.DeleteObject<CaptureRate>(captureRate.Id);
 
             return this.RedirectToAction("CaptureRates", "Admin");
         }
@@ -433,7 +433,7 @@ namespace Pokedex.Controllers
         [Route("delete_base_happiness/{id:int}")]
         public IActionResult BaseHappiness(BaseHappiness baseHappiness)
         {
-            this.dataService.DeleteBaseHappiness(baseHappiness.Id);
+            this.dataService.DeleteObject<BaseHappiness>(baseHappiness.Id);
 
             return this.RedirectToAction("BaseHappinesses", "Admin");
         }
@@ -452,7 +452,7 @@ namespace Pokedex.Controllers
         [Route("delete_evolution_method/{id:int}")]
         public IActionResult EvolutionMethod(EvolutionMethod evolutionMethod)
         {
-            this.dataService.DeleteEvolutionMethod(evolutionMethod.Id);
+            this.dataService.DeleteObject<EvolutionMethod>(evolutionMethod.Id);
 
             return this.RedirectToAction("EvolutionMethods", "Admin");
         }
@@ -471,7 +471,7 @@ namespace Pokedex.Controllers
         [Route("delete_battle_item/{id:int}")]
         public IActionResult BattleItem(BattleItem battleItem)
         {
-            this.dataService.DeleteBattleItem(battleItem.Id);
+            this.dataService.DeleteObject<BattleItem>(battleItem.Id);
 
             return this.RedirectToAction("BattleItems", "Admin");
         }
@@ -490,7 +490,7 @@ namespace Pokedex.Controllers
         [Route("delete_ability/{id:int}")]
         public IActionResult Ability(Ability ability)
         {
-            this.dataService.DeleteAbility(ability.Id);
+            this.dataService.DeleteObject<Ability>(ability.Id);
 
             return this.RedirectToAction("Abilities", "Admin");
         }
@@ -509,7 +509,7 @@ namespace Pokedex.Controllers
         [Route("delete_comment_page/{id:int}")]
         public IActionResult CommentPage(CommentPage commentPage)
         {
-            this.dataService.DeleteCommentPage(commentPage.Id);
+            this.dataService.DeleteObject<CommentPage>(commentPage.Id);
 
             return this.RedirectToAction("CommentPages", "Admin");
         }
@@ -528,7 +528,7 @@ namespace Pokedex.Controllers
         [Route("delete_comment_category/{id:int}")]
         public IActionResult CommentCategory(CommentCategory commentCommentCategory)
         {
-            this.dataService.DeleteCommentCategory(commentCommentCategory.Id);
+            this.dataService.DeleteObject<CommentCategory>(commentCommentCategory.Id);
 
             return this.RedirectToAction("CommentCategories", "Admin");
         }
@@ -547,7 +547,7 @@ namespace Pokedex.Controllers
         [Route("delete_form/{id:int}")]
         public IActionResult Form(Form form)
         {
-            this.dataService.DeleteForm(form.Id);
+            this.dataService.DeleteObject<Form>(form.Id);
 
             return this.RedirectToAction("Forms", "Admin");
         }
@@ -566,7 +566,7 @@ namespace Pokedex.Controllers
         [Route("delete_legendary_type/{id:int}")]
         public IActionResult LegendaryType(LegendaryType legendaryType)
         {
-            this.dataService.DeleteLegendaryType(legendaryType.Id);
+            this.dataService.DeleteObject<LegendaryType>(legendaryType.Id);
 
             return this.RedirectToAction("LegendaryTypes", "Admin");
         }
@@ -576,7 +576,7 @@ namespace Pokedex.Controllers
         public IActionResult Comment(int id)
         {
             Comment comment = this.dataService.GetObjectByPropertyValue<Comment>("Id", id);
-            this.dataService.DeleteComment(comment.Id);
+            this.dataService.DeleteObject<Comment>(comment.Id);
 
             return this.RedirectToAction("Comments", "Owner");
         }
@@ -595,7 +595,7 @@ namespace Pokedex.Controllers
         [Route("delete_egg_group/{id:int}")]
         public IActionResult EggGroup(EggGroup eggGroup)
         {
-            this.dataService.DeleteEggGroup(eggGroup.Id);
+            this.dataService.DeleteObject<EggGroup>(eggGroup.Id);
 
             return this.RedirectToAction("EggGroups", "Admin");
         }
@@ -614,7 +614,7 @@ namespace Pokedex.Controllers
         [Route("delete_form_item/{id:int}")]
         public IActionResult FormItem(FormItem formItem)
         {
-            this.dataService.DeleteFormItem(formItem.Id);
+            this.dataService.DeleteObject<FormItem>(formItem.Id);
 
             return this.RedirectToAction("FormItems", "Admin");
         }
@@ -633,7 +633,7 @@ namespace Pokedex.Controllers
         [Route("delete_classification/{id:int}")]
         public IActionResult Classification(Classification classification)
         {
-            this.dataService.DeleteClassification(classification.Id);
+            this.dataService.DeleteObject<Classification>(classification.Id);
 
             return this.RedirectToAction("Classifications", "Admin");
         }

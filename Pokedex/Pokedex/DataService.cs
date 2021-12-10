@@ -1802,222 +1802,6 @@ namespace Pokedex
             return moveset;
         }
 
-        public void DeleteWeather(int id)
-        {
-            Weather weather = this.GetObjectByPropertyValue<Weather>("Id", id);
-            this.dataContext.Weathers.Remove(weather);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonGameDetail(int id)
-        {
-            PokemonGameDetail pokemonGameDetail = this.GetObjectByPropertyValue<PokemonGameDetail>("Id", id);
-            this.dataContext.PokemonGameDetails.Remove(pokemonGameDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonGameDetails(List<PokemonGameDetail> details)
-        {
-            this.dataContext.PokemonGameDetails.RemoveRange(this.dataContext.PokemonGameDetails.Where(x => details.Select(y => y.Id).Contains(x.Id)));
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteType(int id)
-        {
-            Type type = this.GetObjectByPropertyValue<Type>("Id", id);
-            this.dataContext.Types.Remove(type);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteTypeChart(int id)
-        {
-            TypeChart typeChart = this.GetObjectByPropertyValue<TypeChart>("Id", id);
-            this.dataContext.TypeCharts.Remove(typeChart);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteBattleItem(int id)
-        {
-            BattleItem battleItem = this.GetObjectByPropertyValue<BattleItem>("Id", id);
-            this.dataContext.BattleItems.Remove(battleItem);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteAbility(int id)
-        {
-            Ability ability = this.GetObjectByPropertyValue<Ability>("Id", id);
-            this.dataContext.Abilities.Remove(ability);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteLocation(int id)
-        {
-            Location location = this.GetObjectByPropertyValue<Location>("Id", id);
-            this.dataContext.Locations.Remove(location);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteCaptureMethod(int id)
-        {
-            CaptureMethod captureMethod = this.GetObjectByPropertyValue<CaptureMethod>("Id", id);
-            this.dataContext.CaptureMethods.Remove(captureMethod);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteSeason(int id)
-        {
-            Season season = this.GetObjectByPropertyValue<Season>("Id", id);
-            this.dataContext.Seasons.Remove(season);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteTime(int id)
-        {
-            Time time = this.GetObjectByPropertyValue<Time>("Id", id);
-            this.dataContext.Times.Remove(time);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePageStat(int id)
-        {
-            PageStat pageStat = this.GetObjectByPropertyValue<PageStat>("Id", id);
-            this.dataContext.PageStats.Remove(pageStat);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonLocationDetail(int id)
-        {
-            PokemonLocationDetail pokemonLocationDetail = this.GetObjectByPropertyValue<PokemonLocationDetail>("Id", id);
-            this.dataContext.PokemonLocationDetails.Remove(pokemonLocationDetail);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteLegendaryType(int id)
-        {
-            LegendaryType legendaryType = this.GetObjectByPropertyValue<LegendaryType>("Id", id);
-            this.dataContext.LegendaryTypes.Remove(legendaryType);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteEggCycle(int id)
-        {
-            EggCycle eggCycle = this.GetObjectByPropertyValue<EggCycle>("Id", id);
-            this.dataContext.EggCycles.Remove(eggCycle);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteCommentCategory(int id)
-        {
-            CommentCategory commentCategory = this.GetObjectByPropertyValue<CommentCategory>("Id", id);
-            this.dataContext.CommentCategories.Remove(commentCategory);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteCommentPage(int id)
-        {
-            CommentPage commentPage = this.GetObjectByPropertyValue<CommentPage>("Id", id);
-            this.dataContext.CommentPages.Remove(commentPage);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokeball(int id)
-        {
-            Pokeball pokeball = this.GetPokeball(id);
-            this.dataContext.Pokeballs.Remove(pokeball);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokeballCatchModifierDetail(int id)
-        {
-            PokeballCatchModifierDetail pokeballCatchModifier = this.GetPokeballCatchModifierDetail(id);
-            this.dataContext.PokeballCatchModifierDetails.Remove(pokeballCatchModifier);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteExperienceGrowth(int id)
-        {
-            ExperienceGrowth experienceGrowth = this.GetObjectByPropertyValue<ExperienceGrowth>("Id", id);
-            this.dataContext.ExperienceGrowths.Remove(experienceGrowth);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteStatus(int id)
-        {
-            Status status = this.GetObjectByPropertyValue<Status>("Id", id);
-            this.dataContext.Statuses.Remove(status);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteGenderRatio(int id)
-        {
-            GenderRatio genderRatio = this.GetObjectByPropertyValue<GenderRatio>("Id", id);
-            this.dataContext.GenderRatios.Remove(genderRatio);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteCaptureRate(int id)
-        {
-            CaptureRate captureRate = this.GetObjectByPropertyValue<CaptureRate>("Id", id);
-            this.dataContext.CaptureRates.Remove(captureRate);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteComment(int id)
-        {
-            Comment comment = this.GetObjectByPropertyValue<Comment>("Id", id);
-            this.dataContext.Comments.Remove(comment);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteEggGroup(int id)
-        {
-            EggGroup eggGroup = this.GetObjectByPropertyValue<EggGroup>("Id", id);
-            this.dataContext.EggGroups.Remove(eggGroup);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteFormItem(int id)
-        {
-            FormItem formItem = this.GetObjectByPropertyValue<FormItem>("Id", id);
-            this.dataContext.FormItems.Remove(formItem);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteEvolutionMethod(int id)
-        {
-            EvolutionMethod evolutionMethod = this.GetObjectByPropertyValue<EvolutionMethod>("Id", id);
-            this.dataContext.EvolutionMethods.Remove(evolutionMethod);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteForm(int id)
-        {
-            Form form = this.GetObjectByPropertyValue<Form>("Id", id);
-            this.dataContext.Forms.Remove(form);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteBaseHappiness(int id)
-        {
-            BaseHappiness baseHappiness = this.GetObjectByPropertyValue<BaseHappiness>("Id", id);
-            this.dataContext.BaseHappiness.Remove(baseHappiness);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteReviewedPokemon(int id)
-        {
-            ReviewedPokemon reviewedPokemon = this.GetObjectByPropertyValue<ReviewedPokemon>("Id", id);
-            this.dataContext.ReviewedPokemons.Remove(reviewedPokemon);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteMessage(int id)
-        {
-            Message message = this.GetObjectByPropertyValue<Message>("Id", id);
-            this.dataContext.Messages.Remove(message);
-            this.dataContext.SaveChanges();
-        }
-
         public void DeletePokemonTeam(int id)
         {
             PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
@@ -2027,7 +1811,7 @@ namespace Pokedex
 
             foreach (var p in pokemonTeamDetailIds)
             {
-                this.DeletePokemonTeamDetail(p);
+                this.DeleteObject<PokemonTeamDetail>(p);
             }
         }
 
@@ -2114,53 +1898,18 @@ namespace Pokedex
 
             if (evId != null)
             {
-                this.DeletePokemonTeamEV((int)evId);
+                this.DeleteObject<PokemonTeamEV>((int)evId);
             }
 
             if (ivId != null)
             {
-                this.DeletePokemonTeamIV((int)ivId);
+                this.DeleteObject<PokemonTeamIV>((int)ivId);
             }
 
             if (movesetId != null)
             {
-                this.DeletePokemonTeamMoveset((int)movesetId);
+                this.DeleteObject<PokemonTeamMoveset>((int)movesetId);
             }
-        }
-
-        public void DeletePokemonTeamEV(int id)
-        {
-            PokemonTeamEV pokemonTeamDetailEV = this.GetObjectByPropertyValue<PokemonTeamEV>("Id", id);
-            this.dataContext.PokemonTeamEVs.Remove(pokemonTeamDetailEV);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonTeamIV(int id)
-        {
-            PokemonTeamIV pokemonTeamDetailIV = this.GetObjectByPropertyValue<PokemonTeamIV>("Id", id);
-            this.dataContext.PokemonTeamIVs.Remove(pokemonTeamDetailIV);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeletePokemonTeamMoveset(int id)
-        {
-            PokemonTeamMoveset pokemonTeamDetailMoveset = this.GetObjectByPropertyValue<PokemonTeamMoveset>("Id", id);
-            this.dataContext.PokemonTeamMovesets.Remove(pokemonTeamDetailMoveset);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteClassification(int id)
-        {
-            Classification classification = this.GetObjectByPropertyValue<Classification>("Id", id);
-            this.dataContext.Classifications.Remove(classification);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteNature(int id)
-        {
-            Nature nature = this.GetObjectByPropertyValue<Nature>("Id", id);
-            this.dataContext.Natures.Remove(nature);
-            this.dataContext.SaveChanges();
         }
 
         public string FormatPokemonName(string pokemonName)

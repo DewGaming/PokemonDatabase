@@ -304,7 +304,7 @@ namespace Pokedex.Controllers
                 pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", r.PokemonId);
                 pokemon.IsComplete = true;
                 this.dataService.UpdateObject<Pokemon>(pokemon);
-                this.dataService.DeleteReviewedPokemon(r.Id);
+                this.dataService.DeleteObject<ReviewedPokemon>(r.Id);
             }
 
             return this.RedirectToAction("Pokemon", "Admin");
