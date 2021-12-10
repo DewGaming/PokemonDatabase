@@ -557,9 +557,14 @@ namespace Pokedex.Controllers
 
                 comment.Name = string.Concat(comment.Name, exceptionHandlerFeature.Error.StackTrace.Replace("   ", " "));
 
-                this.dataService.AddObject(comment);
+                if (this.User.Identity.Name != null)
+                {
+                    comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                }
 
                 this.EmailComment(comment);
+
+                this.dataService.AddObject(comment);
             }
             else if (exceptionHandlerFeature != null)
             {
