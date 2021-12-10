@@ -305,25 +305,14 @@ namespace Pokedex.Controllers
                 pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
             }
 
-            if (pokemonTeamDetail.PokemonTeamEV != null)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
-            }
+            pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
 
             if (pokemonTeamDetail.Nature != null && generationId != 1 && generationId != 2)
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, "\n", pokemonTeamDetail.Nature.Name, " Nature");
             }
 
-            if (pokemonTeamDetail.PokemonTeamIV != null)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV));
-            }
-
-            if (pokemonTeamDetail.PokemonTeamMoveset != null)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
-            }
+            pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV), this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
 
             return pokemonTeamString;
         }
