@@ -10,6 +10,8 @@ namespace Pokedex.DataAccess.Models
         public int PokedexNumber { get; set; }
         [Display(Name = "Pokemon Name"), StringLength(25), Required]
         public string Name { get; set; }
+        [Display(Name = "Pronunciation")]
+        public string Pronunciation { get; set; }
         [Required, Column(TypeName = "decimal(4,1)")]
         public decimal Height { get; set; }
         [Required, Column(TypeName = "decimal(4,1)")]
