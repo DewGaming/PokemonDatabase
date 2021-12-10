@@ -48,7 +48,7 @@
                                         @foreach (var pd in p.GrabPokemonTeamDetails)
                                         {
                                             <div class="pokemonTeamGroup">
-                                                <img class="lightshadowed pokemonTeamPokemon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, pd.IsShiny ? @Model.AppConfig.ShinyPokemonImageUrl : @Model.AppConfig.PokemonImageUrl, pd.Pokemon.Id, ".png"))" />
+                                                <img class="lightshadowed pokemonTeamPokemon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, pd.IsShiny ? @Model.AppConfig.ShinyPokemonImageUrl : @Model.AppConfig.PokemonImageUrl, pd.PokemonId, ".png"))" />
                                             </div>
                                         }
                                     </td>
