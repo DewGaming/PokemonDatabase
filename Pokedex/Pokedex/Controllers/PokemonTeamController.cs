@@ -173,7 +173,7 @@ namespace Pokedex.Controllers
 
             PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
 
-            Pokemon pokemon = this.dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
             if (pokemon.GenderRatioId == 10)
             {
@@ -272,7 +272,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            Pokemon pokemon = this.dataService.GetPokemonById(pokemonTeamDetail.PokemonId);
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
             if (pokemon.GenderRatioId == 10)
             {
@@ -665,7 +665,7 @@ namespace Pokedex.Controllers
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
 
-            List<Pokemon> altForms = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
 
             foreach (var p in pokemonList.Where(x => altForms.Any(y => y.Id == x.Id)).ToList())
             {

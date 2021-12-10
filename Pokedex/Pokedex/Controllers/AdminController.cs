@@ -137,7 +137,7 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                AllComments = this.dataService.GetComments(),
+                AllComments = this.dataService.GetObjects<Comment>(includes: "Commentor, Category, Page"),
                 AllCategories = this.dataService.GetObjects<CommentCategory>(),
                 AllPages = this.dataService.GetCommentPages(),
             };
@@ -150,7 +150,7 @@ namespace Pokedex.Controllers
         {
             CommentViewModel model = new CommentViewModel()
             {
-                AllComments = this.dataService.GetComments(),
+                AllComments = this.dataService.GetObjects<Comment>(includes: "Commentor, Category, Page"),
                 AllCategories = this.dataService.GetObjects<CommentCategory>(),
                 AllPages = this.dataService.GetCommentPages(),
             };
@@ -164,7 +164,7 @@ namespace Pokedex.Controllers
             TypeViewModel model = new TypeViewModel()
             {
                 AllTypes = this.dataService.GetObjects<Type>("Name"),
-                AllPokemon = this.dataService.GetAllPokemonWithTypesAndIncomplete(),
+                AllPokemon = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "AltFormPokemon, OriginalPokemon, Form"),
             };
 
             return this.View(model);
@@ -252,7 +252,7 @@ namespace Pokedex.Controllers
             LegendaryTypeViewModel model = new LegendaryTypeViewModel()
             {
                 AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                AllPokemon = this.dataService.GetAllPokemonWithLegendaryTypesAndIncomplete(),
+                AllPokemon = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType"),
             };
 
             return this.View(model);
@@ -264,7 +264,7 @@ namespace Pokedex.Controllers
             FormViewModel model = new FormViewModel()
             {
                 AllForms = this.dataService.GetObjects<Form>("Name"),
-                AllPokemon = this.dataService.GetPokemonFormDetails(),
+                AllPokemon = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form"),
             };
 
             return this.View(model);
@@ -324,7 +324,7 @@ namespace Pokedex.Controllers
             ClassificationViewModel model = new ClassificationViewModel()
             {
                 AllClassifications = this.dataService.GetObjects<Classification>("Name"),
-                AllPokemon = this.dataService.GetAllPokemonWithClassificationsAndIncomplete(),
+                AllPokemon = this.dataService.GetObjects<Pokemon>(includes: "Classification"),
             };
 
             return this.View(model);
@@ -342,7 +342,7 @@ namespace Pokedex.Controllers
         public IActionResult BattleItems()
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
             foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;

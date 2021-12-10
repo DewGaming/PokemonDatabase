@@ -188,7 +188,7 @@ namespace Pokedex.Controllers
         {
             AllCommentsViewModel model = new AllCommentsViewModel()
             {
-                AllComments = this.dataService.GetComments(),
+                AllComments = this.dataService.GetObjects<Comment>(includes: "Commentor, Category, Page"),
                 AllCategories = this.dataService.GetObjects<CommentCategory>(),
             };
 
@@ -221,13 +221,13 @@ namespace Pokedex.Controllers
         public IActionResult ReviewPokemon(int pokemonId)
         {
             // Ensuring that the pokemon really has all of these added.
-            bool pokemonIsComplete = this.dataService.GetAllPokemonWithTypesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+            bool pokemonIsComplete = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "AltFormPokemon, OriginalPokemon, Form").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetBaseStatsWithIncomplete().Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetEVYieldsWithIncomplete().Exists(x => x.PokemonId == pokemonId);
+                   this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetObjects<EVYield>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId);
 
-            Pokemon pokemon = this.dataService.GetPokemonById(pokemonId);
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {
@@ -248,7 +248,7 @@ namespace Pokedex.Controllers
 
                 if (this.dataService.CheckIfAltForm(pokemonId))
                 {
-                    model.OriginalPokemon = this.dataService.GetOriginalPokemonByAltFormId(pokemon.Id);
+                    model.OriginalPokemon = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemon.Id, "AltFormPokemon, OriginalPokemon").OriginalPokemon;
                 }
 
                 return this.View(model);

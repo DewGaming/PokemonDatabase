@@ -70,7 +70,7 @@ namespace Pokedex.Controllers
         [Route("game_availability/{pokemonId:int}")]
         public IActionResult PokemonGameDetails(int pokemonId)
         {
-            Pokemon pokemon = this.dataService.GetPokemonById(pokemonId);
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
             if (this.dataService.CheckIfAltForm(pokemonId))
             {
                 pokemon.Name = this.dataService.GetAltFormWithFormName(pokemon.Id).Name;
@@ -170,7 +170,7 @@ namespace Pokedex.Controllers
         public IActionResult BattleItem(int id)
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
             foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
@@ -197,7 +197,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
                 foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
@@ -227,7 +227,7 @@ namespace Pokedex.Controllers
         {
             BasePokemonViewModel model = new BasePokemonViewModel()
             {
-                Pokemon = this.dataService.GetPokemonById(id),
+                Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 AllClassifications = this.dataService.GetObjects<Classification>("Name"),
             };
@@ -282,7 +282,7 @@ namespace Pokedex.Controllers
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    Pokemon = this.dataService.GetPokemonById(pokemon.Id),
+                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
@@ -329,11 +329,11 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
-            else if (this.dataService.GetObjectByPropertyValue<Pokemon>("PokedexNumber", pokemon.PokedexNumber) != null && this.dataService.GetPokemonById(pokemon.Id).PokedexNumber != pokemon.PokedexNumber)
+            else if (this.dataService.GetObjectByPropertyValue<Pokemon>("PokedexNumber", pokemon.PokedexNumber) != null && this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").PokedexNumber != pokemon.PokedexNumber)
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    Pokemon = this.dataService.GetPokemonById(pokemon.Id),
+                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness"),
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
@@ -383,7 +383,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            Pokemon oldPokemon = this.dataService.GetPokemonById(pokemon.Id);
+            Pokemon oldPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
             List<Pokemon> altForms = this.dataService.GetAltFormsNoIncludes(pokemon.Id);
             if (oldPokemon.PokedexNumber != pokemon.PokedexNumber)
             {
@@ -406,7 +406,7 @@ namespace Pokedex.Controllers
         [Route("edit_pokemon_image/{id:int}")]
         public IActionResult PokemonImage(int id)
         {
-            Pokemon model = this.dataService.GetPokemonById(id);
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
             if (this.dataService.CheckIfAltForm(id))
             {
@@ -423,7 +423,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
-                Pokemon model = this.dataService.GetPokemonById(id);
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
@@ -434,7 +434,7 @@ namespace Pokedex.Controllers
             }
             else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
             {
-                Pokemon model = this.dataService.GetPokemonById(id);
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
@@ -446,7 +446,7 @@ namespace Pokedex.Controllers
             }
             else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetPokemonById(id);
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
@@ -514,7 +514,7 @@ namespace Pokedex.Controllers
         [Route("edit_shiny_pokemon_image/{id:int}")]
         public IActionResult ShinyPokemonImage(int id)
         {
-            Pokemon model = this.dataService.GetPokemonById(id);
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
             if (this.dataService.CheckIfAltForm(id))
             {
@@ -531,7 +531,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
-                Pokemon model = this.dataService.GetPokemonById(id);
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
@@ -542,7 +542,7 @@ namespace Pokedex.Controllers
             }
             else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
             {
-                Pokemon model = this.dataService.GetPokemonById(id);
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
@@ -554,7 +554,7 @@ namespace Pokedex.Controllers
             }
             else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetPokemonById(id);
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
@@ -952,7 +952,7 @@ namespace Pokedex.Controllers
                 Name = item.Name,
             };
 
-            List<Pokemon> altForms = this.dataService.GetPokemonFormDetails().Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form").Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
 
             altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
 
@@ -980,7 +980,7 @@ namespace Pokedex.Controllers
                     Name = item.Name,
                 };
 
-                List<Pokemon> altForms = this.dataService.GetPokemonFormDetails().Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form").Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
 
                 altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
 
@@ -1211,7 +1211,7 @@ namespace Pokedex.Controllers
         [Route("edit_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {
-            Pokeball pokeball = this.dataService.GetPokeball(id);
+            Pokeball pokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id, "Generation");
             PokeballAdminViewModel model = new PokeballAdminViewModel()
             {
                 AllGenerations = this.dataService.GetObjects<Generation>(),
@@ -1231,7 +1231,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Pokeball newPokeball = this.dataService.GetPokeball(pokeball.Id);
+                Pokeball newPokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", pokeball.Id, "Generation");
                 PokeballAdminViewModel model = new PokeballAdminViewModel()
                 {
                     AllGenerations = this.dataService.GetObjects<Generation>(),
@@ -1403,7 +1403,7 @@ namespace Pokedex.Controllers
         [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
         public IActionResult PokeballCatchModifierDetail(int id)
         {
-            PokeballCatchModifierDetail model = this.dataService.GetPokeballCatchModifierDetail(id);
+            PokeballCatchModifierDetail model = this.dataService.GetObjectByPropertyValue<PokeballCatchModifierDetail>("Id", id, "Pokeball");
 
             return this.View(model);
         }
@@ -1415,7 +1415,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokeballCatchModifierDetail model = this.dataService.GetPokeballCatchModifierDetail(pokeballCatchModifierDetail.Id);
+                PokeballCatchModifierDetail model = this.dataService.GetObjectByPropertyValue<PokeballCatchModifierDetail>("Id", pokeballCatchModifierDetail.Id, "Pokeball");
 
                 return this.View(model);
             }
@@ -1942,7 +1942,7 @@ namespace Pokedex.Controllers
             };
 
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").Where(x => x.Id != pokemonId).ToList();
-            List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
             foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
             {
                 pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
@@ -1976,7 +1976,7 @@ namespace Pokedex.Controllers
                 };
 
                 List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                List<Pokemon> altFormsList = this.dataService.GetAllAltForms().ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
                 foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
@@ -1995,8 +1995,8 @@ namespace Pokedex.Controllers
         [Route("edit_alternate_forms/{pokemonId:int}")]
         public IActionResult AltForms(int pokemonId)
         {
-            Pokemon originalPokemon = this.dataService.GetPokemonById(pokemonId);
-            List<Pokemon> altFormList = this.dataService.GetAllAltForms().Select(x => x.AltFormPokemon).Where(x => x.Name == originalPokemon.Name).ToList();
+            Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").Select(x => x.AltFormPokemon).Where(x => x.Name == originalPokemon.Name).ToList();
             foreach (var pokemon in altFormList)
             {
                 pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
@@ -2005,13 +2005,13 @@ namespace Pokedex.Controllers
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel()
             {
                 AllPokemon = altFormList,
-                AllAltForms = this.dataService.GetAllAltForms(),
+                AllAltForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form"),
                 AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
-                AllTypings = this.dataService.GetAllPokemonWithTypesAndIncomplete(),
+                AllTypings = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "AltFormPokemon, OriginalPokemon, Form"),
                 AllAbilities = this.dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
                 AllEggGroups = this.dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
-                AllBaseStats = this.dataService.GetBaseStatsWithIncomplete(),
-                AllEVYields = this.dataService.GetEVYieldsWithIncomplete(),
+                AllBaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon"),
+                AllEVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon"),
                 AllLegendaryDetails = this.dataService.GetAllPokemonWithLegendaryTypes(),
                 AllPokemonCaptureRates = this.dataService.GetAllPokemonWithCaptureRates(),
             };
@@ -2029,7 +2029,7 @@ namespace Pokedex.Controllers
         [Route("edit_alternate_form/{pokemonId:int}")]
         public IActionResult AltFormsForm(int pokemonId)
         {
-            PokemonFormDetail pokemonForm = this.dataService.GetPokemonFormDetailByAltFormId(pokemonId);
+            PokemonFormDetail pokemonForm = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId, "AltFormPokemon, OriginalPokemon, Form");
             AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
             {
                 PokemonFormDetail = pokemonForm,
@@ -2046,7 +2046,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonFormDetail pokemonForm = this.dataService.GetPokemonFormDetailByAltFormId(pokemonFormDetail.AltFormPokemonId);
+                PokemonFormDetail pokemonForm = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonFormDetail.AltFormPokemonId, "AltFormPokemon, OriginalPokemon, Form");
                 AlternateFormsFormViewModel model = new AlternateFormsFormViewModel()
                 {
                     PokemonFormDetail = pokemonForm,

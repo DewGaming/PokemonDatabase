@@ -49,7 +49,7 @@ namespace Pokedex.Controllers
         [Route("delete_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {
-            Pokeball pokeball = this.dataService.GetPokeball(id);
+            Pokeball pokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id, "Generation");
             PokeballAdminViewModel model = new PokeballAdminViewModel()
             {
                 AllGenerations = this.dataService.GetObjects<Generation>(),
@@ -244,7 +244,7 @@ namespace Pokedex.Controllers
         [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
         public IActionResult PokeballCatchModifierDetail(int id)
         {
-            PokeballCatchModifierDetail model = this.dataService.GetPokeballCatchModifierDetail(id);
+            PokeballCatchModifierDetail model = this.dataService.GetObjectByPropertyValue<PokeballCatchModifierDetail>("Id", id, "Pokeball");
 
             return this.View(model);
         }
