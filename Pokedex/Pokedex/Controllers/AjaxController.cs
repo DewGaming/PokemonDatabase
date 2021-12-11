@@ -498,7 +498,7 @@ namespace Pokedex.Controllers
                 Pokeball pokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", pokeballId, "Generation");
                 PokemonLegendaryDetail legendary = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
                 List<PokemonCaptureRateDetail> captureRates = this.dataService.GetPokemonWithCaptureRates(pokemonId).OrderBy(x => x.GenerationId).ToList();
-                List<PokeballCatchModifierDetail> pokeballDetails = this.dataService.GetCatchModifiersForPokeball(pokeballId);
+                List<PokeballCatchModifierDetail> pokeballDetails = this.dataService.GetObjects<PokeballCatchModifierDetail>(whereProperty: "PokeballId", wherePropertyValue: pokeballId);
                 float statusEffect = 1;
                 if (statusId != 0)
                 {

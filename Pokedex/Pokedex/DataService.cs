@@ -69,8 +69,10 @@ namespace Pokedex
         /// <typeparam name="TEntity">The generic type parameter.</typeparam>
         /// <param name="orderedProperty">The property that is used if an order is needed. Separate properties by commas for multiples. I.E. "Id, Name".</param>
         /// <param name="includes">The property that is used if an include is needed. Separate includes by commas for multiples. I.E. "Game, Ability".</param>
+        /// <param name="whereProperty">The property the object will be searched for.</param>
+        /// <param name="wherePropertyValue">The property's value.</param>
         /// <returns>Returns the list of the class requested.</returns>
-        public List<TEntity> GetObjects<TEntity>(string orderedProperty = "", string includes = "")
+        public List<TEntity> GetObjects<TEntity>(string orderedProperty = "", string includes = "", string whereProperty = "", object wherePropertyValue = null)
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
@@ -88,7 +90,24 @@ namespace Pokedex
                 objects = objects.OrderBy(orderedProperty);
             }
 
-            return objects.ToList();
+            string searchString = string.Concat("x => x.", whereProperty, " == ");
+            if (wherePropertyValue is string)
+            {
+                searchString = string.Concat(searchString, '"', wherePropertyValue, '"');
+            }
+            else
+            {
+                searchString = string.Concat(searchString, wherePropertyValue);
+            }
+
+            try
+            {
+                return objects.Where(searchString).ToList();
+            }
+            catch
+            {
+                return objects.ToList();
+            }
         }
 
         /// <summary>
@@ -412,13 +431,6 @@ namespace Pokedex
             };
         }
 
-        public List<PokeballCatchModifierDetail> GetCatchModifiersForPokeball(int id)
-        {
-            return this.dataContext.PokeballCatchModifierDetails
-                .Where(x => x.PokeballId == id)
-                .ToList();
-        }
-
         public List<Pokemon> GetAllPokemon()
         {
             return this.dataContext.Pokemon
@@ -719,7 +731,6 @@ namespace Pokedex
                 .Include(x => x.PokemonTeamMoveset)
                 .Include(x => x.BattleItem)
                 .Include(x => x.Nature)
-                .AsNoTracking()
                 .ToList()
                 .Find(x => x.Id == id);
         }
