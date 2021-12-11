@@ -122,6 +122,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Generations", "Admin");
         }
 
+        /// <summary>
+        /// Adds an region.
+        /// </summary>
+        /// <returns>The view to add the region.</returns>
         [HttpGet]
         [Route("add_region")]
         public IActionResult Region()
@@ -134,6 +138,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Adds an region.
+        /// </summary>
+        /// <param name="region">The region being added.</param>
+        /// <returns>The view to the region admin page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_region")]
