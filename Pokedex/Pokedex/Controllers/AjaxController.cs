@@ -100,7 +100,7 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
-                foreach (var r in this.dataService.GetAllReviewedPokemon())
+                foreach (var r in this.dataService.GetObjects<ReviewedPokemon>("Pokemon.PokedexNumber", "Pokemon"))
                 {
                     model.PokemonList.Remove(model.PokemonList.Find(x => x.Id == r.PokemonId));
                     model.ReviewedPokemon.Add(r);
@@ -464,7 +464,7 @@ namespace Pokedex.Controllers
                     PokemonNoTypeList = pokemonList,
                     AltFormsList = altFormsList,
                     AppConfig = this.appConfig,
-                    Generation = this.dataService.GetGenerationFromGame(gameId),
+                    Generation = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId, "Generation").Generation,
                 };
 
                 return this.PartialView("_FillAvailableGenerationTable", model);
@@ -1329,7 +1329,7 @@ namespace Pokedex.Controllers
 
                 if (selectedGame != 0)
                 {
-                    generationId = this.dataService.GetGenerationFromGame(selectedGame).Id;
+                    generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame).GenerationId;
                 }
 
                 model.PokemonURLs = new List<string>();
@@ -1650,7 +1650,7 @@ namespace Pokedex.Controllers
                 if (formItems.Count == 0)
                 {
                     Generation generation = this.dataService.GetObjectByPropertyValue<Generation>("Id", generationId);
-                    List<BattleItem> allBattleItems = this.dataService.GetBattleItems();
+                    List<BattleItem> allBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon");
                     battleItems.AddRange(allBattleItems.Where(x => !x.OnlyInThisGeneration && x.PokemonId == null).ToList());
                     if (generation != null)
                     {
@@ -1750,7 +1750,7 @@ namespace Pokedex.Controllers
                     List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
                     List<PokemonGameDetail> availablePokemon = this.dataService.GetPokemonGameDetailsByGame(selectedGame).Where(x => !altFormsList.Any(y => y.Id == x.PokemonId)).ToList();
                     List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
-                    Generation selectedGen = this.dataService.GetGenerationFromGame(selectedGame);
+                    Generation selectedGen = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame, "Generation").Generation;
                     List<Generation> generationList = this.dataService.GetObjects<Generation>().Where(x => x.Id <= selectedGen.Id).ToList();
                     List<DataAccess.Models.Type> typesList = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= selectedGen.Id).ToList();
                     List<LegendaryType> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type");

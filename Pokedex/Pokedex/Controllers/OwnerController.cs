@@ -285,7 +285,7 @@ namespace Pokedex.Controllers
         [Route("reviewed_pokemon")]
         public IActionResult ReviewedPokemon()
         {
-            List<ReviewedPokemon> model = this.dataService.GetAllReviewedPokemon();
+            List<ReviewedPokemon> model = this.dataService.GetObjects<ReviewedPokemon>("Pokemon.PokedexNumber", "Pokemon");
 
             return this.View(model);
         }
@@ -297,7 +297,7 @@ namespace Pokedex.Controllers
         [Route("complete_reviewed_pokemon")]
         public IActionResult CompleteReviewedPokemon()
         {
-            List<ReviewedPokemon> reviewedPokemonList = this.dataService.GetAllReviewedPokemon();
+            List<ReviewedPokemon> reviewedPokemonList = this.dataService.GetObjects<ReviewedPokemon>("Pokemon.PokedexNumber", "Pokemon");
             Pokemon pokemon;
             foreach (var r in reviewedPokemonList)
             {

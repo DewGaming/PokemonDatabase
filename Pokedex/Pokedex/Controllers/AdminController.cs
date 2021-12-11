@@ -350,7 +350,7 @@ namespace Pokedex.Controllers
 
             BattleItemViewModel model = new BattleItemViewModel()
             {
-                AllBattleItems = this.dataService.GetBattleItems(),
+                AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                 AllPokemonTeamDetails = this.dataService.GetPokemonTeamDetails(),
                 AllPokemon = pokemonList,
             };

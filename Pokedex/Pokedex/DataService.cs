@@ -1379,32 +1379,23 @@ namespace Pokedex
             return effectivenessChart;
         }
 
-        public List<BattleItem> GetBattleItems()
-        {
-            return this.dataContext.BattleItems
-                .Include(x => x.Generation)
-                .Include(x => x.Pokemon)
-                .OrderBy(x => x.Generation.Id)
-                .ThenBy(x => x.Name)
-                .ToList();
-        }
-
-        public List<ReviewedPokemon> GetAllReviewedPokemon()
-        {
-            return this.dataContext.ReviewedPokemons
-                .Include(x => x.Pokemon)
-                .OrderBy(x => x.Pokemon.PokedexNumber)
-                .ToList();
-        }
-
         public List<Game> GetAvailableGamesFromPokemonId(int id)
         {
-            return this.dataContext.PokemonGameDetails.Where(x => x.PokemonId == id).Select(x => x.Game).ToList();
+            return this.dataContext.PokemonGameDetails
+                .Where(x => x.PokemonId == id)
+                .Select(x => x.Game)
+                .ToList();
         }
 
         public List<Game> GetGamesCatchableInFromPokemonId(int id)
         {
-            return this.dataContext.PokemonLocationGameDetails.Include(x => x.PokemonLocationDetail).Where(x => x.PokemonLocationDetail.PokemonId == id).Select(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+            return this.dataContext.PokemonLocationGameDetails
+                .Include(x => x.PokemonLocationDetail)
+                .Where(x => x.PokemonLocationDetail.PokemonId == id)
+                .Select(x => x.Game)
+                .OrderBy(x => x.ReleaseDate)
+                .ThenBy(x => x.Id)
+                .ToList();
         }
 
         public List<Game> GetAvailableGames(int pokemonTeamId)
@@ -1513,18 +1504,11 @@ namespace Pokedex
             }
         }
 
-        public Generation GetGenerationFromGame(int id)
-        {
-            return this.dataContext.Games
-                .Include(x => x.Generation)
-                .ToList()
-                .Find(x => x.Id == id)
-                .Generation;
-        }
-
         public List<Message> GetMessagesToUser(int id)
         {
-            return this.dataContext.Messages.Where(x => x.ReceiverId == id).ToList();
+            return this.dataContext.Messages
+                .Where(x => x.ReceiverId == id)
+                .ToList();
         }
 
         public List<CommentPage> GetCommentPages()
@@ -1684,7 +1668,7 @@ namespace Pokedex
             this.UpdateObject(team);
         }
 
-        public PokemonTeam ShiftPokemonTeam(PokemonTeam pokemonTeam)
+        private PokemonTeam ShiftPokemonTeam(PokemonTeam pokemonTeam)
         {
             if (pokemonTeam.FirstPokemonId == null && pokemonTeam.SecondPokemonId != null)
             {

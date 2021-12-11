@@ -237,7 +237,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                    AllBattleItems = this.dataService.GetBattleItems().OrderBy(x => x.Name).ToList(),
+                    AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
                 };
 
@@ -265,7 +265,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                    AllBattleItems = this.dataService.GetBattleItems().OrderBy(x => x.Name).ToList(),
+                    AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
                 };
 
