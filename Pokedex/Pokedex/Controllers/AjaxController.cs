@@ -27,7 +27,7 @@ namespace Pokedex.Controllers
         [Route("mark-as-read")]
         public void MarkAsRead()
         {
-            List<Message> messages = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
+            List<Message> messages = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
             foreach (var m in messages.Where(x => !x.IsRead))
             {
                 m.IsRead = true;
@@ -38,7 +38,7 @@ namespace Pokedex.Controllers
         [Route("check-unread-messages")]
         public int CheckUnreadMessages()
         {
-            return this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value)).Where(x => !x.IsRead).ToList().Count;
+            return this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value)).Where(x => !x.IsRead).ToList().Count;
         }
 
         [Route("update-last-visit")]
@@ -1341,7 +1341,7 @@ namespace Pokedex.Controllers
                     }
                     else
                     {
-                        model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = this.dataService.GetAvailableGamesFromPokemonId(p.Id).Last().Id }));
+                        model.PokemonURLs.Add(this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = p.Id, generationId = this.dataService.GetObjects<PokemonGameDetail>(whereProperty: "PokemonId", wherePropertyValue: p.Id).Select(x => x.Game).Last().Id }));
                     }
                 }
 

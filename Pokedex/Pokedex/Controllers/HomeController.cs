@@ -270,7 +270,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
         {
             selectedPokemonId = pokemonId;
-            if (generationId > this.dataService.GetAvailableGamesFromPokemonId(pokemonId).Last().GenerationId)
+            if (generationId > this.dataService.GetObjects<PokemonGameDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).Last().GenerationId)
             {
                 selectedGenerationId = 0;
             }
@@ -378,7 +378,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonLocationsWithId(string pokemonName, int pokemonId, int generationId)
         {
             selectedPokemonId = pokemonId;
-            if (generationId > this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Last().GenerationId)
+            if (generationId > this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, GameId", "PokemonLocationDetail, Game", "PokemonLocationDetail.PokemonId", pokemonId).Select(x => x.Game).Last().GenerationId)
             {
                 selectedGenerationId = 0;
             }
@@ -417,9 +417,9 @@ namespace Pokedex.Controllers
                 pokemonId = pokemon.Id;
             }
 
-            if (generationId == 0 && this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Count() > 0)
+            if (generationId == 0 && this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, GameId", "PokemonLocationDetail, Game", "PokemonLocationDetail.PokemonId", pokemonId).Count() > 0)
             {
-                generationId = this.dataService.GetGamesCatchableInFromPokemonId(pokemonId).Last().GenerationId;
+                generationId = this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, GameId", "PokemonLocationDetail, Game", "PokemonLocationDetail.PokemonId", pokemonId).Select(x => x.Game).Last().GenerationId;
             }
 
             if (pokemon?.IsComplete == true)

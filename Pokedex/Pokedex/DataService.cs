@@ -1148,74 +1148,6 @@ namespace Pokedex
             return effectivenessChart;
         }
 
-        public List<Game> GetAvailableGamesFromPokemonId(int id)
-        {
-            return this.dataContext.PokemonGameDetails
-                .Where(x => x.PokemonId == id)
-                .Select(x => x.Game)
-                .ToList();
-        }
-
-        public List<Game> GetGamesCatchableInFromPokemonId(int id)
-        {
-            return this.dataContext.PokemonLocationGameDetails
-                .Include(x => x.PokemonLocationDetail)
-                .Where(x => x.PokemonLocationDetail.PokemonId == id)
-                .Select(x => x.Game)
-                .OrderBy(x => x.ReleaseDate)
-                .ThenBy(x => x.Id)
-                .ToList();
-        }
-
-        public List<Game> GetAvailableGames(int pokemonTeamId)
-        {
-            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", pokemonTeamId, "FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon, Game");
-            List<Game> availableGames = new List<Game>();
-            if (pokemonTeam.FirstPokemonId != null)
-            {
-                availableGames = this.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).ConvertAll(x => x.Game);
-            }
-
-            if (pokemonTeam.SecondPokemonId != null)
-            {
-                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
-            }
-
-            if (pokemonTeam.ThirdPokemonId != null)
-            {
-                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
-            }
-
-            if (pokemonTeam.FourthPokemonId != null)
-            {
-                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
-            }
-
-            if (pokemonTeam.FifthPokemonId != null)
-            {
-                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
-            }
-
-            if (pokemonTeam.SixthPokemonId != null)
-            {
-                availableGames = availableGames.Where(x => this.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
-            }
-
-            return availableGames;
-        }
-
-        /// <summary>
-        /// Gets the messages for a specific user.
-        /// </summary>
-        /// <param name="id">The id of the user.</param>
-        /// <returns>The list of messages.</param>
-        public List<Message> GetMessagesToUser(int id)
-        {
-            return this.dataContext.Messages
-                .Where(x => x.ReceiverId == id)
-                .ToList();
-        }
-
         /// <summary>
         /// Gets the list of pages able to be commented on.
         /// </summary>
@@ -1276,8 +1208,7 @@ namespace Pokedex
                 pokemonTeamDetail.PokemonTeamMovesetId = pokemonTeamMoveset.Id;
             }
 
-            this.dataContext.PokemonTeamDetails.Add(pokemonTeamDetail);
-            this.dataContext.SaveChanges();
+            this.AddObject(pokemonTeamDetail);
             return pokemonTeamDetail.Id;
         }
 
@@ -1291,7 +1222,7 @@ namespace Pokedex
             List<GameRegionDetail> gameRegionDetails = this.GetObjects<GameRegionDetail>().Where(x => x.GameId == id).ToList();
             foreach (var r in gameRegionDetails)
             {
-                this.dataContext.GameRegionDetails.Remove(r);
+                this.DeleteObject<GameRegionDetail>(r.Id);
             }
 
             this.DeleteObject<Game>(game.Id);
@@ -1305,8 +1236,7 @@ namespace Pokedex
         {
             PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
             List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
-            this.dataContext.PokemonTeams.Remove(pokemonTeam);
-            this.dataContext.SaveChanges();
+            this.DeleteObject<PokemonTeam>(pokemonTeam.Id);
 
             foreach (var p in pokemonTeamDetailIds)
             {

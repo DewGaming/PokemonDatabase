@@ -39,7 +39,7 @@ namespace Pokedex.Controllers
         [Route("messages")]
         public IActionResult ViewMessages()
         {
-            List<Message> model = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
+            List<Message> model = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
 
             return this.View(model);
         }
@@ -53,7 +53,7 @@ namespace Pokedex.Controllers
         [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(int messageId)
         {
-            Message model = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+            Message model = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
 
             return this.View(model);
         }
@@ -81,7 +81,7 @@ namespace Pokedex.Controllers
         [Route("reply_to_message/{messageId:int}")]
         public IActionResult ReplyMessage(int messageId)
         {
-            Message originalMessage = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+            Message originalMessage = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
             Message model = new Message()
             {
                 ReceiverId = originalMessage.SenderId,
@@ -104,7 +104,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Message originalMessage = this.dataService.GetMessagesToUser(Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+                Message originalMessage = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
 
                 Message model = new Message()
                 {
