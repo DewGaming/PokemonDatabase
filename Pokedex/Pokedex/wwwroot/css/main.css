@@ -239,7 +239,7 @@ hr.dropdown-line {
   outline: 0
 }
 
-.search-bar input, .search-bar .search-button, .search-bar .reset-button {
+.search-bar input, .search-bar .search-button {
   list-style: none;
   padding: .25rem 0;
   line-height: 1rem;
@@ -251,12 +251,12 @@ hr.dropdown-line {
   border-radius: 4px 0 0 4px;
 }
 
-.search-bar .search-button, .search-bar .reset-button {
+.search-bar .search-button {
   border-radius: 0 4px 4px 0;
   width: 75px
 }
 
-.search-bar input, .search-bar .reset-button {
+.search-bar input {
   background-color: #fff
 }
 
