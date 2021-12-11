@@ -179,6 +179,7 @@ namespace Pokedex.Controllers
         [Route("pokemon_teams")]
         public IActionResult PokemonTeams()
         {
+            this.dataService.AddPageView("Pokemon Team Page", this.User.IsInRole("Owner"));
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
                 AllPokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name),
