@@ -1538,7 +1538,7 @@ namespace Pokedex.Controllers
                     Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                IFormFile spriteUpload = this.dataService.FormatFavIcon(upload);
+                IFormFile favIconUpload = this.dataService.FormatFavIcon(upload);
 
                 request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, pokemon.Id.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
@@ -1546,7 +1546,7 @@ namespace Pokedex.Controllers
 
                 using (Stream requestStream = request.GetRequestStream())
                 {
-                    await spriteUpload.CopyToAsync(requestStream).ConfigureAwait(false);
+                    await favIconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -1561,7 +1561,6 @@ namespace Pokedex.Controllers
                     Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword),
                 };
 
-                byte[] file = webRequest.DownloadData(string.Concat(this.appConfig.WebUrl, "/images/general/tempPhoto.png"));
                 MemoryStream strm = new MemoryStream();
                 IFormFile tempUpload = new FormFile(strm, 0, strm.Length, "image", "image.png");
 
