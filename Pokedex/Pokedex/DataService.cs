@@ -1041,6 +1041,13 @@ namespace Pokedex
             return pokemonTypeCharts;
         }
 
+        /// <summary>
+        /// Gets the type chart for the given typing and generation.
+        /// </summary>
+        /// <param name="primaryTypeId">The id of the primary type.</param>
+        /// <param name="secondaryTypeId">The id of the secondary type.</param>
+        /// <param name="generationId">The id of the generation.</param>
+        /// <returns>Returns the type effectiveness given the typing and generation.</returns>
         public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId)
         {
             List<Type> typeList = this.GetObjects<Type>("Name");
@@ -1245,7 +1252,7 @@ namespace Pokedex
         /// Adds a pokemon team detail to the database, and ensures that there is an entry for the pokemon's EV, IV, and moveset.
         /// </summary>
         /// <param name="pokemonTeamDetail">The pokemon team detail that is being added.</param>
-        /// <returns>The id of the new pokemon team detail</returns>
+        /// <returns>The id of the new pokemon team detail.</returns>
         public int AddPokemonTeamDetail(PokemonTeamDetail pokemonTeamDetail)
         {
             if (pokemonTeamDetail.PokemonTeamEVId == null)
@@ -1277,7 +1284,7 @@ namespace Pokedex
         /// <summary>
         /// Deletes a game and all game region details.
         /// </summary>
-        /// <param name="id">The id of the game being removed</param>
+        /// <param name="id">The id of the game being removed.</param>
         public void DeleteGame(int id)
         {
             Game game = this.GetObjectByPropertyValue<Game>("Id", id);
