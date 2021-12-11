@@ -402,7 +402,7 @@ namespace Pokedex
             {
                 AllAltForms = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form"),
                 AllEvolutions = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod, Generation"),
-                AllTypings = this.GetObjects<PokemonTypeDetail>("PokemonId", "AltFormPokemon, OriginalPokemon, Form"),
+                AllTypings = this.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
                 AllAbilities = this.GetAllPokemonWithAbilitiesAndIncomplete(),
                 AllEggGroups = this.GetAllPokemonWithEggGroupsAndIncomplete(),
                 AllBaseStats = this.GetObjects<BaseStat>(includes: "Pokemon"),

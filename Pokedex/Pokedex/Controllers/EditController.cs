@@ -2007,7 +2007,7 @@ namespace Pokedex.Controllers
                 AllPokemon = altFormList,
                 AllAltForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form"),
                 AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
-                AllTypings = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "AltFormPokemon, OriginalPokemon, Form"),
+                AllTypings = this.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
                 AllAbilities = this.dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
                 AllEggGroups = this.dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
                 AllBaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon"),

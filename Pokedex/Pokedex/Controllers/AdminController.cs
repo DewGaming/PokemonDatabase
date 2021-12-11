@@ -164,7 +164,7 @@ namespace Pokedex.Controllers
             TypeViewModel model = new TypeViewModel()
             {
                 AllTypes = this.dataService.GetObjects<Type>("Name"),
-                AllPokemon = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "AltFormPokemon, OriginalPokemon, Form"),
+                AllPokemon = this.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
             };
 
             return this.View(model);
