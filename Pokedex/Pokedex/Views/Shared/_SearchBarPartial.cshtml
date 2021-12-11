@@ -2,10 +2,8 @@
     <li>
         @using (Html.BeginForm("Search", "Home", FormMethod.Get, new { @class = "form-inline" } ))
         {
-            <div style="margin-right: 7.5px;" class="form-group mb-2">
+            <div class="form-group mb-2">
                 @Html.Editor("searchText", new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" }, @Value = @ViewData["Search"] })
-            </div>
-            <div style="margin-top: -1px;" class="form-group mb-2">
                 <button type="submit" class="btn btn-secondary search-button" role="button">Search</button>
             </div>
         }
