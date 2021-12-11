@@ -94,7 +94,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonLocationDetails(int locationId)
         {
             List<PokemonLocationDetail> pokemonList = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
-            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName();
+            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName().Where(x => x.IsComplete == true).ToList();
             Pokemon pokemon;
 
             foreach (var a in altFormList)
@@ -240,7 +240,7 @@ namespace Pokedex.Controllers
             AbilityViewModel model = new AbilityViewModel()
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("GenerationId, Name"),
-                AllPokemon = this.dataService.GetAllPokemonWithAbilitiesAndIncomplete(),
+                AllPokemon = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility"),
             };
 
             return this.View(model);

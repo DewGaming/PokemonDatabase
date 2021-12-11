@@ -585,7 +585,7 @@ namespace Pokedex.Controllers
         [Route("delete_team_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult DeletePokemon(PokemonTeamDetail pokemonTeamDetail)
         {
-            this.dataService.DeletePokemonTeamDetail(pokemonTeamDetail.Id);
+            this.DeletePokemonTeamDetail(pokemonTeamDetail.Id);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -607,7 +607,7 @@ namespace Pokedex.Controllers
                 PokemonTeamName = pokemonTeam.PokemonTeamName,
                 GameId = pokemonTeam.GameId,
                 UserId = pokemonTeam.UserId,
-                AllGames = this.dataService.GetAvailableGames(pokemonTeam.Id),
+                AllGames = this.GetAvailableGames(pokemonTeam),
             };
 
             return this.View(model);
@@ -631,7 +631,7 @@ namespace Pokedex.Controllers
                     PokemonTeamName = originalPokemonTeam.PokemonTeamName,
                     GameId = originalPokemonTeam.GameId,
                     UserId = originalPokemonTeam.UserId,
-                    AllGames = this.dataService.GetAvailableGames(newPokemonTeam.Id),
+                    AllGames = this.GetAvailableGames(newPokemonTeam),
                 };
 
                 return this.View(model);
@@ -755,8 +755,8 @@ namespace Pokedex.Controllers
             }
 
             string generationId = importedTeam.Split("===\r\n")[0];
-            this.dataService.FillPokemonTeam(pokemonTeam);
-            List<Game> availableGames = this.dataService.GetAvailableGames(pokemonTeam);
+            this.FillPokemonTeam(pokemonTeam);
+            List<Game> availableGames = this.GetAvailableGames(pokemonTeam);
             if (generationId.IndexOf("[gen") != -1)
             {
                 int generationStart = generationId.IndexOf(" [");
@@ -1097,13 +1097,231 @@ namespace Pokedex.Controllers
                 {
                     move = m.Substring(2, m.Length - 2).Trim();
                     moveset.FourthMove = move;
-                    moveset = this.dataService.SortMoveset(moveset);
+                    moveset = this.SortMoveset(moveset);
                 }
 
                 pokemonTeamDetail.Moveset = moveset;
             }
 
             return pokemonTeamDetail;
+        }
+
+        private void FillPokemonTeam(PokemonTeam pokemonTeam)
+        {
+            if (pokemonTeam.FirstPokemonId != null)
+            {
+                pokemonTeam.FirstPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.FirstPokemonId);
+            }
+
+            if (pokemonTeam.SecondPokemonId != null)
+            {
+                pokemonTeam.SecondPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.SecondPokemonId);
+            }
+
+            if (pokemonTeam.ThirdPokemonId != null)
+            {
+                pokemonTeam.ThirdPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.ThirdPokemonId);
+            }
+
+            if (pokemonTeam.FourthPokemonId != null)
+            {
+                pokemonTeam.FourthPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.FourthPokemonId);
+            }
+
+            if (pokemonTeam.FifthPokemonId != null)
+            {
+                pokemonTeam.FifthPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.FifthPokemonId);
+            }
+
+            if (pokemonTeam.SixthPokemonId != null)
+            {
+                pokemonTeam.SixthPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.SixthPokemonId);
+            }
+        }
+
+        /// <summary>
+        /// Deletes all of the details for a pokemon team detail.
+        /// </summary>
+        /// <param name="id">The id of the pokemon team detail variable.</param>
+        private void DeletePokemonTeamDetail(int id)
+        {
+            PokemonTeamDetail pokemonTeamDetail = this.dataService.GetObjectByPropertyValue<PokemonTeamDetail>("Id", id);
+            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeamFromPokemonNoIncludes(pokemonTeamDetail.Id);
+            if (pokemonTeam != null)
+            {
+                this.RemovePokemonFromTeam(pokemonTeam, pokemonTeamDetail);
+            }
+
+            int? evId = pokemonTeamDetail.PokemonTeamEVId;
+            int? ivId = pokemonTeamDetail.PokemonTeamIVId;
+            int? movesetId = pokemonTeamDetail.PokemonTeamMovesetId;
+            this.dataService.DeleteObject<PokemonTeamDetail>(pokemonTeamDetail.Id);
+
+            if (evId != null)
+            {
+                this.dataService.DeleteObject<PokemonTeamEV>((int)evId);
+            }
+
+            if (ivId != null)
+            {
+                this.dataService.DeleteObject<PokemonTeamIV>((int)ivId);
+            }
+
+            if (movesetId != null)
+            {
+                this.dataService.DeleteObject<PokemonTeamMoveset>((int)movesetId);
+            }
+        }
+
+        /// <summary>
+        /// Removes a pokemon from the team and then shifts all of the pokemon up in the team to fill in any empty spaces.
+        /// </summary>
+        /// <param name="team">The team that the pokemon is being removed from are being shifted.</param>
+        /// <param name="teamDetail">The pokemon being removed.</param>
+        private void RemovePokemonFromTeam(PokemonTeam team, PokemonTeamDetail teamDetail)
+        {
+            if (team.FirstPokemonId == teamDetail.Id)
+            {
+                team.FirstPokemonId = null;
+            }
+            else if (team.SecondPokemonId == teamDetail.Id)
+            {
+                team.SecondPokemonId = null;
+            }
+            else if (team.ThirdPokemonId == teamDetail.Id)
+            {
+                team.ThirdPokemonId = null;
+            }
+            else if (team.FourthPokemonId == teamDetail.Id)
+            {
+                team.FourthPokemonId = null;
+            }
+            else if (team.FifthPokemonId == teamDetail.Id)
+            {
+                team.FifthPokemonId = null;
+            }
+            else if (team.SixthPokemonId == teamDetail.Id)
+            {
+                team.SixthPokemonId = null;
+            }
+
+            // Shifts the pokemon up in the team to fill empty space.
+            if (team.FirstPokemonId == null && team.SecondPokemonId != null)
+            {
+                team.FirstPokemonId = team.SecondPokemonId;
+                team.SecondPokemonId = null;
+            }
+
+            if (team.SecondPokemonId == null && team.ThirdPokemonId != null)
+            {
+                team.SecondPokemonId = team.ThirdPokemonId;
+                team.ThirdPokemonId = null;
+            }
+
+            if (team.ThirdPokemonId == null && team.FourthPokemonId != null)
+            {
+                team.ThirdPokemonId = team.FourthPokemonId;
+                team.FourthPokemonId = null;
+            }
+
+            if (team.FourthPokemonId == null && team.FifthPokemonId != null)
+            {
+                team.FourthPokemonId = team.FifthPokemonId;
+                team.FifthPokemonId = null;
+            }
+
+            if (team.FifthPokemonId == null && team.SixthPokemonId != null)
+            {
+                team.FifthPokemonId = team.SixthPokemonId;
+                team.SixthPokemonId = null;
+            }
+
+            this.dataService.UpdateObject(team);
+        }
+
+        /// <summary>
+        /// Sorts the movesets to ensure no empty spaces.
+        /// </summary>
+        /// <param name="moveset">The moveset that is being sorted.</param>
+        /// <returns>The sorted moveset.</returns>
+        private PokemonTeamMoveset SortMoveset(PokemonTeamMoveset moveset)
+        {
+            // First Sort
+            if (string.IsNullOrEmpty(moveset.FirstMove) && !string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.FirstMove = moveset.SecondMove;
+                moveset.SecondMove = null;
+            }
+
+            if (string.IsNullOrEmpty(moveset.SecondMove) && !string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                moveset.SecondMove = moveset.ThirdMove;
+                moveset.ThirdMove = null;
+            }
+
+            if (string.IsNullOrEmpty(moveset.ThirdMove) && !string.IsNullOrEmpty(moveset.FourthMove))
+            {
+                moveset.ThirdMove = moveset.FourthMove;
+                moveset.FourthMove = null;
+            }
+
+            // Second Sort
+            if (string.IsNullOrEmpty(moveset.FirstMove) && !string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.FirstMove = moveset.SecondMove;
+                moveset.SecondMove = null;
+            }
+
+            if (string.IsNullOrEmpty(moveset.SecondMove) && !string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                moveset.SecondMove = moveset.ThirdMove;
+                moveset.ThirdMove = null;
+            }
+
+            // Third Sort.
+            if (string.IsNullOrEmpty(moveset.FirstMove) && !string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.FirstMove = moveset.SecondMove;
+                moveset.SecondMove = null;
+            }
+
+            return moveset;
+        }
+
+        private List<Game> GetAvailableGames(PokemonTeam pokemonTeam)
+        {
+            List<Game> availableGames = new List<Game>();
+            if (pokemonTeam.FirstPokemonId != null)
+            {
+                availableGames = this.dataService.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).ConvertAll(x => x.Game);
+            }
+
+            if (pokemonTeam.SecondPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if (pokemonTeam.ThirdPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if (pokemonTeam.FourthPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if (pokemonTeam.FifthPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if (pokemonTeam.SixthPokemonId != null)
+            {
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            return availableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
         }
     }
 }

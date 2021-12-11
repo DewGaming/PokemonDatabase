@@ -222,7 +222,7 @@ namespace Pokedex.Controllers
         {
             // Ensuring that the pokemon really has all of these added.
             bool pokemonIsComplete = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<EVYield>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId);
@@ -236,12 +236,12 @@ namespace Pokedex.Controllers
                     Pokemon = pokemon,
                     BaseStats = this.dataService.GetBaseStat(pokemon.Id),
                     EVYields = this.dataService.GetEVYields(pokemon.Id),
-                    Typings = this.dataService.GetPokemonWithTypes(pokemon.Id),
-                    Abilities = this.dataService.GetPokemonWithAbilities(pokemon.Id),
-                    EggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.Id),
+                    Typings = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                    Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                    EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
-                    PreEvolutions = this.dataService.GetPreEvolutionIncludeIncomplete(pokemon.Id),
-                    Evolutions = this.dataService.GetPokemonEvolutionsIncludeIncomplete(pokemon.Id),
+                    PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id),
+                    Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id),
                     Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
                     AppConfig = this.appConfig,
                 };

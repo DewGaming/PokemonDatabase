@@ -5,6 +5,7 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -86,7 +87,7 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
-                search = this.dataService.FormatPokemonName(search);
+                search = this.FormatPokemonName(search);
 
                 List<PokemonTypeDetail> model = this.dataService.GetAllPokemonWithTypes()
                                                                  .Where(x => x.Pokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
@@ -290,7 +291,7 @@ namespace Pokedex.Controllers
             int generationId = selectedGenerationId;
             selectedPokemonId = 0;
             selectedGenerationId = 0;
-            name = this.dataService.FormatPokemonName(name);
+            name = this.FormatPokemonName(name);
 
             Pokemon pokemon = this.dataService.GetPokemon(name);
             if (pokemonId == 0)
@@ -399,7 +400,7 @@ namespace Pokedex.Controllers
             selectedPokemonId = 0;
             selectedGenerationId = 0;
             Pokemon pokemon;
-            name = this.dataService.FormatPokemonName(name);
+            name = this.FormatPokemonName(name);
 
             if (name.Contains('(') && !name.Contains("Nidoran"))
             {
@@ -469,7 +470,7 @@ namespace Pokedex.Controllers
             this.dataService.AddPageView("Capture Calculator Page", this.User.IsInRole("Owner"));
             CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
             {
-                AllPokemon = this.dataService.GetAllPokemonForCaptureCalculator(),
+                AllPokemon = this.GetAllPokemonForCaptureCalculator(),
                 AllPokeballs = this.dataService.GetObjects<Pokeball>("Name"),
                 AllStatuses = this.dataService.GetObjects<Status>("Name"),
                 AllGenerations = this.dataService.GetObjects<Generation>(),
@@ -512,7 +513,7 @@ namespace Pokedex.Controllers
 
             if (!string.IsNullOrEmpty(comment.PokemonName))
             {
-                Pokemon pokemon = this.dataService.GetPokemon(this.dataService.FormatPokemonName(comment.PokemonName));
+                Pokemon pokemon = this.dataService.GetPokemon(this.FormatPokemonName(comment.PokemonName));
                 if (pokemon == null)
                 {
                     comment.PokemonName = null;
@@ -641,6 +642,77 @@ namespace Pokedex.Controllers
             {
                 Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Formats the name of the pokemon to how the database stores their names.
+        /// </summary>
+        /// <param name="pokemonName">The name being formatted.</param>
+        /// <returns>The formatted pokemon name string.</returns>
+        private string FormatPokemonName(string pokemonName)
+        {
+            pokemonName.ToLower();
+
+            if (pokemonName.Contains("type"))
+            {
+                pokemonName = "Type: Null";
+            }
+
+            if (pokemonName.Contains('_'))
+            {
+                pokemonName = pokemonName.Replace('_', ' ');
+            }
+
+            if (pokemonName == "flabe" || pokemonName == "flabeb" || pokemonName == "flabebe")
+            {
+                pokemonName = "Flabébé";
+            }
+
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            pokemonName = textInfo.ToTitleCase(pokemonName);
+
+            if (pokemonName.Length > 1 && pokemonName.Substring(pokemonName.Length - 2, 2) == "-O")
+            {
+                pokemonName = string.Concat(pokemonName.Remove(pokemonName.Length - 2, 2), "-o");
+            }
+
+            return pokemonName;
+        }
+
+        /// <summary>
+        /// Gets all of the pokemon used for the capture calculator.
+        /// </summary>
+        /// <returns>The list of capturable pokemon.</returns>
+        private List<Pokemon> GetAllPokemonForCaptureCalculator()
+        {
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness", "IsComplete", true);
+
+            List<PokemonFormDetail> pokemonForm = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true);
+
+            List<PokemonFormDetail> altFormList = new List<PokemonFormDetail>();
+
+            foreach (var p in pokemonForm)
+            {
+                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
+                altFormList.Add(p);
+            }
+
+            Pokemon pokemon;
+
+            foreach (var a in altFormList)
+            {
+                pokemon = pokemonList.Find(x => x.Id == a.AltFormPokemonId);
+                if (a.Form.Catchable)
+                {
+                    pokemon.Name = a.AltFormPokemon.Name;
+                }
+                else
+                {
+                    pokemonList.Remove(pokemon);
+                }
+            }
+
+            return pokemonList;
         }
     }
 }

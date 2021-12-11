@@ -1135,7 +1135,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            List<PokemonFormDetail> originalPokemonForms = this.dataService.GetPokemonFormsWithIncomplete(pokemon.OriginalPokemonId);
+            List<PokemonFormDetail> originalPokemonForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemonId", "Form, OriginalPokemon, AltFormPokemon", "OriginalPokemonId", pokemon.OriginalPokemonId);
 
             foreach (var p in originalPokemonForms)
             {
@@ -1174,7 +1174,7 @@ namespace Pokedex.Controllers
             this.UploadImages(normalUpload, normalUrlUpload, alternatePokemon);
             this.UploadImages(shinyUpload, shinyUrlUpload, alternatePokemon);
 
-            PokemonEggGroupDetail eggGroups = this.dataService.GetPokemonWithEggGroups(pokemon.OriginalPokemonId).Last();
+            PokemonEggGroupDetail eggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
             {
                 PrimaryEggGroupId = eggGroups.PrimaryEggGroupId,
@@ -1236,7 +1236,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(typing);
 
-            if (this.dataService.GetPokemonWithAbilities(typing.PokemonId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", typing.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").IsComplete)
+            if (this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: typing.PokemonId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", typing.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").IsComplete)
             {
                 return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId, generationId = typing.GenerationId });
             }
@@ -1281,7 +1281,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(abilities);
 
-            if (this.dataService.GetPokemonWithEggGroups(abilities.PokemonId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").IsComplete)
+            if (this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: abilities.PokemonId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").IsComplete)
             {
                 return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
             }
