@@ -221,7 +221,7 @@ namespace Pokedex.Controllers
         public IActionResult ReviewPokemon(int pokemonId)
         {
             // Ensuring that the pokemon really has all of these added.
-            bool pokemonIsComplete = this.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType").Exists(x => x.PokemonId == pokemonId) &&
+            bool pokemonIsComplete = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetAllPokemonWithAbilitiesAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
