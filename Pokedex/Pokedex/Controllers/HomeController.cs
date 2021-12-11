@@ -149,11 +149,16 @@ namespace Pokedex.Controllers
                 List<Pokemon> pokemonInGen = allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList();
                 if (pokemonInGen.Count != 0)
                 {
-                    List<Game> uniqueGames = pokemonInGen.Select(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).GroupBy(y => y.Id).Select(z => z.First()).ToList();
+                    List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id && DateTime.Compare(DateTime.Today, x.ReleaseDate) >= 0).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).GroupBy(y => y.ReleaseDate).Select(z => z.First()).ToList();
                     List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id && DateTime.Compare(DateTime.Today, x.ReleaseDate) >= 0).ToList();
                     for (var i = 0; i < uniqueGames.Count; i++)
                     {
-                        if (i == uniqueGames.Count - 1)
+                        if (uniqueGames[i].Abbreviation == "FR")
+                        {
+                            selectableGames.Add(uniqueGames[i]);
+                            selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Abbreviation", "LG"));
+                        }
+                        else if (i == uniqueGames.Count - 1)
                         {
                             selectableGames.Add(new Game()
                             {
