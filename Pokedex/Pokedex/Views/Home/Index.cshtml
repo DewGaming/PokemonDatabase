@@ -25,9 +25,9 @@
 }
 
 <h4>Welcome to the Pokémon Database!</h4>
-<br>
 <p>This was created starting as a school project and then eventually being transformed into a website.  Please Enjoy!</p>
 <h5>Site Features</h5>
+<p>Click on the image to learn more about that page!</p>
 <div class="siteFeatures">
     <div class="feature pokemonList">
         <a href="@this.Url.Action("AllPokemon", "Home")"><p>Lookup Pokemon!</p></a>
@@ -37,9 +37,9 @@
         <a href="@this.Url.Action("CaptureCalculator", "Home")"><p>Calculate Chance of Capture!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("CaptureCalculator", "Home")" alt="Capture Calculator" title="Find out what the chances of catching a Pokémon depending on it's health, what pokeball you use, and various other options!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "captureCalculator.png"))">
     </div>
-    <div class="feature dayCareEvaluator">
-        <a href="@this.Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokémon can be placed in a day care to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareEvaluator.png"))">
+    <div class="feature teamRandomizerFeature">
+        <a href="@this.Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
     </div>
 </div>
 <div class="siteFeatures">
@@ -47,13 +47,13 @@
         <a href="@this.Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
     </div>
-    <div class="feature teamRandomizerFeature">
-        <a href="@this.Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
-    </div>
-    <div class="feature typeEvaluator">
+    <div class="feature locationEvaluator">
         <a href="@this.Url.Action("LocationAvailability", "Home")"><p>View Pokemon Locations!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("LocationAvailability", "Home")" alt="Location Availability" title="View what pokémon are available in different areas of games! Some locations have different encounters depending on the game!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "locationAvailability.png"))">
+    </div>
+    <div class="feature teamBuilder">
+        <a href="@this.Url.Action("PokemonTeams", "User")"><p>Build Teams!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("PokemonTeams", "User")" alt="Team Builder" title="Build different teams with the given options, or import them from Pokémon Showdown!  Once saved, you can export them to Showdown as well! Requires you to be logged into your account to use." src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonTeams.png"))">
     </div>
 </div>
 <div class="siteFeatures">
@@ -65,9 +65,9 @@
         <a href="@this.Url.Action("AbilityEvaluator", "Home")"><p>Lookup Abilities!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("AbilityEvaluator", "Home")" alt="Ability Evaluator" title="Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "abilityEvaluator.png"))">
     </div>
-    <div class="feature teamBuilder">
-        <a href="@this.Url.Action("PokemonTeams", "User")"><p>Build Teams!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("PokemonTeams", "User")" alt="Team Builder" title="Build different teams with the given options, or import them from Pokémon Showdown!  Once saved, you can export them to Showdown as well! Requires you to be logged into your account to use." src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonTeams.png"))">
+    <div class="feature dayCareEvaluator">
+        <a href="@this.Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("DayCareEvaluator", "Home")" alt="Day Care Evaluator" title="Find out what Pokémon can be placed in a day care to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareEvaluator.png"))">
     </div>
 </div>
 </div>
