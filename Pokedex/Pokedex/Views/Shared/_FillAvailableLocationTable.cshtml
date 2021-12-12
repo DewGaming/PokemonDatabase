@@ -1,0 +1,10 @@
+@model Pokedex.Models.LocationAvailabilityViewModel;
+
+@foreach (var l in Model.AllLocations)
+{
+    <div class="location">
+        <a href="@this.Url.Action("PokemonByLocations", "Home", new { locationId = @l.Id, gameId = @Model.GameId })">
+            <div class="locationLink @l.Name">@l.Name</div>
+        </a>
+    </div>
+}

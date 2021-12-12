@@ -1,8 +1,8 @@
-.generations, .games {
+.generations, .games, .methods {
     display: none;
 }
 
-.generations button {
+.generations button, .locationEvaluator button {
     border-top: 0;
 }
 

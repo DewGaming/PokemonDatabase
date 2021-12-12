@@ -52,11 +52,15 @@
         <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
     </div>
     <div class="feature typeEvaluator">
-        <a href="@this.Url.Action("TypingEvaluator", "Home")"><p>Lookup Type Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingEvaluator.png"))">
+        <a href="@this.Url.Action("LocationAvailability", "Home")"><p>View Pokemon Locations!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("LocationAvailability", "Home")" alt="Location Availability" title="View what pokémon are available in different areas of games! Some locations have different encounters depending on the game!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "locationAvailability.png"))">
     </div>
 </div>
 <div class="siteFeatures">
+    <div class="feature typeEvaluator">
+        <a href="@this.Url.Action("TypingEvaluator", "Home")"><p>Lookup Type Combinations!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("TypingEvaluator", "Home")" alt="Typing Evaluator" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingEvaluator.png"))">
+    </div>
     <div class="feature abilityEvaluator">
         <a href="@this.Url.Action("AbilityEvaluator", "Home")"><p>Lookup Abilities!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("AbilityEvaluator", "Home")" alt="Ability Evaluator" title="Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "abilityEvaluator.png"))">

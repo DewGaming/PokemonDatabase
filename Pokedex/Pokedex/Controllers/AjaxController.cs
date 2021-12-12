@@ -476,6 +476,26 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("get-available-location-by-game/{gameId}")]
+        public IActionResult GetAvailableLocationByGame(int gameId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                LocationAvailabilityViewModel model = new LocationAvailabilityViewModel()
+                {
+                    AllLocations = this.dataService.GetObjects<PokemonLocationGameDetail>("PokemonLocationDetail.Location.Name", "PokemonLocationDetail, PokemonLocationDetail.Location", "GameId", gameId).ConvertAll(x => x.PokemonLocationDetail.Location).GroupBy(x => x.Id).Select(x => x.First()).ToList(),
+                    GameId = gameId,
+                };
+
+                return this.PartialView("_FillAvailableLocationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Home", "Index");
+            }
+        }
+
+        [AllowAnonymous]
         [Route("get-capture-chance")]
         public string GetCaptureChange(int pokemonId, int generationId, float healthPercentage, int pokeballId, int statusId, float turnCount, float encounterLevel, float userLevel, bool surfing, bool fishing, bool previouslyCaught, bool caveOrNight, bool sameGender)
         {

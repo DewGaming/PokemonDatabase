@@ -55,13 +55,13 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations, .games {
+.generations, .games, .locationEvaluator {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.generations {
+.generations, .locationEvaluator {
   margin-bottom: 10px;
 }
 
@@ -69,11 +69,11 @@
   margin: -10px 0 10px;
 }
 
-.generations.active, .games.active {
+.generations.active, .games.active, .locationEvaluator.active {
   display: flex;
 }
 
-.generations button, .games button {
+.generations button, .games button, .locationEvaluator button {
   list-style: none;
   -webkit-box-flex: 1;
   -ms-flex: 1 1 0px;
@@ -90,7 +90,7 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations button.active {
+.generations button.active, .locationEvaluator button.active {
   background-color: #fff;
   border-bottom-color: #fff;
   color: #404040;
@@ -102,7 +102,7 @@
   color: #404040;
 }
 
-.generations button:focus, .games button:focus {
+.generations button:focus, .games button:focus, .locationEvaluator button:focus {
   outline-width: 0;
 }
 

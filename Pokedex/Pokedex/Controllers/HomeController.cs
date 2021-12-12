@@ -260,7 +260,18 @@ namespace Pokedex.Controllers
         public IActionResult GameAvailability()
         {
             this.dataService.AddPageView("Game Availability Page", this.User.IsInRole("Owner"));
-            List<Game> model = this.dataService.GetGamesForEachReleaseDate();
+            List<Game> model = this.GetGamesForEachReleaseDate();
+
+            return this.View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("location_availability")]
+        public IActionResult LocationAvailability()
+        {
+            this.dataService.AddPageView("Location Availability Page", this.User.IsInRole("Owner"));
+            List<Game> model = this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, Game.Id", "Game").Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.Now).GroupBy(x => x.Id).Select(x => x.First()).ToList();
 
             return this.View(model);
         }
@@ -270,7 +281,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
         {
             selectedPokemonId = pokemonId;
-            if (generationId > this.dataService.GetObjects<PokemonGameDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).Last().GenerationId)
+            if (generationId > this.dataService.GetObjects<PokemonGameDetail>(includes: "Game", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).Last().GenerationId)
             {
                 selectedGenerationId = 0;
             }
@@ -446,6 +457,26 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("AllPokemon", "Home");
             }
+        }
+
+        [AllowAnonymous]
+        [Route("location_evaluator/{locationId:int}/{gameId:int}")]
+        public IActionResult PokemonByLocations(int locationId, int gameId)
+        {
+            this.dataService.AddPageView("Location Evaluator Page", this.User.IsInRole("Owner"));
+            List<PokemonLocationDetail> pokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>().Where(x => x.LocationId == locationId).ToList();
+            List<PokemonLocationGameDetail> pokemonLocationGames = this.dataService.GetObjects<PokemonLocationGameDetail>("PokemonLocationDetail.Pokemon.PokedexNumber, PokemonLocationDetail.PokemonId", "PokemonLocationDetail, PokemonLocationDetail.Pokemon, PokemonLocationDetail.CaptureMethod, PokemonLocationDetail.Location, PokemonLocationDetail.CaptureMethod", "GameId", gameId).Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList();
+            LocationEvaluatorViewModel model = new LocationEvaluatorViewModel()
+            {
+                PokemonLocationGames = pokemonLocationGames,
+                PokemonTimes = this.dataService.GetObjects<PokemonLocationTimeDetail>("TimeId", "PokemonLocationDetail, Time").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
+                PokemonSeasons = this.dataService.GetObjects<PokemonLocationSeasonDetail>("SeasonId", "PokemonLocationDetail, Season").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
+                Location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId),
+                Game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId),
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
         }
 
         [AllowAnonymous]
@@ -713,6 +744,72 @@ namespace Pokedex.Controllers
             }
 
             return pokemonList;
+        }
+
+        /// <summary>
+        /// Grabs a list of games, separated by the release dates.
+        /// </summary>
+        /// <returns>Returns a list of games, based on the release dates.</returns>
+        private List<Game> GetGamesForEachReleaseDate()
+        {
+            List<Game> gameList = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+            List<Game> games = new List<Game>();
+            foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                if (gameList.First(x => x.ReleaseDate == r).Id != 4)
+                {
+                    games.Add(new Game()
+                    {
+                        Id = gameList.First(x => x.ReleaseDate == r).Id,
+                        Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                        GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
+                        ReleaseDate = r,
+                        Abbreviation = string.Concat(gameList.Where(x => x.ReleaseDate == r).Select(x => x.Abbreviation)),
+                    });
+                }
+                else
+                {
+                    foreach (var g in gameList.Where(x => x.ReleaseDate == r).ToList())
+                    {
+                        games.Add(g);
+                    }
+                }
+            }
+
+            return games;
+        }
+
+        /// <summary>
+        /// Grabs a list of games, separated by the release dates.
+        /// </summary>
+        /// <returns>Returns a list of games, based on the release dates.</returns>
+        private List<Game> GetGamesForEachPokemonLocationDetail()
+        {
+            List<Game> gameList = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game").ConvertAll(x => x.Game);
+            List<Game> games = new List<Game>();
+            foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                if (gameList.First(x => x.ReleaseDate == r).Id != 4)
+                {
+                    games.Add(new Game()
+                    {
+                        Id = gameList.First(x => x.ReleaseDate == r).Id,
+                        Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                        GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
+                        ReleaseDate = r,
+                        Abbreviation = string.Concat(gameList.Where(x => x.ReleaseDate == r).Select(x => x.Abbreviation)),
+                    });
+                }
+                else
+                {
+                    foreach (var g in gameList.Where(x => x.ReleaseDate == r).ToList())
+                    {
+                        games.Add(g);
+                    }
+                }
+            }
+
+            return games;
         }
     }
 }

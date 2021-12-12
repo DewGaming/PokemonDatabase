@@ -1,0 +1,205 @@
+@using System.Collections.Generic;
+@using Pokedex.DataAccess.Models;
+@model Pokedex.Models.LocationEvaluatorViewModel;
+@{
+    Layout = "_Layout";
+    string style = string.Empty;
+    ViewBag.Title = string.Concat("Location Evaluator");
+    ViewBag.Description = string.Concat("View the In-Game Locations for Pokémon in ", Model.Game.Name, "'s ", Model.Location.Name);
+    List<CaptureMethod> captureMethods = Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail.CaptureMethod).GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.Name).ToList();
+    List<PokemonLocationTimeDetail> times = new List<PokemonLocationTimeDetail>();
+    List<PokemonLocationSeasonDetail> seasons = new List<PokemonLocationSeasonDetail>();
+    List<PokemonLocationDetail> pokemonLocations = new List<PokemonLocationDetail>();
+    int rowSpan;
+    int colSpan;
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link href="/css/pokemonLocations.css" rel="stylesheet" type="text/css" />
+    <style>
+        td, th {
+            border-width: 2px !important;
+        }
+
+        .splitTH, .time, .season, .alwaysAvailable, th {
+            text-align: center !important;
+        }
+
+        .time {
+            width: 3.5rem;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script>
+        function lookupMethod(method) {
+            $('.locationEvaluator button.active').each(function () {
+                $(this).removeClass('active');
+            })
+
+            $('.page.active').each(function () {
+                $(this).removeClass('active');
+            })
+
+            $('button#Method' + method).addClass('active');
+            $('.page.method' + method).addClass('active');
+        }
+    </script>
+}
+
+<h2>Pokémon available in @(Model.Location.Name) in Pokémon @(Model.Game.Name)</h2>
+<hr style="margin: auto 0px;">
+<div class="locationEvaluator" id="Location@(Model.Location.Id)">
+    @foreach(var m in captureMethods)
+    {
+        <button onclick="lookupMethod('@m.Id')" id="Method@(m.Id)">@m.Name</button>
+    }
+</div>
+
+<div class="pokemonLocationData">
+    @foreach(var m in captureMethods)
+    {
+        rowSpan = 1;
+        colSpan = 1;
+        times = Model.PokemonTimes.Where(x => Model.PokemonLocationGames.Where(y => y.PokemonLocationDetail.LocationId == Model.Location.Id && y.PokemonLocationDetail.CaptureMethodId == m.Id && y.GameId == Model.Game.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).ToList();
+        seasons = Model.PokemonSeasons.Where(x => Model.PokemonLocationGames.Where(y => y.PokemonLocationDetail.LocationId == Model.Location.Id && y.PokemonLocationDetail.CaptureMethodId == m.Id && y.GameId == Model.Game.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).ToList();
+        @if (times.Count() != 0)
+        {
+            rowSpan = 2;
+            colSpan = 3;
+        }
+        else if (seasons.Count() != 0)
+        {
+            rowSpan = 2;
+            colSpan = 4;
+        }
+        <div class="page method@(m.Id)">
+            <div class="locationDetailDiv">
+                <table class="pokemonLocation">
+                    <thead>
+                        <tr>
+                            <th rowspan="@rowSpan">Pokémon Name</th>
+                            <th rowspan="@rowSpan">Level Range</th>
+                            <th @(colSpan > 1 ? "class=splitTH" : string.Empty) colspan="@colSpan">Chance of Encounter</th>
+                            @if(Model.PokemonLocationGames.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.GameId == Model.Game.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
+                            {
+                                <th rowspan="@rowSpan">Only Encounterable Thru SOS Battles</th>
+                            }
+                            @if(Model.PokemonLocationGames.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.GameId == Model.Game.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SpecialSpawn) != null)
+                            {
+                                <th rowspan="@rowSpan">Only Available Thru Special Spawns</th>
+                            }
+                            @if(Model.PokemonLocationGames.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.GameId == Model.Game.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.FailedSnag) != null)
+                            {
+                                <th rowspan="@rowSpan">Only Available After Failed Snag</th>
+                            }
+                        </tr>
+                        @if(rowSpan == 2)
+                        {
+                            <tr>
+                                @if(times.Count() != 0)
+                                {
+                                    <th class="time">Morning</th>
+                                    <th class="time">Day</th>
+                                    <th class="time">Night</th>
+                                }
+                                @if(seasons.Count() != 0)
+                                {
+                                    <th class="season">Spring</th>
+                                    <th class="season">Summer</th>
+                                    <th class="season">Autumn</th>
+                                    <th class="season">Winter</th>
+                                }
+                            </tr>
+                        }
+                    </thead>
+                    <tbody>
+                        @foreach(var p in Model.PokemonLocationGames.Where(x => x.PokemonLocationDetail.CaptureMethodId == m.Id).Select(x => x.PokemonLocationDetail.Pokemon).GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id))
+                        {
+                            @foreach(var pl in Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail).GroupBy(x => new { x.PokemonId, x.MinimumLevel, x.MaximumLevel }).Select(x => x.First()).Where(x => x.LocationId == Model.Location.Id && x.PokemonId == p.Id && x.CaptureMethodId == m.Id).OrderBy(x => x.Id))
+                            {
+                                <tr>
+                                    <td>@p.Name</td>
+                                    <td>
+                                        @if (pl.MinimumLevel == pl.MaximumLevel)
+                                        {
+                                            @string.Concat("Level ", pl.MinimumLevel)
+                                        }
+                                        else
+                                        {
+                                            @string.Concat("Level ", pl.MinimumLevel, " - ", pl.MaximumLevel)
+                                        }
+                                    </td>
+                                    @if (Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
+                                    {
+                                        pokemonLocations = Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail).GroupBy(x => x.Id).Select(x => x.First()).Where(x => x.LocationId == Model.Location.Id && x.PokemonId == p.Id && x.MinimumLevel == pl.MinimumLevel && x.MaximumLevel == pl.MaximumLevel && x.CaptureMethodId == m.Id).OrderBy(x => x.Id).ToList();
+                                        @if (Model.PokemonTimes.Find(x => x.Time.Name == "Morning" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="time">@string.Concat(Model.PokemonTimes.Find(x => x.Time.Name == "Morning" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="time">0%</td>
+                                        }
+
+                                        @if (Model.PokemonTimes.Find(x => x.Time.Name == "Day" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="time">@string.Concat(Model.PokemonTimes.Find(x => x.Time.Name == "Day" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="time">0%</td>
+                                        }
+
+                                        @if (Model.PokemonTimes.Find(x => x.Time.Name == "Night" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="time">@string.Concat(Model.PokemonTimes.Find(x => x.Time.Name == "Night" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="time">0%</td>
+                                        }
+                                    }
+                                    else if (Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
+                                    {
+                                        <td class="season">@string.Concat(pl.ChanceOfEncounter, '%')</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="alwaysAvailable"colspan="@colSpan">@string.Concat(pl.ChanceOfEncounter, '%')</td>
+                                    }
+
+                                    @if(Model.PokemonLocationGames.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
+                                    {
+                                        <td>
+                                            @pl.SOSBattleOnly
+                                        </td>
+                                    }
+                                    
+                                    @if(Model.PokemonLocationGames.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SpecialSpawn) != null)
+                                    {
+                                        <td>
+                                            @pl.SpecialSpawn
+                                        </td>
+                                    }
+
+                                    @if(Model.PokemonLocationGames.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.FailedSnag) != null)
+                                    {
+                                        <td>
+                                            @pl.FailedSnag
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

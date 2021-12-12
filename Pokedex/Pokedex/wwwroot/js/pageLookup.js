@@ -122,6 +122,26 @@ function lookupAvailableGame(gameId) {
   }
 }
 
+function lookupAvailableLocations(gameId) {
+  if (!$('.active').is($('#Game' + gameId))) {
+    $('button').each(function () {
+      $(this).removeClass('active');
+    });
+
+    $('.locationHeader').remove();
+
+    $('.locationList').removeClass('active');
+    $('.locationList > .grid-container').empty();
+    $('button#Game' + gameId).addClass('active');
+
+    $('.grid-container').load('/get-available-location-by-game/' + gameId, function () {
+      $('.totalLocations').prepend($('<h5>').addClass('locationHeader').text('Click On A Box To View That Location\'s Pokmeon Data.'));
+
+      $('.locationList').addClass('active');
+    });
+  }
+}
+
 function lookupAdminGeneration(generationId) {
   if (!$('.active').is($('#Generation' + generationId))) {
     $('button').each(function () {

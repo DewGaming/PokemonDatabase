@@ -14,6 +14,11 @@
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonLocations.css" rel="stylesheet" type="text/css" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
+    <style>
+        .locationDiv a {
+            color: #212529;
+        }
+    </style>
 }
 
 @section scripts
@@ -85,7 +90,9 @@
                 @foreach(var l in Model.PokemonLocations.Where(x => x.GameId == g.Id).Select(x => x.PokemonLocationDetail.Location).GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.Name))
                 {
                     <div class="locationDiv">
-                        <h2>@l.Name</h2>
+                        <a href="@this.Url.Action("PokemonByLocations", "Home", new { locationId = @l.Id, gameId = @g.Id })">
+                            <h2>@l.Name</h2>
+                        </a>
                         <table class="gameLocation">
                             <thead>
                                 <th>Level Range</th>
