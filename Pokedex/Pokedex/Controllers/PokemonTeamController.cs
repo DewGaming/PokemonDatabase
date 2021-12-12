@@ -600,6 +600,7 @@ namespace Pokedex.Controllers
         public IActionResult EditTeam(int pokemonTeamId)
         {
             PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
+            this.FillPokemonTeam(pokemonTeam);
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel()
             {
@@ -1293,32 +1294,32 @@ namespace Pokedex.Controllers
             List<Game> availableGames = new List<Game>();
             if (pokemonTeam.FirstPokemonId != null)
             {
-                availableGames = this.dataService.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).ConvertAll(x => x.Game);
+                availableGames = this.dataService.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.Now).ToList();
             }
 
             if (pokemonTeam.SecondPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.ThirdPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.FourthPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.FifthPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.SixthPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             return availableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
