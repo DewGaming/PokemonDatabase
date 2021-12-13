@@ -5,6 +5,7 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Pokedex.Controllers
@@ -473,6 +474,8 @@ namespace Pokedex.Controllers
 
                 return this.View(model);
             }
+
+            this.FormatMoveText(pokemonTeamMoveset);
 
             this.dataService.UpdateObject(pokemonTeamMoveset);
 
@@ -1323,6 +1326,30 @@ namespace Pokedex.Controllers
             }
 
             return availableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+        }
+
+        private void FormatMoveText(PokemonTeamMovesetViewModel moveset)
+        {
+            TextInfo info = CultureInfo.CurrentCulture.TextInfo;
+            if (!string.IsNullOrEmpty(moveset.FirstMove))
+            {
+                moveset.FirstMove = info.ToTitleCase(moveset.FirstMove);
+            }
+
+            if (!string.IsNullOrEmpty(moveset.SecondMove))
+            {
+                moveset.SecondMove = info.ToTitleCase(moveset.SecondMove);
+            }
+
+            if (!string.IsNullOrEmpty(moveset.ThirdMove))
+            {
+                moveset.ThirdMove = info.ToTitleCase(moveset.ThirdMove);
+            }
+
+            if (!string.IsNullOrEmpty(moveset.FourthMove))
+            {
+                moveset.FourthMove = info.ToTitleCase(moveset.FourthMove);
+            }
         }
     }
 }
