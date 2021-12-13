@@ -55,7 +55,7 @@ $('.calculatorButton').on('click', function() {
     $.ajax({
         url: '/get-capture-chance/',
         method: 'POST',
-        data: { 'pokemonId': $('#Pokemon').val(), 'generationId': $('#Generation').val(), 'healthPercentage': $('.healthSlider').val() / 100, 'pokeballId': $('#Pokeball').val(), 'statusId': $('#Status').val(), 'turnCount': $('.turnSlider').val(), 'encounterLevel': $('.encounterLevelSlider').val(), 'userLevel': $('.userLevelSlider').val(), 'surfing': $('#Surfing').is(':checked'), 'fishing': $('#Fishing').is(':checked'), 'previouslyCaught': $('#PreviouslyCaught').is(':checked'), 'caveOrNight': $('#CaveOrNight').is(':checked'), 'sameGender': $("input[name='Gender']:checked").val() }
+        data: { 'pokemonId': $('#Pokemon').val(), 'generationId': $('#Generation').val(), 'healthPercentage': $('.healthSlider').val() / 100, 'pokeballId': $('#Pokeball').val(), 'statusId': $('#Status').val(), 'turnCount': $('.turnSlider').val(), 'encounterLevel': $('.encounterLevelSlider').val(), 'userLevel': $('.userLevelSlider').val(), 'surfing': $('#Surfing').is(':checked'), 'fishing': $('#Fishing').is(':checked'), 'previouslyCaught': $('#PreviouslyCaught').is(':checked'), 'caveOrNight': $('#CaveOrNight').is(':checked'), 'storyComplete': $('#StoryComplete').is(':checked'), 'sameGender': $("input[name='Gender']:checked").val() }
     })
         .done(function (data) {
             var calculatedChanceOutput = '';
@@ -76,13 +76,30 @@ $('.regionList').on('change', function() {
     checkPokeball();
 })
 
-var generationId, actualGenerationId, pokemonId, pokeballId, updateIDs = function () {
+$('.StoryComplete').on('change', function() {
+    updateIDs();
+    checkPokemon();
+    checkPokeball();
+})
+
+var generationId, storyComplete, actualGenerationId, pokemonId, pokeballId, updateIDs = function () {
     generationId = $('.regionList > select').val();
     if (generationId == 99 || generationId == 100) {
         generationId = 3;
     }
+    
+    storyComplete = $('#StoryComplete').is(':checked');
     pokemonId = $('.pokemonList > select').val();
     pokeballId = $('.pokeballList > select').val();
+
+    if (generationId >= 8)
+    {
+        $('.StoryComplete').css('display', 'block');
+    }
+    else
+    {
+        $('.StoryComplete').css('display', 'none');
+    }
 }, checkPokemon = function () {
     $('.pokemonList option').each(function() {
         if (Number($(this).attr('id')) <= Number(generationId))
@@ -294,5 +311,16 @@ var generationId, actualGenerationId, pokemonId, pokeballId, updateIDs = functio
             $('.turnBar').css('display', 'none');
             $('.turnBar').val(1);
             break;
+    }
+    
+    if (generationId >= 8)
+    {
+        $('.encounterLevelBar').css('display', 'block');
+        $('.encounterLevelBar').val(100);
+        if (!storyComplete)
+        {
+            $('.userLevelBar').css('display', 'block');
+            $('.userLevelBar').val(100);
+        }
     }
 }

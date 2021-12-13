@@ -82,6 +82,12 @@
                 @Html.Label("Status")
                 @Html.DropDownList("Status", new SelectList(@Model.AllStatuses, "Id", "Name"), "", new { @class = "form-control" })
             </div>
+            <div class="col-md-6 StoryComplete">
+                <input id="StoryComplete" type="checkbox" />
+                <label for="StoryComplete"><span>Is Story Complete</span></label>
+            </div>
+        </div>
+        <div class="flexDiv">
             <div class="encounterLevelBar col-md-6">
                 <label for="EncounterLevel">Encounter Level: <span id="encounterLevelVal"></span></label>
                 <div>
@@ -94,6 +100,14 @@
                     <input class="turnSlider slider col-md-12" data-val-required="The Turn field is required." id="Turn" name="Turn" type="range" min="1" max="11" value="1">
                 </div>
             </div>
+            <div class="userLevelBar col-md-6">
+                <label for="UserLevel">User Level: <span id="userLevelVal"></span></label>
+                <div>
+                    <input class="userLevelSlider slider col-md-12" data-val-required="The Level field is required." id="UserLevel" name="UserLevel" type="range" min="1" max="100" value="100">
+                </div>
+            </div>
+        </div>
+        <div class="flexDiv">
             <div class="col-md-6 Surfing">
                 <input id="Surfing" type="checkbox" />
                 <label for="Surfing"><span>Surfing</span></label>
@@ -118,14 +132,6 @@
                 <br>
                 <input type="radio" id="DifferentGender" name="Gender" value="false" />
                 <label for="DifferentGender"><span>Different Genders or Different Species</span></label>
-            </div>
-        </div>
-        <div class="flexDiv">
-            <div class="userLevelBar col-md-6">
-                <label for="UserLevel">User Level: <span id="userLevelVal"></span></label>
-                <div>
-                    <input class="userLevelSlider slider col-md-12" data-val-required="The Level field is required." id="UserLevel" name="UserLevel" type="range" min="1" max="100" value="100">
-                </div>
             </div>
         </div>
         <br>

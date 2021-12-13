@@ -497,7 +497,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-capture-chance")]
-        public string GetCaptureChange(int pokemonId, int generationId, float healthPercentage, int pokeballId, int statusId, float turnCount, float encounterLevel, float userLevel, bool surfing, bool fishing, bool previouslyCaught, bool caveOrNight, bool sameGender)
+        public string GetCaptureChange(int pokemonId, int generationId, float healthPercentage, int pokeballId, int statusId, float turnCount, float encounterLevel, float userLevel, bool surfing, bool fishing, bool previouslyCaught, bool caveOrNight, bool storyComplete, bool sameGender)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -879,7 +879,7 @@ namespace Pokedex.Controllers
                             wobbles[i] = Math.Round(wobbles[i] * 100, 3);
                         }
                     }
-                    else
+                    else if (generationId >= 5 && generationId <= 7)
                     {
                         if (legendary?.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
                         {
@@ -887,6 +887,55 @@ namespace Pokedex.Controllers
                         }
 
                         catchValue = Math.Min((1d - ((2d * healthPercentage) / 3d)) * catchRate * statusEffect, 255);
+                        if (pokeball.Name != "Heavy Ball")
+                        {
+                            catchValue *= pokeballEffect;
+                            if (catchValue > 255f)
+                            {
+                                catchValue = 255;
+                            }
+                            else if (catchValue < 0f)
+                            {
+                                catchValue = 1;
+                            }
+                        }
+
+                        double captureChance = Math.Floor(65536f / Math.Sqrt(Math.Sqrt(255f / catchValue))) / 65536;
+                        double chanceInverse = 1 - captureChance;
+
+                        successfulCapture = Math.Pow(captureChance, 3);
+                        wobbles = new List<double>()
+                        {
+                            chanceInverse,
+                            captureChance * chanceInverse,
+                            0,
+                            Math.Pow(captureChance, 2) * chanceInverse,
+                        };
+
+                        for (var i = 0; i < 4; i++)
+                        {
+                            wobbles[i] = Math.Round(wobbles[i] * 100, 3);
+                        }
+                    }
+                    else
+                    {
+                        double lowLevelModifier = 1, difficultyModifier = 1;
+                        if (legendary?.LegendaryType.Type == "Ultra Beast" && pokeball.Name != "Beast Ball")
+                        {
+                            pokeballEffect = 0.10009765625;
+                        }
+
+                        if (encounterLevel <= 19)
+                        {
+                            lowLevelModifier = (30 - encounterLevel) / 10d;
+                        }
+
+                        if (encounterLevel > userLevel && !storyComplete)
+                        {
+                            difficultyModifier = 410d / 4096d;
+                        }
+
+                        catchValue = Math.Min((1d - ((2d * healthPercentage) / 3d)) * catchRate * statusEffect * lowLevelModifier * difficultyModifier, 255);
                         if (pokeball.Name != "Heavy Ball")
                         {
                             catchValue *= pokeballEffect;
