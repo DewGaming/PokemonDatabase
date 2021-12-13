@@ -1,7 +1,6 @@
 var checkTypings = function () {
-    $('.secondaryList option').each(function() {
-        if (!$(this).is(':visible'))
-        {
+    $('.secondaryList option').each(function () {
+        if (!$(this).is(':visible')) {
             $(this).css('display', 'block');
         }
     });
@@ -25,31 +24,25 @@ var checkTypings = function () {
     if ($('.primaryList > select').val() != '0' && $('.secondaryList > select').val() != '100') {
         $('.effectivenessChart').empty();
 
-        $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': $('.primaryList > select').val(), 'secondaryTypeID': $('.secondaryList > select').val(), 'generationID': $('.generationList > select').val() }, function() {
-            if ($('.typing-table-strong').children().length > 0)
-            {
+        $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': $('.primaryList > select').val(), 'secondaryTypeID': $('.secondaryList > select').val(), 'generationID': $('.generationList > select').val() }, function () {
+            if ($('.typing-table-strong').children().length > 0) {
                 $(".StrongAgainst").css("display", "block");
             }
-            else
-            {
+            else {
                 $(".StrongAgainst").css("display", "none");
             }
 
-            if ($('.typing-table-weak').children().length > 0)
-            {
+            if ($('.typing-table-weak').children().length > 0) {
                 $(".WeakAgainst").css("display", "block");
             }
-            else
-            {
+            else {
                 $(".WeakAgainst").css("display", "none");
             }
 
-            if ($('.typing-table-immune').children().length > 0)
-            {
+            if ($('.typing-table-immune').children().length > 0) {
                 $(".ImmuneTo").css("display", "block");
             }
-            else
-            {
+            else {
                 $(".ImmuneTo").css("display", "none");
             }
 
@@ -73,8 +66,7 @@ var checkTypings = function () {
                 $('.pokemonWithTyping').css('display', 'none');
             }
 
-            if ($('.secondaryList > select').val() == '')
-            {
+            if ($('.secondaryList > select').val() == '') {
                 $('.effectivenessChart').css('display', 'flex');
             }
         });
@@ -85,21 +77,17 @@ var checkTypings = function () {
 }, grabTypes = function (generationID) {
     var primaryTypeID = $('.primaryList > select').val(), secondaryTypeID = $('.secondaryList > select').val();
     $('.typeLists').load('/get-types-by-generation/', { 'generationID': generationID }, function () {
-        if ($('.primaryList option[value=' + primaryTypeID + ']').length != 0)
-        {
+        if ($('.primaryList option[value=' + primaryTypeID + ']').length != 0) {
             $('.primaryList > select').val(primaryTypeID);
         }
-        else
-        {
+        else {
             $('.primaryList > select').val(0);
         }
 
-        if ($('.secondaryList option[value=' + secondaryTypeID + ']').length != 0)
-        {
+        if ($('.secondaryList option[value=' + secondaryTypeID + ']').length != 0) {
             $('.secondaryList > select').val(secondaryTypeID);
         }
-        else
-        {
+        else {
             $('.secondaryList > select').val(0);
         }
 

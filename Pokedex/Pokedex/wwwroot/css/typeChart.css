@@ -256,15 +256,19 @@
     font-size: .75rem;
     line-height: 34px;
   }
+
   .type-abbr, .type-fx-cell, .type-fx-icon {
     width: 36px;
   }
+
   .cell-atkdef {
     line-height: 1rem;
   }
+
   .type-fx-cell, .type-fx-icon {
     font-size: .75rem;
   }
+
   .type-fx-25, .type-fx-50 {
     font-size: .875rem;
   }

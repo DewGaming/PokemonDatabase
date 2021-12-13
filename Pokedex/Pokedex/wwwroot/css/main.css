@@ -35,7 +35,7 @@
 
 .modal {
   padding-top: 100px;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
 .modalImage {
@@ -71,8 +71,13 @@
 }
 
 @keyframes zoom {
-  from {transform:scale(0)}
-  to {transform:scale(1)}
+  from {
+    transform: scale(0)
+  }
+
+  to {
+    transform: scale(1)
+  }
 }
 
 .close {
@@ -92,11 +97,11 @@
   cursor: pointer;
 }
 
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 700px) {
   .modalImage {
     width: 100%;
   }
-} 
+}
 
 .siteFeatures {
   display: flex;
@@ -630,16 +635,19 @@ a {
     -ms-flex-pack: start;
     justify-content: flex-start
   }
+
   .navbar-expand-custom .navbar-nav {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
     flex-direction: row
   }
+
   .navbar-expand-custom .navbar-nav .nav-link {
     padding-right: .5rem;
     padding-left: .5rem
   }
+
   .navbar-expand-custom .navbar-collapse {
     display: -webkit-box !important;
     display: -ms-flexbox !important;
@@ -647,12 +655,15 @@ a {
     -ms-flex-preferred-size: auto;
     flex-basis: auto
   }
+
   .navbar-expand-custom .navbar-toggler {
     display: none
   }
+
   .navbar-expand-custom .navbar-nav .dropdown-menu {
     position: absolute
   }
+
   .search-bar {
     margin: 0
   }

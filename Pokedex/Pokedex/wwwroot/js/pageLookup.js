@@ -115,7 +115,7 @@ function lookupAvailableGame(gameId) {
 
     $('.grid-container').load('/get-available-pokemon-by-game/' + gameId, function () {
       $('.totalPokemon').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokémon: ' + $('.grid-container').children().length));
-      $('.updater').append($('<a>').attr('href','admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
+      $('.updater').append($('<a>').attr('href', 'admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
 
       $('.pokemonList').addClass('active');
     });

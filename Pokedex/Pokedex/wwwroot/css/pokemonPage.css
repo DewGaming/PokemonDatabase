@@ -58,8 +58,8 @@
   .pokemonWithForms {
     width: 21.418rem;
   }
-  
-  .pokemonWithForms > .pokemonImage img {
+
+  .pokemonWithForms>.pokemonImage img {
     width: 300px;
     height: 300px;
   }

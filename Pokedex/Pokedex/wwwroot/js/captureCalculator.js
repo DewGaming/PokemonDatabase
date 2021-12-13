@@ -6,12 +6,10 @@ $(function () {
     $('#userLevelVal').text($('.userLevelSlider').val());
     $('.userLevelSlider').val($('.userLevelSlider').val());
     turnText = ''
-    if (Number($('.turnSlider').val()) == 11)
-    {
+    if (Number($('.turnSlider').val()) == 11) {
         turnText = '11+'
     }
-    else
-    {
+    else {
         turnText = $('.turnSlider').val()
     }
     $('#turnVal').text(turnText);
@@ -36,12 +34,10 @@ $('.userLevelSlider').on('input', function () {
 
 $('.turnSlider').on('input', function () {
     turnText = ''
-    if (Number($(this).val()) == 11)
-    {
+    if (Number($(this).val()) == 11) {
         turnText = '11+'
     }
-    else
-    {
+    else {
         turnText = $(this).val()
     }
     $('#turnVal').text(turnText);
@@ -51,7 +47,7 @@ $('#Pokeball').on('input', function () {
     checkSpecialPokeball();
 });
 
-$('.calculatorButton').on('click', function() {
+$('.calculatorButton').on('click', function () {
     $.ajax({
         url: '/get-capture-chance/',
         method: 'POST',
@@ -59,8 +55,7 @@ $('.calculatorButton').on('click', function() {
     })
         .done(function (data) {
             var calculatedChanceOutput = '';
-            $.each(data.split("|"), function()
-            {
+            $.each(data.split("|"), function () {
                 calculatedChanceOutput += '<div>' + this + '</div>';
             })
             $('.calculatedChance').html(calculatedChanceOutput);
@@ -70,13 +65,13 @@ $('.calculatorButton').on('click', function() {
         });
 });
 
-$('.regionList').on('change', function() {
+$('.regionList').on('change', function () {
     updateIDs();
     checkPokemon();
     checkPokeball();
 })
 
-$('.StoryComplete').on('change', function() {
+$('.StoryComplete').on('change', function () {
     updateIDs();
     checkPokemon();
     checkPokeball();
@@ -87,54 +82,46 @@ var generationId, storyComplete, actualGenerationId, pokemonId, pokeballId, upda
     if (generationId == 99 || generationId == 100) {
         generationId = 3;
     }
-    
+
     storyComplete = $('#StoryComplete').is(':checked');
     pokemonId = $('.pokemonList > select').val();
     pokeballId = $('.pokeballList > select').val();
 
-    if (generationId >= 8)
-    {
+    if (generationId >= 8) {
         $('.StoryComplete').css('display', 'block');
     }
-    else
-    {
+    else {
         $('.StoryComplete').css('display', 'none');
     }
 }, checkPokemon = function () {
-    $('.pokemonList option').each(function() {
-        if (Number($(this).attr('id')) <= Number(generationId))
-        {
+    $('.pokemonList option').each(function () {
+        if (Number($(this).attr('id')) <= Number(generationId)) {
             $(this).css('display', 'block');
         }
-        else
-        {
+        else {
             $(this).css('display', 'none');
         }
     });
 
-    if (!$('.pokemonList option[value="' + pokemonId + '"]').is(':visible'))
-    {
+    if (!$('.pokemonList option[value="' + pokemonId + '"]').is(':visible')) {
         $('.pokemonList #Pokemon').val(1);
     }
-}, checkPokeball = function() {
-    $('.pokeballList option').each(function() {
-        if (Number($(this).attr('id')) <= Number(generationId))
-        {
+}, checkPokeball = function () {
+    $('.pokeballList option').each(function () {
+        if (Number($(this).attr('id')) <= Number(generationId)) {
             $(this).css('display', 'block');
         }
-        else
-        {
+        else {
             $(this).css('display', 'none');
         }
     });
 
-    if (!$('.pokeballList option[value="' + pokeballId + '"]').is(':visible'))
-    {
+    if (!$('.pokeballList option[value="' + pokeballId + '"]').is(':visible')) {
         $('.pokeballList #Pokeball').val(1);
     }
-    checkSpecialPokeball(); 
-}, checkSpecialPokeball = function() {
-    switch(Number($('#Pokeball').val())) {
+    checkSpecialPokeball();
+}, checkSpecialPokeball = function () {
+    switch (Number($('#Pokeball').val())) {
         case 7:
             $('.Surfing').css('display', 'block');
             $('.Fishing').css('display', 'none');
@@ -312,13 +299,11 @@ var generationId, storyComplete, actualGenerationId, pokemonId, pokeballId, upda
             $('.turnBar').val(1);
             break;
     }
-    
-    if (generationId >= 8)
-    {
+
+    if (generationId >= 8) {
         $('.encounterLevelBar').css('display', 'block');
         $('.encounterLevelBar').val(100);
-        if (!storyComplete)
-        {
+        if (!storyComplete) {
             $('.userLevelBar').css('display', 'block');
             $('.userLevelBar').val(100);
         }
