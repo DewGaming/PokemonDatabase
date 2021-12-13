@@ -3,10 +3,7 @@
 }
 
 .page.active {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -30,18 +27,13 @@
 }
 
 .pageButtons {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   border-bottom: 1px solid #dbdbdb;
 }
 
 .pageButtons button {
   list-style: none;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 0px;
   flex: 1 1 0;
   min-width: auto;
   margin: 0 0 -1px 0;
@@ -51,13 +43,11 @@
   line-height: 1.2;
   text-align: center;
   color: #737373;
-  -webkit-transition: color .2s, background-color .2s;
   transition: color .2s, background-color .2s;
 }
 
 .generations, .games, .locationEvaluator {
   display: flex;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
@@ -75,8 +65,6 @@
 
 .generations button, .games button, .locationEvaluator button {
   list-style: none;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 0px;
   flex: 1 1 0;
   min-width: auto;
   margin: 0 0 -1px 0;
@@ -86,7 +74,6 @@
   line-height: 1.2;
   text-align: center;
   color: #737373;
-  -webkit-transition: color .2s, background-color .2s;
   transition: color .2s, background-color .2s;
 }
 

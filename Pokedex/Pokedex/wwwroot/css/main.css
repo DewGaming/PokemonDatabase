@@ -15,6 +15,7 @@
   width: auto;
   max-width: 100%;
   max-height: 10rem;
+  -o-object-fit: contain;
   object-fit: contain;
   border-radius: 3px;
   cursor: pointer;
@@ -43,6 +44,7 @@
   display: block;
   max-width: 90%;
   max-height: 85%;
+  -o-object-fit: contain;
   object-fit: contain;
   border: black 1px solid;
   border-radius: 5px;
@@ -66,8 +68,20 @@
 }
 
 .modalImage, .modalCaption, .modalDescription {
+  -webkit-animation-name: zoom;
   animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
   animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {
+    transform: scale(0)
+  }
+
+  to {
+    transform: scale(1)
+  }
 }
 
 @keyframes zoom {
@@ -163,10 +177,7 @@
 }
 
 .grid-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   background-color: gray;
   padding: 7.5px 10px;
@@ -180,10 +191,7 @@
   border: 1px solid black;
   text-align: center;
   font-size: 1rem;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
   flex: 1;
-  -ms-flex-preferred-size: 20%;
   flex-basis: 15%
 }
 
@@ -341,8 +349,6 @@ main {
 
 .pokemonTeamGroup {
   position: relative;
-  display: -ms-inline-flexbox;
-  display: -webkit-inline-box;
   display: inline-flex;
   padding-bottom: 0 !important
 }
@@ -356,10 +362,7 @@ main {
 }
 
 .pokemonTables, .typing {
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -368,8 +371,6 @@ main {
 }
 
 .effectivenessChart {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex
 }
 
@@ -416,8 +417,6 @@ main {
 }
 
 .teamRandomizer:hover .dropdown-menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex
 }
 
@@ -616,8 +615,6 @@ a {
 }
 
 .flexDiv {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex
 }
 
@@ -627,19 +624,11 @@ a {
 
 @media(min-width:855px) {
   .navbar-expand-custom {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
-    -webkit-box-pack: start;
-    -ms-flex-pack: start;
     justify-content: flex-start
   }
 
   .navbar-expand-custom .navbar-nav {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
     flex-direction: row
   }
 
@@ -649,10 +638,7 @@ a {
   }
 
   .navbar-expand-custom .navbar-collapse {
-    display: -webkit-box !important;
-    display: -ms-flexbox !important;
     display: flex !important;
-    -ms-flex-preferred-size: auto;
     flex-basis: auto
   }
 

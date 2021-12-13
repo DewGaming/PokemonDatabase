@@ -38,7 +38,6 @@
 
 @media (max-width: 391px) {
   .effectivenessChart {
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
 }
