@@ -14,6 +14,11 @@ namespace Pokedex.Models
         public List<PokemonTeam> AllPokemonTeams { get; set; }
 
         /// <summary>
+        /// Gets or sets the user of the pokemon teams.
+        /// </summary>
+        public User User { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }

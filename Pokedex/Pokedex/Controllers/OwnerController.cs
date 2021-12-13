@@ -336,6 +336,7 @@ namespace Pokedex.Controllers
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
                 AllPokemonTeams = this.dataService.GetPokemonTeamsByUserId(id),
+                User = this.dataService.GetObjectByPropertyValue<User>("Id", id),
                 AppConfig = this.appConfig,
             };
 

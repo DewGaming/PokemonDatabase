@@ -2,12 +2,16 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Pokémon Teams";
+    int teamCount = 0;
+    int pokemonCount = 0;
 }
 
 @section scripts
 {
     <script src="/js/pokemonTeam.js"></script>
 }
+
+<h2>View the Pokémon Teams of @Model.User.Username</h2>
 
 <div>
     @if (Model.AllPokemonTeams.ToList().Count > 0)
@@ -32,17 +36,20 @@
                         </th>
                     }
                     <th class="col-md-5" scope="col">Pokémon</th>
+                    <th class="col-md-3" scope="col">Actions</th>
                 </tr>
-                @foreach (var pt in Model.AllPokemonTeams)
+                @for(var i = 0; i < Model.AllPokemonTeams.Count; i++)
                 {
+                    teamCount++;
+                    pokemonCount = 0;
                     <tr>
-                        <td>@pt.PokemonTeamName</td>
+                        <td>@Model.AllPokemonTeams[i].PokemonTeamName</td>
                         @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
                         {
                             <td>
-                                @if (@pt.Game != null)
+                                @if (@Model.AllPokemonTeams[i].Game != null)
                                 {
-                                    @pt.Game.Name
+                                    @Model.AllPokemonTeams[i].Game.Name
                                 }
                                 else
                                 {
@@ -55,18 +62,27 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            @foreach (var p in @pt.GrabPokemonTeamDetails)
+                                            @foreach (var p in @Model.AllPokemonTeams[i].GrabPokemonTeamDetails)
                                             {
-                                                <div class="pokemonTeamGroup shadowed">
-                                                    <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")
+                                                pokemonCount++;
+                                                <div class="pokemonTeamGroup">
+                                                    <span class="pokemonTeamPicture">
+                                                        <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")
 Ability: @p.Ability.Name
-@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Pokemon.Id, ".png"))" />
+@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, p.IsShiny ? @Model.AppConfig.ShinyPokemonImageUrl : @Model.AppConfig.PokemonImageUrl, @p.Pokemon.Id, ".png"))" />
+                                                    </span>
                                                 </div>
                                             }
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </td>
+                        <td>
+                            @if (@Model.AllPokemonTeams[i].FirstPokemon != null)
+                            {
+                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
+                            }
                         </td>
                     </tr>
                 }

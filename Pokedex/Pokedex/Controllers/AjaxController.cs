@@ -139,9 +139,9 @@ namespace Pokedex.Controllers
         [Route("grab-user-pokemon-team")]
         public List<ExportPokemonViewModel> ExportUserPokemonTeam(int teamId)
         {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeams().Find(x => x.Id == teamId);
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (pokemonTeam.User.Username == this.User.Identity.Name || this.User.IsInRole("Owner")))
             {
-                PokemonTeam pokemonTeam = this.dataService.GetAllPokemonTeams(this.User.Identity.Name).Find(x => x.Id == teamId);
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
                 List<PokemonTeamDetail> pokemonList = pokemonTeam.GrabPokemonTeamDetails;
                 if (pokemonList.Count > 0)

@@ -548,12 +548,13 @@ namespace Pokedex
                     .Include("SixthPokemon.BattleItem")
                     .Include("SixthPokemon.Nature")
                 .Include(x => x.User)
+                .OrderBy(x => x.Id)
                 .ToList();
         }
 
         public List<PokemonTeam> GetAllPokemonTeams(string username)
         {
-            return this.GetPokemonTeams().Where(x => x.User.Username == username).OrderBy(x => x.Id).ToList();
+            return this.GetPokemonTeams().Where(x => x.User.Username == username).ToList();
         }
 
         public List<PokemonTeam> GetPokemonTeamsByUserId(int id)
