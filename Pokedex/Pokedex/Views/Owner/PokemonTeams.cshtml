@@ -18,28 +18,27 @@
     {
         <table class="table pokemonTeam">
             <tbody>
-                <tr>
-                    <th class="col-md-2" scope="col">Team Name</th>
-                    @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
-                    {
-                        <th class="col-md-2" scope="col">
-                            Game@{
-                                foreach (var team in Model.AllPokemonTeams)
-                                {
-                                    if (team.Game != null && team.Game.Name.Contains('/'))
-                                    {
-                                        @("(s)");
-                                        break;
-                                    }
-                                }
-                            }
-                        </th>
-                    }
-                    <th class="col-md-5" scope="col">Pokémon</th>
-                    <th class="col-md-3" scope="col">Actions</th>
-                </tr>
                 @for(var i = 0; i < Model.AllPokemonTeams.Count; i++)
                 {
+                    <tr>
+                        <th scope="col">Team Name</th>
+                        @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
+                        {
+                            <th scope="col">
+                                Game@{
+                                    foreach (var team in Model.AllPokemonTeams)
+                                    {
+                                        if (team.Game != null && team.Game.Name.Contains('/'))
+                                        {
+                                            @("(s)");
+                                            break;
+                                        }
+                                    }
+                                }
+                            </th>
+                        }
+                        <th scope="col">Actions</th>
+                    </tr>
                     teamCount++;
                     pokemonCount = 0;
                     <tr>
@@ -58,6 +57,15 @@
                             </td>
                         }
                         <td>
+                            @if (@Model.AllPokemonTeams[i].FirstPokemon != null)
+                            {
+                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="col">Pokémon</th>
+                        <td colspan="2">
                             <table class="pokemonTeamPokemonTable">
                                 <tbody>
                                     <tr>
@@ -77,12 +85,6 @@ Ability: @p.Ability.Name
                                     </tr>
                                 </tbody>
                             </table>
-                        </td>
-                        <td>
-                            @if (@Model.AllPokemonTeams[i].FirstPokemon != null)
-                            {
-                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
-                            }
                         </td>
                     </tr>
                 }
