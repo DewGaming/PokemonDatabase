@@ -6,6 +6,15 @@
     int pokemonCount;
 }
 
+@section styles
+{
+    <style>
+        .pokemonTeamGroup {
+            margin-right: 10px;
+        }
+    </style>
+}
+
 @section scripts
 {
     <script src="/js/pokemonTeam.js"></script>
@@ -93,7 +102,7 @@ Ability: @p.Ability.Name
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
                                                         <span class="adminMenuTitle">View</span>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon</a></li>
+                                                        <li><a class="dropdown-item" href="@(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon Data</a></li>
                                                         <hr class="adminOptionSeparator">
                                                         <span class="adminMenuTitle">Update</span>
                                                         <li><a class="dropdown-item" href="@(this.Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokémon</a></li>
