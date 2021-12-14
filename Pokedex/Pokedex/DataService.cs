@@ -749,10 +749,17 @@ namespace Pokedex
             return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
         }
 
-        public List<Ability> GetAbilitiesForPokemon(int pokemonId)
+        public List<Ability> GetAbilitiesForPokemon(int pokemonId, int gameId)
         {
+            if (gameId == 0)
+            {
+                gameId = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
+            }
+
+            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             List<Ability> abilityList = new List<Ability>();
-            PokemonAbilityDetail pokemonAbilityDetail = this.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonId, "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility");
+            List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
+            PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
 
             abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
             if (pokemonAbilityDetail.SecondaryAbility != null)
