@@ -8,10 +8,11 @@ var abilityId = 0, gender = "Empty", battleItem = "Empty", grabAbilities = funct
             $('#PokemonTeamDetail_AbilityId').empty();
             $.each(data, function (index, item) {
                 $('#PokemonTeamDetail_AbilityId').append($('<option>').val(item.id).text(item.name));
+                if (item.id == abilityId)
+                {
+                    $('#PokemonTeamDetail_AbilityId option:contains("' + item.name + '")').attr("selected", "selected");
+                }
             });
-            if (abilityId != 0) {
-                $('#PokemonTeamDetail_AbilityId').val(abilityId);
-            }
         })
         .fail(function () {
             alert("Failed to grab abilities!");
@@ -26,10 +27,11 @@ var abilityId = 0, gender = "Empty", battleItem = "Empty", grabAbilities = funct
             $('#PokemonTeamDetail_Gender').empty();
             $.each(data, function (index, item) {
                 $('#PokemonTeamDetail_Gender').append($('<option>').text(item));
+                if (item == gender)
+                {
+                    $('#PokemonTeamDetail_Gender option:contains("' + item + '")').attr("selected", "selected");
+                }
             });
-            if (gender != "Empty") {
-                $('#PokemonTeamDetail_Gender').val(gender);
-            }
             if ($.inArray("None", data) !== -1 && data.length == 1) {
                 $('#PokemonTeamDetail_Gender').parent().hide();
             }
@@ -52,11 +54,12 @@ var abilityId = 0, gender = "Empty", battleItem = "Empty", grabAbilities = funct
                 $('#PokemonTeamDetail_BattleItemId').append($('<option>'));
                 $.each(data, function (index, item) {
                     $('#PokemonTeamDetail_BattleItemId').append($('<option>').val(item.id).text(item.name));
+                    if (item.name == battleItem)
+                    {
+                        $('#PokemonTeamDetail_BattleItemId option:contains("' + item.name + '")').attr("selected", "selected");
+                    }
                 });
                 $('#PokemonTeamDetail_BattleItemId').parent().show();
-                if (battleItem != "Empty") {
-                    $('#PokemonTeamDetail_BattleItemId').val($("#PokemonTeamDetail_BattleItemId option:contains(" + battleItem + ")").val());
-                }
             }
             else {
                 $('#PokemonTeamDetail_BattleItemId').parent().hide();
@@ -79,9 +82,11 @@ $(document).ready(function () {
 });
 
 $('#PokemonTeamDetail_PokemonId').on('change', function () {
-    abilityId = 0;
-    battleItem = "Empty";
-    gender = "Empty";
+    abilityId = $('#PokemonTeamDetail_AbilityId').val();
+    gender = $('#PokemonTeamDetail_Gender').val();
+    if ($('#PokemonTeamDetail_BattleItemId').val().length != 0) {
+        battleItem = $('#PokemonTeamDetail_BattleItemId option[value=' + $('#PokemonTeamDetail_BattleItemId').val() + ']').text();
+    }
     refreshGenders();
     grabAbilities();
 });
