@@ -19,12 +19,10 @@ var grabPokemon = function () {
     }
 }, grabAbilities = function (generationID) {
     var abilityId = $('.abilityList > select').val();
+    $('.abilityList > select').val(0);
     $('.abilityList').load('/get-abilities-by-generation/', { 'generationID': generationID }, function () {
         if ($('.abilityList option[value=' + abilityId + ']').length != 0) {
             $('.abilityList > select').val(abilityId);
-        }
-        else {
-            $('.abilityList > select').val(0);
         }
 
         $('.typingSelectList').off();
