@@ -1564,7 +1564,7 @@ namespace Pokedex.Controllers
             Region region = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Location, Location.Region").Location.Region;
             PokemonLocationDetail pokemonLocationDetail = this.dataService.GetObjectByPropertyValue<PokemonLocationDetail>("Id", pokemonLocationDetailId, "Pokemon, CaptureMethod, Pokemon.Game");
             List<Game> games = this.dataService.GetObjects<GameRegionDetail>("Game.ReleaseDate, Game.Id", "Game").Where(x => x.RegionId == region.Id).Select(x => x.Game).ToList();
-            games = games.Where(x => x.ReleaseDate >= pokemonLocationDetail.Pokemon.Game.ReleaseDate && this.dataService.GetObjects<PokemonGameDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonLocationDetail.PokemonId).Select(x => x.Game).Any(y => y.Id == x.Id)).ToList();
+            games = games.Where(x => x.ReleaseDate >= pokemonLocationDetail.Pokemon.Game.ReleaseDate && this.dataService.GetObjects<PokemonGameDetail>(includes: "Game", whereProperty: "PokemonId", wherePropertyValue: pokemonLocationDetail.PokemonId).Select(x => x.Game).Any(y => y.Id == x.Id)).ToList();
             PokemonLocationGameDetailViewModel model = new PokemonLocationGameDetailViewModel()
             {
                 AllGames = games,
