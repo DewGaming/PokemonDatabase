@@ -778,38 +778,5 @@ namespace Pokedex.Controllers
 
             return games;
         }
-
-        /// <summary>
-        /// Grabs a list of games, separated by the release dates.
-        /// </summary>
-        /// <returns>Returns a list of games, based on the release dates.</returns>
-        private List<Game> GetGamesForEachPokemonLocationDetail()
-        {
-            List<Game> gameList = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game").ConvertAll(x => x.Game);
-            List<Game> games = new List<Game>();
-            foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
-            {
-                if (gameList.First(x => x.ReleaseDate == r).Id != 4)
-                {
-                    games.Add(new Game()
-                    {
-                        Id = gameList.First(x => x.ReleaseDate == r).Id,
-                        Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
-                        GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
-                        ReleaseDate = r,
-                        Abbreviation = string.Concat(gameList.Where(x => x.ReleaseDate == r).Select(x => x.Abbreviation)),
-                    });
-                }
-                else
-                {
-                    foreach (var g in gameList.Where(x => x.ReleaseDate == r).ToList())
-                    {
-                        games.Add(g);
-                    }
-                }
-            }
-
-            return games;
-        }
     }
 }
