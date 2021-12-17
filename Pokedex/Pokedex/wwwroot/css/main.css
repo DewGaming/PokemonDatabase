@@ -1,3 +1,7 @@
+.cursorHelp {
+  cursor: help;
+}
+
 .pokemonListPicture {
   width: 150px;
   height: 150px;
