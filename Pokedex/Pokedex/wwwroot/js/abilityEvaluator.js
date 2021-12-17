@@ -1,5 +1,5 @@
 var grabPokemon = function () {
-    if ($('.abilityList > select').val() != '') {
+    if ($('.abilityList > select').val() != '0') {
         $('.pokemonWithAbility').css('display', 'none');
         $('.pokemonWithAbility').empty();
         $('.pokemonWithAbility').load('/get-pokemon-by-ability/', { 'abilityId': $('.abilityList > select').val(), 'generationID': $('.generationList > select').val() }, function () {
@@ -25,9 +25,9 @@ var grabPokemon = function () {
             $('.abilityList > select').val(abilityId);
         }
 
-        $('.typingSelectList').off();
+        $('.abilitySelectList').off();
 
-        $('.typingSelectList').on('change', function () {
+        $('.abilitySelectList').on('change', function () {
             grabPokemon();
         });
     });
