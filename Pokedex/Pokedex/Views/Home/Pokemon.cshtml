@@ -127,6 +127,11 @@
                 {
                     shiny()
                     $('.pokemonImage').addClass('shiny')
+                
+                    $.ajax({
+                        url: '/shiny-button-clicked/',
+                        method: "POST"
+                    });
                 }
             }
         })

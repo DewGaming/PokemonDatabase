@@ -74,6 +74,11 @@
                 $('.grid-container .pokemonImages').each(function () {
                     $(this).addClass('shiny')
                 })
+                
+                $.ajax({
+                    url: '/shiny-button-clicked/',
+                    method: "POST"
+                });
             }
         })
     </script>
