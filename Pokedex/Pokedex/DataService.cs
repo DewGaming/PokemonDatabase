@@ -37,16 +37,7 @@ namespace Pokedex
             {
                 PageStat pageStat = this.GetObjects<PageStat>().Find(x => x.Name == pageName);
 
-                if (pageStat != null)
-                {
-                    pageStat.ViewCount += 1;
-                    pageStat.LastVisit = System.DateTime.Now.ToUniversalTime();
-                    this.UpdateObject(pageStat);
-                }
-                else
-                {
-                    this.AddObject(new PageStat() { Name = pageName, ViewCount = 1, LastVisit = System.DateTime.Now.ToUniversalTime() });
-                }
+                this.AddObject(new PageStat() { Name = pageName, VisitTime = System.DateTime.Now.ToUniversalTime(), VisitDate = System.DateTime.Now.ToUniversalTime() });
             }
         }
 
@@ -57,8 +48,7 @@ namespace Pokedex
         {
             foreach (var p in this.GetObjects<PageStat>())
             {
-                p.ViewCount = 0;
-                this.UpdateObject(p);
+                this.DeleteObject<PageStat>(p.Id);
             }
         }
 

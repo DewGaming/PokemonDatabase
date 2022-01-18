@@ -1,6 +1,7 @@
 @model List<Pokedex.DataAccess.Models.PageStat>;
 @{
     Layout = "_Layout";
+    
 }
 
 <a class="btn btn-primary" href="@this.Url.Action("ClearPageViews", "Owner")">Clear Page Views</a>
@@ -12,16 +13,25 @@
             <tr>
                 <th scope="col">Page Name</th>
                 <th scope="col">View Count</th>
-                <th scope="col">Last Visit</th>
+                <th scope="col">Last Visit/Updated</th>
                 <th scope="col">Actions</th>
             </tr>
-            @foreach (var item in Model.OrderByDescending(x => x.LastVisit).ThenBy(x => x.ViewCount))
+            @foreach (var item in Model.OrderByDescending(x => x.VisitTime).GroupBy(x => x.Name).Select(x => x.First()).ToList())
             {
                 <tr>
                     <td>@item.Name</td>
-                    <td>@item.ViewCount</td>
-                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.LastVisit, TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")).ToString("MMMM dd yyyy h:mm tt")</td>
-                    <td><a href="@this.Url.Action("PageStat", "Delete", new { id = item.Id })">Delete</a></td>
+                    <td>@Model.Where(x => x.Name == item.Name).Count()</td>
+                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.VisitTime, TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")).ToString("MMMM dd yyyy h:mm tt")</td>
+                    <td>
+                        @if (@Model.Where(x => x.Name == item.Name).Count() == 0)
+                        {
+                            <a href="@this.Url.Action("PageStat", "Delete", new { id = item.Id })">Delete</a>
+                        }
+                        else
+                        {
+                            <a href="@this.Url.Action("ClearPageStats", "Owner", new { id = item.Id })">Clear</a>
+                        }
+                    </td>
                 </tr>
             }
         </table>

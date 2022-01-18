@@ -342,5 +342,21 @@ namespace Pokedex.Controllers
 
             return this.View(model);
         }
+
+        /// <summary>
+        /// Opens the page to view a specific saved pokemon team.
+        /// </summary>
+        /// <param name="id">The pokemon team's id.</param>
+        /// <returns>The pokemon team page.</returns>
+        [Route("clear_page_views/{id:int}")]
+        public IActionResult ClearPageStats(int id)
+        {
+            PageStat pageStat = this.dataService.GetObjectByPropertyValue<PageStat>("Id", id);
+            pageStat.VisitTime = System.DateTime.Now.ToUniversalTime();
+            pageStat.VisitDate = System.DateTime.Now.ToUniversalTime();
+            this.dataService.UpdateObject(pageStat);
+
+            return this.RedirectToAction("PageStats");
+        }
     }
 }

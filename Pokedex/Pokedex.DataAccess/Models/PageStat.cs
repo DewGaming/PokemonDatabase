@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pokedex.DataAccess.Models
 {
@@ -8,10 +9,11 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        public int ViewCount { get; set; }
 
         [Required]
-        public DateTime LastVisit { get; set; }
+        public DateTime VisitTime { get; set; }
+
+        [Column(TypeName="Date")]
+        public DateTime VisitDate { get; set; }
     }
 }
