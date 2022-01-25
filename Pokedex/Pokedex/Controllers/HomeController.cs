@@ -752,7 +752,12 @@ namespace Pokedex.Controllers
         /// <returns>Returns a list of games, based on the release dates.</returns>
         private List<Game> GetGamesForEachReleaseDate()
         {
-            List<Game> gameList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
+            List<Game> gameList = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+            if (!this.User.IsInRole("Owner"))
+            {
+                gameList = gameList.Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
+            }
+
             List<Game> games = new List<Game>();
             foreach (var r in gameList.ConvertAll(x => x.ReleaseDate).Distinct())
             {
