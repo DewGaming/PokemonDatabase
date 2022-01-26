@@ -27,6 +27,7 @@
 <p class="adminButtons">
     @using (Html.BeginForm())
     {
+        @Html.HiddenFor(x => x.Pokemon.Id)
         <button type="submit" class="btn btn-primary" role="button">Finish Review</button>
         <a href="@this.Url.Action("CompletePokemon", "Owner", new { pokemonId = @Model.Pokemon.Id })" class="btn btn-primary">Mark Pokémon As Complete</a>
     }
