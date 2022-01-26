@@ -383,7 +383,7 @@ namespace Pokedex
 
             pokemonList = pokemonList.GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.PokedexNumber).ToList();
 
-            List<Pokemon> altFormList = this.GetAllAltFormsWithFormName().Where(x => x.IsComplete == true).ToList();
+            List<Pokemon> altFormList = this.GetAllAltFormsWithFormName().ToList();
             Pokemon pokemon;
 
             foreach (var a in altFormList)

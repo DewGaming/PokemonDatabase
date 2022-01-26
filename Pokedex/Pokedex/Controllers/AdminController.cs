@@ -94,7 +94,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonLocationDetails(int locationId)
         {
             List<PokemonLocationDetail> pokemonList = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
-            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName().Where(x => x.IsComplete == true).ToList();
+            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName().ToList();
             Pokemon pokemon;
 
             foreach (var a in altFormList)
