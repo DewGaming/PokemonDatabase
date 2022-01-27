@@ -9,9 +9,16 @@
     List<CaptureMethod> captureMethods = Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail.CaptureMethod).GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.Name).ToList();
     List<PokemonLocationTimeDetail> times = new List<PokemonLocationTimeDetail>();
     List<PokemonLocationSeasonDetail> seasons = new List<PokemonLocationSeasonDetail>();
+    List<PokemonLocationWeatherDetail> weathers = new List<PokemonLocationWeatherDetail>();
     List<PokemonLocationDetail> pokemonLocations = new List<PokemonLocationDetail>();
-    int rowSpan;
-    int colSpan;
+    int rowSpan = 0;
+    int colSpan = 0;
+    int timeCount;
+    bool timeFound;
+    int seasonCount;
+    bool seasonFound;
+    int weatherCount;
+    bool weatherFound;
 }
 
 @section styles
@@ -24,7 +31,7 @@
             border-width: 2px !important;
         }
 
-        .splitTH, .time, .season, .alwaysAvailable, th {
+        .splitTH, .time, .season, .weather, .alwaysAvailable, th {
             text-align: center !important;
         }
 
@@ -68,15 +75,23 @@
         colSpan = 1;
         times = Model.PokemonTimes.Where(x => Model.PokemonLocationGames.Where(y => y.PokemonLocationDetail.LocationId == Model.Location.Id && y.PokemonLocationDetail.CaptureMethodId == m.Id && y.GameId == Model.Game.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).ToList();
         seasons = Model.PokemonSeasons.Where(x => Model.PokemonLocationGames.Where(y => y.PokemonLocationDetail.LocationId == Model.Location.Id && y.PokemonLocationDetail.CaptureMethodId == m.Id && y.GameId == Model.Game.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).ToList();
+        weathers = Model.PokemonWeathers.Where(x => Model.PokemonLocationGames.Where(y => y.PokemonLocationDetail.LocationId == Model.Location.Id && y.PokemonLocationDetail.CaptureMethodId == m.Id && y.GameId == Model.Game.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).ToList();
         @if (times.Count() != 0)
         {
             rowSpan = 2;
-            colSpan = 3;
+            colSpan += 4;
         }
-        else if (seasons.Count() != 0)
+
+        @if (seasons.Count() != 0)
         {
             rowSpan = 2;
-            colSpan = 4;
+            colSpan += 4;
+        }
+
+        @if (weathers.Count() != 0)
+        {
+            rowSpan = 2;
+            colSpan += 9;
         }
         <div class="page method@(m.Id)">
             <div class="locationDetailDiv">
@@ -106,6 +121,7 @@
                                 {
                                     <th class="time">Morning</th>
                                     <th class="time">Day</th>
+                                    <th class="time">Evening</th>
                                     <th class="time">Night</th>
                                 }
                                 @if(seasons.Count() != 0)
@@ -115,6 +131,18 @@
                                     <th class="season">Autumn</th>
                                     <th class="season">Winter</th>
                                 }
+                                @if(weathers.Count() != 0)
+                                {
+                                    <th class="weather">Normal</th>
+                                    <th class="weather">Overcast</th>
+                                    <th class="weather">Raining</th>
+                                    <th class="weather">Thunderstorm</th>
+                                    <th class="weather">Snowing</th>
+                                    <th class="weather">Snowstorm</th>
+                                    <th class="weather">Sandstorm</th>
+                                    <th class="weather">Intense Sun</th>
+                                    <th class="weather">Fog</th>
+                                }
                             </tr>
                         }
                     </thead>
@@ -123,6 +151,13 @@
                         {
                             @foreach(var pl in Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail).GroupBy(x => new { x.PokemonId, x.MinimumLevel, x.MaximumLevel }).Select(x => x.First()).Where(x => x.LocationId == Model.Location.Id && x.PokemonId == p.Id && x.CaptureMethodId == m.Id).OrderBy(x => x.Id))
                             {
+                                pokemonLocations = Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail).GroupBy(x => x.Id).Select(x => x.First()).Where(x => x.LocationId == Model.Location.Id && x.PokemonId == p.Id && x.MinimumLevel == pl.MinimumLevel && x.MaximumLevel == pl.MaximumLevel && x.CaptureMethodId == m.Id).OrderBy(x => x.Id).ToList();
+                                timeCount = Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count();
+                                timeFound = Model.PokemonTimes.Find(x => pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null;
+                                seasonCount = Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count();
+                                seasonFound = Model.PokemonSeasons.Find(x => pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null;
+                                weatherCount = Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count();
+                                weatherFound = Model.PokemonWeathers.Find(x => pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null;
                                 <tr>
                                     <td>@p.Name</td>
                                     <td>
@@ -135,9 +170,8 @@
                                             @string.Concat("Level ", pl.MinimumLevel, " - ", pl.MaximumLevel)
                                         }
                                     </td>
-                                    @if (Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
+                                    @if (timeCount != 0)
                                     {
-                                        pokemonLocations = Model.PokemonLocationGames.Select(x => x.PokemonLocationDetail).GroupBy(x => x.Id).Select(x => x.First()).Where(x => x.LocationId == Model.Location.Id && x.PokemonId == p.Id && x.MinimumLevel == pl.MinimumLevel && x.MaximumLevel == pl.MaximumLevel && x.CaptureMethodId == m.Id).OrderBy(x => x.Id).ToList();
                                         @if (Model.PokemonTimes.Find(x => x.Time.Name == "Morning" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
                                         {
                                             <td class="time">@string.Concat(Model.PokemonTimes.Find(x => x.Time.Name == "Morning" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
@@ -156,6 +190,15 @@
                                             <td class="time">0%</td>
                                         }
 
+                                        @if (Model.PokemonTimes.Find(x => x.Time.Name == "Evening" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="time">@string.Concat(Model.PokemonTimes.Find(x => x.Time.Name == "Evening" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="time">0%</td>
+                                        }
+
                                         @if (Model.PokemonTimes.Find(x => x.Time.Name == "Night" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
                                         {
                                             <td class="time">@string.Concat(Model.PokemonTimes.Find(x => x.Time.Name == "Night" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
@@ -165,11 +208,143 @@
                                             <td class="time">0%</td>
                                         }
                                     }
-                                    else if (Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
+                                    else if (Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id).Count() > 0 && (seasonCount > 0 || weatherCount > 0))
                                     {
-                                        <td class="season">@string.Concat(pl.ChanceOfEncounter, '%')</td>
+                                        <td class="time" colspan="4">--</td>
                                     }
-                                    else
+                                    
+                                    @if (seasonCount != 0)
+                                    {
+                                        @if (Model.PokemonSeasons.Find(x => x.Season.Name == "Spring" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="season">@string.Concat(Model.PokemonSeasons.Find(x => x.Season.Name == "Spring" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="season">0%</td>
+                                        }
+
+                                        @if (Model.PokemonSeasons.Find(x => x.Season.Name == "Summer" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="season">@string.Concat(Model.PokemonSeasons.Find(x => x.Season.Name == "Summer" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="season">0%</td>
+                                        }
+
+                                        @if (Model.PokemonSeasons.Find(x => x.Season.Name == "Autumn" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="season">@string.Concat(Model.PokemonSeasons.Find(x => x.Season.Name == "Autumn" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="season">0%</td>
+                                        }
+
+                                        @if (Model.PokemonSeasons.Find(x => x.Season.Name == "Winter" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="season">@string.Concat(Model.PokemonSeasons.Find(x => x.Season.Name == "Winter" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="season">0%</td>
+                                        }
+                                    }
+                                    else if (Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id).Count() > 0 && (timeCount > 0 || weatherCount > 0))
+                                    {
+                                        <td class="season" colspan="4">--</td>
+                                    }
+                                    
+                                    @if (weatherCount != 0)
+                                    {
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Normal" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Normal" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Overcast" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Overcast" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Raining" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Raining" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Thunderstorm" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Thunderstorm" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Snowing" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Snowing" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Snowstorm" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Snowstorm" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Sandstorm" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Sandstorm" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Intense Sun" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Intense Sun" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+
+                                        @if (Model.PokemonWeathers.Find(x => x.Weather.Name == "Fog" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)) != null)
+                                        {
+                                            <td class="weather">@string.Concat(Model.PokemonWeathers.Find(x => x.Weather.Name == "Fog" && pokemonLocations.Any(y => y.Id == x.PokemonLocationDetailId)).PokemonLocationDetail.ChanceOfEncounter, '%')</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="weather">0%</td>
+                                        }
+                                    }
+                                    else if (Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id).Count() > 0 && (timeCount > 0 || seasonCount > 0))
+                                    {
+                                        <td class="weather" colspan="9">--</td>
+                                    }
+                                    
+                                    @if (timeCount == 0 && seasonCount == 0 && weatherCount == 0)
                                     {
                                         <td class="alwaysAvailable"colspan="@colSpan">@string.Concat(pl.ChanceOfEncounter, '%')</td>
                                     }

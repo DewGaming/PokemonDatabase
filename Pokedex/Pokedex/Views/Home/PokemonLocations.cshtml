@@ -106,6 +106,10 @@
                                 {
                                     <th>Seasons Available</th>
                                 }
+                                @if(Model.PokemonWeathers.Where(x => Model.PokemonLocations.Where(y => y.PokemonLocationDetail.LocationId == l.Id && y.GameId == g.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).Count() != 0)
+                                {
+                                    <th>Weather Available</th>
+                                }
                                 @if(Model.PokemonLocations.Where(x => x.GameId == g.Id && x.PokemonLocationDetail.LocationId == l.Id).ToList().ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
                                 {
                                     <th>Only Encounterable Thru SOS Battles</th>
@@ -177,6 +181,26 @@
                                         {
                                             <td>
                                                 @("Available During Any Season")
+                                            </td>
+                                        }
+                                        @if(Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).Count() != 0)
+                                        {
+                                            <td>
+                                                @for (var i = 0; i < Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).Count(); i++)
+                                                {
+                                                    if (@i != 0)
+                                                    {
+                                                        @(" / ")
+                                                    }
+
+                                                    @Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == l.Id && x.PokemonLocationDetailId == pl.Id).ToList()[i].Weather.Name;
+                                                }
+                                            </td>
+                                        }
+                                        else if(Model.PokemonWeathers.Where(x => Model.PokemonLocations.Where(y => y.PokemonLocationDetail.LocationId == l.Id && y.GameId == g.Id).Any(y => y.PokemonLocationDetailId == x.PokemonLocationDetailId)).Count() != 0)
+                                        {
+                                            <td>
+                                                @("Available During Any Weather")
                                             </td>
                                         }
                                         @if(Model.PokemonLocations.ConvertAll(x => x.PokemonLocationDetail).Find(x => x.SOSBattleOnly) != null)
