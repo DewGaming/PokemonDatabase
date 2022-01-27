@@ -100,14 +100,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(evolution);
 
-            if (this.dataService.GetObjectByPropertyValue<Pokemon>("Id", evolution.EvolutionPokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness").IsComplete)
-            {
-                return this.RedirectToAction("Pokemon", "Admin");
-            }
-            else
-            {
-                return this.RedirectToAction("ReviewPokemon", "Owner", new { pokemonId = evolution.EvolutionPokemonId });
-            }
+            return this.RedirectToAction("ReviewPokemon", "Owner", new { pokemonId = evolution.EvolutionPokemonId });
         }
 
         /// <summary>
