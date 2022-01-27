@@ -16,8 +16,6 @@ namespace Pokedex.DataAccess.Models
         public decimal Height { get; set; }
         [Required, Column(TypeName = "decimal(4,1)")]
         public decimal Weight { get; set; }
-        [Display(Name = "Experience Yield"), Required]
-        public int ExpYield { get; set; }
         [Required]
         public bool IsComplete { get; set; }
         [Display(Name = "Egg Cycle Count"), Required]

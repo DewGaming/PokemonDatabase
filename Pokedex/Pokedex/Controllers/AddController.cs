@@ -1157,7 +1157,6 @@ namespace Pokedex.Controllers
             alternatePokemon.PokedexNumber = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.OriginalPokemonId).PokedexNumber;
             alternatePokemon.Height = pokemon.Height;
             alternatePokemon.Weight = pokemon.Weight;
-            alternatePokemon.ExpYield = pokemon.ExpYield;
             alternatePokemon.GameId = pokemon.GameId;
             alternatePokemon.ClassificationId = pokemon.ClassificationId;
             alternatePokemon.IsComplete = false;

@@ -70,12 +70,5 @@ namespace Pokedex.Models
         [Display(Name = "Weight (In Kilograms)")]
         [Required]
         public decimal Weight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the alternate form's exp yield.
-        /// </summary>
-        [Display(Name = "Experience Yield")]
-        [Required]
-        public int ExpYield { get; set; }
     }
 }
