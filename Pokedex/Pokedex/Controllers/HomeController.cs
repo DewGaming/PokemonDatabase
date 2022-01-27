@@ -467,6 +467,15 @@ namespace Pokedex.Controllers
             this.dataService.AddPageView("Location Evaluator Page", this.User.IsInRole("Owner"));
             List<PokemonLocationDetail> pokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>().Where(x => x.LocationId == locationId).ToList();
             List<PokemonLocationGameDetail> pokemonLocationGames = this.dataService.GetObjects<PokemonLocationGameDetail>("PokemonLocationDetail.Pokemon.PokedexNumber, PokemonLocationDetail.PokemonId", "PokemonLocationDetail, PokemonLocationDetail.Pokemon, PokemonLocationDetail.CaptureMethod, PokemonLocationDetail.Location, PokemonLocationDetail.CaptureMethod", "GameId", gameId).Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList();
+
+            foreach (var p in pokemonLocationGames)
+            {
+                if (this.dataService.CheckIfAltForm(p.PokemonLocationDetail.PokemonId))
+                {
+                    p.PokemonLocationDetail.Pokemon.Name = this.dataService.GetAltFormWithFormName(p.PokemonLocationDetail.PokemonId).Name;
+                }
+            }
+
             LocationEvaluatorViewModel model = new LocationEvaluatorViewModel()
             {
                 PokemonLocationGames = pokemonLocationGames,
