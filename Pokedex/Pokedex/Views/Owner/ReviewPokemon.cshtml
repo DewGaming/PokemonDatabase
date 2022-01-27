@@ -17,11 +17,80 @@
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.FaviconImageUrl, @Model.Pokemon.Id, ".png"))" />
+    <style>
+        .pokemonImage h4 {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .pokemonImage {
+            perspective: 720px;
+            position: relative;
+        }
+
+        .front, .back {
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            width: 100%;
+            transition: all 0.5s ease-out 0s;
+        }
+
+        .front {
+            z-index: 1;
+            position: absolute;
+            transform: rotateY(0deg);
+        }
+
+        .back {
+            z-index: 0;
+            position: relative;
+            transform: rotateY(-180deg);
+        }
+
+        .pokemonImage img {
+            backface-visibility: hidden;
+        }</style>
 }
 
 @section scripts
 {
     <script src="/js/calculateCaptureRate.js"></script>
+    <script>
+        var shiny = function() {
+        	$('.front').css('z-index: 0')
+        	$('.front').css('transform', 'rotateY(-180deg)')
+        	$('.back').css('z-index: 1')
+        	$('.back').css('transform', 'rotateY(0deg)')
+        }
+
+        var normal = function() {
+        	$('.back').css('z-index: 0')
+        	$('.back').css('transform', 'rotateY(-180deg)')
+        	$('.front').css('z-index: 1')
+        	$('.front').css('transform', 'rotateY(0deg)')
+        }
+
+        $('.pokemonImage').on('click', function() {
+            if (!$(this).hasClass('gen1Image'))
+            {
+                if ($($('.pokemonImage')).hasClass('shiny'))
+                {
+                    normal()
+                    $('.pokemonImage').removeClass('shiny')
+                }
+                else
+                {
+                    shiny()
+                    $('.pokemonImage').addClass('shiny')
+                
+                    $.ajax({
+                        url: '/shiny-button-clicked/',
+                        method: "POST"
+                    });
+                }
+            }
+        })
+    </script>
 }
 
 <p class="adminButtons">
@@ -37,7 +106,16 @@
 
 <div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
     <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
-        <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+        <div class="pokemonImage">
+            <div class="front">
+                <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+                <h4>← Normal →</h4>
+            </div>
+            <div class="back">
+                <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+                <h4>← Shiny →</h4>
+            </div>
+        </div>
         @if (Model.OriginalPokemon != null)
         {
             <div class="differentForms">
@@ -226,7 +304,7 @@
                 </tr>
                 <tr>
                     <th>Catch Rate</th>
-                    <td class="catchRate" id=@Model.CaptureRates.Last(x => x.PokemonId == @Model.Pokemon.Id).CaptureRate.CatchRate></td>
+                    <td class="catchRate">@Model.CaptureRates.Last(x => x.PokemonId == @Model.Pokemon.Id).CaptureRate.CatchRate</td>
                 </tr>
                 <tr>
                     <th>Experience Growth</th>
