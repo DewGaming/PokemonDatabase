@@ -1369,6 +1369,7 @@ namespace Pokedex.Controllers
                 Id = captureRate.Id,
                 PokemonId = captureRate.PokemonId,
                 GenerationId = captureRate.GenerationId,
+                CaptureRateId = captureRate.CaptureRateId,
                 AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
             };
 
@@ -1388,6 +1389,7 @@ namespace Pokedex.Controllers
                     Id = captureRate.Id,
                     PokemonId = captureRate.PokemonId,
                     GenerationId = captureRate.GenerationId,
+                    CaptureRateId = captureRate.CaptureRateId,
                     AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
                 };
 
