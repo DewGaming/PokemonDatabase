@@ -900,7 +900,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </h2>
                     <table class="evolutionTable">
                         <tbody class="evolutionPokemon">
-                            @foreach (var evolution in evolutions)
+                            @foreach (var evolution in evolutions.OrderBy(x => x.EvolutionPokemon.PokedexNumber).ThenBy(x => x.EvolutionPokemon.Id))
                             {
                                 if (g >= evolution.EvolutionPokemon.Game.GenerationId)
                                 {
