@@ -12,7 +12,7 @@
             {
                 <span class="adminMenuTitle">Add To Pokémon</span>
             }
-            else if (Model.Pokemon.ExpYield != 0)
+            else
             {
                 <span class="adminMenuTitle">Review Pokémon</span>
                 <li><a class="dropdown-item" href="@(this.Url.Action("ReviewPokemon", "Owner", new { pokemonId = Model.Pokemon.Id }))">Review Info</a></li>
