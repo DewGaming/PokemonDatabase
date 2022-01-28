@@ -21,7 +21,7 @@
                 <tr>
                     <td>@item.Name</td>
                     <td>@Model.Where(x => x.Name == item.Name).Count()</td>
-                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.VisitTime, TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")).ToString("MMMM dd yyyy h:mm tt")</td>
+                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.VisitTime, TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")).ToString("MMMM dd yyyy h:mm:ss tt")</td>
                     <td>
                         @if (@Model.Where(x => x.Name == item.Name).Count() == 0)
                         {

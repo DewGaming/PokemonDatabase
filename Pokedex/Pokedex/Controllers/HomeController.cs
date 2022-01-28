@@ -311,6 +311,7 @@ namespace Pokedex.Controllers
             }
             else
             {
+                this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemon.Name), this.User.IsInRole("Owner"));
                 if (pokemonId == 0)
                 {
                     pokemonId = pokemon.Id;
