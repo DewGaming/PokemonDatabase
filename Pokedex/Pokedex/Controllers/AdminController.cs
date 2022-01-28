@@ -312,7 +312,7 @@ namespace Pokedex.Controllers
             BaseHappinessViewModel model = new BaseHappinessViewModel()
             {
                 AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
-                AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                AllPokemon = this.dataService.GetObjects<PokemonBaseHappinessDetail>(),
             };
 
             return this.View(model);

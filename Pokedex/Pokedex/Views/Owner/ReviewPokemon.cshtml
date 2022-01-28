@@ -316,7 +316,7 @@
                 </tr>
                 <tr>
                     <th>Base Happiness</th>
-                    <td>@Model.Pokemon.BaseHappiness.Happiness</td>
+                    <td>@Model.BaseHappinesses.Last(x => x.PokemonId == @Model.Pokemon.Id).BaseHappiness.Happiness</td>
                 </tr>
             </tbody>
         </table>

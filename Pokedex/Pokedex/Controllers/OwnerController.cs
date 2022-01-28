@@ -240,6 +240,7 @@ namespace Pokedex.Controllers
                     Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
+                    BaseHappinesses = this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
                     PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id),
                     Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id),
                     Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),

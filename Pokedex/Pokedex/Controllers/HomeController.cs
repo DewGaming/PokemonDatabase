@@ -271,7 +271,7 @@ namespace Pokedex.Controllers
         public IActionResult LocationAvailability()
         {
             this.dataService.AddPageView("Location Availability Page", this.User.IsInRole("Owner"));
-            List<Game> model = this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, Game.Id", "Game").Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.Now).GroupBy(x => x.Id).Select(x => x.First()).ToList();
+            List<Game> model = this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, Game.Id", "Game").Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.UtcNow).GroupBy(x => x.Id).Select(x => x.First()).ToList();
 
             return this.View(model);
         }

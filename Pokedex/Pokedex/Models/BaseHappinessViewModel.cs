@@ -16,6 +16,6 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all pokemon.
         /// </summary>
-        public List<Pokemon> AllPokemon { get; set; }
+        public List<PokemonBaseHappinessDetail> AllPokemon { get; set; }
     }
 }
