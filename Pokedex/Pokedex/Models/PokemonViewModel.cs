@@ -24,6 +24,11 @@ namespace Pokedex.Models
         public LegendaryType LegendaryType { get; set; }
 
         /// <summary>
+        /// Gets or sets the pokemon's base happinesses.
+        /// </summary>
+        public List<PokemonBaseHappinessDetail> BaseHappinesses { get; set; }
+
+        /// <summary>
         /// Gets or sets the pokemon's base stats.
         /// </summary>
         public List<BaseStat> BaseStats { get; set; }

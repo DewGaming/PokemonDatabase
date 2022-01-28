@@ -57,5 +57,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all pokemon capture rates.
         /// </summary>
         public List<PokemonCaptureRateDetail> AllPokemonCaptureRates { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all pokemon base happinesses.
+        /// </summary>
+        public List<PokemonBaseHappinessDetail> AllPokemonBaseHappinesses { get; set; }
     }
 }

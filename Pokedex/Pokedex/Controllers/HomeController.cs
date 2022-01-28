@@ -735,7 +735,7 @@ namespace Pokedex.Controllers
         /// <returns>The list of capturable pokemon.</returns>
         private List<Pokemon> GetAllPokemonForCaptureCalculator()
         {
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness", "IsComplete", true);
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth", "IsComplete", true);
 
             List<PokemonFormDetail> pokemonForm = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true);
 

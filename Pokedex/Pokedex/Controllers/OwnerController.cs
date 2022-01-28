@@ -227,7 +227,7 @@ namespace Pokedex.Controllers
                    this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<EVYield>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId);
 
-            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {

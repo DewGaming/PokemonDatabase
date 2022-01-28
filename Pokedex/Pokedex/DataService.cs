@@ -283,6 +283,7 @@ namespace Pokedex
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
             {
                 Pokemon = pokemon,
+                BaseHappinesses = this.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
                 BaseStats = this.GetBaseStat(pokemon.Id),
                 EVYields = this.GetEVYields(pokemon.Id),
                 Typings = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
@@ -326,6 +327,7 @@ namespace Pokedex
                 AllEVYields = this.GetObjects<EVYield>(includes: "Pokemon"),
                 AllLegendaryDetails = this.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true),
                 AllPokemonCaptureRates = this.GetAllPokemonWithCaptureRates(),
+                AllPokemonBaseHappinesses = this.GetAllPokemonWithBaseHappinesses(),
             };
         }
 
@@ -337,8 +339,7 @@ namespace Pokedex
                 .Include(x => x.Classification)
                 .Include(x => x.Game)
                     .Include("Game.Generation")
-                .Include(x => x.ExperienceGrowth)
-                .Include(x => x.BaseHappiness)
+                .Include(x => x.ExperienceGrowth)                
                 .Where(x => x.IsComplete)
                 .OrderBy(x => x.PokedexNumber)
                 .ThenBy(x => x.Id)
@@ -354,7 +355,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Include(x => x.BaseHappiness)
                 .OrderBy(x => x.PokedexNumber)
                 .ThenBy(x => x.Id)
                 .ToList();
@@ -452,7 +452,7 @@ namespace Pokedex
 
         public List<Pokemon> GetAllPokemonWithoutFormsWithIncomplete()
         {
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
             List<Pokemon> altFormList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
             return pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
         }
@@ -470,7 +470,7 @@ namespace Pokedex
 
         public List<int> GetGenerationsFromPokemonWithIncomplete()
         {
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappiness");
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
             List<Pokemon> altFormList = this.dataContext.PokemonFormDetails.Select(x => x.AltFormPokemon).ToList();
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
 
@@ -623,7 +623,6 @@ namespace Pokedex
                     .Include("AltFormPokemon.Classification")
                     .Include("AltFormPokemon.Game")
                     .Include("AltFormPokemon.ExperienceGrowth")
-                    .Include("AltFormPokemon.BaseHappiness")
                 .Include(x => x.Form)
                 .OrderBy(x => x.AltFormPokemon.Game.ReleaseDate)
                 .ThenBy(x => x.AltFormPokemon.PokedexNumber)
@@ -807,6 +806,16 @@ namespace Pokedex
                 .ToList();
         }
 
+        public List<PokemonBaseHappinessDetail> GetAllPokemonWithBaseHappinesses()
+        {
+            return this.dataContext.PokemonBaseHappinessDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.BaseHappiness)
+                .Include(x => x.Generation)
+                .OrderByDescending(x => x.GenerationId)
+                .ToList();
+        }
+
         public List<PokemonCaptureRateDetail> GetPokemonWithCaptureRates(int pokemonId)
         {
             return this.dataContext.PokemonCaptureRateDetails
@@ -823,6 +832,16 @@ namespace Pokedex
             return this.dataContext.PokemonCaptureRateDetails
                 .Include(x => x.Pokemon)
                 .Include(x => x.CaptureRate)
+                .Include(x => x.Generation)
+                .ToList()
+                .First(x => x.Pokemon.Id == pokemonId && x.Generation.Id == generationId);
+        }
+
+        public PokemonBaseHappinessDetail GetPokemonWithBaseHappinesssFromGenerationId(int pokemonId, int generationId)
+        {
+            return this.dataContext.PokemonBaseHappinessDetails
+                .Include(x => x.Pokemon)
+                .Include(x => x.BaseHappiness)
                 .Include(x => x.Generation)
                 .ToList()
                 .First(x => x.Pokemon.Id == pokemonId && x.Generation.Id == generationId);

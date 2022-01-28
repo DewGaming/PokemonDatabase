@@ -742,7 +742,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         </tr>
                         <tr>
                             <th>Base Happiness</th>
-                            <td>@item.Pokemon.BaseHappiness.Happiness</td>
+                            <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
                         </tr>
                     </tbody>
                 </table>
