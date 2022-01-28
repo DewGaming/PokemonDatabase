@@ -305,82 +305,89 @@ namespace Pokedex.Controllers
             name = this.FormatPokemonName(name);
 
             Pokemon pokemon = this.dataService.GetPokemon(name);
-            if (pokemonId == 0)
+            if (pokemon == null)
             {
-                pokemonId = pokemon.Id;
+                return this.RedirectToAction("AllPokemon", "Home");
             }
-
-            if (generationId == 0)
+            else
             {
-                generationId = this.dataService.GetPokemonGameDetails(pokemonId).Last().Game.GenerationId;
-            }
-
-            if (pokemon?.IsComplete == true)
-            {
-                List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
-                PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, null, this.appConfig);
-                pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemon.Id);
-
-                pokemonList.Add(pokemonDetails);
-
-                List<Pokemon> altForms = this.dataService.GetAltForms(pokemon.Id);
-                if (altForms.Count > 0)
-                {
-                    Form form;
-                    foreach (var p in altForms)
-                    {
-                        if (p.IsComplete)
-                        {
-                            form = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form;
-                            pokemonDetails = this.dataService.GetPokemonDetails(p, form, this.appConfig);
-
-                            pokemonList.Add(pokemonDetails);
-                        }
-                    }
-                }
-
-                List<int> pokemonIds = pokemonList.ConvertAll(x => x.Pokemon.Id);
-
-                if (pokemonIds.IndexOf(pokemonId) == -1)
+                if (pokemonId == 0)
                 {
                     pokemonId = pokemon.Id;
                 }
 
-                AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
+                if (generationId == 0)
                 {
-                    PokemonList = pokemonList,
-                    PokemonId = pokemonId,
-                    GenerationId = generationId,
-                };
-
-                if (this.User.IsInRole("Owner"))
-                {
-                    AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
-                    DropdownViewModel dropdownViewModel = new DropdownViewModel()
-                    {
-                        AllPokemon = allAdminPokemon,
-                        AppConfig = this.appConfig,
-                    };
-                    AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
-                    {
-                        PokemonList = new List<Pokemon>(),
-                        DropdownViewModel = dropdownViewModel,
-                        AppConfig = this.appConfig,
-                    };
-
-                    foreach (var p in pokemonList)
-                    {
-                        adminDropdown.PokemonList.Add(p.Pokemon);
-                    }
-
-                    model.AdminDropdown = adminDropdown;
+                    generationId = this.dataService.GetPokemonGameDetails(pokemonId).Last().Game.GenerationId;
                 }
 
-                return this.View(model);
-            }
-            else
-            {
-                return this.RedirectToAction("AllPokemon", "Home");
+                if (pokemon?.IsComplete == true)
+                {
+                    List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
+                    PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, null, this.appConfig);
+                    pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemon.Id);
+
+                    pokemonList.Add(pokemonDetails);
+
+                    List<Pokemon> altForms = this.dataService.GetAltForms(pokemon.Id);
+                    if (altForms.Count > 0)
+                    {
+                        Form form;
+                        foreach (var p in altForms)
+                        {
+                            if (p.IsComplete)
+                            {
+                                form = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form;
+                                pokemonDetails = this.dataService.GetPokemonDetails(p, form, this.appConfig);
+
+                                pokemonList.Add(pokemonDetails);
+                            }
+                        }
+                    }
+
+                    List<int> pokemonIds = pokemonList.ConvertAll(x => x.Pokemon.Id);
+
+                    if (pokemonIds.IndexOf(pokemonId) == -1)
+                    {
+                        pokemonId = pokemon.Id;
+                    }
+
+                    AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
+                    {
+                        PokemonList = pokemonList,
+                        PokemonId = pokemonId,
+                        GenerationId = generationId,
+                    };
+
+                    if (this.User.IsInRole("Owner"))
+                    {
+                        AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+                        DropdownViewModel dropdownViewModel = new DropdownViewModel()
+                        {
+                            AllPokemon = allAdminPokemon,
+                            AppConfig = this.appConfig,
+                        };
+                        AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
+                        {
+                            PokemonList = new List<Pokemon>(),
+                            DropdownViewModel = dropdownViewModel,
+                            AppConfig = this.appConfig,
+                        };
+
+                        foreach (var p in pokemonList)
+                        {
+                            adminDropdown.PokemonList.Add(p.Pokemon);
+                        }
+
+                        model.AdminDropdown = adminDropdown;
+                    }
+
+                    return this.View(model);
+                }
+                else
+                {
+                    return this.RedirectToAction("AllPokemon", "Home");
+                }
             }
         }
 
