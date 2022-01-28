@@ -208,7 +208,7 @@
                                             <td class="time">0%</td>
                                         }
                                     }
-                                    else if (Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id).Count() > 0 && (seasonCount > 0 || weatherCount > 0))
+                                    else if (Model.PokemonTimes.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetail.CaptureMethodId == m.Id).Count() > 0 && (seasonCount > 0 || weatherCount > 0))
                                     {
                                         <td class="time" colspan="4">--</td>
                                     }
@@ -251,7 +251,7 @@
                                             <td class="season">0%</td>
                                         }
                                     }
-                                    else if (Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id).Count() > 0 && (timeCount > 0 || weatherCount > 0))
+                                    else if (Model.PokemonSeasons.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetail.CaptureMethodId == m.Id).Count() > 0 && (timeCount > 0 || weatherCount > 0))
                                     {
                                         <td class="season" colspan="4">--</td>
                                     }
@@ -339,7 +339,7 @@
                                             <td class="weather">0%</td>
                                         }
                                     }
-                                    else if (Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id).Count() > 0 && (timeCount > 0 || seasonCount > 0))
+                                    else if (Model.PokemonWeathers.Where(x => x.PokemonLocationDetail.LocationId == Model.Location.Id && x.PokemonLocationDetail.CaptureMethodId == m.Id).Count() > 0 && (timeCount > 0 || seasonCount > 0))
                                     {
                                         <td class="weather" colspan="9">--</td>
                                     }
