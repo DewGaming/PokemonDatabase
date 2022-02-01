@@ -26,5 +26,10 @@ namespace Pokedex.Models
         /// Gets or sets the generation's id that will be selected upon opening the page.
         /// </summary>
         public int GenerationId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the latest generation's id for form changing.
+        /// </summary>
+        public int LatestGenerationId { get; set; }
     }
 }

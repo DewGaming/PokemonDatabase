@@ -297,7 +297,6 @@ namespace Pokedex.Controllers
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
         {
-            this.dataService.AddPageView("Pokemon Page", this.User.IsInRole("Owner"));
             int pokemonId = selectedPokemonId;
             int generationId = selectedGenerationId;
             selectedPokemonId = 0;
@@ -311,6 +310,7 @@ namespace Pokedex.Controllers
             }
             else
             {
+                this.dataService.AddPageView("Pokemon Page", this.User.IsInRole("Owner"));
                 this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemon.Name), this.User.IsInRole("Owner"));
                 if (pokemonId == 0)
                 {
@@ -326,11 +326,11 @@ namespace Pokedex.Controllers
                 {
                     List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
                     PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, null, this.appConfig);
-                    pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemon.Id);
+                    pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemonId);
 
                     pokemonList.Add(pokemonDetails);
 
-                    List<Pokemon> altForms = this.dataService.GetAltForms(pokemon.Id);
+                    List<Pokemon> altForms = this.dataService.GetAltForms(pokemonId);
                     if (altForms.Count > 0)
                     {
                         Form form;
@@ -358,6 +358,7 @@ namespace Pokedex.Controllers
                         PokemonList = pokemonList,
                         PokemonId = pokemonId,
                         GenerationId = generationId,
+                        LatestGenerationId = this.dataService.GetObjects<Generation>(orderedProperty: "Id").Last().Id,
                     };
 
                     if (this.User.IsInRole("Owner"))

@@ -24,6 +24,15 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
 
   pokemonName = pokemonName.replace("&apos;", "\'");
 
+  while ($('.generation' + generation + '#' + pageName).length == 0)
+  {
+    generation -= 1
+    if (generation == 0)
+    {
+      generation = Number($('#LatestGenerationId').val())
+    }
+  }
+
   $('button#Generation' + generation + ', .generations#' + pageName.replace('%', '\\%') + ', .generation' + generation + '#' + pageName.replace('%', '\\%')).addClass('active');
 
   $('.tabIcon').attr("href", iconLink);
