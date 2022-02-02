@@ -289,7 +289,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $("#randomAbilityBool").prop('checked', false);
                 }
 
-                if ($.inArray(selectedGame, ['0', '14', '15', '16', '17']) != -1) {
+                if ($.inArray(selectedGame, ['0', '14', '15', '16', '17', '37']) != -1) {
                     if (!$('.alolanFormCheckbox').is(':visible')) {
                         $(".alolanFormCheckbox").show();
                     }
@@ -323,6 +323,16 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $("#Gigantamax").prop('checked', false);
                     $(".multipleGMaxBoolCheckbox").hide();
                     $("#multipleGMaxBool").prop('checked', false);
+                }
+
+                if ($.inArray(selectedGame, ['0', '37']) != -1) {
+                    if (!$('.hisuianFormCheckbox').is(':visible')) {
+                        $(".hisuianFormCheckbox").show();
+                    }
+                }
+                else {
+                    $(".hisuianFormCheckbox").hide();
+                    $("#Hisuian").prop('checked', false);
                 }
 
                 data.pokemonTypes;
