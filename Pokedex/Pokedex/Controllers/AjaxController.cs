@@ -2076,16 +2076,6 @@ namespace Pokedex.Controllers
             return this.PartialView("_FillAbilityEvaluatorAbilities", model);
         }
 
-        /// <summary>
-        /// Counts the times users click on the shiny button.
-        /// </summary>
-        [AllowAnonymous]
-        [Route("shiny-button-clicked")]
-        public void ShinyButtonTracker()
-        {
-            this.dataService.AddPageView("Shiny Button", this.User.IsInRole("Owner"));
-        }
-
         private string FillEVs(PokemonTeamEV evs)
         {
             string evString = string.Empty;
