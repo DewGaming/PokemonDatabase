@@ -459,12 +459,23 @@ label {
 }
 
 .evolutionPokemon {
-  width: 100%
+  width: 100%;
 }
 
-.evolutionPokemon a, .evolutionPokemon a:hover {
-  color: grey !important;
-  text-decoration: none
+.evolutionPokemon a, .evolutionPokemon a:hover, .evolutionPokemon p {
+  color: black !important;
+}
+
+.evolutionPokemon a {
+  text-decoration: none;
+}
+
+.evolutionPokemon a:hover {
+  text-decoration: underline;
+}
+
+.evolutionPokemon p {
+  white-space: normal;
 }
 
 .hide {
@@ -498,7 +509,7 @@ label {
   margin: 0 -10px
 }
 
-.evolutionPokemon a, .evolutionPokemon span {
+.evolutionImage a {
   padding: 0 10px;
 }
 
@@ -555,28 +566,7 @@ h2 {
   border-top-width: 0;
 }
 
-.evolutions thead tr h2 {
-  margin-top: -4px;
-  margin-bottom: 4px
-}
-
-.evolutions tbody th:first-child {
-  padding-right: 10px
-}
-
-.evolutions thead th:first-of-type {
-  min-width: 155px
-}
-
-.evolutions tbody th {
-  text-align: left
-}
-
-.evolutions thead th:last-child {
-  width: 100%
-}
-
-.evolutions tbody th {
+.evolutions th {
   font-size: 1rem
 }
 
