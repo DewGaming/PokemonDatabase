@@ -279,7 +279,6 @@ namespace Pokedex
 
         public PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form, AppConfig appConfig)
         {
-            List<PokemonLocationDetail> pokemonLocationDetails = this.GetObjects<PokemonLocationDetail>().Where(x => x.PokemonId == pokemon.Id).ToList();
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
             {
                 Pokemon = pokemon,
@@ -294,7 +293,6 @@ namespace Pokedex
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete && x.EvolutionPokemon.IsComplete).ToList(),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
                 GamesAvailableIn = this.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
-                PokemonLocationGameDetails = this.GetObjects<PokemonLocationGameDetail>().Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
                 AppConfig = appConfig,
             };
 
@@ -366,33 +364,6 @@ namespace Pokedex
             {
                 pokemon = pokemonList.Find(x => x.Id == a.Id);
                 pokemon.Name = a.Name;
-            }
-
-            return pokemonList;
-        }
-
-        public List<Pokemon> GetPokemonForLocation(int locationId)
-        {
-            Region region = this.GetObjectByPropertyValue<Location>("Id", locationId, "Region").Region;
-            List<Game> games = this.GetObjects<GameRegionDetail>(includes: "Game").Where(x => x.RegionId == region.Id).Select(x => x.Game).ToList();
-            List<Pokemon> pokemonList = new List<Pokemon>();
-            foreach (var g in games)
-            {
-                pokemonList.AddRange(this.GetPokemonGameDetailsByGame(g.Id).Select(x => x.Pokemon).ToList());
-            }
-
-            pokemonList = pokemonList.GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.PokedexNumber).ToList();
-
-            List<Pokemon> altFormList = this.GetAllAltFormsWithFormName().ToList();
-            Pokemon pokemon;
-
-            foreach (var a in altFormList)
-            {
-                if (pokemonList.Find(x => x.Id == a.Id) != null)
-                {
-                    pokemon = pokemonList.Find(x => x.Id == a.Id);
-                    pokemon.Name = a.Name;
-                }
             }
 
             return pokemonList;

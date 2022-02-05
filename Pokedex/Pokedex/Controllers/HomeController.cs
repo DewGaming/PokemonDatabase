@@ -266,17 +266,6 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        [Route("location_availability")]
-        public IActionResult LocationAvailability()
-        {
-            this.dataService.AddPageView("Location Availability Page", this.User.IsInRole("Owner"));
-            List<Game> model = this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, Game.Id", "Game").Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.Now).GroupBy(x => x.Id).Select(x => x.First()).ToList();
-
-            return this.View(model);
-        }
-
-        [AllowAnonymous]
         [Route("pokemon/{pokemonName}/{pokemonId:int}/{generationId:int}")]
         public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
         {
@@ -391,112 +380,6 @@ namespace Pokedex.Controllers
                     return this.RedirectToAction("AllPokemon", "Home");
                 }
             }
-        }
-
-        [AllowAnonymous]
-        [Route("pokemon_locations/{pokemonName}/{pokemonId:int}/{generationId:int}")]
-        public IActionResult PokemonLocationsWithId(string pokemonName, int pokemonId, int generationId)
-        {
-            selectedPokemonId = pokemonId;
-            if (generationId > this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, GameId", "PokemonLocationDetail, Game", "PokemonLocationDetail.PokemonId", pokemonId).Select(x => x.Game).Last().GenerationId)
-            {
-                selectedGenerationId = 0;
-            }
-            else
-            {
-                selectedGenerationId = generationId;
-            }
-
-            return this.RedirectToAction("PokemonLocations", "Home", new { name = pokemonName });
-        }
-
-        [AllowAnonymous]
-        [Route("pokemon_locations/{name}")]
-        public IActionResult PokemonLocations(string name)
-        {
-            this.dataService.AddPageView("Pokemon Locations Page", this.User.IsInRole("Owner"));
-            int pokemonId = selectedPokemonId;
-            int generationId = selectedGenerationId;
-            selectedPokemonId = 0;
-            selectedGenerationId = 0;
-            Pokemon pokemon;
-            name = this.FormatPokemonName(name);
-
-            if (name.Contains('(') && !name.Contains("Nidoran"))
-            {
-                string[] names = name.Split(" (");
-                pokemon = this.dataService.GetPokemonFromNameAndFormName(names[0], names[1].Replace(")", string.Empty));
-            }
-            else
-            {
-                pokemon = this.dataService.GetPokemon(name);
-            }
-
-            if (pokemonId == 0)
-            {
-                pokemonId = pokemon.Id;
-            }
-
-            if (generationId == 0 && this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, GameId", "PokemonLocationDetail, Game", "PokemonLocationDetail.PokemonId", pokemonId).Count() > 0)
-            {
-                generationId = this.dataService.GetObjects<PokemonLocationGameDetail>("Game.ReleaseDate, GameId", "PokemonLocationDetail, Game", "PokemonLocationDetail.PokemonId", pokemonId).Select(x => x.Game).Last().GenerationId;
-            }
-
-            if (pokemon?.IsComplete == true)
-            {
-                List<PokemonLocationDetail> pokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>().Where(x => x.PokemonId == pokemon.Id).ToList();
-                List<Game> gamesAvailableIn = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).Select(x => x.Game).ToList();
-                gamesAvailableIn = gamesAvailableIn.GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
-                List<PokemonLocationGameDetail> pokemonLocation = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "PokemonLocationDetail, PokemonLocationDetail.Location, PokemonLocationDetail.CaptureMethod").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList();
-                PokemonLocationViewModel model = new PokemonLocationViewModel()
-                {
-                    Pokemon = pokemon,
-                    GamesAvailableIn = gamesAvailableIn,
-                    PokemonLocations = pokemonLocation,
-                    PokemonTimes = this.dataService.GetObjects<PokemonLocationTimeDetail>("TimeId", "PokemonLocationDetail, Time").Where(x => x.PokemonLocationDetail.PokemonId == pokemon.Id).ToList(),
-                    PokemonSeasons = this.dataService.GetObjects<PokemonLocationSeasonDetail>("SeasonId", "PokemonLocationDetail, Season").Where(x => x.PokemonLocationDetail.PokemonId == pokemon.Id).ToList(),
-                    PokemonWeathers = this.dataService.GetObjects<PokemonLocationWeatherDetail>("WeatherId", "PokemonLocationDetail, Weather").Where(x => x.PokemonLocationDetail.PokemonId == pokemon.Id).ToList(),
-                    PokemonId = pokemonId,
-                    GenerationId = generationId,
-                    AppConfig = this.appConfig,
-                };
-
-                return this.View(model);
-            }
-            else
-            {
-                return this.RedirectToAction("AllPokemon", "Home");
-            }
-        }
-
-        [AllowAnonymous]
-        [Route("location_evaluator/{locationId:int}/{gameId:int}")]
-        public IActionResult PokemonByLocations(int locationId, int gameId)
-        {
-            this.dataService.AddPageView("Location Evaluator Page", this.User.IsInRole("Owner"));
-            List<PokemonLocationDetail> pokemonLocationDetails = this.dataService.GetObjects<PokemonLocationDetail>().Where(x => x.LocationId == locationId).ToList();
-            List<PokemonLocationGameDetail> pokemonLocationGames = this.dataService.GetObjects<PokemonLocationGameDetail>("PokemonLocationDetail.Pokemon.PokedexNumber, PokemonLocationDetail.PokemonId", "PokemonLocationDetail, PokemonLocationDetail.Pokemon, PokemonLocationDetail.CaptureMethod, PokemonLocationDetail.Location, PokemonLocationDetail.CaptureMethod", "GameId", gameId).Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList();
-
-            foreach (var p in pokemonLocationGames)
-            {
-                if (this.dataService.CheckIfAltForm(p.PokemonLocationDetail.PokemonId))
-                {
-                    p.PokemonLocationDetail.Pokemon.Name = this.dataService.GetAltFormWithFormName(p.PokemonLocationDetail.PokemonId).Name;
-                }
-            }
-
-            LocationEvaluatorViewModel model = new LocationEvaluatorViewModel()
-            {
-                PokemonLocationGames = pokemonLocationGames,
-                PokemonTimes = this.dataService.GetObjects<PokemonLocationTimeDetail>("TimeId", "PokemonLocationDetail, Time").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                PokemonSeasons = this.dataService.GetObjects<PokemonLocationSeasonDetail>("SeasonId", "PokemonLocationDetail, Season").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                PokemonWeathers = this.dataService.GetObjects<PokemonLocationWeatherDetail>("WeatherId", "PokemonLocationDetail, Weather").Where(x => pokemonLocationDetails.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                Location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId),
-                Game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId),
-                AppConfig = this.appConfig,
-            };
-
-            return this.View(model);
         }
 
         [AllowAnonymous]

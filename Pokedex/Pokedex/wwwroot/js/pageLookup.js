@@ -95,20 +95,6 @@ function lookupGeneration(generationId) {
   });
 }
 
-function lookupRegion(regionId) {
-  $('button').each(function () {
-    $(this).removeClass('active');
-  });
-
-  $('.locationList').removeClass('active');
-  $('.locationList > .grid-container').empty();
-  $('button#Region' + regionId).addClass('active');
-
-  $('.grid-container').load('/get-location-by-region/' + regionId, function () {
-    $('.locationList').addClass('active');
-  });
-}
-
 function lookupAvailableGame(gameId) {
   if (!$('.active').is($('#Game' + gameId))) {
     $('button').each(function () {
@@ -127,26 +113,6 @@ function lookupAvailableGame(gameId) {
       $('.updater').append($('<a>').attr('href', 'admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
 
       $('.pokemonList').addClass('active');
-    });
-  }
-}
-
-function lookupAvailableLocations(gameId) {
-  if (!$('.active').is($('#Game' + gameId))) {
-    $('button').each(function () {
-      $(this).removeClass('active');
-    });
-
-    $('.locationHeader').remove();
-
-    $('.locationList').removeClass('active');
-    $('.locationList > .grid-container').empty();
-    $('button#Game' + gameId).addClass('active');
-
-    $('.grid-container').load('/get-available-location-by-game/' + gameId, function () {
-      $('.totalLocations').prepend($('<h5>').addClass('locationHeader').text('Click On A Box To View That Location\'s Pokmeon Data.'));
-
-      $('.locationList').addClass('active');
     });
   }
 }

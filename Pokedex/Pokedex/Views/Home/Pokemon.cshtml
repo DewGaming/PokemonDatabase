@@ -10,7 +10,6 @@
     ViewBag.Image = @Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.PokemonImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"));
     AdminPokemonViewModel adminPokemon = null;
     Evolution preEvolution = null;
-    bool catchable = false;
     int[] generations = null;
     if (this.User.IsInRole("Owner"))
     {
@@ -28,10 +27,6 @@
     <style>
         .surroundingPokemon {
             margin: 5px 0;
-        }
-
-        .locationButton {
-            margin-top: 10px;
         }
 
         .mb-4 {
@@ -204,7 +199,6 @@
     {
         preEvolution = null;
         evolutions = new List<Evolution>();
-        catchable = false;
         if (item.PreEvolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g).Count() > 0)
         {
             preEvolution = item.PreEvolutions.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g);
@@ -636,15 +630,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             @(" / ")
                                         }
-                                        @if (item.PokemonLocationGameDetails.Find(x => x.GameId == gameList[j].Id) != null)
-                                        {
-                                            catchable = true;
-                                            <b>@gameList[j].Name</b>
-                                        }
-                                        else
-                                        {
-                                            @gameList[j].Name
-                                        }
+                                        @gameList[j].Name
                                     }
                                 </td>
                                 @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
@@ -657,15 +643,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 @(" / ")
                                             }
-                                            @if (item.PokemonLocationGameDetails.Find(x => x.GameId == gameList[j].Id) != null)
-                                            {
-                                                catchable = true;
-                                                <b>@gameList[j].Name</b>
-                                            }
-                                            else
-                                            {
-                                                @gameList[j].Name
-                                            }
+                                            @gameList[j].Name
                                         }
                                     </td>
                                 }
@@ -677,10 +655,6 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         }
                     </tbody>
                 </table>
-                @if (catchable)
-                {
-                    <a target="_blank" class="locationButton btn btn-primary" href="@this.Url.Action("PokemonLocationsWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Pokemon.Id, generationId = @g })" role="button">View In-Game Locations</a>
-                }
             </div>
             <div class="pokemonInfo pokemonTraining pokemonTables">
                 <h2>Training</h2>

@@ -2,14 +2,8 @@
     display: none;
 }
 
-.generations button, .locationEvaluator button {
+.generations button {
     border-top: 0;
-}
-
-.gameLocation, .locationDiv {
-    width: 100%;
-    max-width: 33.5rem;
-    margin: 0 15px 10px;
 }
 
 .pokemonImage {
@@ -24,15 +18,4 @@
     filter: url("data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='0.5' dy='0.5' result='offsetblur'/><feFlood flood-color='rgba(2,2,2,1)'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow") !important;
     -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0.5, OffY=0.5, Color='#222')" !important;
     filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0.5, OffY=0.5, Color='#222')" !important;
-}
-
-.pokemonLocationData {
-    display: flex;
-    justify-content: center;
-}
-
-@media (max-width: 782px) {
-    .pokemonLocationData {
-        flex-wrap: wrap;
-    }
 }

@@ -46,12 +46,12 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations, .games, .locationEvaluator {
+.generations, .games {
   display: flex;
   flex-wrap: wrap;
 }
 
-.generations, .locationEvaluator {
+.generations {
   margin-bottom: 10px;
 }
 
@@ -59,11 +59,11 @@
   margin: -10px 0 10px;
 }
 
-.generations.active, .games.active, .locationEvaluator.active {
+.generations.active, .games.active.active {
   display: flex;
 }
 
-.generations button, .games button, .locationEvaluator button {
+.generations button, .games button button {
   list-style: none;
   flex: 1 1 0;
   min-width: auto;
@@ -77,7 +77,7 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations button.active, .locationEvaluator button.active {
+.generations button.active button.active {
   background-color: #fff;
   border-bottom-color: #fff;
   color: #404040;
@@ -89,7 +89,7 @@
   color: #404040;
 }
 
-.generations button:focus, .games button:focus, .locationEvaluator button:focus {
+.generations button:focus, .games button:focus button:focus {
   outline-width: 0;
 }
 

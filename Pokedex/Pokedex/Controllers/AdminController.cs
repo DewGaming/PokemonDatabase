@@ -50,71 +50,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("locations")]
-        public IActionResult Locations()
-        {
-            List<Region> model = this.dataService.GetObjects<Region>("GenerationId, Id");
-
-            return this.View(model);
-        }
-
         [Route("capture_methods")]
         public IActionResult CaptureMethods()
         {
             List<CaptureMethod> model = this.dataService.GetObjects<CaptureMethod>("Name");
-
-            return this.View(model);
-        }
-
-        [Route("times")]
-        public IActionResult Times()
-        {
-            List<Time> model = this.dataService.GetObjects<Time>("Name");
-
-            return this.View(model);
-        }
-
-        [Route("weathers")]
-        public IActionResult Weathers()
-        {
-            List<Weather> model = this.dataService.GetObjects<Weather>("Name");
-
-            return this.View(model);
-        }
-
-        [Route("seasons")]
-        public IActionResult Seasons()
-        {
-            List<Season> model = this.dataService.GetObjects<Season>();
-
-            return this.View(model);
-        }
-
-        [Route("pokemon_availability/{locationId:int}")]
-        public IActionResult PokemonLocationDetails(int locationId)
-        {
-            List<PokemonLocationDetail> pokemonList = this.dataService.GetObjects<PokemonLocationDetail>("PokemonId", "Pokemon, CaptureMethod").Where(x => x.LocationId == locationId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
-            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName().ToList();
-            Pokemon pokemon;
-
-            foreach (var a in altFormList)
-            {
-                if (pokemonList.Find(x => x.PokemonId == a.Id) != null)
-                {
-                    pokemon = pokemonList.Find(x => x.PokemonId == a.Id).Pokemon;
-                    pokemon.Name = a.Name;
-                }
-            }
-
-            PokemonLocationDetailAdminViewModel model = new PokemonLocationDetailAdminViewModel()
-            {
-                AllPokemon = pokemonList,
-                AllPokemonLocationGameDetails = this.dataService.GetObjects<PokemonLocationGameDetail>(includes: "Game").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                AllPokemonLocationSeasonDetails = this.dataService.GetObjects<PokemonLocationSeasonDetail>(includes: "Season").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                AllPokemonLocationTimeDetails = this.dataService.GetObjects<PokemonLocationTimeDetail>(includes: "Time").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                AllPokemonLocationWeatherDetails = this.dataService.GetObjects<PokemonLocationWeatherDetail>(includes: "Weather").Where(x => pokemonList.Any(y => y.Id == x.PokemonLocationDetailId)).ToList(),
-                Location = this.dataService.GetObjectByPropertyValue<Location>("Id", locationId, "Region"),
-            };
 
             return this.View(model);
         }
