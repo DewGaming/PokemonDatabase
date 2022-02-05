@@ -81,14 +81,6 @@
         .cursorHelp:hover {
             text-decoration: underline;
         }
-
-        .innerTable th, .innerTable td {
-            border-width: 0;
-        }
-
-        .innerTable td {
-            margin-top: -5px;
-        }
     </style>
     @if (this.User.IsInRole("Owner"))
     {
@@ -806,21 +798,15 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             }
                                         </th>
                                         <td>
-                                            <table class="innerTable">
-                                                <tr>
-                                                    <th>
-                                                        @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
-                                                        {
-                                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
-                                                        }
-                                                        <p>@preEvolution.EvolutionMethod.Name@(@preEvolution.EvolutionDetails != null ? string.Concat(" (", @preEvolution.EvolutionDetails, ")") : string.Empty)</p>
-                                                    </th>
-                                                </tr>
-                                            </table>
+                                            @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
+                                            }
+                                            <p>@preEvolution.EvolutionMethod.Name@(@preEvolution.EvolutionDetails != null ? string.Concat(" (", @preEvolution.EvolutionDetails, ")") : string.Empty)</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -902,22 +888,16 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             }
                                         </th>
                                         <td>
-                                            <table class="innerTable">
-                                                <tr>
-                                                    <th>
-                                                        @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
-                                                        {
+                                            @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
+                                            {
 
-                                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">@evolution.EvolutionPokemon.Name</a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">@evolution.EvolutionPokemon.Name</a>
-                                                        }
-                                                        <p>@evolution.EvolutionMethod.Name@(evolution.EvolutionDetails != null ? string.Concat(" (", @evolution.EvolutionDetails, ")") : string.Empty)</p>
-                                                    </th>
-                                                </tr>
-                                            </table>
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">@evolution.EvolutionPokemon.Name</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">@evolution.EvolutionPokemon.Name</a>
+                                            }
+                                            <p>@evolution.EvolutionMethod.Name@(evolution.EvolutionDetails != null ? string.Concat(" (", @evolution.EvolutionDetails, ")") : string.Empty)</p>
                                         </td>
                                     </tr>
                                 }
