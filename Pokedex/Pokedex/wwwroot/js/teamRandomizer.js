@@ -357,6 +357,12 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
                 $("input[name=typeSelection][value=" + typeId + "]").prop('checked', true);
 
+                $('.typeRadioOption input').off()
+
+                $('.typeRadioOption input').on('click', function () {
+                    checkTyping();
+                });
+
                 megaCheck = checkMegaCheck();
                 altCheck = checkAltFormChecks();
                 legendCheck = checkLegendaryChecks();
@@ -365,6 +371,21 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             .fail(function () {
                 alert("Failed To Get Generations!");
             });
+    }, checkTyping = function () {
+        var boxChecked = false;
+        if ($('.typeRadioOption input:checked').val() == "0") {
+            boxChecked = true;
+        }
+
+        if (!boxChecked) {
+            if ($('.noRepeatTypeBoolCheckbox').is(':visible')) {
+                $(".noRepeatTypeBoolCheckbox").hide();
+                $("#noRepeatTypeBool").prop('checked', false);
+            }
+        }
+        else {
+            $(".noRepeatTypeBoolCheckbox").show();
+        }
     }, checkOtherOptions = function () {
         var isVisible = 0;
 
@@ -387,6 +408,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         checkMegaCheck();
         checkGigantamaxCheck();
         checkUltraBeasts();
+        checkTyping();
         checkOtherOptions();
         generatorMenuCheck();
     };
@@ -421,6 +443,10 @@ $('.gigantamaxFormCheckbox').on('click', function () {
 
 $('.gameRadioOption input').on('click', function () {
     refreshGenerationsByGame();
+});
+
+$('.typeRadioOption input').on('click', function () {
+    checkTyping();
 });
 
 $(window).on('resize', function () {
@@ -477,7 +503,7 @@ $('.generatorButton').on('click', function () {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'selectedGens': selectedGens, 'selectedGame': selectedGame, 'selectedType': selectedType, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'randomAbility': $("#randomAbilityBool").is(":checked") }
+        data: { 'selectedGens': selectedGens, 'selectedGame': selectedGame, 'selectedType': selectedType, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'randomAbility': $("#randomAbilityBool").is(":checked"), 'noRepeatType': $("#noRepeatTypeBool").is(":checked") }
     })
         .done(function (data) {
             pokemonList = data.allPokemonChangedNames;

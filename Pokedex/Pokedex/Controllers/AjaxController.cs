@@ -980,7 +980,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility)
+        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1392,6 +1392,39 @@ namespace Pokedex.Controllers
                                 if (allPokemon.Exists(x => x.Id == p.Id))
                                 {
                                     allPokemon.Remove(allPokemon.Find(x => x.Id == p.Id));
+                                }
+                            }
+                        }
+
+                        if (noRepeatType)
+                        {
+                            List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "PrimaryType, SecondaryType");
+                            List<DataAccess.Models.Type> selectedPokemonTyping = new List<DataAccess.Models.Type>()
+                            {
+                                pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id).PrimaryType,
+                            };
+
+                            if (pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id).SecondaryType != null)
+                            {
+                                selectedPokemonTyping.Add(pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id).SecondaryType);
+                            }
+
+                            foreach (var t in selectedPokemonTyping)
+                            {
+                                if (pokemonTypeDetails.Exists(x => x.PrimaryTypeId == t.Id))
+                                {
+                                    foreach (var ptd in pokemonTypeDetails.Where(x => x.PrimaryTypeId == t.Id))
+                                    {
+                                        allPokemon.Remove(allPokemon.Find(x => x.Id == ptd.PokemonId));
+                                    }
+                                }
+
+                                if (pokemonTypeDetails.Exists(x => x.SecondaryTypeId == t.Id))
+                                {
+                                    foreach (var ptd in pokemonTypeDetails.Where(x => x.SecondaryTypeId == t.Id))
+                                    {
+                                        allPokemon.Remove(allPokemon.Find(x => x.Id == ptd.PokemonId));
+                                    }
                                 }
                             }
                         }
