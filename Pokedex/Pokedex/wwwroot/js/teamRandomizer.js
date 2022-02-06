@@ -237,7 +237,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $('.' + gen + ' input').prop('checked', true);
                 })
 
-                if ($.inArray(selectedGame, ['1', '2']) != -1) {
+                if ($.inArray(selectedGame, ['1', '2', '37']) != -1) {
                     $("#alternateForms").hide();
                     $(".randomAbilityCheckbox").hide();
                     $("#randomAbilityBool").prop('checked', false);
