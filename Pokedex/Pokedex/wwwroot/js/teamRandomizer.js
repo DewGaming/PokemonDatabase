@@ -366,6 +366,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
                 $('.typeRadioOption input').on('click', function () {
                     checkTyping();
+                    checkOtherOptions();
                 });
 
                 megaCheck = checkMegaCheck();
