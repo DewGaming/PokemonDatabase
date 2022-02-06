@@ -238,9 +238,15 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 })
 
                 if ($.inArray(selectedGame, ['1', '2', '37']) != -1) {
-                    $("#alternateForms").hide();
                     $(".randomAbilityCheckbox").hide();
                     $("#randomAbilityBool").prop('checked', false);
+                }
+                else {
+                    $(".randomAbilityCheckbox").show();
+                }
+
+                if ($.inArray(selectedGame, ['1', '2']) != -1) {
+                    $("#alternateForms").hide();
                     $(".otherFormCheckbox").hide();
                     $("#Other").prop('checked', false);
                     $(".onePokemonFormBoolCheckbox").hide();
@@ -248,7 +254,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 }
                 else {
                     $("#alternateForms").show();
-                    $(".randomAbilityCheckbox").show();
                     $(".otherFormCheckbox").show();
                     $(".onePokemonFormBoolCheckbox").show();
                 }
@@ -447,6 +452,7 @@ $('.gameRadioOption input').on('click', function () {
 
 $('.typeRadioOption input').on('click', function () {
     checkTyping();
+    checkOtherOptions();
 });
 
 $(window).on('resize', function () {
