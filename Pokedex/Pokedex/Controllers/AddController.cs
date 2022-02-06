@@ -462,28 +462,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_capture_method")]
-        public IActionResult CaptureMethod()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_capture_method")]
-        public IActionResult CaptureMethod(CaptureMethod captureMethod)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddObject(captureMethod);
-
-            return this.RedirectToAction("CaptureMethods", "Admin");
-        }
-
-        [HttpGet]
         [Route("add_ability")]
         public IActionResult Ability()
         {

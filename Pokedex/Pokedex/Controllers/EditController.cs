@@ -1104,32 +1104,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_capture_method/{id:int}")]
-        public IActionResult CaptureMethod(int id)
-        {
-            CaptureMethod model = this.dataService.GetObjectByPropertyValue<CaptureMethod>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_capture_method/{id:int}")]
-        public IActionResult CaptureMethod(CaptureMethod captureMethod)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                CaptureMethod model = this.dataService.GetObjectByPropertyValue<CaptureMethod>("Id", captureMethod.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(captureMethod);
-
-            return this.RedirectToAction("CaptureMethods", "Admin");
-        }
-
-        [HttpGet]
         [Route("edit_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {

@@ -119,25 +119,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_capture_method/{id:int}")]
-        public IActionResult CaptureMethod(int id)
-        {
-            CaptureMethod model = this.dataService.GetObjectByPropertyValue<CaptureMethod>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_capture_method/{id:int}")]
-        public IActionResult CaptureMethod(CaptureMethod captureMethod)
-        {
-            this.dataService.DeleteObject<CaptureMethod>(captureMethod.Id);
-
-            return this.RedirectToAction("CaptureMethods", "Admin");
-        }
-
-        [HttpGet]
         [Route("delete_status/{id:int}")]
         public IActionResult Status(int id)
         {

@@ -50,14 +50,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("capture_methods")]
-        public IActionResult CaptureMethods()
-        {
-            List<CaptureMethod> model = this.dataService.GetObjects<CaptureMethod>("Name");
-
-            return this.View(model);
-        }
-
         [Route("games")]
         public IActionResult Games()
         {

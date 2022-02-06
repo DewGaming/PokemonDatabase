@@ -3,7 +3,7 @@
     if (this.User.IsInRole("Admin") || this.User.IsInRole("Owner"))
     {
         dropdownWidth = "37rem";
-        dropdownHeight = "24.75rem";
+        dropdownHeight = "23rem";
         columnWidth = "33.3%";
     }
     else
@@ -49,7 +49,6 @@
                     <a class="dropdown-item" href="@this.Url.Action("BaseHappinesses", "Admin")">Base Happiness</a>
                     <a class="dropdown-item" href="@this.Url.Action("BattleItems", "Admin")">Battle Items</a>
                     <a class="dropdown-item" href="@this.Url.Action("CaptureRates", "Admin")">Capture Rates</a>
-                    <a class="dropdown-item" href="@this.Url.Action("CaptureMethods", "Admin")">Capture Methods</a>
                     <a class="dropdown-item" href="@this.Url.Action("Classifications", "Admin")">Classifications</a>
                     <a class="dropdown-item" href="@this.Url.Action("CommentCategories", "Admin")">Comment Categories</a>
                     <a class="dropdown-item" href="@this.Url.Action("CommentPages", "Admin")">Comment Pages</a>
@@ -57,10 +56,10 @@
                     <a class="dropdown-item" href="@this.Url.Action("EggGroups", "Admin")">Egg Groups</a>
                     <a class="dropdown-item" href="@this.Url.Action("ExperienceGrowths", "Admin")">Experience Growths</a>
                     <a class="dropdown-item" href="@this.Url.Action("EvolutionMethods", "Admin")">Evolution Methods</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Forms", "Admin")">Forms</a>
                 </div>
                 <div class="column" style="width: 36.7%">
                     <a class="dropdown-item" href="@this.Url.Action("FormItems", "Admin")">Form Items</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Forms", "Admin")">Forms</a>
                     <a class="dropdown-item" href="@this.Url.Action("Games", "Admin")">Games</a>
                     <a class="dropdown-item" href="@this.Url.Action("GenderRatios", "Admin")">Gender Ratios</a>
                     <a class="dropdown-item" href="@this.Url.Action("Generations", "Admin")">Generations</a>
