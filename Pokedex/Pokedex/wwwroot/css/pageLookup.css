@@ -46,7 +46,7 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations, .games {
+.generations {
   display: flex;
   flex-wrap: wrap;
 }
@@ -55,15 +55,11 @@
   margin-bottom: 10px;
 }
 
-.games {
-  margin: -10px 0 10px;
-}
-
-.generations.active, .games.active.active {
+.generations.active {
   display: flex;
 }
 
-.generations button, .games button button {
+.generations button {
   list-style: none;
   flex: 1 1 0;
   min-width: auto;
@@ -77,19 +73,13 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations button.active button.active {
+.generations button.active {
   background-color: #fff;
   border-bottom-color: #fff;
   color: #404040;
 }
 
-.games button.active {
-  background-color: #fff;
-  border-top-color: #fff;
-  color: #404040;
-}
-
-.generations button:focus, .games button:focus button:focus {
+.generations button:focus {
   outline-width: 0;
 }
 
