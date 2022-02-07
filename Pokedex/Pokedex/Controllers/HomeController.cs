@@ -299,7 +299,13 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemon.Name), this.User.IsInRole("Owner"));
+                string pokemonName = pokemon.Name;
+                if (this.dataService.CheckIfAltForm(pokemonId))
+                {
+                    pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
+                }
+
+                this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
                 if (pokemonId == 0)
                 {
                     pokemonId = pokemon.Id;
