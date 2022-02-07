@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
@@ -123,6 +123,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("AllPokemon", "Home");
         }
 
+        /// <summary>
+        /// The page that lists off all of the completed pokemon.
+        /// </summary>
+        /// <returns>Returns the all pokemon's page.</returns>
         [AllowAnonymous]
         [Route("pokemon")]
         public IActionResult AllPokemon()
@@ -133,6 +137,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page that allows users to generate randomized teams.
+        /// </summary>
+        /// <returns>Returns the team randomizer's page.</returns>
         [AllowAnonymous]
         [Route("team_randomizer")]
         public IActionResult TeamRandomizer()
@@ -199,6 +207,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page that is used to evaluate the different possible pokemon type combinations. This will also showcase any completed pokemon with the selected type combination.
+        /// </summary>
+        /// <returns>Returns the typing evaluator page.</returns>
         [AllowAnonymous]
         [Route("typing_evaluator")]
         public IActionResult TypingEvaluator()
@@ -213,6 +225,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page that is used to evaluate the different abilities, providing a description of the selected ability and showcasing any completed pokemon with said ability.
+        /// </summary>
+        /// <returns>Returns the ability evaluator page.</returns>
         [AllowAnonymous]
         [Route("ability_evaluator")]
         public IActionResult AbilityEvaluator()
@@ -233,6 +249,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page that is used to evaluate the pokemon available for use in day cares.
+        /// </summary>
+        /// <returns>Returns the day care evaluator.</returns>
         [AllowAnonymous]
         [Route("day_care_evaluator")]
         public IActionResult DayCareEvaluator()
@@ -258,6 +278,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page that is used to showcase what pokemon are available for use in a generation. This is not showing what pokemon are catchable in a game.
+        /// </summary>
+        /// <returns>Returns the game availability page.</returns>
         [AllowAnonymous]
         [Route("game_availability")]
         public IActionResult GameAvailability()
@@ -268,6 +292,13 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The method that is used to specify a generation and alternate form for the pokemon page.
+        /// </summary>
+        /// <param name="pokemonName">The name of the pokemon.</param>
+        /// <param name="pokemonId">The ID of the pokemon.</param>
+        /// <param name="generationId">The ID of the generation.</param>
+        /// <returns>Returns the pokemon page's method.</returns>
         [AllowAnonymous]
         [Route("pokemon/{pokemonName}/{pokemonId:int}/{generationId:int}")]
         public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
@@ -285,6 +316,11 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Home", new { name = pokemonName });
         }
 
+        /// <summary>
+        /// The page that is used to showcase all of the information pertaining to a particular pokemon. This includes any alternate forms relating to the selected pokemon.
+        /// </summary>
+        /// <param name="name">The name of the pokemon.</param>
+        /// <returns>Returns the pokemon's page.</returns>
         [AllowAnonymous]
         [Route("pokemon/{Name}")]
         public IActionResult Pokemon(string name)
@@ -390,6 +426,10 @@ namespace Pokedex.Controllers
             }
         }
 
+        /// <summary>
+        /// The page that is used to showcase the different type charts throughout the generations.
+        /// </summary>
+        /// <returns>The type chart page.</returns>
         [AllowAnonymous]
         [Route("type_chart")]
         public IActionResult TypeChart()
@@ -405,6 +445,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page that is used to calculate the capture chance of a pokemon.
+        /// </summary>
+        /// <returns>The capture calculator page.</returns>
         [AllowAnonymous]
         [Route("capture_calculator")]
         public IActionResult CaptureCalculator()
@@ -424,6 +468,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The page used for users to create comments regarding the website.
+        /// </summary>
+        /// <returns>Returns the comment page.</returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("comment")]
@@ -438,6 +486,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Verifies if the comment is valid, then adds it to the database and sends the owner an email.
+        /// </summary>
+        /// <param name="comment">The comment the user made.</param>
+        /// <returns>Returns the main page.</returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("comment")]
@@ -482,6 +535,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Only viewed if the user gets an error while using the website. An email with the exact error will be sent to the owner's specified email.
+        /// </summary>
+        /// <returns>Returns the error page.</returns>
         [AllowAnonymous]
         [Route("error")]
         public IActionResult Error()

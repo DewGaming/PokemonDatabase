@@ -344,6 +344,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Clears the database of visits to a particular page.
+        /// </summary>
+        /// <param name="id">The page's id.</param>
+        /// <returns>The page stat page.</returns>
         [Route("clear_page_views/{id:int}")]
         public IActionResult ClearPageStats(int id)
         {
