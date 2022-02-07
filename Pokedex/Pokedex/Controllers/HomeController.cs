@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
@@ -299,7 +299,6 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.dataService.AddPageView("Pokemon Page", this.User.IsInRole("Owner"));
                 this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemon.Name), this.User.IsInRole("Owner"));
                 if (pokemonId == 0)
                 {
