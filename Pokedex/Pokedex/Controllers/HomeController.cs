@@ -225,7 +225,10 @@ namespace Pokedex.Controllers
             };
 
             // Removes the first and second generation from the list, as abilities were introduced in the third generation.
-            model.AllGenerations.RemoveRange(0, 2);
+            foreach (var g in model.AllGenerations.Where(x => x.Id == 1 || x.Id == 2))
+            {
+                model.AllGenerations.Remove(g);
+            }
 
             return this.View(model);
         }
