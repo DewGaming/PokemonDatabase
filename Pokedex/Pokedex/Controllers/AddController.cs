@@ -484,28 +484,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_comment_category")]
-        public IActionResult CommentCategory()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_comment_category")]
-        public IActionResult CommentCategory(CommentCategory commentCategory)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddObject(commentCategory);
-
-            return this.RedirectToAction("CommentCategories", "Admin");
-        }
-
-        [HttpGet]
         [Route("add_pokeball")]
         public IActionResult Pokeball()
         {
@@ -560,28 +538,6 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(pokeballCatchModifierDetail);
 
             return this.RedirectToAction("Pokeballs", "Admin");
-        }
-
-        [HttpGet]
-        [Route("add_comment_page")]
-        public IActionResult CommentPage()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_comment_page")]
-        public IActionResult CommentPage(CommentPage commentPage)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddObject(commentPage);
-
-            return this.RedirectToAction("CommentPages", "Admin");
         }
 
         [HttpGet]

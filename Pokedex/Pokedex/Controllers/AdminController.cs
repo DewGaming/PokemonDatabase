@@ -63,32 +63,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("comment_categories")]
-        public IActionResult CommentCategories()
-        {
-            CommentViewModel model = new CommentViewModel()
-            {
-                AllComments = this.dataService.GetObjects<Comment>(includes: "Commentor, Category, Page"),
-                AllCategories = this.dataService.GetObjects<CommentCategory>(),
-                AllPages = this.dataService.GetCommentPages(),
-            };
-
-            return this.View(model);
-        }
-
-        [Route("comment_pages")]
-        public IActionResult CommentPages()
-        {
-            CommentViewModel model = new CommentViewModel()
-            {
-                AllComments = this.dataService.GetObjects<Comment>(includes: "Commentor, Category, Page"),
-                AllCategories = this.dataService.GetObjects<CommentCategory>(),
-                AllPages = this.dataService.GetCommentPages(),
-            };
-
-            return this.View(model);
-        }
-
         [Route("type")]
         public IActionResult Types()
         {

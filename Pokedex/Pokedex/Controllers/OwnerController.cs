@@ -186,11 +186,7 @@ namespace Pokedex.Controllers
         [Route("comments")]
         public IActionResult Comments()
         {
-            AllCommentsViewModel model = new AllCommentsViewModel()
-            {
-                AllComments = this.dataService.GetObjects<Comment>(includes: "Commentor, Category, Page"),
-                AllCategories = this.dataService.GetObjects<CommentCategory>(),
-            };
+            List<Comment> model = this.dataService.GetObjects<Comment>();
 
             return this.View(model);
         }

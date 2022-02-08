@@ -1450,58 +1450,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_comment_page/{id:int}")]
-        public IActionResult CommentPage(int id)
-        {
-            CommentPage model = this.dataService.GetObjectByPropertyValue<CommentPage>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_comment_page/{id:int}")]
-        public IActionResult CommentPage(CommentPage page)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                CommentPage model = this.dataService.GetObjectByPropertyValue<CommentPage>("Id", page.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(page);
-
-            return this.RedirectToAction("CommentPages", "Admin");
-        }
-
-        [HttpGet]
-        [Route("edit_comment_category/{id:int}")]
-        public IActionResult CommentCategory(int id)
-        {
-            CommentCategory model = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_comment_category/{id:int}")]
-        public IActionResult CommentCategory(CommentCategory category)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                CommentCategory model = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", category.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(category);
-
-            return this.RedirectToAction("CommentCategories", "Admin");
-        }
-
-        [HttpGet]
         [Route("edit_evolution/{pokemonId:int}/{generationId:int}")]
         public IActionResult Evolution(int pokemonId, int generationId)
         {

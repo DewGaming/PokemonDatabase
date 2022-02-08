@@ -1,88 +1,42 @@
-@model Pokedex.Models.AllCommentsViewModel;
+@model List<Pokedex.DataAccess.Models.Comment>;
 @{
     Layout = "_Layout";
-    string GrabCommentCount(string pageName)
-    {
-        string commentTotalString = string.Empty;
-        if (Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == pageName).ToList().Count() > 0)
+}
+
+@if (@Model.Where(x => !x.IsCompleted).ToList().Count() > 0)
+{
+    <table class="table">
+        <tr>
+            <th class="col-md-9" scope="col">Comment</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model.Where(x => !x.IsCompleted))
         {
-            commentTotalString = string.Concat(" (", Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == pageName).ToList().Count().ToString(), " Comment");
-            if (Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == pageName).ToList().Count() > 1)
-            {
-                commentTotalString = string.Concat(commentTotalString, "s");
-            }
-            commentTotalString = string.Concat(commentTotalString, ")");
-        }
-
-        return commentTotalString;
-    }
-}
-
-@section styles
-{
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-}
-
-@section scripts
-{
-    <script src="/js/pageLookup.js"></script>
-}
-
-<div class="pageButtons">
-    @foreach (var category in Model.AllCategories)
-    {
-        <button class="@(category.Name.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())" onclick="lookupPage('@(category.Name.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())')">@(category.Name)<br>@(GrabCommentCount(@category.Name))</button>
-    }
-</div>
-@foreach (var category in Model.AllCategories)
-{
-    <div class="page" id="@(category.Name.Replace(" ", string.Empty).Replace("/", string.Empty).ToLower())">
-        @if (@Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == category.Name).ToList().Count() > 0)
-        {
-            <table class="table">
-                <tr>
-                    <th class="col-md-9" scope="col">Comment</th>
-                    <th scope="col">Actions</th>
-                </tr>
-                @foreach (var item in Model.AllComments.Where(x => !x.IsCompleted && x.Category.Name == category.Name))
+            <tr>
+                <td>
+                    @("New Comment")
+                    @if (item.Commentor != null)
+                    {
+                        @(string.Concat(" by ", @item.Commentor.Username))
+                    }
+                    <br>
+                    <br>
+                    @item.Name
+                </td>
+                <td>
+                    <a class="btn btn-primary" href="@this.Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
+                @if (item.CommentorId != null && item.CommentorId != 1)
                 {
-                    <tr>
-                        <td>
-                            @(string.Concat(@item.Category.Name, " for ", @item.Page.Name))
-                            @if (@item.PokemonName != null)
-                            {
-                                @(" (")<a href="@this.Url.Action("Pokemon", "Home", new { Name = item.PokemonName.Replace(": ", "_").Replace(' ', '_').ToLower() })">@item.PokemonName</a>@(")")
-                            }
-                            @if (@item.OtherPage != null)
-                            {
-                                @(" (" + item.OtherPage + ")")
-                            }
-
-                            @if (item.Commentor != null)
-                            {
-                                @(string.Concat(" by ", @item.Commentor.Username))
-                            }
-                            <br>
-                            <br>
-                            @item.Name
-                        </td>
-
-                        <td>
-                            <a class="btn btn-primary" href="@this.Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
-                        @if (item.CommentorId != null && item.CommentorId != 1)
-                        {
-                            <br>
-                            <br>
-                                <a class="btn btn-primary" href="@this.Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
-                        }
-                        </td>
-                    </tr>
+                    <br>
+                    <br>
+                        <a class="btn btn-primary" href="@this.Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
                 }
-            </table>
+                </td>
+            </tr>
         }
-        else
-        {
-            <div class="noUsers">There are no comments at all!</div>
-        }
-    </div>
+    </table>
+}
+else
+{
+    <div class="noUsers">There are no comments at all!</div>
 }

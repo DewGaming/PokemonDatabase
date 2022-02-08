@@ -478,11 +478,7 @@ namespace Pokedex.Controllers
         public IActionResult Comment()
         {
             this.dataService.AddPageView("Comment Page", this.User.IsInRole("Owner"));
-            CommentViewModel model = new CommentViewModel()
-            {
-                AllCategories = this.dataService.GetObjects<CommentCategory>(),
-                AllPages = this.dataService.GetCommentPages(),
-            };
+            Comment model = new Comment();
             return this.View(model);
         }
 
@@ -498,26 +494,8 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                CommentViewModel model = new CommentViewModel()
-                {
-                    AllCategories = this.dataService.GetObjects<CommentCategory>(),
-                    AllPages = this.dataService.GetCommentPages(),
-                };
+                Comment model = new Comment();
                 return this.View(model);
-            }
-
-            if (!string.IsNullOrEmpty(comment.PokemonName))
-            {
-                Pokemon pokemon = this.dataService.GetPokemon(this.FormatPokemonName(comment.PokemonName));
-                if (pokemon == null)
-                {
-                    comment.PokemonName = null;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(comment.PokemonName) && comment.PageId != 3)
-            {
-                comment.PageId = 3;
             }
 
             if (this.User.Identity.Name != null)
@@ -526,9 +504,6 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.AddObject(comment);
-
-            comment.Category = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", comment.CategoryId);
-            comment.Page = this.dataService.GetObjectByPropertyValue<CommentPage>("Id", comment.PageId);
 
             this.EmailComment(comment);
 
@@ -550,8 +525,6 @@ namespace Pokedex.Controllers
             {
                 Comment comment = new Comment()
                 {
-                    CategoryId = 1,
-                    PageId = 13,
                     Name = string.Concat(exceptionHandlerFeature.Error.GetType().ToString(), " (", exceptionHandlerFeature.Error.Message, ")"),
                 };
 
@@ -595,18 +568,7 @@ namespace Pokedex.Controllers
                 {
                     MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
                     MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
-                    string body = this.dataService.GetObjectByPropertyValue<CommentCategory>("Id", comment.CategoryId).Name;
-                    body = string.Concat(body, " for ", this.dataService.GetObjectByPropertyValue<CommentPage>("Id", comment.PageId).Name);
-
-                    if (comment.OtherPage != null)
-                    {
-                        body = string.Concat(body, " (", comment.OtherPage, ")");
-                    }
-
-                    if (comment.PokemonName != null)
-                    {
-                        body = string.Concat(body, " (", comment.PokemonName, ")");
-                    }
+                    string body = "Comment";
 
                     if (comment.CommentorId != null)
                     {

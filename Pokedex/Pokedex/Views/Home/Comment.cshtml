@@ -1,5 +1,5 @@
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
-@model Pokedex.Models.CommentViewModel
+@model Pokedex.DataAccess.Models.Comment
 @{
     Layout = "_layout";
     ViewBag.Title = "Leave a Comment";
@@ -25,44 +25,9 @@
         @Html.ValidationSummary()
 
         <div class="form-group">
-            @Html.LabelFor(x => x.AllCategories, "* What type of comment is this?")
-            @foreach (var c in Model.AllCategories)
-            {
-                <div class="radioButton col-md-8">
-                    @Html.RadioButtonFor(x => x.CategoryId, c.Id, new { @id = string.Concat(c.Name.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Type") })
-                    @Html.Label(string.Concat(c.Name.Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Type"), c.Name)
-                </div>
-            }
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(x => x.AllPages, "* What page are you commenting on?")
-            @foreach (var p in Model.AllPages)
-            {
-                <div class="radioButton">
-                    <div class="col-md-8">
-                        @Html.RadioButtonFor(x => x.PageId, p.Id, new { @id = string.Concat(p.Name.Replace("é", "e").Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page") })
-                        @Html.Label(string.Concat(p.Name.Replace("é", "e").Replace(" ", "").Replace("/", "").Replace("(", "").Replace(")", ""), "Page"), p.Name)
-                    </div>
-                    @if (p.Name == "Pokémon Page")
-                    {
-                        <div class="col-md-3">
-                            @Html.EditorFor(x => x.PokemonName, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
-                        </div>
-                    }
-                    @if (p.Name == "Other")
-                    {
-                        <div class="col-md-3">
-                            @Html.EditorFor(x => x.OtherPage, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(x => x.Name, "* Comment")
-            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control" } })
+            <br>
+            @Html.TextAreaFor(x => x.Name, new { @class = "form-control" })
         </div>
 
         <p>

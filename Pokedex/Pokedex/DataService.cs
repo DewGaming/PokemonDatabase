@@ -1142,38 +1142,6 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Gets the list of pages able to be commented on.
-        /// </summary>
-        /// <returns>The list of commentable pages.</param>
-        public List<CommentPage> GetCommentPages()
-        {
-            List<CommentPage> pages = this.dataContext.CommentPages.ToList();
-            List<CommentPage> pagesToBeMoved = pages.Where(x => x.Name.Contains("(Need to login to see)")).ToList();
-
-            foreach (var p in pagesToBeMoved)
-            {
-                pages.Remove(p);
-            }
-
-            pages.AddRange(pagesToBeMoved);
-
-            pagesToBeMoved = new List<CommentPage>
-            {
-                pages.Find(x => x.Name == "New Page"),
-                pages.Find(x => x.Name == "Other"),
-            };
-
-            foreach (var p in pagesToBeMoved)
-            {
-                pages.Remove(p);
-            }
-
-            pages.AddRange(pagesToBeMoved);
-
-            return pages;
-        }
-
-        /// <summary>
         /// Adds a pokemon team detail to the database, and ensures that there is an entry for the pokemon's EV, IV, and moveset.
         /// </summary>
         /// <param name="pokemonTeamDetail">The pokemon team detail that is being added.</param>
