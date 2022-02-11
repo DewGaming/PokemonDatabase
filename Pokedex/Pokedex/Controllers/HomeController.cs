@@ -234,16 +234,17 @@ namespace Pokedex.Controllers
         public IActionResult AbilityEvaluator()
         {
             this.dataService.AddPageView("Ability Evalutator Page", this.User.IsInRole("Owner"));
+            List<Generation> generations = this.dataService.GetObjects<Generation>();
             AbilityEvaluatorViewModel model = new AbilityEvaluatorViewModel()
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                AllGenerations = this.dataService.GetObjects<Generation>(),
+                AllGenerations = new List<Generation>(),
             };
 
             // Removes the first and second generation from the list, as abilities were introduced in the third generation.
-            foreach (var g in model.AllGenerations.Where(x => x.Id == 1 || x.Id == 2))
+            foreach (var g in generations.Where(x => x.Id != 1 && x.Id != 2))
             {
-                model.AllGenerations.Remove(g);
+                model.AllGenerations.Add(g);
             }
 
             return this.View(model);
