@@ -761,25 +761,28 @@ namespace Pokedex.Controllers
             string generationId = importedTeam.Split("===\r\n")[0];
             this.FillPokemonTeam(pokemonTeam);
             List<Game> availableGames = this.GetAvailableGames(pokemonTeam);
-            if (generationId.IndexOf("[gen") != -1)
+            if (availableGames.Count() > 0)
             {
-                int generationStart = generationId.IndexOf(" [");
-                int generationEnd = generationId.IndexOf("] ");
-                generationId = generationId.Substring(generationStart, generationEnd - generationStart);
-                int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, "[^0-9]+", string.Empty));
-                if (availableGames.Find(x => x.Id == genId) != null)
+                if (generationId.IndexOf("[gen") != -1)
                 {
-                    pokemonTeam.GameId = availableGames.Last(x => x.GenerationId == genId).Id;
+                    int generationStart = generationId.IndexOf(" [");
+                    int generationEnd = generationId.IndexOf("] ");
+                    generationId = generationId.Substring(generationStart, generationEnd - generationStart);
+                    int genId = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(generationId, "[^0-9]+", string.Empty));
+                    if (availableGames.Find(x => x.Id == genId) != null)
+                    {
+                        pokemonTeam.GameId = availableGames.Last(x => x.GenerationId == genId).Id;
+                    }
+                    else
+                    {
+                        pokemonTeam.GameId = availableGames.Last().Id;
+                    }
                 }
                 else
                 {
-                    pokemonTeam.GameId = availableGames.Last().Id;
+                    Game newestGame = availableGames.Last();
+                    pokemonTeam.GameId = newestGame.Id;
                 }
-            }
-            else
-            {
-                Game newestGame = availableGames.Last();
-                pokemonTeam.GameId = newestGame.Id;
             }
 
             if (pokemonTeam.FirstPokemon != null)
