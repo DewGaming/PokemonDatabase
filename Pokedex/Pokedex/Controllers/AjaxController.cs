@@ -1508,6 +1508,8 @@ namespace Pokedex.Controllers
 
                 model.ExportString = this.ExportPokemonTeam(pokemonIds, abilityNames, randomAbility);
 
+                this.dataService.AddPageView("Random Team Generated", this.User.IsInRole("Owner"));
+
                 return model;
             }
             else
