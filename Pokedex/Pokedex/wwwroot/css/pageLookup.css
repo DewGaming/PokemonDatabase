@@ -6,6 +6,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
 }
 
 .page th {
@@ -30,6 +31,7 @@
   display: flex;
   flex-wrap: wrap;
   border-bottom: 1px solid #dbdbdb;
+  width: 100%;
 }
 
 .pageButtons button {

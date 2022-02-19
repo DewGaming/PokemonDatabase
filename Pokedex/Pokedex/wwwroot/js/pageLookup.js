@@ -170,3 +170,45 @@ function lookupGames(gameId) {
     $('.game' + gameId).addClass('active');
   }
 }
+
+function lookupYear(year) {
+  $('.year button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.year.pageStatList').removeClass('active');
+  $('.year.pageStatList').empty();
+  $('button#Year' + year).addClass('active');
+
+  $('.year.pageStatList').load('/get-month-by-year/' + year, function () {
+    $('.year.pageStatList').addClass('active');
+  });
+}
+
+function lookupMonth(month) {
+  $('.month button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.month.pageStatList').removeClass('active');
+  $('.month.pageStatList').empty();
+  $('button#Month' + month).addClass('active');
+
+  $('.month.pageStatList').load('/get-day-by-month/' + month + '/' + $('.pageButtons.year .active').attr('id').replace('Year', ''), function () {
+    $('.month.pageStatList').addClass('active');
+  });
+}
+
+function lookupDay(day) {
+  $('.day button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.day.pageStatList').removeClass('active');
+  $('.day.pageStatList').empty();
+  $('button#Day' + day).addClass('active');
+
+  $('.day.pageStatList').load('/get-stats-by-date/' + day + '/' + $('.pageButtons.month .active').attr('id').replace('Month', '') + '/' + $('.pageButtons.year .active').attr('id').replace('Year', ''), function () {
+    $('.day.pageStatList').addClass('active');
+  });
+}

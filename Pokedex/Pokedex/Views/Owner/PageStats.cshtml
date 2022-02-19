@@ -5,39 +5,23 @@
 }
 
 <a class="btn btn-primary" href="@this.Url.Action("ClearPageViews", "Owner")">Clear Page Views</a>
+<br><br>
 
-<div class="pageStatTable">
-    @if (Model.Count() > 0)
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/pageLookup.js"></script>
+}
+
+<div class="pageButtons year">
+    @foreach (var item in Model.GroupBy(x => x.VisitDate.ToString("yyyy")).Select(x => x.First()).ToList())
     {
-        <table class="table">
-            <tr>
-                <th scope="col">Page Name</th>
-                <th scope="col">View Count</th>
-                <th scope="col">Last Visit/Updated</th>
-                <th scope="col">Actions</th>
-            </tr>
-            @foreach (var item in Model.OrderByDescending(x => x.VisitTime).GroupBy(x => x.Name).Select(x => x.First()).ToList())
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@Model.Where(x => x.Name == item.Name).Count()</td>
-                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.VisitTime, TimeZoneInfo.FindSystemTimeZoneById("Central America Standard Time")).ToString("MMMM dd yyyy h:mm:ss tt")</td>
-                    <td>
-                        @if (@Model.Where(x => x.Name == item.Name).Count() == 0)
-                        {
-                            <a href="@this.Url.Action("PageStat", "Delete", new { id = item.Id })">Delete</a>
-                        }
-                        else
-                        {
-                            <a href="@this.Url.Action("ClearPageStats", "Owner", new { id = item.Id })">Clear</a>
-                        }
-                    </td>
-                </tr>
-            }
-        </table>
-    }
-    else
-    {
-        <div class="noStats">There are no stats for any page!</div>
+        int year = Convert.ToInt16(item.VisitDate.ToString("yyyy"));
+        <button id="Year@(year)" onclick="lookupYear(@year)">@year</button>
     }
 </div>
+<div class="page year pageStatList"></div>

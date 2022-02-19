@@ -1,0 +1,9 @@
+@model List<string>;
+
+<div class="pageButtons day">
+    @foreach (var day in Model)
+    {
+        <button id="Day@(day)" onclick="lookupDay(@day)">@day</button>
+    }
+</div>
+<div class="page day pageStatList"></div>

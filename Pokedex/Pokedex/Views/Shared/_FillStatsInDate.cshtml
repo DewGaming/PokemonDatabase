@@ -1,0 +1,19 @@
+@model List<Pokedex.DataAccess.Models.PageStat>;
+
+<table>
+    <thead>
+        <tr>
+            <th>Page Name</th>
+            <th>Visits</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var p in Model.OrderBy(x => x.Name).Select(x => x.Name).Distinct())
+        {
+            <tr>
+                <td>@p</td>
+                <td>@Model.Where(x => x.Name == p).Count()</td>
+            </tr>
+        }
+    </tbody>
+</table>
