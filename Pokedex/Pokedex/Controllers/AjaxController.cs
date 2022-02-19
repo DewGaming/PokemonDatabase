@@ -2158,12 +2158,15 @@ namespace Pokedex.Controllers
                 pageStats = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList();
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 string altForm;
+                Pokemon pokemon;
                 foreach (var p in pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.Name.Replace("Pokemon Page - ", string.Empty)).Distinct())
                 {
                     if (p.Contains("(") && !p.Contains("Nidoran"))
                     {
                         altForm = p.Split("(")[1].Replace(")", string.Empty);
-                        pokemonList.Add(this.dataService.GetPokemonFromNameAndFormName(p.Split(" (")[0], altForm));
+                        pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Split(" (")[0], altForm);
+                        pokemon.Name = string.Concat(pokemon.Name, " (", altForm, ")");
+                        pokemonList.Add(pokemon);
                     }
                     else
                     {
