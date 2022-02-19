@@ -1,13 +1,13 @@
 @model List<Pokedex.DataAccess.Models.PageStat>;
 
-<table>
-    <thead>
-        <tr>
-            <th>Page Name</th>
-            <th>Visits</th>
-        </tr>
-    </thead>
+<h2>Stats for @Model.First().VisitDate.ToString("MMMM dd, yyyy")</h2>
+
+<table class="table">
     <tbody>
+        <tr>
+            <th scope="col">Page Name</th>
+            <th scope="col">Visits</th>
+        </tr>
         @foreach(var p in Model.OrderBy(x => x.Name).Select(x => x.Name).Distinct())
         {
             <tr>
