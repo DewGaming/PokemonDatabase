@@ -2159,7 +2159,7 @@ namespace Pokedex.Controllers
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 string altForm;
                 Pokemon pokemon;
-                foreach (var p in pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.Name.Replace("Pokemon Page - ", string.Empty)).Distinct())
+                foreach (var p in pageStats.Select(x => x.Name.Replace("Pokemon Page - ", string.Empty)).Distinct())
                 {
                     if (p.Contains("(") && !p.Contains("Nidoran"))
                     {
