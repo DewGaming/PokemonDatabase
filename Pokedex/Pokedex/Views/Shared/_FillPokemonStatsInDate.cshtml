@@ -1,0 +1,40 @@
+@model Pokedex.Models.PokemonPageStatsViewModel;
+
+<h2>Stats for @Model.PageStatList.First().VisitDate.ToString("MMMM dd, yyyy")</h2>
+
+<div class="grid-container">
+    @foreach (var p in Model.PokemonList)
+    {
+        if (p.IsComplete)
+        {
+            <div class="shadowed @p.Name">
+                @if (p.Name.IndexOf(" (") > -1)
+                {
+                    <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @p.Id, generationId = @Model.Generation.Id })">
+                        <img class="pokemonlistPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Id, ".png"))">
+                    </a>
+                }
+                else
+                {
+                    <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @p.Id, generationId = @Model.Generation.Id })">
+                        <img class="pokemonlistPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Id, ".png"))">
+                    </a>
+                }
+                <div class="description">
+                    <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
+                    <br>
+                    <span class="pokemonName">Total Visits: @Model.PageStatList.Where(x => x.Name.Contains(p.Name)).Count()</span>
+                </div>
+            </div>
+        }
+        else if (this.User.IsInRole("Owner"))
+        {
+            <div class="shadowed incomplete @p.Name">
+                <img class="pokemonlistPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.PokemonImageUrl, @p.Id, ".png"))">
+                <div class="description">
+                    <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
+                </div>
+            </div>
+        }
+    }
+</div>

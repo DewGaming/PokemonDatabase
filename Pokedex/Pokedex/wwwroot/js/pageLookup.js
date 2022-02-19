@@ -180,7 +180,7 @@ function lookupYear(year) {
   $('.year.pageStatList').empty();
   $('button#Year' + year).addClass('active');
 
-  $('.year.pageStatList').load('/get-month-by-year/' + year, function () {
+  $('.year.pageStatList').load('/get-month-by-year/' + year + '/' + $('.pokemonPageCheck').attr('id'), function () {
     $('.year.pageStatList').addClass('active');
   });
 }
@@ -194,7 +194,7 @@ function lookupMonth(month) {
   $('.month.pageStatList').empty();
   $('button#Month' + month).addClass('active');
 
-  $('.month.pageStatList').load('/get-day-by-month/' + month + '/' + $('.pageButtons.year .active').attr('id').replace('Year', ''), function () {
+  $('.month.pageStatList').load('/get-day-by-month/' + month + '/' + $('.pageButtons.year .active').attr('id').replace('Year', '') + '/' + $('.pokemonPageCheck').attr('id'), function () {
     $('.month.pageStatList').addClass('active');
   });
 }
@@ -208,7 +208,7 @@ function lookupDay(day) {
   $('.day.pageStatList').empty();
   $('button#Day' + day).addClass('active');
 
-  $('.day.pageStatList').load('/get-stats-by-date/' + day + '/' + $('.pageButtons.month .active').attr('id').replace('Month', '') + '/' + $('.pageButtons.year .active').attr('id').replace('Year', ''), function () {
+  $('.day.pageStatList').load('/get-stats-by-date/' + day + '/' + $('.pageButtons.month .active').attr('id').replace('Month', '') + '/' + $('.pageButtons.year .active').attr('id').replace('Year', '') + '/' + $('.pokemonPageCheck').attr('id'), function () {
     $('.day.pageStatList').addClass('active');
   });
 }

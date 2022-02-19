@@ -23,7 +23,7 @@
     <script src="/js/pageLookup.js"></script>
 }
 
-<div style="display: none" class="pokemonPageCheck" id="noPokemonPage"></div>
+<div style="display: none" class="pokemonPageCheck" id="pokemonPage"></div>
 
 <div class="pageButtons year">
     @foreach (var item in Model.GroupBy(x => x.VisitDate.ToString("yyyy")).Select(x => x.First()).ToList())

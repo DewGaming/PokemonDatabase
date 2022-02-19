@@ -2102,33 +2102,85 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
-        [Route("get-month-by-year/{year:int}")]
-        public IActionResult GrabMonthByYear(int year)
+        [Route("get-month-by-year/{year:int}/{pokemonPageCheck}")]
+        public IActionResult GrabMonthByYear(int year, string pokemonPageCheck)
         {
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
+            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate");
+            if (pokemonPageCheck == "noPokemonPage")
+            {
+                pageStats = pageStats.Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
+            }
+            else
+            {
+                pageStats = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList();
+            }
+
+            pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
             List<string> model = pageStats.Select(x => x.VisitDate.ToString("MMMM")).Distinct().ToList();
             return this.PartialView("_FillMonthInYear", model);
         }
 
         [AllowAnonymous]
-        [Route("get-day-by-month/{month}/{year:int}")]
-        public IActionResult GrabDayByMonth(string month, int year)
+        [Route("get-day-by-month/{month}/{year:int}/{pokemonPageCheck}")]
+        public IActionResult GrabDayByMonth(string month, int year, string pokemonPageCheck)
         {
+            List<string> model = new List<string>();
             List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
             pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
-            List<string> model = pageStats.Select(x => x.VisitDate.ToString("dd")).Distinct().ToList();
+
+            if (pokemonPageCheck == "noPokemonPage")
+            {
+                model = pageStats.Where(x => !x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.VisitDate.ToString("dd")).Distinct().ToList();
+            }
+            else
+            {
+                model = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.VisitDate.ToString("dd")).Distinct().ToList();
+            }
+
             return this.PartialView("_FillDayInMonth", model);
         }
 
         [AllowAnonymous]
-        [Route("get-stats-by-date/{day:int}/{month}/{year:int}")]
-        public IActionResult GrabStatsByDate(int day, string month, int year)
+        [Route("get-stats-by-date/{day:int}/{month}/{year:int}/{pokemonPageCheck}")]
+        public IActionResult GrabStatsByDate(int day, string month, int year, string pokemonPageCheck)
         {
-            List<PageStat> model = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
-            model = model.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
-            model = model.Where(x => Convert.ToInt16(x.VisitDate.ToString("dd")) == day).ToList();
-            model = model.Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
-            return this.PartialView("_FillStatsInDate", model);
+            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
+            pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
+            pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("dd")) == day).ToList();
+
+            if (pokemonPageCheck == "noPokemonPage")
+            {
+                pageStats = pageStats.Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
+                return this.PartialView("_FillStatsInDate", pageStats);
+            }
+            else
+            {
+                pageStats = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList();
+                List<Pokemon> pokemonList = new List<Pokemon>();
+                string altForm;
+                foreach (var p in pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.Name.Replace("Pokemon Page - ", string.Empty)).Distinct())
+                {
+                    if (p.Contains("(") && !p.Contains("Nidoran"))
+                    {
+                        altForm = p.Split("(")[1].Replace(")", string.Empty);
+                        pokemonList.Add(this.dataService.GetPokemonFromNameAndFormName(p.Split(" (")[0], altForm));
+                    }
+                    else
+                    {
+                        pokemonList.Add(this.dataService.GetPokemon(p));
+                    }
+                }
+
+                PokemonPageStatsViewModel model = new PokemonPageStatsViewModel()
+                {
+                    PokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
+                    PageStatList = pageStats,
+                    AppConfig = this.appConfig,
+                    Generation = this.dataService.GetObjects<Generation>().Last(),
+                };
+
+                return this.PartialView("_FillPokemonStatsInDate", model);
+            }
         }
 
         private string FillEVs(PokemonTeamEV evs)

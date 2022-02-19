@@ -162,7 +162,19 @@ namespace Pokedex.Controllers
         [Route("page_stats")]
         public IActionResult PageStats()
         {
-            List<PageStat> model = this.dataService.GetObjects<PageStat>();
+            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Opens the page to view the stats of all pages.
+        /// </summary>
+        /// <returns>The page stat page.</returns>
+        [Route("pokemon_page_stats")]
+        public IActionResult PokemonPageStats()
+        {
+            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => x.Name.Contains("Pokemon Page -")).ToList();
 
             return this.View(model);
         }
