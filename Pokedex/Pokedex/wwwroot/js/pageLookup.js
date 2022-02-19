@@ -203,10 +203,14 @@ function lookupDay(day) {
   $('.day button').each(function () {
     $(this).removeClass('active');
   });
+  var dayString = day;
+  if (day < 10) {
+    dayString = '0' + day;
+  }
 
   $('.day.pageStatList').removeClass('active');
   $('.day.pageStatList').empty();
-  $('button#Day' + day).addClass('active');
+  $('button#Day' + dayString).addClass('active');
 
   $('.day.pageStatList').load('/get-stats-by-date/' + day + '/' + $('.pageButtons.month .active').attr('id').replace('Month', '') + '/' + $('.pageButtons.year .active').attr('id').replace('Year', '') + '/' + $('.pokemonPageCheck').attr('id'), function () {
     $('.day.pageStatList').addClass('active');
