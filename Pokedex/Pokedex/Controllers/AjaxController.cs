@@ -2089,6 +2089,11 @@ namespace Pokedex.Controllers
         [Route("get-types-by-generation")]
         public IActionResult GrabTypingEvaluatorTypes(int generationID)
         {
+            if (generationID == 0)
+            {
+                generationID = this.dataService.GetObjects<Generation>().Last().Id;
+            }
+
             List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= generationID).ToList();
             return this.PartialView("_FillTypingEvaluatorTypes", model);
         }

@@ -102,7 +102,6 @@ var checkTypings = function () {
 };
 
 $(function () {
-    $('.generationList > select').val($('.generationList option:last-child').val());
     grabTypes($('.generationList > select').val());
 });
 
