@@ -19,6 +19,42 @@ namespace Pokedex.Controllers
             this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// Opens the page to view the stats of all pages.
+        /// </summary>
+        /// <returns>The page stat page.</returns>
+        [Route("page_stats")]
+        public IActionResult PageStats()
+        {
+            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Opens the page to view the stats of all pages.
+        /// </summary>
+        /// <returns>The page stat page.</returns>
+        [Route("pokemon_page_stats")]
+        public IActionResult PokemonPageStats()
+        {
+            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => x.Name.Contains("Pokemon Page -")).ToList();
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Clears the view count of all pages and then returns owner to home page.
+        /// </summary>
+        /// <returns>The home page.</returns>
+        [Route("clear_page_views")]
+        public IActionResult ClearPageViews()
+        {
+            this.dataService.ClearPageViews();
+
+            return this.RedirectToAction("PageStats", "Admin");
+        }
+
         [Route("pokemon")]
         public IActionResult Pokemon()
         {

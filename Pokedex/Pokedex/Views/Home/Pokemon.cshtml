@@ -11,7 +11,7 @@
     AdminPokemonViewModel adminPokemon = null;
     Evolution preEvolution = null;
     int[] generations = null;
-    if (this.User.IsInRole("Owner"))
+    if (this.User.IsInRole("Admin"))
     {
         adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
     }
@@ -82,7 +82,7 @@
             text-decoration: underline;
         }
     </style>
-    @if (this.User.IsInRole("Owner"))
+    @if (this.User.IsInRole("Admin"))
     {
         <style>
             .btn-group {
@@ -175,7 +175,7 @@
 {
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
-    if (this.User.IsInRole("Owner"))
+    if (this.User.IsInRole("Admin"))
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
@@ -206,7 +206,7 @@
             }
         }
 
-        if (this.User.IsInRole("Owner"))
+        if (this.User.IsInRole("Admin"))
         {
             adminPokemon.GenerationId = g;
         }
@@ -272,7 +272,7 @@
                 }
             </div>
             <div class="pokemonInfo pokemonData pokemonTables">
-                @if (this.User.IsInRole("Owner"))
+                @if (this.User.IsInRole("Admin"))
                 {
                     @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
                 }

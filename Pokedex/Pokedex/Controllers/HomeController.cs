@@ -396,7 +396,7 @@ namespace Pokedex.Controllers
                         LatestGenerationId = this.dataService.GetObjects<Generation>(orderedProperty: "Id").Last().Id,
                     };
 
-                    if (this.User.IsInRole("Owner"))
+                    if (this.User.IsInRole("Admin"))
                     {
                         AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
                         DropdownViewModel dropdownViewModel = new DropdownViewModel()

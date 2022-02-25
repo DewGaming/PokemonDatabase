@@ -6,7 +6,7 @@
 <div class="btn-group">
     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit</button>
     <ul class="dropdown-menu dropdown-menu-right">
-        @if (!Model.Pokemon.IsComplete)
+        @if (this.User.IsInRole("Owner") && !Model.Pokemon.IsComplete)
         {
             @if (!everythingAdded)
             {
@@ -19,7 +19,7 @@
                 <hr class="adminOptionSeparator">
             }
         }
-        else if (!everythingAdded)
+        else if (this.User.IsInRole("Owner") && !everythingAdded)
         {
             <span class="adminMenuTitle">Add To Pokémon This Gen</span>
         }
@@ -51,7 +51,7 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EVYields", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add EV Yields</a></li>
         }
-        @if (!everythingAdded)
+        @if (this.User.IsInRole("Owner") && !everythingAdded)
         {
             <hr class="adminOptionSeparator">
         }
@@ -89,16 +89,16 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit EV Yields</a></li>
         }
-        @if (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id)))
+        @if (this.User.IsInRole("Owner") && (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))))
         {
             <hr class="adminOptionSeparator">
             <span class="adminMenuTitle">Add Relations</span>
         }
-        @if (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
+        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Pre-Evolution</a></li>
         }
-        @if (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if (this.User.IsInRole("Owner") && Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("AltForm", "Add", new { pokemonId = Model.Pokemon.Id }))">Add Alternate Form</a></li>
         }
@@ -120,11 +120,11 @@
         <li><a target="_blank" class="dropdown-item" href="@(this.Url.Action("PokemonImage", "Edit", new { id = Model.Pokemon.Id }))">Update Home Render</a></li>
         <li><a target="_blank" class="dropdown-item" href="@(this.Url.Action("ShinyPokemonImage", "Edit", new { id = Model.Pokemon.Id }))">Update Shiny Home Render</a></li>
         <li><a class="dropdown-item" href="@(this.Url.Action("PokemonGameDetails", "Edit", new { pokemonId = Model.Pokemon.Id }))">Update Games Available In</a></li>
-        @if (Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null))
+        @if (this.User.IsInRole("Owner") && Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Special Event Ability</a></li>
         }
-        @if (!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id))
+        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>
         }

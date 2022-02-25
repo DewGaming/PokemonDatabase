@@ -156,42 +156,6 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Opens the page to view the stats of all pages.
-        /// </summary>
-        /// <returns>The page stat page.</returns>
-        [Route("page_stats")]
-        public IActionResult PageStats()
-        {
-            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
-
-            return this.View(model);
-        }
-
-        /// <summary>
-        /// Opens the page to view the stats of all pages.
-        /// </summary>
-        /// <returns>The page stat page.</returns>
-        [Route("pokemon_page_stats")]
-        public IActionResult PokemonPageStats()
-        {
-            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => x.Name.Contains("Pokemon Page -")).ToList();
-
-            return this.View(model);
-        }
-
-        /// <summary>
-        /// Clears the view count of all pages and then returns owner to home page.
-        /// </summary>
-        /// <returns>The home page.</returns>
-        [Route("clear_page_views")]
-        public IActionResult ClearPageViews()
-        {
-            this.dataService.ClearPageViews();
-
-            return this.RedirectToAction("PageStats", "Owner");
-        }
-
-        /// <summary>
         /// Opens the page to view comments left by users.
         /// </summary>
         /// <returns>The comments page.</returns>
@@ -350,23 +314,6 @@ namespace Pokedex.Controllers
             };
 
             return this.View(model);
-        }
-
-        /// <summary>
-        /// Clears the database of visits to a particular page.
-        /// </summary>
-        /// <param name="id">The page's id.</param>
-        /// <returns>The page stat page.</returns>
-        [Route("clear_page_views/{id:int}")]
-        public IActionResult ClearPageStats(int id)
-        {
-            PageStat pageStat = this.dataService.GetObjectByPropertyValue<PageStat>("Id", id);
-            foreach (var p in this.dataService.GetObjects<PageStat>(whereProperty: "Name", wherePropertyValue: pageStat.Name))
-            {
-                this.dataService.DeleteObject<PageStat>(p.Id);
-            }
-
-            return this.RedirectToAction("PageStats");
         }
     }
 }
