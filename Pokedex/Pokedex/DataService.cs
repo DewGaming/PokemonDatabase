@@ -710,41 +710,6 @@ namespace Pokedex
             return pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
         }
 
-        public List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, int generationId)
-        {
-            List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true)
-                                                        .GroupBy(x => new { x.PokemonId })
-                                                        .Select(x => x.LastOrDefault())
-                                                        .ToList();
-
-            if (secondaryTypeId != 0 && secondaryTypeId != 100)
-            {
-                pokemonList = pokemonList.Where(x => (x.PrimaryTypeId == primaryTypeId && x.SecondaryTypeId == secondaryTypeId) || (x.PrimaryTypeId == secondaryTypeId && x.SecondaryTypeId == primaryTypeId)).ToList();
-            }
-            else if (secondaryTypeId == 100)
-            {
-                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId || x.SecondaryTypeId == primaryTypeId).ToList();
-            }
-            else
-            {
-                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
-            }
-
-            if (generationId != 0)
-            {
-                pokemonList = pokemonList.Where(x => x.Pokemon.Game.GenerationId == generationId).Where(x => x.GenerationId <= generationId).ToList();
-
-                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
-
-                foreach (var pokemon in exclusionList)
-                {
-                    pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
-                }
-            }
-
-            return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
-        }
-
         public List<Ability> GetAbilitiesForPokemon(int pokemonId, int gameId)
         {
             if (gameId == 0)

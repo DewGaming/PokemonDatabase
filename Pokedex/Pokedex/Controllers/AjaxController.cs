@@ -980,7 +980,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGame, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
+        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -991,6 +991,12 @@ namespace Pokedex.Controllers
                 }
 
                 Pokemon pokemon;
+                Game selectedGame = new Game();
+                if (selectedGameId != 0)
+                {
+                    selectedGame = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
+                }
+
                 TeamRandomizerViewModel model = new TeamRandomizerViewModel()
                 {
                     AllPokemonChangedNames = new List<Pokemon>(),
@@ -1001,9 +1007,9 @@ namespace Pokedex.Controllers
                 List<Pokemon> pokemonList = new List<Pokemon>();
                 List<PokemonGameDetail> availablePokemon = new List<PokemonGameDetail>();
 
-                if (selectedGame != 0)
+                if (selectedGame.Id != 0)
                 {
-                    availablePokemon = this.dataService.GetPokemonGameDetailsByGame(selectedGame);
+                    availablePokemon = this.dataService.GetPokemonGameDetailsByGame(selectedGame.Id);
                 }
                 else
                 {
@@ -1012,6 +1018,11 @@ namespace Pokedex.Controllers
 
                 List<Pokemon> allPokemon = this.dataService.GetAllPokemonWithoutForms();
                 List<Evolution> allEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod");
+                if (selectedGame.Id != 0)
+                {
+                    allEvolutions = allEvolutions.Where(x => x.PreevolutionPokemon.Game.ReleaseDate <= selectedGame.ReleaseDate && x.EvolutionPokemon.Game.ReleaseDate <= selectedGame.ReleaseDate).ToList();
+                }
+
                 Random rnd = new Random();
 
                 foreach (var gen in unselectedGens)
@@ -1099,7 +1110,7 @@ namespace Pokedex.Controllers
 
                         foreach (var p in allPokemon)
                         {
-                            if (selectedGame != 37 || (selectedGame == 37 && p.Id == 54))
+                            if (selectedGame.Id != 37 || (selectedGame.Id == 37 && p.Id == 54))
                             {
                                 List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
                                 foreach (var a in altForm)
@@ -1259,8 +1270,17 @@ namespace Pokedex.Controllers
 
                 if (selectedType != 0)
                 {
-                    List<PokemonTypeDetail> allTypes = this.dataService.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true).Where(x => allPokemon.Any(y => y.Id == x.PokemonId)).ToList();
-                    allTypes = allTypes.Where(x => x.PrimaryTypeId == selectedType || x.SecondaryTypeId == selectedType).ToList();
+                    List<PokemonTypeDetail> allTypes = new List<PokemonTypeDetail>();
+                    if (selectedGame.Id != 0)
+                    {
+                        allTypes = this.GetAllPokemonWithSpecificType(selectedType, selectedGame.GenerationId, allPokemon);
+                    }
+                    else
+                    {
+                        allTypes = this.dataService.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true).Where(x => allPokemon.Any(y => y.Id == x.PokemonId)).ToList();
+                        allTypes = allTypes.Where(x => x.PrimaryTypeId == selectedType || x.SecondaryTypeId == selectedType).ToList();
+                    }
+
                     allPokemon = allPokemon.Where(x => allTypes.Select(x => x.Pokemon).Any(y => y.Id == x.Id)).ToList();
                 }
 
@@ -1441,9 +1461,9 @@ namespace Pokedex.Controllers
 
                 int generationId = 0;
 
-                if (selectedGame != 0)
+                if (selectedGame.Id != 0)
                 {
-                    generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame).GenerationId;
+                    generationId = selectedGame.GenerationId;
                 }
 
                 model.PokemonURLs = new List<string>();
@@ -1459,7 +1479,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                if (randomAbility && selectedGame != 1 && selectedGame != 2)
+                if (randomAbility && selectedGame.Id != 1 && selectedGame.Id != 2)
                 {
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
@@ -1899,7 +1919,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonTypeDetail> typingList = this.dataService.GetAllPokemonWithSpecificTypes(primaryTypeID, secondaryTypeID, generationID);
+                List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeID, secondaryTypeID, generationID);
                 List<Pokemon> pokemonList = new List<Pokemon>();
 
                 foreach (var p in typingList)
@@ -2464,6 +2484,65 @@ namespace Pokedex.Controllers
             }
 
             return pokemonList;
+        }
+
+        private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, int generationId)
+        {
+            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true)
+                                                        .GroupBy(x => new { x.PokemonId })
+                                                        .Select(x => x.LastOrDefault())
+                                                        .ToList();
+
+            if (secondaryTypeId != 0 && secondaryTypeId != 100)
+            {
+                pokemonList = pokemonList.Where(x => (x.PrimaryTypeId == primaryTypeId && x.SecondaryTypeId == secondaryTypeId) || (x.PrimaryTypeId == secondaryTypeId && x.SecondaryTypeId == primaryTypeId)).ToList();
+            }
+            else if (secondaryTypeId == 100)
+            {
+                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId || x.SecondaryTypeId == primaryTypeId).ToList();
+            }
+            else
+            {
+                pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
+            }
+
+            if (generationId != 0)
+            {
+                pokemonList = pokemonList.Where(x => x.Pokemon.Game.GenerationId == generationId).Where(x => x.GenerationId <= generationId).ToList();
+
+                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
+
+                foreach (var pokemon in exclusionList)
+                {
+                    pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+                }
+            }
+
+            return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+        }
+
+        private List<PokemonTypeDetail> GetAllPokemonWithSpecificType(int typeId, int generationId, List<Pokemon> allPokemon)
+        {
+            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true)
+                                                        .Where(x => allPokemon.Any(y => y.Id == x.PokemonId))
+                                                        .OrderBy(x => x.GenerationId)
+                                                        .ToList();
+
+            if (generationId != 0)
+            {
+                pokemonList = pokemonList.Where(x => x.GenerationId <= generationId).ToList();
+
+                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
+
+                foreach (var pokemon in exclusionList)
+                {
+                    pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+                }
+            }
+
+            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).Where(x => x.PrimaryTypeId == typeId || x.SecondaryTypeId == typeId).ToList();
+
+            return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
         }
     }
 }
