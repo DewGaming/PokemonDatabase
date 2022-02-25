@@ -48,6 +48,11 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
+            if (user.IsOwner && !user.IsAdmin)
+            {
+                user.IsAdmin = true;
+            }
+
             this.dataService.UpdateObject(user);
 
             return this.RedirectToAction("Users", "Owner");
