@@ -5,7 +5,7 @@
 <div class="grid-container">
     @foreach (var p in Model.PokemonList)
     {
-        <div class="shadowed @p.Name">
+        <div class="shadowed @p.Name@(p.IsComplete ? "" : " incomplete")">
             @if (p.Name.IndexOf(" (") > -1)
             {
                 <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @p.Id, generationId = @Model.Generation.Id })">
