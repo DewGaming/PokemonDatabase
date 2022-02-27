@@ -6,10 +6,10 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace Pokedex.Controllers
 {
@@ -359,13 +359,24 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
+            TextInfo textInfo = new CultureInfo("en-US",false).TextInfo;
+            classification.Name = textInfo.ToTitleCase(classification.Name);
+
             if (classification.Name.Contains("pokemon"))
             {
-                classification.Name = classification.Name.Replace("pokemon", "Pokemon");
+                classification.Name = classification.Name.Replace("pokemon", "Pokémon");
             }
-            else if (!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
+            else if (classification.Name.Contains("Pokemon"))
             {
-                classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
+                classification.Name = classification.Name.Replace("Pokemon", "Pokémon");
+            }
+            else if (classification.Name.Contains("pokémon"))
+            {
+                classification.Name = classification.Name.Replace("pokémon", "Pokémon");
+            }
+            else if (!classification.Name.Contains("Pokémon"))
+            {
+                classification.Name = string.Concat(classification.Name.Trim(), " Pokémon");
             }
 
             this.dataService.AddObject(classification);
