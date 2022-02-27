@@ -84,7 +84,7 @@ function lookupGeneration(generationId) {
   $('.pokemonList > .grid-container').empty();
   $('button#Generation' + generationId).addClass('active');
 
-  $('.grid-container').load('/get-pokemon-by-generation/' + generationId, function () {
+  $('.pokemonList').load('/get-pokemon-by-generation/' + generationId, function () {
     $.each($('.grid-container .pokemonName'), function (index, item) {
       if ($(item).text().includes('_')) {
         $(item).text($(item).text().replace('_', ' '));

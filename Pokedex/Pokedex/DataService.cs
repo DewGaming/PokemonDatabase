@@ -338,7 +338,6 @@ namespace Pokedex
                 .Include(x => x.Game)
                     .Include("Game.Generation")
                 .Include(x => x.ExperienceGrowth)
-                .Where(x => x.IsComplete)
                 .OrderBy(x => x.PokedexNumber)
                 .ThenBy(x => x.Id)
                 .ToList();
@@ -704,7 +703,7 @@ namespace Pokedex
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
             List<Pokemon> altFormList = this.dataContext.PokemonFormDetails.Select(x => x.AltFormPokemon).ToList();
-            List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true).Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
+            List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
             List<int> pokemonIds = pokemonList.Select(x => x.PokemonId).Distinct().ToList();
 
             return pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();

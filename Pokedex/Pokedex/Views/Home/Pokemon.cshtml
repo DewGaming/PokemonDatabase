@@ -173,6 +173,11 @@
 }
 @foreach (var item in Model.PokemonList)
 {
+    @if(!item.Pokemon.IsComplete)
+    {
+        <h4>Please be aware that the information for this Pokémon is not complete due to not all the information being available. Some information may change as more is revealed.</h4>
+    }
+
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
     if (this.User.IsInRole("Admin"))
@@ -652,7 +657,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 <h2>Training</h2>
                 <table>
                     <tbody>
-                        @if (@g > 2)
+                        @if (@g > 2 && item.EVYields.Count() > 0)
                         {
                             <tr>
                                 <th>EV Yield</th>
@@ -699,10 +704,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 </td>
                             </tr>
                         }
-                        <tr>
-                            <th>Catch Rate</th>
-                            <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
-                        </tr>
+                        @if(item.CaptureRates.Count() > 0)
+                        {
+                            <tr>
+                                <th>Catch Rate</th>
+                                <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
+                            </tr>
+                        }
                         <tr>
                             <th>Experience Growth</th>
                             <td>
@@ -711,67 +719,73 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
                             </td>
                         </tr>
-                        <tr>
-                            <th>Base Happiness</th>
-                            <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
-                        </tr>
+                        @if(item.BaseHappinesses.Count() > 0)
+                        {
+                            <tr>
+                                <th>Base Happiness</th>
+                                <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
             <div class="pokemonInfo pokemonStats pokemonTables">
-                <h2>Base Stats</h2>
-                <table class="baseStatTable">
-                    <tbody>
-                        <tr>
-                            <th class="Health" scope="col">Health</th>
-                            <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health * 100 / 255m)%;"></div></td>
-                            <td class="Health">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health</td>
-                        </tr>
-                        <tr>
-                            <th class="Attack" scope="col">Attack</th>
-                            <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack * 100 / 255m)%;"></div></td>
-                            <td class="Attack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack</td>
-                        </tr>
-                        <tr>
-                            <th class="Defense" scope="col">Defense</th>
-                            <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense * 100 / 255m)%;"></div></td>
-                            <td class="Defense">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense</td>
-                        </tr>
-                        <tr>
-                            <th class="SpecialAttack" scope="col">
-                                @if (@g == 1)
-                                {
-                                    @("Special")
-                                }
-                                else
-                                {
-                                    @("Sp. Attack")
-                                }
-                            </th>
-                            <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack * 100 / 255m)%;"></div></td>
-                            <td class="SpecialAttack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack</td>
-                        </tr>
-                        @if (@g != 1)
-                        {
+                @if(item.BaseStats.Count() > 0)
+                {
+                    <h2>Base Stats</h2>
+                    <table class="baseStatTable">
+                        <tbody>
                             <tr>
-                                <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                                <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense * 100 / 255m)%;"></div></td>
-                                <td class="SpecialDefense">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense</td>
+                                <th class="Health" scope="col">Health</th>
+                                <td class="statData"><div class="health statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health * 100 / 255m)%;"></div></td>
+                                <td class="Health">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health</td>
                             </tr>
-                        }
-                        <tr>
-                            <th class="Speed" scope="col">Speed</th>
-                            <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed * 100 / 255m)%;"></div></td>
-                            <td class="Speed">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th class="baseStatTotal" scope="col">Total</th>
-                            <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).StatTotal</b></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                            <tr>
+                                <th class="Attack" scope="col">Attack</th>
+                                <td class="statData"><div class="attack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack * 100 / 255m)%;"></div></td>
+                                <td class="Attack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack</td>
+                            </tr>
+                            <tr>
+                                <th class="Defense" scope="col">Defense</th>
+                                <td class="statData"><div class="defense statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense * 100 / 255m)%;"></div></td>
+                                <td class="Defense">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense</td>
+                            </tr>
+                            <tr>
+                                <th class="SpecialAttack" scope="col">
+                                    @if (@g == 1)
+                                    {
+                                        @("Special")
+                                    }
+                                    else
+                                    {
+                                        @("Sp. Attack")
+                                    }
+                                </th>
+                                <td class="statData"><div class="specialAttack statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack * 100 / 255m)%;"></div></td>
+                                <td class="SpecialAttack">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack</td>
+                            </tr>
+                            @if (@g != 1)
+                            {
+                                <tr>
+                                    <th class="SpecialDefense" scope="col">Sp. Defense</th>
+                                    <td class="statData"><div class="specialDefense statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense * 100 / 255m)%;"></div></td>
+                                    <td class="SpecialDefense">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense</td>
+                                </tr>
+                            }
+                            <tr>
+                                <th class="Speed" scope="col">Speed</th>
+                                <td class="statData"><div class="speed statBar" style="width: @(@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed * 100 / 255m)%;"></div></td>
+                                <td class="Speed">@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="baseStatTotal" scope="col">Total</th>
+                                <td colspan="2" class="baseStatTotal"><b>@item.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).StatTotal</b></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                }
             </div>
             @if (g != 1 || (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId))
             {
@@ -815,7 +829,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         <br class="preEvoBreak">
                     }
 
-                    @if (@g != 1)
+                    @if (@g != 1 && item.EggGroups.Count() > 0)
                     {
                         <div class="pokemonBreeding">
                             <h2>Breeding</h2>
