@@ -68,21 +68,29 @@ namespace Pokedex
                 objects = objects.OrderBy(orderedProperty);
             }
 
-            string searchString = string.Concat("x => x.", whereProperty, " == ");
-            if (wherePropertyValue is string)
+            if (!string.IsNullOrEmpty(whereProperty) && wherePropertyValue != null)
             {
-                searchString = string.Concat(searchString, '"', wherePropertyValue, '"');
+                string searchString = string.Concat("x => x.", whereProperty, " == ");
+
+                if (wherePropertyValue is string)
+                {
+                    searchString = string.Concat(searchString, '"', wherePropertyValue, '"');
+                }
+                else
+                {
+                    searchString = string.Concat(searchString, wherePropertyValue);
+                }
+
+                try
+                {
+                    return objects.Where(searchString).ToList();
+                }
+                catch
+                {
+                    return objects.ToList();
+                }
             }
             else
-            {
-                searchString = string.Concat(searchString, wherePropertyValue);
-            }
-
-            try
-            {
-                return objects.Where(searchString).ToList();
-            }
-            catch
             {
                 return objects.ToList();
             }
@@ -212,6 +220,11 @@ namespace Pokedex
             return preEvolution;
         }
 
+        /// <summary>
+        /// Gets all of the evolutions available for a pokemon by their id.
+        /// </summary>
+        /// <param name="pokemonId">The preevolution's id.</param>
+        /// <returns>The list of all available evolutions.</returns>
         public List<Evolution> GetPokemonEvolutions(int pokemonId)
         {
             List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemon.Id",  "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod", "PreevolutionPokemon.Id", pokemonId);
@@ -227,32 +240,62 @@ namespace Pokedex
             return evolutions;
         }
 
+        /// <summary>
+        /// Finds the name of the alternate form given the pokemon id.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>Returns the name of the alternate form.</returns>
         public string GetPokemonFormName(int pokemonId)
         {
             return this.GetObjects<PokemonFormDetail>(includes: "Form")
                 .FirstOrDefault(x => x.AltFormPokemonId == pokemonId).Form.Name;
         }
 
+        /// <summary>
+        /// Gets a list of the game details for a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>Returns the game details of the pokemon.</returns>
         public List<PokemonGameDetail> GetPokemonGameDetails(int pokemonId)
         {
             return this.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId);
         }
 
+        /// <summary>
+        /// Gets a list of the game details for a game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>Returns the game details of the game.</returns>
         public List<PokemonGameDetail> GetPokemonGameDetailsByGame(int gameId)
         {
             return this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: gameId);
         }
 
+        /// <summary>
+        /// Gets the pokemon by the name.
+        /// </summary>
+        /// <param name="name">The name of the pokemon.</param>
+        /// <returns>Returns the requested pokemon.</returns>
         public Pokemon GetPokemon(string name)
         {
             return this.GetAllPokemon().Find(x => x.Name == name);
         }
 
+        /// <summary>
+        /// Gets the pokemon from a name. This pokemon will be an alternate form and will have the form name be used in the process of searching for it.
+        /// </summary>
+        /// <param name="pokemonName">The name of the pokemon.</param>
+        /// <param name="formName">The name of the alternate form.</param>
+        /// <returns>Returns the alternate pokemon.</returns>
         public Pokemon GetPokemonFromNameAndFormName(string pokemonName, string formName)
         {
             return this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: formName).FirstOrDefault(x => x.AltFormPokemon.Name == pokemonName).AltFormPokemon;
         }
 
+        /// <summary>
+        /// Gets all of the details required for admin actions.
+        /// </summary>
+        /// <returns>Returns all the details required for admins.</returns>
         public AllAdminPokemonViewModel GetAllAdminPokemonDetails()
         {
             return new AllAdminPokemonViewModel()
@@ -270,11 +313,19 @@ namespace Pokedex
             };
         }
 
+        /// <summary>
+        /// Gets a list of all pokemon.
+        /// </summary>
+        /// <returns>Returns the list of all pokemon.</returns>
         public List<Pokemon> GetAllPokemon()
         {
             return this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
         }
 
+        /// <summary>
+        /// Gets a list of all pokemon that are able to be bred in the day care.
+        /// </summary>
+        /// <returns>The list of breedable pokemon.</returns>
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon()
         {
             List<Pokemon> pokemonList = this.GetObjects<Pokemon>(whereProperty: "IsComplete", wherePropertyValue: true);
@@ -318,6 +369,10 @@ namespace Pokedex
             return eggGroupDetails;
         }
 
+        /// <summary>
+        /// Gets the complete list of pokemon teams. Specifically doesn't use the GetObjects method, due to the amount of includes being made.
+        /// </summary>
+        /// <returns>All pokemon teams created on the website.</returns>
         public List<PokemonTeam> GetPokemonTeams()
         {
             return this.dataContext.PokemonTeams
@@ -423,6 +478,11 @@ namespace Pokedex
             return pokemonList;
         }
 
+        /// <summary>
+        /// Gets the pokemon given an id. This pokemon will be an alternate form and will have its form name added to the pokemon's name.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon id.</param>
+        /// <returns>Returns the pokemon.</returns>
         public Pokemon GetAltFormWithFormName(int pokemonId)
         {
             PokemonFormDetail pokemonForm = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form")
@@ -435,6 +495,10 @@ namespace Pokedex
             return pokemon;
         }
 
+        /// <summary>
+        /// Gets a list of all pokemon, alongside all of their possible typings.
+        /// </summary>
+        /// <returns>Returns the pokemon type detail list.</returns>
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
             List<Pokemon> altFormList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
@@ -444,6 +508,12 @@ namespace Pokedex
             return pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
         }
 
+        /// <summary>
+        /// Gets the abilities of a pokemon. This is will then be cut down to the abilities of either the latest game, or of the game specified.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon id.</param>
+        /// <param name="gameId">The game id.</param>
+        /// <returns>Returns the list of abilities.</returns>
         public List<Ability> GetAbilitiesForPokemon(int pokemonId, int gameId)
         {
             if (gameId == 0)
@@ -475,6 +545,10 @@ namespace Pokedex
             return abilityList;
         }
 
+        /// <summary>
+        /// Gets a list of all pokemon, alongside their capture rates.
+        /// </summary>
+        /// <returns>Returns the list of pokemon capture rate details.</returns>
         public List<PokemonCaptureRateDetail> GetAllPokemonWithCaptureRates()
         {
             return this.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate, Generation")
@@ -482,6 +556,10 @@ namespace Pokedex
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets a list of all pokemon, alongside their base happinesses.
+        /// </summary>
+        /// <returns>Returns the list of pokemon base happiness details.</returns>
         public List<PokemonBaseHappinessDetail> GetAllPokemonWithBaseHappinesses()
         {
             return this.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness, Generation")
@@ -489,6 +567,11 @@ namespace Pokedex
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets the capture rates of a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>Returns the list of capture rates for a pokemon.</returns>
         public List<PokemonCaptureRateDetail> GetPokemonWithCaptureRates(int pokemonId)
         {
             return this.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate, Generation", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId)
