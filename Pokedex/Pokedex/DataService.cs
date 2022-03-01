@@ -42,17 +42,6 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Resets the view counts of all current pages.
-        /// </summary>
-        public void ClearPageViews()
-        {
-            foreach (var p in this.GetObjects<PageStat>())
-            {
-                this.DeleteObject<PageStat>(p.Id);
-            }
-        }
-
-        /// <summary>
         /// Returns a list of objects from the passed-through TEntity class.
         /// </summary>
         /// <typeparam name="TEntity">The generic type parameter.</typeparam>

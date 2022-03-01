@@ -43,18 +43,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        /// <summary>
-        /// Clears the view count of all pages and then returns owner to home page.
-        /// </summary>
-        /// <returns>The home page.</returns>
-        [Route("clear_page_views")]
-        public IActionResult ClearPageViews()
-        {
-            this.dataService.ClearPageViews();
-
-            return this.RedirectToAction("PageStats", "Admin");
-        }
-
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
