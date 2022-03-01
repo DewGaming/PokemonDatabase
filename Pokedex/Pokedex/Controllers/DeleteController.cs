@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pokedex.Controllers
 {
@@ -170,7 +171,13 @@ namespace Pokedex.Controllers
         [Route("delete_game/{id:int}")]
         public IActionResult Game(Game game)
         {
-            this.dataService.DeleteGame(game.Id);
+            List<GameRegionDetail> gameRegionDetails = this.dataService.GetObjects<GameRegionDetail>().Where(x => x.GameId == game.Id).ToList();
+            foreach (var r in gameRegionDetails)
+            {
+                this.dataService.DeleteObject<GameRegionDetail>(r.Id);
+            }
+
+            this.dataService.DeleteObject<Game>(game.Id);
 
             return this.RedirectToAction("Games", "Admin");
         }
@@ -189,8 +196,8 @@ namespace Pokedex.Controllers
         [Route("delete_type/{id:int}")]
         public IActionResult Type(Type type)
         {
-            List<TypeChart> typeCharts = this.dataService.GetAllTypeChartByDefendType(type.Id);
-            typeCharts.AddRange(this.dataService.GetAllTypeChartByAttackType(type.Id));
+            List<TypeChart> typeCharts = this.dataService.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend", "DefendId", type.Id);
+            typeCharts.AddRange(this.dataService.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend", "AttackId", type.Id));
             foreach (var t in typeCharts)
             {
                 this.dataService.DeleteObject<TypeChart>(t.Id);

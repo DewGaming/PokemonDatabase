@@ -187,9 +187,16 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").Select(x => x.AltFormPokemon).OrderBy(x => x.PokedexNumber).ToList();
+
+                foreach (var p in pokemonList)
+                {
+                    p.Name = string.Concat(p.Name, " (", this.dataService.GetPokemonFormName(p.Id), ")");
+                }
+
                 FormItemViewModel model = new FormItemViewModel()
                 {
-                    AllPokemon = this.dataService.GetAllPokemonOnlyForms(),
+                    AllPokemon = pokemonList,
                 };
 
                 return this.View(model);
@@ -359,7 +366,7 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
-            TextInfo textInfo = new CultureInfo("en-US",false).TextInfo;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             classification.Name = textInfo.ToTitleCase(classification.Name);
 
             if (classification.Name.Contains("pokemon"))
@@ -1133,7 +1140,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonAbilityDetail pokemonAbilities = this.dataService.GetPokemonWithAbilitiesNoIncludes(ability.PokemonId, generationId);
+            PokemonAbilityDetail pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon").FirstOrDefault(x => x.PokemonId == ability.PokemonId && x.GenerationId == generationId);
 
             pokemonAbilities.SpecialEventAbilityId = ability.AbilityId;
 

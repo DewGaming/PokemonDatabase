@@ -255,7 +255,14 @@ namespace Pokedex.Controllers
         [Route("update_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditPokemon(PokemonTeamDetail pokemonTeamDetail)
         {
-            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeamFromPokemon(pokemonTeamDetail.Id);
+            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon, User")
+                .Find(x => x.FirstPokemonId == pokemonTeamDetail.Id ||
+                           x.SecondPokemonId == pokemonTeamDetail.Id ||
+                           x.ThirdPokemonId == pokemonTeamDetail.Id ||
+                           x.FourthPokemonId == pokemonTeamDetail.Id ||
+                           x.FifthPokemonId == pokemonTeamDetail.Id ||
+                           x.SixthPokemonId == pokemonTeamDetail.Id);
+
             if (!this.ModelState.IsValid)
             {
                 List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);
@@ -1153,7 +1160,14 @@ namespace Pokedex.Controllers
         private void DeletePokemonTeamDetail(int id)
         {
             PokemonTeamDetail pokemonTeamDetail = this.dataService.GetObjectByPropertyValue<PokemonTeamDetail>("Id", id);
-            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeamFromPokemonNoIncludes(pokemonTeamDetail.Id);
+            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>()
+                .Find(x => x.FirstPokemonId == pokemonTeamDetail.Id ||
+                           x.SecondPokemonId == pokemonTeamDetail.Id ||
+                           x.ThirdPokemonId == pokemonTeamDetail.Id ||
+                           x.FourthPokemonId == pokemonTeamDetail.Id ||
+                           x.FifthPokemonId == pokemonTeamDetail.Id ||
+                           x.SixthPokemonId == pokemonTeamDetail.Id);
+
             if (pokemonTeam != null)
             {
                 this.RemovePokemonFromTeam(pokemonTeam, pokemonTeamDetail);

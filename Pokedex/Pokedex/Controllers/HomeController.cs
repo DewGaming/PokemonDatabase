@@ -132,7 +132,11 @@ namespace Pokedex.Controllers
         public IActionResult AllPokemon()
         {
             this.dataService.AddPageView("All Pokemon Page", this.User.IsInRole("Owner"));
-            List<int> model = this.dataService.GetGenerationsFromPokemon();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>().Select(x => x.AltFormPokemon).ToList();
+            pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
+
+            List<int> model = pokemonList.Select(x => x.Game.GenerationId).Distinct().OrderBy(x => x).ToList();
 
             return this.View(model);
         }
@@ -358,8 +362,8 @@ namespace Pokedex.Controllers
                 }
 
                 List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
-                PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, null, this.appConfig);
-                pokemonDetails.SurroundingPokemon = this.dataService.GetSurroundingPokemon(pokemonId);
+                PokemonViewModel pokemonDetails = this.GetPokemonDetails(pokemon);
+                pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemonId);
 
                 pokemonList.Add(pokemonDetails);
 
@@ -372,7 +376,7 @@ namespace Pokedex.Controllers
                         if (p.IsComplete)
                         {
                             form = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form;
-                            pokemonDetails = this.dataService.GetPokemonDetails(p, form, this.appConfig);
+                            pokemonDetails = this.GetPokemonDetails(p, form);
 
                             pokemonList.Add(pokemonDetails);
                         }
@@ -553,6 +557,84 @@ namespace Pokedex.Controllers
             }
 
             return this.View();
+        }
+
+        /// <summary>
+        /// Gets all of the details for a pokemon.
+        /// </summary>
+        /// <param name="pokemon">The pokemon needing their details.</param>
+        /// <param name="form">The alternate form if it applies.</param>
+        /// <returns>Returns the pokemon's details.</returns>
+        private PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form = null)
+        {
+            PokemonViewModel pokemonViewModel = new PokemonViewModel()
+            {
+                Pokemon = pokemon,
+                BaseHappinesses = this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
+                BaseStats = this.dataService.GetBaseStat(pokemon.Id),
+                EVYields = this.dataService.GetEVYields(pokemon.Id),
+                Typings = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
+                PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete).ToList(),
+                Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete && x.EvolutionPokemon.IsComplete).ToList(),
+                Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
+                GamesAvailableIn = this.dataService.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
+                AppConfig = this.appConfig,
+            };
+
+            if (form != null)
+            {
+                pokemonViewModel.Form = form;
+                pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
+            }
+
+            PokemonLegendaryDetail legendaryType = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
+
+            if (legendaryType != null)
+            {
+                pokemonViewModel.LegendaryType = legendaryType.LegendaryType;
+            }
+
+            return pokemonViewModel;
+        }
+
+        private List<Pokemon> GetSurroundingPokemon(int pokemonId)
+        {
+            List<Pokemon> surroundingPokemon = new List<Pokemon>();
+            List<int> ids = this.dataService.GetAllPokemon().ConvertAll(x => x.Id);
+            List<int> altIds = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemonId);
+            List<int> pokemonIds = ids.Where(x => !altIds.Any(y => y == x)).ToList();
+            if (altIds.Where(x => x == pokemonId).Count() > 0 && pokemonIds.Where(x => x == pokemonId).Count() == 0)
+            {
+                pokemonId = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId).OriginalPokemonId;
+            }
+
+            int previousId, nextId, index = pokemonIds.FindIndex(x => x == pokemonId);
+
+            if (pokemonIds[index] == pokemonIds[0])
+            {
+                previousId = pokemonIds.Last();
+            }
+            else
+            {
+                previousId = pokemonIds[index - 1];
+            }
+
+            if (pokemonIds[index] == pokemonIds.Last())
+            {
+                nextId = pokemonIds[0];
+            }
+            else
+            {
+                nextId = pokemonIds[index + 1];
+            }
+
+            surroundingPokemon.Add(this.dataService.GetObjectByPropertyValue<Pokemon>("Id", previousId));
+            surroundingPokemon.Add(this.dataService.GetObjectByPropertyValue<Pokemon>("Id", nextId));
+
+            return surroundingPokemon;
         }
 
         private void EmailComment(Comment comment)

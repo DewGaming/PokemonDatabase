@@ -46,7 +46,11 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<int> model = this.dataService.GetGenerationsFromPokemonWithIncomplete();
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>().Select(x => x.AltFormPokemon).ToList();
+            pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
+
+            List<int> model = pokemonList.Select(x => x.Game.GenerationId).Distinct().OrderBy(x => x).ToList();
 
             return this.View(model);
         }
@@ -280,7 +284,7 @@ namespace Pokedex.Controllers
             BattleItemViewModel model = new BattleItemViewModel()
             {
                 AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
-                AllPokemonTeamDetails = this.dataService.GetPokemonTeamDetails(),
+                AllPokemonTeamDetails = this.dataService.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature"),
                 AllPokemon = pokemonList,
             };
 

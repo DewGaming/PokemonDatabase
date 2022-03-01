@@ -389,7 +389,7 @@ namespace Pokedex.Controllers
             }
 
             Pokemon oldPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altForms = this.dataService.GetAltFormsNoIncludes(pokemon.Id);
+            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form", "OriginalPokemonId", pokemon.Id).Select(x => x.AltFormPokemon).ToList();
             if (oldPokemon.PokedexNumber != pokemon.PokedexNumber)
             {
                 foreach (var p in altForms)
@@ -1222,7 +1222,7 @@ namespace Pokedex.Controllers
         [Route("edit_pokemon_capture_rate/{pokemonId:int}/{generationId:int}")]
         public IActionResult CaptureRates(int pokemonId, int generationId)
         {
-            PokemonCaptureRateDetail captureRate = this.dataService.GetPokemonWithCaptureRatesFromGenerationId(pokemonId, generationId);
+            PokemonCaptureRateDetail captureRate = this.GetPokemonWithCaptureRatesFromGenerationId(pokemonId, generationId);
             PokemonCaptureRateViewModel model = new PokemonCaptureRateViewModel()
             {
                 Id = captureRate.Id,
@@ -1242,7 +1242,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonCaptureRateDetail captureRate = this.dataService.GetPokemonWithCaptureRatesFromGenerationId(pokemonCaptureRate.PokemonId, pokemonCaptureRate.GenerationId);
+                PokemonCaptureRateDetail captureRate = this.GetPokemonWithCaptureRatesFromGenerationId(pokemonCaptureRate.PokemonId, pokemonCaptureRate.GenerationId);
                 PokemonCaptureRateViewModel model = new PokemonCaptureRateViewModel()
                 {
                     Id = captureRate.Id,
@@ -1264,7 +1264,7 @@ namespace Pokedex.Controllers
         [Route("edit_pokemon_base_happiness/{pokemonId:int}/{generationId:int}")]
         public IActionResult BaseHappinesses(int pokemonId, int generationId)
         {
-            PokemonBaseHappinessDetail bassHappiness = this.dataService.GetPokemonWithBaseHappinesssFromGenerationId(pokemonId, generationId);
+            PokemonBaseHappinessDetail bassHappiness = this.GetPokemonWithBaseHappinesssFromGenerationId(pokemonId, generationId);
             PokemonBaseHappinessViewModel model = new PokemonBaseHappinessViewModel()
             {
                 Id = bassHappiness.Id,
@@ -1284,7 +1284,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonBaseHappinessDetail baseHappiness = this.dataService.GetPokemonWithBaseHappinesssFromGenerationId(pokemonBaseHappiness.PokemonId, pokemonBaseHappiness.GenerationId);
+                PokemonBaseHappinessDetail baseHappiness = this.GetPokemonWithBaseHappinesssFromGenerationId(pokemonBaseHappiness.PokemonId, pokemonBaseHappiness.GenerationId);
                 PokemonBaseHappinessViewModel model = new PokemonBaseHappinessViewModel()
                 {
                     Id = baseHappiness.Id,
@@ -1594,6 +1594,16 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
         }
 
+        private PokemonCaptureRateDetail GetPokemonWithCaptureRatesFromGenerationId(int pokemonId, int generationId)
+        {
+            return this.dataService.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate, Generation").First(x => x.Pokemon.Id == pokemonId && x.Generation.Id == generationId);
+        }
+
+        private PokemonBaseHappinessDetail GetPokemonWithBaseHappinesssFromGenerationId(int pokemonId, int generationId)
+        {
+            return this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness, Generation").First(x => x.Pokemon.Id == pokemonId && x.Generation.Id == generationId);
+        }
+
         /// <summary>
         /// Gets a list of all pokemon and adds the form name to it if it is an alternate form.
         /// </summary>
@@ -1601,7 +1611,15 @@ namespace Pokedex.Controllers
         private List<Pokemon> GetAllPokemonWithFormNames()
         {
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName();
+            List<PokemonFormDetail> pokemonForm = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+            List<Pokemon> altFormList = pokemonForm.ConvertAll(x => x.AltFormPokemon);
+
+            foreach (var p in pokemonForm)
+            {
+                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
+                altFormList.Add(p.AltFormPokemon);
+            }
+
             Pokemon pokemon;
 
             foreach (var a in altFormList)
