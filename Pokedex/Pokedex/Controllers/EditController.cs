@@ -158,7 +158,7 @@ namespace Pokedex.Controllers
         public IActionResult GameAvailability(int id)
         {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithIncompleteWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
             EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
             {
                 Game = game,
@@ -1592,6 +1592,25 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(pokemonFormDetail);
 
             return this.RedirectToAction("AltForms", "Edit", new { pokemonId = pokemonFormDetail.OriginalPokemonId });
+        }
+
+        /// <summary>
+        /// Gets a list of all pokemon and adds the form name to it if it is an alternate form.
+        /// </summary>
+        /// <returns>Returns all pokemon with the form name attached.</returns>
+        private List<Pokemon> GetAllPokemonWithFormNames()
+        {
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            List<Pokemon> altFormList = this.dataService.GetAllAltFormsWithFormName();
+            Pokemon pokemon;
+
+            foreach (var a in altFormList)
+            {
+                pokemon = pokemonList.Find(x => x.Id == a.Id);
+                pokemon.Name = a.Name;
+            }
+
+            return pokemonList;
         }
     }
 }

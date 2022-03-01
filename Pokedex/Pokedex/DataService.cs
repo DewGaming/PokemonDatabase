@@ -343,31 +343,6 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<Pokemon> GetAllPokemonWithIncompleteWithFormNames()
-        {
-            List<Pokemon> pokemonList = this.dataContext.Pokemon
-                .Include(x => x.EggCycle)
-                .Include(x => x.GenderRatio)
-                .Include(x => x.Classification)
-                .Include(x => x.Game)
-                    .Include("Game.Generation")
-                .Include(x => x.ExperienceGrowth)
-                .OrderBy(x => x.PokedexNumber)
-                .ThenBy(x => x.Id)
-                .ToList();
-
-            List<Pokemon> altFormList = this.GetAllAltFormsWithFormName();
-            Pokemon pokemon;
-
-            foreach (var a in altFormList)
-            {
-                pokemon = pokemonList.Find(x => x.Id == a.Id);
-                pokemon.Name = a.Name;
-            }
-
-            return pokemonList;
-        }
-
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon()
         {
             List<Pokemon> pokemonList = this.dataContext.Pokemon
