@@ -2262,7 +2262,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    typeChart = typeChart.Where(x => x.GenerationId == generations.Last()).ToList();
+                    typeChart = typeChart.Where(x => x.GenerationId == generations.First()).ToList();
                 }
 
                 foreach (var t in typeList)
