@@ -2218,7 +2218,7 @@ namespace Pokedex.Controllers
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>
-        public List<Pokemon> GetAllPokemonWithoutForms()
+        private List<Pokemon> GetAllPokemonWithoutForms()
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
