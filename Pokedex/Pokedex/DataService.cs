@@ -437,7 +437,7 @@ namespace Pokedex
 
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
-            List<Pokemon> altFormList = this.GetObjects<PokemonFormDetail>().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
             List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
             List<int> pokemonIds = pokemonList.Select(x => x.PokemonId).Distinct().ToList();
 

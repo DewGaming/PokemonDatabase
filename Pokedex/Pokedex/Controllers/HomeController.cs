@@ -133,7 +133,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.AddPageView("All Pokemon Page", this.User.IsInRole("Owner"));
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
 
             List<int> model = pokemonList.Select(x => x.Game.GenerationId).Distinct().OrderBy(x => x).ToList();

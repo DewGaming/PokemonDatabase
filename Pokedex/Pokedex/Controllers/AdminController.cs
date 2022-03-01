@@ -47,7 +47,7 @@ namespace Pokedex.Controllers
         public IActionResult Pokemon()
         {
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>().Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
 
             List<int> model = pokemonList.Select(x => x.Game.GenerationId).Distinct().OrderBy(x => x).ToList();
