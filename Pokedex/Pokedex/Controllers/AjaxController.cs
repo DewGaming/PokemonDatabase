@@ -2253,7 +2253,7 @@ namespace Pokedex.Controllers
 
             foreach (var type in pokemonTypes)
             {
-                typeChart = this.dataService.GetObjects<TypeChart>(includes: "Attack, Defend", whereProperty: "Defend", wherePropertyValue: type);
+                typeChart = this.dataService.GetObjects<TypeChart>(includes: "Attack, Defend", whereProperty: "DefendId", wherePropertyValue: type.Id);
 
                 List<int> generations = typeChart.Select(x => x.GenerationId).Distinct().OrderByDescending(x => x).ToList();
                 if (generationId != 0)
