@@ -173,7 +173,7 @@ namespace Pokedex
         /// <returns>Returns whether the pokemon is an alternate form or not.</returns>
         public bool CheckIfAltForm(int id)
         {
-            return this.dataContext.PokemonFormDetails.ToList().Exists(x => x.AltFormPokemonId == id);
+            return this.GetObjects<PokemonFormDetail>().Exists(x => x.AltFormPokemonId == id);
         }
 
         /// <summary>
@@ -229,31 +229,18 @@ namespace Pokedex
 
         public string GetPokemonFormName(int pokemonId)
         {
-            return this.dataContext.PokemonFormDetails
-                .Include(x => x.Form)
+            return this.GetObjects<PokemonFormDetail>(includes: "Form")
                 .FirstOrDefault(x => x.AltFormPokemonId == pokemonId).Form.Name;
         }
 
         public List<PokemonGameDetail> GetPokemonGameDetails(int pokemonId)
         {
-            return this.dataContext.PokemonGameDetails
-                .Include(x => x.Pokemon)
-                    .Include("Pokemon.Game")
-                .Include(x => x.Game)
-                .Where(x => x.PokemonId == pokemonId)
-                .OrderBy(x => x.Game.GenerationId)
-                .ThenBy(x => x.GameId)
-                .ThenBy(x => x.Id)
-                .ToList();
+            return this.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId);
         }
 
         public List<PokemonGameDetail> GetPokemonGameDetailsByGame(int gameId)
         {
-            return this.dataContext.PokemonGameDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.Game)
-                .Where(x => x.GameId == gameId)
-                .ToList();
+            return this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: gameId);
         }
 
         public Pokemon GetPokemon(string name)
@@ -285,23 +272,12 @@ namespace Pokedex
 
         public List<Pokemon> GetAllPokemon()
         {
-            return this.dataContext.Pokemon
-                .Include(x => x.EggCycle)
-                .Include(x => x.GenderRatio)
-                .Include(x => x.Classification)
-                .Include(x => x.Game)
-                    .Include("Game.Generation")
-                .Include(x => x.ExperienceGrowth)
-                .OrderBy(x => x.PokedexNumber)
-                .ThenBy(x => x.Id)
-                .ToList();
+            return this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
         }
 
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon()
         {
-            List<Pokemon> pokemonList = this.dataContext.Pokemon
-                .Where(x => x.IsComplete)
-                .ToList();
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>(whereProperty: "IsComplete", wherePropertyValue: true);
 
             List<PokemonFormDetail> formDetails = new List<PokemonFormDetail>();
             List<string> formNames = new List<string>()
@@ -412,23 +388,12 @@ namespace Pokedex
 
         public List<PokemonTeam> GetPokemonTeamsByUserId(int id)
         {
-            return this.GetPokemonTeams()
-                .Where(x => x.User.Id == id)
-                .ToList();
+            return this.GetPokemonTeams().Where(x => x.User.Id == id).ToList();
         }
 
         public PokemonTeamDetail GetPokemonTeamDetail(int id)
         {
-            return this.dataContext.PokemonTeamDetails
-                .Include(x => x.Pokemon)
-                    .Include("Pokemon.Game.Generation")
-                .Include(x => x.Ability)
-                .Include(x => x.PokemonTeamEV)
-                .Include(x => x.PokemonTeamIV)
-                .Include(x => x.PokemonTeamMoveset)
-                .Include(x => x.BattleItem)
-                .Include(x => x.Nature)
-                .ToList()
+            return this.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature")
                 .Find(x => x.Id == id);
         }
 
@@ -438,46 +403,16 @@ namespace Pokedex
             List<PokemonFormDetail> pokemonFormList = new List<PokemonFormDetail>();
             if (this.CheckIfAltForm(pokemonId))
             {
-                PokemonFormDetail formDetail = this.dataContext.PokemonFormDetails
-                    .Include(x => x.AltFormPokemon)
-                        .Include("AltFormPokemon.EggCycle")
-                        .Include("AltFormPokemon.GenderRatio")
-                        .Include("AltFormPokemon.Classification")
-                        .Include("AltFormPokemon.Game")
-                        .Include("AltFormPokemon.ExperienceGrowth")
-                    .Include(x => x.Form)
-                    .ToList()
+                PokemonFormDetail formDetail = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form")
                     .Find(x => x.AltFormPokemonId == pokemonId);
 
-                pokemonFormList = this.dataContext.PokemonFormDetails
-                    .Include(x => x.AltFormPokemon)
-                        .Include("AltFormPokemon.EggCycle")
-                        .Include("AltFormPokemon.GenderRatio")
-                        .Include("AltFormPokemon.Classification")
-                        .Include("AltFormPokemon.Game")
-                        .Include("AltFormPokemon.ExperienceGrowth")
-                    .Include(x => x.Form)
-                    .OrderBy(x => x.AltFormPokemon.Game.ReleaseDate)
-                    .ThenBy(x => x.AltFormPokemon.PokedexNumber)
-                    .ThenBy(x => x.AltFormPokemon.Id)
-                    .Where(x => x.OriginalPokemonId == formDetail.OriginalPokemonId && x.AltFormPokemonId != pokemonId).ToList();
+                pokemonFormList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form").Where(x => x.OriginalPokemonId == formDetail.OriginalPokemonId && x.AltFormPokemonId != pokemonId).ToList();
 
                 pokemonFormList.Add(formDetail);
             }
             else
             {
-                pokemonFormList = this.dataContext.PokemonFormDetails
-                    .Include(x => x.AltFormPokemon)
-                        .Include("AltFormPokemon.EggCycle")
-                        .Include("AltFormPokemon.GenderRatio")
-                        .Include("AltFormPokemon.Classification")
-                        .Include("AltFormPokemon.Game")
-                        .Include("AltFormPokemon.ExperienceGrowth")
-                    .Include(x => x.Form)
-                    .OrderBy(x => x.AltFormPokemon.Game.ReleaseDate)
-                    .ThenBy(x => x.AltFormPokemon.PokedexNumber)
-                    .ThenBy(x => x.AltFormPokemon.Id)
-                    .Where(x => x.OriginalPokemonId == pokemonId).ToList();
+                pokemonFormList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form", "OriginalPokemonId", pokemonId);
             }
 
             foreach (var p in pokemonFormList)
@@ -490,10 +425,7 @@ namespace Pokedex
 
         public Pokemon GetAltFormWithFormName(int pokemonId)
         {
-            PokemonFormDetail pokemonForm = this.dataContext.PokemonFormDetails
-                .Include(x => x.AltFormPokemon)
-                .Include(x => x.Form)
-                .ToList()
+            PokemonFormDetail pokemonForm = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form")
                 .Find(x => x.AltFormPokemonId == pokemonId);
 
             Pokemon pokemon = pokemonForm.AltFormPokemon;
@@ -505,7 +437,7 @@ namespace Pokedex
 
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
-            List<Pokemon> altFormList = this.dataContext.PokemonFormDetails.Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altFormList = this.GetObjects<PokemonFormDetail>().Select(x => x.AltFormPokemon).ToList();
             List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
             List<int> pokemonIds = pokemonList.Select(x => x.PokemonId).Distinct().ToList();
 
@@ -545,94 +477,63 @@ namespace Pokedex
 
         public List<PokemonCaptureRateDetail> GetAllPokemonWithCaptureRates()
         {
-            return this.dataContext.PokemonCaptureRateDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.CaptureRate)
-                .Include(x => x.Generation)
+            return this.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate, Generation")
                 .OrderByDescending(x => x.GenerationId)
                 .ToList();
         }
 
         public List<PokemonBaseHappinessDetail> GetAllPokemonWithBaseHappinesses()
         {
-            return this.dataContext.PokemonBaseHappinessDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.BaseHappiness)
-                .Include(x => x.Generation)
+            return this.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness, Generation")
                 .OrderByDescending(x => x.GenerationId)
                 .ToList();
         }
 
         public List<PokemonCaptureRateDetail> GetPokemonWithCaptureRates(int pokemonId)
         {
-            return this.dataContext.PokemonCaptureRateDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.CaptureRate)
-                .Include(x => x.Generation)
-                .Where(x => x.Pokemon.Id == pokemonId)
+            return this.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate, Generation", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId)
                 .OrderByDescending(x => x.GenerationId)
                 .ToList();
         }
 
         public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroupsAndIncomplete()
         {
-            return this.dataContext.PokemonEggGroupDetails
-                .Include(x => x.Pokemon)
-                .Include(x => x.PrimaryEggGroup)
-                .Include(x => x.SecondaryEggGroup)
-                .ToList();
+            return this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
         }
 
         public BaseStat GetPokemonBaseStats(int pokemonId, int generationId)
         {
-            return this.dataContext.BaseStats
-                .Include(x => x.Pokemon)
+            return this.GetObjects<BaseStat>(includes: "Pokemon")
                 .ToList()
                 .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
         public EVYield GetPokemonEVYields(int pokemonId, int generationId)
         {
-            return this.dataContext.EVYields
-                .Include(x => x.Pokemon)
+            return this.GetObjects<EVYield>(includes: "Pokemon")
                 .ToList()
                 .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
         public List<BaseStat> GetBaseStat(int pokemonId)
         {
-            return this.dataContext.BaseStats
-                .Include(x => x.Pokemon)
-                .Where(x => x.Pokemon.Id == pokemonId)
-                .ToList();
+            return this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId);
         }
 
         public List<EVYield> GetEVYields(int pokemonId)
         {
-            return this.dataContext.EVYields
-                .Include(x => x.Pokemon)
-                .Where(x => x.Pokemon.Id == pokemonId)
-                .ToList();
+            return this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId);
         }
 
         public List<TypeChart> GetTypeCharts()
         {
-            return this.dataContext.TypeCharts
-                .Include(x => x.Attack)
-                .Include(x => x.Defend)
-                .OrderBy(x => x.AttackId)
-                .ThenBy(x => x.DefendId)
-                .ToList();
+            return this.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend");
         }
 
         public List<TypeChart> GetTypeChartByDefendType(int id, int genId)
         {
-            return this.dataContext.TypeCharts
-                .Include(x => x.Attack)
-                .Include(x => x.Defend)
+            return this.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend")
                 .Where(x => x.DefendId == id && x.GenerationId == genId)
-                .OrderBy(x => x.AttackId)
-                .ThenBy(x => x.DefendId)
                 .ToList();
         }
 
