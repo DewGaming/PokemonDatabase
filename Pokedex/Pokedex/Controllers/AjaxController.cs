@@ -1892,6 +1892,7 @@ namespace Pokedex.Controllers
                         AllGenerations = availableGenerations,
                         AllTypes = typesList,
                         AllLegendaryTypes = legendaryTypes,
+                        AllForms = this.dataService.GetObjects<Form>("Name", whereProperty: "SeparateRandomize", wherePropertyValue: true).ToList(),
                     };
 
                     return model;
@@ -1903,6 +1904,7 @@ namespace Pokedex.Controllers
                         AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
                         AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                         AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
+                        AllForms = this.dataService.GetObjects<Form>("Name", whereProperty: "SeparateRandomize", wherePropertyValue: true).ToList(),
                     };
 
                     return model;

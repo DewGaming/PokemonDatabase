@@ -30,6 +30,12 @@ namespace Pokedex.DataAccess.Models
         /// </summary>
         public bool SeparateRandomize { get; set; }
 
+        [Display(Name="Separate Form Option Name"), StringLength(25)]
+        /// <summary>
+        /// Gets or sets the name of the form.
+        /// </summary>
+        public string OptionName { get; set; }
+
         [Display(Name="Requires An item To Use"), Required]
         /// <summary>
         /// Gets or sets the necessity of an item.

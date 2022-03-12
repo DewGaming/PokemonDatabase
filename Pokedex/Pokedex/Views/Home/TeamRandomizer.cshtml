@@ -109,22 +109,17 @@
                 <input id="Mega" type="checkbox" value="Mega" checked="checked" />
                 <label for="Mega" class="generatorOptionTitle">Mega Evolutions</label>
             </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox alolanFormCheckbox">
-                <input id="Alolan" type="checkbox" value="Alolan" checked="checked" />
-                <label for="Alolan" class="generatorOptionTitle">Alolan Forms</label>
-            </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox galarianFormCheckbox">
-                <input id="Galarian" type="checkbox" value="Galarian" checked="checked" />
-                <label for="Galarian" class="generatorOptionTitle">Galarian Forms</label>
-            </li>
             <li class="dropdown-item generatorOption alternateFormCheckbox gigantamaxFormCheckbox">
                 <input id="Gigantamax" type="checkbox" value="Gigantamax" checked="checked" />
                 <label for="Gigantamax" class="generatorOptionTitle">Gigantamax Forms</label>
             </li>
-            <li class="dropdown-item generatorOption alternateFormCheckbox hisuianFormCheckbox">
-                <input id="Hisuian" type="checkbox" value="Hisuian" checked="checked" />
-                <label for="Hisuian" class="generatorOptionTitle">Hisuian Forms</label>
-            </li>
+            @foreach (var form in Model.AllForms)
+            {
+                <li class="dropdown-item generatorOption alternateFormCheckbox @(form.OptionName.ToLower())FormCheckbox">
+                    <input id="@form.OptionName" type="checkbox" value="@form.OptionName" checked="checked" />
+                    <label for="@form.OptionName" class="generatorOptionTitle">@form.OptionName Forms</label>
+                </li>
+            }
             <li class="dropdown-item generatorOption alternateFormCheckbox otherFormCheckbox">
                 <input id="Other" type="checkbox" value="Other" checked="checked" />
                 <label for="Other" class="generatorOptionTitle">Other Forms</label>

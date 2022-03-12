@@ -206,6 +206,7 @@ namespace Pokedex.Controllers
                 AllGames = selectableGames,
                 AllTypes = types,
                 AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
+                AllForms = this.dataService.GetObjects<Form>("Name", whereProperty: "SeparateRandomize", wherePropertyValue: true).ToList(),
             };
 
             return this.View(model);

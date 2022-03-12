@@ -15,6 +15,7 @@
             <th scope="col">Name</th>
             <th scope="col">Part Of "Other Forms" In Randomize Team Page</th>
             <th scope="col">Separate Form Option In Randomize Team Page</th>
+            <th scope="col">Separate Form Option Name</th>
             <th scope="col">Needs An Item</th>
             <th scope="col">Actions</th>
         </tr>
@@ -24,6 +25,7 @@
                 <td>@item.Name</td>
                 <td>@(item.Randomizable ? "X" : string.Empty)</td>
                 <td>@(item.SeparateRandomize ? "X" : string.Empty)</td>
+                <td>@(!string.IsNullOrEmpty(item.OptionName) ? item.OptionName : string.Empty)</td>
                 <td>@(item.NeedsItem ? "X" : string.Empty)</td>
                 <td>
                     <a href="@(this.Url.Action("Form", "Edit", new { id = item.Id }))">Edit</a>

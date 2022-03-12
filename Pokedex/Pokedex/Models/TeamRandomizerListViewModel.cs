@@ -27,5 +27,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all legendary types.
         /// </summary>
         public List<LegendaryType> AllLegendaryTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all forms.
+        /// </summary>
+        public List<Form> AllForms { get; set; }
     }
 }
