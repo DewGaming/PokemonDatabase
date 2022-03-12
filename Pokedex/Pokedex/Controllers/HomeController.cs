@@ -445,29 +445,6 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// The page that is used to calculate the capture chance of a pokemon.
-        /// </summary>
-        /// <returns>The capture calculator page.</returns>
-        [AllowAnonymous]
-        [Route("capture_calculator")]
-        public IActionResult CaptureCalculator()
-        {
-            this.dataService.AddPageView("Capture Calculator Page", this.User.IsInRole("Owner"));
-            CaptureCalculatorViewModel model = new CaptureCalculatorViewModel()
-            {
-                AllPokemon = this.GetAllPokemonForCaptureCalculator(),
-                AllPokeballs = this.dataService.GetObjects<Pokeball>("Name"),
-                AllStatuses = this.dataService.GetObjects<Status>("Name"),
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-            };
-
-            model.AllGenerations.Insert(3, new Generation() { Id = 99 });
-            model.AllGenerations.Insert(4, new Generation() { Id = 100 });
-
-            return this.View(model);
-        }
-
-        /// <summary>
         /// The page used for users to create comments regarding the website.
         /// </summary>
         /// <returns>Returns the comment page.</returns>
@@ -715,42 +692,6 @@ namespace Pokedex.Controllers
             }
 
             return pokemonName;
-        }
-
-        /// <summary>
-        /// Gets all of the pokemon used for the capture calculator.
-        /// </summary>
-        /// <returns>The list of capturable pokemon.</returns>
-        private List<Pokemon> GetAllPokemonForCaptureCalculator()
-        {
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth", "IsComplete", true);
-
-            List<PokemonFormDetail> pokemonForm = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true);
-
-            List<PokemonFormDetail> altFormList = new List<PokemonFormDetail>();
-
-            foreach (var p in pokemonForm)
-            {
-                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
-                altFormList.Add(p);
-            }
-
-            Pokemon pokemon;
-
-            foreach (var a in altFormList)
-            {
-                pokemon = pokemonList.Find(x => x.Id == a.AltFormPokemonId);
-                if (a.Form.Catchable)
-                {
-                    pokemon.Name = a.AltFormPokemon.Name;
-                }
-                else
-                {
-                    pokemonList.Remove(pokemon);
-                }
-            }
-
-            return pokemonList;
         }
 
         /// <summary>

@@ -33,13 +33,13 @@
         <a href="@this.Url.Action("AllPokemon", "Home")"><p>Lookup Pokemon!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("AllPokemon", "Home")" alt="Pokemon List" title="Lookup different Pokémon stats, separated by different generations!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonList.png"))">
     </div>
-    <div class="feature captureCalculator">
-        <a href="@this.Url.Action("CaptureCalculator", "Home")"><p>Calculate Chance of Capture!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("CaptureCalculator", "Home")" alt="Capture Calculator" title="Find out what the chances of catching a Pokémon depending on it's health, what pokeball you use, and various other options!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "captureCalculator.png"))">
-    </div>
     <div class="feature teamRandomizerFeature">
         <a href="@this.Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
+    </div>
+    <div class="feature gameAvailability">
+        <a href="@this.Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
     </div>
 </div>
 <div class="siteFeatures">
@@ -57,10 +57,6 @@
     </div>
 </div>
 <div class="siteFeatures">
-    <div class="feature gameAvailability">
-        <a href="@this.Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
-    </div>
     <div class="feature teamBuilder">
         <a href="@this.Url.Action("PokemonTeams", "User")"><p>Build Teams!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("PokemonTeams", "User")" alt="Team Builder" title="Build different teams with the given options, or import them from Pokémon Showdown!  Once saved, you can export them to Showdown as well! Requires you to be logged into your account to use." src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonTeams.png"))">
