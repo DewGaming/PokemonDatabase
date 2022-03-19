@@ -983,7 +983,7 @@ namespace Pokedex.Controllers
 
         [AllowAnonymous]
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, string selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1378,7 +1378,7 @@ namespace Pokedex.Controllers
 
                 if (allPokemon.Count > 0)
                 {
-                    for (var i = 0; i < 6; i++)
+                    for (var i = 0; i < pokemonCount; i++)
                     {
                         if (pokemonList.Count >= allPokemon.Count)
                         {

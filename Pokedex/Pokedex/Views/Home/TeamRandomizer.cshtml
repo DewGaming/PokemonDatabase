@@ -32,6 +32,10 @@
     </span>
     <ul class="generatorDropdownMenu dropdown-menu">
         <section class="generatorSection">
+            <span class="generationOptionTitle" id="pokemonCount">Pokémon Count</span>
+            <li class="dropdown-item generatorOption evolutionNumber">
+                <input id="pokemonCount" name="pokemonCount" type="number" autocomplete="off" value="6" min="1" max="6" />
+            </li>
             <span class="generationOptionTitle" id="generations">Generations</span>
             @foreach (var gen in Model.AllGames.Select(x => x.GenerationId).Distinct().ToList())
             {
