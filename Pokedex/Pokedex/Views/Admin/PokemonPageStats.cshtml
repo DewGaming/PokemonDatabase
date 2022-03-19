@@ -26,6 +26,7 @@
 <div style="display: none" class="pokemonPageCheck" id="pokemonPage"></div>
 
 <div class="pageButtons year">
+    <button id="Popularity" onclick="lookupPopularity()">Popularity</button>
     @foreach (var item in Model.GroupBy(x => x.VisitDate.ToString("yyyy")).Select(x => x.First()).ToList())
     {
         int year = Convert.ToInt16(item.VisitDate.ToString("yyyy"));

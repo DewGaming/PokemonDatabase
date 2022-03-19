@@ -216,3 +216,17 @@ function lookupDay(day) {
     $('.day.pageStatList').addClass('active');
   });
 }
+
+function lookupPopularity() {
+  $('.year button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.year.pageStatList').removeClass('active');
+  $('.year.pageStatList').empty();
+  $('button#Popularity').addClass('active');
+
+  $('.year.pageStatList').load('/get-stats-by-popularity/', function () {
+    $('.year.pageStatList').addClass('active');
+  });
+}
