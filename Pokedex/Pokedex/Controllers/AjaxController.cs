@@ -1520,20 +1520,16 @@ namespace Pokedex.Controllers
 
                 if (selectedGame.GenerationId != 1)
                 {
-                    while (!model.ShinyChance.Contains(4096))
+                    foreach (var p in model.AllPokemonOriginalNames)
                     {
-                        model.ShinyChance = new List<int>();
-                        foreach (var p in model.AllPokemonOriginalNames)
+                        Random rand = new Random();
+                        if (selectedGame.Id == 0 || selectedGame.GenerationId >= 6)
                         {
-                            Random rand = new Random();
-                            if (selectedGame.Id == 0 || selectedGame.GenerationId >= 6)
-                            {
-                                model.ShinyChance.Add(rand.Next(1, 4097));
-                            }
-                            else
-                            {
-                                model.ShinyChance.Add(rand.Next(1, 8193));
-                            }
+                            model.ShinyChance.Add(rand.Next(1, 4097));
+                        }
+                        else
+                        {
+                            model.ShinyChance.Add(rand.Next(1, 8193));
                         }
                     }
                 }
