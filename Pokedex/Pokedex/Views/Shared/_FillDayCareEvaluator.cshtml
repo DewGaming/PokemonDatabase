@@ -7,13 +7,13 @@
     @if (Model.AllAltForms.Any(x => x.Id == @Model.SearchedPokemon.Id))
     {
         <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.SearchedPokemon.Id, generationId = Model.GenerationId } )">
-            <img class="pokemonlistPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
+            <img class="pokemonListPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
         </a>
     }
     else
     {
         <a href="@this.Url.Action("Pokemon", "Home", new { name = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
-            <img class="pokemonlistPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
+            <img class="pokemonListPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
         </a>
     }
     <div class="eggGroups">

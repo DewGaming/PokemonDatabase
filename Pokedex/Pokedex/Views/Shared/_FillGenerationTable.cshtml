@@ -16,10 +16,10 @@
             <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
             <div class="pokemonImages">
                 <div class="front">
-                    <img class="pokemonlistPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
+                    <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
                 </div>
                 <div class="back">
-                    <img class="pokemonlistPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl.Replace("normal", "shiny"))">
+                    <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl.Replace("normal", "shiny"))">
                 </div>
             </div>
             </a>
