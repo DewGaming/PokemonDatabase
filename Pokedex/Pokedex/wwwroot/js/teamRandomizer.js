@@ -478,7 +478,7 @@ $(window).on('resize', function () {
 });
 
 $('.generatorButton').on('click', function () {
-    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions, selectedGame, selectedType;
+    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions = [], selectedGame, selectedType;
     $('.generationCheckbox input').each(function () {
         if ($(this).prop('checked')) {
             selectedGens.push(this.value);
@@ -497,9 +497,9 @@ $('.generatorButton').on('click', function () {
         }
     });
 
-    $('.evolutionRadio input').each(function () {
+    $('.evolutionCheckbox input').each(function () {
         if ($(this).prop('checked')) {
-            selectedEvolutions = this.value;
+            selectedEvolutions.push(this.value);
         }
     });
 

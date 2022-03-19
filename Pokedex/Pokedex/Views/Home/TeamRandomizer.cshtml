@@ -45,21 +45,17 @@
                 </li>
             }
             <span class="generationOptionTitle" id="evolutions">Evolutions</span>
-            <li class="dropdown-item generatorOption evolutionRadio">
-                <input id="allEvolutions" type="radio" name="evolutionSelection" value="allEvolutions" checked="checked" />
-                <label for="allEvolutions" class="generatorRadio">All Evolutions</label>
+            <li class="dropdown-item generatorOption evolutionCheckbox">
+                <input id="stage1Pokemon" type="checkbox" value="stage1Pokemon" checked="checked" />
+                <label for="stage1Pokemon" class="generatorOptionTitle">Pre Evolution</label>
             </li>
-            <li class="dropdown-item generatorOption evolutionRadio">
-                <input id="stage1Pokemon" type="radio" name="evolutionSelection" value="stage1Pokemon" />
-                <label for="stage1Pokemon" class="generatorRadio">Pre Evolution</label>
+            <li class="dropdown-item generatorOption evolutionCheckbox">
+                <input id="stage2Pokemon" type="checkbox" value="middleEvolution" checked="checked" />
+                <label for="stage2Pokemon" class="generatorOptionTitle">Middle Evolution</label>
             </li>
-            <li class="dropdown-item generatorOption evolutionRadio">
-                <input id="stage2Pokemon" type="radio" name="evolutionSelection" value="middleEvolution" />
-                <label for="stage2Pokemon" class="generatorRadio">Middle Evolution</label>
-            </li>
-            <li class="dropdown-item generatorOption evolutionRadio">
-                <input id="onlyFullyEvolved" type="radio" name="evolutionSelection" value="onlyFullyEvolved" />
-                <label for="onlyFullyEvolved" class="generatorRadio">Final Evolution</label>
+            <li class="dropdown-item generatorOption evolutionCheckbox">
+                <input id="onlyFullyEvolved" type="checkbox" value="onlyFullyEvolved" checked="checked" />
+                <label for="onlyFullyEvolved" class="generatorOptionTitle">Final Evolution</label>
             </li>
         </section>
         <section style="margin-bottom: -25px;" class="generatorSection">

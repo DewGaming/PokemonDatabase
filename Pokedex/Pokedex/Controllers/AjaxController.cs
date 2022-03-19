@@ -1331,44 +1331,43 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                if (selectedEvolutions == "stage1Pokemon")
+                if (selectedEvolutions.Count > 0 && selectedEvolutions.Count() < 3)
                 {
-                    List<Pokemon> newPokemon = new List<Pokemon>();
-                    foreach (var p in allPokemon)
+                    List<Pokemon> evolutions = new List<Pokemon>();
+                    if (selectedEvolutions.Contains("stage1Pokemon"))
                     {
-                        if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                        foreach (var p in allPokemon)
                         {
-                            newPokemon.Add(p);
+                            if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                            {
+                                evolutions.Add(p);
+                            }
                         }
                     }
 
-                    allPokemon = newPokemon;
-                }
-                else if (selectedEvolutions == "middleEvolution")
-                {
-                    List<Pokemon> newPokemon = new List<Pokemon>();
-                    foreach (var p in allPokemon)
+                    if (selectedEvolutions.Contains("middleEvolution"))
                     {
-                        if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                        foreach (var p in allPokemon)
                         {
-                            newPokemon.Add(p);
+                            if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                            {
+                                evolutions.Add(p);
+                            }
                         }
                     }
 
-                    allPokemon = newPokemon;
-                }
-                else if (selectedEvolutions == "onlyFullyEvolved")
-                {
-                    List<Pokemon> newPokemon = new List<Pokemon>();
-                    foreach (var p in allPokemon)
+                    if (selectedEvolutions.Contains("onlyFullyEvolved"))
                     {
-                        if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
+                        foreach (var p in allPokemon)
                         {
-                            newPokemon.Add(p);
+                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
+                            {
+                                evolutions.Add(p);
+                            }
                         }
                     }
 
-                    allPokemon = newPokemon;
+                    allPokemon = evolutions;
                 }
 
                 if (availablePokemon.Count > 1)
