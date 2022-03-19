@@ -1005,6 +1005,7 @@ namespace Pokedex.Controllers
                     AllPokemonChangedNames = new List<Pokemon>(),
                     AllPokemonOriginalNames = new List<Pokemon>(),
                     PokemonAbilities = new List<Ability>(),
+                    ShinyChance = new List<int>(),
                     AppConfig = this.appConfig,
                 };
                 List<Pokemon> pokemonList = new List<Pokemon>();
@@ -1482,7 +1483,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                if (randomAbility && selectedGame.Id != 1 && selectedGame.Id != 2)
+                if (randomAbility && selectedGame.GenerationId != 1 && selectedGame.GenerationId != 2)
                 {
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
@@ -1514,6 +1515,26 @@ namespace Pokedex.Controllers
                         }
 
                         model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                    }
+                }
+
+                if (selectedGame.GenerationId != 1)
+                {
+                    while (!model.ShinyChance.Contains(4096))
+                    {
+                        model.ShinyChance = new List<int>();
+                        foreach (var p in model.AllPokemonOriginalNames)
+                        {
+                            Random rand = new Random();
+                            if (selectedGame.Id == 0 || selectedGame.GenerationId >= 6)
+                            {
+                                model.ShinyChance.Add(rand.Next(1, 4097));
+                            }
+                            else
+                            {
+                                model.ShinyChance.Add(rand.Next(1, 8193));
+                            }
+                        }
                     }
                 }
 
