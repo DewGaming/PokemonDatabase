@@ -1109,48 +1109,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_pokeball/{id:int}")]
-        public IActionResult Pokeball(int id)
-        {
-            Pokeball pokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id, "Generation");
-            PokeballAdminViewModel model = new PokeballAdminViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-                Id = pokeball.Id,
-                Name = pokeball.Name,
-                GenerationId = pokeball.GenerationId,
-                Generation = pokeball.Generation,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_pokeball/{id:int}")]
-        public IActionResult Pokeball(Pokeball pokeball)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Pokeball newPokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", pokeball.Id, "Generation");
-                PokeballAdminViewModel model = new PokeballAdminViewModel()
-                {
-                    AllGenerations = this.dataService.GetObjects<Generation>(),
-                    Id = newPokeball.Id,
-                    Name = newPokeball.Name,
-                    GenerationId = newPokeball.GenerationId,
-                    Generation = newPokeball.Generation,
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(pokeball);
-
-            return this.RedirectToAction("Pokeballs", "Admin");
-        }
-
-        [HttpGet]
         [Route("edit_region/{id:int}")]
         public IActionResult Region(int id)
         {
@@ -1190,32 +1148,6 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(region);
 
             return this.RedirectToAction("Regions", "Admin");
-        }
-
-        [HttpGet]
-        [Route("edit_status/{id:int}")]
-        public IActionResult Status(int id)
-        {
-            Status model = this.dataService.GetObjectByPropertyValue<Status>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_status/{id:int}")]
-        public IActionResult Status(Status status)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Status model = this.dataService.GetObjectByPropertyValue<Status>("Id", status.Id);
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(status);
-
-            return this.RedirectToAction("Statuses", "Admin");
         }
 
         [HttpGet]
@@ -1300,45 +1232,6 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(pokemonBaseHappiness);
 
             return this.RedirectToAction("Pokemon", "Admin");
-        }
-
-        [HttpGet]
-        [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail(int id)
-        {
-            PokeballCatchModifierDetail model = this.dataService.GetObjectByPropertyValue<PokeballCatchModifierDetail>("Id", id, "Pokeball");
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                PokeballCatchModifierDetail model = this.dataService.GetObjectByPropertyValue<PokeballCatchModifierDetail>("Id", pokeballCatchModifierDetail.Id, "Pokeball");
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(pokeballCatchModifierDetail);
-
-            return this.RedirectToAction("Pokeballs", "Admin");
-        }
-
-        [Route("pokeball_catch_modifier/{pokeballId:int}")]
-        public IActionResult PokeballCatchModifiers(int pokeballId)
-        {
-            PokeballViewModel model = new PokeballViewModel()
-            {
-                PokeballId = pokeballId,
-                AllPokeballs = this.dataService.GetObjects<Pokeball>("GenerationId, Name", "Generation"),
-                AllCatchModifiers = this.dataService.GetObjects<PokeballCatchModifierDetail>(includes: "Pokeball"),
-            };
-
-            return this.View(model);
         }
 
         [HttpGet]

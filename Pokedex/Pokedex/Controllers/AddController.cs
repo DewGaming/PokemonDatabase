@@ -502,63 +502,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_pokeball")]
-        public IActionResult Pokeball()
-        {
-            PokeballAdminViewModel model = new PokeballAdminViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_pokeball")]
-        public IActionResult Pokeball(Pokeball pokeball)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                PokeballAdminViewModel model = new PokeballAdminViewModel()
-                {
-                    AllGenerations = this.dataService.GetObjects<Generation>(),
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.AddObject(pokeball);
-
-            return this.RedirectToAction("Pokeballs", "Admin");
-        }
-
-        [HttpGet]
-        [Route("add_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifierDetail, int id)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            pokeballCatchModifierDetail.PokeballId = id;
-            pokeballCatchModifierDetail.Id = 0;
-
-            this.dataService.AddObject(pokeballCatchModifierDetail);
-
-            return this.RedirectToAction("Pokeballs", "Admin");
-        }
-
-        [HttpGet]
         [Route("add_base_happiness")]
         public IActionResult BaseHappiness()
         {
@@ -623,28 +566,6 @@ namespace Pokedex.Controllers
             }
 
             return this.RedirectToAction("Games", "Admin");
-        }
-
-        [HttpGet]
-        [Route("add_status")]
-        public IActionResult Status()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_status")]
-        public IActionResult Status(Status status)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddObject(status);
-
-            return this.RedirectToAction("Statuses", "Admin");
         }
 
         [HttpGet]

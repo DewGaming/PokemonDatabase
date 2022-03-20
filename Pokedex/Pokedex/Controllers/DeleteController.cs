@@ -47,33 +47,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_pokeball/{id:int}")]
-        public IActionResult Pokeball(int id)
-        {
-            Pokeball pokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id, "Generation");
-            PokeballAdminViewModel model = new PokeballAdminViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-                Id = pokeball.Id,
-                Name = pokeball.Name,
-                GenerationId = pokeball.GenerationId,
-                Generation = pokeball.Generation,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_pokeball/{id:int}")]
-        public IActionResult Pokeball(Pokeball pokeball)
-        {
-            this.dataService.DeleteObject<Pokeball>(pokeball.Id);
-
-            return this.RedirectToAction("Pokeballs", "Admin");
-        }
-
-        [HttpGet]
         [Route("delete_region/{id:int}")]
         public IActionResult Region(int id)
         {
@@ -117,44 +90,6 @@ namespace Pokedex.Controllers
             this.dataService.DeleteObject<PageStat>(pageStat.Id);
 
             return this.RedirectToAction("PageStats", "Owner");
-        }
-
-        [HttpGet]
-        [Route("delete_status/{id:int}")]
-        public IActionResult Status(int id)
-        {
-            Status model = this.dataService.GetObjectByPropertyValue<Status>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_status/{id:int}")]
-        public IActionResult Status(Status status)
-        {
-            this.dataService.DeleteObject<Status>(status.Id);
-
-            return this.RedirectToAction("Statuses", "Admin");
-        }
-
-        [HttpGet]
-        [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail(int id)
-        {
-            PokeballCatchModifierDetail model = this.dataService.GetObjectByPropertyValue<PokeballCatchModifierDetail>("Id", id, "Pokeball");
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_pokeball_catch_modifier_detail/{id:int}")]
-        public IActionResult PokeballCatchModifierDetail(PokeballCatchModifierDetail pokeballCatchModifier)
-        {
-            this.dataService.DeleteObject<PokeballCatchModifierDetail>(pokeballCatchModifier.Id);
-
-            return this.RedirectToAction("Pokeballs", "Admin");
         }
 
         [HttpGet]

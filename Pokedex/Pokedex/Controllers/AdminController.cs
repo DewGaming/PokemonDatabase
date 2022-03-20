@@ -147,26 +147,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("statuses")]
-        public IActionResult Statuses()
-        {
-            List<Status> model = this.dataService.GetObjects<Status>("Name");
-
-            return this.View(model);
-        }
-
-        [Route("pokeballs")]
-        public IActionResult Pokeballs()
-        {
-            PokeballViewModel model = new PokeballViewModel()
-            {
-                AllPokeballs = this.dataService.GetObjects<Pokeball>("GenerationId, Name", "Generation"),
-                AllCatchModifiers = this.dataService.GetObjects<PokeballCatchModifierDetail>(includes: "Pokeball"),
-            };
-
-            return this.View(model);
-        }
-
         [Route("ability")]
         public IActionResult Abilities()
         {

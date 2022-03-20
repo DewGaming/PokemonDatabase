@@ -59,11 +59,8 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Nature> Natures { get; set; }
         public DbSet<ReviewedPokemon> ReviewedPokemons { get; set; }
         public DbSet<PokemonGameDetail> PokemonGameDetails { get; set; }
-        public DbSet<Pokeball> Pokeballs { get; set; }
-        public DbSet<Status> Statuses { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<GameRegionDetail> GameRegionDetails { get; set; }
-        public DbSet<PokeballCatchModifierDetail> PokeballCatchModifierDetails { get; set; }
         public DbSet<PokemonCaptureRateDetail> PokemonCaptureRateDetails { get; set; }
         public DbSet<PageStat> PageStats { get; set; }
     }
