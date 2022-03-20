@@ -253,7 +253,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, shinyChance
                     $(".randomAbilityCheckbox").show();
                 }
 
-                if ($.inArray(selectedGame, ['1', '2']) != -1) {
+                if ($.inArray(selectedGame, ['1', '2', '20', '23']) != -1) {
                     $("#alternateForms").hide();
                     $(".otherFormCheckbox").hide();
                     $("#Other").prop('checked', false);
