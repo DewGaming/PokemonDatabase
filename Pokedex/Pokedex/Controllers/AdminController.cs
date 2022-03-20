@@ -147,6 +147,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("form_groups")]
+        public IActionResult FormGroups()
+        {
+            FormGroupViewModel model = new FormGroupViewModel()
+            {
+                AllFormGroups = this.dataService.GetObjects<FormGroup>(),
+                AllForms = this.dataService.GetObjects<Form>("Name"),
+            };
+
+            return this.View(model);
+        }
+
         [Route("ability")]
         public IActionResult Abilities()
         {
@@ -176,7 +188,7 @@ namespace Pokedex.Controllers
         {
             FormViewModel model = new FormViewModel()
             {
-                AllForms = this.dataService.GetObjects<Form>("Name"),
+                AllForms = this.dataService.GetObjects<Form>("Name", "FormGroup"),
                 AllPokemon = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form"),
             };
 

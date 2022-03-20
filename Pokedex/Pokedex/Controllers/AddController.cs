@@ -208,6 +208,28 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_form_group")]
+        public IActionResult FormGroup()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_form_group")]
+        public IActionResult FormGroup(FormGroup formGroup)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(formGroup);
+
+            return this.RedirectToAction("FormGroups", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_type")]
         public IActionResult Type()
         {
@@ -417,7 +439,12 @@ namespace Pokedex.Controllers
         [Route("add_form")]
         public IActionResult Form()
         {
-            return this.View();
+            FormModelViewModel model = new FormModelViewModel()
+            {
+                AllFormGroups = this.dataService.GetObjects<FormGroup>(),
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -427,7 +454,12 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                FormModelViewModel model = new FormModelViewModel()
+                {
+                    AllFormGroups = this.dataService.GetObjects<FormGroup>(),
+                };
+    
+                return this.View(model);
             }
 
             this.dataService.AddObject(form);

@@ -570,154 +570,45 @@ namespace Pokedex.Controllers
                     allPokemon = legendaryList;
                 }
 
-                if (selectedForms.Count != 0)
+                if (selectedForms.Count() != 0)
                 {
                     List<Pokemon> altForms = new List<Pokemon>();
 
-                    if (selectedForms.Contains("Mega"))
+                    if (selectedForms.Where(x => x != "Other").Count() > 0)
                     {
-                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => x.Form.Name.Contains("Mega")).ToList();
-
-                        List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
-
-                        foreach (var p in allPokemon)
+                        FormGroup formGroup;
+                        List<Form> forms;
+                        List<PokemonFormDetail> pokemonFormList, filteredFormList;
+                        foreach (var formGroupName in selectedForms.Where(x => x != "Other"))
                         {
-                            List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
-                            foreach (var a in altForm)
+                            formGroup = this.dataService.GetObjectByPropertyValue<FormGroup>("Name", formGroupName);
+                            forms = this.dataService.GetObjects<Form>(whereProperty: "FormGroupId", wherePropertyValue: formGroup.Id);
+                            pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => forms.Any(y => y.Id == x.FormId)).ToList();
+                            filteredFormList = new List<PokemonFormDetail>();
+
+                            foreach (var p in allPokemon)
                             {
-                                a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
-                            }
-
-                            if (altForm.Count > 0)
-                            {
-                                filteredFormList.AddRange(altForm);
-                            }
-                        }
-
-                        if (filteredFormList.Count > 0)
-                        {
-                            foreach (var p in filteredFormList)
-                            {
-                                altForms.Add(p.AltFormPokemon);
-                            }
-                        }
-                    }
-
-                    if (selectedForms.Contains("Alolan"))
-                    {
-                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => x.Form.Name == "Alola").ToList();
-
-                        List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
-
-                        foreach (var p in allPokemon)
-                        {
-                            if (selectedGame.Id != 37 || (selectedGame.Id == 37 && p.Id == 54))
-                            {
-                                List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
-                                foreach (var a in altForm)
+                                if (formGroup.Name != "Alolan" || (formGroup.Name == "Alolan" && (selectedGame.Id != 37 || (selectedGame.Id == 37 && (p.Id == 54 || p.Id == 56)))))
                                 {
-                                    a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
-                                }
+                                    List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
+                                    foreach (var a in altForm)
+                                    {
+                                        a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
+                                    }
 
-                                if (altForm.Count > 0)
-                                {
-                                    filteredFormList.AddRange(altForm);
+                                    if (altForm.Count > 0)
+                                    {
+                                        filteredFormList.AddRange(altForm);
+                                    }
                                 }
                             }
-                        }
 
-                        if (filteredFormList.Count > 0)
-                        {
-                            foreach (var p in filteredFormList)
+                            if (filteredFormList.Count > 0)
                             {
-                                altForms.Add(p.AltFormPokemon);
-                            }
-                        }
-                    }
-
-                    if (selectedForms.Contains("Galarian"))
-                    {
-                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => x.Form.Name == "Galar").ToList();
-
-                        List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
-
-                        foreach (var p in allPokemon)
-                        {
-                            List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
-                            foreach (var a in altForm)
-                            {
-                                a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
-                            }
-
-                            if (altForm.Count > 0)
-                            {
-                                filteredFormList.AddRange(altForm);
-                            }
-                        }
-
-                        if (filteredFormList.Count > 0)
-                        {
-                            foreach (var p in filteredFormList)
-                            {
-                                altForms.Add(p.AltFormPokemon);
-                            }
-                        }
-                    }
-
-                    if (selectedForms.Contains("Gigantamax"))
-                    {
-                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => x.Form.Name.Contains("Gigantamax")).ToList();
-
-                        List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
-
-                        foreach (var p in allPokemon)
-                        {
-                            List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
-                            foreach (var a in altForm)
-                            {
-                                a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
-                            }
-
-                            if (altForm.Count > 0)
-                            {
-                                filteredFormList.AddRange(altForm);
-                            }
-                        }
-
-                        if (filteredFormList.Count > 0)
-                        {
-                            foreach (var p in filteredFormList)
-                            {
-                                altForms.Add(p.AltFormPokemon);
-                            }
-                        }
-                    }
-
-                    if (selectedForms.Contains("Hisuian"))
-                    {
-                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => x.Form.Name == "Hisui").ToList();
-
-                        List<PokemonFormDetail> filteredFormList = new List<PokemonFormDetail>();
-
-                        foreach (var p in allPokemon)
-                        {
-                            List<PokemonFormDetail> altForm = pokemonFormList.Where(x => x.OriginalPokemonId == p.Id).ToList();
-                            foreach (var a in altForm)
-                            {
-                                a.AltFormPokemon.Name = string.Concat(a.AltFormPokemon.Name, " (", a.Form.Name, ")");
-                            }
-
-                            if (altForm.Count > 0)
-                            {
-                                filteredFormList.AddRange(altForm);
-                            }
-                        }
-
-                        if (filteredFormList.Count > 0)
-                        {
-                            foreach (var p in filteredFormList)
-                            {
-                                altForms.Add(p.AltFormPokemon);
+                                foreach (var p in filteredFormList)
+                                {
+                                    altForms.Add(p.AltFormPokemon);
+                                }
                             }
                         }
                     }
@@ -1405,7 +1296,7 @@ namespace Pokedex.Controllers
                         AllGenerations = availableGenerations,
                         AllTypes = typesList,
                         AllLegendaryTypes = legendaryTypes,
-                        AllForms = this.dataService.GetObjects<Form>("Name", whereProperty: "SeparateRandomize", wherePropertyValue: true).ToList(),
+                        AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
                     };
 
                     return model;
@@ -1417,7 +1308,7 @@ namespace Pokedex.Controllers
                         AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
                         AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                         AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                        AllForms = this.dataService.GetObjects<Form>("Name", whereProperty: "SeparateRandomize", wherePropertyValue: true).ToList(),
+                        AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
                     };
 
                     return model;

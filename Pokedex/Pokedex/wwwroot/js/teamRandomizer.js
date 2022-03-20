@@ -271,14 +271,14 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, shinyChance
                         $(".multipleMegaBoolCheckbox").show();
                     }
 
-                    if (!$('.megaCheckbox').is(':visible')) {
-                        $(".megaCheckbox").show();
+                    if (!$('.megaFormCheckbox').is(':visible')) {
+                        $(".megaFormCheckbox").show();
                     }
                 }
                 else {
                     $(".multipleMegaBoolCheckbox").hide();
                     $("#multipleMegaBool").prop('checked', false);
-                    $(".megaCheckbox").hide();
+                    $(".megaFormCheckbox").hide();
                     $("#Mega").prop('checked', false);
                 }
 
@@ -445,7 +445,7 @@ $('.legendaryCheckbox').on('click', function () {
     checkOtherOptions();
 });
 
-$('.megaCheckbox').on('click', function () {
+$('.megaFormCheckbox').on('click', function () {
     checkMegaCheck();
     checkOtherOptions();
 });

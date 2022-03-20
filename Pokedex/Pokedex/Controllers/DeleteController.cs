@@ -401,6 +401,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_form_group/{id:int}")]
+        public IActionResult FormGroup(int id)
+        {
+            FormGroup model = this.dataService.GetObjectByPropertyValue<FormGroup>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_form_group/{id:int}")]
+        public IActionResult FormGroup(FormGroup formGroup)
+        {
+            this.dataService.DeleteObject<FormGroup>(formGroup.Id);
+
+            return this.RedirectToAction("FormGroups", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_classification/{id:int}")]
         public IActionResult Classification(int id)
         {

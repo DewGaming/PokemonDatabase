@@ -31,6 +31,6 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all forms.
         /// </summary>
-        public List<Form> AllForms { get; set; }
+        public List<FormGroup> AllFormGroups { get; set; }
     }
 }

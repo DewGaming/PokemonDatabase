@@ -1,0 +1,33 @@
+@model Pokedex.Models.FormGroupViewModel;
+@{
+    Layout = "_Layout";
+}
+
+<div class="formTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("FormGroup", "Add")" role="button">Add Form Group</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model.AllFormGroups)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a href="@(this.Url.Action("FormGroup", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllForms.Exists(x => x.FormGroupId == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("FormGroup", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

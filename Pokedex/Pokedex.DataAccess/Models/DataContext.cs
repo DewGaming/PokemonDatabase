@@ -33,6 +33,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<EVYield> EVYields { get; set; }
         public DbSet<ExperienceGrowth> ExperienceGrowths { get; set; }
         public DbSet<Form> Forms { get; set; }
+        public DbSet<FormGroup> FormGroups { get; set; }
         public DbSet<GenderRatio> GenderRatios { get; set; }
         public DbSet<Generation> Generations { get; set; }
         public DbSet<Game> Games { get; set; }

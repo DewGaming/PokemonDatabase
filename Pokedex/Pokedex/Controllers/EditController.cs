@@ -1005,10 +1005,45 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_form_group/{id:int}")]
+        public IActionResult FormGroup(int id)
+        {
+            FormGroup model = this.dataService.GetObjectByPropertyValue<FormGroup>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_form_group/{id:int}")]
+        public IActionResult FormGroup(FormGroup formGroup)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                FormGroup model = this.dataService.GetObjectByPropertyValue<FormGroup>("Id", formGroup.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(formGroup);
+
+            return this.RedirectToAction("FormGroups", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_form/{id:int}")]
         public IActionResult Form(int id)
         {
-            Form model = this.dataService.GetObjectByPropertyValue<Form>("Id", id);
+            Form form = this.dataService.GetObjectByPropertyValue<Form>("Id", id);
+            FormModelViewModel model = new FormModelViewModel()
+            {
+                Id = form.Id,
+                Name = form.Name,
+                Randomizable = form.Randomizable,
+                FormGroupId = form.FormGroupId,
+                NeedsItem = form.NeedsItem,
+                AllFormGroups = this.dataService.GetObjects<FormGroup>(),
+            };
 
             return this.View(model);
         }
@@ -1020,7 +1055,16 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Form model = this.dataService.GetObjectByPropertyValue<Form>("Id", form.Id);
+                Form newForm = this.dataService.GetObjectByPropertyValue<Form>("Id", form.Id);
+                FormModelViewModel model = new FormModelViewModel()
+                {
+                    Id = newForm.Id,
+                    Name = newForm.Name,
+                    Randomizable = newForm.Randomizable,
+                    FormGroupId = newForm.FormGroupId,
+                    NeedsItem = newForm.NeedsItem,
+                    AllFormGroups = this.dataService.GetObjects<FormGroup>(),
+                };
 
                 return this.View(model);
             }

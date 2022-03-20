@@ -24,17 +24,16 @@ namespace Pokedex.DataAccess.Models
         /// </summary>
         public bool Randomizable { get; set; }
 
-        [Display(Name="Separate Form Option in Randomize Team Page"), Required]
+        [Display(Name="Separate Form Group")]
         /// <summary>
-        /// Gets or sets the ability to appear as a separate option in the forms category in the randomize team page.
+        /// Gets or sets the id of the group this form belongs to.
         /// </summary>
-        public bool SeparateRandomize { get; set; }
+        public int? FormGroupId { get; set; }
 
-        [Display(Name="Separate Form Option Name"), StringLength(25)]
         /// <summary>
-        /// Gets or sets the name of the form.
+        /// Gets or sets the group this form belongs to.
         /// </summary>
-        public string OptionName { get; set; }
+        public FormGroup FormGroup { get; set; }
 
         [Display(Name="Requires An item To Use"), Required]
         /// <summary>
