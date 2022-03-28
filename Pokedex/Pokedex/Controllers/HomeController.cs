@@ -285,6 +285,35 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// The page that is used to evaluate the alternate forms of pokemon.
+        /// </summary>
+        /// <returns>Returns the form evaluator.</returns>
+        [AllowAnonymous]
+        [Route("form_evaluator")]
+        public IActionResult FormEvaluator()
+        {
+            this.dataService.AddPageView("Form Evaluator Page", this.User.IsInRole("Owner"));
+            List<Form> model = this.dataService.GetObjects<Form>();
+            List<FormGroup> formGroupList = this.dataService.GetObjects<FormGroup>();
+
+            foreach (var fg in formGroupList)
+            {
+                if (model.Where(x => x.FormGroupId == fg.Id).Count() > 1)
+                {
+                    List<Form> formsFromGroupList = model.Where(x => x.FormGroupId == fg.Id).ToList();
+                    for (var i = 1; i < formsFromGroupList.Count(); i++)
+                    {
+                        model.Remove(model.FirstOrDefault(x => x.Id == formsFromGroupList[i].Id));
+                    }
+                }
+            }
+
+            model = model.OrderBy(x => x.Name).ToList();
+
+            return this.View(model);
+        }
+
+        /// <summary>
         /// The page that is used to showcase what pokemon are available for use in a generation. This is not showing what pokemon are catchable in a game.
         /// </summary>
         /// <returns>Returns the game availability page.</returns>

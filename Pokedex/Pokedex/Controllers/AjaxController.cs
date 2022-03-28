@@ -1515,6 +1515,52 @@ namespace Pokedex.Controllers
         }
 
         [AllowAnonymous]
+        [Route("get-pokemon-by-alternate-form")]
+        public IActionResult GetPokemonByAlternateForm(int formId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonFormDetail> pokemonFormList = new List<PokemonFormDetail>();
+                Form form = this.dataService.GetObjectByPropertyValue<Form>("Id", formId, "FormGroup");
+                if (form.FormGroup != null)
+                {
+                    List<Form> formList = this.dataService.GetObjects<Form>(whereProperty: "FormGroupId", wherePropertyValue: form.FormGroupId);
+                    foreach (var f in formList)
+                    {
+                        pokemonFormList.AddRange(this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form", whereProperty: "FormId", wherePropertyValue: f.Id));
+                    }
+                }
+                else
+                {
+                    pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form", whereProperty: "FormId", wherePropertyValue: form.Id);
+                }
+
+                foreach (var f in pokemonFormList)
+                {
+                    f.AltFormPokemon.Name = string.Concat(f.AltFormPokemon.Name, " (", this.dataService.GetPokemonFormName(f.AltFormPokemonId), ")");
+                }
+
+                pokemonFormList = pokemonFormList.OrderBy(x => x.AltFormPokemon.PokedexNumber).ThenBy(x => x.AltFormPokemon.Id).ToList();
+
+                FormEvaluatorViewModel model = new FormEvaluatorViewModel()
+                {
+                    AllAltFormPokemon = pokemonFormList,
+                    AllOriginalPokemon = pokemonFormList.Select(x => x.OriginalPokemon).ToList(),
+                    AppConfig = this.appConfig,
+                    GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
+                };
+
+                return this.PartialView("_FillFormEvaluator", model);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
         [Route("get-types-by-generation")]
         public IActionResult GrabTypingEvaluatorTypes(int generationID)
         {

@@ -1,0 +1,29 @@
+@model List<Pokedex.DataAccess.Models.Form>;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Form Evaluator";
+    ViewBag.Description = "Find out what Pokémon are part of different forms!";
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts
+{
+    <script src="/js/formEvaluator.js"></script>
+}
+
+<div>
+    <div class="evaluator">
+        <div class="flexDiv">
+            <div class="formList">
+                @Html.Label("Alternate Forms")
+                @Html.DropDownList("Alternate Forms", new SelectList(@Model, "Id", "Name"), "", new { @class = "form-control formSelectList" })
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="pokemonWithAlternateForm"></div>
+</div>
