@@ -793,7 +793,16 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     @if (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId)
                     {
                         <div class="evolutions">
-                            <h2>Pre-Evolution</h2>
+                            <h2>
+                                @if (item.Pokemon.Id == 612)
+                                {
+                                    @("Pre-Evolutions");
+                                }
+                                else
+                                {
+                                    @("Pre-Evolution");
+                                }
+                            </h2>
                             <table class="preEvolutionTable">
                                 <tbody class="evolutionPokemon">
                                     <tr>
@@ -823,13 +832,37 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             <p>@preEvolution.EvolutionMethod.Name@(@preEvolution.EvolutionDetails != null ? string.Concat(" (", @preEvolution.EvolutionDetails, ")") : string.Empty)</p>
                                         </td>
                                     </tr>
+                                    @if (item.Pokemon.Id == 612)
+                                    {
+                                        <tr>
+                                            <th>
+                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1645, generationId = @g })">
+                                                    <img class="lightshadowed" title="Burmy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, "1645.png"))" />
+                                                </a>
+                                            </th>
+                                            <td>
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1645, generationId = @g })">Burmy (Sandy)</a>
+                                                <p>Level Up (Level 20 When Male)</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1646, generationId = @g })">
+                                                    <img class="lightshadowed" title="Burmy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, "1646.png"))" />
+                                                </a>
+                                            </th>
+                                            <td>
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1646, generationId = @g })">Burmy (Trash)</a>
+                                                <p>Level Up (Level 20 When Male)</p>
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
                         <br class="preEvoBreak">
                     }
-
-                    @if (@g != 1 && item.EggGroups.Count() > 0)
+                    @if (@g != 1 && item.EggGroups.Count() > 0 && item.Pokemon.Id != 612)
                     {
                         <div class="pokemonBreeding">
                             <h2>Breeding</h2>
@@ -866,12 +899,48 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         </div>
                     }
                 </div>
+                @if (@g != 1 && item.EggGroups.Count() > 0 && item.Pokemon.Id == 612)
+                {
+                    <div class="pokemonBreeding">
+                        <h2>Breeding</h2>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
+                                    {
+                                        <th>Egg Groups</th>
+                                    }
+                                    else
+                                    {
+                                        <th>Egg Group</th>
+                                    }
+                                    <td>
+                                        @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryEggGroup.Name
+                                        @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
+                                        {
+                                            <br>
+                                            @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup.Name
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                   <th>Egg Cycles</th>
+                                   <td>
+                                       @item.Pokemon.EggCycle.CycleCount Cycles
+                                       <br>
+                                       (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
             }
             @if (evolutions.Count() > 0)
             {
                 <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
                     <h2>
-                        @if (evolutions.Count() > 1)
+                        @if (evolutions.Count() > 1 || (item.Pokemon.PokedexNumber == 412 && item.Pokemon.Id != 610))
                         {
                             @("Evolutions");
                         }
@@ -904,7 +973,6 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         <td>
                                             @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
                                             {
-
                                                 <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">@evolution.EvolutionPokemon.Name</a>
                                             }
                                             else
@@ -915,6 +983,20 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         </td>
                                     </tr>
                                 }
+                            }
+                            @if (item.Pokemon.PokedexNumber == 412 && item.Pokemon.Id != 610)
+                            {
+                                <tr>
+                                    <th>
+                                        <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "mothim", pokemonId = 612, generationId = @g })">
+                                            <img class="lightshadowed" title="Mothim" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.PokemonImageUrl, "612.png"))" />
+                                        </a>
+                                    </th>
+                                    <td>
+                                        <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "mothim", pokemonId = 612, generationId = @g })">Mothim</a>
+                                        <p>Level Up (Level 20 When Male)</p>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
