@@ -1540,12 +1540,9 @@ namespace Pokedex.Controllers
                     f.AltFormPokemon.Name = string.Concat(f.AltFormPokemon.Name, " (", this.dataService.GetPokemonFormName(f.AltFormPokemonId), ")");
                 }
 
-                pokemonFormList = pokemonFormList.OrderBy(x => x.AltFormPokemon.PokedexNumber).ThenBy(x => x.AltFormPokemon.Id).ToList();
-
                 FormEvaluatorViewModel model = new FormEvaluatorViewModel()
                 {
-                    AllAltFormPokemon = pokemonFormList,
-                    AllOriginalPokemon = pokemonFormList.Select(x => x.OriginalPokemon).ToList(),
+                    AllAltFormPokemon = pokemonFormList.OrderBy(x => x.AltFormPokemon.PokedexNumber).ThenBy(x => x.AltFormPokemon.Id).ToList(),
                     AppConfig = this.appConfig,
                     GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
                 };

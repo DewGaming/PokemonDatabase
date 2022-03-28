@@ -4,11 +4,11 @@
     @for(var i = 0; i < Model.AllAltFormPokemon.Count(); i++)
     {
         <div class="shadowed @Model.AllAltFormPokemon[i].OriginalPokemon.Name">
-            <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = @Model.GenerationId } )">
+            <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllAltFormPokemon[i].AltFormPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllAltFormPokemon[i].AltFormPokemon.Id, generationId = @Model.GenerationId } )">
                 <img class="pokemonListPicture" title="@Model.AllAltFormPokemon[i].AltFormPokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, Model.AllAltFormPokemon[i].AltFormPokemonId, ".png")">
             </a>
             <div>
-                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = @Model.GenerationId } )">@('#')@Model.AllAltFormPokemon[i].AltFormPokemon.PokedexNumber.ToString().PadLeft(3, '0') @Model.AllAltFormPokemon[i].AltFormPokemon.Name</a>
+                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllAltFormPokemon[i].AltFormPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllAltFormPokemon[i].AltFormPokemon.Id, generationId = @Model.GenerationId } )">@('#')@Model.AllAltFormPokemon[i].AltFormPokemon.PokedexNumber.ToString().PadLeft(3, '0') @Model.AllAltFormPokemon[i].AltFormPokemon.Name</a>
             </div>
         </div>
     }
