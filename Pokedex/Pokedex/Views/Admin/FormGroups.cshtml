@@ -13,12 +13,14 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Will This Group Appear In Team Randomizer</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model.AllFormGroups)
         {
             <tr>
                 <td>@item.Name</td>
+                <td>@(item.AppearInTeamRandomizer ? "Yes" : "No")</td>
                 <td>
                     <a href="@(this.Url.Action("FormGroup", "Edit", new { id = item.Id }))">Edit</a>
                     @if (!(Model.AllForms.Exists(x => x.FormGroupId == item.Id)))

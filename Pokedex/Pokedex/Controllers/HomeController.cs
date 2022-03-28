@@ -206,7 +206,7 @@ namespace Pokedex.Controllers
                 AllGames = selectableGames,
                 AllTypes = types,
                 AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
+                AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true).ToList(),
             };
 
             return this.View(model);
@@ -296,15 +296,15 @@ namespace Pokedex.Controllers
             List<Form> model = this.dataService.GetObjects<Form>();
             List<FormGroup> formGroupList = this.dataService.GetObjects<FormGroup>();
 
+            model.Remove(model.FirstOrDefault(x => x.Name == "Female"));
+
             foreach (var fg in formGroupList)
             {
-                if (model.Where(x => x.FormGroupId == fg.Id).Count() > 1)
+                List<Form> formsFromGroupList = model.Where(x => x.FormGroupId == fg.Id).ToList();
+                model.Add(new Form() { Id = formsFromGroupList.First().Id, Name = fg.Name, FormGroupId = fg.Id });
+                foreach (var f in formsFromGroupList)
                 {
-                    List<Form> formsFromGroupList = model.Where(x => x.FormGroupId == fg.Id).ToList();
-                    for (var i = 1; i < formsFromGroupList.Count(); i++)
-                    {
-                        model.Remove(model.FirstOrDefault(x => x.Id == formsFromGroupList[i].Id));
-                    }
+                    model.Remove(f);
                 }
             }
 
