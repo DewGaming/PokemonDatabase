@@ -784,7 +784,7 @@ namespace Pokedex
 
                 byte[] file = webRequest.DownloadData(string.Concat(appConfig.WebUrl, "/images/general/tempPhoto.png"));
 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, pokemon.Id.ToString(), ".png"));
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, pokemonId.ToString(), ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
 
