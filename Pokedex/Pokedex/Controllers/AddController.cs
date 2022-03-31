@@ -849,8 +849,8 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(newPokemon);
 
-            this.UploadImages(normalUpload, normalUrlUpload, newPokemon);
-            this.UploadImages(shinyUpload, shinyUrlUpload, newPokemon);
+            this.dataService.UploadImages(normalUpload, normalUrlUpload, newPokemon.Id, this.appConfig, "normal");
+            this.dataService.UploadImages(shinyUpload, shinyUrlUpload, newPokemon.Id, this.appConfig, "shiny");
 
             this.dataService.AddObject(new PokemonGameDetail()
             {
@@ -939,8 +939,8 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(alternatePokemon);
 
-            this.UploadImages(normalUpload, normalUrlUpload, alternatePokemon);
-            this.UploadImages(shinyUpload, shinyUrlUpload, alternatePokemon);
+            this.dataService.UploadImages(normalUpload, normalUrlUpload, alternatePokemon.Id, this.appConfig, "normal");
+            this.dataService.UploadImages(shinyUpload, shinyUrlUpload, alternatePokemon.Id, this.appConfig, "shiny");
 
             PokemonEggGroupDetail eggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
@@ -1266,84 +1266,6 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(pokemonLegendaryDetails);
 
             return this.RedirectToAction("Pokemon", "Admin");
-        }
-
-        private async void UploadImages(IFormFile fileUpload, string urlUpload, Pokemon pokemon)
-        {
-            IFormFile upload;
-
-            if (fileUpload == null && urlUpload != null)
-            {
-                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
-
-                using WebResponse webResponse = webRequest.GetResponse();
-                Stream stream = webResponse.GetResponseStream();
-                MemoryStream memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
-
-                upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
-            }
-            else
-            {
-                upload = fileUpload;
-            }
-
-            if (upload != null)
-            {
-                upload = this.dataService.TrimImage(upload);
-
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, pokemon.Id.ToString(), upload.FileName.Substring(upload.FileName.LastIndexOf('.'))));
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
-
-                using (Stream requestStream = request.GetRequestStream())
-                {
-                    await upload.CopyToAsync(requestStream).ConfigureAwait(false);
-                }
-
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
-
-                IFormFile favIconUpload = this.dataService.FormatFavIcon(upload);
-
-                request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, pokemon.Id.ToString(), ".png"));
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
-
-                using (Stream requestStream = request.GetRequestStream())
-                {
-                    await favIconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
-                }
-
-                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
-            }
-            else
-            {
-                WebClient webRequest = new WebClient
-                {
-                    Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword),
-                };
-
-                MemoryStream strm = new MemoryStream();
-                IFormFile tempUpload = new FormFile(strm, 0, strm.Length, "image", "image.png");
-
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, pokemon.Id.ToString(), ".png"));
-                ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
-                ftpRequest.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
-
-                using (Stream requestStream = ftpRequest.GetRequestStream())
-                {
-                    await tempUpload.CopyToAsync(requestStream).ConfigureAwait(false);
-                }
-
-                using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
-                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-            }
         }
     }
 }

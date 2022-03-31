@@ -462,55 +462,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            IFormFile upload;
-
-            if (fileUpload == null)
-            {
-                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
-
-                using WebResponse webResponse = webRequest.GetResponse();
-                Stream stream = webResponse.GetResponseStream();
-                MemoryStream memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
-
-                upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
-            }
-            else
-            {
-                upload = fileUpload;
-            }
-
-            upload = this.dataService.TrimImage(upload);
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.PokemonImageFTPUrl, id.ToString(), ".png"));
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
-
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                await upload.CopyToAsync(requestStream).ConfigureAwait(false);
-            }
-
-            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-            {
-                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-            }
-
-            upload = this.dataService.FormatFavIcon(upload);
-
-            request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.FaviconImageFTPUrl, id.ToString(), ".png"));
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
-
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                await upload.CopyToAsync(requestStream).ConfigureAwait(false);
-            }
-
-            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-            {
-                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-            }
+            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "normal");
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -570,39 +522,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            IFormFile upload;
-
-            if (fileUpload == null)
-            {
-                WebRequest webRequest = WebRequest.CreateHttp(urlUpload);
-
-                using WebResponse webResponse = webRequest.GetResponse();
-                Stream stream = webResponse.GetResponseStream();
-                MemoryStream memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
-
-                upload = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.png");
-            }
-            else
-            {
-                upload = fileUpload;
-            }
-
-            upload = this.dataService.TrimImage(upload);
-
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(this.appConfig.FTPUrl, this.appConfig.ShinyPokemonImageFTPUrl, id.ToString(), ".png"));
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential(this.appConfig.FTPUsername, this.appConfig.FTPPassword);
-
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                await upload.CopyToAsync(requestStream).ConfigureAwait(false);
-            }
-
-            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-            {
-                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-            }
+            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "shiny");
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
