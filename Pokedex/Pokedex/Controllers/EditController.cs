@@ -424,7 +424,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit_pokemon_image/{id:int}")]
-        public async Task<IActionResult> PokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
+        public IActionResult PokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
@@ -484,7 +484,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("edit_shiny_pokemon_image/{id:int}")]
-        public async Task<IActionResult> ShinyPokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
+        public IActionResult ShinyPokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
