@@ -97,7 +97,7 @@
                                                         <span class="pokemonTeamPicture">
                                                             <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")
 Ability: @p.Ability.Name
-@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, p.IsShiny ? @Model.AppConfig.HomePokemonImageUrl : @Model.AppConfig.OfficialPokemonImageUrl, @p.Pokemon.Id, ".png"))" />
+@((@p.BattleItemId != null) ? string.Concat("Held Item: ", @p.BattleItem.Name) : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Pokemon.Id, ".png"))" />
                                                         </span>
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">

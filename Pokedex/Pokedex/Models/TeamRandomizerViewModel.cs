@@ -34,11 +34,6 @@ namespace Pokedex.Models
         public List<string> PokemonURLs { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of shiny chances.
-        /// </summary>
-        public List<int> ShinyChance { get; set; }
-
-        /// <summary>
         /// Gets or sets the applicaiton configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }
