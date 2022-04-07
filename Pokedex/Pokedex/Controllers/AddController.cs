@@ -757,7 +757,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokemon")]
-        public IActionResult Pokemon(BasePokemonViewModel newPokemon, IFormFile normalUpload, string normalUrlUpload, IFormFile shinyUpload, string shinyUrlUpload)
+        public IActionResult Pokemon(BasePokemonViewModel newPokemon, IFormFile officialUpload, string officialUrlUpload, IFormFile homeUpload, string homeUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -849,8 +849,8 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(newPokemon);
 
-            this.dataService.UploadImages(normalUpload, normalUrlUpload, newPokemon.Id, this.appConfig, "normal");
-            this.dataService.UploadImages(shinyUpload, shinyUrlUpload, newPokemon.Id, this.appConfig, "shiny");
+            this.dataService.UploadImages(officialUpload, homeUrlUpload, newPokemon.Id, this.appConfig, "2d");
+            this.dataService.UploadImages(homeUpload, homeUrlUpload, newPokemon.Id, this.appConfig, "3d");
 
             this.dataService.AddObject(new PokemonGameDetail()
             {
@@ -885,7 +885,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_alternate_form/{pokemonId:int}")]
-        public IActionResult AltForm(AlternateFormViewModel pokemon, IFormFile normalUpload, string normalUrlUpload, IFormFile shinyUpload, string shinyUrlUpload)
+        public IActionResult AltForm(AlternateFormViewModel pokemon, IFormFile officialUpload, string officialUrlUpload, IFormFile homeUpload, string homeUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -939,8 +939,8 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(alternatePokemon);
 
-            this.dataService.UploadImages(normalUpload, normalUrlUpload, alternatePokemon.Id, this.appConfig, "normal");
-            this.dataService.UploadImages(shinyUpload, shinyUrlUpload, alternatePokemon.Id, this.appConfig, "shiny");
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, alternatePokemon.Id, this.appConfig, "2d");
+            this.dataService.UploadImages(homeUpload, homeUrlUpload, alternatePokemon.Id, this.appConfig, "3d");
 
             PokemonEggGroupDetail eggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()

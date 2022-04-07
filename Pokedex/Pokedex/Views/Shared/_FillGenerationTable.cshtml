@@ -11,7 +11,7 @@
 <div class="grid-container">
     @foreach (var p in Model.PokemonList)
     {
-        pokemonImageUrl = string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.PokemonImageUrl, @p.PokemonId, ".png");
+        pokemonImageUrl = string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, @p.PokemonId, ".png");
         <div class="shadowed @p.Pokemon.Name@(p.Pokemon.IsComplete ? "" : " incomplete")">
             <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
             <div class="pokemonImages">
@@ -19,7 +19,7 @@
                     <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
                 </div>
                 <div class="back">
-                    <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl.Replace("normal", "shiny"))">
+                    <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl.Replace("2d", "3d"))">
                 </div>
             </div>
             </a>

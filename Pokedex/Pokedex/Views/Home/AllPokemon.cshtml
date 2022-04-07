@@ -46,33 +46,33 @@
 {
     <script src="/js/pageLookup.js"></script>
     <script>
-        var shiny = function() {
+        var home = function() {
         	$('.front').css('z-index: 0')
         	$('.front').css('transform', 'rotateY(-180deg)')
         	$('.back').css('z-index: 1')
         	$('.back').css('transform', 'rotateY(0deg)')
         }
 
-        var normal = function() {
+        var official = function() {
         	$('.back').css('z-index: 0')
         	$('.back').css('transform', 'rotateY(-180deg)')
         	$('.front').css('z-index: 1')
         	$('.front').css('transform', 'rotateY(0deg)')
         }
 
-        $('.turnShiny').on('click', function() {
-            if ($($('.grid-container .pokemonImages')[0]).hasClass('shiny'))
+        $('.turnHome').on('click', function() {
+            if ($($('.grid-container .pokemonImages')[0]).hasClass('home'))
             {
-                normal()
+                official()
                 $('.grid-container .pokemonImages').each(function () {
-                    $(this).removeClass('shiny')
+                    $(this).removeClass('home')
                 })
             }
             else
             {
-                shiny()
+                home()
                 $('.grid-container .pokemonImages').each(function () {
-                    $(this).addClass('shiny')
+                    $(this).addClass('home')
                 })
             }
         })
@@ -80,7 +80,7 @@
 }
 
 <p>
-    <button class="btn btn-primary turnShiny">Turn Shiny</button>
+    <button class="btn btn-primary turnHome">Change Artwork (2D ⟷ 3D)</button>
     @if (this.User.IsInRole("Owner"))
     {
         <a class="btn btn-primary" href="@this.Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>

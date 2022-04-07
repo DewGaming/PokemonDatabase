@@ -408,8 +408,8 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_pokemon_image/{id:int}")]
-        public IActionResult PokemonImage(int id)
+        [Route("edit_official_pokemon_image/{id:int}")]
+        public IActionResult OfficialPokemonImage(int id)
         {
             Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
@@ -423,8 +423,8 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_pokemon_image/{id:int}")]
-        public IActionResult PokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
+        [Route("edit_official_pokemon_image/{id:int}")]
+        public IActionResult OfficialPokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
@@ -462,14 +462,14 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "normal");
+            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "2d");
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
         [HttpGet]
-        [Route("edit_shiny_pokemon_image/{id:int}")]
-        public IActionResult ShinyPokemonImage(int id)
+        [Route("edit_home_pokemon_image/{id:int}")]
+        public IActionResult HomePokemonImage(int id)
         {
             Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
@@ -483,8 +483,8 @@ namespace Pokedex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_shiny_pokemon_image/{id:int}")]
-        public IActionResult ShinyPokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
+        [Route("edit_home_pokemon_image/{id:int}")]
+        public IActionResult HomePokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
@@ -522,7 +522,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "shiny");
+            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "3d");
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

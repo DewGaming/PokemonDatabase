@@ -715,13 +715,13 @@ namespace Pokedex
             string imageUrlPath;
             IFormFile upload;
 
-            if (imageType == "normal")
+            if (imageType == "2d")
             {
-                imageUrlPath = appConfig.PokemonImageFTPUrl;
+                imageUrlPath = appConfig.OfficialPokemonImageFTPUrl;
             }
             else
             {
-                imageUrlPath = appConfig.ShinyPokemonImageFTPUrl;
+                imageUrlPath = appConfig.HomePokemonImageFTPUrl;
             }
 
             if (fileUpload == null && urlUpload != null)
@@ -758,7 +758,7 @@ namespace Pokedex
                     System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                if (imageType != "shiny")
+                if (imageType == "2d")
                 {
                     IFormFile favIconUpload = this.FormatFavIcon(upload);
 
