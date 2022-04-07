@@ -5,7 +5,7 @@
     "rimraf": "^3.0.2",
     "set-value": "^4.1.0",
     "uglifycss": "^0.0.29",
-    "uglifyjs-folder": "^2.0.0"
+    "uglifyjs-folder": "^3.1.2"
   },
   "scripts": {
     "build": "npm run remove-build-folders && npm run build-app && npm run copy-to-dist && npm run minify && echo Done!",
