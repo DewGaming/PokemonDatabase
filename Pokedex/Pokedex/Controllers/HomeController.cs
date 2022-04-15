@@ -388,7 +388,7 @@ namespace Pokedex.Controllers
 
                 if (generationId == 0)
                 {
-                    generationId = this.dataService.GetPokemonGameDetails(pokemonId).Last().Game.GenerationId;
+                    generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId).Last().Game.GenerationId;
                 }
 
                 List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
@@ -466,7 +466,7 @@ namespace Pokedex.Controllers
             this.dataService.AddPageView("Type Chart Page", this.User.IsInRole("Owner"));
             TypeChartViewModel model = new TypeChartViewModel()
             {
-                TypeChart = this.dataService.GetTypeCharts(),
+                TypeChart = this.dataService.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend"),
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                 AllGenerations = this.dataService.GetObjects<Generation>("Id"),
             };
@@ -578,8 +578,8 @@ namespace Pokedex.Controllers
             {
                 Pokemon = pokemon,
                 BaseHappinesses = this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
-                BaseStats = this.dataService.GetBaseStat(pokemon.Id),
-                EVYields = this.dataService.GetEVYields(pokemon.Id),
+                BaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
+                EVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
                 Typings = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
@@ -587,7 +587,7 @@ namespace Pokedex.Controllers
                 PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete).ToList(),
                 Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete && x.EvolutionPokemon.IsComplete).ToList(),
                 Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
-                GamesAvailableIn = this.dataService.GetPokemonGameDetails(pokemon.Id).ConvertAll(x => x.Game),
+                GamesAvailableIn = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game),
                 AppConfig = this.appConfig,
             };
 

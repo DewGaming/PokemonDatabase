@@ -253,26 +253,6 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Gets a list of the game details for a pokemon.
-        /// </summary>
-        /// <param name="pokemonId">The pokemon's id.</param>
-        /// <returns>Returns the game details of the pokemon.</returns>
-        public List<PokemonGameDetail> GetPokemonGameDetails(int pokemonId)
-        {
-            return this.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId);
-        }
-
-        /// <summary>
-        /// Gets a list of the game details for a game.
-        /// </summary>
-        /// <param name="gameId">The game's id.</param>
-        /// <returns>Returns the game details of the game.</returns>
-        public List<PokemonGameDetail> GetPokemonGameDetailsByGame(int gameId)
-        {
-            return this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: gameId);
-        }
-
-        /// <summary>
         /// Gets the pokemon by the name.
         /// </summary>
         /// <param name="name">The name of the pokemon.</param>
@@ -305,7 +285,7 @@ namespace Pokedex
                 AllEvolutions = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod, Generation"),
                 AllTypings = this.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
                 AllAbilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility"),
-                AllEggGroups = this.GetAllPokemonWithEggGroupsAndIncomplete(),
+                AllEggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.GetObjects<EVYield>(includes: "Pokemon"),
                 AllLegendaryDetails = this.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true),
@@ -437,22 +417,11 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<PokemonTeam> GetAllPokemonTeams(string username)
-        {
-            return this.GetPokemonTeams().Where(x => x.User.Username == username).ToList();
-        }
-
-        public List<PokemonTeam> GetPokemonTeamsByUserId(int id)
-        {
-            return this.GetPokemonTeams().Where(x => x.User.Id == id).ToList();
-        }
-
-        public PokemonTeamDetail GetPokemonTeamDetail(int id)
-        {
-            return this.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature")
-                .Find(x => x.Id == id);
-        }
-
+        /// <summary>
+        /// Used to get all of the alternate forms of a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The id of a pokemon.</param>
+        /// <returns>Returns a list of all alternate forms of a pokemon.</returns>
         public List<Pokemon> GetAltForms(int pokemonId)
         {
             List<Pokemon> pokemonList = new List<Pokemon>();
@@ -580,11 +549,12 @@ namespace Pokedex
                 .ToList();
         }
 
-        public List<PokemonEggGroupDetail> GetAllPokemonWithEggGroupsAndIncomplete()
-        {
-            return this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
-        }
-
+        /// <summary>
+        /// Gets the base stats of a pokemon depending on the generation.
+        /// </summary>
+        /// <param name="pokemonId">The id of the pokemon.</param>
+        /// <param name="generationId">The id of the generation.</param>
+        /// <returns>The base stats of the pokemon by generation.</returns>
         public BaseStat GetPokemonBaseStats(int pokemonId, int generationId)
         {
             return this.GetObjects<BaseStat>(includes: "Pokemon")
@@ -592,6 +562,12 @@ namespace Pokedex
                 .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
+        /// <summary>
+        /// Gets the ev yield of a pokemon depending on the generation.
+        /// </summary>
+        /// <param name="pokemonId">The id of the pokemon.</param>
+        /// <param name="generationId">The id of the generation.</param>
+        /// <returns>The ev yield of the pokemon by generation.</returns>
         public EVYield GetPokemonEVYields(int pokemonId, int generationId)
         {
             return this.GetObjects<EVYield>(includes: "Pokemon")
@@ -599,33 +575,29 @@ namespace Pokedex
                 .Find(x => x.PokemonId == pokemonId && x.GenerationId == generationId);
         }
 
-        public List<BaseStat> GetBaseStat(int pokemonId)
-        {
-            return this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId);
-        }
-
-        public List<EVYield> GetEVYields(int pokemonId)
-        {
-            return this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId);
-        }
-
-        public List<TypeChart> GetTypeCharts()
-        {
-            return this.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend");
-        }
-
-        public List<TypeChart> GetTypeChartByDefendType(int id, int genId)
+        /// <summary>
+        /// Gets the type chart by the defending type.
+        /// </summary>
+        /// <param name="typeId">The type's id.</param>
+        /// <param name="generationId">The generation's id.</param>
+        /// <returns>The type chart by the defending type.</returns>
+        public List<TypeChart> GetTypeChartByDefendType(int typeId, int generationId)
         {
             return this.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend")
-                .Where(x => x.DefendId == id && x.GenerationId == genId)
+                .Where(x => x.DefendId == typeId && x.GenerationId == generationId)
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets the type chart of a particular pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The id of the pokemon.</param>
+        /// <returns>The view model used for the pokemon's type chart.</returns>
         public List<PokemonTypeChartViewModel> GetTypeChartPokemon(int pokemonId)
         {
             List<Type> typeList = this.GetObjects<Type>("Name");
             List<PokemonTypeDetail> pokemonTypes = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemonId);
-            List<TypeChart> typeChart = this.GetTypeCharts();
+            List<TypeChart> typeChart = this.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend");
             List<TypeChart> primaryTypeChart = new List<TypeChart>();
             List<TypeChart> secondaryTypeChart = new List<TypeChart>();
             List<PokemonTypeChartViewModel> pokemonTypeCharts = new List<PokemonTypeChartViewModel>();
@@ -710,6 +682,14 @@ namespace Pokedex
             }
         }
 
+        /// <summary>
+        /// Uploades a given image to the pokemon images folder.
+        /// </summary>
+        /// <param name="fileUpload">The file being uploaded.</param>
+        /// <param name="urlUpload">The URL of an image if no file is provided.</param>
+        /// <param name="pokemonId">The id of the pokemon this image is for.</param>
+        /// <param name="appConfig">The application config.</param>
+        /// <param name="imageType">Whether this image is for the 2d artwork or the 3d render.</param>
         public async void UploadImages(IFormFile fileUpload, string urlUpload, int pokemonId, AppConfig appConfig, string imageType)
         {
             string imageUrlPath;
@@ -803,7 +783,7 @@ namespace Pokedex
         /// </summary>
         /// <param name="file">The file being formatted.</param>
         /// <returns>The formatted file.</returns>
-        public IFormFile TrimImage(IFormFile file)
+        private IFormFile TrimImage(IFormFile file)
         {
             using (MemoryStream ms = new MemoryStream())
             {
@@ -825,7 +805,7 @@ namespace Pokedex
         /// </summary>
         /// <param name="file">The file being formatted.</param>
         /// <returns>The formatted file.</returns>
-        public IFormFile FormatFavIcon(IFormFile file)
+        private IFormFile FormatFavIcon(IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
             file.CopyTo(ms);

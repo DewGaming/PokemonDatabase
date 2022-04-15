@@ -224,7 +224,7 @@ namespace Pokedex.Controllers
             else
             {
                 PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
-                PokemonTeamDetail pokemonTeamDetail = this.dataService.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
+                PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
 
                 if (pokemonTeamDetail.Nature == null)
                 {
@@ -573,7 +573,7 @@ namespace Pokedex.Controllers
             else
             {
                 PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
-                PokemonTeamDetail pokemonTeamDetail = this.dataService.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
+                PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
                 PokemonTeamDetailViewModel model = new PokemonTeamDetailViewModel()
                 {
                     Id = pokemonTeamDetail.Id,
@@ -672,7 +672,7 @@ namespace Pokedex.Controllers
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon().ToList();
             if (pokemonTeam.GameId != null)
             {
-                List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetPokemonGameDetailsByGame((int)pokemonTeam.GameId);
+                List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: (int)pokemonTeam.GameId);
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
 
@@ -762,7 +762,7 @@ namespace Pokedex.Controllers
                 }
 
                 int pokemonId = this.dataService.AddPokemonTeamDetail(p);
-                pokemonTeam.InsertPokemon(this.dataService.GetPokemonTeamDetail(pokemonId));
+                pokemonTeam.InsertPokemon(this.GetPokemonTeamDetail(pokemonId));
             }
 
             string generationId = importedTeam.Split("===\r\n")[0];
@@ -1124,32 +1124,32 @@ namespace Pokedex.Controllers
         {
             if (pokemonTeam.FirstPokemonId != null)
             {
-                pokemonTeam.FirstPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.FirstPokemonId);
+                pokemonTeam.FirstPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.FirstPokemonId);
             }
 
             if (pokemonTeam.SecondPokemonId != null)
             {
-                pokemonTeam.SecondPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.SecondPokemonId);
+                pokemonTeam.SecondPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.SecondPokemonId);
             }
 
             if (pokemonTeam.ThirdPokemonId != null)
             {
-                pokemonTeam.ThirdPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.ThirdPokemonId);
+                pokemonTeam.ThirdPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.ThirdPokemonId);
             }
 
             if (pokemonTeam.FourthPokemonId != null)
             {
-                pokemonTeam.FourthPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.FourthPokemonId);
+                pokemonTeam.FourthPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.FourthPokemonId);
             }
 
             if (pokemonTeam.FifthPokemonId != null)
             {
-                pokemonTeam.FifthPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.FifthPokemonId);
+                pokemonTeam.FifthPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.FifthPokemonId);
             }
 
             if (pokemonTeam.SixthPokemonId != null)
             {
-                pokemonTeam.SixthPokemon = this.dataService.GetPokemonTeamDetail((int)pokemonTeam.SixthPokemonId);
+                pokemonTeam.SixthPokemon = this.GetPokemonTeamDetail((int)pokemonTeam.SixthPokemonId);
             }
         }
 
@@ -1314,32 +1314,32 @@ namespace Pokedex.Controllers
             List<Game> availableGames = new List<Game>();
             if (pokemonTeam.FirstPokemonId != null)
             {
-                availableGames = this.dataService.GetPokemonGameDetails(pokemonTeam.FirstPokemon.PokemonId).Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.Now).ToList();
+                availableGames = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.FirstPokemon.PokemonId).Select(x => x.Game).Where(x => x.ReleaseDate <= DateTime.Now).ToList();
             }
 
             if (pokemonTeam.SecondPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.SecondPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.ThirdPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.ThirdPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.FourthPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.FourthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.FifthPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.FifthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             if (pokemonTeam.SixthPokemonId != null)
             {
-                availableGames = availableGames.Where(x => this.dataService.GetPokemonGameDetails(pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
+                availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
             return availableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
@@ -1367,6 +1367,12 @@ namespace Pokedex.Controllers
             {
                 moveset.FourthMove = info.ToTitleCase(moveset.FourthMove);
             }
+        }
+
+        private PokemonTeamDetail GetPokemonTeamDetail(int id)
+        {
+            return this.dataService.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature")
+                .Find(x => x.Id == id);
         }
     }
 }

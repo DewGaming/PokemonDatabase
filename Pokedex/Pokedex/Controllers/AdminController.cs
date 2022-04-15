@@ -201,7 +201,7 @@ namespace Pokedex.Controllers
             EggGroupViewModel model = new EggGroupViewModel()
             {
                 AllEggGroups = this.dataService.GetObjects<EggGroup>("Name"),
-                AllPokemon = this.dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                AllPokemon = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
             };
 
             return this.View(model);

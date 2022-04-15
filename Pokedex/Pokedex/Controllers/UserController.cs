@@ -181,7 +181,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetAllPokemonTeams(this.User.Identity.Name),
+                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList(),
                 AppConfig = this.appConfig,
             };
 

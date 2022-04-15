@@ -84,7 +84,7 @@ namespace Pokedex.Controllers
             PokemonGameViewModel model = new PokemonGameViewModel()
             {
                 Pokemon = pokemon,
-                PokemonGameDetails = this.dataService.GetPokemonGameDetails(pokemonId),
+                PokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId),
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate >= pokemon.Game.ReleaseDate).ToList(),
             };
 
@@ -1398,7 +1398,7 @@ namespace Pokedex.Controllers
                 AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
                 AllTypings = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
                 AllAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility"),
-                AllEggGroups = this.dataService.GetAllPokemonWithEggGroupsAndIncomplete(),
+                AllEggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon"),
                 AllLegendaryDetails = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true),

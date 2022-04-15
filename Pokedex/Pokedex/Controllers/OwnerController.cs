@@ -195,7 +195,7 @@ namespace Pokedex.Controllers
             // Ensuring that the pokemon really has all of these added.
             bool pokemonIsComplete = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetAllPokemonWithEggGroupsAndIncomplete().Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<EVYield>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId);
 
@@ -206,8 +206,8 @@ namespace Pokedex.Controllers
                 PokemonViewModel model = new PokemonViewModel()
                 {
                     Pokemon = pokemon,
-                    BaseStats = this.dataService.GetBaseStat(pokemon.Id),
-                    EVYields = this.dataService.GetEVYields(pokemon.Id),
+                    BaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
+                    EVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
                     Typings = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
@@ -308,7 +308,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetPokemonTeamsByUserId(id),
+                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Id == id).ToList(),
                 User = this.dataService.GetObjectByPropertyValue<User>("Id", id),
                 AppConfig = this.appConfig,
             };
