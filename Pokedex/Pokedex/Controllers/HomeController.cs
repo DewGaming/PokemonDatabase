@@ -374,13 +374,7 @@ namespace Pokedex.Controllers
             else
             {
                 string pokemonName = pokemon.Name;
-                if (this.dataService.CheckIfAltForm(pokemonId))
-                {
-                    pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
-                }
 
-                this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
-                this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
                 if (pokemonId == 0)
                 {
                     pokemonId = pokemon.Id;
@@ -393,23 +387,26 @@ namespace Pokedex.Controllers
 
                 List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
                 PokemonViewModel pokemonDetails = this.GetPokemonDetails(pokemon);
-                pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemonId);
+                pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemon.Id);
 
                 pokemonList.Add(pokemonDetails);
 
                 List<Pokemon> altForms = this.dataService.GetAltForms(pokemonId);
                 if (altForms.Count > 0)
                 {
+                    if (this.dataService.CheckIfAltForm(pokemonId))
+                    {
+                        pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
+                    }
+
                     Form form;
+                    List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>("Form");
                     foreach (var p in altForms)
                     {
-                        if (p.IsComplete)
-                        {
-                            form = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form;
-                            pokemonDetails = this.GetPokemonDetails(p, form);
+                        form = formDetails.Find(x => x.AltFormPokemonId == p.Id).Form;
+                        pokemonDetails = this.GetPokemonDetails(p, form);
 
-                            pokemonList.Add(pokemonDetails);
-                        }
+                        pokemonList.Add(pokemonDetails);
                     }
                 }
 
@@ -450,6 +447,9 @@ namespace Pokedex.Controllers
 
                     model.AdminDropdown = adminDropdown;
                 }
+
+                this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
+                this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
 
                 return this.View(model);
             }
@@ -609,37 +609,12 @@ namespace Pokedex.Controllers
 
         private List<Pokemon> GetSurroundingPokemon(int pokemonId)
         {
-            List<Pokemon> surroundingPokemon = new List<Pokemon>();
-            List<int> ids = this.dataService.GetAllPokemon().ConvertAll(x => x.Id);
-            List<int> altIds = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemonId);
-            List<int> pokemonIds = ids.Where(x => !altIds.Any(y => y == x)).ToList();
-            if (altIds.Where(x => x == pokemonId).Count() > 0 && pokemonIds.Where(x => x == pokemonId).Count() == 0)
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> surroundingPokemon = new List<Pokemon>
             {
-                pokemonId = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId).OriginalPokemonId;
-            }
-
-            int previousId, nextId, index = pokemonIds.FindIndex(x => x == pokemonId);
-
-            if (pokemonIds[index] == pokemonIds[0])
-            {
-                previousId = pokemonIds.Last();
-            }
-            else
-            {
-                previousId = pokemonIds[index - 1];
-            }
-
-            if (pokemonIds[index] == pokemonIds.Last())
-            {
-                nextId = pokemonIds[0];
-            }
-            else
-            {
-                nextId = pokemonIds[index + 1];
-            }
-
-            surroundingPokemon.Add(this.dataService.GetObjectByPropertyValue<Pokemon>("Id", previousId));
-            surroundingPokemon.Add(this.dataService.GetObjectByPropertyValue<Pokemon>("Id", nextId));
+                pokemonList.First(x => x.PokedexNumber == pokemonList.Find(x => x.Id == pokemonId).PokedexNumber - 1),
+                pokemonList.First(x => x.PokedexNumber == pokemonList.Find(x => x.Id == pokemonId).PokedexNumber + 1),
+            };
 
             return surroundingPokemon;
         }

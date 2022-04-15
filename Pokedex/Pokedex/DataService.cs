@@ -288,7 +288,7 @@ namespace Pokedex
                 AllEggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.GetObjects<EVYield>(includes: "Pokemon"),
-                AllLegendaryDetails = this.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true),
+                AllLegendaryDetails = this.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType"),
                 AllPokemonCaptureRates = this.GetAllPokemonWithCaptureRates(),
                 AllPokemonBaseHappinesses = this.GetAllPokemonWithBaseHappinesses(),
             };
@@ -424,28 +424,21 @@ namespace Pokedex
         /// <returns>Returns a list of all alternate forms of a pokemon.</returns>
         public List<Pokemon> GetAltForms(int pokemonId)
         {
-            List<Pokemon> pokemonList = new List<Pokemon>();
-            List<PokemonFormDetail> pokemonFormList = new List<PokemonFormDetail>();
+            List<PokemonFormDetail> pokemonList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form");
             if (this.CheckIfAltForm(pokemonId))
             {
-                PokemonFormDetail formDetail = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form")
-                    .Find(x => x.AltFormPokemonId == pokemonId);
+                PokemonFormDetail formDetail = pokemonList.Find(x => x.AltFormPokemonId == pokemonId);
 
-                pokemonFormList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form").Where(x => x.OriginalPokemonId == formDetail.OriginalPokemonId && x.AltFormPokemonId != pokemonId).ToList();
+                pokemonList = pokemonList.Where(x => x.OriginalPokemonId == formDetail.OriginalPokemonId && x.AltFormPokemonId != pokemonId).ToList();
 
-                pokemonFormList.Add(formDetail);
+                pokemonList.Add(formDetail);
             }
             else
             {
-                pokemonFormList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form", "OriginalPokemonId", pokemonId);
+                pokemonList = pokemonList.Where(x => x.OriginalPokemonId == pokemonId).ToList();
             }
 
-            foreach (var p in pokemonFormList)
-            {
-                pokemonList.Add(p.AltFormPokemon);
-            }
-
-            return pokemonList;
+            return pokemonList.Select(x => x.AltFormPokemon).ToList();
         }
 
         /// <summary>
