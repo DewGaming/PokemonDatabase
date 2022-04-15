@@ -866,18 +866,17 @@ namespace Pokedex.Controllers
         public IActionResult AltForm(int pokemonId)
         {
             Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+            List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
 
-            AlternateFormViewModel model = new AlternateFormViewModel()
+            AlternateFormViewModel model = new AlternateFormViewModel
             {
                 AllForms = this.dataService.GetObjects<Form>("Name"),
                 AllClassifications = this.dataService.GetObjects<Classification>("Name"),
-                AllGames = games,
+                AllGames = games.Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList(),
                 OriginalPokemon = originalPokemon,
                 OriginalPokemonId = originalPokemon.Id,
+                GameId = games.Last().Id,
             };
-
-            model.GameId = this.dataService.GetObjects<Game>("ReleaseDate, Id").Last().Id;
 
             return this.View(model);
         }
@@ -890,15 +889,16 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.OriginalPokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList();
+                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
 
                 AlternateFormViewModel model = new AlternateFormViewModel()
                 {
                     AllForms = this.dataService.GetObjects<Form>("Name"),
                     AllClassifications = this.dataService.GetObjects<Classification>("Name"),
-                    AllGames = games,
+                    AllGames = games.Where(x => x.ReleaseDate >= originalPokemon.Game.ReleaseDate).ToList(),
                     OriginalPokemon = originalPokemon,
                     OriginalPokemonId = originalPokemon.Id,
+                    GameId = games.Last().Id,
                 };
 
                 return this.View(model);
