@@ -31,5 +31,20 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Experience Growth"), Required]
         public int ExperienceGrowthId { get; set; }
         public ExperienceGrowth ExperienceGrowth { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Pokemon item))
+            {
+                return false;
+            }
+
+            return this.Id.Equals(item.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
     }
 }

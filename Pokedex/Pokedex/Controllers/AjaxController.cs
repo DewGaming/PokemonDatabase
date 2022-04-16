@@ -1549,13 +1549,46 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets a list of abilities that are available in the given generation.
         /// </summary>
-        /// <param name="generationID">The generation's id.</param>
+        /// <param name="generationId">The generation's id.</param>
         /// <returns>The fill ability evaluator abilities shared view.</returns>
         [Route("get-abilities-by-generation")]
-        public IActionResult GrabAbilityEvaluatorAbilities(int generationID)
+        public IActionResult GrabAbilityEvaluatorAbilities(int generationId)
         {
-            List<Ability> model = this.dataService.GetObjects<Ability>("Name").Where(x => x.GenerationId <= generationID).ToList();
-            return this.PartialView("_FillAbilityEvaluatorAbilities", model);
+            List<Ability> model = new List<Ability>();
+            if (generationId != 0)
+            {
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.Pokemon).ToList();
+                pokemonList = pokemonList.Distinct().ToList();
+                List<PokemonAbilityDetail> pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Where(x => x.GenerationId <= generationId).ToList();
+                pokemonAbilities = pokemonAbilities.Where(x => pokemonList.Any(y => y.Id == x.PokemonId)).ToList();
+                if (pokemonAbilities.ConvertAll(x => x.PrimaryAbility).Any(x => x != null))
+                {
+                    model.AddRange(pokemonAbilities.ConvertAll(x => x.PrimaryAbility).Where(x => x != null).ToList());
+                }
+
+                if (pokemonAbilities.ConvertAll(x => x.SecondaryAbility).Any(x => x != null))
+                {
+                    model.AddRange(pokemonAbilities.ConvertAll(x => x.SecondaryAbility).Where(x => x != null).ToList());
+                }
+
+                if (pokemonAbilities.ConvertAll(x => x.HiddenAbility).Any(x => x != null))
+                {
+                    model.AddRange(pokemonAbilities.ConvertAll(x => x.HiddenAbility).Where(x => x != null).ToList());
+                }
+
+                if (pokemonAbilities.ConvertAll(x => x.SpecialEventAbility).Any(x => x != null))
+                {
+                    model.AddRange(pokemonAbilities.ConvertAll(x => x.SpecialEventAbility).Where(x => x != null).ToList());
+                }
+
+                model = model.Distinct().ToList();
+            }
+            else
+            {
+                model = this.dataService.GetObjects<Ability>().ToList();
+            }
+
+            return this.PartialView("_FillAbilityEvaluatorAbilities", model.OrderBy(x => x.Name).ToList());
         }
 
         /// <summary>
