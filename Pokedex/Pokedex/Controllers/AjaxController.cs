@@ -1896,7 +1896,7 @@ namespace Pokedex.Controllers
 
         private List<PokemonAbilityDetail> GetPokemonByAbilityAndGeneration(int abilityId, int generationId)
         {
-            List<PokemonAbilityDetail> pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true)
+            List<PokemonAbilityDetail> pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game")
                 .Where(x => x.Pokemon.Game.GenerationId <= generationId)
                 .Where(x => x.GenerationId <= generationId)
                 .OrderBy(x => x.GenerationId)
