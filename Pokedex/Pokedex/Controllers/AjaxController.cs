@@ -21,12 +21,20 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AjaxController"/> class.
+        /// </summary>
+        /// <param name="appConfig">The application's config.</param>
+        /// <param name="dataContext">The database's context.</param>
         public AjaxController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             this.appConfig = appConfig.Value;
             this.dataService = new DataService(dataContext);
         }
 
+        /// <summary>
+        /// Marks a message as read.
+        /// </summary>
         [Route("mark-as-read")]
         public void MarkAsRead()
         {
@@ -38,12 +46,19 @@ namespace Pokedex.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks to see if there are any unread messages for the user.
+        /// </summary>
+        /// <returns>The amount of unread messages.</returns>
         [Route("check-unread-messages")]
         public int CheckUnreadMessages()
         {
             return this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value)).Where(x => !x.IsRead).ToList().Count;
         }
 
+        /// <summary>
+        /// Updates the user's last visit time.
+        /// </summary>
         [Route("update-last-visit")]
         public void UpdateLastVisit()
         {
@@ -52,6 +67,11 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(user);
         }
 
+        /// <summary>
+        /// Prepares the required information for the admin to view the admin pokemon page.
+        /// </summary>
+        /// <param name="generationId">The generation requested by the admin.</param>
+        /// <returns>The fill admin generation table shared view.</returns>
         [Route("get-pokemon-by-generation-admin/{generationId}")]
         public IActionResult GetPokemonByGenerationAdmin(int generationId)
         {
@@ -84,7 +104,11 @@ namespace Pokedex.Controllers
             }
         }
 
-        [Route("get-incomplete-pokemon-admin/")]
+        /// <summary>
+        /// Prepares the required information for the admin to view all incomplete pokemon.
+        /// </summary>
+        /// <returns>The fill admin generation table shared view.</returns>
+        [Route("get-incomplete-pokemon-admin")]
         public IActionResult GetPokemonByGenerationAdmin()
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -120,7 +144,11 @@ namespace Pokedex.Controllers
             }
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Exports a user's team into a format that can be imported into pokemon showdown.
+        /// </summary>
+        /// <param name="teamId">The team being exported.</param>
+        /// <returns>A list of all the pokemon exported to be copied to clipboard.</returns>
         [Route("grab-user-pokemon-team")]
         public List<ExportPokemonViewModel> ExportUserPokemonTeam(int teamId)
         {
@@ -167,7 +195,10 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Exports all of a user's teams into a format that can be imported into pokemon showdown.
+        /// </summary>
+        /// <returns>A list of all the pokemon exported to be copied to clipboard.</returns>
         [Route("grab-all-user-pokemon-teams")]
         public List<ExportPokemonViewModel> ExportAllUserPokemonTeams()
         {
@@ -218,104 +249,24 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
-        [Route("fill-user-pokemon-team")]
-        public string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? generationId)
-        {
-            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<string> pokemonForm = new List<string>();
-            string pokemonName = string.Empty;
-            if (this.dataService.CheckIfAltForm(pokemon.Id))
-            {
-                pokemonForm = this.GetUserFormDetails(pokemon.Id);
-            }
-
-            if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
-            {
-                pokemonName = string.Concat(pokemonTeamDetail.Nickname, " (");
-            }
-
-            if (pokemon.Name.Contains(" (Male)"))
-            {
-                pokemon.Name = pokemon.Name.Replace(" (Male)", "-M");
-            }
-            else if (pokemon.Name.Contains(" (Female)"))
-            {
-                pokemon.Name = pokemon.Name.Replace(" (Female)", "-F");
-            }
-
-            pokemonName = string.Concat(pokemonName, pokemon.Name);
-            if (this.dataService.CheckIfAltForm(pokemon.Id))
-            {
-                pokemonName = string.Concat(pokemonName, "-", (pokemonForm[0] == "Female") ? "F" : pokemonForm[0]);
-            }
-
-            if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
-            {
-                pokemonName = string.Concat(pokemonName, ")");
-            }
-
-            if (!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != 1)
-            {
-                pokemonName = string.Concat(pokemonName, " (", pokemonTeamDetail.Gender.Substring(0, 1), ")");
-            }
-
-            if (pokemonForm.Count == 2)
-            {
-                pokemonName = string.Concat(pokemonName, pokemonForm[1]);
-            }
-            else if (pokemonTeamDetail.BattleItemId != null && generationId != 1)
-            {
-                pokemonName = string.Concat(pokemonName, " @ ", pokemonTeamDetail.BattleItem.Name);
-            }
-
-            string pokemonTeamString = pokemonName;
-            if (generationId != 1 && generationId != 2)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
-            }
-
-            if (pokemonTeamDetail.Level < 100)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nLevel: ", pokemonTeamDetail.Level.ToString());
-            }
-
-            if (pokemonTeamDetail.IsShiny && generationId != 1)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nShiny: Yes");
-            }
-
-            if (pokemonTeamDetail.Happiness < 255 && generationId != 1)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
-            }
-
-            pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
-
-            if (pokemonTeamDetail.Nature != null && generationId != 1 && generationId != 2)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\n", pokemonTeamDetail.Nature.Name, " Nature");
-            }
-
-            pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV), this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
-
-            return pokemonTeamString;
-        }
-
+        /// <summary>
+        /// Saves a team that was generated from the team randomizer.
+        /// </summary>
+        /// <param name="selectedGame">The game selected in the randomizer.</param>
+        /// <param name="pokemonIdList">The list of ids of the pokemon generated.</param>
+        /// <param name="abilityIdList">The list of abilities generated alongside the pokemon.</param>
+        /// <param name="exportAbilities">Check to see if generated abilities are to be exported.</param>
+        /// <param name="pokemonTeamName">The given pokemon team name. Defaults to "Save from Team Randomizer" if no name given.</param>
+        /// <returns>The string confirming the team has been generated. Tells a user they need to be logged in if they aren't.</returns>
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(string pokemonTeamName, int selectedGame, List<int> pokemonIdList, List<int> abilityIdList, bool exportAbilities)
+        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string pokemonTeamName = "Save from Team Randomizer")
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
                 if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
                 {
-                    if (string.IsNullOrEmpty(pokemonTeamName))
-                    {
-                        pokemonTeamName = "Save from Team Randomizer";
-                    }
-
+                    this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
                     PokemonTeam pokemonTeam = new PokemonTeam()
                     {
                         PokemonTeamName = pokemonTeamName,
@@ -375,42 +326,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("get-pokemon-list")]
-        public List<Pokemon> GetPokemonList()
-        {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                List<Pokemon> pokemonList = this.GetAllPokemonWithoutForms();
-
-                foreach (var pokemon in pokemonList)
-                {
-                    if (pokemon.Name.Contains("type null"))
-                    {
-                        pokemon.Name = "Type: Null";
-                    }
-
-                    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-                    pokemon.Name = textInfo.ToTitleCase(pokemon.Name);
-
-                    if (pokemon.Name.Contains("-O") && pokemon.Name.Substring(pokemon.Name.Length - 2, 2) == "-O")
-                    {
-                        pokemon.Name = string.Concat(pokemon.Name.Remove(pokemon.Name.Length - 2, 2), "-o");
-                    }
-                }
-
-                return pokemonList;
-            }
-            else
-            {
-                this.RedirectToAction("Error");
-            }
-
-            return null;
-        }
-
-        [AllowAnonymous]
+        /// <summary>
+        /// Prepares the required information for the user to view the pokemon page.
+        /// </summary>
+        /// <param name="generationId">The generation requested by the user.</param>
+        /// <returns>The fill generation table shared view.</returns>
         [Route("get-pokemon-by-generation/{generationId}")]
         public IActionResult GetPokemonByGeneration(int generationId)
         {
@@ -430,7 +350,11 @@ namespace Pokedex.Controllers
             }
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Prepares the required information for the user to view the available pokemon page.
+        /// </summary>
+        /// <param name="gameId">The game requested by the user.</param>
+        /// <returns>The fill available generation table shared view.</returns>
         [Route("get-available-pokemon-by-game/{gameId}")]
         public IActionResult GetAvailablePokemonByGame(int gameId)
         {
@@ -461,7 +385,24 @@ namespace Pokedex.Controllers
             }
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Generatres a pokemon team for the team randomizer.
+        /// </summary>
+        /// <param name="pokemonCount">The amount of pokemon requested.</param>
+        /// <param name="selectedGens">The generations allowed for generation.</param>
+        /// <param name="selectedGameId">The specific game used for generation.</param>
+        /// <param name="selectedType">The specific type for generation.</param>
+        /// <param name="selectedLegendaries">The specific legendary classifications available for generation.</param>
+        /// <param name="selectedForms">The specific forms available for generation.</param>
+        /// <param name="selectedEvolutions">The specific evolution classification available for generation.</param>
+        /// <param name="onlyLegendaries">Whether or not only legendaries are allowed for generation.</param>
+        /// <param name="onlyAltForms">Whether or not only alternate forms are allowed for generation.</param>
+        /// <param name="multipleMegas">Whether or not multiple mega pokemon are allowed for generation.</param>
+        /// <param name="multipleGMax">Whether or not multiple gigantimax pokemon are allowed for generation.</param>
+        /// <param name="onePokemonForm">Whether or not only one form of a pokemon is allowed for generation.</param>
+        /// <param name="randomAbility">Whether or not randomized abilities will also be generated.</param>
+        /// <param name="noRepeatType">Whether or not repeat types are allowed for generation.</param>
+        /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
         public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
         {
@@ -913,7 +854,12 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of abilities for a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon requested.</param>
+        /// <param name="gameId">The game the search will take place in.</param>
+        /// <returns>The list of available abilities for the specified pokemon in the specified game.</returns>
         [Route("get-pokemon-abilities")]
         public List<Ability> GetPokemonAbilities(int pokemonId, int gameId)
         {
@@ -930,7 +876,15 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Updates the type chart for the given type.
+        /// </summary>
+        /// <param name="typeId">The type being modified.</param>
+        /// <param name="genId">The generation this modification is taking place.</param>
+        /// <param name="resistances">The type's resistances.</param>
+        /// <param name="weaknesses">The type's weaknesses.</param>
+        /// <param name="immunities">The type's immunities.</param>
+        /// <returns>The admin type page.</returns>
         [Route("update-type-chart")]
         public string UpdateTypeChart(int typeId, int genId, List<int> resistances, List<int> weaknesses, List<int> immunities)
         {
@@ -1010,7 +964,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Deletes the teams selected by the user.
+        /// </summary>
+        /// <param name="teamIds">The teams for deletion.</param>
+        /// <returns>The pokemon teams page.</returns>
         [Route("delete-pokemon-teams")]
         public string DeletePokemonTeams(List<int> teamIds)
         {
@@ -1034,7 +992,12 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Updates the availablity of the specified pokemon in different games.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="games">The games the pokemon is able to be used in.</param>
+        /// <returns>The admin pokemon page.</returns>
         [Route("update-pokemon-game-availability")]
         public string UpdatePokemonGameAvailability(int pokemonId, List<int> games)
         {
@@ -1068,7 +1031,12 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Updates the availablity of the pokemon in a specified game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <param name="pokemonList">The pokemon that are available in the given game.</param>
+        /// <returns>The admin pokemon page.</returns>
         [Route("update-game-availability")]
         public string UpdateGameAvailability(int gameId, List<int> pokemonList)
         {
@@ -1126,7 +1094,12 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of battle items for a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon the item belongs to.</param>
+        /// <param name="generationId">The generation used to sort the available items.</param>
+        /// <returns>The list of available battle items.</returns>
         [Route("get-pokemon-battle-items")]
         public List<BattleItem> GetPokemonBattleItems(int pokemonId, int generationId)
         {
@@ -1173,7 +1146,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets the available genders for a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>A list of available genders.</returns>
         [Route("get-pokemon-genders")]
         public List<string> GetPokemonGenders(int pokemonId)
         {
@@ -1210,7 +1187,13 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets the type chart for the given typing combination.
+        /// </summary>
+        /// <param name="primaryTypeID">The primary type's id.</param>
+        /// <param name="secondaryTypeID">The secondary type's id.</param>
+        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <returns>The file type evaluator chart shared view.</returns>
         [Route("get-typing-evaluator-chart")]
         public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int generationID)
         {
@@ -1226,7 +1209,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of generations based on what pokemon are available in the given game.
+        /// </summary>
+        /// <param name="selectedGame">The game used to filter the generations.</param>
+        /// <returns>The refreshed list of generations.</returns>
         [Route("get-generations")]
         public TeamRandomizerListViewModel GetGenerations(int selectedGame)
         {
@@ -1288,7 +1275,13 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of all pokemon by their type combination.
+        /// </summary>
+        /// <param name="primaryTypeID">The primary type's id.</param>
+        /// <param name="secondaryTypeID">The secondary type's id.</param>
+        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <returns>The fill typing evaluator shared view.</returns>
         [Route("get-pokemon-by-typing")]
         public IActionResult GetPokemonByTyping(int primaryTypeID, int secondaryTypeID, int generationID)
         {
@@ -1328,7 +1321,12 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of all pokemon by their ability.
+        /// </summary>
+        /// <param name="abilityID">The ability's id.</param>
+        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <returns>The fill typing evaluator shared view.</returns>
         [Route("get-pokemon-by-ability")]
         public IActionResult GetPokemonByAbility(int abilityID, int generationID)
         {
@@ -1369,7 +1367,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of all pokemon that is capable of breeding with the given pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The parent pokemon.</param>
+        /// <returns>The fill day care evaluator shared view.</returns>
         [Route("get-pokemon-by-egg-group")]
         public IActionResult GetPokemonByEggGroup(int pokemonId)
         {
@@ -1480,7 +1482,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of pokemon with a specific form or form group.
+        /// </summary>
+        /// <param name="formId">The form or form group's id.</param>
+        /// <returns>The fill form evaluator shared view.</returns>
         [Route("get-pokemon-by-alternate-form")]
         public IActionResult GetPokemonByAlternateForm(int formId)
         {
@@ -1523,7 +1529,11 @@ namespace Pokedex.Controllers
             return null;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of types that are available in the given generation.
+        /// </summary>
+        /// <param name="generationID">The generation's id.</param>
+        /// <returns>The fill typing evaluator types shared view.</returns>
         [Route("get-types-by-generation")]
         public IActionResult GrabTypingEvaluatorTypes(int generationID)
         {
@@ -1536,7 +1546,11 @@ namespace Pokedex.Controllers
             return this.PartialView("_FillTypingEvaluatorTypes", model);
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of abilities that are available in the given generation.
+        /// </summary>
+        /// <param name="generationID">The generation's id.</param>
+        /// <returns>The fill ability evaluator abilities shared view.</returns>
         [Route("get-abilities-by-generation")]
         public IActionResult GrabAbilityEvaluatorAbilities(int generationID)
         {
@@ -1544,7 +1558,12 @@ namespace Pokedex.Controllers
             return this.PartialView("_FillAbilityEvaluatorAbilities", model);
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of months that any pages were viewed in by the year.
+        /// </summary>
+        /// <param name="year">The year in question.</param>
+        /// <param name="pokemonPageCheck">Checks whether or not this pertains to the pokemon page stat page.</param>
+        /// <returns>The fill month in year shared view.</returns>
         [Route("get-month-by-year/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabMonthByYear(int year, string pokemonPageCheck)
         {
@@ -1563,7 +1582,13 @@ namespace Pokedex.Controllers
             return this.PartialView("_FillMonthInYear", model);
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of days that any pages were viewed in by the month and year.
+        /// </summary>
+        /// <param name="month">The month in question.</param>
+        /// <param name="year">The year in question.</param>
+        /// <param name="pokemonPageCheck">Checks whether or not this pertains to the pokemon page stat page.</param>
+        /// <returns>The fill day in month shared view.</returns>
         [Route("get-day-by-month/{month}/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabDayByMonth(string month, int year, string pokemonPageCheck)
         {
@@ -1583,7 +1608,14 @@ namespace Pokedex.Controllers
             return this.PartialView("_FillDayInMonth", model);
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets a list of stats for any page that was viewed in by the day, month, and year.
+        /// </summary>
+        /// <param name="day">The day in question.</param>
+        /// <param name="month">The month in question.</param>
+        /// <param name="year">The year in question.</param>
+        /// <param name="pokemonPageCheck">Checks whether or not this pertains to the pokemon page stat page.</param>
+        /// <returns>The fill stats in date shared view.</returns>
         [Route("get-stats-by-date/{day:int}/{month}/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabStatsByDate(int day, string month, int year, string pokemonPageCheck)
         {
@@ -1637,7 +1669,10 @@ namespace Pokedex.Controllers
             }
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Gets and sorts a list of pokemon by their popularity on the site.
+        /// </summary>
+        /// <returns>The fill pokemon stats by popularity shared view.</returns>
         [Route("get-stats-by-popularity")]
         public IActionResult GrabStatsByPopularity()
         {
@@ -2178,6 +2213,88 @@ namespace Pokedex.Controllers
             pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).Where(x => x.PrimaryTypeId == typeId || x.SecondaryTypeId == typeId).ToList();
 
             return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+        }
+
+        private string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? generationId)
+        {
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            List<string> pokemonForm = new List<string>();
+            string pokemonName = string.Empty;
+            if (this.dataService.CheckIfAltForm(pokemon.Id))
+            {
+                pokemonForm = this.GetUserFormDetails(pokemon.Id);
+            }
+
+            if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+            {
+                pokemonName = string.Concat(pokemonTeamDetail.Nickname, " (");
+            }
+
+            if (pokemon.Name.Contains(" (Male)"))
+            {
+                pokemon.Name = pokemon.Name.Replace(" (Male)", "-M");
+            }
+            else if (pokemon.Name.Contains(" (Female)"))
+            {
+                pokemon.Name = pokemon.Name.Replace(" (Female)", "-F");
+            }
+
+            pokemonName = string.Concat(pokemonName, pokemon.Name);
+            if (this.dataService.CheckIfAltForm(pokemon.Id))
+            {
+                pokemonName = string.Concat(pokemonName, "-", (pokemonForm[0] == "Female") ? "F" : pokemonForm[0]);
+            }
+
+            if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+            {
+                pokemonName = string.Concat(pokemonName, ")");
+            }
+
+            if (!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != 1)
+            {
+                pokemonName = string.Concat(pokemonName, " (", pokemonTeamDetail.Gender.Substring(0, 1), ")");
+            }
+
+            if (pokemonForm.Count == 2)
+            {
+                pokemonName = string.Concat(pokemonName, pokemonForm[1]);
+            }
+            else if (pokemonTeamDetail.BattleItemId != null && generationId != 1)
+            {
+                pokemonName = string.Concat(pokemonName, " @ ", pokemonTeamDetail.BattleItem.Name);
+            }
+
+            string pokemonTeamString = pokemonName;
+            if (generationId != 1 && generationId != 2)
+            {
+                pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
+            }
+
+            if (pokemonTeamDetail.Level < 100)
+            {
+                pokemonTeamString = string.Concat(pokemonTeamString, "\nLevel: ", pokemonTeamDetail.Level.ToString());
+            }
+
+            if (pokemonTeamDetail.IsShiny && generationId != 1)
+            {
+                pokemonTeamString = string.Concat(pokemonTeamString, "\nShiny: Yes");
+            }
+
+            if (pokemonTeamDetail.Happiness < 255 && generationId != 1)
+            {
+                pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
+            }
+
+            pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
+
+            if (pokemonTeamDetail.Nature != null && generationId != 1 && generationId != 2)
+            {
+                pokemonTeamString = string.Concat(pokemonTeamString, "\n", pokemonTeamDetail.Nature.Name, " Nature");
+            }
+
+            pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV), this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
+
+            return pokemonTeamString;
         }
     }
 }

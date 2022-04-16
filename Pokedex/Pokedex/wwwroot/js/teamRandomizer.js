@@ -200,7 +200,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             $.ajax({
                 url: '/save-pokemon-team/',
                 method: 'POST',
-                data: { 'pokemonTeamName': teamName, 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities': $("#randomAbilityBool").is(":checked") }
+                data: { 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities': $("#randomAbilityBool").is(":checked"), 'pokemonTeamName': teamName }
             })
                 .done(function (data) {
                     alert(data);
