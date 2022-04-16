@@ -120,27 +120,6 @@ namespace Pokedex.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("update-pokemon-list/{gameId}")]
-        public UpdatePokemonListViewModel UpdatePokemonList(int gameId)
-        {
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: gameId);
-            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            UpdatePokemonListViewModel pokemonList = new UpdatePokemonListViewModel()
-            {
-                PokemonList = this.dataService.GetAllPokemon().Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList(),
-                Game = game,
-            };
-
-            foreach (var pokemon in pokemonList.PokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
-            {
-                pokemon.Name = this.dataService.GetAltFormWithFormName(pokemon.Id).Name;
-            }
-
-            return pokemonList;
-        }
-
         [AllowAnonymous]
         [Route("grab-user-pokemon-team")]
         public List<ExportPokemonViewModel> ExportUserPokemonTeam(int teamId)
