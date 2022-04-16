@@ -1,3 +1,4 @@
+@using Pokedex.DataAccess.Models;
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.EditGameAvailabilityViewModel
 @{
@@ -38,7 +39,7 @@
 </p>
 
 <div class="flexDiv">
-    @foreach(var g in Model.PokemonList.Select(x => x.Game.Generation).GroupBy(x => x.Id).Select(x => x.First()).OrderBy(x => x.Id).ToList())
+    @foreach(var g in Model.PokemonList.Select(x => x.Game.Generation).Distinct().OrderBy(x => x.Id).ToList())
     {
         <div class="gen@(g.Id) gameAvailability">
             <p>Generation @g.Id</p>

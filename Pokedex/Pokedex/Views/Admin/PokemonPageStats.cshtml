@@ -1,3 +1,4 @@
+@using MoreLinq;
 @model List<Pokedex.DataAccess.Models.PageStat>;
 @{
     Layout = "_Layout";
@@ -27,7 +28,7 @@
 
 <div class="pageButtons year">
     <button id="Popularity" onclick="lookupPopularity()">Popularity</button>
-    @foreach (var item in Model.GroupBy(x => x.VisitDate.ToString("yyyy")).Select(x => x.First()).ToList())
+    @foreach (var item in Model.DistinctBy(x => x.VisitDate.ToString("yyyy")).ToList())
     {
         int year = Convert.ToInt16(item.VisitDate.ToString("yyyy"));
         <button id="Year@(year)" onclick="lookupYear(@year)">@year</button>

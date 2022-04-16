@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
@@ -162,7 +163,7 @@ namespace Pokedex.Controllers
                 List<Pokemon> pokemonInGen = allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList();
                 if (pokemonInGen.Count != 0)
                 {
-                    List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).GroupBy(y => y.ReleaseDate).Select(z => z.First()).ToList();
+                    List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
                     List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
                     for (var i = 0; i < uniqueGames.Count; i++)
                     {

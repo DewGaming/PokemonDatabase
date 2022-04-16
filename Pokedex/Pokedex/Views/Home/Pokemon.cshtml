@@ -1,6 +1,7 @@
 @using Pokedex.Models;
 @using Pokedex.DataAccess.Models;
 @using System.Collections.Generic;
+@using MoreLinq;
 @model Pokedex.Models.AdminPokemonDropdownViewModel
 @{
     Layout = "_Layout";
@@ -199,7 +200,7 @@
         }
         if (item.Evolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g).Count() > 0)
         {
-            foreach (var e in item.Evolutions.OrderByDescending(x => x.GenerationId).GroupBy(x => x.EvolutionPokemonId).Select(y => y.First()))
+            foreach (var e in item.Evolutions.OrderByDescending(x => x.GenerationId).DistinctBy(x => x.EvolutionPokemonId))
             {
                 if (item.Evolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g && x.EvolutionPokemonId == e.EvolutionPokemonId).Count() > 0)
                 {
