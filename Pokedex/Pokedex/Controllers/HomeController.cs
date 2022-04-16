@@ -400,7 +400,7 @@ namespace Pokedex.Controllers
                     }
 
                     Form form;
-                    List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>("Form");
+                    List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
                     foreach (var p in altForms)
                     {
                         form = formDetails.Find(x => x.AltFormPokemonId == p.Id).Form;
