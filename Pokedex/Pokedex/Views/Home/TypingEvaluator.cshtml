@@ -60,7 +60,7 @@
             <div class="generationList">
                 @Html.Label("Generation")
                 <select class="form-control generationSelectList" id="Generation" name="Generation">
-                    <option value="0">Any Generation</option>
+                    <option value="0">Latest Generation</option>
                     @foreach (var g in Model.AllGenerations)
                     {
                         <option value="@g.Id">@g.GenerationName</option>
