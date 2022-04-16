@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that handles the deletion of objects from the database.
+    /// </summary>
     [Authorize(Roles = "Owner")]
     [Route("admin")]
     public class DeleteController : Controller

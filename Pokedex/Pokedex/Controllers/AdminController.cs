@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that handles the admin actions.
+    /// </summary>
     [Authorize(Roles = "Admin,Owner")]
     [Route("admin")]
     public class AdminController : Controller

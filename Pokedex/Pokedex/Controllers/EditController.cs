@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Pokedex.Controllers
 {
+    /// <summary>
+    /// The class that handles the editing of the database.
+    /// </summary>
     [Authorize(Roles = "Admin,Owner")]
     [Route("admin")]
     public class EditController : Controller

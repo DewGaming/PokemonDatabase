@@ -11,7 +11,7 @@ using System.Linq;
 namespace Pokedex.Controllers
 {
     /// <summary>
-    /// The class that is used to represent the user controller.
+    /// The class that handles the user related requests.
     /// </summary>
     [Authorize]
     [Route("")]

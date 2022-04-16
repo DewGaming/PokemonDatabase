@@ -14,7 +14,7 @@ using System.Web;
 namespace Pokedex.Controllers
 {
     /// <summary>
-    /// The class that is used to represent the HomeController.
+    /// The class that handles the main website pages.
     /// </summary>
     [Authorize]
     [Route("")]

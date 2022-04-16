@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Pokedex.Controllers
 {
     /// <summary>
-    /// The class that is used to represent the account controller.
+    /// The class that handles the account related actions.
     /// </summary>
     [Authorize]
     [Route("")]

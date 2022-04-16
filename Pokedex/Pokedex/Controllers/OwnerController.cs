@@ -9,7 +9,7 @@ using System.Linq;
 namespace Pokedex.Controllers
 {
     /// <summary>
-    /// The class that is used to represent the owner controller.
+    /// The class that handles the requests for the owner.
     /// </summary>
     [Authorize(Roles = "Owner")]
     [Route("admin")]

@@ -14,7 +14,7 @@ using System.Net;
 namespace Pokedex.Controllers
 {
     /// <summary>
-    /// The class that is used to represent the add controller.
+    /// The class that handles all additions to the database.
     /// </summary>
     [Authorize(Roles = "Owner")]
     [Route("admin")]
@@ -104,7 +104,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Adds an generation.
+        /// Adds a generation.
         /// </summary>
         /// <returns>The view to add the generation.</returns>
         [Route("add_generation")]
@@ -116,7 +116,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Adds an region.
+        /// Adds a region.
         /// </summary>
         /// <returns>The view to add the region.</returns>
         [HttpGet]
@@ -132,7 +132,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Adds an region.
+        /// Adds a region.
         /// </summary>
         /// <param name="region">The region being added.</param>
         /// <returns>The view to the region admin page.</returns>
@@ -156,6 +156,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Regions", "Admin");
         }
 
+        /// <summary>
+        /// Adds a form item.
+        /// </summary>
+        /// <returns>The view to add the form item.</returns>
         [HttpGet]
         [Route("add_form_item")]
         public IActionResult FormItem()
@@ -180,6 +184,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Adds a form item.
+        /// </summary>
+        /// <param name="formItem">The form item being added.</param>
+        /// <returns>The view to the form item admin page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_form_item")]
@@ -207,6 +216,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("FormItems", "Admin");
         }
 
+        /// <summary>
+        /// Adds a form group.
+        /// </summary>
+        /// <returns>The view to add the form group.</returns>
         [HttpGet]
         [Route("add_form_group")]
         public IActionResult FormGroup()
@@ -214,6 +227,11 @@ namespace Pokedex.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// Adds a form group.
+        /// </summary>
+        /// <param name="formGroup">The form group being added.</param>
+        /// <returns>The view to the form group admin page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_form_group")]
@@ -849,7 +867,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(newPokemon);
 
-            this.dataService.UploadImages(officialUpload, homeUrlUpload, newPokemon.Id, this.appConfig, "2d");
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "2d");
             this.dataService.UploadImages(homeUpload, homeUrlUpload, newPokemon.Id, this.appConfig, "3d");
 
             this.dataService.AddObject(new PokemonGameDetail()

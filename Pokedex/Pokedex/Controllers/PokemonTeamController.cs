@@ -11,7 +11,7 @@ using System.Linq;
 namespace Pokedex.Controllers
 {
     /// <summary>
-    /// The class that is used to represent the controller for a user's pokemon team.
+    /// The class that handles all PokemonTeam related requests.
     /// </summary>
     [Authorize]
     [Route("")]
