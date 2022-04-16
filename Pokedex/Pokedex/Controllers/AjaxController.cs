@@ -308,6 +308,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
                 if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
                 {
                     if (string.IsNullOrEmpty(pokemonTeamName))
