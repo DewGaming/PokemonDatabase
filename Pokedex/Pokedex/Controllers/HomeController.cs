@@ -610,11 +610,41 @@ namespace Pokedex.Controllers
 
         private List<Pokemon> GetSurroundingPokemon(int pokemonId)
         {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon().OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            List<Pokemon> originalPokemonList = pokemonList.Where(x => !altForms.Contains(x)).ToList();
+            Pokemon pokemon = pokemonList.Find(x => x.Id == pokemonId);
+            Pokemon priorPokemon = originalPokemonList.FirstOrDefault(x => x.PokedexNumber == (pokemon.PokedexNumber - 1));
+            Pokemon nextPokemon = originalPokemonList.FirstOrDefault(x => x.PokedexNumber == (pokemon.PokedexNumber + 1));
+
+            if (priorPokemon == null)
+            {
+                if (originalPokemonList.First().PokedexNumber != pokemon.PokedexNumber)
+                {
+                    priorPokemon = originalPokemonList.Last(x => x.PokedexNumber < pokemon.PokedexNumber);
+                }
+                else
+                {
+                    priorPokemon = originalPokemonList.Last();
+                }
+            }
+
+            if (nextPokemon == null)
+            {
+                if (originalPokemonList.Last().PokedexNumber != pokemon.PokedexNumber)
+                {
+                    nextPokemon = originalPokemonList.First(x => x.PokedexNumber > pokemon.PokedexNumber);
+                }
+                else
+                {
+                    nextPokemon = originalPokemonList.First();
+                }
+            }
+
             List<Pokemon> surroundingPokemon = new List<Pokemon>
             {
-                pokemonList.First(x => x.PokedexNumber == pokemonList.Find(x => x.Id == pokemonId).PokedexNumber - 1),
-                pokemonList.First(x => x.PokedexNumber == pokemonList.Find(x => x.Id == pokemonId).PokedexNumber + 1),
+                priorPokemon,
+                nextPokemon,
             };
 
             return surroundingPokemon;
