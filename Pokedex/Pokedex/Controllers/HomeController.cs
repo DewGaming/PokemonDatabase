@@ -221,7 +221,7 @@ namespace Pokedex.Controllers
         [Route("typing_evaluator")]
         public IActionResult TypingEvaluator()
         {
-            this.dataService.AddPageView("Typing Evaluator Page", this.User.IsInRole("Owner"));
+            this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
@@ -264,7 +264,7 @@ namespace Pokedex.Controllers
         [Route("day_care_evaluator")]
         public IActionResult DayCareEvaluator()
         {
-            this.dataService.AddPageView("Day Care Evaluator Page", this.User.IsInRole("Owner"));
+            this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
             List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon();
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
@@ -293,7 +293,7 @@ namespace Pokedex.Controllers
         [Route("form_evaluator")]
         public IActionResult FormEvaluator()
         {
-            this.dataService.AddPageView("Form Evaluator Page", this.User.IsInRole("Owner"));
+            this.dataService.AddPageView("Form Viewer Page", this.User.IsInRole("Owner"));
             List<Form> model = this.dataService.GetObjects<Form>();
             List<FormGroup> formGroupList = this.dataService.GetObjects<FormGroup>();
 

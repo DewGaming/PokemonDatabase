@@ -1,7 +1,7 @@
 @model Pokedex.Models.TypeEvaluatorViewModel
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Typing Evaluator";
+    ViewBag.Title = "Typing Lookup";
     ViewBag.Description = string.Concat("Find out what Pokémon have a specific typing and what that type chart looks like!");
     var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
     var secondaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 100, Name = "Any Type" });

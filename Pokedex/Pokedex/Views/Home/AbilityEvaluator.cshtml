@@ -1,7 +1,7 @@
 @model Pokedex.Models.AbilityEvaluatorViewModel
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Ability Evaluator";
+    ViewBag.Title = "Ability Lookup";
     ViewBag.Description = "Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!";
     var abilities = Model.AllAbilities.Prepend(new Pokedex.DataAccess.Models.Ability { Id = 0, Name = "No Ability Selected" });
 }
