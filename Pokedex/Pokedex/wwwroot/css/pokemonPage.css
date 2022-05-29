@@ -50,10 +50,6 @@
   .differentFormsMobile {
     display: block !important;
   }
-
-  .pokemonWithForms>.pokemonImage img {
-    width: 300px;
-  }
 }
 
 @media (min-width: 783px) {
