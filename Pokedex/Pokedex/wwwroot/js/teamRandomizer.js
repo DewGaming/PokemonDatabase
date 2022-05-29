@@ -238,7 +238,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $('.' + gen + ' input').prop('checked', true);
                 })
 
-                if ($.inArray(selectedGame, ['1', '2', '37']) != -1) {
+                if ($.inArray(selectedGame, ['1', '2', '20', '23', '37']) != -1) {
                     $(".randomAbilityCheckbox").hide();
                     $("#randomAbilityBool").prop('checked', false);
                 }
@@ -353,13 +353,25 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 $(dropdownItem).append(dropdownInput).append(dropdownLabel);
                 $("#types").append($(dropdownItem));
 
-                $.each(data.allTypes, function () {
+                let len = Math.ceil(data.allTypes.length / 2);
+
+                for (let i = 0; i < len; i++) {
                     var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
-                    var dropdownInput = $("<input>").attr("id", "type" + this.id).attr("name", "typeSelection").attr("type", "radio").val(this.id);
-                    var dropdownLabel = $("<label>").attr("for", "type" + this.id).addClass("generatorOptionTitle").text(this.name);
+                    var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
+                    var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
                     $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                    $("#types").append($(dropdownItem));
-                });
+                    console.log($(dropdownItem));
+                    $(".typeSelector section:first-of-type").append($(dropdownItem));
+                }
+
+                for (let i = len; i < data.allTypes.length; i++) {
+                    var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
+                    var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
+                    var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
+                    $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+                    console.log($(dropdownItem));
+                    $(".typeSelector section:last-of-type").append($(dropdownItem));
+                }
 
                 $("input[name=typeSelection][value=" + typeId + "]").prop('checked', true);
 
@@ -424,7 +436,7 @@ $(function () {
     updateDropdown();
 });
 
-$('.generatorDropdown').on('mouseover', function () {
+$('.otherSelector button').on('mouseover', function () {
     updateDropdown();
 });
 

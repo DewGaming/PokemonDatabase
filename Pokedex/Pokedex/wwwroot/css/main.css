@@ -402,10 +402,6 @@ main {
   margin-left: 5px
 }
 
-.generatorDropdown {
-  margin-top: -15px
-}
-
 .generatorDropdown, .generatorButton, .exportTeamButton, .saveTeamButton {
   height: 50px
 }
@@ -581,8 +577,8 @@ h2 {
   text-align: center
 }
 
-.generatorButton, .exportTeamButton, .saveTeamButton {
-  margin: 0 5px 15px 0
+.generatorButton, .exportTeamButton, .saveTeamButton, .teamRandomizer {
+  margin-bottom: 5px;
 }
 
 a {
@@ -651,6 +647,10 @@ a {
 @media (min-width: 783px) {
   .pokemonImage img {
     height: 327px;
+  }
+
+  .gameSelector section:last-of-type, .typeSelector section:last-of-type {
+    margin-top: 25px;
   }
 }
 

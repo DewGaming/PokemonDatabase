@@ -26,9 +26,71 @@
     <script src="/js/teamRandomizer.js"></script>
 }
 
-<div class="btn-group teamRandomizer">
+<div class="btn-group teamRandomizer gameSelector">
     <span>
-        <button class="btn btn-primary generatorDropdown">Randomizer Options</button>
+        <button class="btn btn-primary generatorDropdown">Game Options</button>
+    </span>
+    <ul class="generatorDropdownMenu dropdown-menu">
+        <section class="generatorSection">
+            <span class="generationOptionTitle" id="games">Games</span>
+            <li class="dropdown-item generatorOption gameRadioOption">
+                <input id="game0" name="gameSelection" type="radio" value="0" checked="checked" />
+                <label for="game0" class="generatorOptionTitle">Any Game</label>
+            </li>
+            @for (var i = 0; i < (int)Math.Ceiling(Model.AllGames.Count() / 2m); i++ )
+            {
+                <li class="dropdown-item generatorOption gameRadioOption">
+                    <input id="game@(Model.AllGames[i].Id)" name="gameSelection" type="radio" value="@(Model.AllGames[i].Id)" />
+                    <label for="game@(Model.AllGames[i].Id)" class="generatorOptionTitle">@Model.AllGames[i].Name</label>
+                </li>
+            }
+        </section>
+        <section class="generatorSection">
+            @for (var i = (int)Math.Ceiling(Model.AllGames.Count() / 2m); i < Model.AllGames.Count(); i++ )
+            {
+                <li class="dropdown-item generatorOption gameRadioOption">
+                    <input id="game@(Model.AllGames[i].Id)" name="gameSelection" type="radio" value="@(Model.AllGames[i].Id)" />
+                    <label for="game@(Model.AllGames[i].Id)" class="generatorOptionTitle">@Model.AllGames[i].Name</label>
+                </li>
+            }
+        </section>
+    </ul>
+</div>
+
+<div class="btn-group teamRandomizer typeSelector">
+    <span>
+        <button class="btn btn-primary generatorDropdown">Type Options</button>
+    </span>
+    <ul class="generatorDropdownMenu dropdown-menu">
+        <section class="generatorSection">
+            <span class="generationOptionTitle" id="types">Types</span>
+            <li class="dropdown-item generatorOption typeRadioOption">
+                <input id="type0" name="typeSelection" type="radio" value="0" checked="checked" />
+                <label for="type0" class="generatorOptionTitle">Any Type</label>
+            </li>
+            @for (var i = 0; i < (int)Math.Ceiling(Model.AllTypes.Count() / 2m); i++ )
+            {
+                <li class="dropdown-item generatorOption typeRadioOption">
+                    <input id="type@(Model.AllTypes[i].Id)" name="typeSelection" type="radio" value="@(Model.AllTypes[i].Id)" />
+                    <label for="type@(Model.AllTypes[i].Id)" class="generatorOptionTitle">@Model.AllTypes[i].Name</label>
+                </li>
+            }
+        </section>
+        <section class="generatorSection">
+            @for (var i = (int)Math.Ceiling(Model.AllTypes.Count() / 2m); i < Model.AllTypes.Count(); i++ )
+            {
+                <li class="dropdown-item generatorOption typeRadioOption">
+                    <input id="type@(Model.AllTypes[i].Id)" name="typeSelection" type="radio" value="@(Model.AllTypes[i].Id)" />
+                    <label for="type@(Model.AllTypes[i].Id)" class="generatorOptionTitle">@Model.AllTypes[i].Name</label>
+                </li>
+            }
+        </section>
+    </ul>
+</div>
+
+<div class="btn-group teamRandomizer otherSelector">
+    <span>
+        <button class="btn btn-primary generatorDropdown">Other Options</button>
     </span>
     <ul class="generatorDropdownMenu dropdown-menu">
         <section class="generatorSection">
@@ -44,6 +106,8 @@
                     <label for="gen@(gen)" class="generatorOptionTitle">Generation @gen</label>
                 </li>
             }
+        </section>
+        <section class="generatorSection">
             <span class="generationOptionTitle" id="evolutions">Evolutions</span>
             <li class="dropdown-item generatorOption evolutionCheckbox">
                 <input id="stage1Pokemon" type="checkbox" value="stage1Pokemon" checked="checked" />
@@ -57,53 +121,6 @@
                 <input id="onlyFullyEvolved" type="checkbox" value="onlyFullyEvolved" checked="checked" />
                 <label for="onlyFullyEvolved" class="generatorOptionTitle">Final Evolution</label>
             </li>
-        </section>
-        <section style="margin-bottom: -25px;" class="generatorSection">
-            <span class="generationOptionTitle" id="games">Games</span>
-            <li class="dropdown-item generatorOption gameRadioOption">
-                <input id="game0" name="gameSelection" type="radio" value="0" checked="checked" />
-                <label for="game0" class="generatorOptionTitle">Any Game</label>
-            </li>
-            @for (var i = 0; i < (int)Math.Ceiling(Model.AllGames.Count() / 2m); i++ )
-            {
-                <li class="dropdown-item generatorOption gameRadioOption">
-                    <input id="Model.AllGames[i]@(Model.AllGames[i].Id)" name="gameSelection" type="radio" value="@(Model.AllGames[i].Id)" />
-                    <label for="Model.AllGames[i]@(Model.AllGames[i].Id)" class="generatorOptionTitle">@Model.AllGames[i].Name</label>
-                </li>
-            }
-        </section>
-        <section style="margin-top: 25px;" class="generatorSection">
-            @for (var i = (int)Math.Ceiling(Model.AllGames.Count() / 2m); i < Model.AllGames.Count(); i++ )
-            {
-                <li class="dropdown-item generatorOption gameRadioOption">
-                    <input id="Model.AllGames[i]@(Model.AllGames[i].Id)" name="gameSelection" type="radio" value="@(Model.AllGames[i].Id)" />
-                    <label for="Model.AllGames[i]@(Model.AllGames[i].Id)" class="generatorOptionTitle">@Model.AllGames[i].Name</label>
-                </li>
-            }
-        </section>
-        <section class="generatorSection">
-            <span class="generationOptionTitle" id="types">Types</span>
-            <li class="dropdown-item generatorOption typeRadioOption">
-                <input id="type0" name="typeSelection" type="radio" value="0" checked="checked" />
-                <label for="type0" class="generatorOptionTitle">Any Type</label>
-            </li>
-            @foreach (var type in Model.AllTypes)
-            {
-                <li class="dropdown-item generatorOption typeRadioOption">
-                    <input id="type@(type.Id)" name="typeSelection" type="radio" value="@(type.Id)" />
-                    <label for="type@(type.Id)" class="generatorOptionTitle">@type.Name</label>
-                </li>
-            }
-        </section>
-        <section class="generatorSection">
-            <span class="generationOptionTitle" id=legendary>Legendaries</span>
-            @foreach(var l in Model.AllLegendaryTypes)
-            {
-                <li class="dropdown-item generatorOption legendaryCheckbox@(l.Type == "Ultra Beast" ? " ultraBeastCheckbox" : String.Empty)">
-                    <input id=@l.Type.Replace(" ", @String.Empty) type="checkbox" value=@l.Type.Replace(" ", @String.Empty) checked="checked" />
-                    <label for=@l.Type.Replace(" ", @String.Empty) class="generatorOptionTitle">@(l.Type.Last() == 'y' ? @l.Type.Replace("y", "ies") : @l.Type += 's')</label>
-                </li>
-            }
             <span class="generationOptionTitle" id="alternateForms">Alternate Forms</span>
             @foreach (var formGroup in Model.AllFormGroups)
             {
@@ -116,6 +133,16 @@
                 <input id="Other" type="checkbox" value="Other" checked="checked" />
                 <label for="Other" class="generatorOptionTitle">Other Forms</label>
             </li>
+        </section>
+        <section class="generatorSection">
+            <span class="generationOptionTitle" id=legendary>Legendaries</span>
+            @foreach(var l in Model.AllLegendaryTypes)
+            {
+                <li class="dropdown-item generatorOption legendaryCheckbox@(l.Type == "Ultra Beast" ? " ultraBeastCheckbox" : String.Empty)">
+                    <input id=@l.Type.Replace(" ", @String.Empty) type="checkbox" value=@l.Type.Replace(" ", @String.Empty) checked="checked" />
+                    <label for=@l.Type.Replace(" ", @String.Empty) class="generatorOptionTitle">@(l.Type.Last() == 'y' ? @l.Type.Replace("y", "ies") : @l.Type += 's')</label>
+                </li>
+            }
             <span class="generationOptionTitle" id="otherOptions">Other Options</span>
             <li class="dropdown-item generatorOption otherOption randomAbilityCheckbox">
                 <input id="randomAbilityBool" type="checkbox" value="randomAbilityBool" />
