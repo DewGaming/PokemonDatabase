@@ -434,7 +434,6 @@ label {
 .pokemonImage img {
   width: 100%;
   max-width: 327px;
-  height: 327px;
   padding: 5px;
   -o-object-fit: contain;
   object-fit: contain;
@@ -646,6 +645,12 @@ a {
 @media(max-width:854px) {
   .close {
     top: 75px;
+  }
+}
+
+@media (min-width: 783px) {
+  .pokemonImage img {
+    height: 327px;
   }
 }
 
