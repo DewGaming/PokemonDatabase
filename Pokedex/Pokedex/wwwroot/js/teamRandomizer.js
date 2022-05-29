@@ -55,8 +55,15 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             }
         }
 
-        $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
-        $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.exportTeamButton');
+        if ($(window).width() >= 406) {
+            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
+            $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
+        }
+        else {
+            $('<br class="mobileBreak" />').insertAfter('.generatorButton');
+            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
+            $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.saveTeamButton');
+        }
         refreshEvents();
     }, checkLegendaryChecks = function () {
         var boxChecked = false;
