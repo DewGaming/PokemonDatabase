@@ -1404,7 +1404,7 @@ namespace Pokedex.Controllers
                 AllEggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon"),
-                AllLegendaryDetails = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true),
+                AllLegendaryDetails = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType"),
                 AllPokemonCaptureRates = this.dataService.GetAllPokemonWithCaptureRates(),
                 AllPokemonBaseHappinesses = this.dataService.GetAllPokemonWithBaseHappinesses(),
             };

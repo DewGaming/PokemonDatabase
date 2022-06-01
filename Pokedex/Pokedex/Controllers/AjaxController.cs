@@ -476,7 +476,7 @@ namespace Pokedex.Controllers
 
                 if (selectedLegendaries.Count == 0)
                 {
-                    List<PokemonLegendaryDetail> legendaryList = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true);
+                    List<PokemonLegendaryDetail> legendaryList = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType");
 
                     foreach (var p in legendaryList)
                     {
@@ -488,7 +488,7 @@ namespace Pokedex.Controllers
                     List<string> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type").ConvertAll(x => x.Type);
                     foreach (var legendary in legendaryTypes.Except(selectedLegendaries).ToList())
                     {
-                        List<PokemonLegendaryDetail> legendaryList = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true).Where(x => x.LegendaryType.Type == legendary).ToList();
+                        List<PokemonLegendaryDetail> legendaryList = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType").Where(x => x.LegendaryType.Type == legendary).ToList();
 
                         foreach (var l in legendaryList)
                         {
@@ -500,7 +500,7 @@ namespace Pokedex.Controllers
                 if (onlyLegendaries)
                 {
                     List<Pokemon> legendaryList = new List<Pokemon>();
-                    List<PokemonLegendaryDetail> allLegendaries = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true);
+                    List<PokemonLegendaryDetail> allLegendaries = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType");
 
                     foreach (var p in allLegendaries)
                     {
@@ -2246,7 +2246,7 @@ namespace Pokedex.Controllers
 
         private List<PokemonTypeDetail> GetAllPokemonWithSpecificType(int typeId, int generationId, List<Pokemon> allPokemon)
         {
-            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", whereProperty: "Pokemon.IsComplete", wherePropertyValue: true)
+            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
                                                         .Where(x => allPokemon.Any(y => y.Id == x.PokemonId))
                                                         .OrderBy(x => x.GenerationId)
                                                         .ToList();
