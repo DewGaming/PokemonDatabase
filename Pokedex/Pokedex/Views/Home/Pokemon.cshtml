@@ -292,15 +292,23 @@
                             <td>
                                 @{
                                     string height;
-                                    var feet = 0;
-                                    var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m), 0);
-                                    while(inches >= 12)
-                                    {
-                                        feet++;
-                                        inches -= 12;
-                                    }
 
-                                    height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                                    if (item.Pokemon.Height != 0m)
+                                    {
+                                        var feet = 0;
+                                        var inches = (int)Math.Round((@item.Pokemon.Height / 0.0254m), 0);
+                                        while(inches >= 12)
+                                        {
+                                            feet++;
+                                            inches -= 12;
+                                        }
+
+                                        height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                                    }
+                                    else
+                                    {
+                                        height = "???' ???\" (??? m)";
+                                    }
                                 }
                                 @height
                             </td>
