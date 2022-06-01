@@ -430,146 +430,114 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </tbody>
                 </table>
             </div>
-            <div class="pokemonInfo pokemonTables">
-                <div class="typing">
-                    <h2>Typing</h2>
-                    <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
-                    @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
-                    {
-                        <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
-                    }
-                </div>
-                <div class="effectivenessChart tableWithHeaders noRowBorders">
-                    @{
-                        var typeChart = item.Effectiveness.OrderByDescending(x => x.Generation.Id).First(x => x.Generation.Id <= g).TypeChart;
-                        List<string> StrongAgainst = new List<string>();
-                        List<string> WeakAgainst = new List<string>();
-                        List<string> ImmuneTo = new List<string>();
-                        if (g == 1)
+            @if (item.Typings.Count() > 0)
+            {
+                <div class="pokemonInfo pokemonTables">
+                    <div class="typing">
+                        <h2>Typing</h2>
+                        <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
+                        @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
                         {
-                            typeChart = typeChart.Where(x => x.GenerationId == 1).ToList();
+                            <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
                         }
-                        else if (g >= 2 && g <= 5)
-                        {
-                            typeChart = typeChart.Where(x => x.GenerationId == 2).ToList();
-                        }
-                        else if (g >= 6)
-                        {
-                            typeChart = typeChart.Where(x => x.GenerationId == 6).ToList();
-                        }
-
-                        foreach(var t in typeChart)
-                        {
-                            if (t.Effective == 0)
+                    </div>
+                    <div class="effectivenessChart tableWithHeaders noRowBorders">
+                        @{
+                            var typeChart = item.Effectiveness.OrderByDescending(x => x.Generation.Id).First(x => x.Generation.Id <= g).TypeChart;
+                            List<string> StrongAgainst = new List<string>();
+                            List<string> WeakAgainst = new List<string>();
+                            List<string> ImmuneTo = new List<string>();
+                            if (g == 1)
                             {
-                                ImmuneTo.Add(t.Attack.Name);
+                                typeChart = typeChart.Where(x => x.GenerationId == 1).ToList();
                             }
-                            else if (t.Effective == 0.5m && !ImmuneTo.Contains(t.Attack.Name))
+                            else if (g >= 2 && g <= 5)
                             {
-                                if (StrongAgainst.Contains(t.Attack.Name))
-                                {
-                                    StrongAgainst = StrongAgainst.Select(x => x.Replace(t.Attack.Name, t.Attack.Name + " Quad")).ToList();
-                                }
-                                else if (WeakAgainst.Contains(t.Attack.Name))
-                                {
-                                    WeakAgainst.Remove(t.Attack.Name);
-                                }
-                                else
-                                {
-                                    StrongAgainst.Add(t.Attack.Name);
-                                }
+                                typeChart = typeChart.Where(x => x.GenerationId == 2).ToList();
                             }
-                            else if (t.Effective == 2 && !ImmuneTo.Contains(t.Attack.Name))
+                            else if (g >= 6)
                             {
-                                if (WeakAgainst.Contains(t.Attack.Name))
-                                {
-                                    WeakAgainst = WeakAgainst.Select(x => x.Replace(t.Attack.Name, t.Attack.Name + " Quad")).ToList();
-                                }
-                                else if (StrongAgainst.Contains(t.Attack.Name))
-                                {
-                                    StrongAgainst.Remove(t.Attack.Name);
-                                }
-                                else
-                                {
-                                    WeakAgainst.Add(t.Attack.Name);
-                                }
+                                typeChart = typeChart.Where(x => x.GenerationId == 6).ToList();
                             }
-                        }
 
-                        StrongAgainst.Sort();
-                        WeakAgainst.Sort();
-                        ImmuneTo.Sort();
-
-                        var superStrong = StrongAgainst.Where(x => x.Contains("Quad")).ToList();
-                        foreach(var s in superStrong)
-                        {
-                            StrongAgainst.Remove(StrongAgainst.Find(x => x == s));
-                        }
-                        superStrong.AddRange(StrongAgainst);
-                        StrongAgainst = superStrong;
-
-                        var superWeak = WeakAgainst.Where(x => x.Contains("Quad")).ToList();
-                        foreach(var s in superWeak)
-                        {
-                            WeakAgainst.Remove(WeakAgainst.Find(x => x == s));
-                        }
-                        superWeak.AddRange(WeakAgainst);
-                        WeakAgainst = superWeak;
-                    }
-                    @if (StrongAgainst.Count > 0)
-                    {
-                        <div class="StrongAgainst">
-                            <h2>Resistances</h2>
-                            <table class="StrongAgainstTable">
-                                <tbody>
-                                    @foreach (string s in StrongAgainst)
+                            foreach(var t in typeChart)
+                            {
+                                if (t.Effective == 0)
+                                {
+                                    ImmuneTo.Add(t.Attack.Name);
+                                }
+                                else if (t.Effective == 0.5m && !ImmuneTo.Contains(t.Attack.Name))
+                                {
+                                    if (StrongAgainst.Contains(t.Attack.Name))
                                     {
-                                        <tr>
-                                            @if (@s.IndexOf(" Quad") > -1)
-                                            {
-                                                <td>
-                                                    <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
-                                                    <div class="pokemon-type quad-icon quad-resist">Quad</div>
-                                                </td>
-                                            }
-                                            else
-                                            {
-                                                <td>
-                                                    <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
-                                                </td>
-                                            }
-                                        </tr>
+                                        StrongAgainst = StrongAgainst.Select(x => x.Replace(t.Attack.Name, t.Attack.Name + " Quad")).ToList();
                                     }
-                                </tbody>
-                            </table>
-                        </div>
-                        style = string.Empty;
-                    }
-                    else
-                    {
-                        style = "display: flex;";
-                    }
-                    <div style="@style" class="nonResistances">
-                        @if (WeakAgainst.Count > 0)
+                                    else if (WeakAgainst.Contains(t.Attack.Name))
+                                    {
+                                        WeakAgainst.Remove(t.Attack.Name);
+                                    }
+                                    else
+                                    {
+                                        StrongAgainst.Add(t.Attack.Name);
+                                    }
+                                }
+                                else if (t.Effective == 2 && !ImmuneTo.Contains(t.Attack.Name))
+                                {
+                                    if (WeakAgainst.Contains(t.Attack.Name))
+                                    {
+                                        WeakAgainst = WeakAgainst.Select(x => x.Replace(t.Attack.Name, t.Attack.Name + " Quad")).ToList();
+                                    }
+                                    else if (StrongAgainst.Contains(t.Attack.Name))
+                                    {
+                                        StrongAgainst.Remove(t.Attack.Name);
+                                    }
+                                    else
+                                    {
+                                        WeakAgainst.Add(t.Attack.Name);
+                                    }
+                                }
+                            }
+
+                            StrongAgainst.Sort();
+                            WeakAgainst.Sort();
+                            ImmuneTo.Sort();
+
+                            var superStrong = StrongAgainst.Where(x => x.Contains("Quad")).ToList();
+                            foreach(var s in superStrong)
+                            {
+                                StrongAgainst.Remove(StrongAgainst.Find(x => x == s));
+                            }
+                            superStrong.AddRange(StrongAgainst);
+                            StrongAgainst = superStrong;
+
+                            var superWeak = WeakAgainst.Where(x => x.Contains("Quad")).ToList();
+                            foreach(var s in superWeak)
+                            {
+                                WeakAgainst.Remove(WeakAgainst.Find(x => x == s));
+                            }
+                            superWeak.AddRange(WeakAgainst);
+                            WeakAgainst = superWeak;
+                        }
+                        @if (StrongAgainst.Count > 0)
                         {
-                            <div class="WeakAgainst">
-                                <h2>Weaknesses</h2>
-                                <table class="WeakAgainstTable">
+                            <div class="StrongAgainst">
+                                <h2>Resistances</h2>
+                                <table class="StrongAgainstTable">
                                     <tbody>
-                                        @foreach (string w in WeakAgainst)
+                                        @foreach (string s in StrongAgainst)
                                         {
                                             <tr>
-                                                @if (@w.IndexOf(" Quad") > -1)
+                                                @if (@s.IndexOf(" Quad") > -1)
                                                 {
                                                     <td>
-                                                        <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
-                                                        <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                                                        <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
+                                                        <div class="pokemon-type quad-icon quad-resist">Quad</div>
                                                     </td>
                                                 }
                                                 else
                                                 {
                                                     <td>
-                                                        <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                                        <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
                                                     </td>
                                                 }
                                             </tr>
@@ -577,28 +545,63 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                     </tbody>
                                 </table>
                             </div>
+                            style = string.Empty;
                         }
-                        @if (ImmuneTo.Count > 0)
+                        else
                         {
-                            <div class="ImmuneTo">
-                                <h2>Immunities</h2>
-                                <table class="ImmuneToTable">
-                                    <tbody>
-                                        @foreach (string i in ImmuneTo)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                            style = "display: flex;";
                         }
+                        <div style="@style" class="nonResistances">
+                            @if (WeakAgainst.Count > 0)
+                            {
+                                <div class="WeakAgainst">
+                                    <h2>Weaknesses</h2>
+                                    <table class="WeakAgainstTable">
+                                        <tbody>
+                                            @foreach (string w in WeakAgainst)
+                                            {
+                                                <tr>
+                                                    @if (@w.IndexOf(" Quad") > -1)
+                                                    {
+                                                        <td>
+                                                            <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
+                                                            <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            @if (ImmuneTo.Count > 0)
+                            {
+                                <div class="ImmuneTo">
+                                    <h2>Immunities</h2>
+                                    <table class="ImmuneToTable">
+                                        <tbody>
+                                            @foreach (string i in ImmuneTo)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
             <div class="pokemonInfo pokemonGames pokemonTables">
                 <h2>Games Available In</h2>
                 <table>
