@@ -26,7 +26,16 @@
             <div class="description">
                 <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @p.Pokemon.Name</a>
                 <div class="typing">
-                    <div class="pokemon-type type-icon type-@p.PrimaryType.Name.ToLower()">@p.PrimaryType.Name</div>
+                    <div class="pokemon-type type-icon type-@p.PrimaryType.Name.ToLower()">
+                        @if (p.PrimaryType.Name == "None")
+                        {
+                            @("???")
+                        }
+                        else
+                        {
+                            @p.PrimaryType.Name
+                        }
+                    </div>
                     @if (p.SecondaryType != null)
                     {
                         <div class="pokemon-type type-icon type-@p.SecondaryType.Name.ToLower()">@p.SecondaryType.Name</div>

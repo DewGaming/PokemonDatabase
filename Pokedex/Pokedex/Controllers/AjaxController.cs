@@ -342,6 +342,26 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
+                List<PokemonTypeDetail> typingDetail = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game", whereProperty: "Pokemon.Game.GenerationId", wherePropertyValue: generationId).ToList();
+                List<Pokemon> noTypingPokemon = this.dataService.GetAllPokemon().Where(x => x.Game.GenerationId == generationId).Except(typingDetail.Select(x => x.Pokemon)).ToList();
+
+                foreach (var p in noTypingPokemon)
+                {
+                    model.PokemonList.Add(new PokemonTypeDetail()
+                    {
+                        Pokemon = p,
+                        PokemonId = p.Id,
+                        PrimaryTypeId = 0,
+                        PrimaryType = new DataAccess.Models.Type()
+                        {
+                            Id = 0,
+                            Name = "None",
+                        },
+                    });
+                }
+
+                model.PokemonList = model.PokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+
                 return this.PartialView("_FillGenerationTable", model);
             }
             else
