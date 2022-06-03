@@ -13,7 +13,6 @@ namespace Pokedex.Controllers
     /// <summary>
     /// The class that handles all AJAX requests.
     /// </summary>
-    [Authorize]
     [Route("")]
     public class AjaxController : Controller
     {
