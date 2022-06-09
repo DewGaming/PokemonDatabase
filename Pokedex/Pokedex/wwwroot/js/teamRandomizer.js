@@ -1,8 +1,8 @@
 var pokemonList, pokemonURLs, abilityList, typeList, exportString
     , fillGeneratedTable = function (appConfig) {
-        removeEventButtons();
         $('.teamRandomizerTable tbody').remove();
         $('.teamRandomizerTable').append($('<tbody>'));
+        removeEventButtons();
 
         if ($(window).width() >= 1000) {
             for (var i = 0; i < 2; i++) {
@@ -162,6 +162,9 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
     }, removeEventButtons = function () {
         $('.exportTeamButton').remove();
         $('.saveTeamButton').remove();
+        if ($(window).width() < 405) {
+            $('.mobileBreak').remove();
+        }
     }, refreshEvents = function () {
         refreshExportEvent();
         refreshSaveEvent();
