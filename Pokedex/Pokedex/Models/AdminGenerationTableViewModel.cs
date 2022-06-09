@@ -14,11 +14,6 @@ namespace Pokedex.Models
         public List<Pokemon> PokemonList { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all reviewed pokemon.
-        /// </summary>
-        public List<ReviewedPokemon> ReviewedPokemon { get; set; }
-
-        /// <summary>
         /// Gets or sets the pokemon's dropdown menu.
         /// </summary>
         public DropdownViewModel DropdownViewModel { get; set; }

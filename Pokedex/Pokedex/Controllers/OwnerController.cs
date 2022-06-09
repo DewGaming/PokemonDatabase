@@ -241,44 +241,8 @@ namespace Pokedex.Controllers
         [Route("review_pokemon/{pokemonId:int}")]
         public IActionResult ReviewPokemon(Pokemon pokemon)
         {
-            ReviewedPokemon reviewedPokemon = this.dataService.GetObjectByPropertyValue<ReviewedPokemon>("PokemonId", pokemon.Id);
-            if (reviewedPokemon == null)
-            {
-                reviewedPokemon = new ReviewedPokemon() { PokemonId = pokemon.Id };
-                this.dataService.AddObject(reviewedPokemon);
-            }
-
-            return this.RedirectToAction("Pokemon", "Admin");
-        }
-
-        /// <summary>
-        /// Opens the page to view all reviewed pokemon.
-        /// </summary>
-        /// <returns>The reviewed pokemon page.</returns>
-        [Route("reviewed_pokemon")]
-        public IActionResult ReviewedPokemon()
-        {
-            List<ReviewedPokemon> model = this.dataService.GetObjects<ReviewedPokemon>("Pokemon.PokedexNumber", "Pokemon");
-
-            return this.View(model);
-        }
-
-        /// <summary>
-        /// Opens the page to mark all reviewed pokemon as complete.
-        /// </summary>
-        /// <returns>The admin pokemon page.</returns>
-        [Route("complete_reviewed_pokemon")]
-        public IActionResult CompleteReviewedPokemon()
-        {
-            List<ReviewedPokemon> reviewedPokemonList = this.dataService.GetObjects<ReviewedPokemon>("Pokemon.PokedexNumber", "Pokemon");
-            Pokemon pokemon;
-            foreach (var r in reviewedPokemonList)
-            {
-                pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", r.PokemonId);
-                pokemon.IsComplete = true;
-                this.dataService.UpdateObject(pokemon);
-                this.dataService.DeleteObject<ReviewedPokemon>(r.Id);
-            }
+            pokemon.IsComplete = true;
+            this.dataService.UpdateObject(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

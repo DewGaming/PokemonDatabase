@@ -22,14 +22,6 @@ namespace Pokedex.Controllers
             this.dataService = new DataService(dataContext);
         }
 
-        [Route("delete_reviewed_pokemon/{id:int}")]
-        public IActionResult ReviewedPokemon(int id)
-        {
-            this.dataService.DeleteObject<ReviewedPokemon>(id);
-
-            return this.RedirectToAction("ReviewedPokemon", "Owner");
-        }
-
         [HttpGet]
         [Route("delete_generation/{id:int}")]
         public IActionResult Generation(int id)
