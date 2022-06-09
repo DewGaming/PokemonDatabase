@@ -526,6 +526,8 @@ $('.generatorButton').on('click', function () {
             selectedType = this.value;
         }
     });
+    
+    $(".overlay").fadeIn(300);
 
     $.ajax({
         url: '/get-pokemon-team/',
@@ -538,6 +540,10 @@ $('.generatorButton').on('click', function () {
             pokemonURLs = data.pokemonURLs;
             abilityList = data.pokemonAbilities;
             exportString = data.exportString;
+            setTimeout(function(){
+                $(".overlay").fadeOut(300);
+            }, 500);
+
             fillGeneratedTable(data.appConfig);
         })
         .fail(function () {

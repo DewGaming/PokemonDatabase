@@ -1,0 +1,16 @@
+img {
+    width: 100%;
+    max-width: 300px;
+    height: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    padding: 5px;
+}
+
+.pokemonAbility {
+    margin: 10px 0;
+}
+
+.typeSelector, .generatorButton, .saveTeamButton {
+    margin-right: 5px;
+}

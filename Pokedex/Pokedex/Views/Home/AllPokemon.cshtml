@@ -10,6 +10,7 @@
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
     <style>
         .pokemonImages {
             perspective: 720px;
@@ -87,13 +88,17 @@
     }
 </p>
 
-
-
 <div class="pageButtons">
     @foreach (var id in Model)
     {
         <button id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
     }
 </div>
-<div class="page generation pokemonList">
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
 </div>
+
+<div class="page generation pokemonList"></div>

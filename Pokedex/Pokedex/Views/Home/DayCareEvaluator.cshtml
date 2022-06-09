@@ -9,6 +9,7 @@
 {
     <link href="/css/eggGroup.css" rel="stylesheet" type="text/css" />
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
 }
 
 @section scripts
@@ -16,14 +17,19 @@
     <script src="/js/dayCareEvaluator.js"></script>
 }
 
-<div>
-    <div class="evaluator">
-        <div class="flexDiv">
-            <div class="breedablePokemonList">
-                @Html.Label("Breedable Pokémon")
-                @Html.DropDownList("Breedable Pokémon", new SelectList(@Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control eggGroupSelectList" })
-            </div>
+<div class="evaluator">
+    <div class="flexDiv">
+        <div class="breedablePokemonList">
+            @Html.Label("Breedable Pokémon")
+            @Html.DropDownList("Breedable Pokémon", new SelectList(@Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control eggGroupSelectList" })
         </div>
     </div>
-    <div class="pokemonWithEggGroup"></div>
 </div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+
+<div class="pokemonWithEggGroup"></div>

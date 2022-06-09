@@ -9,6 +9,7 @@
 {
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
     <style>
         .totalPokemon {
             text-align: center;
@@ -27,6 +28,13 @@
         <button class="gameButton" id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Name (@p.Abbreviation)</button>
     }
 </div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+
 <div class="page generation pokemonList">
     <div class="totalPokemon" style="@((this.User.IsInRole("Owner") ? "margin-bottom: 20px;" : ""))">
         @if (this.User.IsInRole("Owner"))

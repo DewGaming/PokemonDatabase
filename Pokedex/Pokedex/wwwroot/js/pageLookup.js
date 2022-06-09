@@ -76,6 +76,8 @@ function lookupGeneration(generationId) {
     currentGeneration = generationId;
   }
 
+  $(".overlay").fadeIn(300);
+
   $('button').each(function () {
     $(this).removeClass('active');
   });
@@ -92,11 +94,17 @@ function lookupGeneration(generationId) {
     });
 
     $('.pokemonList').addClass('active');
+
+    setTimeout(function () {
+      $(".overlay").fadeOut(300);
+    }, 500);
   });
 }
 
 function lookupAvailableGame(gameId) {
   if (!$('.active').is($('#Game' + gameId))) {
+    $(".overlay").fadeIn(300);
+
     $('button').each(function () {
       $(this).removeClass('active');
     });
@@ -113,6 +121,10 @@ function lookupAvailableGame(gameId) {
       $('.updater').append($('<a>').attr('href', 'admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
 
       $('.pokemonList').addClass('active');
+      
+      setTimeout(function () {
+        $(".overlay").fadeOut(300);
+      }, 500);
     });
   }
 }

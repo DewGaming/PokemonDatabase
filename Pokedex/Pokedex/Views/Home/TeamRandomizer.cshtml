@@ -7,24 +7,8 @@
 
 @section styles
 {
-    <style>
-        img {
-            width: 100%;
-            max-width: 300px;
-            height: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            padding: 5px;
-        }
-
-        .pokemonAbility {
-            margin: 10px 0;
-        }
-
-        .typeSelector, .generatorButton, .saveTeamButton {
-            margin-right: 5px;
-        }
-    </style>
+    <link href="/css/teamRandomizer.css" rel="stylesheet" type="text/css" />
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
 }
 
 @section scripts
@@ -182,6 +166,12 @@
 </div>
 
 <button class="btn btn-primary generatorButton">Randomize Team</button>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
 
 <div class="teamRandomizer">
     <table  class="teamRandomizerTable"></table>

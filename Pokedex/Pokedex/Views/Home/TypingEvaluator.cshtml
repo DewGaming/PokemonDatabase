@@ -12,6 +12,7 @@
 {
     <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
     <style>
         .quad-icon {
             margin-left: 5px;
@@ -54,35 +55,38 @@
     <script src="/js/typingEvaluator.js"></script>
 }
 
-<div>
-    <div class="evaluator">
-        <div class="flexDiv">
-            <div class="generationList">
-                @Html.Label("Generation")
-                <select class="form-control generationSelectList" id="Generation" name="Generation">
-                    <option value="0">Latest Generation</option>
-                    @foreach (var g in Model.AllGenerations)
-                    {
-                        <option value="@g.Id">@g.GenerationName</option>
-                    }
-                </select>
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+
+<div class="evaluator">
+    <div class="flexDiv">
+        <div class="generationList">
+            @Html.Label("Generation")
+            <select class="form-control generationSelectList" id="Generation" name="Generation">
+                <option value="0">Every Generation</option>
+                @foreach (var g in Model.AllGenerations)
+                {
+                    <option value="@g.Id">@g.GenerationName</option>
+                }
+            </select>
+        </div>
+        <div class="typeLists flexDiv">
+            <div class="primaryList">
+                @Html.Label("Primary Type")
+                @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
             </div>
-            <div class="typeLists flexDiv">
-                <div class="primaryList">
-                    @Html.Label("Primary Type")
-                    @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
-                </div>
-                <div class="secondaryList">
-                    @Html.Label("Secondary Type")
-                    @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
-                </div>
+            <div class="secondaryList">
+                @Html.Label("Secondary Type")
+                @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
             </div>
         </div>
-
-        <div style="display: none;" class="effectivenessChart pokemonTables tableWithHeaders noRowBorders"></div>
     </div>
-    <div style="display: none;" class="pokemonWithTyping">
-        <h2>Pokémon With Typing</h2>
-        <div class="grid-container pokemonList"></div>
-    </div>
+    <div style="display: none;" class="effectivenessChart pokemonTables tableWithHeaders noRowBorders"></div>
+</div>
+<div style="display: none;" class="pokemonWithTyping">
+    <h2>Pokémon With Typing</h2>
+    <div class="grid-container pokemonList"></div>
 </div>

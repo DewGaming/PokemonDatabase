@@ -6,6 +6,8 @@ function updateGameAvailability(gameId) {
         }
     });
 
+    $(".overlay").fadeIn(300);
+
     $.ajax({
         url: '/update-game-availability/',
         method: "POST",
@@ -17,4 +19,8 @@ function updateGameAvailability(gameId) {
         .fail(function () {
             alert("Update Failed!");
         });
+
+    setTimeout(function () {
+        $(".overlay").fadeOut(300);
+    }, 500);
 }
