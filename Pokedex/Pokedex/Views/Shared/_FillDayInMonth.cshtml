@@ -1,6 +1,7 @@
 @model List<string>;
 
 <div class="pageButtons day">
+    <button id="Day00" onclick="lookupDay(00)">Monthly Stats</button>
     @foreach (var day in Model)
     {
         <button id="Day@(day)" onclick="lookupDay(@day)">@day</button>

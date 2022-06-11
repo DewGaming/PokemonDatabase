@@ -1666,7 +1666,10 @@ namespace Pokedex.Controllers
         {
             List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
             pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
-            pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("dd")) == day).ToList();
+            if (day != 0)
+            {
+                pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("dd")) == day).ToList();
+            }
 
             if (pokemonPageCheck == "noPokemonPage")
             {
