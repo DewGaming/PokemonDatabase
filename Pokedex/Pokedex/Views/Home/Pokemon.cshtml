@@ -171,7 +171,7 @@
 }
 @foreach (var item in Model.PokemonList)
 {
-    @if(!item.Pokemon.IsComplete)
+    @if (!item.Pokemon.IsComplete)
     {
         <h4>Please be aware that the information for this Pokémon is not complete due to not all the information being available. Some information may change as more is revealed.</h4>
     }
@@ -215,7 +215,7 @@
         }
 
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
-            @if(Model.PokemonList.Count() > 1)
+            @if (Model.PokemonList.Count() > 1)
             {
                 <div class="differentForms">
                     <h2 class="formHeader">Forms</h2>
@@ -242,7 +242,7 @@
                     </div>
                 </div>
 
-                @if(Model.PokemonList.Count() > 1)
+                @if (Model.PokemonList.Count() > 1)
                 {
                     <div class="differentFormsMobile">
                         <h2>Different Forms</h2>
@@ -401,6 +401,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         else if (item.Pokemon.GenderRatio.MaleRatio == 0)
                                         {
                                             <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                        }
+                                        else if (item.Pokemon.GenderRatioId == 12)
+                                        {
+                                            @("???");
                                         }
                                         else
                                         {
@@ -647,85 +651,91 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </tbody>
                 </table>
             </div>
-            <div class="pokemonInfo pokemonTraining pokemonTables">
-                <h2>Training</h2>
-                <table>
-                    <tbody>
-                        @if (@g > 2 && item.EVYields.Count() > 0)
-                        {
-                            <tr>
-                                <th>EV Yield</th>
-                                <td>
-                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health != 0)
-                                    {
-                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health@(" Health");
-                                        <br>
-                                    }
-                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack != 0)
-                                    {
-                                        @if (item.Pokemon.Name == "Watchog" && @g == 5)
+            @if ((@g > 2 && item.EVYields.Count() > 0) || item.CaptureRates.Count() > 0 || item.Pokemon.ExperienceGrowthId != 8 || item.BaseHappinesses.Count() > 0)
+            {
+                <div class="pokemonInfo pokemonTraining pokemonTables">
+                    <h2>Training</h2>
+                    <table>
+                        <tbody>
+                            @if (@g > 2 && item.EVYields.Count() > 0)
+                            {
+                                <tr>
+                                    <th>EV Yield</th>
+                                    <td>
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health != 0)
                                         {
-                                            @("1 Attack in BW")
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health@(" Health");
                                             <br>
-                                            @("2 Attack in B2W2")
                                         }
-                                        else
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack != 0)
                                         {
-                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack@(" Attack");
+                                            @if (item.Pokemon.Name == "Watchog" && @g == 5)
+                                            {
+                                                @("1 Attack in BW")
+                                                <br>
+                                                @("2 Attack in B2W2")
+                                            }
+                                            else
+                                            {
+                                                @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack@(" Attack");
+                                            }
+                                            <br>
                                         }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense@(" Defense");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack@(" Sp. Attack");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense@(" Sp. Defense");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed@(" Speed");
+                                            <br>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            @if (item.CaptureRates.Count() > 0)
+                            {
+                                <tr>
+                                    <th>Catch Rate</th>
+                                    <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
+                                </tr>
+                            }
+                            @if (item.Pokemon.ExperienceGrowthId != 8)
+                            {
+                                <tr>
+                                    <th>Experience Growth</th>
+                                    <td>
+                                        @item.Pokemon.ExperienceGrowth.Name
                                         <br>
-                                    }
-                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense != 0)
-                                    {
-                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense@(" Defense");
-                                        <br>
-                                    }
-                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack != 0)
-                                    {
-                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack@(" Sp. Attack");
-                                        <br>
-                                    }
-                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense != 0)
-                                    {
-                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense@(" Sp. Defense");
-                                        <br>
-                                    }
-                                    @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed != 0)
-                                    {
-                                        @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed@(" Speed");
-                                        <br>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                        @if(item.CaptureRates.Count() > 0)
-                        {
-                            <tr>
-                                <th>Catch Rate</th>
-                                <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
-                            </tr>
-                        }
-                        <tr>
-                            <th>Experience Growth</th>
-                            <td>
-                                @item.Pokemon.ExperienceGrowth.Name
-                                <br>
-                                (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
-                            </td>
-                        </tr>
-                        @if(item.BaseHappinesses.Count() > 0)
-                        {
-                            <tr>
-                                <th>Base Happiness</th>
-                                <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="pokemonInfo pokemonStats pokemonTables">
-                @if(item.BaseStats.Count() > 0)
-                {
+                                        (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
+                                    </td>
+                                </tr>
+                            }
+                            @if (item.BaseHappinesses.Count() > 0)
+                            {
+                                <tr>
+                                    <th>Base Happiness</th>
+                                    <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @if (item.BaseStats.Count() > 0)
+            {
+                <div class="pokemonInfo pokemonStats pokemonTables">
                     <h2>Base Stats</h2>
                     <table class="baseStatTable">
                         <tbody>
@@ -779,8 +789,8 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             </tr>
                         </tfoot>
                     </table>
-                }
-            </div>
+                </div>
+            }
             @if (g != 1 || (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId))
             {
                 <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
