@@ -1270,7 +1270,7 @@ namespace Pokedex.Controllers
                 {
                     TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
                     {
-                        AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
+                        AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Where(x => x.Game.ReleaseDate <= DateTime.UtcNow).Any(y => y.Game.GenerationId == x.Id)).ToList(),
                         AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                         AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
                         AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
