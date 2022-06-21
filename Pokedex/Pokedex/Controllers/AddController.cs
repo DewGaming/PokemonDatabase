@@ -775,7 +775,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokemon")]
-        public IActionResult Pokemon(BasePokemonViewModel newPokemon, IFormFile officialUpload, string officialUrlUpload, IFormFile homeUpload, string homeUrlUpload)
+        public IActionResult Pokemon(BasePokemonViewModel newPokemon, IFormFile officialUpload, string officialUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -868,7 +868,7 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(newPokemon);
 
             this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "2d");
-            this.dataService.UploadImages(homeUpload, homeUrlUpload, newPokemon.Id, this.appConfig, "3d");
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "3d");
 
             this.dataService.AddObject(new PokemonGameDetail()
             {
