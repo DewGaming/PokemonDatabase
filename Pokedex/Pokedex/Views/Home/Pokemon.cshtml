@@ -674,7 +674,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 WeakAgainst.Remove(WeakAgainst.Find(x => x == s));
                             }
                         }
-                        @if (StrongAgainst.Count > 0)
+                        @if (StrongAgainst.Count > 0 || SuperStrong.Count() > 0)
                         {
                             <div class="StrongAgainst">
                                 <h2>Resistances</h2>
@@ -699,11 +699,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                                     </td>
                                                 </tr>
                                             }
-                                            <tr>
-                                                <td>
-                                                    <b>Regular Resist</b>
-                                                </td>
-                                            </tr>
+                                            if (StrongAgainst.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <b>Regular Resist</b>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                         @for (var i = 0; i < StrongAgainst.Count(); i += 2)
                                         {
@@ -727,7 +730,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             style = "display: flex;";
                         }
                         <div style="@style" class="nonResistances">
-                            @if (WeakAgainst.Count > 0)
+                            @if (WeakAgainst.Count > 0 || SuperWeak.Count() > 0)
                             {
                                 <div class="WeakAgainst">
                                     <h2>Weaknesses</h2>
@@ -752,11 +755,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                                     </td>
                                                 </tr>
                                             }
-                                            <tr>
-                                                <td>
-                                                    <b>Regular Weakness</b>
-                                                </td>
-                                            </tr>
+                                            if (WeakAgainst.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <b>Regular Weakness</b>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                         @for (var i = 0; i < WeakAgainst.Count(); i += 2)
                                         {
