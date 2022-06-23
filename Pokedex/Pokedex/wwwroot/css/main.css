@@ -457,7 +457,7 @@ label {
   width: 100%;
 }
 
-.evolutionPokemon a, .evolutionPokemon a:hover, .evolutionPokemon p {
+.evolutionTable a, .evolutionTable a:hover, .evolutionTable p, .preEvolutionTable a, .preEvolutionTable a:hover, .preEvolutionTable p {
   color: black !important;
 }
 

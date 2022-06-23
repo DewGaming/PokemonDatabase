@@ -25,7 +25,7 @@
   margin-bottom: 0;
 }
 
-.type-icon, .quad-icon {
+.type-icon {
   margin: 2px 0 2px;
   background: #dbdbdb;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -55,10 +55,6 @@
 
 .type-table tbody th {
   padding-right: 7.5px;
-}
-
-.quad-icon {
-  width: 57px;
 }
 
 .type-normal {
@@ -135,14 +131,6 @@
 
 .type-none {
   background-color: #68A090;
-}
-
-.quad-resist {
-  background-color: #73d216;
-}
-
-.quad-weak {
-  background-color: #7c0000;
 }
 
 .typing-table {

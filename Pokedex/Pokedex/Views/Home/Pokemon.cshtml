@@ -383,39 +383,6 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 </td>
                             </tr>
                         }
-                        @if (g != 1)
-                        {
-                            <tr>
-                                <th>Gender Ratio</th>
-                                <td>
-                                    @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
-                                    {
-                                        @("Genderless");
-                                    }
-                                    else
-                                    {
-                                        if (item.Pokemon.GenderRatio.FemaleRatio == 0)
-                                        {
-                                            <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
-                                        }
-                                        else if (item.Pokemon.GenderRatio.MaleRatio == 0)
-                                        {
-                                            <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
-                                        }
-                                        else if (item.Pokemon.GenderRatioId == 12)
-                                        {
-                                            @("???");
-                                        }
-                                        else
-                                        {
-                                            <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
-                                            @("/")
-                                            <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
-                                        }
-                                    }
-                                </td>
-                            </tr>
-                        }
                         <tr>
                             <th>
                                 @if (item.Pokemon.Game.Name.IndexOf('/') > -1)
@@ -431,6 +398,195 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 @String.Join(" / ", item.GamesAvailableIn.Where(x => x.ReleaseDate == item.Pokemon.Game.ReleaseDate).Select(x => x.Name))
                             </td>
                         </tr>
+                    </tbody>
+                </table>
+            </div>
+            @if ((@g != 1 && item.EggGroups.Count() > 0) || (@g > 2 && item.EVYields.Count() > 0) || item.CaptureRates.Count() > 0 || item.Pokemon.ExperienceGrowthId != 8 || item.BaseHappinesses.Count() > 0)
+            {
+                <div class="pokemonInfo pokemonTraining pokemonTables">
+                    <h2>More Pokémon Data</h2>
+                    <table>
+                        <tbody>
+                            @if (@g > 2 && item.EVYields.Count() > 0)
+                            {
+                                <tr>
+                                    <th>EV Yield</th>
+                                    <td>
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health@(" Health");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack != 0)
+                                        {
+                                            @if (item.Pokemon.Name == "Watchog" && @g == 5)
+                                            {
+                                                @("1 Attack in BW")
+                                                <br>
+                                                @("2 Attack in B2W2")
+                                            }
+                                            else
+                                            {
+                                                @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack@(" Attack");
+                                            }
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense@(" Defense");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack@(" Sp. Attack");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense@(" Sp. Defense");
+                                            <br>
+                                        }
+                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed != 0)
+                                        {
+                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed@(" Speed");
+                                            <br>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            @if (item.CaptureRates.Count() > 0)
+                            {
+                                <tr>
+                                    <th>Catch Rate</th>
+                                    <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
+                                </tr>
+                            }
+                            @if (item.Pokemon.ExperienceGrowthId != 8)
+                            {
+                                <tr>
+                                    <th>Experience Growth</th>
+                                    <td>
+                                        @item.Pokemon.ExperienceGrowth.Name
+                                        <br>
+                                        (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
+                                    </td>
+                                </tr>
+                            }
+                            @if (item.BaseHappinesses.Count() > 0)
+                            {
+                                <tr>
+                                    <th>Base Happiness</th>
+                                    <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
+                                </tr>
+                            }
+                            @if (g != 1)
+                            {
+                                <tr>
+                                    <th>Gender Ratio</th>
+                                    <td>
+                                        @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                        {
+                                            @("Genderless");
+                                        }
+                                        else
+                                        {
+                                            if (item.Pokemon.GenderRatio.FemaleRatio == 0)
+                                            {
+                                                <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>;
+                                            }
+                                            else if (item.Pokemon.GenderRatio.MaleRatio == 0)
+                                            {
+                                                <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                            }
+                                            else if (item.Pokemon.GenderRatioId == 12)
+                                            {
+                                                @("???");
+                                            }
+                                            else
+                                            {
+                                                <span class="maleRatio">@item.Pokemon.GenderRatio.MaleRatio@("% Male")</span>
+                                                @("/")
+                                                <span class="femaleRatio">@item.Pokemon.GenderRatio.FemaleRatio@("% Female")</span>;
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            @if (@g != 1 && item.EggGroups.Count() > 0)
+                            {
+                                <tr>
+                                    @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
+                                    {
+                                        <th>Egg Groups</th>
+                                    }
+                                    else
+                                    {
+                                        <th>Egg Group</th>
+                                    }
+                                    <td>
+                                        @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryEggGroup.Name
+                                        @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
+                                        {
+                                            <br>
+                                            @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup.Name
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                   <th>Egg Cycles</th>
+                                   <td>
+                                       @item.Pokemon.EggCycle.CycleCount Cycles
+                                       <br>
+                                       (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            <div class="pokemonInfo pokemonGames pokemonTables">
+                <h2>Games Available In</h2>
+                <table>
+                    <tbody>
+                        @{
+                            var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g == x.GenerationId).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+                            var gamesAvailableInReleaseDates = gamesAvailableInInGeneration.Select(x => x.ReleaseDate).Distinct().ToArray();
+                        }
+                        @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
+                        {
+                            var gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i]).ToList();
+                            <tr>
+                                <td>
+                                    @for(var j = 0; j < gameList.Count(); j++)
+                                    {
+                                        @if (j > 0)
+                                        {
+                                            @(" / ")
+                                        }
+                                        @gameList[j].Name
+                                    }
+                                </td>
+                                @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
+                                {
+                                    gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).ToList();
+                                    <td>
+                                        @for(var j = 0; j < gameList.Count(); j++)
+                                        {
+                                            @if (j > 0)
+                                            {
+                                                @(" / ")
+                                            }
+                                            @gameList[j].Name
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -506,21 +662,17 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             WeakAgainst.Sort();
                             ImmuneTo.Sort();
 
-                            var superStrong = StrongAgainst.Where(x => x.Contains("Quad")).ToList();
-                            foreach(var s in superStrong)
+                            List<string> SuperStrong = StrongAgainst.Where(x => x.Contains("Quad")).ToList();
+                            foreach(var s in SuperStrong)
                             {
                                 StrongAgainst.Remove(StrongAgainst.Find(x => x == s));
                             }
-                            superStrong.AddRange(StrongAgainst);
-                            StrongAgainst = superStrong;
 
-                            var superWeak = WeakAgainst.Where(x => x.Contains("Quad")).ToList();
-                            foreach(var s in superWeak)
+                            List<string> SuperWeak = WeakAgainst.Where(x => x.Contains("Quad")).ToList();
+                            foreach(var s in SuperWeak)
                             {
                                 WeakAgainst.Remove(WeakAgainst.Find(x => x == s));
                             }
-                            superWeak.AddRange(WeakAgainst);
-                            WeakAgainst = superWeak;
                         }
                         @if (StrongAgainst.Count > 0)
                         {
@@ -528,22 +680,41 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 <h2>Resistances</h2>
                                 <table class="StrongAgainstTable">
                                     <tbody>
-                                        @foreach (string s in StrongAgainst)
+                                        @if (SuperStrong.Count() > 0)
                                         {
                                             <tr>
-                                                @if (@s.IndexOf(" Quad") > -1)
-                                                {
+                                                <td>
+                                                    <b>Quad Resist</b>
+                                                </td>
+                                            </tr>
+                                            @for (var i = 0; i < SuperStrong.Count(); i += 2)
+                                            {
+                                                <tr>
                                                     <td>
-                                                        <div class="pokemon-type type-icon type-@s.ToLower().Substring(0, @s.IndexOf(" Quad"))">@s.Substring(0, @s.IndexOf(" Quad"))</div>
-                                                        <div class="pokemon-type quad-icon quad-resist">Quad</div>
+                                                        <div class="pokemon-type type-icon type-@SuperStrong[i].ToLower().Substring(0, @SuperStrong[i].IndexOf(" Quad"))">@SuperStrong[i].Substring(0, @SuperStrong[i].IndexOf(" Quad"))</div>
+                                                        @if (SuperStrong.ElementAtOrDefault(i+1) != null)
+                                                        {
+                                                            <div class="pokemon-type type-icon type-@SuperStrong[i+1].ToLower().Substring(0, @SuperStrong[i+1].IndexOf(" Quad"))">@SuperStrong[i+1].Substring(0, @SuperStrong[i+1].IndexOf(" Quad"))</div>
+                                                        }
                                                     </td>
-                                                }
-                                                else
-                                                {
-                                                    <td>
-                                                        <div class="pokemon-type type-icon type-@s.ToLower()">@s</div>    
-                                                    </td>
-                                                }
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td>
+                                                    <b>Regular Resist</b>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @for (var i = 0; i < StrongAgainst.Count(); i += 2)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="pokemon-type type-icon type-@StrongAgainst[i].ToLower()">@StrongAgainst[i]</div>
+                                                    @if (StrongAgainst.ElementAtOrDefault(i+1) != null)
+                                                    {
+                                                        <div class="pokemon-type type-icon type-@StrongAgainst[i+1].ToLower()">@StrongAgainst[i+1]</div>
+                                                    }
+                                                </td>
                                             </tr>
                                         }
                                     </tbody>
@@ -562,24 +733,43 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                     <h2>Weaknesses</h2>
                                     <table class="WeakAgainstTable">
                                         <tbody>
-                                            @foreach (string w in WeakAgainst)
+                                        @if (SuperWeak.Count() > 0)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <b>Quad Weak</b>
+                                                </td>
+                                            </tr>
+                                            @for (var i = 0; i < SuperWeak.Count(); i += 2)
                                             {
                                                 <tr>
-                                                    @if (@w.IndexOf(" Quad") > -1)
-                                                    {
-                                                        <td>
-                                                            <div class="pokemon-type type-icon type-@w.ToLower().Substring(0, @w.IndexOf(" Quad"))">@w.Substring(0, @w.IndexOf(" Quad"))</div>
-                                                            <div class="pokemon-type quad-icon quad-weak">Quad</div>
-                                                        </td>
-                                                    }
-                                                    else
-                                                    {
-                                                        <td>
-                                                            <div class="pokemon-type type-icon type-@w.ToLower()">@w</div>
-                                                        </td>
-                                                    }
+                                                    <td>
+                                                        <div class="pokemon-type type-icon type-@SuperWeak[i].ToLower().Substring(0, @SuperWeak[i].IndexOf(" Quad"))">@SuperWeak[i].Substring(0, @SuperWeak[i].IndexOf(" Quad"))</div>
+                                                        @if (SuperWeak.ElementAtOrDefault(i+1) != null)
+                                                        {
+                                                            <div class="pokemon-type type-icon type-@SuperWeak[i+1].ToLower().Substring(0, @SuperWeak[i+1].IndexOf(" Quad"))">@SuperWeak[i+1].Substring(0, @SuperWeak[i+1].IndexOf(" Quad"))</div>
+                                                        }
+                                                    </td>
                                                 </tr>
                                             }
+                                            <tr>
+                                                <td>
+                                                    <b>Regular Weakness</b>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @for (var i = 0; i < WeakAgainst.Count(); i += 2)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="pokemon-type type-icon type-@WeakAgainst[i].ToLower()">@WeakAgainst[i]</div>
+                                                    @if (WeakAgainst.ElementAtOrDefault(i+1) != null)
+                                                    {
+                                                        <div class="pokemon-type type-icon type-@WeakAgainst[i+1].ToLower()">@WeakAgainst[i+1]</div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
                                         </tbody>
                                     </table>
                                 </div>
@@ -590,147 +780,24 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                     <h2>Immunities</h2>
                                     <table class="ImmuneToTable">
                                         <tbody>
-                                            @foreach (string i in ImmuneTo)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <div class="pokemon-type type-icon type-@i.ToLower()">@i</div>
-                                                    </td>
-                                                </tr>
-                                            }
+                                        @for (var i = 0; i < ImmuneTo.Count(); i += 2)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="pokemon-type type-icon type-@ImmuneTo[i].ToLower()">@ImmuneTo[i]</div>
+                                                    @if (ImmuneTo.ElementAtOrDefault(i+1) != null)
+                                                    {
+                                                        <div class="pokemon-type type-icon type-@ImmuneTo[i+1].ToLower()">@ImmuneTo[i+1]</div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
                                         </tbody>
                                     </table>
                                 </div>
                             }
                         </div>
                     </div>
-                </div>
-            }
-            <div class="pokemonInfo pokemonGames pokemonTables">
-                <h2>Games Available In</h2>
-                <table>
-                    <tbody>
-                        @{
-                            var gamesAvailableInInGeneration = @item.GamesAvailableIn.Where(x => g == x.GenerationId).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
-                            var gamesAvailableInReleaseDates = gamesAvailableInInGeneration.Select(x => x.ReleaseDate).Distinct().ToArray();
-                        }
-                        @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
-                        {
-                            var gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i]).ToList();
-                            <tr>
-                                <td>
-                                    @for(var j = 0; j < gameList.Count(); j++)
-                                    {
-                                        @if (j > 0)
-                                        {
-                                            @(" / ")
-                                        }
-                                        @gameList[j].Name
-                                    }
-                                </td>
-                                @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
-                                {
-                                    gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).ToList();
-                                    <td>
-                                        @for(var j = 0; j < gameList.Count(); j++)
-                                        {
-                                            @if (j > 0)
-                                            {
-                                                @(" / ")
-                                            }
-                                            @gameList[j].Name
-                                        }
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            @if ((@g > 2 && item.EVYields.Count() > 0) || item.CaptureRates.Count() > 0 || item.Pokemon.ExperienceGrowthId != 8 || item.BaseHappinesses.Count() > 0)
-            {
-                <div class="pokemonInfo pokemonTraining pokemonTables">
-                    <h2>Training</h2>
-                    <table>
-                        <tbody>
-                            @if (@g > 2 && item.EVYields.Count() > 0)
-                            {
-                                <tr>
-                                    <th>EV Yield</th>
-                                    <td>
-                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health != 0)
-                                        {
-                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Health@(" Health");
-                                            <br>
-                                        }
-                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack != 0)
-                                        {
-                                            @if (item.Pokemon.Name == "Watchog" && @g == 5)
-                                            {
-                                                @("1 Attack in BW")
-                                                <br>
-                                                @("2 Attack in B2W2")
-                                            }
-                                            else
-                                            {
-                                                @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Attack@(" Attack");
-                                            }
-                                            <br>
-                                        }
-                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense != 0)
-                                        {
-                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Defense@(" Defense");
-                                            <br>
-                                        }
-                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack != 0)
-                                        {
-                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialAttack@(" Sp. Attack");
-                                            <br>
-                                        }
-                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense != 0)
-                                        {
-                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialDefense@(" Sp. Defense");
-                                            <br>
-                                        }
-                                        @if (item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed != 0)
-                                        {
-                                            @item.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).Speed@(" Speed");
-                                            <br>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                            @if (item.CaptureRates.Count() > 0)
-                            {
-                                <tr>
-                                    <th>Catch Rate</th>
-                                    <td class="catchRate">@item.CaptureRates.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).CaptureRate.CatchRate</td>
-                                </tr>
-                            }
-                            @if (item.Pokemon.ExperienceGrowthId != 8)
-                            {
-                                <tr>
-                                    <th>Experience Growth</th>
-                                    <td>
-                                        @item.Pokemon.ExperienceGrowth.Name
-                                        <br>
-                                        (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
-                                    </td>
-                                </tr>
-                            }
-                            @if (item.BaseHappinesses.Count() > 0)
-                            {
-                                <tr>
-                                    <th>Base Happiness</th>
-                                    <td>@item.BaseHappinesses.Find(x => x.PokemonId == @item.Pokemon.Id && x.GenerationId <= g).BaseHappiness.Happiness</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
                 </div>
             }
             @if (item.BaseStats.Count() > 0)
@@ -791,154 +858,78 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                     </table>
                 </div>
             }
-            @if (g != 1 || (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId))
+            @if (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId)
             {
-                <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
-                    @if (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId)
-                    {
-                        <div class="evolutions">
-                            <h2>
-                                @if (item.Pokemon.Id == 612)
-                                {
-                                    @("Pre-Evolutions");
-                                }
-                                else
-                                {
-                                    @("Pre-Evolution");
-                                }
-                            </h2>
-                            <table class="preEvolutionTable">
-                                <tbody class="evolutionPokemon">
-                                    <tr>
-                                        <th>
-                                            @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
-                                            {
-                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
-                                                </a>
-                                            }
-                                        </th>
-                                        <td>
-                                            @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
-                                            {
-                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
-                                            }
-                                            else
-                                            {
-                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
-                                            }
-                                            <p>@preEvolution.EvolutionMethod.Name@(@preEvolution.EvolutionDetails != null ? string.Concat(" (", @preEvolution.EvolutionDetails, ")") : string.Empty)</p>
-                                        </td>
-                                    </tr>
-                                    @if (item.Pokemon.Id == 612)
-                                    {
-                                        <tr>
-                                            <th>
-                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1645, generationId = @g })">
-                                                    <img class="lightshadowed" title="Burmy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, "1645.png"))" />
-                                                </a>
-                                            </th>
-                                            <td>
-                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1645, generationId = @g })">Burmy (Sandy)</a>
-                                                <p>Level Up (Level 20 When Male)</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1646, generationId = @g })">
-                                                    <img class="lightshadowed" title="Burmy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, "1646.png"))" />
-                                                </a>
-                                            </th>
-                                            <td>
-                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1646, generationId = @g })">Burmy (Trash)</a>
-                                                <p>Level Up (Level 20 When Male)</p>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <br class="preEvoBreak">
-                    }
-                    @if (@g != 1 && item.EggGroups.Count() > 0 && item.Pokemon.Id != 612)
-                    {
-                        <div class="pokemonBreeding">
-                            <h2>Breeding</h2>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
+                <div class="pokemonInfo pokemonEvos pokemonTables">
+                    <div class="evolutions">
+                        <h2>
+                            @if (item.Pokemon.Id == 612)
+                            {
+                                @("Pre-Evolutions");
+                            }
+                            else
+                            {
+                                @("Pre-Evolution");
+                            }
+                        </h2>
+                        <table class="preEvolutionTable">
+                            <tbody class="evolutionPokemon">
+                                <tr>
+                                    <th>
+                                        @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                         {
-                                            <th>Egg Groups</th>
+                                            <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
+                                                <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                            </a>
                                         }
                                         else
                                         {
-                                            <th>Egg Group</th>
+                                            <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
+                                                <img class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                            </a>
                                         }
+                                    </th>
+                                    <td>
+                                        @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
+                                        {
+                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">@preEvolution.PreevolutionPokemon.Name</a>
+                                        }
+                                        <p>@preEvolution.EvolutionMethod.Name@(@preEvolution.EvolutionDetails != null ? string.Concat(" (", @preEvolution.EvolutionDetails, ")") : string.Empty)</p>
+                                    </td>
+                                </tr>
+                                @if (item.Pokemon.Id == 612)
+                                {
+                                    <tr>
+                                        <th>
+                                            <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1645, generationId = @g })">
+                                                <img class="lightshadowed" title="Burmy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, "1645.png"))" />
+                                            </a>
+                                        </th>
                                         <td>
-                                            @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryEggGroup.Name
-                                            @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
-                                            {
-                                                <br>
-                                                @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup.Name
-                                            }
+                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1645, generationId = @g })">Burmy (Sandy)</a>
+                                            <p>Level Up (Level 20 When Male)</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                       <th>Egg Cycles</th>
-                                       <td>
-                                           @item.Pokemon.EggCycle.CycleCount Cycles
-                                           <br>
-                                           (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                                        <th>
+                                            <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1646, generationId = @g })">
+                                                <img class="lightshadowed" title="Burmy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, "1646.png"))" />
+                                            </a>
+                                        </th>
+                                        <td>
+                                            <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "burmy", pokemonId = 1646, generationId = @g })">Burmy (Trash)</a>
+                                            <p>Level Up (Level 20 When Male)</p>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </div>
-                @if (@g != 1 && item.EggGroups.Count() > 0 && item.Pokemon.Id == 612)
-                {
-                    <div class="pokemonBreeding">
-                        <h2>Breeding</h2>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
-                                    {
-                                        <th>Egg Groups</th>
-                                    }
-                                    else
-                                    {
-                                        <th>Egg Group</th>
-                                    }
-                                    <td>
-                                        @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryEggGroup.Name
-                                        @if (item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup != null)
-                                        {
-                                            <br>
-                                            @item.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryEggGroup.Name
-                                        }
-                                    </td>
-                                </tr>
-                                <tr>
-                                   <th>Egg Cycles</th>
-                                   <td>
-                                       @item.Pokemon.EggCycle.CycleCount Cycles
-                                       <br>
-                                       (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
-                                    </td>
-                                </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
-                }
+                </div>
             }
             @if (evolutions.Count() > 0)
             {
@@ -953,11 +944,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             @("Evolution");
                         }
                     </h2>
-                    <table class="evolutionTable">
-                        <tbody class="evolutionPokemon">
-                            @foreach (var evolution in evolutions.OrderBy(x => x.EvolutionPokemon.PokedexNumber).ThenBy(x => x.EvolutionPokemon.Id))
-                            {
-                                if (g >= evolution.EvolutionPokemon.Game.GenerationId)
+                    <table style="@((preEvolution == null || g < preEvolution.PreevolutionPokemon.Game.GenerationId) ? "width: 200%" : string.Empty)" class="evolutionTable">
+                        @{
+                            List<Evolution> evolutionList = evolutions.Where(x => g >= x.EvolutionPokemon.Game.GenerationId).OrderBy(x => x.EvolutionPokemon.PokedexNumber).ThenBy(x => x.EvolutionPokemon.Id).ToList();
+                        }
+                        @if (preEvolution != null && g >= preEvolution.PreevolutionPokemon.Game.GenerationId)
+                        {
+                            <tbody class="evolutionPokemon">
+                                @foreach (var evolution in evolutionList)
                                 {
                                     <tr>
                                         <th>
@@ -987,9 +981,106 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         </td>
                                     </tr>
                                 }
-                            }
-                            @if (item.Pokemon.PokedexNumber == 412 && item.Pokemon.Id != 610)
-                            {
+                            </tbody>
+                        }
+                        else
+                        {
+                            <tbody class="evolutionPokemon935">
+                                @for (var i = 0; i < evolutionList.Count(); i += 2)
+                                {
+                                    <tr>
+                                        <th>
+                                            @if (@evolutionList[i].EvolutionPokemon.Name.Contains(" ("))
+                                            {
+                                                <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i].EvolutionPokemon.Name.Substring(0, evolutionList[i].EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i].EvolutionPokemonId, generationId = @g })">
+                                                    <img class="lightshadowed" title="@evolutionList[i].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i].EvolutionPokemon.Id, ".png"))" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i].EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i].EvolutionPokemonId, generationId = @g })">
+                                                    <img class="lightshadowed" title="@evolutionList[i].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i].EvolutionPokemon.Id, ".png"))" />
+                                                </a>
+                                            }
+                                        </th>
+                                        <td>
+                                            @if (@evolutionList[i].EvolutionPokemon.Name.Contains(" ("))
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i].EvolutionPokemon.Name.Substring(0, evolutionList[i].EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i].EvolutionPokemonId, generationId = @g })">@evolutionList[i].EvolutionPokemon.Name</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i].EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i].EvolutionPokemonId, generationId = @g })">@evolutionList[i].EvolutionPokemon.Name</a>
+                                            }
+                                            <p>@evolutionList[i].EvolutionMethod.Name@(evolutionList[i].EvolutionDetails != null ? string.Concat(" (", @evolutionList[i].EvolutionDetails, ")") : string.Empty)</p>
+                                        </td>
+                                        @if (evolutionList.ElementAtOrDefault(i+1) != null)
+                                        {
+                                            <th>
+                                                @if (@evolutionList[i+1].EvolutionPokemon.Name.Contains(" ("))
+                                                {
+                                                    <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i+1].EvolutionPokemon.Name.Substring(0, evolutionList[i+1].EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i+1].EvolutionPokemonId, generationId = @g })">
+                                                        <img class="lightshadowed" title="@evolutionList[i+1].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i+1].EvolutionPokemon.Id, ".png"))" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i+1].EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i+1].EvolutionPokemonId, generationId = @g })">
+                                                        <img class="lightshadowed" title="@evolutionList[i+1].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i+1].EvolutionPokemon.Id, ".png"))" />
+                                                    </a>
+                                                }
+                                            </th>
+                                            <td>
+                                                @if (@evolutionList[i+1].EvolutionPokemon.Name.Contains(" ("))
+                                                {
+                                                    <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i+1].EvolutionPokemon.Name.Substring(0, evolutionList[i+1].EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i+1].EvolutionPokemonId, generationId = @g })">@evolutionList[i+1].EvolutionPokemon.Name</a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i+1].EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i+1].EvolutionPokemonId, generationId = @g })">@evolutionList[i+1].EvolutionPokemon.Name</a>
+                                                }
+                                                <p>@evolutionList[i+1].EvolutionMethod.Name@(evolutionList[i+1].EvolutionDetails != null ? string.Concat(" (", @evolutionList[i+1].EvolutionDetails, ")") : string.Empty)</p>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                            <tbody class="evolutionPokemon934">
+                                @foreach (var e in evolutionList)
+                                {
+                                    <tr>
+                                        <th>
+                                            @if (e.EvolutionPokemon.Name.Contains(" ("))
+                                            {
+                                                <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = e.EvolutionPokemon.Name.Substring(0, e.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = e.EvolutionPokemonId, generationId = @g })">
+                                                    <img class="lightshadowed" title="@e.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, e.EvolutionPokemon.Id, ".png"))" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = e.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = e.EvolutionPokemonId, generationId = @g })">
+                                                    <img class="lightshadowed" title="@e.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, e.EvolutionPokemon.Id, ".png"))" />
+                                                </a>
+                                            }
+                                        </th>
+                                        <td>
+                                            @if (e.EvolutionPokemon.Name.Contains(" ("))
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = e.EvolutionPokemon.Name.Substring(0, e.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = e.EvolutionPokemonId, generationId = @g })">@e.EvolutionPokemon.Name</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="evolutionLink" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = e.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = e.EvolutionPokemonId, generationId = @g })">@e.EvolutionPokemon.Name</a>
+                                            }
+                                            <p>@e.EvolutionMethod.Name@(e.EvolutionDetails != null ? string.Concat(" (", e.EvolutionDetails, ")") : string.Empty)</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        @if (item.Pokemon.PokedexNumber == 412 && item.Pokemon.Id != 610)
+                        {
+                            <tbody class="evolutionPokemon">
                                 <tr>
                                     <th>
                                         <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = "mothim", pokemonId = 612, generationId = @g })">
@@ -1001,8 +1092,8 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         <p>Level Up (Level 20 When Male)</p>
                                     </td>
                                 </tr>
-                            }
-                        </tbody>
+                            </tbody>
+                        }
                     </table>
                 </div>
             }

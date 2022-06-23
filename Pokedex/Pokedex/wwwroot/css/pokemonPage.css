@@ -36,6 +36,10 @@
   text-decoration: none;
 }
 
+.emptyDiv {
+  z-index: -1;
+}
+
 @media (max-width: 391px) {
   .effectivenessChart {
     flex-wrap: wrap;
@@ -52,6 +56,20 @@
   }
 }
 
+@media (max-width: 934px) {
+  .evolutionTable {
+    width: 100% !important;
+  }
+
+  .evolutionPokemon935 {
+    display: none;
+  }
+
+  .evolutionPokemon934 {
+    display: table-row-group;
+  }
+}
+
 @media (min-width: 783px) {
   .pokemonWithForms {
     width: 21.418rem;
@@ -60,5 +78,15 @@
   .pokemonWithForms>.pokemonImage img {
     width: 300px;
     height: 300px;
+  }
+}
+
+@media (min-width: 935px) {
+  .evolutionPokemon934 {
+    display: none;
+  }
+
+  .evolutionPokemon935 {
+    display: table-row-group;
   }
 }
