@@ -66,8 +66,14 @@
     <div class="evaluator">
         <div class="flexDiv">
             <div class="generationList">
-                @Html.Label("Generation")
-                @Html.DropDownList("Generation List", new SelectList(@Model.AllGenerations, "Id", "GenerationName"), new { @class = "form-control generationSelectList" })
+                <label for="Generation">Generation</label>
+                <select class="form-control generationSelectList" id="Generation_List" name="Generation List">
+                    <option value="0">Any Generation</option>
+                    @foreach (var g in Model.AllGenerations)
+                    {
+                        <option value="@g.Id">@g.GenerationName</option>
+                    }
+                </select>
             </div>
             <div class="abilityList">
                 @Html.Label("Ability")

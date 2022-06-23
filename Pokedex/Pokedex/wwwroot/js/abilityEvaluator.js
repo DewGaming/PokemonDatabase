@@ -30,11 +30,12 @@ var grabPokemon = function () {
         $('.abilitySelectList').on('change', function () {
             grabPokemon();
         });
+
+        grabPokemon();
     });
 };
 
 $(function () {
-    $('.generationList > select').val($('.generationList option:last-child').val());
     grabAbilities($('.generationList > select').val());
 });
 

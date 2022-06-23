@@ -1345,6 +1345,7 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonAbilityDetail> abilityList = this.GetPokemonByAbilityAndGeneration(abilityID, generationID);
+
                 List<Pokemon> pokemonList = new List<Pokemon>();
 
                 foreach (var p in abilityList)
@@ -1911,19 +1912,30 @@ namespace Pokedex.Controllers
 
         private List<PokemonAbilityDetail> GetPokemonByAbilityAndGeneration(int abilityId, int generationId)
         {
-            List<PokemonAbilityDetail> pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game")
-                .Where(x => x.Pokemon.Game.GenerationId <= generationId)
-                .Where(x => x.GenerationId <= generationId)
-                .OrderBy(x => x.GenerationId)
-                .GroupBy(x => new { x.PokemonId })
-                .Select(x => x.LastOrDefault())
-                .ToList();
-
-            List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
-
-            foreach (var pokemon in exclusionList)
+            List<PokemonAbilityDetail> pokemonList = new List<PokemonAbilityDetail>();
+            if (generationId != 0)
             {
-                pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+                pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game")
+                    .Where(x => x.Pokemon.Game.GenerationId <= generationId)
+                    .Where(x => x.GenerationId <= generationId)
+                    .OrderBy(x => x.GenerationId)
+                    .GroupBy(x => new { x.PokemonId })
+                    .Select(x => x.LastOrDefault())
+                    .ToList();
+
+                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
+
+                foreach (var pokemon in exclusionList)
+                {
+                    pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+                }
+            }
+            else
+            {
+                pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game")
+                    .GroupBy(x => new { x.PokemonId })
+                    .Select(x => x.LastOrDefault())
+                    .ToList();
             }
 
             return pokemonList.Where(x => x.PrimaryAbilityId == abilityId || x.SecondaryAbilityId == abilityId || x.HiddenAbilityId == abilityId || x.SpecialEventAbilityId == abilityId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
