@@ -35,28 +35,24 @@
     </div>
     <div class="feature teamRandomizerFeature">
         <a href="@this.Url.Action("TeamRandomizer", "Home")"><p>Randomize Teams!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menu to create a random Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menus to create a randomized Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
     </div>
     <div class="feature gameAvailability">
         <a href="@this.Url.Action("GameAvailability", "Home")"><p>Lookup Game Availability!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
     </div>
-</div>
-<div class="siteFeatures">
     <div class="feature abilityLookup">
         <a href="@this.Url.Action("AbilityEvaluator", "Home")"><p>Lookup Abilities!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("AbilityEvaluator", "Home")" alt="Ability Lookup" title="Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "abilityLookup.png"))">
     </div>
     <div class="feature formViewer">
-        <a href="@this.Url.Action("FormEvaluator", "Home")"><p>Lookup Form Combinations!</p></a>
+        <a href="@this.Url.Action("FormEvaluator", "Home")"><p>View Alternate Forms!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("FormEvaluator", "Home")" alt="Form Viewer" title="Find out what Pokémon belong to a particular alternate form!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "formViewer.png"))">
     </div>
     <div class="feature typeLookup">
-        <a href="@this.Url.Action("TypingEvaluator", "Home")"><p>Lookup Type Combinations!</p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("TypingEvaluator", "Home")" alt="Typing Lookup" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingLookup.png"))">
+        <a href="@this.Url.Action("TypingEvaluator", "Home")"><p>Evaluate Type Combinations!</p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("TypingEvaluator", "Home")" alt="Type Combinations" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingLookup.png"))">
     </div>
-</div>
-<div class="siteFeatures">
     <div class="feature dayCareCombinations">
         <a href="@this.Url.Action("DayCareEvaluator", "Home")"><p>Lookup Day Care Combinations!</p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("DayCareEvaluator", "Home")" alt="Day Care Combinations" title="Find out what Pokémon can be placed in a day care to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareCombinations.png"))">
