@@ -14,3 +14,14 @@ img {
 .typeSelector, .generatorButton, .saveTeamButton {
     margin-right: 5px;
 }
+
+.teamRandomizerResults {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.teamRandomizerResults div {
+    flex: none;
+    width: 300px;
+    height: 300px;
+}

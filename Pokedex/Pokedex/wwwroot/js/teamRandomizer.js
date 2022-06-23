@@ -1,50 +1,9 @@
 var pokemonList, pokemonURLs, abilityList, typeList, exportString
     , fillGeneratedTable = function (appConfig) {
-        $('.teamRandomizerTable tbody').remove();
-        $('.teamRandomizerTable').append($('<tbody>'));
-        removeEventButtons();
-
-        if ($(window).width() >= 1000) {
-            for (var i = 0; i < 2; i++) {
-                $('.teamRandomizer tbody').append($('<tr>'));
-            }
-
-            for (var i = 0; i < 3; i++) {
-                $('.teamRandomizer tr:nth-child(1)').append($('<td>', {
-                    class: "generatorPicture shadowed pokemon" + (i + 1)
-                }));
-                $('.teamRandomizer tr:nth-child(2)').append($('<td>', {
-                    class: "generatorPicture shadowed pokemon" + (i + 4)
-                }));
-            }
-        }
-        else if ($(window).width() >= 768) {
-            for (var i = 0; i < 3; i++) {
-                $('.teamRandomizer tbody').append($('<tr>'));
-            }
-
-            for (var i = 0; i < 2; i++) {
-                $('.teamRandomizer tr:nth-child(1)').append($('<td>', {
-                    class: "generatorPicture shadowed pokemon" + (i + 1)
-                }));
-                $('.teamRandomizer tr:nth-child(2)').append($('<td>', {
-                    class: "generatorPicture shadowed pokemon" + (i + 3)
-                }));
-                $('.teamRandomizer tr:nth-child(3)').append($('<td>', {
-                    class: "generatorPicture shadowed pokemon" + (i + 5)
-                }));
-            }
-        }
-        else {
-            for (var i = 0; i < 6; i++) {
-                $('.teamRandomizer tbody').append($('<tr>'));
-            }
-
-            for (var i = 0; i < 6; i++) {
-                $('.teamRandomizer tr:nth-child(' + (i + 1) + ')').append($('<td>', {
-                    class: "generatorPicture shadowed pokemon" + (i + 1)
-                }));
-            }
+        for (var i = 0; i < 6; i++) {
+            $('.teamRandomizerResults').append($('<div>', {
+                class: "generatorPicture shadowed pokemon" + (i + 1)
+            }));
         }
 
         for (var i = 0; i < originalNames.length; i++) {
@@ -64,6 +23,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
             $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.saveTeamButton');
         }
+
         refreshEvents();
     }, checkLegendaryChecks = function () {
         var boxChecked = false;
@@ -479,19 +439,6 @@ $('.typeRadioOption input').on('click', function () {
     checkOtherOptions();
 });
 
-$(window).on('resize', function () {
-    generatorMenuCheck();
-
-    if (
-        ($('.teamRandomizer tr').length == 2 && $(window).width() < 1000) ||
-        ($('.teamRandomizer tr').length == 3 && $(window).width() >= 1000) ||
-        ($('.teamRandomizer tr').length == 3 && $(window).width() < 768) ||
-        ($('.teamRandomizer tr').length == 6 && $(window).width() >= 768)
-    ) {
-        fillGeneratedTable();
-    }
-});
-
 $('.generatorButton').on('click', function () {
     var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions = [], selectedGame, selectedType;
     $('.generationCheckbox input').each(function () {
@@ -531,6 +478,10 @@ $('.generatorButton').on('click', function () {
     });
     
     $(".overlay").fadeIn(300);
+    
+    $('.teamRandomizerResults div').each(function () { $(this).remove() });
+    
+    removeEventButtons();
 
     $.ajax({
         url: '/get-pokemon-team/',
