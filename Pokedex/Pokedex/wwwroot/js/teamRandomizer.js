@@ -501,6 +501,10 @@ $('.generatorButton').on('click', function () {
             fillGeneratedTable(data.appConfig);
         })
         .fail(function () {
+            setTimeout(function(){
+                $(".overlay").fadeOut(300);
+            }, 500);
+            
             alert("Failed To Get Team!");
         });
 });

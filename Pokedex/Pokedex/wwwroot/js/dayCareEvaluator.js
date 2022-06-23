@@ -2,6 +2,7 @@ var grabPokemon = function (pokemonId) {
     $('.pokemonWithEggGroup').empty();
     if (pokemonId != "") {
         $('.pokemonWithEggGroup').load('/get-pokemon-by-egg-group/', { 'pokemonId': pokemonId });
+        
         setTimeout(function () {
             $(".overlay").fadeOut(300);
         }, 500);
