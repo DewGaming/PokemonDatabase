@@ -218,7 +218,7 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <returns>Returns the typing evaluator page.</returns>
         [AllowAnonymous]
-        [Route("typing_evaluator")]
+        [Route("typing_lookup")]
         public IActionResult TypingEvaluator()
         {
             this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
@@ -236,7 +236,7 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <returns>Returns the ability evaluator page.</returns>
         [AllowAnonymous]
-        [Route("ability_evaluator")]
+        [Route("ability_lookup")]
         public IActionResult AbilityEvaluator()
         {
             this.dataService.AddPageView("Ability Evalutator Page", this.User.IsInRole("Owner"));
@@ -261,7 +261,7 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <returns>Returns the day care evaluator.</returns>
         [AllowAnonymous]
-        [Route("day_care_evaluator")]
+        [Route("day_care_combinations")]
         public IActionResult DayCareEvaluator()
         {
             this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
@@ -290,7 +290,7 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <returns>Returns the form evaluator.</returns>
         [AllowAnonymous]
-        [Route("form_evaluator")]
+        [Route("form_viewer")]
         public IActionResult FormEvaluator()
         {
             this.dataService.AddPageView("Form Viewer Page", this.User.IsInRole("Owner"));
