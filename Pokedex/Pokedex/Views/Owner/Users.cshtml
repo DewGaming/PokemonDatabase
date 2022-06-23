@@ -24,14 +24,9 @@
                         {
                             <a href="@this.Url.Action("User", "Edit", new { id = item.Id })">Edit</a>
                         }
-                        @if (Model.UsersWithPokemonTeams.Find(x => x.Id == item.Id) != null)
+                        else
                         {
-                            if (item.Id != 1)
-                            {
-                                @("|")
-                            }
-                            
-                            <a href="@this.Url.Action("PokemonTeams", "Owner", new { id = item.Id })">View Pokémon Teams</a>
+                            @("No Actions Available")
                         }
                     </td>
                 </tr>
