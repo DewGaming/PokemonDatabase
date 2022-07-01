@@ -291,16 +291,16 @@ hr.dropdown-line {
 
 .search-bar {
   height: 30px;
-  margin: 15px 0 10px 0
+  margin: 15px 0 10px;
 }
 
 .statData {
-  width: 150px
+  width: 150px;
 }
 
 main {
   padding: 0 5px !important;
-  margin: 0 0 40px
+  margin: 0 0 5px;
 }
 
 .shadowed img {
