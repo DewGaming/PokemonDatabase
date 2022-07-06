@@ -249,7 +249,7 @@
                     </div>
                     @if (@item.Pokemon.HasShinyImage)
                     {
-                        <div class="shiny">
+                        <div class="shiny" style="@(!item.Pokemon.HasThreeDImage ? "position: relative !important" : "")">
                             <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                         </div>
                     }
