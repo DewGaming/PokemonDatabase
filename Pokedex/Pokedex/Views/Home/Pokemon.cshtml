@@ -244,7 +244,7 @@
             }
             <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
                 <div class="pokemonImage">
-                    <div class="official current" style="@(!(item.Pokemon.HasShinyImage && item.Pokemon.HasThreeDImage) ? "position: relative !important" : "")">
+                    <div class="official current" style="@(!item.Pokemon.HasShinyImage && !item.Pokemon.HasThreeDImage ? "position: relative !important" : "")">
                         <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                     </div>
                     @if (@item.Pokemon.HasShinyImage)
