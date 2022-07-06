@@ -685,16 +685,20 @@ namespace Pokedex
         /// <param name="imageType">Whether this image is for the 2d artwork or the 3d render.</param>
         public async void UploadImages(IFormFile fileUpload, string urlUpload, int pokemonId, AppConfig appConfig, string imageType)
         {
-            string imageUrlPath;
+            string imageUrlPath = string.Empty;
             IFormFile upload;
 
             if (imageType == "2d")
             {
                 imageUrlPath = appConfig.OfficialPokemonImageFTPUrl;
             }
-            else
+            else if (imageType == "3d")
             {
                 imageUrlPath = appConfig.HomePokemonImageFTPUrl;
+            }
+            else if (imageType == "shiny")
+            {
+                imageUrlPath = appConfig.ShinyPokemonImageFTPUrl;
             }
 
             if (fileUpload == null && urlUpload != null)

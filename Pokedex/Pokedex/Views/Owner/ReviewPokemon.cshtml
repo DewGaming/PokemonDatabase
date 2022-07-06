@@ -55,37 +55,6 @@
 @section scripts
 {
     <script src="/js/calculateCaptureRate.js"></script>
-    <script>
-        var home = function() {
-        	$('.front').css('z-index: 0')
-        	$('.front').css('transform', 'rotateY(-180deg)')
-        	$('.back').css('z-index: 1')
-        	$('.back').css('transform', 'rotateY(0deg)')
-        }
-
-        var official = function() {
-        	$('.back').css('z-index: 0')
-        	$('.back').css('transform', 'rotateY(-180deg)')
-        	$('.front').css('z-index: 1')
-        	$('.front').css('transform', 'rotateY(0deg)')
-        }
-
-        $('.pokemonImage').on('click', function() {
-            if (!$(this).hasClass('gen1Image'))
-            {
-                if ($($('.pokemonImage')).hasClass('home'))
-                {
-                    official()
-                    $('.pokemonImage').removeClass('home')
-                }
-                else
-                {
-                    home()
-                    $('.pokemonImage').addClass('home')
-                }
-            }
-        })
-    </script>
 }
 
 <p class="adminButtons">
@@ -102,14 +71,7 @@
 <div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
     <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
         <div class="pokemonImage">
-            <div class="front">
-                <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
-                <h4>← 2D Artwork →</h4>
-            </div>
-            <div class="back">
-                <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.HomePokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
-                <h4>← 3D Render→</h4>
-            </div>
+            <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
         </div>
         @if (Model.OriginalPokemon != null)
         {

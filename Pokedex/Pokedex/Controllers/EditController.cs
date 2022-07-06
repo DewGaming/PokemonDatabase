@@ -527,6 +527,74 @@ namespace Pokedex.Controllers
 
             this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "3d");
 
+            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id);
+            pokemon.HasThreeDImage = true;
+            this.dataService.UpdateObject(pokemon);
+
+            return this.RedirectToAction("Pokemon", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_shiny_pokemon_image/{id:int}")]
+        public IActionResult ShinyPokemonImage(int id)
+        {
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+            if (this.dataService.CheckIfAltForm(id))
+            {
+                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_shiny_pokemon_image/{id:int}")]
+        public IActionResult ShinyPokemonImage(Pokemon pokemon, int id, IFormFile fileUpload, string urlUpload)
+        {
+            if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                }
+
+                return this.View(model);
+            }
+            else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+
+            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "shiny");
+
+            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id);
+            pokemon.HasShinyImage = true;
+            this.dataService.UpdateObject(pokemon);
+
             return this.RedirectToAction("Pokemon", "Admin");
         }
 

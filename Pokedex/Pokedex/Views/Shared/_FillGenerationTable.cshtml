@@ -15,12 +15,7 @@
         <div class="shadowed @p.Pokemon.Name@(p.Pokemon.IsComplete ? "" : " incomplete")">
             <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
             <div class="pokemonImages">
-                <div class="front">
-                    <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
-                </div>
-                <div class="back">
-                    <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl.Replace("2d", "3d"))">
-                </div>
+                <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
             </div>
             </a>
             <div class="description">

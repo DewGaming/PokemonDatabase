@@ -56,23 +56,27 @@
             position: relative;
         }
 
-        .front, .back {
+        .official, .home, .shiny {
             backface-visibility: hidden;
             transform-style: preserve-3d;
             width: 100%;
             transition: all 0.5s ease-out 0s;
         }
 
-        .front {
-            z-index: 1;
-            position: absolute;
+        .pokemonImage .current {
             transform: rotateY(0deg);
         }
 
-        .back {
-            z-index: 0;
-            position: relative;
+        .pokemonImage div:not(.current) {
             transform: rotateY(-180deg);
+        }
+
+        .official, .shiny {
+            position: absolute;
+        }
+
+        .home {
+            position: relative;
         }
 
         .pokemonImage img {
@@ -81,6 +85,20 @@
 
         .cursorHelp:hover {
             text-decoration: underline;
+        }
+
+        .pokemonImageButtons {
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .pokemonImageButtons button {
+            width: 100%;
+            margin: 0 2.5px;
+        }
+
+        .pokemonImageButtons .hidden {
+            display: none;
         }
     </style>
     @if (this.User.IsInRole("Admin"))
@@ -97,32 +115,26 @@
 {
     <script src="/js/pageLookup.js"></script>
     <script>
-        var home = function() {
-        	$('.front').css('z-index: 0')
-        	$('.front').css('transform', 'rotateY(-180deg)')
-        	$('.back').css('z-index: 1')
-        	$('.back').css('transform', 'rotateY(0deg)')
+        var officialRender = function() {
+            $('.current').removeClass('current');
+            $('.official').addClass('current');
+            $('.pokemonImageButtons>.hidden').removeClass('hidden');
+            $('.pokemonImageButtons .officialButton').addClass('hidden');
         }
 
-        var official = function() {
-        	$('.back').css('z-index: 0')
-        	$('.back').css('transform', 'rotateY(-180deg)')
-        	$('.front').css('z-index: 1')
-        	$('.front').css('transform', 'rotateY(0deg)')
+        var homeRender = function() {
+            $('.current').removeClass('current');
+            $('.home').addClass('current');
+            $('.pokemonImageButtons>.hidden').removeClass('hidden');
+            $('.pokemonImageButtons .homeButton').addClass('hidden');
         }
 
-        $('.pokemonImage').on('click', function() {
-            if ($($('.pokemonImage')).hasClass('home'))
-            {
-                official()
-                $('.pokemonImage').removeClass('home')
-            }
-            else
-            {
-                home()
-                $('.pokemonImage').addClass('home')
-            }
-        })
+        var shinyRender = function() {
+            $('.current').removeClass('current');
+            $('.shiny').addClass('current');
+            $('.pokemonImageButtons>.hidden').removeClass('hidden');
+            $('.pokemonImageButtons .shinyButton').addClass('hidden');
+        }
 
         $('span[title]').on('click', function() {
             alert($(this).attr('title'))
@@ -178,7 +190,7 @@
 
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
-    if (this.User.IsInRole("Admin"))
+    @if (this.User.IsInRole("Admin"))
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
@@ -232,15 +244,36 @@
             }
             <div class="pokemonInfo pokemonPicture pokemonTables shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
                 <div class="pokemonImage">
-                    <div class="front">
+                    <div class="official current">
                         <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-                        <h4>← 2D Artwork →</h4>
                     </div>
-                    <div class="back">
-                        <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.HomePokemonImageUrl, @item.Pokemon.Id, ".png"))" />
-                        <h4>← 3D Render→</h4>
-                    </div>
+                    @if (@item.Pokemon.HasShinyImage)
+                    {
+                        <div class="shiny">
+                            <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                        </div>
+                    }
+                    @if (@item.Pokemon.HasThreeDImage)
+                    {
+                        <div class="home">
+                            <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.HomePokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                        </div>
+                    }
                 </div>
+                @if (@item.Pokemon.HasShinyImage || @item.Pokemon.HasThreeDImage)
+                {
+                    <div class="pokemonImageButtons">
+                        <button class="btn btn-primary officialButton hidden" onclick="officialRender()">View Official Artwork</button>
+                        @if (@item.Pokemon.HasShinyImage)
+                        {
+                            <button class="btn btn-primary shinyButton" onclick="shinyRender()">View Shiny Artwork</button>
+                        }
+                        @if (@item.Pokemon.HasThreeDImage)
+                        {
+                            <button class="btn btn-primary homeButton" onclick="homeRender()">View Home Render</button>
+                        }
+                    </div>
+                }
 
                 @if (Model.PokemonList.Count() > 1)
                 {

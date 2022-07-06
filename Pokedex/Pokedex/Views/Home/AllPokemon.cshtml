@@ -46,42 +46,9 @@
 @section scripts
 {
     <script src="/js/pageLookup.js"></script>
-    <script>
-        var home = function() {
-        	$('.front').css('z-index: 0')
-        	$('.front').css('transform', 'rotateY(-180deg)')
-        	$('.back').css('z-index: 1')
-        	$('.back').css('transform', 'rotateY(0deg)')
-        }
-
-        var official = function() {
-        	$('.back').css('z-index: 0')
-        	$('.back').css('transform', 'rotateY(-180deg)')
-        	$('.front').css('z-index: 1')
-        	$('.front').css('transform', 'rotateY(0deg)')
-        }
-
-        $('.turnHome').on('click', function() {
-            if ($($('.grid-container .pokemonImages')[0]).hasClass('home'))
-            {
-                official()
-                $('.grid-container .pokemonImages').each(function () {
-                    $(this).removeClass('home')
-                })
-            }
-            else
-            {
-                home()
-                $('.grid-container .pokemonImages').each(function () {
-                    $(this).addClass('home')
-                })
-            }
-        })
-    </script>
 }
 
 <p>
-    <button class="btn btn-primary turnHome">Change Artwork (2D ⟷ 3D)</button>
     @if (this.User.IsInRole("Owner"))
     {
         <a class="btn btn-primary" href="@this.Url.Action("Pokemon", "Add")" role="button">Add Pokémon</a>
