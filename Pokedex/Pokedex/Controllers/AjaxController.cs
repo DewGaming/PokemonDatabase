@@ -518,7 +518,7 @@ namespace Pokedex.Controllers
                         {
                             formGroup = this.dataService.GetObjectByPropertyValue<FormGroup>("Name", formGroupName);
                             forms = this.dataService.GetObjects<Form>(whereProperty: "FormGroupId", wherePropertyValue: formGroup.Id);
-                            pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true).Where(x => forms.Any(y => y.Id == x.FormId)).ToList();
+                            pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").Where(x => forms.Any(y => y.Id == x.FormId)).ToList();
                             filteredFormList = new List<PokemonFormDetail>();
 
                             foreach (var p in allPokemon)
@@ -550,7 +550,7 @@ namespace Pokedex.Controllers
 
                     if (selectedForms.Contains("Other"))
                     {
-                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form", whereProperty: "AltFormPokemon.IsComplete", wherePropertyValue: true);
+                        List<PokemonFormDetail> pokemonFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form");
 
                         List<Form> formsToRemove = this.dataService.GetObjects<Form>("Name").Where(x => !x.Randomizable).ToList();
 
@@ -604,7 +604,7 @@ namespace Pokedex.Controllers
                     }
                     else
                     {
-                        allTypes = this.dataService.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true).Where(x => allPokemon.Any(y => y.Id == x.PokemonId)).ToList();
+                        allTypes = this.dataService.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => allPokemon.Any(y => y.Id == x.PokemonId)).ToList();
                         allTypes = allTypes.Where(x => x.PrimaryTypeId == selectedType || x.SecondaryTypeId == selectedType).ToList();
                     }
 
@@ -807,36 +807,39 @@ namespace Pokedex.Controllers
 
                 if (randomAbility && selectedGame.GenerationId != 1 && selectedGame.GenerationId != 2)
                 {
+                    PokemonAbilityDetail pokemonAbilities;
+                    List<Ability> abilities = new List<Ability>();
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
-                        PokemonAbilityDetail pokemonAbilities;
-                        List<Ability> abilities = new List<Ability>();
-                        if (generationId != 0)
+                        if (this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", p.Id) != null)
                         {
-                            pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: p.Id).Last(x => x.GenerationId <= generationId);
-                        }
-                        else
-                        {
-                            pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: p.Id).Last();
-                        }
+                            if (generationId != 0)
+                            {
+                                pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: p.Id).Last(x => x.GenerationId <= generationId);
+                            }
+                            else
+                            {
+                                pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: p.Id).Last();
+                            }
 
-                        abilities.Add(pokemonAbilities.PrimaryAbility);
-                        if (pokemonAbilities.SecondaryAbility != null)
-                        {
-                            abilities.Add(pokemonAbilities.SecondaryAbility);
-                        }
+                            abilities.Add(pokemonAbilities.PrimaryAbility);
+                            if (pokemonAbilities.SecondaryAbility != null)
+                            {
+                                abilities.Add(pokemonAbilities.SecondaryAbility);
+                            }
 
-                        if (pokemonAbilities.HiddenAbility != null)
-                        {
-                            abilities.Add(pokemonAbilities.HiddenAbility);
-                        }
+                            if (pokemonAbilities.HiddenAbility != null)
+                            {
+                                abilities.Add(pokemonAbilities.HiddenAbility);
+                            }
 
-                        if (pokemonAbilities.SpecialEventAbility != null)
-                        {
-                            abilities.Add(pokemonAbilities.SpecialEventAbility);
-                        }
+                            if (pokemonAbilities.SpecialEventAbility != null)
+                            {
+                                abilities.Add(pokemonAbilities.SpecialEventAbility);
+                            }
 
-                        model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                            model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                        }
                     }
                 }
 
@@ -1270,7 +1273,7 @@ namespace Pokedex.Controllers
                 {
                     TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
                     {
-                        AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Where(x => x.Game.ReleaseDate <= DateTime.UtcNow).Any(y => y.Game.GenerationId == x.Id)).ToList(),
+                        AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
                         AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                         AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
                         AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
@@ -2150,7 +2153,10 @@ namespace Pokedex.Controllers
                     pokemonTeam = string.Concat(pokemonTeam, pokemonName);
                     if (exportAbilities)
                     {
-                        pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
+                        if (this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonIdList[i]) != null)
+                        {
+                            pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
+                        }
                     }
 
                     pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");
