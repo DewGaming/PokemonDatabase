@@ -808,9 +808,10 @@ namespace Pokedex.Controllers
                 if (randomAbility && selectedGame.GenerationId != 1 && selectedGame.GenerationId != 2)
                 {
                     PokemonAbilityDetail pokemonAbilities;
-                    List<Ability> abilities = new List<Ability>();
+                    List<Ability> abilities;
                     foreach (var p in model.AllPokemonOriginalNames)
                     {
+                        abilities = new List<Ability>();
                         if (this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", p.Id) != null)
                         {
                             if (generationId != 0)
@@ -839,6 +840,10 @@ namespace Pokedex.Controllers
                             }
 
                             model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
+                        }
+                        else
+                        {
+                            model.PokemonAbilities.Add(new Ability() { Id = 0, Name = "Unknown", Description = "Unknown" });
                         }
                     }
                 }
@@ -2151,12 +2156,9 @@ namespace Pokedex.Controllers
                     }
 
                     pokemonTeam = string.Concat(pokemonTeam, pokemonName);
-                    if (exportAbilities)
+                    if (exportAbilities && this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonIdList[i]) != null)
                     {
-                        if (this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonIdList[i]) != null)
-                        {
-                            pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
-                        }
+                        pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
                     }
 
                     pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");

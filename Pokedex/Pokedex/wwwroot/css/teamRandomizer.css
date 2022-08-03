@@ -7,10 +7,6 @@ img {
     padding: 5px;
 }
 
-.pokemonAbility {
-    margin: 10px 0;
-}
-
 .typeSelector, .generatorButton, .saveTeamButton {
     margin-right: 5px;
 }
@@ -24,4 +20,6 @@ img {
     flex: none;
     width: 300px;
     height: 300px;
+    margin: 0 auto 10px;
+    text-align: center;
 }
