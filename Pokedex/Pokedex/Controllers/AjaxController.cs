@@ -2218,7 +2218,7 @@ namespace Pokedex.Controllers
 
         private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, int generationId)
         {
-            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType", "Pokemon.IsComplete", true)
+            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
                                                         .GroupBy(x => new { x.PokemonId })
                                                         .Select(x => x.LastOrDefault())
                                                         .ToList();
