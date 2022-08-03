@@ -902,7 +902,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_alternate_form/{pokemonId:int}")]
-        public IActionResult AltForm(AlternateFormViewModel pokemon, IFormFile officialUpload, string officialUrlUpload, IFormFile homeUpload, string homeUrlUpload)
+        public IActionResult AltForm(AlternateFormViewModel pokemon, IFormFile officialUpload, string officialUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -958,7 +958,6 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(alternatePokemon);
 
             this.dataService.UploadImages(officialUpload, officialUrlUpload, alternatePokemon.Id, this.appConfig, "2d");
-            this.dataService.UploadImages(homeUpload, homeUrlUpload, alternatePokemon.Id, this.appConfig, "3d");
 
             PokemonEggGroupDetail eggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.OriginalPokemonId).Last();
             PokemonEggGroupDetail alternatePokemonEggGroups = new PokemonEggGroupDetail()
