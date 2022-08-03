@@ -7,8 +7,12 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         }
 
         for (var i = 0; i < originalNames.length; i++) {
-            var imageLocation;
-            $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + appConfig.officialPokemonImageUrl + pokemonList[i].id + '.png" /></a>');
+            var imageLocation = appConfig.officialPokemonImageUrl;
+            if (Math.floor((Math.random() * 4096) + 1) == 4096 && originalNames[i].hasShinyImage) {
+                console.log("Shiny Pokemon!");
+                imageLocation = appConfig.shinyPokemonImageUrl;
+            }
+            $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + imageLocation + pokemonList[i].id + '.png" /></a>');
             if ($(randomAbilityBool).prop('checked')) {
                 $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
             }
@@ -140,8 +144,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             $(temp).select();
             document.execCommand("copy");
             $(temp).remove();
-
-            console.log(exportString);
 
             alert("Team has been copied to your clipboard!");
         });
@@ -330,7 +332,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
                     var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
                     $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                    console.log($(dropdownItem));
                     $(".typeSelector section:first-of-type").append($(dropdownItem));
                 }
 
@@ -339,7 +340,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
                     var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
                     $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                    console.log($(dropdownItem));
                     $(".typeSelector section:last-of-type").append($(dropdownItem));
                 }
 
