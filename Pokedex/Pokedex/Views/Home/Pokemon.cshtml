@@ -228,7 +228,7 @@
 
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
             <div class="pokemonInfo pokemonPicture pokemonTables">
-                <div style="display: flex">
+                <div style="@(Model.PokemonList.Count() > 1 ? "display: flex" : string.Empty)">
                     @if (Model.PokemonList.Count() > 1)
                     {
                         <div class="differentForms">
