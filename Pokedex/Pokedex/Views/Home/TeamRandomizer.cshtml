@@ -113,7 +113,7 @@
             <span class="generationOptionTitle" id="alternateForms">Alternate Forms</span>
             @foreach (var formGroup in Model.AllFormGroups)
             {
-                <li class="dropdown-item generatorOption alternateFormCheckbox @(formGroup.Name.ToLower())FormCheckbox">
+                <li class="dropdown-item generatorOption alternateFormCheckbox @(formGroup.Name.ToLower().Replace(" ", string.Empty))FormCheckbox">
                     <input id="@formGroup.Name" type="checkbox" value="@formGroup.Name" checked="checked" />
                     <label for="@formGroup.Name" class="generatorOptionTitle">@formGroup.Name Forms</label>
                 </li>
@@ -127,7 +127,7 @@
             <span class="generationOptionTitle" id=legendary>Legendaries</span>
             @foreach(var l in Model.AllLegendaryTypes)
             {
-                <li class="dropdown-item generatorOption legendaryCheckbox@(l.Type == "Ultra Beast" ? " ultraBeastCheckbox" : String.Empty)">
+                <li class="dropdown-item generatorOption legendaryCheckbox">
                     <input id=@l.Type.Replace(" ", @String.Empty) type="checkbox" value=@l.Type.Replace(" ", @String.Empty) checked="checked" />
                     <label for=@l.Type.Replace(" ", @String.Empty) class="generatorOptionTitle">@(l.Type.Last() == 'y' ? @l.Type.Replace("y", "ies") : @l.Type += 's')</label>
                 </li>

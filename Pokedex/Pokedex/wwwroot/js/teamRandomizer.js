@@ -101,21 +101,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         else {
             $(".multipleGMaxBoolCheckbox").show();
         }
-    }, checkUltraBeasts = function () {
-        var boxChecked = false;
-        if ($('#gen7').prop('checked')) {
-            boxChecked = true;
-        }
-
-        if (!boxChecked) {
-            if ($('.ultraBeastCheckbox').is(':visible')) {
-                $(".ultraBeastCheckbox").hide();
-                $("#UltraBeast").prop('checked', false);
-            }
-        }
-        else {
-            $(".ultraBeastCheckbox").show();
-        }
     }, generatorMenuCheck = function () {
         if ($(window).width() < 768) {
             $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
@@ -236,30 +221,15 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                         $(".multipleMegaBoolCheckbox").show();
                     }
 
-                    if (!$('.megaFormCheckbox').is(':visible')) {
-                        $(".megaFormCheckbox").show();
+                    if (!$('.megaevolutionFormCheckbox').is(':visible')) {
+                        $(".megaevolutionFormCheckbox").show();
                     }
                 }
                 else {
                     $(".multipleMegaBoolCheckbox").hide();
                     $("#multipleMegaBool").prop('checked', false);
-                    $(".megaFormCheckbox").hide();
+                    $(".megaevolutionFormCheckbox").hide();
                     $("#Mega").prop('checked', false);
-                }
-
-                if ($.inArray(selectedGame, ['0', '14', '15', '17']) != -1) {
-                    if (!$('.ultraBeastCheckbox').is(':visible')) {
-                        $(".ultraBeastCheckbox").show();
-                    }
-
-                    $('.gen7Checkbox').on('click', function () {
-                        checkUltraBeasts();
-                        legendCheck = checkLegendaryChecks();
-                    });
-                }
-                else {
-                    $(".ultraBeastCheckbox").hide();
-                    $("#UltraBeast").prop('checked', false);
                 }
 
                 if (selectedGame == 16) {
@@ -268,13 +238,11 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 }
 
                 if ($.inArray(selectedGame, ['0', '14', '15', '16', '17', '37']) != -1) {
-                    if (!$('.alolanFormCheckbox').is(':visible')) {
-                        $(".alolanFormCheckbox").show();
+                    if ($('.alolanFormCheckbox').is(':visible')) {
+                        $('.gen1Checkbox').on('click', function () {
+                            altCheck = checkAltFormChecks();
+                        });
                     }
-
-                    $('.gen1Checkbox').on('click', function () {
-                        altCheck = checkAltFormChecks();
-                    });
                 }
                 else {
                     $(".alolanFormCheckbox").hide();
@@ -303,7 +271,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $("#multipleGMaxBool").prop('checked', false);
                 }
 
-                if ($.inArray(selectedGame, ['0', '37']) != -1) {
+                if ($.inArray(selectedGame, ['0', '37', '41', '42']) != -1) {
                     if (!$('.hisuianFormCheckbox').is(':visible')) {
                         $(".hisuianFormCheckbox").show();
                     }
@@ -311,6 +279,16 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 else {
                     $(".hisuianFormCheckbox").hide();
                     $("#Hisuian").prop('checked', false);
+                }
+
+                if ($.inArray(selectedGame, ['0', '41', '42']) != -1) {
+                    if (!$('.paldeanFormCheckbox').is(':visible')) {
+                        $(".paldeanFormCheckbox").show();
+                    }
+                }
+                else {
+                    $(".paldeanFormCheckbox").hide();
+                    $("#Paldean").prop('checked', false);
                 }
 
                 data.pokemonTypes;
@@ -396,7 +374,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         checkLegendaryChecks();
         checkMegaCheck();
         checkGigantamaxCheck();
-        checkUltraBeasts();
         checkTyping();
         checkOtherOptions();
         generatorMenuCheck();
