@@ -1064,11 +1064,12 @@ namespace Pokedex.Controllers
             {
                 List<PokemonGameDetail> existingGameDetails = new List<PokemonGameDetail>();
                 List<PokemonGameDetail> newGameDetails = new List<PokemonGameDetail>();
-                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>();
                 List<int> pokemonIds = new List<int>();
                 List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
                 DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
                 games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
+                int generationId = games.First().GenerationId;
+                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
 
                 if (gameId == 4 || gameId == 5)
                 {
