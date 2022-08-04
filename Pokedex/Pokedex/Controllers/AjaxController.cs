@@ -1064,6 +1064,8 @@ namespace Pokedex.Controllers
             {
                 List<PokemonGameDetail> existingGameDetails = new List<PokemonGameDetail>();
                 List<PokemonGameDetail> newGameDetails = new List<PokemonGameDetail>();
+                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>();
+                List<int> pokemonIds = new List<int>();
                 List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
                 DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
                 games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
@@ -1073,11 +1075,28 @@ namespace Pokedex.Controllers
                     games = games.Where(x => x.Id == gameId).ToList();
                 }
 
+                pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
+
+                foreach (var p in pokemonList.Intersect(evolutions.Select(x => x.EvolutionPokemonId).ToList()))
+                {
+                    Evolution evolutionDetails = evolutions.Find(x => x.EvolutionPokemonId == p);
+                    if (!pokemonIds.Contains(evolutionDetails.PreevolutionPokemonId))
+                    {
+                        pokemonIds.Add(evolutionDetails.PreevolutionPokemonId);
+                        if (evolutions.FirstOrDefault(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId) != null)
+                        {
+                            pokemonIds.Add(evolutions.First(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId).PreevolutionPokemonId);
+                        }
+                    }
+
+                    pokemonIds.Add(p);
+                }
+
                 foreach (var game in games.ConvertAll(x => x.Id))
                 {
                     existingGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: game);
 
-                    foreach (var p in pokemonList)
+                    foreach (var p in pokemonIds)
                     {
                         if (existingGameDetails.Find(x => x.PokemonId == p && x.GameId == game) == null)
                         {
