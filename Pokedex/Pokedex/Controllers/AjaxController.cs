@@ -1075,6 +1075,14 @@ namespace Pokedex.Controllers
                 {
                     games = games.Where(x => x.Id == gameId).ToList();
                 }
+                else if (gameId == 16 || gameId == 28)
+                {
+                    generationId = 1;
+                }
+                else if (gameId == 35 || gameId == 36)
+                {
+                    generationId = 4;
+                }
 
                 pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
 
