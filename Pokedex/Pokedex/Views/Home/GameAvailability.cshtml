@@ -25,7 +25,7 @@
 <div class="pageButtons">
     @foreach (var p in Model.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id))
     {
-        <button class="gameButton" id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Name (@p.Abbreviation)</button>
+        <button class="gameButton" id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Name</button>
     }
 </div>
 

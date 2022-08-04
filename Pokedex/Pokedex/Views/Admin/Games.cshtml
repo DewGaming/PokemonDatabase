@@ -24,7 +24,7 @@
         @foreach (var item in Model.AllGames)
         {
             <tr>
-                <td>@item.Name (@item.Abbreviation)</td>
+                <td>@item.Name</td>
                 <td>@item.ReleaseDate.ToString("MMMM dd, yyyy")</td>
                 <td>@item.Generation.GenerationName</td>
                 @if (Model.AllGameRegionDetails.Find(x => x.GameId == item.Id) != null)

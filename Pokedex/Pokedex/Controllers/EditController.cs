@@ -103,7 +103,6 @@ namespace Pokedex.Controllers
             {
                 Id = game.Id,
                 Name = game.Name,
-                Abbreviation = game.Abbreviation,
                 ReleaseDate = game.ReleaseDate,
                 GenerationId = game.GenerationId,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
@@ -125,7 +124,6 @@ namespace Pokedex.Controllers
                 {
                     Id = oldGame.Id,
                     Name = oldGame.Name,
-                    Abbreviation = oldGame.Abbreviation,
                     ReleaseDate = oldGame.ReleaseDate,
                     GenerationId = oldGame.GenerationId,
                     AllGenerations = this.dataService.GetObjects<Generation>(),

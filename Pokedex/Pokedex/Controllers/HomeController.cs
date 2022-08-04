@@ -167,10 +167,10 @@ namespace Pokedex.Controllers
                     List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
                     for (var i = 0; i < uniqueGames.Count; i++)
                     {
-                        if (uniqueGames[i].Abbreviation == "FR")
+                        if (uniqueGames[i].Name == "Fire Red")
                         {
                             selectableGames.Add(uniqueGames[i]);
-                            selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Abbreviation", "LG"));
+                            selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
                         }
                         else if (i == uniqueGames.Count - 1)
                         {
@@ -766,7 +766,6 @@ namespace Pokedex.Controllers
                         Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
                         GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
                         ReleaseDate = r,
-                        Abbreviation = string.Concat(gameList.Where(x => x.ReleaseDate == r).Select(x => x.Abbreviation)),
                     });
                 }
                 else
