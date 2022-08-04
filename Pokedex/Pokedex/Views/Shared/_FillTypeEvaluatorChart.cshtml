@@ -1,57 +1,123 @@
 @model Pokedex.Models.TypeEffectivenessViewModel;
-
-<div class="StrongAgainst">
-    <h2>Resistances</h2>
-    <table class="typing-table-strong typing-table">
-        @foreach (var type in Model.StrongAgainst)
-        {
-            <tr>
-                <td>
-                    @if (type.IndexOf("Quad") > -1)
-                    {
-                        <div class="pokemon-type type-icon type-@type.ToLower().Substring(0, type.IndexOf(' '))">@type.Substring(0, type.IndexOf(' '))</div>
-                        <div class="pokemon-type quad-icon quad-resist">Quad</div>
-                    }
-                    else
-                    {
-                        <div class="pokemon-type type-icon type-@type.ToLower()">@type</div>
-                    }
-                </td>
-            </tr>
-        }
-    </table>
-</div>
-<div class="WeakAgainst">
-   <h2>Weaknesses</h2>
-   <table class="typing-table-weak typing-table">
-       @foreach (var type in Model.WeakAgainst)
-       {
-        <tr>
-            <td>
-                @if (type.IndexOf("Quad") > -1)
+@if (@Model.StrongAgainst.Count > 0 || @Model.SuperStrongAgainst.Count() > 0)
+{
+    <div class="StrongAgainst">
+        <h2>Resistances</h2>
+        <table class="typing-table-strong typing-table">
+            <tbody>
+                @if (@Model.SuperStrongAgainst.Count() > 0)
                 {
-                    <div class="pokemon-type type-icon type-@type.ToLower().Substring(0, type.IndexOf(' '))">@type.Substring(0, type.IndexOf(' '))</div>
-                    <div class="pokemon-type quad-icon quad-weak">Quad</div>
+                    <tr>
+                        <td>
+                            <b>Quad Resist</b>
+                        </td>
+                    </tr>
+                    @for (var i = 0; i < @Model.SuperStrongAgainst.Count(); i += 2)
+                    {
+                        <tr>
+                            <td>
+                                <div class="pokemon-type type-icon type-@Model.SuperStrongAgainst[i].ToLower().Substring(0, @Model.SuperStrongAgainst[i].IndexOf(" Quad"))">@Model.SuperStrongAgainst[i].Substring(0, @Model.SuperStrongAgainst[i].IndexOf(" Quad"))</div>
+                                @if (@Model.SuperStrongAgainst.ElementAtOrDefault(i+1) != null)
+                                {
+                                    <div class="pokemon-type type-icon type-@Model.SuperStrongAgainst[i+1].ToLower().Substring(0, @Model.SuperStrongAgainst[i+1].IndexOf(" Quad"))">@Model.SuperStrongAgainst[i+1].Substring(0, @Model.SuperStrongAgainst[i+1].IndexOf(" Quad"))</div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    if (@Model.StrongAgainst.Count > 0)
+                    {
+                        <tr>
+                            <td>
+                                <b>Regular Resist</b>
+                            </td>
+                        </tr>
+                    }
                 }
-                else
+                @for (var i = 0; i < @Model.StrongAgainst.Count(); i += 2)
                 {
-                    <div class="pokemon-type type-icon type-@type.ToLower()">@type</div>
+                    <tr>
+                        <td>
+                            <div class="pokemon-type type-icon type-@Model.StrongAgainst[i].ToLower()">@Model.StrongAgainst[i]</div>
+                            @if (@Model.StrongAgainst.ElementAtOrDefault(i+1) != null)
+                            {
+                                <div class="pokemon-type type-icon type-@Model.StrongAgainst[i+1].ToLower()">@Model.StrongAgainst[i+1]</div>
+                            }
+                        </td>
+                    </tr>
                 }
-            </td>
-        </tr>
-       }
-   </table>
-</div>
-<div class="ImmuneTo">
-    <h2>Immunities</h2>
-    <table class="typing-table-immune typing-table">
-        @foreach (var type in Model.ImmuneTo)
-        {
-            <tr>
-                <td>
-                    <div class="pokemon-type type-icon type-@type.ToLower()">@type</div>
-                </td>
-            </tr>
-        }
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+}
+@if (@Model.WeakAgainst.Count > 0 || @Model.SuperWeakAgainst.Count() > 0)
+{
+    <div class="WeakAgainst">
+        <h2>Weaknesses</h2>
+        <table class="typing-table-weak typing-table">
+            <tbody>
+            @if (@Model.SuperWeakAgainst.Count() > 0)
+            {
+                <tr>
+                    <td>
+                        <b>Quad Weak</b>
+                    </td>
+                </tr>
+                @for (var i = 0; i < @Model.SuperWeakAgainst.Count(); i += 2)
+                {
+                    <tr>
+                        <td>
+                            <div class="pokemon-type type-icon type-@Model.SuperWeakAgainst[i].ToLower().Substring(0, @Model.SuperWeakAgainst[i].IndexOf(" Quad"))">@Model.SuperWeakAgainst[i].Substring(0, @Model.SuperWeakAgainst[i].IndexOf(" Quad"))</div>
+                            @if (@Model.SuperWeakAgainst.ElementAtOrDefault(i+1) != null)
+                            {
+                                <div class="pokemon-type type-icon type-@Model.SuperWeakAgainst[i+1].ToLower().Substring(0, @Model.SuperWeakAgainst[i+1].IndexOf(" Quad"))">@Model.SuperWeakAgainst[i+1].Substring(0, @Model.SuperWeakAgainst[i+1].IndexOf(" Quad"))</div>
+                            }
+                        </td>
+                    </tr>
+                }
+                if (@Model.WeakAgainst.Count > 0)
+                {
+                    <tr>
+                        <td>
+                            <b>Regular Weakness</b>
+                        </td>
+                    </tr>
+                }
+            }
+            @for (var i = 0; i < @Model.WeakAgainst.Count(); i += 2)
+            {
+                <tr>
+                    <td>
+                        <div class="pokemon-type type-icon type-@Model.WeakAgainst[i].ToLower()">@Model.WeakAgainst[i]</div>
+                        @if (@Model.WeakAgainst.ElementAtOrDefault(i+1) != null)
+                        {
+                            <div class="pokemon-type type-icon type-@Model.WeakAgainst[i+1].ToLower()">@Model.WeakAgainst[i+1]</div>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+@if (@Model.ImmuneTo.Count > 0)
+{
+    <div class="ImmuneTo">
+        <h2>Immunities</h2>
+        <table class="typing-table-immune typing-table">
+            <tbody>
+            @for (var i = 0; i < @Model.ImmuneTo.Count(); i += 2)
+            {
+                <tr>
+                    <td>
+                        <div class="pokemon-type type-icon type-@Model.ImmuneTo[i].ToLower()">@Model.ImmuneTo[i]</div>
+                        @if (@Model.ImmuneTo.ElementAtOrDefault(i+1) != null)
+                        {
+                            <div class="pokemon-type type-icon type-@Model.ImmuneTo[i+1].ToLower()">@Model.ImmuneTo[i+1]</div>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

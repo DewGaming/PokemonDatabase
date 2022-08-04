@@ -1888,17 +1888,13 @@ namespace Pokedex.Controllers
             weakAgainst.Sort();
             superWeakAgainst.Sort();
 
-            List<string> strongAgainstList = superStrongAgainst;
-            strongAgainstList.AddRange(strongAgainst);
-
-            List<string> weakAgainstList = superWeakAgainst;
-            weakAgainstList.AddRange(weakAgainst);
-
             TypeEffectivenessViewModel effectivenessChart = new TypeEffectivenessViewModel()
             {
                 ImmuneTo = immuneTo,
-                StrongAgainst = strongAgainstList,
-                WeakAgainst = weakAgainstList,
+                StrongAgainst = strongAgainst,
+                WeakAgainst = weakAgainst,
+                SuperStrongAgainst = superStrongAgainst,
+                SuperWeakAgainst = superWeakAgainst,
             };
 
             return effectivenessChart;

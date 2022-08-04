@@ -13,9 +13,19 @@ namespace Pokedex.Models
         public List<string> StrongAgainst { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of types super strong against the pokemon.
+        /// </summary>
+        public List<string> SuperStrongAgainst { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of types weak against the pokemon.
         /// </summary>
         public List<string> WeakAgainst { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of types super weak against the pokemon.
+        /// </summary>
+        public List<string> SuperWeakAgainst { get; set; }
 
         /// <summary>
         /// Gets or sets a list of types immune to the pokemon.
