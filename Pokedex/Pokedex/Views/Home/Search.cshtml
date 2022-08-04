@@ -18,7 +18,7 @@
     <div class="grid-container">
         @foreach (var item in Model.AllPokemon)
         {
-            <div class="shadowed @item.Pokemon.Name">
+            <div class="shadowed @item.Pokemon.Name@(item.Pokemon.IsComplete ? "" : " incomplete")">
                 <a href="@this.Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
                     <img class="pokemonListPicture" title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))"/>
                 </a>
