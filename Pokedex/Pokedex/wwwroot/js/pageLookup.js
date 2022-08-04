@@ -22,6 +22,8 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
     $(this).removeClass('active');
   })
 
+  var imageUsed = $('.current').attr('class').split(' ')[0];
+
   pokemonName = pokemonName.replace("&apos;", "\'");
 
   while ($('.generation' + generation + '#' + pageName).length == 0)
@@ -34,6 +36,24 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
   }
 
   $('button#Generation' + generation + ', .generations#' + pageName.replace('%', '\\%') + ', .generation' + generation + '#' + pageName.replace('%', '\\%')).addClass('active');
+  
+  if (!$('.active .pokemonImage>div').hasClass(imageUsed)) {
+    $('.current').each(function () {
+      $(this).removeClass('current');
+    })
+
+    $('.pokemonImage .official').each(function () {
+      $(this).addClass('current');
+    })
+
+    $('.pokemonImageButtons button').each(function () {
+      $(this).removeClass('hidden');
+    })
+
+    $('.pokemonImageButtons .officialButton').each(function () {
+      $(this).addClass('hidden');
+    })
+  }
 
   $('.tabIcon').attr("href", iconLink);
   $('.pageTitle').text(pokemonName + " | Pokémon Database");
