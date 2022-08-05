@@ -1069,7 +1069,6 @@ namespace Pokedex.Controllers
                 DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
                 games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
                 int generationId = games.First().GenerationId;
-                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
 
                 if (gameId == 4 || gameId == 5)
                 {
@@ -1083,6 +1082,8 @@ namespace Pokedex.Controllers
                 {
                     generationId = 4;
                 }
+
+                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
 
                 pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
 
@@ -1226,6 +1227,30 @@ namespace Pokedex.Controllers
                 }
 
                 return genders;
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the type chart for the given typing combination.
+        /// </summary>
+        /// <param name="pokemonID">The pokemon's id.</param>
+        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <returns>The file type evaluator chart shared view.</returns>
+        [Route("get-typing-evaluator-chart-by-pokemon")]
+        public IActionResult GetTypingEvaluatorChartByPokemon(int pokemonID, int generationID)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonID).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationID);
+                int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
+                int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationID));
             }
             else
             {
@@ -1812,24 +1837,14 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Gets a list of all pokemon that are not alternate forms.
-        /// </summary>
-        /// <returns>Returns the list of original pokemon.</returns>
-        private List<Pokemon> GetAllPokemonWithoutForms()
-        {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            return pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
-        }
-
-        /// <summary>
         /// Gets the type chart for the given typing and generation.
         /// </summary>
         /// <param name="primaryTypeId">The id of the primary type.</param>
         /// <param name="secondaryTypeId">The id of the secondary type.</param>
         /// <param name="generationId">The id of the generation.</param>
         /// <returns>Returns the type effectiveness given the typing and generation.</returns>
-        private TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId)
+        [Route("get-type-chart-typing")]
+        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId)
         {
             List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<DataAccess.Models.Type> pokemonTypes = new List<DataAccess.Models.Type>();
@@ -1926,6 +1941,17 @@ namespace Pokedex.Controllers
             };
 
             return effectivenessChart;
+        }
+
+        /// <summary>
+        /// Gets a list of all pokemon that are not alternate forms.
+        /// </summary>
+        /// <returns>Returns the list of original pokemon.</returns>
+        private List<Pokemon> GetAllPokemonWithoutForms()
+        {
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
+            return pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
         }
 
         private List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int? secondaryEggGroupId)

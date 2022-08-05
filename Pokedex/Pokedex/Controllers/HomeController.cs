@@ -452,6 +452,8 @@ namespace Pokedex.Controllers
                 this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
                 this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
 
+                model.AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
+
                 return this.View(model);
             }
         }

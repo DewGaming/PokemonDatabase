@@ -16,7 +16,24 @@
     {
         adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
     }
+    var types = new List<Pokedex.DataAccess.Models.Type>();
+    if (Model.PokemonList.First().Pokemon.Name == "Arceus")
+    {
+        types.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
+    }
+    else if (Model.PokemonList.First().Pokemon.Name == "Silvally")
+    {
+        types.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Memory" });
+    }
+    else
+    {
+        types.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
+    }
+
+    types.AddRange(Model.AllTypes);
 }
+
+@Html.HiddenFor(x => x.PokemonId)
 
 @section styles
 {
@@ -100,6 +117,14 @@
         .pokemonImageButtons .hidden {
             display: none;
         }
+
+        .typingChart {
+            display: flex;
+        }
+
+        .typingChart .typing {
+            margin-right: 1rem;
+        }
     </style>
     @if (this.User.IsInRole("Admin"))
     {
@@ -113,33 +138,8 @@
 
 @section scripts
 {
+    <script src="/js/pokemonPage.js"></script>
     <script src="/js/pageLookup.js"></script>
-    <script>
-        var officialRender = function() {
-            $('.current').removeClass('current');
-            $('.official').addClass('current');
-            $('.pokemonImageButtons>.hidden').removeClass('hidden');
-            $('.pokemonImageButtons .officialButton').addClass('hidden');
-        }
-
-        var homeRender = function() {
-            $('.current').removeClass('current');
-            $('.home').addClass('current');
-            $('.pokemonImageButtons>.hidden').removeClass('hidden');
-            $('.pokemonImageButtons .homeButton').addClass('hidden');
-        }
-
-        var shinyRender = function() {
-            $('.current').removeClass('current');
-            $('.shiny').addClass('current');
-            $('.pokemonImageButtons>.hidden').removeClass('hidden');
-            $('.pokemonImageButtons .shinyButton').addClass('hidden');
-        }
-
-        $('span[title]').on('click', function() {
-            alert($(this).attr('title'))
-        })
-    </script>
 }
 
 @Html.HiddenFor(x => x.LatestGenerationId)
@@ -629,12 +629,56 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
             @if (item.Typings.Count() > 0)
             {
                 <div class="pokemonInfo pokemonTables">
-                    <div class="typing">
-                        <h2>Typing</h2>
-                        <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
-                        @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
+                    <div class="typingChart">
+                        <div class="typing">
+                            @if(g == 9)
+                            {
+                                <h2>Base Typing</h2>
+                            }
+                            else
+                            {
+                                <h2>Typing</h2>
+                            }
+
+                            <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
+                            @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
+                            {
+                                <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
+                            }
+                        </div>
+                        @if(g == 9 || Model.PokemonList.First().Pokemon.Name == "Arceus" || Model.PokemonList.First().Pokemon.Name == "Silvally")
                         {
-                            <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
+                            <div class="teraTypingList">
+                                <label for="TeraTypes">
+                                    @if (Model.PokemonList.First().Pokemon.Name == "Arceus")
+                                    {
+                                        if (g == 9)
+                                        {
+                                            <h2>Plate/Tera</h2>
+                                        }
+                                        else
+                                        {
+                                            <h2>Arceus Plate</h2>
+                                        }
+                                    }
+                                    else if (Model.PokemonList.First().Pokemon.Name == "Silvally")
+                                    {
+                                        if (g == 9)
+                                        {
+                                            <h2>Memory/Tera</h2>
+                                        }
+                                        else
+                                        {
+                                            <h2>RKS Memory</h2>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <h2>Tera Typing</h2>
+                                    }
+                                </label>
+                                @Html.DropDownList("TeraTypes", new SelectList(@types.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                            </div>
                         }
                     </div>
                     <div class="effectivenessChart tableWithHeaders noRowBorders">
