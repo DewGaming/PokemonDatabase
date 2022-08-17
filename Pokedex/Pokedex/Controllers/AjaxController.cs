@@ -108,7 +108,7 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <returns>The fill admin generation table shared view.</returns>
         [Route("get-incomplete-pokemon-admin")]
-        public IActionResult GetPokemonByGenerationAdmin()
+        public IActionResult GetIncompletePokemonAdmin()
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -124,6 +124,72 @@ namespace Pokedex.Controllers
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
                     PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.IsComplete).ToList(),
+                    DropdownViewModel = dropdownViewModel,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.PartialView("_FillAdminGenerationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+        }
+
+        /// <summary>
+        /// Prepares the required information for the admin to view all incomplete pokemon.
+        /// </summary>
+        /// <returns>The fill admin generation table shared view.</returns>
+        [Route("get-missing-threed-pokemon-admin")]
+        public IActionResult GetMissingThreeDPokemonAdmin()
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+
+                DropdownViewModel dropdownViewModel = new DropdownViewModel()
+                {
+                    AllPokemon = allAdminPokemon,
+                    AppConfig = this.appConfig,
+                    GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
+                };
+
+                AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
+                {
+                    PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.HasThreeDImage).ToList(),
+                    DropdownViewModel = dropdownViewModel,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.PartialView("_FillAdminGenerationTable", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+        }
+
+        /// <summary>
+        /// Prepares the required information for the admin to view all pokemon missing shiny artwork.
+        /// </summary>
+        /// <returns>The fill admin generation table shared view.</returns>
+        [Route("get-missing-shiny-pokemon-admin")]
+        public IActionResult GetMissingShinyPokemonAdmin()
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+
+                DropdownViewModel dropdownViewModel = new DropdownViewModel()
+                {
+                    AllPokemon = allAdminPokemon,
+                    AppConfig = this.appConfig,
+                    GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
+                };
+
+                AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
+                {
+                    PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.HasShinyImage).ToList(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
                 };

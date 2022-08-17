@@ -59,6 +59,17 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
   $('.pageTitle').text(pokemonName + " | Pokémon Database");
 }
 
+function lookupAllPokemon() {
+  $('.pokemonList > .grid-container').empty();
+  $('.pokemonList').removeClass('active');
+
+  $('.pageButtons').show();
+  $('.incompletePokemon').show();
+  $('.missingThreeD').show();
+  $('.missingShiny').show();
+  $('.allPokemon').hide();
+};
+
 function lookupIncompletePokemon() {
   $('button').each(function () {
     $(this).removeClass('active');
@@ -79,16 +90,59 @@ function lookupIncompletePokemon() {
 
   $('.pageButtons').hide();
   $('.incompletePokemon').hide();
+  $('.missingThreeD').show();
+  $('.missingShiny').show();
   $('.allPokemon').show();
 };
 
-function lookupAllPokemon() {
-  $('.pokemonList > .grid-container').empty();
-  $('.pokemonList').removeClass('active');
+function lookupMissingThreeD() {
+  $('button').each(function () {
+    $(this).removeClass('active');
+  });
 
-  $('.pageButtons').show();
+  $('.pokemonList').removeClass('active');
+  $('.pokemonList > .grid-container').empty();
+
+  $('.grid-container').load('/get-missing-threed-pokemon-admin/', function () {
+    $.each($('.grid-container .pokemonName'), function (index, item) {
+      if ($(item).text().includes('_')) {
+        $(item).text($(item).text().replace('_', ' '));
+      }
+    });
+
+    $('.pokemonList').addClass('active');
+  });
+
+  $('.pageButtons').hide();
   $('.incompletePokemon').show();
-  $('.allPokemon').hide();
+  $('.missingThreeD').hide();
+  $('.missingShiny').show();
+  $('.allPokemon').show();
+};
+
+function lookupMissingShiny() {
+  $('button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.pokemonList').removeClass('active');
+  $('.pokemonList > .grid-container').empty();
+
+  $('.grid-container').load('/get-missing-shiny-pokemon-admin/', function () {
+    $.each($('.grid-container .pokemonName'), function (index, item) {
+      if ($(item).text().includes('_')) {
+        $(item).text($(item).text().replace('_', ' '));
+      }
+    });
+
+    $('.pokemonList').addClass('active');
+  });
+
+  $('.pageButtons').hide();
+  $('.incompletePokemon').show();
+  $('.missingThreeD').show();
+  $('.missingShiny').hide();
+  $('.allPokemon').show();
 };
 
 function lookupGeneration(generationId) {
