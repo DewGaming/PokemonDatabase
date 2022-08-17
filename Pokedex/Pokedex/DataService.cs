@@ -790,7 +790,10 @@ namespace Pokedex
                 image.Trim();
                 MemoryStream strm = new MemoryStream();
                 image.RePage();
-                image.Write(strm, MagickFormat.Png);
+                image.Quality = 100;
+                image.Settings.SetDefine(MagickFormat.WebP, "lossless", true);
+                image.Settings.SetDefine(MagickFormat.WebP, "method", "6");
+                image.Write(strm, MagickFormat.WebP);
                 file = new FormFile(strm, 0, strm.Length, file.Name, file.FileName);
             }
 
