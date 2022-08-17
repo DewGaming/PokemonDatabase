@@ -194,6 +194,20 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
+                // List of pokemon that do not have shiny artwork.
+                List<Pokemon> pokemonWithoutShinies = new List<Pokemon>();
+                List<PokemonFormDetail> pokemonForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+                List<string> formNames = new List<string>()
+                {
+                    "Starter",
+                    "Eternamax",
+                };
+                pokemonWithoutShinies.AddRange(pokemonForms.Where(x => formNames.Contains(x.Form.Name)).ToList().ConvertAll(x => x.AltFormPokemon));
+                foreach (var v in pokemonWithoutShinies)
+                {
+                    model.PokemonList.Remove(v);
+                }
+
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
             else
