@@ -124,9 +124,15 @@ namespace Pokedex.Controllers
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
                     PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.IsComplete).ToList(),
+                    AltFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon).Where(x => !x.IsComplete).ToList(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
                 };
+
+                foreach (var a in model.AltFormList)
+                {
+                    a.Name = string.Concat(a.Name, " (", this.dataService.GetPokemonFormName(a.Id), ")");
+                }
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -157,9 +163,15 @@ namespace Pokedex.Controllers
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
                     PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.HasThreeDImage).ToList(),
+                    AltFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon).Where(x => !x.HasThreeDImage).ToList(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
                 };
+
+                foreach (var a in model.AltFormList)
+                {
+                    a.Name = string.Concat(a.Name, " (", this.dataService.GetPokemonFormName(a.Id), ")");
+                }
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -190,22 +202,14 @@ namespace Pokedex.Controllers
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
                     PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.HasShinyImage).ToList(),
+                    AltFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon).Where(x => !x.HasShinyImage).ToList(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
                 };
 
-                // List of pokemon that do not have shiny artwork.
-                List<Pokemon> pokemonWithoutShinies = new List<Pokemon>();
-                List<PokemonFormDetail> pokemonForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
-                List<string> formNames = new List<string>()
+                foreach (var a in model.AltFormList)
                 {
-                    "Starter",
-                    "Eternamax",
-                };
-                pokemonWithoutShinies.AddRange(pokemonForms.Where(x => formNames.Contains(x.Form.Name)).ToList().ConvertAll(x => x.AltFormPokemon));
-                foreach (var v in pokemonWithoutShinies)
-                {
-                    model.PokemonList.Remove(v);
+                    a.Name = string.Concat(a.Name, " (", this.dataService.GetPokemonFormName(a.Id), ")");
                 }
 
                 return this.PartialView("_FillAdminGenerationTable", model);
