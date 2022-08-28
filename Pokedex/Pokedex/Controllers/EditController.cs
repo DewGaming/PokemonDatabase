@@ -231,18 +231,17 @@ namespace Pokedex.Controllers
         [Route("edit_pokemon/{id:int}")]
         public IActionResult Pokemon(int id)
         {
-            BasePokemonViewModel model = new BasePokemonViewModel()
+            BasePokemonViewModel model = new BasePokemonViewModel
             {
                 Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 AllClassifications = this.dataService.GetObjects<Classification>("Name"),
+                AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
+                AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
+                AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
+                AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
+                AllGenderRatios = new List<GenderRatioViewModel>(),
             };
-
-            model.AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness");
-            model.AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate");
-            model.AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount");
-            model.AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name");
-            model.AllGenderRatios = new List<GenderRatioViewModel>();
 
             foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
             {
