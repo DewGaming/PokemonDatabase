@@ -56,7 +56,7 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
   }
 
   $('.tabIcon').attr("href", iconLink);
-  $('.pageTitle').text(pokemonName + " | Pokémon Database");
+  $('.pageTitle').text(pokemonName + " | Pokéluna");
 }
 
 function lookupAllPokemon() {

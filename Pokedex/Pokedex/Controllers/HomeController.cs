@@ -688,7 +688,7 @@ namespace Pokedex.Controllers
 
                     using MailMessage message = new MailMessage(fromAddress, toAddress)
                     {
-                        Subject = "New Comment for Pokémon Database",
+                        Subject = "New Comment for Pokéluna",
                         Body = body,
                     };
                     smtp.Send(message);
