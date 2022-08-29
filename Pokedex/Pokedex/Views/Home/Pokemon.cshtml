@@ -39,10 +39,6 @@
             display: none;
         }
 
-        .generations button {
-            border-top: 0;
-        }
-
         .pokemonImage h4 {
             text-align: center;
             font-weight: bold;
@@ -157,7 +153,6 @@
     </tr>
 </table>
 
-<hr style="margin-top: 0;margin-bottom: 0;">
 @{
     List<Evolution> evolutions = new List<Evolution>();
 }
@@ -266,7 +261,7 @@
                 }
             </div>
             <div class="pokemonInfo pokemonData pokemonTables">
-                <h2>Pokémon Data</h2>
+                <h2>Pokémon Details</h2>
                 <table class="pokedexNumber">
                     <tbody>
                         <tr>
@@ -407,7 +402,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
             @if ((@g != 1 && item.EggGroups.Count() > 0) || (@g > 2 && item.EVYields.Count() > 0) || item.CaptureRates.Count() > 0 || item.Pokemon.ExperienceGrowthId != 8 || item.BaseHappinesses.Count() > 0)
             {
                 <div class="pokemonInfo pokemonTraining pokemonTables">
-                    <h2>More Pokémon Data</h2>
+                    <h2>More Pokémon Details</h2>
                     <table>
                         <tbody>
                             @if (@g > 2 && item.EVYields.Count() > 0)
@@ -584,7 +579,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         }
                                     </td>
                                 }
-                                else
+                                else if (i > 1)
                                 {
                                     <td></td>
                                 }
