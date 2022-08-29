@@ -424,35 +424,25 @@ namespace Pokedex.Controllers
                     PokemonId = pokemonId,
                     GenerationId = generationId,
                     LatestGenerationId = this.dataService.GetObjects<Generation>(orderedProperty: "Id").Last().Id,
+                    AllTypes = new List<DataAccess.Models.Type>(),
                 };
-
-                if (this.User.IsInRole("Admin"))
-                {
-                    AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
-                    DropdownViewModel dropdownViewModel = new DropdownViewModel()
-                    {
-                        AllPokemon = allAdminPokemon,
-                        AppConfig = this.appConfig,
-                    };
-                    AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
-                    {
-                        PokemonList = new List<Pokemon>(),
-                        DropdownViewModel = dropdownViewModel,
-                        AppConfig = this.appConfig,
-                    };
-
-                    foreach (var p in pokemonList)
-                    {
-                        adminDropdown.PokemonList.Add(p.Pokemon);
-                    }
-
-                    model.AdminDropdown = adminDropdown;
-                }
 
                 this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
                 this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
+                if (name == "Arceus")
+                {
+                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
+                }
+                else if (name == "Silvally")
+                {
+                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Memory" });
+                }
+                else
+                {
+                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
+                }
 
-                model.AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
+                model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
 
                 return this.View(model);
             }

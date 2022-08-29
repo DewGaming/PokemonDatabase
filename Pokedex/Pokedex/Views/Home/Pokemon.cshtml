@@ -9,28 +9,8 @@
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     ViewBag.Description = string.Concat("View the information for the ", @Model.PokemonList.FirstOrDefault().Pokemon.Classification.Name, ", ", @Model.PokemonList.FirstOrDefault().Pokemon.Name, "!");
     ViewBag.Image = @Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.OfficialPokemonImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"));
-    AdminPokemonViewModel adminPokemon = null;
     Evolution preEvolution = null;
     int[] generations = null;
-    if (this.User.IsInRole("Admin"))
-    {
-        adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
-    }
-    var types = new List<Pokedex.DataAccess.Models.Type>();
-    if (Model.PokemonList.First().Pokemon.Name == "Arceus")
-    {
-        types.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
-    }
-    else if (Model.PokemonList.First().Pokemon.Name == "Silvally")
-    {
-        types.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Memory" });
-    }
-    else
-    {
-        types.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
-    }
-
-    types.AddRange(Model.AllTypes);
 }
 
 @Html.HiddenFor(x => x.PokemonId)
@@ -190,10 +170,6 @@
 
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
-    @if (this.User.IsInRole("Admin"))
-    {
-        adminPokemon.Pokemon = item.Pokemon;
-    }
     
     <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
         @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
@@ -219,11 +195,6 @@
                     evolutions.Add(item.Evolutions.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g && x.EvolutionPokemonId == e.EvolutionPokemonId));
                 }
             }
-        }
-
-        if (this.User.IsInRole("Admin"))
-        {
-            adminPokemon.GenerationId = g;
         }
 
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
@@ -295,10 +266,6 @@
                 }
             </div>
             <div class="pokemonInfo pokemonData pokemonTables">
-                @if (this.User.IsInRole("Admin"))
-                {
-                    @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
-                }
                 <h2>Pokémon Data</h2>
                 <table class="pokedexNumber">
                     <tbody>
@@ -677,7 +644,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         <h2>Tera Typing</h2>
                                     }
                                 </label>
-                                @Html.DropDownList("TeraTypes", new SelectList(@types.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                                @Html.DropDownList("TeraTypes", new SelectList(@Model.AllTypes.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
                             </div>
                         }
                     </div>
