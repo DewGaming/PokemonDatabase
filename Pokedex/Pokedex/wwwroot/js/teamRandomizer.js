@@ -73,7 +73,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         }
     }, checkMegaCheck = function () {
         var boxChecked = false;
-        if ($('#Mega').prop('checked')) {
+        if ($('#MegaEvolution').prop('checked')) {
             boxChecked = true;
         }
 

@@ -114,8 +114,8 @@
             @foreach (var formGroup in Model.AllFormGroups)
             {
                 <li class="dropdown-item generatorOption alternateFormCheckbox @(formGroup.Name.ToLower().Replace(" ", string.Empty))FormCheckbox">
-                    <input id="@formGroup.Name" type="checkbox" value="@formGroup.Name" checked="checked" />
-                    <label for="@formGroup.Name" class="generatorOptionTitle">@formGroup.Name Forms</label>
+                    <input id="@formGroup.Name.Replace(" ", string.Empty)" type="checkbox" value="@formGroup.Name" checked="checked" />
+                    <label for="@formGroup.Name.Replace(" ", string.Empty)" class="generatorOptionTitle">@formGroup.Name Forms</label>
                 </li>
             }
             <li class="dropdown-item generatorOption alternateFormCheckbox otherFormCheckbox">

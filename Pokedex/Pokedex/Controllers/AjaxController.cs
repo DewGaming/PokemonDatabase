@@ -504,6 +504,11 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                if (pokemonCount > 6)
+                {
+                    pokemonCount = 6;
+                }
+
                 List<Generation> unselectedGens = this.dataService.GetObjects<Generation>();
                 foreach (var item in selectedGens)
                 {
@@ -787,8 +792,6 @@ namespace Pokedex.Controllers
                 {
                     for (var i = 0; i < pokemonCount; i++)
                     {
-                        pokemonTypeDetails = pokemonTypeDetails.Where(x => allPokemon.Any(y => x.PokemonId == y.Id)).ToList();
-
                         pokemon = allPokemon[rnd.Next(allPokemon.Count)];
                         allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
 
@@ -823,6 +826,8 @@ namespace Pokedex.Controllers
 
                         if (noRepeatType)
                         {
+                            pokemonTypeDetails = pokemonTypeDetails.Where(x => allPokemon.Any(y => x.PokemonId == y.Id)).ToList();
+
                             if (pokemonTypeDetails.Exists(x => x.PokemonId == pokemon.Id))
                             {
                                 List<DataAccess.Models.Type> selectedPokemonTyping = new List<DataAccess.Models.Type>()
