@@ -509,6 +509,11 @@ namespace Pokedex.Controllers
                     pokemonCount = 6;
                 }
 
+                if (selectedType != 0 && noRepeatType)
+                {
+                    noRepeatType = false;
+                }
+
                 List<Generation> unselectedGens = this.dataService.GetObjects<Generation>();
                 foreach (var item in selectedGens)
                 {

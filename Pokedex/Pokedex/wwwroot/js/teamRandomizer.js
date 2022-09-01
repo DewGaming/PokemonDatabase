@@ -217,12 +217,12 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 }
 
                 if ($.inArray(selectedGame, ['0', '12', '13', '14', '15', '16']) != -1) {
-                    if (!$('.multipleMegaBoolCheckbox').is(':visible')) {
-                        $(".multipleMegaBoolCheckbox").show();
-                    }
-
                     if (!$('.megaevolutionFormCheckbox').is(':visible')) {
                         $(".megaevolutionFormCheckbox").show();
+                    }
+
+                    if ($('.megaevolutionFormCheckbox').prop('checked') && !$('.multipleMegaBoolCheckbox').is(':visible')) {
+                        $(".multipleMegaBoolCheckbox").show();
                     }
                 }
                 else {
@@ -397,7 +397,7 @@ $('.legendaryCheckbox').on('click', function () {
     checkOtherOptions();
 });
 
-$('.megaFormCheckbox').on('click', function () {
+$('.megaevolutionFormCheckbox').on('click', function () {
     checkMegaCheck();
     checkOtherOptions();
 });
