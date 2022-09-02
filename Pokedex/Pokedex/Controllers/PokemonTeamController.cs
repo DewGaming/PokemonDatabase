@@ -870,7 +870,7 @@ namespace Pokedex.Controllers
             // Nickname converter.
             if (pokemonName.IndexOf("(") != -1)
             {
-                pokemonTeamDetail.Nickname = pokemonName.Substring(0, pokemonName.IndexOf("(") - 1);
+                pokemonTeamDetail.Nickname = pokemonName.Substring(0, pokemonName.LastIndexOf("(") - 1);
                 pokemonName = pokemonName.Replace(string.Concat(pokemonTeamDetail.Nickname, " ("), string.Empty);
                 pokemonName = pokemonName.Replace(")", string.Empty);
             }
