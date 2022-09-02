@@ -533,7 +533,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Only viewed if the user gets an error while using the website. An email with the exact error will be sent to the owner's specified email.
+        /// Only viewed if the user gets an unaccounted for error while using the website. An email with the exact error will be sent to the owner's specified email.
         /// </summary>
         /// <returns>Returns the error page.</returns>
         [AllowAnonymous]
