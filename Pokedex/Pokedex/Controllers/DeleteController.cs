@@ -16,6 +16,10 @@ namespace Pokedex.Controllers
     {
         private readonly DataService dataService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeleteController"/> class.
+        /// </summary>
+        /// <param name="dataContext">The data context.</param>
         public DeleteController(DataContext dataContext)
         {
             // Instantiate an instance of the data service.

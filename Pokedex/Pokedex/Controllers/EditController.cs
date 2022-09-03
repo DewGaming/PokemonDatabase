@@ -23,6 +23,11 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditController"/> class.
+        /// </summary>
+        /// <param name="appConfig">The configuration for the application.</param>
+        /// <param name="dataContext">The data context.</param>
         public EditController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             this.appConfig = appConfig.Value;
