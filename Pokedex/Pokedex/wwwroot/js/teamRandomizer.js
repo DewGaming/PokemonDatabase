@@ -229,7 +229,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $(".multipleMegaBoolCheckbox").hide();
                     $("#multipleMegaBool").prop('checked', false);
                     $(".megaevolutionFormCheckbox").hide();
-                    $("#Mega").prop('checked', false);
+                    $("#MegaEvolution").prop('checked', false);
                 }
 
                 if (selectedGame == 16) {
