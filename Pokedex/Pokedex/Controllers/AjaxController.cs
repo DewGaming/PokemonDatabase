@@ -970,8 +970,8 @@ namespace Pokedex.Controllers
 
                         commentBody = string.Concat(commentBody, " - Pokemon Count: ", pokemonCount);
                         commentBody = string.Concat(commentBody, " - Selected Generation Ids: {", string.Join(", ", selectedGens), "}");
-                        commentBody = string.Concat(commentBody, " - Selected Game Id: ", selectedGameId);
-                        commentBody = string.Concat(commentBody, " - Selected Type: ", selectedType);
+                        commentBody = string.Concat(commentBody, " - Selected Game Id: ", this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId).Name);
+                        commentBody = string.Concat(commentBody, " - Selected Type: ", this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", selectedType).Name);
                         commentBody = string.Concat(commentBody, " - Selected Legendary Types: {", string.Join(", ", selectedLegendaries), "}");
                         commentBody = string.Concat(commentBody, " - Selected Forms: {", string.Join(", ", selectedForms), "}");
                         commentBody = string.Concat(commentBody, " - Selected Evolutions: {", string.Join(", ", selectedEvolutions), "}");
@@ -1037,6 +1037,8 @@ namespace Pokedex.Controllers
 
                         this.dataService.AddObject(comment);
                     }
+
+                    return null;
                 }
             }
             else
