@@ -59,10 +59,6 @@
             display: none;
         }
 
-        .generations button {
-            border-top: 0;
-        }
-
         .pokemonImage h4 {
             text-align: center;
             font-weight: bold;
@@ -177,17 +173,11 @@
     </tr>
 </table>
 
-<hr style="margin-top: 0;margin-bottom: 0;">
 @{
     List<Evolution> evolutions = new List<Evolution>();
 }
 @foreach (var item in Model.PokemonList)
 {
-    @if (!item.Pokemon.IsComplete)
-    {
-        <h4>Please be aware that the information for this Pokémon is not complete due to not all the information being available. Some information may change as more is revealed.</h4>
-    }
-
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
     @if (this.User.IsInRole("Admin"))
@@ -195,7 +185,13 @@
         adminPokemon.Pokemon = item.Pokemon;
     }
     
-    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
+    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">    
+        @if (!item.Pokemon.IsComplete)
+        {
+            <hr style="width: 100%;margin-top: 0;margin-bottom: 0;">
+            <h4>Please be aware that the information for this Pokémon is not complete due to not all the information being available. Some information may change as more is revealed.</h4>
+        }
+
         @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
         {
             <button class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
