@@ -91,6 +91,7 @@ namespace Pokedex.Controllers
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
+                    AltFormList = altFormList,
                     PokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).Where(x => x.Game.GenerationId == generationId).ToList(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,

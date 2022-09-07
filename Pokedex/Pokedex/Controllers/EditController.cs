@@ -1371,7 +1371,6 @@ namespace Pokedex.Controllers
                 GenerationId = ability.GenerationId,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
             };
-            return this.View(model);
 
             return this.View(model);
         }

@@ -20,13 +20,7 @@
     adminPokemon.GenerationId = p.Game.GenerationId;
     everythingAdded = Model.DropdownViewModel.AllPokemon.AllTypings.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllPokemonCaptureRates.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllBaseStats.Exists(x => x.PokemonId == p.Id) && Model.DropdownViewModel.AllPokemon.AllEVYields.Exists(x => x.PokemonId == p.Id);
     <div class="shadowed @p.Name@(p.IsComplete ? "" : everythingAdded ? " review" : " incomplete")">
-        @if (p.IsComplete)
-        {
-            <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
-            </a>
-        }
-        else if (everythingAdded)
+        @if (!p.IsComplete && everythingAdded)
         {
             <a href="@(this.Url.Action("ReviewPokemon", "Owner", new { pokemonId = p.Id }))">
                 <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
@@ -34,17 +28,12 @@
         }
         else
         {
-            <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
+            <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
+            </a>
         }
         <div class="description">
-            @if (p.IsComplete)
-            {
-                <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokedexNumber.ToString().PadLeft(3, '0') @pokemonName.Replace(' ', '_')</a>
-            }
-            else
-            {
-                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @pokemonName.Replace(' ', '_')</span>
-            }
+            <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokedexNumber.ToString().PadLeft(3, '0') @pokemonName.Replace(' ', '_')</a>
             <br>
             @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
         </div>
