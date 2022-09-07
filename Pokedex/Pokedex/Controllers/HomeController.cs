@@ -90,20 +90,27 @@ namespace Pokedex.Controllers
                 this.ViewData["Search"] = search;
                 search = this.FormatPokemonName(search);
 
-                List<PokemonTypeDetail> model = this.dataService.GetAllPokemonWithTypes()
+                List<PokemonTypeDetail> typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
                                                                  .Where(x => x.Pokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                                                                 .OrderByDescending(x => x.GenerationId)
                                                                  .ToList();
 
-                Pokemon pokemonSearched = this.dataService.GetPokemon(search);
-
-                if (model.Count == 1 || pokemonSearched != null)
+                List<PokemonTypeDetail> model = new List<PokemonTypeDetail>();
+                foreach (var t in typeDetails)
                 {
-                    if (pokemonSearched == null)
+                    if (model.Find(x => x.PokemonId == t.PokemonId) == null)
                     {
-                        pokemonSearched = model[0].Pokemon;
+                        model.Add(t);
                     }
+                }
 
-                    return this.RedirectToAction("Pokemon", "Home", new { Name = pokemonSearched.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
+                model = model.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+
+                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                if (model.Count == 1)
+                {
+                    return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
                 else if (model.Count == 0)
                 {
@@ -114,6 +121,7 @@ namespace Pokedex.Controllers
                     AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel()
                     {
                         AllPokemon = model,
+                        AllAltForms = altForms,
                         AppConfig = this.appConfig,
                     };
 
