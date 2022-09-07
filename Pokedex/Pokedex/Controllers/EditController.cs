@@ -1362,7 +1362,15 @@ namespace Pokedex.Controllers
         [Route("edit_ability/{id:int}")]
         public IActionResult Ability(int id)
         {
-            Ability model = this.dataService.GetObjectByPropertyValue<Ability>("Id", id);
+            Ability ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", id);
+            AbilityAdminViewModel model = new AbilityAdminViewModel()
+            {
+                Id = ability.Id,
+                Description = ability.Description,
+                GenerationId = ability.GenerationId,
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+            };
+            return this.View(model);
 
             return this.View(model);
         }

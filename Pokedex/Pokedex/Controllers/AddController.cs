@@ -533,7 +533,11 @@ namespace Pokedex.Controllers
         [Route("add_ability")]
         public IActionResult Ability()
         {
-            return this.View();
+            AbilityAdminViewModel model = new AbilityAdminViewModel()
+            {
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+            };
+            return this.View(model);
         }
 
         [HttpPost]
