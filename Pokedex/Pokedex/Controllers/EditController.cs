@@ -1366,6 +1366,7 @@ namespace Pokedex.Controllers
             AbilityAdminViewModel model = new AbilityAdminViewModel()
             {
                 Id = ability.Id,
+                Name = ability.Name,
                 Description = ability.Description,
                 GenerationId = ability.GenerationId,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
