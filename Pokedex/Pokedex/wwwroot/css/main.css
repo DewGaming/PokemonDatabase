@@ -312,7 +312,7 @@ main {
 
 .lightshadowed {
   height: 3.5rem;
-  width: 3.75rem;
+  width: 3.5rem;
   -o-object-fit: contain;
   object-fit: contain;
   padding: .125rem;
@@ -501,7 +501,7 @@ label {
   margin: -10px
 }
 
-.evolutionPokemon img {
+.evolutionImage img {
   margin: 0 -10px
 }
 
@@ -510,7 +510,7 @@ label {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold
 }
 
