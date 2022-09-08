@@ -81,6 +81,10 @@
     @if (this.User.Identity.IsAuthenticated)
     {
       <script>
+        $('.dropdown').hover(function(){ 
+          $('.dropdown-toggle', this).trigger('click'); 
+        }); 
+
         $(document).ready(function () {
             $.ajax({
                 url: '/check-unread-messages/',
