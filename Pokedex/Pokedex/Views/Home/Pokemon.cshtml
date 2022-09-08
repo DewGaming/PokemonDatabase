@@ -484,9 +484,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 <tr>
                                     <th>Experience Growth</th>
                                     <td>
-                                        @item.Pokemon.ExperienceGrowth.Name
-                                        <br>
-                                        (@item.Pokemon.ExperienceGrowth.ExpPointTotal XP)
+                                       <span class="cursorHelp" title='@item.Pokemon.ExperienceGrowth.ExpPointTotal.ToString("N0") XP to Level 100'>@item.Pokemon.ExperienceGrowth.Name</span>
                                     </td>
                                 </tr>
                             }
@@ -553,9 +551,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 <tr>
                                    <th>Egg Cycles</th>
                                    <td>
-                                       @item.Pokemon.EggCycle.CycleCount Cycles
-                                       <br>
-                                       (@(item.Pokemon.EggCycle.CycleCount * 257)-@(item.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
+                                       <span class="cursorHelp" title='@((item.Pokemon.EggCycle.CycleCount * 257).ToString("N0")) - @((item.Pokemon.EggCycle.CycleCount * 257 + 256).ToString("N0")) Steps to Hatch'>@item.Pokemon.EggCycle.CycleCount Egg Cycles</span>
                                     </td>
                                 </tr>
                             }
