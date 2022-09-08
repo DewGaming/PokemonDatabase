@@ -606,7 +606,7 @@ a {
   padding: 0;
 }
 
-@media(min-width:915px) {
+@media(min-width:935px) {
   .navbar-expand-custom {
     flex-flow: row nowrap;
     justify-content: flex-start
@@ -639,7 +639,7 @@ a {
   }
 }
 
-@media(max-width:914px) {
+@media(max-width:934px) {
   .close {
     top: 75px;
   }

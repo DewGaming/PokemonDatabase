@@ -101,6 +101,26 @@
         .typingChart .typing {
             margin-right: 1rem;
         }
+        
+        @@media(max-width:934px) {
+            .morePokemonDetails {
+                display: none;
+            }
+
+            .pokemonTraining {
+                margin-top: -9px;
+            }
+        }
+        
+        @@media(min-width:935px) {
+            .morePokemonDetails {
+                display: block;
+            }
+
+            .pokemonTraining {
+                margin-top: 0px;
+            }
+        }
     </style>
     @if (this.User.IsInRole("Admin"))
     {
@@ -402,7 +422,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
             @if ((@g != 1 && item.EggGroups.Count() > 0) || (@g > 2 && item.EVYields.Count() > 0) || item.CaptureRates.Count() > 0 || item.Pokemon.ExperienceGrowthId != 8 || item.BaseHappinesses.Count() > 0)
             {
                 <div class="pokemonInfo pokemonTraining pokemonTables">
-                    <h2>More Pokémon Details</h2>
+                    <h2 class="morePokemonDetails">More Pokémon Details</h2>
                     <table>
                         <tbody>
                             @if (@g > 2 && item.EVYields.Count() > 0)
