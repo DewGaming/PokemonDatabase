@@ -627,7 +627,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 <div class="pokemonInfo pokemonTables">
                     <div class="typingChart">
                         <div class="typing">
-                            @if(g == 9)
+                            @if(g == 9 || Model.PokemonList.First().Pokemon.Name == "Arceus" || Model.PokemonList.First().Pokemon.Name == "Silvally")
                             {
                                 <h2>Base Typing</h2>
                             }
