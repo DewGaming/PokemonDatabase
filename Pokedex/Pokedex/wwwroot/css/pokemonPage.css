@@ -3,7 +3,7 @@
   min-width: 66px;
 }
 
-.WeakAgainst {
+.WeakAgainst, .ImmuneTo {
   margin-right: 10px;
 }
 
@@ -13,6 +13,10 @@
 
 .preEvoBreak {
   line-height: 13px;
+}
+
+.pokemonData th, .pokemonTraining th {
+  min-width: 134px;
 }
 
 .surroundingPokemon {

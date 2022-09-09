@@ -31,10 +31,6 @@
             margin-bottom: 0 !important;
         }
 
-        .effectivenessChart td {
-            border-width: 0px;
-        }
-
         .generations {
             display: none;
         }
@@ -46,6 +42,19 @@
 
         .differentForms {
             text-align: center;
+        }
+
+        .effectivenessChart td div {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .effectivenessChart td div:first-child {
+            margin-left: 5px;
+        }
+        
+        .effectivenessChart td div:last-child {
+            margin-right: 5px;
         }
         
         .pokemonImage {
@@ -112,7 +121,17 @@
             }
 
             .pokemonTraining {
-                margin-top: -9px;
+                margin-top: -11px;
+            }
+
+            .pokemonData table {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .pokemonTraining table {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
             }
         }
         
@@ -427,7 +446,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
             {
                 <div class="pokemonInfo pokemonTraining pokemonTables">
                     <h2 class="morePokemonDetails">More Pokémon Details</h2>
-                    <table>
+                    <table style="min-width: 245.2px;">
                         <tbody>
                             @if (@g > 2 && item.EVYields.Count() > 0)
                             {

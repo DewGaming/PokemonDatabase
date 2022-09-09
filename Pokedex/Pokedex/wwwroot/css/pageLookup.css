@@ -10,7 +10,6 @@
 }
 
 .page th {
-  color: #737373;
   font-size: .875rem;
   font-weight: normal;
   text-align: right;
@@ -20,11 +19,23 @@
   text-align: left;
 }
 
+.page table {
+  border: 3px solid #c8c8c8;
+  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
 .page th, .page td {
-  border-width: 1px 0;
-  border-style: solid;
-  border-color: #dbdbdb;
   padding: 4px 10px;
+}
+
+.page tr {
+  background: #eaeaea;
+}
+
+.page tr:nth-child(2n) {
+  background: #d4d4d4;
 }
 
 .pageButtons {
