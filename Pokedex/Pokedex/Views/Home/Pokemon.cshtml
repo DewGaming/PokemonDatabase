@@ -629,7 +629,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
             </div>
             @if (item.Typings.Count() > 0)
             {
-                <div class="pokemonInfo pokemonTables">
+                <div class="pokemonInfo pokemonTypingTable pokemonTables">
                     <div class="typingChart">
                         <div class="typing">
                             @if(g == 9)
@@ -641,11 +641,17 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 <h2>Typing</h2>
                             }
 
-                            <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
-                            @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
-                            {
-                                <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
-                            }
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name</div>
+                                        @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
+                                        {
+                                            <div class="pokemon-type type-icon type-@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower()">@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name</div>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                         @if(g == 9 || Model.PokemonList.First().Pokemon.Name == "Arceus" || Model.PokemonList.First().Pokemon.Name == "Silvally")
                         {

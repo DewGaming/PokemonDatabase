@@ -502,7 +502,7 @@ label {
   padding: 0 10px;
 }
 
-.effectivenessChart table {
+.pokemonTypingTable table, .teraTypeSelectList {
   width: 153px;
 }
 
