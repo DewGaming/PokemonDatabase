@@ -137,7 +137,7 @@ namespace Pokedex.Controllers
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
 
-            List<int> model = pokemonList.Select(x => x.Game.GenerationId).Distinct().OrderBy(x => x).ToList();
+            List<Game> model = this.dataService.GetObjects<Game>("ReleaseDate, Id");
 
             return this.View(model);
         }
@@ -593,7 +593,7 @@ namespace Pokedex.Controllers
                 PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete).ToList(),
                 Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete && x.EvolutionPokemon.IsComplete).ToList(),
                 Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
-                GamesAvailableIn = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game),
+                GamesAvailableIn = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game),
                 AppConfig = this.appConfig,
             };
 

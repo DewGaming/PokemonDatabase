@@ -1,4 +1,4 @@
-@model List<int>;
+@model List<Pokedex.DataAccess.Models.Game>;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Pokémon List";
@@ -56,9 +56,9 @@
 </p>
 
 <div class="pageButtons">
-    @foreach (var id in Model)
+    @foreach (var id in Model.Select(x => x.GenerationId).Distinct().ToList())
     {
-        <button id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
+        <button style="@(Model.First(x => x.GenerationId == id).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", @Model.Where(x => x.GenerationId == id).ToList()[0].GameColor, " 50%, ", @Model.Where(x => x.GenerationId == id).ToList()[1].GameColor, " 50%)") : string.Empty)" id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
     }
 </div>
 

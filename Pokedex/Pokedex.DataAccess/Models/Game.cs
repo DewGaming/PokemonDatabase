@@ -15,5 +15,7 @@ namespace Pokedex.DataAccess.Models
         [Required, Display(Name = "Generation")]
         public int GenerationId { get; set; }
         public Generation Generation { get; set; }
+        [Required, Display(Name = "Game Background Color")]
+        public string GameColor { get; set; }
     }
 }

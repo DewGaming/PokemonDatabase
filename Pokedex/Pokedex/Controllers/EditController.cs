@@ -105,6 +105,7 @@ namespace Pokedex.Controllers
                 Name = game.Name,
                 ReleaseDate = game.ReleaseDate,
                 GenerationId = game.GenerationId,
+                GameColor = game.GameColor,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
                 AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
             };
@@ -126,6 +127,7 @@ namespace Pokedex.Controllers
                     Name = oldGame.Name,
                     ReleaseDate = oldGame.ReleaseDate,
                     GenerationId = oldGame.GenerationId,
+                    GameColor = oldGame.GameColor,
                     AllGenerations = this.dataService.GetObjects<Generation>(),
                     AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
                 };
