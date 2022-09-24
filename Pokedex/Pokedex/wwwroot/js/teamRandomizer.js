@@ -19,13 +19,17 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         }
 
         if ($(window).width() >= 406) {
-            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
+            if (!abilityList.find((o) => { return o["name"] === "Unknown" })) {
+                $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
+            }
             $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
         }
         else {
             $('<br class="mobileBreak" />').insertAfter('.generatorButton');
-            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
-            $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.saveTeamButton');
+            $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.mobileBreak');
+            if (!abilityList.find((o) => { return o["name"] === "Unknown" })) {
+                $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
+            }
         }
 
         refreshEvents();

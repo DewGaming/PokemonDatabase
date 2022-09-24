@@ -902,7 +902,7 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    if (randomAbility && selectedGame.GenerationId != 1 && selectedGame.GenerationId != 2)
+                    if (selectedGame.GenerationId != 1 && selectedGame.GenerationId != 2)
                     {
                         PokemonAbilityDetail pokemonAbilities;
                         List<Ability> abilities;
