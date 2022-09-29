@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net;
+using System.Net.Mail;
 
 namespace Pokedex
 {
@@ -772,6 +773,56 @@ namespace Pokedex
 
                 using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
                 System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
+        }
+
+        /// <summary>
+        /// Sends an email with a given comment.
+        /// </summary>
+        /// <param name="appConfig">The configuration for the application.</param>
+        /// <param name="comment">The email's message.</param>
+        public void EmailComment(AppConfig appConfig, Comment comment)
+        {
+            try
+            {
+                if (comment.CommentorId != 1)
+                {
+                    MailAddress fromAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Email");
+                    string body = "Comment";
+
+                    if (comment.CommentorId != null)
+                    {
+                        body = string.Concat(body, " by ", this.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
+                    }
+                    else
+                    {
+                        body = string.Concat(body, " by Anonymous User");
+                    }
+
+                    body = string.Concat(body, ": ", comment.Name);
+
+                    SmtpClient smtp = new SmtpClient()
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, appConfig.EmailAddressPassword),
+                    };
+
+                    using MailMessage message = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = "New Comment for Pokémon Database",
+                        Body = body,
+                    };
+                    smtp.Send(message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
             }
         }
 

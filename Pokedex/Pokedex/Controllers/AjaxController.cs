@@ -994,49 +994,9 @@ namespace Pokedex.Controllers
                             comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
                         }
 
-                        try
-                        {
-                            if (comment.CommentorId != 1)
-                            {
-                                MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
-                                MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
-                                string body = "Comment";
-
-                                if (comment.CommentorId != null)
-                                {
-                                    body = string.Concat(body, " by ", this.dataService.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
-                                }
-                                else
-                                {
-                                    body = string.Concat(body, " by Anonymous User");
-                                }
-
-                                body = string.Concat(body, ": ", comment.Name);
-
-                                SmtpClient smtp = new SmtpClient()
-                                {
-                                    Host = "smtp.gmail.com",
-                                    Port = 587,
-                                    EnableSsl = true,
-                                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                                    UseDefaultCredentials = false,
-                                    Credentials = new System.Net.NetworkCredential(fromAddress.Address, this.appConfig.EmailAddressPassword),
-                                };
-
-                                using MailMessage message = new MailMessage(fromAddress, toAddress)
-                                {
-                                    Subject = "Team Randomizer Generation Error",
-                                    Body = body,
-                                };
-                                smtp.Send(message);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
-                        }
-
                         this.dataService.AddObject(comment);
+
+                        this.dataService.EmailComment(this.appConfig, comment);
                     }
 
                     return null;
