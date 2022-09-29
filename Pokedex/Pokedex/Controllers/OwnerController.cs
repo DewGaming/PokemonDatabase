@@ -162,7 +162,7 @@ namespace Pokedex.Controllers
         [Route("comments")]
         public IActionResult Comments()
         {
-            List<Comment> model = this.dataService.GetObjects<Comment>();
+            List<Comment> model = this.dataService.GetObjects<Comment>("Id", "Commentor");
 
             return this.View(model);
         }
