@@ -90,15 +90,14 @@
             })
                 .done(function (data) {
                     console.log("Checked for unread messages");
-                    if (data != 0)
-                    {
+                    if (data[1] != 0) {
                         $('.dropdown-item.messages').html($('.dropdown-item.messages').text() + ' <b>New!</b>');
-                        $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data + '</span>')
+                        $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data[1] + '</span>')
                         console.log("Unread messages");
-                        alert("You have some unread messages! Click the \"View Messages\" option under Account to view it!")
-                    }
-                    else
-                    {
+                        if (data[0] != 0) { 
+                          alert("You have some unread messages! Click the \"View Messages\" option under Account to view it!")
+                        }
+                    } else {
                       console.log("No new unread messages");
                     }
                 })

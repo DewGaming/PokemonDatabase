@@ -51,9 +51,22 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <returns>The amount of unread messages.</returns>
         [Route("check-unread-messages")]
-        public int CheckUnreadMessages()
+        public List<int> CheckUnreadMessages()
         {
-            return this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value)).Where(x => !x.IsRead).ToList().Count;
+            List<Message> messages = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value)).ToList();
+            List<int> counts = new List<int>()
+            {
+                messages.Where(x => !x.IsSeen).Count(),
+                messages.Where(x => !x.IsRead).Count(),
+            };
+
+            foreach (var m in messages.Where(x => !x.IsSeen).ToList())
+            {
+                m.IsSeen = true;
+                this.dataService.UpdateObject(m);
+            }
+
+            return counts;
         }
 
         /// <summary>
