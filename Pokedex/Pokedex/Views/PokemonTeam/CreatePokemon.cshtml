@@ -62,23 +62,32 @@
             @Html.ValidationMessageFor(x => x.IsShiny)
         </div>
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.AbilityId, "Ability", new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.AbilityId, Enumerable.Empty<SelectListItem>(), string.Empty, new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.AbilityId)
-        </div>
+        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20 && @Model.GameId != 2 && @Model.GameId != 22 && @Model.GameId != 23 && @Model.GameId != 37)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.AbilityId, "Ability", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.AbilityId, Enumerable.Empty<SelectListItem>(), string.Empty, new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.AbilityId)
+            </div>
+        }
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.NatureId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.NatureId, new SelectList(Model.AllNatures, "Id", "Name"), new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.NatureId)
-        </div>
-
-        <div class="form-group row">
-            @Html.LabelFor(x => x.BattleItemId, "Held Item", new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.BattleItemId, Enumerable.Empty<SelectListItem>(), string.Empty, new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.BattleItemId)
-        </div>
+        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20 && @Model.GameId != 2 && @Model.GameId != 22 && @Model.GameId != 23)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.NatureId, "Nature", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.NatureId, new SelectList(Model.AllNatures, "Id", "Name"), new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.NatureId)
+            </div>
+        }
+        
+        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.BattleItemId, "Held Item", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.BattleItemId, Enumerable.Empty<SelectListItem>(), string.Empty, new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.BattleItemId)
+            </div>
+        }
 
         <div class="form-group row">
             <label class="col-md-2" for="Level">Level: <span id="levelVal"></span></label>

@@ -484,26 +484,29 @@ namespace Pokedex
             {
                 gameId = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
             }
-
-            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+            
             List<Ability> abilityList = new List<Ability>();
-            List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
-            PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
-
-            abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
-            if (pokemonAbilityDetail.SecondaryAbility != null)
+            if (gameId != 1 && gameId != 21 && gameId != 20 && gameId != 2 && gameId != 22 && gameId != 23 && gameId != 37)
             {
-                abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
-            }
+                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
+                PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
 
-            if (pokemonAbilityDetail.HiddenAbility != null)
-            {
-                abilityList.Add(pokemonAbilityDetail.HiddenAbility);
-            }
+                abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
+                if (pokemonAbilityDetail.SecondaryAbility != null)
+                {
+                    abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
+                }
 
-            if (pokemonAbilityDetail.SpecialEventAbility != null)
-            {
-                abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
+                if (pokemonAbilityDetail.HiddenAbility != null)
+                {
+                    abilityList.Add(pokemonAbilityDetail.HiddenAbility);
+                }
+
+                if (pokemonAbilityDetail.SpecialEventAbility != null)
+                {
+                    abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
+                }
             }
 
             return abilityList;

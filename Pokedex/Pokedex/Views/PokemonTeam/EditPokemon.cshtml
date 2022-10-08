@@ -66,23 +66,32 @@
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.IsShiny)
         </div>
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.AbilityId, "Ability", new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.PokemonTeamDetail.AbilityId)
-        </div>
+        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20 && @Model.GameId != 2 && @Model.GameId != 22 && @Model.GameId != 23 && @Model.GameId != 37)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.PokemonTeamDetail.AbilityId, "Ability", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.PokemonTeamDetail.AbilityId, new SelectList(Model.AllAbilities, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.PokemonTeamDetail.AbilityId)
+            </div>
+        }
 
-        <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.NatureId, "Nature", new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.NatureId, new SelectList(Model.AllNatures, "Id", "Name"), new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.PokemonTeamDetail.NatureId)
-        </div>
-
-        <div class="form-group row">
-            @Html.LabelFor(x => x.PokemonTeamDetail.BattleItemId, "Held Item", new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.PokemonTeamDetail.BattleItemId, new SelectList(Model.AllBattleItems, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.PokemonTeamDetail.BattleItemId)
-        </div>
+        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20 && @Model.GameId != 2 && @Model.GameId != 22 && @Model.GameId != 23)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.PokemonTeamDetail.NatureId, "Nature", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.PokemonTeamDetail.NatureId, new SelectList(Model.AllNatures, "Id", "Name"), new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.PokemonTeamDetail.NatureId)
+            </div>
+        }
+        
+        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.PokemonTeamDetail.BattleItemId, "Held Item", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.PokemonTeamDetail.BattleItemId, new SelectList(Model.AllBattleItems, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.PokemonTeamDetail.BattleItemId)
+            </div>
+        }
 
         <div class="form-group row">
             <label class="col-md-2" for="Level">Level: <span id="levelVal"></span></label>

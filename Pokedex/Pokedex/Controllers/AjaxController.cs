@@ -2482,8 +2482,14 @@ namespace Pokedex.Controllers
             return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
         }
 
-        private string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? generationId)
+        private string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? gameId)
         {
+            int? generationId = null;
+            if (gameId != null)
+            {
+                generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId).GenerationId;
+            }
+
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
             List<string> pokemonForm = new List<string>();
             string pokemonName = string.Empty;
@@ -2532,7 +2538,7 @@ namespace Pokedex.Controllers
             }
 
             string pokemonTeamString = pokemonName;
-            if (generationId != 1 && generationId != 2)
+            if (generationId != 1 && generationId != 2 && gameId != 37)
             {
                 pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
             }
