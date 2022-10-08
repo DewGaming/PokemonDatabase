@@ -484,7 +484,7 @@ namespace Pokedex
             {
                 gameId = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
             }
-            
+
             List<Ability> abilityList = new List<Ability>();
             if (gameId != 1 && gameId != 21 && gameId != 20 && gameId != 2 && gameId != 22 && gameId != 23 && gameId != 37)
             {
