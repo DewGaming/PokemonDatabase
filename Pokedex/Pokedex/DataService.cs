@@ -482,7 +482,8 @@ namespace Pokedex
         {
             if (gameId == 0)
             {
-                gameId = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
+                List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game", "PokemonId", pokemonId).Select(x => x.Game).ToList();
+                gameId = games.Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
             }
 
             List<Ability> abilityList = new List<Ability>();
