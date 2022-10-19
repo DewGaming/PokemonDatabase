@@ -2336,34 +2336,60 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                string pokemonTeam = string.Empty;
-                Pokemon pokemon;
-
-                for (var i = 0; i < pokemonIdList.Count; i++)
+                try
                 {
-                    if (i != 0)
+                    string pokemonTeam = string.Empty;
+                    Pokemon pokemon;
+
+                    for (var i = 0; i < pokemonIdList.Count; i++)
                     {
-                        pokemonTeam = string.Concat(pokemonTeam, "\n\n");
+                        if (i != 0)
+                        {
+                            pokemonTeam = string.Concat(pokemonTeam, "\n\n");
+                        }
+
+                        pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonIdList[i], "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                        string pokemonName = pokemon.Name;
+                        if (this.dataService.CheckIfAltForm(pokemon.Id))
+                        {
+                            string pokemonForm = this.GetFormDetails(pokemon.Id);
+                            pokemonName = string.Concat(pokemonName, "-", pokemonForm);
+                        }
+
+                        pokemonTeam = string.Concat(pokemonTeam, pokemonName);
+                        if (exportAbilities && this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonIdList[i]) != null)
+                        {
+                            pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
+                        }
+
+                        pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");
                     }
 
-                    pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonIdList[i], "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-                    string pokemonName = pokemon.Name;
-                    if (this.dataService.CheckIfAltForm(pokemon.Id))
+                    return pokemonTeam;
+                }
+                catch (Exception e)
+                {
+                    if (!this.User.IsInRole("Owner") && e != null)
                     {
-                        string pokemonForm = this.GetFormDetails(pokemon.Id);
-                        pokemonName = string.Concat(pokemonName, "-", pokemonForm);
-                    }
+                        string commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's export.");
+                        commentBody = string.Concat(commentBody, " - Pokemon Id List: {", string.Join(", ", pokemonIdList), "}");
+                        commentBody = string.Concat(commentBody, " - Ability List: {", string.Join(", ", abilityList), "}");
+                        commentBody = string.Concat(commentBody, " - Export Abilities? ", exportAbilities.ToString());
+                        Comment comment = new Comment()
+                        {
+                            Name = commentBody,
+                        };
+                        if (this.User.Identity.Name != null)
+                        {
+                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        }
 
-                    pokemonTeam = string.Concat(pokemonTeam, pokemonName);
-                    if (exportAbilities && this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonIdList[i]) != null)
-                    {
-                        pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
+                        this.dataService.AddObject(comment);
+                        this.dataService.EmailComment(this.appConfig, comment);
                     }
-
-                    pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");
                 }
 
-                return pokemonTeam;
+                return null;
             }
             else
             {
@@ -2460,114 +2486,165 @@ namespace Pokedex.Controllers
 
         private List<PokemonTypeDetail> GetAllPokemonWithSpecificType(int typeId, int generationId, List<Pokemon> allPokemon)
         {
-            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
-                                                        .Where(x => allPokemon.Any(y => y.Id == x.PokemonId))
-                                                        .OrderBy(x => x.GenerationId)
-                                                        .ToList();
-
-            if (generationId != 0)
+            try
             {
-                pokemonList = pokemonList.Where(x => x.GenerationId <= generationId).ToList();
+                List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
+                                                            .Where(x => allPokemon.Any(y => y.Id == x.PokemonId))
+                                                            .OrderBy(x => x.GenerationId)
+                                                            .ToList();
 
-                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
-
-                foreach (var pokemon in exclusionList)
+                if (generationId != 0)
                 {
-                    pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+                    pokemonList = pokemonList.Where(x => x.GenerationId <= generationId).ToList();
+
+                    List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
+
+                    foreach (var pokemon in exclusionList)
+                    {
+                        pokemonList.Remove(pokemonList.Find(x => x.PokemonId == pokemon));
+                    }
+                }
+
+                pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).Where(x => x.PrimaryTypeId == typeId || x.SecondaryTypeId == typeId).ToList();
+
+                return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody = string.Concat(e.GetType().ToString(), " error during retrieval of pokemon's specific type.");
+                    commentBody = string.Concat(commentBody, " - Type Id: ", typeId);
+                    commentBody = string.Concat(commentBody, " - Generation Id: ", generationId);
+                    commentBody = string.Concat(commentBody, " - Pokemon List: ", allPokemon.ToString());
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.AddObject(comment);
+                    this.dataService.EmailComment(this.appConfig, comment);
                 }
             }
 
-            pokemonList = pokemonList.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).Where(x => x.PrimaryTypeId == typeId || x.SecondaryTypeId == typeId).ToList();
-
-            return pokemonList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+            return null;
         }
 
         private string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? gameId)
         {
-            int? generationId = null;
-            if (gameId != null)
+            try
             {
-                generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId).GenerationId;
+                int? generationId = null;
+                if (gameId != null)
+                {
+                    generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId).GenerationId;
+                }
+
+                Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                List<string> pokemonForm = new List<string>();
+                string pokemonName = string.Empty;
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    pokemonForm = this.GetUserFormDetails(pokemon.Id);
+                }
+
+                if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+                {
+                    pokemonName = string.Concat(pokemonTeamDetail.Nickname, " (");
+                }
+
+                if (pokemon.Name.Contains(" (Male)"))
+                {
+                    pokemon.Name = pokemon.Name.Replace(" (Male)", "-M");
+                }
+                else if (pokemon.Name.Contains(" (Female)"))
+                {
+                    pokemon.Name = pokemon.Name.Replace(" (Female)", "-F");
+                }
+
+                pokemonName = string.Concat(pokemonName, pokemon.Name);
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    pokemonName = string.Concat(pokemonName, "-", (pokemonForm[0] == "Female") ? "F" : pokemonForm[0]);
+                }
+
+                if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
+                {
+                    pokemonName = string.Concat(pokemonName, ")");
+                }
+
+                if (!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != 1)
+                {
+                    pokemonName = string.Concat(pokemonName, " (", pokemonTeamDetail.Gender.Substring(0, 1), ")");
+                }
+
+                if (pokemonForm.Count == 2)
+                {
+                    pokemonName = string.Concat(pokemonName, pokemonForm[1]);
+                }
+                else if (pokemonTeamDetail.BattleItemId != null && generationId != 1)
+                {
+                    pokemonName = string.Concat(pokemonName, " @ ", pokemonTeamDetail.BattleItem.Name);
+                }
+
+                string pokemonTeamString = pokemonName;
+                if (generationId != 1 && generationId != 2 && gameId != 37)
+                {
+                    pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
+                }
+
+                if (pokemonTeamDetail.Level < 100)
+                {
+                    pokemonTeamString = string.Concat(pokemonTeamString, "\nLevel: ", pokemonTeamDetail.Level.ToString());
+                }
+
+                if (pokemonTeamDetail.IsShiny && generationId != 1)
+                {
+                    pokemonTeamString = string.Concat(pokemonTeamString, "\nShiny: Yes");
+                }
+
+                if (pokemonTeamDetail.Happiness < 255 && generationId != 1)
+                {
+                    pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
+                }
+
+                pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
+
+                if (pokemonTeamDetail.Nature != null && generationId != 1 && generationId != 2)
+                {
+                    pokemonTeamString = string.Concat(pokemonTeamString, "\n", pokemonTeamDetail.Nature.Name, " Nature");
+                }
+
+                pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV), this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
+
+                return pokemonTeamString;
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody = string.Concat(e.GetType().ToString(), " error during filling the user's pokemon team.");
+                    commentBody = string.Concat(commentBody, " - Pokemon Team Detail: ", pokemonTeamDetail.ToString());
+                    commentBody = string.Concat(commentBody, " - Game Id: ", gameId.HasValue ? gameId.Value.ToString() : "Null");
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.AddObject(comment);
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
             }
 
-            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<string> pokemonForm = new List<string>();
-            string pokemonName = string.Empty;
-            if (this.dataService.CheckIfAltForm(pokemon.Id))
-            {
-                pokemonForm = this.GetUserFormDetails(pokemon.Id);
-            }
-
-            if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
-            {
-                pokemonName = string.Concat(pokemonTeamDetail.Nickname, " (");
-            }
-
-            if (pokemon.Name.Contains(" (Male)"))
-            {
-                pokemon.Name = pokemon.Name.Replace(" (Male)", "-M");
-            }
-            else if (pokemon.Name.Contains(" (Female)"))
-            {
-                pokemon.Name = pokemon.Name.Replace(" (Female)", "-F");
-            }
-
-            pokemonName = string.Concat(pokemonName, pokemon.Name);
-            if (this.dataService.CheckIfAltForm(pokemon.Id))
-            {
-                pokemonName = string.Concat(pokemonName, "-", (pokemonForm[0] == "Female") ? "F" : pokemonForm[0]);
-            }
-
-            if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
-            {
-                pokemonName = string.Concat(pokemonName, ")");
-            }
-
-            if (!string.IsNullOrEmpty(pokemonTeamDetail.Gender) && generationId != 1)
-            {
-                pokemonName = string.Concat(pokemonName, " (", pokemonTeamDetail.Gender.Substring(0, 1), ")");
-            }
-
-            if (pokemonForm.Count == 2)
-            {
-                pokemonName = string.Concat(pokemonName, pokemonForm[1]);
-            }
-            else if (pokemonTeamDetail.BattleItemId != null && generationId != 1)
-            {
-                pokemonName = string.Concat(pokemonName, " @ ", pokemonTeamDetail.BattleItem.Name);
-            }
-
-            string pokemonTeamString = pokemonName;
-            if (generationId != 1 && generationId != 2 && gameId != 37)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
-            }
-
-            if (pokemonTeamDetail.Level < 100)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nLevel: ", pokemonTeamDetail.Level.ToString());
-            }
-
-            if (pokemonTeamDetail.IsShiny && generationId != 1)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nShiny: Yes");
-            }
-
-            if (pokemonTeamDetail.Happiness < 255 && generationId != 1)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
-            }
-
-            pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));
-
-            if (pokemonTeamDetail.Nature != null && generationId != 1 && generationId != 2)
-            {
-                pokemonTeamString = string.Concat(pokemonTeamString, "\n", pokemonTeamDetail.Nature.Name, " Nature");
-            }
-
-            pokemonTeamString = string.Concat(pokemonTeamString, this.FillIVs(pokemonTeamDetail.PokemonTeamIV), this.FillMoveset(pokemonTeamDetail.PokemonTeamMoveset));
-
-            return pokemonTeamString;
+            return null;
         }
     }
 }
