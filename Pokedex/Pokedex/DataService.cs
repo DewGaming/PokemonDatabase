@@ -483,6 +483,7 @@ namespace Pokedex
             if (gameId == 0)
             {
                 List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game", "PokemonId", pokemonId).Select(x => x.Game).ToList();
+                games = games.Where(x => x.Id != 37).ToList();
                 gameId = games.Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
             }
 

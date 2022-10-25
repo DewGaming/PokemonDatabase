@@ -172,7 +172,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User", whereProperty: "User.Username", wherePropertyValue: this.User.Identity.Name)[pokemonTeamId - 1];
 
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 

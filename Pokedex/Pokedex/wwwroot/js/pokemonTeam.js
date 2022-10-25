@@ -57,6 +57,10 @@ $(document).ready(function () {
 
                     console.clear();
 
+                    if (exportString.indexOf("No Ability") >= 0) { 
+                        alert("It appears that one of your pokemon does not have an ability, even though it should. The pokemon without an ability will have a \"No Ability\" in it's section");
+                    } 
+
                     var temp = $("<textarea>");
                     $("body").append(temp);
                     $(temp).text(exportString);
@@ -99,6 +103,10 @@ $(document).ready(function () {
                         });
 
                         console.clear();
+
+                        if (exportString.indexOf("No Ability") >= 0) { 
+                            alert("It appears that one of your pokemon does not have an ability, even though it should. The pokemon without an ability will have a \"No Ability\" in it's section");
+                        }                        
 
                         var temp = $("<textarea>");
                         $("body").append(temp);

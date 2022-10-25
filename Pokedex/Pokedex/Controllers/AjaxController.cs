@@ -2538,7 +2538,7 @@ namespace Pokedex.Controllers
         {
             try
             {
-                int? generationId = null;
+                int generationId = 0;
                 if (gameId != null)
                 {
                     generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId).GenerationId;
@@ -2594,7 +2594,14 @@ namespace Pokedex.Controllers
                 string pokemonTeamString = pokemonName;
                 if (generationId != 1 && generationId != 2 && gameId != 37)
                 {
-                    pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
+                    if (pokemonTeamDetail.Ability != null)
+                    {
+                        pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
+                    }
+                    else
+                    {
+                        pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: No Ability");
+                    }
                 }
 
                 if (pokemonTeamDetail.Level < 100)
@@ -2628,7 +2635,7 @@ namespace Pokedex.Controllers
                 if (!this.User.IsInRole("Owner") && e != null)
                 {
                     string commentBody = string.Concat(e.GetType().ToString(), " error during filling the user's pokemon team.");
-                    commentBody = string.Concat(commentBody, " - Pokemon Team Detail: ", pokemonTeamDetail.ToString());
+                    commentBody = string.Concat(commentBody, " - Pokemon Team Detail Id: ", pokemonTeamDetail.Id);
                     commentBody = string.Concat(commentBody, " - Game Id: ", gameId.HasValue ? gameId.Value.ToString() : "Null");
                     Comment comment = new Comment()
                     {
