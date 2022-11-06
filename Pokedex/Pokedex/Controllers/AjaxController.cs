@@ -435,6 +435,8 @@ namespace Pokedex.Controllers
 
                 List<PokemonTypeDetail> typingDetail = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game", whereProperty: "Pokemon.Game.GenerationId", wherePropertyValue: generationId).ToList();
                 List<Pokemon> noTypingPokemon = this.dataService.GetAllPokemon().Where(x => x.Game.GenerationId == generationId).Except(typingDetail.Select(x => x.Pokemon)).ToList();
+                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
+                noTypingPokemon = noTypingPokemon.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
 
                 foreach (var p in noTypingPokemon)
                 {
