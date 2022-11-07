@@ -422,7 +422,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 }
                             </th>
                             <td>
-                                @String.Join(" / ", item.GamesAvailableIn.Where(x => x.ReleaseDate == item.Pokemon.Game.ReleaseDate).Select(x => x.Name))
+                                @if (item.Pokemon.Game.Name == "Pokémon GO")
+                                {
+                                    @("Pokémon GO");
+                                }
+                                else
+                                {
+                                    @String.Join(" / ", item.GamesAvailableIn.Where(x => x.ReleaseDate == item.Pokemon.Game.ReleaseDate).Select(x => x.Name))
+                                }
                             </td>
                         </tr>
                     </tbody>
