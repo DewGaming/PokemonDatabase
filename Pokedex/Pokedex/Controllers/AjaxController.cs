@@ -817,7 +817,6 @@ namespace Pokedex.Controllers
                         while (allPokemon.Count() > 0 && pokemonList.Count() < pokemonCount)
                         {
                             pokemon = allPokemon[rnd.Next(allPokemon.Count)];
-                            allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
 
                             if (onePokemonForm)
                             {
@@ -888,6 +887,7 @@ namespace Pokedex.Controllers
                             }
 
                             pokemonList.Add(pokemon);
+                            allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
                         }
                     }
 
