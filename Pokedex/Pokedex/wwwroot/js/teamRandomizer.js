@@ -11,6 +11,10 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             if (Math.floor((Math.random() * 4096) + 1) == 4096 && originalNames[i].hasShinyImage) {
                 console.log("Shiny Pokemon!");
                 imageLocation = appConfig.shinyPokemonImageUrl;
+                $.ajax({
+                    url: '/shiny-pokemon-found/',
+                    method: 'POST'
+                })
             }
             $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + imageLocation + pokemonList[i].id + '.png" /></a>');
             if ($(randomAbilityBool).prop('checked')) {

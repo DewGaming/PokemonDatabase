@@ -2095,6 +2095,15 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Marks down that a shiny pokemon was generated while randomizing a team.
+        /// </summary>
+        [Route("shiny-pokemon-found")]
+        public void ShinyPokemonFound()
+        {
+            this.dataService.AddPageView("Shiny Pokemon found in Team Randomizer", false);
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>
