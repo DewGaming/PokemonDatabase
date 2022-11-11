@@ -1364,6 +1364,12 @@ namespace Pokedex.Controllers
                 availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
             }
 
+            if (availableGames.Count() <= 0)
+            {
+                availableGames = this.dataService.GetObjects<Game>("GenerationId, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
+                availableGames.Remove(availableGames.Find(x => x.Id == 43));
+            }
+
             return availableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
         }
 
