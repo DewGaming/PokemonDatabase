@@ -47,6 +47,8 @@ namespace Pokedex.Controllers
                 UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
             };
 
+            model.AllGames.Remove(model.AllGames.Find(x => x.Id == 43));
+
             return this.View(model);
         }
 
