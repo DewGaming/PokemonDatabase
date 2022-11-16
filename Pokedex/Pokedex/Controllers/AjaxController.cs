@@ -558,6 +558,10 @@ namespace Pokedex.Controllers
                     List<PokemonGameDetail> availablePokemon = new List<PokemonGameDetail>();
                     List<GameStarterDetail> allStarters = new List<GameStarterDetail>();
                     List<Pokemon> starterList = new List<Pokemon>();
+                    if (needsStarter && selectedGameId != 0)
+                    {
+                        starterList = this.dataService.GetObjects<GameStarterDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", selectedGameId).ConvertAll(x => x.Pokemon);
+                    }
 
                     if (selectedGame.Id != 0)
                     {
@@ -762,6 +766,7 @@ namespace Pokedex.Controllers
                     if (selectedEvolutions.Count > 0 && selectedEvolutions.Count() < 3)
                     {
                         List<Pokemon> evolutions = new List<Pokemon>();
+                        List<Pokemon> starterEvolutions = new List<Pokemon>();
                         if (selectedEvolutions.Contains("stage1Pokemon"))
                         {
                             foreach (var p in allPokemon)
@@ -769,6 +774,14 @@ namespace Pokedex.Controllers
                                 if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
                                 {
                                     evolutions.Add(p);
+                                }
+                            }
+
+                            foreach (var p in starterList)
+                            {
+                                if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                                {
+                                    starterEvolutions.Add(p);
                                 }
                             }
                         }
@@ -782,6 +795,14 @@ namespace Pokedex.Controllers
                                     evolutions.Add(p);
                                 }
                             }
+
+                            foreach (var p in starterList)
+                            {
+                                if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                                {
+                                    starterEvolutions.Add(p);
+                                }
+                            }
                         }
 
                         if (selectedEvolutions.Contains("onlyFullyEvolved"))
@@ -793,12 +814,19 @@ namespace Pokedex.Controllers
                                     evolutions.Add(p);
                                 }
                             }
+
+                            foreach (var p in starterList)
+                            {
+                                if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
+                                {
+                                    starterEvolutions.Add(p);
+                                }
+                            }
                         }
 
                         allPokemon = evolutions;
+                        starterList = starterEvolutions;
                     }
-
-                    starterList = allPokemon.Where(x => x.IsStarter).ToList();
 
                     if (selectedType != 0)
                     {
