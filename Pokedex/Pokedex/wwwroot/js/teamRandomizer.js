@@ -246,7 +246,8 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                 }
 
                 if ($.inArray(selectedGame, ['0', '14', '15', '16', '17', '37']) != -1) {
-                    if ($('.alolanFormCheckbox').is(':visible')) {
+                    if (!$('.alolanFormCheckbox').is(':visible')) {
+                        $(".alolanFormCheckbox").show();
                         $('.gen1Checkbox').on('click', function () {
                             altCheck = checkAltFormChecks();
                         });
