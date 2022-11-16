@@ -247,6 +247,10 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("FormGroups", "Admin");
         }
 
+        /// <summary>
+        /// Adds a type.
+        /// </summary>
+        /// <returns>The view to add the type.</returns>
         [HttpGet]
         [Route("add_type")]
         public IActionResult Type()
@@ -259,6 +263,11 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Adds a type.
+        /// </summary>
+        /// <param name="type">The type being added.</param>
+        /// <returns>The view for the type admin page.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_type")]

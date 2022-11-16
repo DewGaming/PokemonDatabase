@@ -508,6 +508,7 @@ namespace Pokedex.Controllers
         /// <param name="selectedLegendaries">The specific legendary classifications available for generation.</param>
         /// <param name="selectedForms">The specific forms available for generation.</param>
         /// <param name="selectedEvolutions">The specific evolution classification available for generation.</param>
+        /// <param name="needsStarter">Whether or not a starter needs to be included.</param>
         /// <param name="onlyLegendaries">Whether or not only legendaries are allowed for generation.</param>
         /// <param name="onlyAltForms">Whether or not only alternate forms are allowed for generation.</param>
         /// <param name="multipleMegas">Whether or not multiple mega pokemon are allowed for generation.</param>
@@ -517,7 +518,7 @@ namespace Pokedex.Controllers
         /// <param name="noRepeatType">Whether or not repeat types are allowed for generation.</param>
         /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool needsStarter, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -555,10 +556,16 @@ namespace Pokedex.Controllers
                     };
                     List<Pokemon> pokemonList = new List<Pokemon>();
                     List<PokemonGameDetail> availablePokemon = new List<PokemonGameDetail>();
+                    List<GameStarterDetail> allStarters = new List<GameStarterDetail>();
+                    List<Pokemon> starterList = new List<Pokemon>();
 
                     if (selectedGame.Id != 0)
                     {
                         availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame.Id);
+                        if (needsStarter)
+                        {
+                            allStarters = this.dataService.GetObjects<GameStarterDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame.Id);
+                        }
                     }
                     else
                     {
@@ -816,7 +823,15 @@ namespace Pokedex.Controllers
                     {
                         while (allPokemon.Count() > 0 && pokemonList.Count() < pokemonCount)
                         {
-                            pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                            if (needsStarter && pokemonList.Count() == 0)
+                            {
+                                starterList = allPokemon.Where(x => allStarters.Any(y => y.PokemonId == x.Id)).ToList();
+                                pokemon = starterList[rnd.Next(starterList.Count)];
+                            }
+                            else
+                            {
+                                pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                            }
 
                             if (onePokemonForm)
                             {
@@ -887,7 +902,17 @@ namespace Pokedex.Controllers
                             }
 
                             pokemonList.Add(pokemon);
-                            allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
+                            if (needsStarter && pokemonList.Count() == 1)
+                            {
+                                foreach (var s in starterList)
+                                {
+                                    allPokemon.Remove(allPokemon.Find(x => x.Id == s.Id));
+                                }
+                            }
+                            else
+                            {
+                                allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
+                            }
                         }
                     }
 
@@ -1203,6 +1228,45 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the availablity of the specified pokemon in different games.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="games">The games the pokemon is able to be used in.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-pokemon-game-starters")]
+        public string UpdatePokemonGameStarters(int pokemonId, List<int> games)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                GameStarterDetail gameStarterDetail;
+                List<GameStarterDetail> existingGameDetails = this.dataService.GetObjects<GameStarterDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId);
+
+                foreach (var g in games)
+                {
+                    gameStarterDetail = new GameStarterDetail()
+                    {
+                        PokemonId = pokemonId,
+                        GameId = g,
+                    };
+                    this.dataService.AddObject(gameStarterDetail);
+                }
+
+                foreach (var g in existingGameDetails)
+                {
+                    this.dataService.DeleteObject<GameStarterDetail>(g.Id);
+                }
+
+                return this.Json(this.Url.Action("Game", "Admin")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Updates the availablity of the pokemon in a specified game.
         /// </summary>
         /// <param name="gameId">The game's id.</param>
@@ -1255,6 +1319,7 @@ namespace Pokedex.Controllers
 
                 foreach (var game in games.ConvertAll(x => x.Id))
                 {
+                    newGameDetails = new List<PokemonGameDetail>();
                     existingGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: game);
 
                     foreach (var p in pokemonIds)
@@ -1285,6 +1350,79 @@ namespace Pokedex.Controllers
                 }
 
                 return this.Json(this.Url.Action("GameAvailability", "Home")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the availablity of the pokemon in a specified game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <param name="pokemonList">The pokemon that are available in the given game.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-game-starters")]
+        public string UpdateGameStarter(int gameId, List<int> pokemonList)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<GameStarterDetail> existingGameStarters = new List<GameStarterDetail>();
+                List<GameStarterDetail> newGameStarters = new List<GameStarterDetail>();
+                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+                DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
+                games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
+                int generationId = games.First().GenerationId;
+
+                if (gameId == 4 || gameId == 5)
+                {
+                    games = games.Where(x => x.Id == gameId).ToList();
+                }
+                else if (gameId == 16 || gameId == 28)
+                {
+                    generationId = 1;
+                }
+                else if (gameId == 35 || gameId == 36)
+                {
+                    generationId = 4;
+                }
+
+                foreach (var game in games.ConvertAll(x => x.Id))
+                {
+                    newGameStarters = new List<GameStarterDetail>();
+                    existingGameStarters = this.dataService.GetObjects<GameStarterDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: game);
+
+                    foreach (var p in pokemonList)
+                    {
+                        if (existingGameStarters.Find(x => x.PokemonId == p && x.GameId == game) == null)
+                        {
+                            newGameStarters.Add(new GameStarterDetail()
+                            {
+                                GameId = game,
+                                PokemonId = p,
+                            });
+                        }
+                        else
+                        {
+                            existingGameStarters.Remove(existingGameStarters.Find(x => x.PokemonId == p && x.GameId == game));
+                        }
+                    }
+
+                    foreach (var g in newGameStarters)
+                    {
+                        this.dataService.AddObject(g);
+                    }
+
+                    foreach (var g in existingGameStarters)
+                    {
+                        this.dataService.DeleteObject<GameStarterDetail>(g.Id);
+                    }
+                }
+
+                return this.Json(this.Url.Action("Games", "Admin")).Value.ToString();
             }
             else
             {
