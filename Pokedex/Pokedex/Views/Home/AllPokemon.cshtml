@@ -3,6 +3,7 @@
     Layout = "_Layout";
     ViewBag.Title = "Pokémon List";
     ViewBag.Description = "Lookup different Pokémon stats, separated by different generations!";
+    string gameColors = string.Empty;
 }
 
 @section styles
@@ -58,7 +59,16 @@
 <div class="pageButtons">
     @foreach (var id in Model.Select(x => x.GenerationId).Distinct().ToList())
     {
-        <button style="@(Model.First(x => x.GenerationId == id).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", @Model.Where(x => x.GenerationId == id).ToList()[0].GameColor, " 50%, ", @Model.Where(x => x.GenerationId == id).ToList()[1].GameColor, " 50%)") : string.Empty)" id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
+        if (id == 7)
+        {
+            gameColors = string.Concat(@Model.Where(x => x.GenerationId == id).ToList()[1].GameColor, " 50%, ", @Model.Where(x => x.GenerationId == id).ToList()[2].GameColor, " 50%)");
+        }
+        else
+        {
+            gameColors = string.Concat(@Model.Where(x => x.GenerationId == id).ToList()[0].GameColor, " 50%, ", @Model.Where(x => x.GenerationId == id).ToList()[1].GameColor, " 50%)");
+        }
+
+        <button style="@(Model.First(x => x.GenerationId == id).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
     }
 </div>
 
