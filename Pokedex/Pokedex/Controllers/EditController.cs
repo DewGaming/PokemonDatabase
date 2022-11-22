@@ -23,6 +23,11 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig appConfig;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditController"/> class.
+        /// </summary>
+        /// <param name="appConfig">The configuration for the application.</param>
+        /// <param name="dataContext">The data context.</param>
         public EditController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             this.appConfig = appConfig.Value;
@@ -168,6 +173,22 @@ namespace Pokedex.Controllers
                 Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 PokemonList = pokemonList,
                 GameAvailability = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game"),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("edit_game_starters/{id:int}")]
+        public IActionResult GameStarter(int id)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            pokemonList = pokemonList.Where(x => x.IsStarter).ToList();
+            EditGameStarterViewModel model = new EditGameStarterViewModel()
+            {
+                Game = game,
+                PokemonList = pokemonList,
+                GameStarters = this.dataService.GetObjects<GameStarterDetail>(includes: "Pokemon, Game"),
             };
 
             return this.View(model);
@@ -1359,7 +1380,15 @@ namespace Pokedex.Controllers
         [Route("edit_ability/{id:int}")]
         public IActionResult Ability(int id)
         {
-            Ability model = this.dataService.GetObjectByPropertyValue<Ability>("Id", id);
+            Ability ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", id);
+            AbilityAdminViewModel model = new AbilityAdminViewModel()
+            {
+                Id = ability.Id,
+                Name = ability.Name,
+                Description = ability.Description,
+                GenerationId = ability.GenerationId,
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+            };
 
             return this.View(model);
         }

@@ -1,7 +1,4 @@
 @model Pokedex.Models.EggGroupEvaluatorViewModel;
-@{
-    List<Pokedex.DataAccess.Models.PokemonEggGroupDetail> eggGroups = Model.AllPokemonWithEggGroups;
-}
 
 <div class="shadowed dayCarePokemon">
     @if (Model.AllAltForms.Any(x => x.Id == @Model.SearchedPokemon.Id))
@@ -26,13 +23,13 @@
 
 <h2>Pokémon @Model.SearchedPokemon.Name Can Breed With</h2>
 <div class="grid-container pokemonList">
-    @for(var i = 0; i < eggGroups.Count(); i++)
+    @for(var i = 0; i < Model.AllPokemonWithEggGroups.Count(); i++)
     {
-        <div class="shadowed @eggGroups[i].Pokemon.Name">
-            @if (Model.AllAltForms.Any(x => x.Id == @eggGroups[i].Pokemon.Id))
+        <div class="shadowed @Model.AllPokemonWithEggGroups[i].Pokemon.Name">
+            @if (Model.AllAltForms.Any(x => x.Id == Model.AllPokemonWithEggGroups[i].Pokemon.Id))
             {
                 <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">
-                    <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, eggGroups[i].PokemonId, ".png")">
+                    <img class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
@@ -41,7 +38,7 @@
             else
             {
                 <a href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
-                    <img class="pokemonListPicture" title="@eggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, eggGroups[i].PokemonId, ".png")">
+                    <img class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>

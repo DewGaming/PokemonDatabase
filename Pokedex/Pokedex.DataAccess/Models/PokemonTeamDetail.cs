@@ -24,7 +24,6 @@ namespace Pokedex.DataAccess.Models
         public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
 
-        [Required]
         public int? AbilityId { get; set; }
 
         public Ability Ability { get; set; }
@@ -32,8 +31,7 @@ namespace Pokedex.DataAccess.Models
         public int? BattleItemId { get; set; }
 
         public BattleItem BattleItem { get; set; }
-        [Required, Display(Name = "Nature")]
-
+        
         public int? NatureId { get; set; }
 
         public Nature Nature { get; set; }

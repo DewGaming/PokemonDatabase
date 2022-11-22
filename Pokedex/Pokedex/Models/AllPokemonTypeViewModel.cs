@@ -14,6 +14,11 @@ namespace Pokedex.Models
         public List<PokemonTypeDetail> AllPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all alt form pokemon.
+        /// </summary>
+        public List<PokemonFormDetail> AllAltForms { get; set; }
+
+        /// <summary>
         /// Gets or sets the application configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }

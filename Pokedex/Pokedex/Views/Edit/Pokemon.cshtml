@@ -16,6 +16,12 @@
 
         @Html.HiddenFor(x => x.Pokemon.IsComplete)
         @Html.HiddenFor(x => x.Pokemon.Id)
+        
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Pokemon.PokedexNumber, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Pokemon.PokedexNumber, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.PokedexNumber)
+        </div>
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Pokemon.Name, new { @class = "col-md-2" })
@@ -24,9 +30,9 @@
         </div>
         
         <div class="form-group row">
-            @Html.LabelFor(x => x.Pokemon.PokedexNumber, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Pokemon.PokedexNumber, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
-            @Html.ValidationMessageFor(x => x.Pokemon.PokedexNumber)
+            @Html.LabelFor(x => x.Pokemon.IsStarter, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Pokemon.IsStarter, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.IsStarter)
         </div>
 
         <div class="form-group row">

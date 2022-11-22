@@ -90,20 +90,27 @@ namespace Pokedex.Controllers
                 this.ViewData["Search"] = search;
                 search = this.FormatPokemonName(search);
 
-                List<PokemonTypeDetail> model = this.dataService.GetAllPokemonWithTypes()
+                List<PokemonTypeDetail> typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
                                                                  .Where(x => x.Pokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+                                                                 .OrderByDescending(x => x.GenerationId)
                                                                  .ToList();
 
-                Pokemon pokemonSearched = this.dataService.GetPokemon(search);
-
-                if (model.Count == 1 || pokemonSearched != null)
+                List<PokemonTypeDetail> model = new List<PokemonTypeDetail>();
+                foreach (var t in typeDetails)
                 {
-                    if (pokemonSearched == null)
+                    if (model.Find(x => x.PokemonId == t.PokemonId) == null)
                     {
-                        pokemonSearched = model[0].Pokemon;
+                        model.Add(t);
                     }
+                }
 
-                    return this.RedirectToAction("Pokemon", "Home", new { Name = pokemonSearched.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
+                model = model.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+
+                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                if (model.Count == 1)
+                {
+                    return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
                 else if (model.Count == 0)
                 {
@@ -114,6 +121,7 @@ namespace Pokedex.Controllers
                     AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel()
                     {
                         AllPokemon = model,
+                        AllAltForms = altForms,
                         AppConfig = this.appConfig,
                     };
 
@@ -155,7 +163,7 @@ namespace Pokedex.Controllers
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").ToList();
-            gamesList = gamesList.Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness").ToList();
+            gamesList = gamesList.Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO").ToList();
             List<Game> selectableGames = new List<Game>();
 
             foreach (var gen in generations)
@@ -504,7 +512,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(comment);
 
-            this.EmailComment(comment);
+            this.dataService.EmailComment(this.appConfig, comment);
 
             return this.RedirectToAction("Index", "Home");
         }
@@ -523,7 +531,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Only viewed if the user gets an error while using the website. An email with the exact error will be sent to the owner's specified email.
+        /// Only viewed if the user gets an unaccounted for error while using the website. An email with the exact error will be sent to the owner's specified email.
         /// </summary>
         /// <returns>Returns the error page.</returns>
         [AllowAnonymous]
@@ -552,9 +560,9 @@ namespace Pokedex.Controllers
                     comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
                 }
 
-                this.EmailComment(comment);
-
                 this.dataService.AddObject(comment);
+
+                this.dataService.EmailComment(this.appConfig, comment);
             }
             else if (exceptionHandlerFeature != null)
             {
@@ -590,8 +598,8 @@ namespace Pokedex.Controllers
                 Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
-                PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete).ToList(),
-                Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id).Where(x => x.PreevolutionPokemon.IsComplete && x.EvolutionPokemon.IsComplete).ToList(),
+                PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id),
+                Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
                 GamesAvailableIn = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game),
                 AppConfig = this.appConfig,
@@ -655,51 +663,6 @@ namespace Pokedex.Controllers
             return surroundingPokemon;
         }
 
-        private void EmailComment(Comment comment)
-        {
-            try
-            {
-                if (comment.CommentorId != 1)
-                {
-                    MailAddress fromAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Website");
-                    MailAddress toAddress = new MailAddress(this.appConfig.EmailAddress, "Pokemon Database Email");
-                    string body = "Comment";
-
-                    if (comment.CommentorId != null)
-                    {
-                        body = string.Concat(body, " by ", this.dataService.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
-                    }
-                    else
-                    {
-                        body = string.Concat(body, " by Anonymous User");
-                    }
-
-                    body = string.Concat(body, ": ", comment.Name);
-
-                    SmtpClient smtp = new SmtpClient()
-                    {
-                        Host = "smtp.gmail.com",
-                        Port = 587,
-                        EnableSsl = true,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(fromAddress.Address, this.appConfig.EmailAddressPassword),
-                    };
-
-                    using MailMessage message = new MailMessage(fromAddress, toAddress)
-                    {
-                        Subject = "New Comment for Pokéluna",
-                        Body = body,
-                    };
-                    smtp.Send(message);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
-            }
-        }
-
         /// <summary>
         /// Formats the name of the pokemon to how the database stores their names.
         /// </summary>
@@ -742,6 +705,7 @@ namespace Pokedex.Controllers
         private List<Game> GetGamesForEachReleaseDate()
         {
             List<Game> gameList = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+            gameList.Remove(gameList.Find(x => x.Id == 43));
             if (!this.User.IsInRole("Owner"))
             {
                 gameList = gameList.Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();

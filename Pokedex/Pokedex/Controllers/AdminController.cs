@@ -17,6 +17,10 @@ namespace Pokedex.Controllers
     {
         private readonly DataService dataService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdminController"/> class.
+        /// </summary>
+        /// <param name="dataContext">The data context.</param>
         public AdminController(DataContext dataContext)
         {
             this.dataService = new DataService(dataContext);

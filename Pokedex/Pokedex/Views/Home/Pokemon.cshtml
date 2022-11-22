@@ -65,12 +65,7 @@
         .official, .home, .shiny {
             backface-visibility: hidden;
             transform-style: preserve-3d;
-            width: 100%;
             transition: all 0.5s ease-out 0s;
-        }
-
-        .pokemonImage .current {
-            transform: rotateY(0deg);
         }
 
         .pokemonImage div:not(.current) {
@@ -201,15 +196,16 @@
 }
 @foreach (var item in Model.PokemonList)
 {
-    @if (!item.Pokemon.IsComplete)
-    {
-        <h4>Please be aware that the information for this Pokémon is not complete due to not all the information being available. Some information may change as more is revealed.</h4>
-    }
-
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
     
-    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
+    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">    
+        @if (!item.Pokemon.IsComplete)
+        {
+            <hr style="width: 100%;margin-top: 0;margin-bottom: 0;">
+            <h4>Please be aware that the information for this Pokémon is not complete due to not all the information being available. Some information may change as more is revealed.</h4>
+        }
+
         @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
         {
             <button style="@(item.GamesAvailableIn.First(x => x.GenerationId == g).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[0].GameColor, " 50%, ", @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[1].GameColor, " 50%)") : string.Empty)"class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
@@ -436,7 +432,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 }
                             </th>
                             <td>
-                                @String.Join(" / ", item.GamesAvailableIn.Where(x => x.ReleaseDate == item.Pokemon.Game.ReleaseDate).Select(x => x.Name))
+                                @if (item.Pokemon.Game.Name == "Pokémon GO")
+                                {
+                                    @("Pokémon GO");
+                                }
+                                else
+                                {
+                                    @String.Join(" / ", item.GamesAvailableIn.Where(x => x.ReleaseDate == item.Pokemon.Game.ReleaseDate).Select(x => x.Name))
+                                }
                             </td>
                         </tr>
                     </tbody>
@@ -632,7 +635,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 <div class="pokemonInfo pokemonTypingTable pokemonTables">
                     <div class="typingChart">
                         <div class="typing">
-                            @if(g == 9)
+                            @if(g == 9 || Model.PokemonList.First().Pokemon.Name == "Arceus" || Model.PokemonList.First().Pokemon.Name == "Silvally")
                             {
                                 <h2>Base Typing</h2>
                             }

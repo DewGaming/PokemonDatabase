@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net;
+using System.Net.Mail;
 
 namespace Pokedex
 {
@@ -481,28 +482,33 @@ namespace Pokedex
         {
             if (gameId == 0)
             {
-                gameId = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
+                List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game", "PokemonId", pokemonId).Select(x => x.Game).ToList();
+                games = games.Where(x => x.Id != 37).ToList();
+                gameId = games.Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
             }
 
-            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             List<Ability> abilityList = new List<Ability>();
-            List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
-            PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
-
-            abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
-            if (pokemonAbilityDetail.SecondaryAbility != null)
+            if (gameId != 1 && gameId != 21 && gameId != 20 && gameId != 2 && gameId != 22 && gameId != 23 && gameId != 37)
             {
-                abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
-            }
+                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
+                PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
 
-            if (pokemonAbilityDetail.HiddenAbility != null)
-            {
-                abilityList.Add(pokemonAbilityDetail.HiddenAbility);
-            }
+                abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
+                if (pokemonAbilityDetail.SecondaryAbility != null)
+                {
+                    abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
+                }
 
-            if (pokemonAbilityDetail.SpecialEventAbility != null)
-            {
-                abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
+                if (pokemonAbilityDetail.HiddenAbility != null)
+                {
+                    abilityList.Add(pokemonAbilityDetail.HiddenAbility);
+                }
+
+                if (pokemonAbilityDetail.SpecialEventAbility != null)
+                {
+                    abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
+                }
             }
 
             return abilityList;
@@ -772,6 +778,56 @@ namespace Pokedex
 
                 using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
                 System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+            }
+        }
+
+        /// <summary>
+        /// Sends an email with a given comment.
+        /// </summary>
+        /// <param name="appConfig">The configuration for the application.</param>
+        /// <param name="comment">The email's message.</param>
+        public void EmailComment(AppConfig appConfig, Comment comment)
+        {
+            try
+            {
+                if (comment.CommentorId != 1)
+                {
+                    MailAddress fromAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Email");
+                    string body = "Comment";
+
+                    if (comment.CommentorId != null)
+                    {
+                        body = string.Concat(body, " by ", this.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
+                    }
+                    else
+                    {
+                        body = string.Concat(body, " by Anonymous User");
+                    }
+
+                    body = string.Concat(body, ": ", comment.Name);
+
+                    SmtpClient smtp = new SmtpClient()
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, appConfig.EmailAddressPassword),
+                    };
+
+                    using MailMessage message = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = "New Comment for Pokéluna",
+                        Body = body,
+                    };
+                    smtp.Send(message);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
             }
         }
 

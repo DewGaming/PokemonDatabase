@@ -37,6 +37,24 @@
             @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Name)
         </div>
+        
+        <div class="form-group row">
+            @Html.LabelFor(x => x.IsStarter, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.IsStarter, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.IsStarter)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.ClassificationId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.ClassificationId, new SelectList(Model.AllClassifications, "Id", "Name"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.ClassificationId)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.GameId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.GameId, new SelectList(Model.AllGames, "Id", "Name"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.GameId)
+        </div>
 
         <div class="form-group row">
             @Html.LabelFor(x => x.Height, new { @class = "col-md-2" })
@@ -60,18 +78,6 @@
             @Html.LabelFor(x => x.GenderRatioId, new { @class = "col-md-2" })
             @Html.DropDownListFor(x => x.GenderRatioId, new SelectList(Model.AllGenderRatios, "Id", "GenderRatioString"), new { @class = "form-control col-md-8" })
             @Html.ValidationMessageFor(x => x.GenderRatioId)
-        </div>
-
-        <div class="form-group row">
-            @Html.LabelFor(x => x.ClassificationId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.ClassificationId, new SelectList(Model.AllClassifications, "Id", "Name"), new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.ClassificationId)
-        </div>
-
-        <div class="form-group row">
-            @Html.LabelFor(x => x.GameId, new { @class = "col-md-2" })
-            @Html.DropDownListFor(x => x.GameId, new SelectList(Model.AllGames, "Id", "Name"), new { @class = "form-control col-md-8" })
-            @Html.ValidationMessageFor(x => x.GameId)
         </div>
 
         <div class="form-group row">

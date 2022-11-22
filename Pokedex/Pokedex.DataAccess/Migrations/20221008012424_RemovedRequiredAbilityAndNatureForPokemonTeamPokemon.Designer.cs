@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221008012424_RemovedRequiredAbilityAndNatureForPokemonTeamPokemon")]
+    partial class RemovedRequiredAbilityAndNatureForPokemonTeamPokemon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -410,10 +412,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("GameColor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("GenerationId")
                         .HasColumnType("int");
 
@@ -452,28 +450,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasIndex("RegionId");
 
                     b.ToTable("GameRegionDetails");
-                });
-
-            modelBuilder.Entity("Pokedex.DataAccess.Models.GameStarterDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PokemonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("PokemonId");
-
-                    b.ToTable("GameStarterDetails");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.GenderRatio", b =>
@@ -634,9 +610,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("decimal(4,1)");
 
                     b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsStarter")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -1329,21 +1302,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Pokedex.DataAccess.Models.GameStarterDetail", b =>
-                {
-                    b.HasOne("Pokedex.DataAccess.Models.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
-                        .WithMany()
-                        .HasForeignKey("PokemonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

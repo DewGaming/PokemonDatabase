@@ -47,6 +47,8 @@ namespace Pokedex.Controllers
                 UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
             };
 
+            model.AllGames.Remove(model.AllGames.Find(x => x.Id == 43));
+
             return this.View(model);
         }
 
@@ -124,7 +126,7 @@ namespace Pokedex.Controllers
         [Route("create_pokemon/{pokemonTeamId:int}")]
         public IActionResult CreatePokemon(int pokemonTeamId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId || pokemonTeams[pokemonTeamId - 1].SixthPokemonId != null)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -161,7 +163,7 @@ namespace Pokedex.Controllers
             {
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
-                    AllPokemon = this.FillPokemonList(this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1]),
+                    AllPokemon = this.FillPokemonList(this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1]),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                     GameId = pokemonTeamDetail.GameId,
@@ -172,7 +174,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User", whereProperty: "User.Username", wherePropertyValue: this.User.Identity.Name)[pokemonTeamId - 1];
 
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
@@ -199,7 +201,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon, Game").Where(x => x.User.Username == this.User.Identity.Name).ToList(),
+                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList(),
                 AppConfig = this.appConfig,
             };
 
@@ -216,7 +218,7 @@ namespace Pokedex.Controllers
         [Route("update_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditPokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -301,7 +303,7 @@ namespace Pokedex.Controllers
         [Route("delete_team/{pokemonTeamId:int}")]
         public IActionResult DeleteTeam(int pokemonTeamId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -351,7 +353,7 @@ namespace Pokedex.Controllers
         [Route("update_ev/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditEV(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -435,7 +437,7 @@ namespace Pokedex.Controllers
         [Route("update_moveset/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditMoveset(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -499,7 +501,7 @@ namespace Pokedex.Controllers
         [Route("update_iv/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditIV(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -565,7 +567,7 @@ namespace Pokedex.Controllers
         [Route("delete_team_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult DeletePokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -606,10 +608,10 @@ namespace Pokedex.Controllers
         /// <param name="pokemonTeamId">The pokemon team id.</param>
         /// <returns>The update pokemon team page.</returns>
         [HttpGet]
-        [Route("edit_team/{pokemonTeamId:int}")]
+        [Route("update_team/{pokemonTeamId:int}")]
         public IActionResult EditTeam(int pokemonTeamId)
         {
-            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User").Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
             this.FillPokemonTeam(pokemonTeam);
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel()
@@ -630,7 +632,7 @@ namespace Pokedex.Controllers
         /// <param name="newPokemonTeam">The updated pokemon team.</param>
         /// <returns>The user's pokemon team page.</returns>
         [HttpPost]
-        [Route("edit_team/{pokemonTeamId:int}")]
+        [Route("update_team/{pokemonTeamId:int}")]
         public IActionResult EditTeam(PokemonTeam newPokemonTeam)
         {
             PokemonTeam originalPokemonTeam = this.dataService.GetObjectByPropertyValue<PokemonTeam>("Id", newPokemonTeam.Id);
@@ -832,292 +834,314 @@ namespace Pokedex.Controllers
         /// <returns>The created PokemonTeamDetail object.</returns>
         private PokemonTeamDetailViewModel CreatePokemonDetailFromImport(string importedPokemon)
         {
-            PokemonTeamDetailViewModel pokemonTeamDetail = new PokemonTeamDetailViewModel();
-            string pokemonName = importedPokemon.Split("\r\n")[0];
-            string remainingImportedText = importedPokemon.Replace(string.Concat(pokemonName, "\r\n"), string.Empty);
-            pokemonName = pokemonName.Trim();
-
-            // Held item converter.
-            if (pokemonName.IndexOf(" @ ") != -1)
+            try
             {
-                string itemName = pokemonName.Split(" @ ")[1];
-                BattleItem battleItem = this.dataService.GetObjectByPropertyValue<BattleItem>("Name", itemName);
-                if (battleItem != null)
+                PokemonTeamDetailViewModel pokemonTeamDetail = new PokemonTeamDetailViewModel();
+                string pokemonName = importedPokemon.Split("\r\n")[0];
+                string remainingImportedText = importedPokemon.Replace(string.Concat(pokemonName, "\r\n"), string.Empty);
+                pokemonName = pokemonName.Trim();
+
+                // Held item converter.
+                if (pokemonName.IndexOf(" @ ") != -1)
                 {
-                    pokemonTeamDetail.BattleItemId = battleItem.Id;
+                    string itemName = pokemonName.Split(" @ ")[1];
+                    BattleItem battleItem = this.dataService.GetObjectByPropertyValue<BattleItem>("Name", itemName);
+                    if (battleItem != null)
+                    {
+                        pokemonTeamDetail.BattleItemId = battleItem.Id;
+                    }
+
+                    pokemonName = pokemonName.Split(string.Concat(" @ ", itemName))[0];
                 }
 
-                pokemonName = pokemonName.Split(string.Concat(" @ ", itemName))[0];
-            }
-
-            // Gender converter.
-            int genderCheckStart = pokemonName.LastIndexOf('(');
-            if (genderCheckStart != -1 && pokemonName.Substring(genderCheckStart + 2, 1) == ")")
-            {
-                string genderInitial = pokemonName.Substring(genderCheckStart + 1, 1);
-                if (genderInitial == "M")
+                // Gender converter.
+                int genderCheckStart = pokemonName.LastIndexOf('(');
+                if (genderCheckStart != -1 && pokemonName.Substring(genderCheckStart + 2, 1) == ")")
                 {
-                    pokemonTeamDetail.Gender = "Male";
-                }
-                else if (genderInitial == "F")
-                {
-                    pokemonTeamDetail.Gender = "Female";
-                }
+                    string genderInitial = pokemonName.Substring(genderCheckStart + 1, 1);
+                    if (genderInitial == "M")
+                    {
+                        pokemonTeamDetail.Gender = "Male";
+                    }
+                    else if (genderInitial == "F")
+                    {
+                        pokemonTeamDetail.Gender = "Female";
+                    }
 
-                pokemonName = pokemonName.Split(string.Concat(" (", genderInitial, ")"))[0];
-            }
-
-            // Nickname converter.
-            if (pokemonName.IndexOf("(") != -1)
-            {
-                pokemonTeamDetail.Nickname = pokemonName.Substring(0, pokemonName.IndexOf("(") - 1);
-                pokemonName = pokemonName.Replace(string.Concat(pokemonTeamDetail.Nickname, " ("), string.Empty);
-                pokemonName = pokemonName.Replace(")", string.Empty);
-            }
-
-            // Pokemon converter.
-            Pokemon pokemon;
-
-            // Converts Pokemon Showdown's apostrophe to the database's apostrophe.
-            pokemonName = pokemonName.Replace('’', '\'');
-
-            // Used to check for alternate form
-            if (pokemonName.LastIndexOf('-') != -1)
-            {
-                if (pokemonName.Contains("Gmax"))
-                {
-                    pokemonName = pokemonName.Replace("-Gmax", "-Gigantamax");
+                    pokemonName = pokemonName.Split(string.Concat(" (", genderInitial, ")"))[0];
                 }
 
-                if (pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
+                // Nickname converter.
+                if (pokemonName.IndexOf("(") != -1)
                 {
-                    pokemonName = pokemonName.Replace("-F", "-Female");
+                    pokemonTeamDetail.Nickname = pokemonName.Substring(0, pokemonName.LastIndexOf("(") - 1);
+                    pokemonName = pokemonName.Replace(string.Concat(pokemonTeamDetail.Nickname, " ("), string.Empty);
+                    pokemonName = pokemonName.Replace(")", string.Empty);
                 }
 
-                List<Form> forms = this.dataService.GetObjects<Form>("Name");
-                foreach (var f in forms)
+                // Pokemon converter.
+                Pokemon pokemon;
+
+                // Converts Pokemon Showdown's apostrophe to the database's apostrophe.
+                pokemonName = pokemonName.Replace('’', '\'');
+
+                // Used to check for alternate form
+                if (pokemonName.LastIndexOf('-') != -1)
                 {
-                    f.Name = f.Name.Replace(' ', '-');
-                }
+                    if (pokemonName.Contains("Gmax"))
+                    {
+                        pokemonName = pokemonName.Replace("-Gmax", "-Gigantamax");
+                    }
 
-                string formName = pokemonName.Remove(0, pokemonName.IndexOf('-') + 1);
+                    if (pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
+                    {
+                        pokemonName = pokemonName.Replace("-F", "-Female");
+                    }
 
-                Form form = forms.Find(x => x.Name == formName);
+                    List<Form> forms = this.dataService.GetObjects<Form>("Name");
+                    foreach (var f in forms)
+                    {
+                        f.Name = f.Name.Replace(' ', '-');
+                    }
 
-                if (form != null)
-                {
-                    pokemon = this.dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", form.Name), string.Empty), form.Name.Replace('-', ' '));
+                    string formName = pokemonName.Remove(0, pokemonName.IndexOf('-') + 1);
+
+                    Form form = forms.Find(x => x.Name == formName);
+
+                    if (form != null)
+                    {
+                        pokemon = this.dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", form.Name), string.Empty), form.Name.Replace('-', ' '));
+                    }
+                    else
+                    {
+                        pokemon = this.dataService.GetPokemon(pokemonName);
+                    }
                 }
                 else
                 {
                     pokemon = this.dataService.GetPokemon(pokemonName);
                 }
-            }
-            else
-            {
-                pokemon = this.dataService.GetPokemon(pokemonName);
-            }
 
-            pokemonTeamDetail.PokemonId = pokemon.Id;
+                pokemonTeamDetail.PokemonId = pokemon.Id;
 
-            // Ability converter.
-            Ability ability;
-            string abilityName = remainingImportedText.Split("\r\n")[0];
-            if (abilityName.Contains("Ability: "))
-            {
-                remainingImportedText = remainingImportedText.Replace(string.Concat(abilityName, "\r\n"), string.Empty);
-                abilityName = abilityName.Split("Ability: ")[1].Trim();
-                ability = this.dataService.GetObjectByPropertyValue<Ability>("Name", abilityName);
-            }
-            else
-            {
-                ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate <= DateTime.Now).Last().Id)[0];
-            }
-
-            pokemonTeamDetail.AbilityId = ability.Id;
-
-            // Level converter.
-            if (remainingImportedText.Contains("Level:"))
-            {
-                string pokemonLevel = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(string.Concat(pokemonLevel, "\r\n"), string.Empty);
-                pokemonLevel = pokemonLevel.Trim();
-                pokemonTeamDetail.Level = Convert.ToByte(pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2, pokemonLevel.Length - (pokemonLevel.IndexOf(':') + 2)));
-                if (pokemonTeamDetail.Level == 0)
+                // Ability converter.
+                Ability ability;
+                string abilityName = remainingImportedText.Split("\r\n")[0];
+                if (abilityName.Contains("Ability: "))
                 {
-                    pokemonTeamDetail.Level = 1;
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(abilityName, "\r\n"), string.Empty);
+                    abilityName = abilityName.Split("Ability: ")[1].Trim();
+                    ability = this.dataService.GetObjectByPropertyValue<Ability>("Name", abilityName);
                 }
-                else if (pokemonTeamDetail.Level > 100 || string.Compare(pokemonTeamDetail.Level.ToString(), pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2)) != 0)
+                else
+                {
+                    ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate <= DateTime.Now).Last().Id)[0];
+                }
+
+                pokemonTeamDetail.AbilityId = ability.Id;
+
+                // Level converter.
+                if (remainingImportedText.Contains("Level:"))
+                {
+                    string pokemonLevel = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(pokemonLevel, "\r\n"), string.Empty);
+                    pokemonLevel = pokemonLevel.Trim();
+                    pokemonTeamDetail.Level = Convert.ToByte(pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2, pokemonLevel.Length - (pokemonLevel.IndexOf(':') + 2)));
+                    if (pokemonTeamDetail.Level == 0)
+                    {
+                        pokemonTeamDetail.Level = 1;
+                    }
+                    else if (pokemonTeamDetail.Level > 100 || string.Compare(pokemonTeamDetail.Level.ToString(), pokemonLevel.Substring(pokemonLevel.IndexOf(':') + 2)) != 0)
+                    {
+                        pokemonTeamDetail.Level = 100;
+                    }
+                }
+                else
                 {
                     pokemonTeamDetail.Level = 100;
                 }
-            }
-            else
-            {
-                pokemonTeamDetail.Level = 100;
-            }
 
-            // Shiny converter.
-            if (remainingImportedText.Contains("Shiny: Yes"))
-            {
-                remainingImportedText = remainingImportedText.Replace(string.Concat(remainingImportedText.Split("\r\n")[0], "\r\n"), string.Empty);
-                pokemonTeamDetail.IsShiny = true;
-            }
+                // Shiny converter.
+                if (remainingImportedText.Contains("Shiny: Yes"))
+                {
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(remainingImportedText.Split("\r\n")[0], "\r\n"), string.Empty);
+                    pokemonTeamDetail.IsShiny = true;
+                }
 
-            // Happiness converter.
-            if (remainingImportedText.Contains("Happiness:"))
-            {
-                string happiness = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(string.Concat(happiness, "\r\n"), string.Empty);
-                happiness = happiness.Trim();
-                pokemonTeamDetail.Happiness = Convert.ToByte(happiness.Substring(happiness.IndexOf(':') + 2, happiness.Length - (happiness.IndexOf(':') + 2)));
-                if (string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness.Substring(happiness.IndexOf(':') + 2)) != 0)
+                // Happiness converter.
+                if (remainingImportedText.Contains("Happiness:"))
+                {
+                    string happiness = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(happiness, "\r\n"), string.Empty);
+                    happiness = happiness.Trim();
+                    pokemonTeamDetail.Happiness = Convert.ToByte(happiness.Substring(happiness.IndexOf(':') + 2, happiness.Length - (happiness.IndexOf(':') + 2)));
+                    if (string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness.Substring(happiness.IndexOf(':') + 2)) != 0)
+                    {
+                        pokemonTeamDetail.Happiness = 255;
+                    }
+                }
+                else
                 {
                     pokemonTeamDetail.Happiness = 255;
                 }
-            }
-            else
-            {
-                pokemonTeamDetail.Happiness = 255;
-            }
 
-            // EV converter.
-            if (remainingImportedText.Contains("EVs:"))
-            {
-                string evs = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(string.Concat(evs, "\r\n"), string.Empty);
-                PokemonTeamEV pokemonEVs = new PokemonTeamEV();
-                if (evs.Contains("HP"))
+                // EV converter.
+                if (remainingImportedText.Contains("EVs:"))
                 {
-                    string health = evs.Substring(evs.IndexOf("HP") - 4, 3);
-                    health = health.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
-                    pokemonEVs.Health = Convert.ToByte(health);
-                }
-
-                if (evs.Contains("Atk"))
-                {
-                    string attack = evs.Substring(evs.IndexOf("Atk") - 4, 3);
-                    attack = attack.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
-                    pokemonEVs.Attack = Convert.ToByte(attack);
-                }
-
-                if (evs.Contains("Def"))
-                {
-                    string defense = evs.Substring(evs.IndexOf("Def") - 4, 3);
-                    defense = defense.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
-                    pokemonEVs.Defense = Convert.ToByte(defense);
-                }
-
-                if (evs.Contains("SpA"))
-                {
-                    string specialAttack = evs.Substring(evs.IndexOf("SpA") - 4, 3);
-                    specialAttack = specialAttack.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
-                    pokemonEVs.SpecialAttack = Convert.ToByte(specialAttack);
-                }
-
-                if (evs.Contains("SpD"))
-                {
-                    string specialDefense = evs.Substring(evs.IndexOf("SpD") - 4, 3);
-                    specialDefense = specialDefense.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
-                    pokemonEVs.SpecialDefense = Convert.ToByte(specialDefense);
-                }
-
-                if (evs.Contains("Spe"))
-                {
-                    string speed = evs.Substring(evs.IndexOf("Spe") - 4, 3);
-                    speed = speed.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
-                    pokemonEVs.Speed = Convert.ToByte(speed);
-                }
-
-                pokemonTeamDetail.EVs = pokemonEVs;
-            }
-
-            // Nature converter.
-            if (remainingImportedText.Contains("Nature"))
-            {
-                string natureName = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(string.Concat(natureName, "\r\n"), string.Empty);
-                natureName = natureName.Replace("Nature", string.Empty).Trim();
-                Nature nature = this.dataService.GetObjectByPropertyValue<Nature>("Name", natureName);
-                pokemonTeamDetail.NatureId = nature.Id;
-            }
-            else
-            {
-                pokemonTeamDetail.NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id;
-            }
-
-            // IV converter.
-            if (remainingImportedText.Contains("IVs:"))
-            {
-                string ivs = remainingImportedText.Split("\r\n")[0];
-                remainingImportedText = remainingImportedText.Replace(string.Concat(ivs, "\r\n"), string.Empty);
-                PokemonTeamIV pokemonIVs = new PokemonTeamIV();
-                if (ivs.Contains("HP"))
-                {
-                    string health = ivs.Substring(ivs.IndexOf("HP") - 3, 2).Trim();
-                    pokemonIVs.Health = Convert.ToByte(health);
-                }
-
-                if (ivs.Contains("Atk"))
-                {
-                    string health = ivs.Substring(ivs.IndexOf("Atk") - 3, 2).Trim();
-                    pokemonIVs.Attack = Convert.ToByte(health);
-                }
-
-                if (ivs.Contains("Def"))
-                {
-                    string health = ivs.Substring(ivs.IndexOf("Def") - 3, 2).Trim();
-                    pokemonIVs.Defense = Convert.ToByte(health);
-                }
-
-                if (ivs.Contains("SpA"))
-                {
-                    string health = ivs.Substring(ivs.IndexOf("SpA") - 3, 2).Trim();
-                    pokemonIVs.SpecialAttack = Convert.ToByte(health);
-                }
-
-                if (ivs.Contains("SpD"))
-                {
-                    string health = ivs.Substring(ivs.IndexOf("SpD") - 3, 2).Trim();
-                    pokemonIVs.SpecialDefense = Convert.ToByte(health);
-                }
-
-                if (ivs.Contains("Spe"))
-                {
-                    string health = ivs.Substring(ivs.IndexOf("Spe") - 3, 2).Trim();
-                    pokemonIVs.Speed = Convert.ToByte(health);
-                }
-
-                pokemonTeamDetail.IVs = pokemonIVs;
-            }
-
-            // Moveset converter.
-            if (remainingImportedText.Contains("- "))
-            {
-                List<string> moves = remainingImportedText.Split("\r\n").ToList();
-                List<string> validMoves = new List<string>();
-                string move;
-                PokemonTeamMoveset moveset = new PokemonTeamMoveset();
-
-                foreach (var m in moves)
-                {
-                    if (!string.IsNullOrEmpty(m) && validMoves.Count < 4)
+                    string evs = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(evs, "\r\n"), string.Empty);
+                    PokemonTeamEV pokemonEVs = new PokemonTeamEV();
+                    if (evs.Contains("HP"))
                     {
-                        validMoves.Add(m);
+                        string health = evs.Substring(evs.IndexOf("HP") - 4, 3);
+                        health = health.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                        pokemonEVs.Health = Convert.ToByte(health);
                     }
+
+                    if (evs.Contains("Atk"))
+                    {
+                        string attack = evs.Substring(evs.IndexOf("Atk") - 4, 3);
+                        attack = attack.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                        pokemonEVs.Attack = Convert.ToByte(attack);
+                    }
+
+                    if (evs.Contains("Def"))
+                    {
+                        string defense = evs.Substring(evs.IndexOf("Def") - 4, 3);
+                        defense = defense.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                        pokemonEVs.Defense = Convert.ToByte(defense);
+                    }
+
+                    if (evs.Contains("SpA"))
+                    {
+                        string specialAttack = evs.Substring(evs.IndexOf("SpA") - 4, 3);
+                        specialAttack = specialAttack.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                        pokemonEVs.SpecialAttack = Convert.ToByte(specialAttack);
+                    }
+
+                    if (evs.Contains("SpD"))
+                    {
+                        string specialDefense = evs.Substring(evs.IndexOf("SpD") - 4, 3);
+                        specialDefense = specialDefense.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                        pokemonEVs.SpecialDefense = Convert.ToByte(specialDefense);
+                    }
+
+                    if (evs.Contains("Spe"))
+                    {
+                        string speed = evs.Substring(evs.IndexOf("Spe") - 4, 3);
+                        speed = speed.Replace(":", string.Empty).Replace("/", string.Empty).Trim();
+                        pokemonEVs.Speed = Convert.ToByte(speed);
+                    }
+
+                    pokemonTeamDetail.EVs = pokemonEVs;
                 }
 
-                foreach (var m in validMoves)
+                // Nature converter.
+                if (remainingImportedText.Contains("Nature"))
                 {
-                    move = m.Substring(2, m.Length - 2).Trim();
-                    moveset.FourthMove = move;
-                    moveset = this.SortMoveset(moveset);
+                    string natureName = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(natureName, "\r\n"), string.Empty);
+                    natureName = natureName.Replace("Nature", string.Empty).Trim();
+                    Nature nature = this.dataService.GetObjectByPropertyValue<Nature>("Name", natureName);
+                    pokemonTeamDetail.NatureId = nature.Id;
+                }
+                else
+                {
+                    pokemonTeamDetail.NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id;
                 }
 
-                pokemonTeamDetail.Moveset = moveset;
-            }
+                // IV converter.
+                if (remainingImportedText.Contains("IVs:"))
+                {
+                    string ivs = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(ivs, "\r\n"), string.Empty);
+                    PokemonTeamIV pokemonIVs = new PokemonTeamIV();
+                    if (ivs.Contains("HP"))
+                    {
+                        string health = ivs.Substring(ivs.IndexOf("HP") - 3, 2).Trim();
+                        pokemonIVs.Health = Convert.ToByte(health);
+                    }
 
-            return pokemonTeamDetail;
+                    if (ivs.Contains("Atk"))
+                    {
+                        string health = ivs.Substring(ivs.IndexOf("Atk") - 3, 2).Trim();
+                        pokemonIVs.Attack = Convert.ToByte(health);
+                    }
+
+                    if (ivs.Contains("Def"))
+                    {
+                        string health = ivs.Substring(ivs.IndexOf("Def") - 3, 2).Trim();
+                        pokemonIVs.Defense = Convert.ToByte(health);
+                    }
+
+                    if (ivs.Contains("SpA"))
+                    {
+                        string health = ivs.Substring(ivs.IndexOf("SpA") - 3, 2).Trim();
+                        pokemonIVs.SpecialAttack = Convert.ToByte(health);
+                    }
+
+                    if (ivs.Contains("SpD"))
+                    {
+                        string health = ivs.Substring(ivs.IndexOf("SpD") - 3, 2).Trim();
+                        pokemonIVs.SpecialDefense = Convert.ToByte(health);
+                    }
+
+                    if (ivs.Contains("Spe"))
+                    {
+                        string health = ivs.Substring(ivs.IndexOf("Spe") - 3, 2).Trim();
+                        pokemonIVs.Speed = Convert.ToByte(health);
+                    }
+
+                    pokemonTeamDetail.IVs = pokemonIVs;
+                }
+
+                // Moveset converter.
+                if (remainingImportedText.Contains("- "))
+                {
+                    List<string> moves = remainingImportedText.Split("\r\n").ToList();
+                    List<string> validMoves = new List<string>();
+                    string move;
+                    PokemonTeamMoveset moveset = new PokemonTeamMoveset();
+
+                    foreach (var m in moves)
+                    {
+                        if (!string.IsNullOrEmpty(m) && validMoves.Count < 4)
+                        {
+                            validMoves.Add(m);
+                        }
+                    }
+
+                    foreach (var m in validMoves)
+                    {
+                        move = m.Substring(2, m.Length - 2).Trim();
+                        moveset.FourthMove = move;
+                        moveset = this.SortMoveset(moveset);
+                    }
+
+                    pokemonTeamDetail.Moveset = moveset;
+                }
+
+                return pokemonTeamDetail;
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    Comment comment = new Comment()
+                    {
+                        Name = string.Concat("Imported Text: ", importedPokemon),
+                    };
+
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
+
+                return null;
+            }
         }
 
         private void FillPokemonTeam(PokemonTeam pokemonTeam)
@@ -1340,6 +1364,12 @@ namespace Pokedex.Controllers
             if (pokemonTeam.SixthPokemonId != null)
             {
                 availableGames = availableGames.Where(x => this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonTeam.SixthPokemon.PokemonId).Select(y => y.Game).Where(r => r.ReleaseDate <= DateTime.Now).Any(z => z.Id == x.Id)).ToList();
+            }
+
+            if (availableGames.Count() <= 0)
+            {
+                availableGames = this.dataService.GetObjects<Game>("GenerationId, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
+                availableGames.Remove(availableGames.Find(x => x.Id == 43));
             }
 
             return availableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();

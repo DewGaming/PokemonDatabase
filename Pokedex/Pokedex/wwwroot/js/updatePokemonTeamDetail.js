@@ -73,7 +73,7 @@ var abilityId = 0, gender = "Empty", battleItem = "Empty", grabAbilities = funct
 $(document).ready(function () {
     abilityId = $('#PokemonTeamDetail_AbilityId').val();
     gender = $('#PokemonTeamDetail_Gender').val();
-    if ($('#PokemonTeamDetail_BattleItemId').val().length != 0) {
+    if ($('#PokemonTeamDetail_BattleItemId').length && $('#PokemonTeamDetail_BattleItemId').val().length != 0) {
         battleItem = $('#PokemonTeamDetail_BattleItemId option[value=' + $('#PokemonTeamDetail_BattleItemId').val() + ']').text();
     }
     refreshGenders();

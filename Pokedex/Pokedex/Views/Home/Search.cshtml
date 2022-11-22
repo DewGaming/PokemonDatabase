@@ -19,11 +19,13 @@
         @foreach (var item in Model.AllPokemon)
         {
             <div class="shadowed @item.Pokemon.Name@(item.Pokemon.IsComplete ? "" : " incomplete")">
-                <a href="@this.Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">
                     <img class="pokemonListPicture" title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))"/>
                 </a>
                 <div>
-                    <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { Name = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower()})">@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @item.Pokemon.Name</a>
+                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">
+                        @('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @item.Pokemon.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId).Form.Name, ")") : string.Empty)
+                    </a>
                     <div class="typing">
                         <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
                         @if (@item.SecondaryType != null)

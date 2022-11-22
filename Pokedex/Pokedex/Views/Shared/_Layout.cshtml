@@ -15,6 +15,10 @@
     <link href="/css/main.css" rel="stylesheet" type="text/css">
     @RenderSection("styles", required: false)
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="@ViewBag.Title">
+    <meta name="type" content="website">
+    <meta name="image" content="@ViewBag.Image">
+    <meta name="description" content="@ViewBag.Description">
     <meta name="og:title" content="@ViewBag.Title">
     <meta name="og:type" content="website">
     <meta name="og:image" content="@ViewBag.Image">
@@ -92,15 +96,14 @@
             })
                 .done(function (data) {
                     console.log("Checked for unread messages");
-                    if (data != 0)
-                    {
+                    if (data[1] != 0) {
                         $('.dropdown-item.messages').html($('.dropdown-item.messages').text() + ' <b>New!</b>');
-                        $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data + '</span>')
+                        $('#userDropdown').html($('#userDropdown').text() + ' <span class="newMessageCount">' + data[1] + '</span>')
                         console.log("Unread messages");
-                        alert("You have some unread messages! Click the \"View Messages\" option under Account to view it!")
-                    }
-                    else
-                    {
+                        if (data[0] != 0) { 
+                          alert("You have some unread messages! Click the \"View Messages\" option under Account to view it!")
+                        }
+                    } else {
                       console.log("No new unread messages");
                     }
                 })
