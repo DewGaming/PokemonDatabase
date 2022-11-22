@@ -208,7 +208,17 @@
 
         @foreach(var g in item.GamesAvailableIn.Select(x => x.GenerationId).Distinct())
         {
-            <button style="@(item.GamesAvailableIn.First(x => x.GenerationId == g).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[0].GameColor, " 50%, ", @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[1].GameColor, " 50%)") : string.Empty)"class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
+            string gameColors = @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[0].GameColor + " 50%, ";
+            if (@item.GamesAvailableIn.Where(x => x.GenerationId == g).Count() > 1)
+            {
+                gameColors += @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[1].GameColor + " 50%)";
+            }
+            else
+            {
+                gameColors += @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[0].GameColor + " 50%)";
+            }
+
+            <button style="@(item.GamesAvailableIn.First(x => x.GenerationId == g).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)"class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
         }
     </div>
 
