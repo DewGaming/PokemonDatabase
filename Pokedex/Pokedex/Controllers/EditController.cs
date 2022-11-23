@@ -273,7 +273,7 @@ namespace Pokedex.Controllers
 
                 if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                 {
-                    viewModel.GenderRatioString = "Genderless";
+                    viewModel.GenderRatioString = "Gender Unknown";
                 }
                 else if (genderRatio.FemaleRatio == 0)
                 {
@@ -330,7 +330,7 @@ namespace Pokedex.Controllers
 
                         if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = "Genderless";
+                            viewModel.GenderRatioString = "Gender Unknown";
                         }
                         else if (genderRatio.FemaleRatio == 0)
                         {
@@ -381,7 +381,7 @@ namespace Pokedex.Controllers
 
                         if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = "Genderless";
+                            viewModel.GenderRatioString = "Gender Unknown";
                         }
                         else if (genderRatio.FemaleRatio == 0)
                         {
