@@ -56,10 +56,10 @@
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  -webkit-text-stroke: 0.5px black;
   -webkit-text-fill-color: #808080;
   filter: saturate(70%);
   transition: color .2s, background-color .2s;
+  text-shadow: 1.5px 1.5px black;
 }
 
 .generations {
@@ -80,6 +80,7 @@
   border-bottom-color: #fff !important;
   -webkit-text-stroke: 0px #404040;
   -webkit-text-fill-color: #404040;
+  text-shadow: 0 0 transparent;
 }
 
 .generations button:focus {
