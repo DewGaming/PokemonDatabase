@@ -665,7 +665,14 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(pokemonCaptureRate);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if (this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemonCaptureRate.PokemonId).Count() == 0 && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonCaptureRate.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
+            {
+                return this.RedirectToAction("EggGroups", "Add", new { pokemonId = pokemonCaptureRate.PokemonId, generationId = pokemonCaptureRate.GenerationId });
+            }
+            else
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
         }
 
         [HttpGet]
@@ -701,7 +708,14 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(pokemonBaseHappiness);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            if (this.dataService.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate", whereProperty: "PokemonId", wherePropertyValue: pokemonBaseHappiness.PokemonId).Count() == 0 && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonBaseHappiness.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
+            {
+                return this.RedirectToAction("CaptureRates", "Add", new { pokemonId = pokemonBaseHappiness.PokemonId, generationId = pokemonBaseHappiness.GenerationId });
+            }
+            else
+            {
+                return this.RedirectToAction("Pokemon", "Admin");
+            }
         }
 
         [HttpGet]
@@ -1035,7 +1049,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(typing);
 
-            if (this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: typing.PokemonId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", typing.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
+            if (this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: typing.PokemonId).Count() == 0 && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", typing.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
             {
                 return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId, generationId = typing.GenerationId });
             }
@@ -1080,9 +1094,9 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(abilities);
 
-            if (this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: abilities.PokemonId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
+            if (this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: abilities.PokemonId).Count() == 0 && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
             {
-                return this.RedirectToAction("EggGroups", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
+                return this.RedirectToAction("BaseHappinesses", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
             }
             else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId, abilities.GenerationId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
             {
