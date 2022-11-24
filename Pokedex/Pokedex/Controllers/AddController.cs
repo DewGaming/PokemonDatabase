@@ -410,11 +410,7 @@ namespace Pokedex.Controllers
         [Route("add_classification")]
         public IActionResult Classification(Classification classification)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
+            List<Classification> classifications = this.dataService.GetObjects<Classification>();
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             classification.Name = textInfo.ToTitleCase(classification.Name);
 
@@ -433,6 +429,11 @@ namespace Pokedex.Controllers
             else if (!classification.Name.Contains("Pokémon"))
             {
                 classification.Name = string.Concat(classification.Name.Trim(), " Pokémon");
+            }
+
+            if (!this.ModelState.IsValid || classifications.Find(x => x.Name == classification.Name) != null)
+            {
+                return this.View();
             }
 
             this.dataService.AddObject(classification);

@@ -1362,11 +1362,19 @@ namespace Pokedex.Controllers
 
             if (classification.Name.Contains("pokemon"))
             {
-                classification.Name = classification.Name.Replace("pokemon", "Pokemon");
+                classification.Name = classification.Name.Replace("pokemon", "Pokémon");
             }
-            else if (!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
+            else if (classification.Name.Contains("Pokemon"))
             {
-                classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
+                classification.Name = classification.Name.Replace("Pokemon", "Pokémon");
+            }
+            else if (classification.Name.Contains("pokémon"))
+            {
+                classification.Name = classification.Name.Replace("pokémon", "Pokémon");
+            }
+            else if (!classification.Name.Contains("Pokémon"))
+            {
+                classification.Name = string.Concat(classification.Name.Trim(), " Pokémon");
             }
 
             this.dataService.UpdateObject(classification);
