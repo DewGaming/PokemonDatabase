@@ -1037,17 +1037,45 @@ namespace Pokedex.Controllers
                 }
                 catch (Exception e)
                 {
-                    if (!this.User.IsInRole("Owner") && e != null)
+                    if (!this.User.IsInRole("Owner"))
                     {
-                        string commentBody = string.Concat(e.GetType().ToString(), " error during team generation.");
+                        string commentBody;
+                        Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
+                        DataAccess.Models.Type type = this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", selectedType);
+
+                        if (e != null)
+                        {
+                            commentBody = string.Concat(e.GetType().ToString(), " error during team generation.");
+                        }
+                        else
+                        {
+                            commentBody = "Unknown error during team generation.";
+                        }
 
                         commentBody = string.Concat(commentBody, " - Pokemon Count: ", pokemonCount);
                         commentBody = string.Concat(commentBody, " - Selected Generation Ids: {", string.Join(", ", selectedGens), "}");
-                        commentBody = string.Concat(commentBody, " - Selected Game Id: ", this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId).Name);
-                        commentBody = string.Concat(commentBody, " - Selected Type: ", this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", selectedType).Name);
+                        if (type != null)
+                        {
+                            commentBody = string.Concat(commentBody, " - Selected Game: ", game.Name);
+                        }
+                        else
+                        {
+                            commentBody = string.Concat(commentBody, " - Selected Game: ", selectedGameId);
+                        }
+
+                        if (type != null)
+                        {
+                            commentBody = string.Concat(commentBody, " - Selected Type: ", type.Name);
+                        }
+                        else
+                        {
+                            commentBody = string.Concat(commentBody, " - Selected Type: ", selectedType);
+                        }
+
                         commentBody = string.Concat(commentBody, " - Selected Legendary Types: {", string.Join(", ", selectedLegendaries), "}");
                         commentBody = string.Concat(commentBody, " - Selected Forms: {", string.Join(", ", selectedForms), "}");
                         commentBody = string.Concat(commentBody, " - Selected Evolutions: {", string.Join(", ", selectedEvolutions), "}");
+                        commentBody = string.Concat(commentBody, " - Needs Starter: ", needsStarter);
                         commentBody = string.Concat(commentBody, " - Only Legendaries: ", onlyLegendaries);
                         commentBody = string.Concat(commentBody, " - Only Alternate Forms: ", onlyAltForms);
                         commentBody = string.Concat(commentBody, " - Multiple Megas: ", multipleMegas);
