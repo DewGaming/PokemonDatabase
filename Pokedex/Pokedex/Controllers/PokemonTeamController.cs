@@ -98,7 +98,7 @@ namespace Pokedex.Controllers
         public IActionResult ImportTeams(string importedTeams)
         {
             int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
-            if (!this.ModelState.IsValid || !string.IsNullOrEmpty(importedTeams))
+            if (!this.ModelState.IsValid || string.IsNullOrEmpty(importedTeams))
             {
                 return this.View();
             }
