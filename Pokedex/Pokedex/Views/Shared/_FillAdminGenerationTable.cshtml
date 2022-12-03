@@ -33,7 +33,7 @@
             </a>
         }
         <div class="description">
-            <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokedexNumber.ToString().PadLeft(3, '0') @pokemonName.Replace(' ', '_')</a>
+            <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.PokedexNumber.ToString().PadLeft(3, '0') @pokemonName</a>
             <br>
             @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
         </div>

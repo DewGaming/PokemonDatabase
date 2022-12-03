@@ -1545,6 +1545,61 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the pokemon list that give the specified evs.
+        /// </summary>
+        /// <param name="gameId">The generation's id.</param>
+        /// <param name="health">The health ev.</param>
+        /// <param name="attack">The attack ev.</param>
+        /// <param name="defense">The defense ev.</param>
+        /// <param name="specialAttack">The special attack ev.</param>
+        /// <param name="specialDefense">The special defense ev.</param>
+        /// <param name="speed">The speed ev.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("get-pokemon-by-ev-yields")]
+        public IActionResult GetPokemonByEVYields(int gameId, int health, int attack, int defense, int specialAttack, int specialDefense, int speed)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", game.Id).Select(x => x.Pokemon).ToList();
+                List<EVYield> allEVYields = this.dataService.GetObjects<EVYield>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon").Where(x => x.GenerationId <= game.GenerationId).ToList();
+                List<EVYield> evYields = new List<EVYield>();
+                foreach (var ev in allEVYields)
+                {
+                    if (!evYields.Any(x => x.PokemonId == ev.PokemonId))
+                    {
+                        evYields.Add(allEVYields.Where(x => x.PokemonId == ev.PokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= game.GenerationId));
+                    }
+                }
+
+                pokemonList = evYields.Where(x => x.Health == health && x.Attack == attack && x.Defense == defense && x.SpecialAttack == specialAttack && x.SpecialDefense == specialDefense && x.Speed == speed && pokemonList.Any(y => y.Id == x.PokemonId)).Select(x => x.Pokemon).ToList();
+                EVTrainerViewModel pokemonEVYields = new EVTrainerViewModel()
+                {
+                    AllPokemon = pokemonList,
+                    AllAltForms = new List<PokemonFormDetail>(),
+                    AppConfig = this.appConfig,
+                };
+
+                foreach (var p in pokemonList)
+                {
+                    if (this.dataService.CheckIfAltForm(p.Id))
+                    {
+                        pokemonEVYields.AllAltForms.Add(altForms.Find(x => x.AltFormPokemonId == p.Id));
+                    }
+                }
+
+                return this.PartialView("_FillEVTrainer", pokemonEVYields);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the available genders for a pokemon.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>

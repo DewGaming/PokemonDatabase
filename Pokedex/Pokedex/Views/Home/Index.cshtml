@@ -56,6 +56,10 @@
         <a href="@this.Url.Action("TypingEvaluator", "Home")"><p><b>Evaluate Type Combinations!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("TypingEvaluator", "Home")" alt="Type Combinations" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingLookup.png"))">
     </div>
+    <div class="feature teamBuilder">
+        <a href="@this.Url.Action("EVTrainer", "Home")"><p><b>Train Pokemon!</b></p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("EVTrainer", "Home")" alt="EV Trainer" title="Find out how to train your Pokémon using the EVs opponent Pokémon give upon defeat!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "evTrainer.png"))">
+    </div>
     <div class="feature gameAvailability">
         <a href="@this.Url.Action("GameAvailability", "Home")"><p><b>Lookup Game Availability!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
