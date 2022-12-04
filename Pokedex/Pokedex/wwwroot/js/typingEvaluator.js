@@ -73,7 +73,7 @@ var checkTypings = function () {
 
             setTimeout(function () {
                 $(".overlay").fadeOut(300);
-            }, 500);
+            });
         });
     }
     else {
@@ -81,7 +81,7 @@ var checkTypings = function () {
 
         setTimeout(function () {
             $(".overlay").fadeOut(300);
-        }, 500);
+        });
     }
 }, grabTypes = function (generationID) {
     var primaryTypeID = $('.primaryList > select').val(), secondaryTypeID = $('.secondaryList > select').val();

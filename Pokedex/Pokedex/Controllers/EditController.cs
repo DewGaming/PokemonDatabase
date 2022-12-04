@@ -176,6 +176,23 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("edit_regional_dex/{id:int}")]
+        public IActionResult RegionalDex(int id)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            List<Pokemon> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Game, Pokemon.Game.Generation", "GameId", id).ConvertAll(x => x.Pokemon);
+            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
+            {
+                Game = game,
+                Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
+                PokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => x.Id == y.Id)).ToList(),
+                RegionalDexDetails = this.dataService.GetObjects<PokemonRegionalDexDetail>(includes: "Pokemon, Game"),
+            };
+
+            return this.View(model);
+        }
+
         [Route("edit_game_starters/{id:int}")]
         public IActionResult GameStarter(int id)
         {

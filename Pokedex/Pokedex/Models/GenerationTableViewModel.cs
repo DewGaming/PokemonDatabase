@@ -14,6 +14,11 @@ namespace Pokedex.Models
         public List<PokemonTypeDetail> PokemonList { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of pokemon regional dex details.
+        /// </summary>
+        public List<PokemonRegionalDexDetail> RegionalDexList { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of pokemon without type details.
         /// </summary>
         public List<Pokemon> PokemonNoTypeList { get; set; }

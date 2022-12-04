@@ -488,6 +488,7 @@ namespace Pokedex.Controllers
                     AltFormsList = altFormsList,
                     AppConfig = this.appConfig,
                     Generation = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId, "Generation").Generation,
+                    RegionalDexList = this.dataService.GetObjects<PokemonRegionalDexDetail>(whereProperty: "GameId", wherePropertyValue: gameId),
                 };
 
                 return this.PartialView("_FillAvailableGenerationTable", model);
@@ -1406,6 +1407,99 @@ namespace Pokedex.Controllers
                     foreach (var g in existingGameDetails)
                     {
                         this.dataService.DeleteObject<PokemonGameDetail>(g.Id);
+                    }
+                }
+
+                return this.Json(this.Url.Action("GameAvailability", "Home")).Value.ToString();
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the regional dex of a specified game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <param name="pokemonList">The pokemon that are available in the game's regional dex.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-regional-dex")]
+        public string UpdateRegionalDex(int gameId, List<int> pokemonList)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonRegionalDexDetail> existingRegionalDexDetails = new List<PokemonRegionalDexDetail>();
+                List<PokemonRegionalDexDetail> newRegionalDexDetails = new List<PokemonRegionalDexDetail>();
+                List<int> pokemonIds = new List<int>();
+                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+                DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
+                games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
+                int generationId = games.First().GenerationId;
+
+                if (gameId == 4 || gameId == 5)
+                {
+                    games = games.Where(x => x.Id == gameId).ToList();
+                }
+                else if (gameId == 16 || gameId == 28)
+                {
+                    generationId = 1;
+                }
+                else if (gameId == 35 || gameId == 36)
+                {
+                    generationId = 4;
+                }
+
+                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
+
+                pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
+
+                foreach (var p in pokemonList.Intersect(evolutions.Select(x => x.EvolutionPokemonId).ToList()))
+                {
+                    Evolution evolutionDetails = evolutions.Find(x => x.EvolutionPokemonId == p);
+                    if (!pokemonIds.Contains(evolutionDetails.PreevolutionPokemonId))
+                    {
+                        pokemonIds.Add(evolutionDetails.PreevolutionPokemonId);
+                        if (evolutions.FirstOrDefault(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId) != null)
+                        {
+                            pokemonIds.Add(evolutions.First(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId).PreevolutionPokemonId);
+                        }
+                    }
+
+                    pokemonIds.Add(p);
+                }
+
+                foreach (var game in games.ConvertAll(x => x.Id))
+                {
+                    newRegionalDexDetails = new List<PokemonRegionalDexDetail>();
+                    existingRegionalDexDetails = this.dataService.GetObjects<PokemonRegionalDexDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: game);
+
+                    foreach (var p in pokemonIds)
+                    {
+                        if (existingRegionalDexDetails.Find(x => x.PokemonId == p && x.GameId == game) == null)
+                        {
+                            newRegionalDexDetails.Add(new PokemonRegionalDexDetail()
+                            {
+                                GameId = game,
+                                PokemonId = p,
+                            });
+                        }
+                        else
+                        {
+                            existingRegionalDexDetails.Remove(existingRegionalDexDetails.Find(x => x.PokemonId == p && x.GameId == game));
+                        }
+                    }
+
+                    foreach (var g in newRegionalDexDetails)
+                    {
+                        this.dataService.AddObject(g);
+                    }
+
+                    foreach (var g in existingRegionalDexDetails)
+                    {
+                        this.dataService.DeleteObject<PokemonRegionalDexDetail>(g.Id);
                     }
                 }
 

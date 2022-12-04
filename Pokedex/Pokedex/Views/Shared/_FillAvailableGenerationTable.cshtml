@@ -8,24 +8,28 @@
             @if (p.Name.IndexOf(" (") > -1)
             {
                 <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Substring(0, p.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @p.Id, generationId = @Model.Generation.Id })">
-                    <img class="pokemonListPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
+                    <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
                 </a>
             }
             else
             {
                 <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = p.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @p.Id, generationId = @Model.Generation.Id })">
-                    <img class="pokemonListPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
+                    <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
                 </a>
             }
             <div class="description">
                 <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
             </div>
+            @if (Model.RegionalDexList.Find(x => x.PokemonId == p.Id) != null)
+            {
+                <img class="pokedex pokemonListPicture" title="Regional Dex" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "pokedex.png"))">
+            }
         </div>
     }
     else if (this.User.IsInRole("Owner"))
     {
         <div class="shadowed incomplete @p.Name">
-            <img class="pokemonListPicture" title="@p.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
+            <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
             <div class="description">
                 <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
             </div>
