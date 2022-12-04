@@ -24,6 +24,10 @@
             {
                 <img class="pokedex pokemonListPicture" title="Regional Dex" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "pokedex.png"))">
             }
+            else if (Model.DLCRegionalDexList.Find(x => x.PokemonId == p.Id) != null)
+            {
+                <img class="pokedex pokemonListPicture" title="Regional Dex with DLC / Transfer Only without DLC" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "pokedexDLC.png"))">
+            }
         </div>
     }
     else if (this.User.IsInRole("Owner"))

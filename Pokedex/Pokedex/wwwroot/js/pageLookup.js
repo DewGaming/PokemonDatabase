@@ -194,6 +194,7 @@ function lookupAvailableGame(gameId) {
       $('.totalPokemon').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokémon: ' + $('.grid-container').children().length));
       $('.updater').append($('<a>').attr('href', 'admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
       $('.updater').append($('<a>').attr('href', 'admin/edit_regional_dex/' + gameId).addClass('updateButton btn btn-primary').text('Update Regional Dex'));
+      $('.updater').append($('<a>').attr('href', 'admin/edit_dlc_regional_dex/' + gameId).addClass('updateButton btn btn-primary').text('Update DLC Regional Dex'));
       $('.pokemonList').addClass('active');
       
       setTimeout(function () {

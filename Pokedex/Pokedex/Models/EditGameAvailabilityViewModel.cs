@@ -32,5 +32,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all pokemon regional dex details.
         /// </summary>
         public List<PokemonRegionalDexDetail> RegionalDexDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all pokemon dlc regional dex details.
+        /// </summary>
+        public List<PokemonDLCRegionalDexDetail> DLCRegionalDexDetails { get; set; }
     }
 }

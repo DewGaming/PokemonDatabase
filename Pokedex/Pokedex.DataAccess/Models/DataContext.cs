@@ -65,5 +65,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<PageStat> PageStats { get; set; }
         public DbSet<GameStarterDetail> GameStarterDetails { get; set; }
         public DbSet<PokemonRegionalDexDetail> PokemonRegionalDexDetails { get; set; }
+        public DbSet<PokemonDLCRegionalDexDetail> PokemonDLCRegionalDexDetails { get; set; }
     }
 }
