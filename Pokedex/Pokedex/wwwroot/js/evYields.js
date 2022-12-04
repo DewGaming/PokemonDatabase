@@ -1,11 +1,11 @@
 var grabPokemon = function (gameId, health, attack, defense, specialAttack, specialDefense, speed) {
     $('.evYields').empty();
     if (gameId != "") {
-        $('.evYields').load('/get-pokemon-by-ev-yields/', { 'gameId': gameId, 'health': health, 'attack': attack, 'defense': defense, 'specialAttack': specialAttack, 'specialDefense': specialDefense, 'speed': speed });
-        
-        setTimeout(function () {
-            $(".overlay").fadeOut(300);
-        }, 750);
+        $('.evYields').load('/get-pokemon-by-ev-yields/', { 'gameId': gameId, 'health': health, 'attack': attack, 'defense': defense, 'specialAttack': specialAttack, 'specialDefense': specialDefense, 'speed': speed }, function () {
+            setTimeout(function () {
+                $(".overlay").fadeOut(300);
+            });
+        });
     }
 }, checkTotalEVs = function (slider, label) {
     var totalEVs = Number($('.healthSlider').val()) + Number($('.attackSlider').val()) + Number($('.defenseSlider').val()) + Number($('.specialAttackSlider').val()) + Number($('.specialDefenseSlider').val()) + Number($('.speedSlider').val());

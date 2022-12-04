@@ -19,12 +19,8 @@ function updateGameStarters(gameId) {
         .fail(function () { 
             setTimeout(function () {
                 $(".overlay").fadeOut(300);
-            }, 500);
+            });
 
             alert("Update Failed!");
         });
-
-    setTimeout(function () {
-        $(".overlay").fadeOut(300);
-    }, 500);
 }
