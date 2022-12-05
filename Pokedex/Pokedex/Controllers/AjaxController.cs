@@ -548,6 +548,10 @@ namespace Pokedex.Controllers
                     {
                         selectedGame = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
                     }
+                    else
+                    {
+                        needsStarter = false;
+                    }
 
                     TeamRandomizerViewModel model = new TeamRandomizerViewModel()
                     {
