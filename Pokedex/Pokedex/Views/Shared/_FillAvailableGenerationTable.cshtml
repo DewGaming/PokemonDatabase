@@ -18,7 +18,7 @@
                 </a>
             }
             <div class="description">
-                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
+                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(4, '0') @p.Name</span>
             </div>
             @if (Model.RegionalDexList.Find(x => x.PokemonId == p.Id) != null)
             {
@@ -35,7 +35,7 @@
         <div class="shadowed incomplete @p.Name">
             <img class="pokemonListPicture" title="@p.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.Id, ".png"))">
             <div class="description">
-                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
+                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(4, '0') @p.Name</span>
             </div>
         </div>
     }

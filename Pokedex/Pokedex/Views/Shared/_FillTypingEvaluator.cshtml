@@ -11,7 +11,7 @@
             <img class="pokemonListPicture" title="@Model.AllPokemon[i].Name" src=@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, typing[i].PokemonId, ".png")>
         </a>
         <div>
-            <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+            <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = typing[i].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = Model.AllPokemon[i].Id, generationId = Model.GenerationId })">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllPokemon[i].Name</a>
         </div>
     </div>
 }

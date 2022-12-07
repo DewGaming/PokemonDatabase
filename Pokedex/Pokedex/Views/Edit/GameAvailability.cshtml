@@ -50,7 +50,7 @@
                     var gameAvail = @Model.GameAvailability.Find(x => x.PokemonId == p.Id && x.GameId == @Model.Game.Id);
                     <li>
                         <input id="gen@(g.Id)@(p.Name)" type="checkbox" value="@p.Id" @(gameAvail != null ? "checked=checked" : "") />
-                        <label for="gen@(g.Id)@(p.Name)" class="generatorOptionTitle"><span>@('#')@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span></label>
+                        <label for="gen@(g.Id)@(p.Name)" class="generatorOptionTitle"><span>@('#')@p.PokedexNumber.ToString().PadLeft(4, '0') @p.Name</span></label>
                     </li>
                 }
             </ul>

@@ -11,7 +11,7 @@
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
-                        @('#')@item.PokedexNumber.ToString().PadLeft(3, '0') @item.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id).Form.Name, ")") : string.Empty)
+                        @('#')@item.PokedexNumber.ToString().PadLeft(4, '0') @item.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id).Form.Name, ")") : string.Empty)
                     </a>
                 </div>
             </div>

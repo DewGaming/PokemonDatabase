@@ -19,7 +19,7 @@
                 </a>
             }
             <div class="description">
-                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(3, '0') @p.Name</span>
+                <span class="pokemonName">#@p.PokedexNumber.ToString().PadLeft(4, '0') @p.Name</span>
                 <br>
                 <span class="pokemonName">Total Visits: @Model.PageStatList.Where(x => x.Name == p.Name).Count()</span>
             </div>

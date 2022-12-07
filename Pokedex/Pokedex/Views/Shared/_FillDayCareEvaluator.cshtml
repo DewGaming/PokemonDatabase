@@ -32,7 +32,7 @@
                     <img class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
                 </a>
                 <div>
-                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllPokemon[i].Name</a>
                 </div>
             }
             else
@@ -41,7 +41,7 @@
                     <img class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
                 </a>
                 <div>
-                    <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(3, '0') @Model.AllPokemon[i].Name</a>
+                    <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllPokemon[i].Name</a>
                 </div>
             }
         </div>
