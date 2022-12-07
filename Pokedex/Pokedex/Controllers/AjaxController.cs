@@ -1060,7 +1060,7 @@ namespace Pokedex.Controllers
 
                         commentBody = string.Concat(commentBody, " - Pokemon Count: ", pokemonCount);
                         commentBody = string.Concat(commentBody, " - Selected Generation Ids: {", string.Join(", ", selectedGens), "}");
-                        if (type != null)
+                        if (game != null)
                         {
                             commentBody = string.Concat(commentBody, " - Selected Game: ", game.Name);
                         }

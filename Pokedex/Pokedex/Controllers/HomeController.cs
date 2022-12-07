@@ -88,12 +88,22 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
+                bool pokedexNumber = false;
                 search = this.FormatPokemonName(search);
 
                 List<PokemonTypeDetail> typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
                                                                  .Where(x => x.Pokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
                                                                  .OrderByDescending(x => x.GenerationId)
                                                                  .ToList();
+
+                if (typeDetails.Count() == 0)
+                {
+                    pokedexNumber = true;
+                    typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
+                        .Where(x => x.Pokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(x => x.GenerationId)
+                        .ToList();
+                }
 
                 List<PokemonTypeDetail> model = new List<PokemonTypeDetail>();
                 foreach (var t in typeDetails)
@@ -106,7 +116,15 @@ namespace Pokedex.Controllers
 
                 model = model.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
 
-                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                List<PokemonFormDetail> altForms = new List<PokemonFormDetail>();
+                if (pokedexNumber)
+                {
+                    altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+                else
+                {
+                    altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
 
                 if (model.Count == 1)
                 {
@@ -429,7 +447,8 @@ namespace Pokedex.Controllers
             selectedGenerationId = 0;
             name = this.FormatPokemonName(name);
 
-            Pokemon pokemon = this.dataService.GetPokemon(name);
+            Pokemon pokemon = this.dataService.GetAllPokemon().Find(x => x.Name == name);
+
             if (pokemon == null)
             {
                 return this.RedirectToAction("AllPokemon", "Home");
