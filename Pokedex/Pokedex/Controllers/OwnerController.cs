@@ -44,7 +44,7 @@ namespace Pokedex.Controllers
                 UsersWithPokemonTeams = new List<User>(),
             };
 
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>();
 
             foreach (var u in model.UserList)
             {
@@ -262,22 +262,22 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
-        /// <summary>
-        /// Opens the page to view a specific saved pokemon team.
-        /// </summary>
-        /// <param name="id">The pokemon team's id.</param>
-        /// <returns>The pokemon team page.</returns>
-        [Route("pokemon_teams/{id:int}")]
-        public IActionResult PokemonTeams(int id)
-        {
-            PokemonTeamsViewModel model = new PokemonTeamsViewModel()
-            {
-                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Id == id).ToList(),
-                User = this.dataService.GetObjectByPropertyValue<User>("Id", id),
-                AppConfig = this.appConfig,
-            };
-
-            return this.View(model);
-        }
+        // /// <summary>
+        // /// Opens the page to view a specific saved pokemon team.
+        // /// </summary>
+        // /// <param name="id">The pokemon team's id.</param>
+        // /// <returns>The pokemon team page.</returns>
+        // [Route("pokemon_teams/{id:int}")]
+        // public IActionResult PokemonTeams(int id)
+        // {
+        //     PokemonTeamsViewModel model = new PokemonTeamsViewModel()
+        //     {
+        //         AllPokemonTeams = this.dataService.GetAllPokemonTeams().Where(x => x.Id == id).ToList(),
+        //         User = this.dataService.GetObjectByPropertyValue<User>("Id", id),
+        //         AppConfig = this.appConfig,
+        //     };
+        //
+        //     return this.View(model);
+        // }
     }
 }
