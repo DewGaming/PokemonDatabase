@@ -694,6 +694,44 @@ namespace Pokedex.Controllers
                 pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
             }
 
+            HttpWebRequest webRequest;
+            HttpWebResponse imageRequest;
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                {
+                    pokemonViewModel.HasShiny = true;
+                }
+                else
+                {
+                    pokemonViewModel.HasShiny = false;
+                }
+            }
+            catch
+            {
+                pokemonViewModel.HasShiny = false;
+            }
+
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                {
+                    pokemonViewModel.HasHome = true;
+                }
+                else
+                {
+                    pokemonViewModel.HasHome = false;
+                }
+            }
+            catch
+            {
+                pokemonViewModel.HasHome = false;
+            }
+
             PokemonLegendaryDetail legendaryType = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
 
             if (legendaryType != null)

@@ -581,10 +581,6 @@ namespace Pokedex.Controllers
 
             this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "3d");
 
-            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id);
-            pokemon.HasThreeDImage = true;
-            this.dataService.UpdateObject(pokemon);
-
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
@@ -644,10 +640,6 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "shiny");
-
-            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id);
-            pokemon.HasShinyImage = true;
-            this.dataService.UpdateObject(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }

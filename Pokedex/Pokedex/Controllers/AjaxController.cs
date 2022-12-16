@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 
 namespace Pokedex.Controllers
@@ -166,7 +167,12 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                HttpWebRequest webRequest;
+                HttpWebResponse imageRequest;
                 AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon);
+                List<int> pokemonIds = pokemonList.ConvertAll(x => x.Id);
 
                 DropdownViewModel dropdownViewModel = new DropdownViewModel()
                 {
@@ -177,11 +183,42 @@ namespace Pokedex.Controllers
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
-                    PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.HasThreeDImage).ToList(),
-                    AltFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon).Where(x => !x.HasThreeDImage).ToList(),
+                    PokemonList = new List<Pokemon>(),
+                    AltFormList = new List<Pokemon>(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
                 };
+
+                foreach (var id in pokemonIds)
+                {
+                    try
+                    {
+                        webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, id, ".png"));
+                        imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                        if (imageRequest.StatusCode != HttpStatusCode.OK)
+                        {
+                            if (altFormList.Exists(x => x.Id == id))
+                            {
+                                model.AltFormList.Add(altFormList.Find(x => x.Id == id));
+                            }
+                            else
+                            {
+                                model.PokemonList.Add(pokemonList.Find(x => x.Id == id));
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        if (altFormList.Exists(x => x.Id == id))
+                        {
+                            model.AltFormList.Add(altFormList.Find(x => x.Id == id));
+                        }
+                        else
+                        {
+                            model.PokemonList.Add(pokemonList.Find(x => x.Id == id));
+                        }
+                    }
+                }
 
                 foreach (var a in model.AltFormList)
                 {
@@ -205,7 +242,12 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                HttpWebRequest webRequest;
+                HttpWebResponse imageRequest;
                 AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon);
+                List<int> pokemonIds = pokemonList.ConvertAll(x => x.Id);
 
                 DropdownViewModel dropdownViewModel = new DropdownViewModel()
                 {
@@ -216,11 +258,42 @@ namespace Pokedex.Controllers
 
                 AdminGenerationTableViewModel model = new AdminGenerationTableViewModel()
                 {
-                    PokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => !x.HasShinyImage).ToList(),
-                    AltFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon).Where(x => !x.HasShinyImage).ToList(),
+                    PokemonList = new List<Pokemon>(),
+                    AltFormList = new List<Pokemon>(),
                     DropdownViewModel = dropdownViewModel,
                     AppConfig = this.appConfig,
                 };
+
+                foreach (var id in pokemonIds)
+                {
+                    try
+                    {
+                        webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, id, ".png"));
+                        imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                        if (imageRequest.StatusCode != HttpStatusCode.OK)
+                        {
+                            if (altFormList.Exists(x => x.Id == id))
+                            {
+                                model.AltFormList.Add(altFormList.Find(x => x.Id == id));
+                            }
+                            else
+                            {
+                                model.PokemonList.Add(pokemonList.Find(x => x.Id == id));
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        if (altFormList.Exists(x => x.Id == id))
+                        {
+                            model.AltFormList.Add(altFormList.Find(x => x.Id == id));
+                        }
+                        else
+                        {
+                            model.PokemonList.Add(pokemonList.Find(x => x.Id == id));
+                        }
+                    }
+                }
 
                 foreach (var a in model.AltFormList)
                 {
