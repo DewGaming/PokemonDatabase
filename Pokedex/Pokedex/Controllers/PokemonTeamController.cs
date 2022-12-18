@@ -103,6 +103,8 @@ namespace Pokedex.Controllers
                 return this.View();
             }
 
+            importedTeams = importedTeams.TrimStart();
+
             List<string> pokemonTeams = importedTeams.Split("\r\n===").ToList();
             for (var i = 1; i < pokemonTeams.Count; i++)
             {
