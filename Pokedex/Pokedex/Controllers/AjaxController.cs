@@ -1959,62 +1959,93 @@ namespace Pokedex.Controllers
         [Route("get-generations")]
         public TeamRandomizerListViewModel GetGenerations(int selectedGame)
         {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            try
             {
-                if (selectedGame != 0)
+                if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                    List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame).Where(x => !altFormsList.Any(y => y.Id == x.PokemonId)).ToList();
-                    List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
-                    Generation selectedGen = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame, "Generation").Generation;
-                    List<Generation> generationList = this.dataService.GetObjects<Generation>().Where(x => x.Id <= selectedGen.Id).ToList();
-                    List<DataAccess.Models.Type> typesList = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= selectedGen.Id).ToList();
-                    List<LegendaryType> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type");
-                    List<Generation> availableGenerations = new List<Generation>();
-                    Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame);
-
-                    foreach (var gen in generationList)
+                    if (selectedGame != 0)
                     {
-                        if (allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count != 0)
+                        List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
+                        List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame).Where(x => !altFormsList.Any(y => y.Id == x.PokemonId)).ToList();
+                        List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
+                        Generation selectedGen = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame, "Generation").Generation;
+                        List<Generation> generationList = this.dataService.GetObjects<Generation>().Where(x => x.Id <= selectedGen.Id).ToList();
+                        List<LegendaryType> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type");
+                        List<Generation> availableGenerations = new List<Generation>();
+                        Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame);
+
+                        foreach (var gen in generationList)
                         {
-                            availableGenerations.Add(gen);
+                            if (allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList().Count != 0)
+                            {
+                                availableGenerations.Add(gen);
+                            }
                         }
+
+                        if (game.ReleaseDate < new DateTime(2016, 11, 18))
+                        {
+                            legendaryTypes.Remove(legendaryTypes.Find(x => x.Type == "Ultra Beast"));
+                        }
+
+                        TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
+                        {
+                            AllGenerations = availableGenerations,
+                            AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= selectedGen.Id).ToList(),
+                            AllLegendaryTypes = legendaryTypes,
+                            AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
+                        };
+
+                        return model;
                     }
-
-                    if (game.ReleaseDate < new DateTime(2016, 11, 18))
+                    else
                     {
-                        legendaryTypes.Remove(legendaryTypes.Find(x => x.Type == "Ultra Beast"));
+                        TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
+                        {
+                            AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
+                            AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
+                            AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
+                            AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
+                        };
+
+                        return model;
                     }
-
-                    TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
-                    {
-                        AllGenerations = availableGenerations,
-                        AllTypes = typesList,
-                        AllLegendaryTypes = legendaryTypes,
-                        AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
-                    };
-
-                    return model;
                 }
                 else
                 {
-                    TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
+                    this.RedirectToAction("Home", "Index");
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody;
+                    if (e != null)
                     {
-                        AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
-                        AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
-                        AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                        AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
+                        commentBody = string.Concat(e.GetType().ToString(), " error during generation fetching.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during generation fetching.";
+                    }
+
+                    Comment comment = new Comment()
+                    {
+                        Name = string.Concat(commentBody, " - Selected Game Id: ", selectedGame),
                     };
 
-                    return model;
-                }
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
 
-            return null;
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
+
+                return null;
+            }
         }
 
         /// <summary>
@@ -2900,7 +2931,15 @@ namespace Pokedex.Controllers
                 {
                     if (!this.User.IsInRole("Owner") && e != null)
                     {
-                        string commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's export.");
+                        string commentBody;
+                        if (e != null)
+                        {
+                            commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's export.");
+                        }
+                        else
+                        {
+                            commentBody = "Unknown error during the pokemon team's export.";
+                        }
                         commentBody = string.Concat(commentBody, " - Pokemon Id List: {", string.Join(", ", pokemonIdList), "}");
                         commentBody = string.Concat(commentBody, " - Ability List: {", string.Join(", ", abilityList), "}");
                         commentBody = string.Concat(commentBody, " - Export Abilities? ", exportAbilities.ToString());
@@ -3042,7 +3081,16 @@ namespace Pokedex.Controllers
             {
                 if (!this.User.IsInRole("Owner") && e != null)
                 {
-                    string commentBody = string.Concat(e.GetType().ToString(), " error during retrieval of pokemon's specific type.");
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during retrieval of pokemon's specific type.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during retrieval of pokemon's specific type.";
+                    }
+
                     commentBody = string.Concat(commentBody, " - Type Id: ", typeId);
                     commentBody = string.Concat(commentBody, " - Generation Id: ", generationId);
                     commentBody = string.Concat(commentBody, " - Pokemon List: ", allPokemon.ToString());
@@ -3163,7 +3211,16 @@ namespace Pokedex.Controllers
             {
                 if (!this.User.IsInRole("Owner") && e != null)
                 {
-                    string commentBody = string.Concat(e.GetType().ToString(), " error during filling the user's pokemon team.");
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during filling the user's pokemon team.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during filling the user's pokemon team.";
+                    }
+
                     commentBody = string.Concat(commentBody, " - Pokemon Team Detail Id: ", pokemonTeamDetail.Id);
                     commentBody = string.Concat(commentBody, " - Game Id: ", gameId.HasValue ? gameId.Value.ToString() : "Null");
                     Comment comment = new Comment()

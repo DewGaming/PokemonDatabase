@@ -122,7 +122,16 @@ namespace Pokedex.Controllers
             {
                 if (!this.User.IsInRole("Owner") && e != null)
                 {
-                    string commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's import.");
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's import.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during the pokemon team's import.";
+                    }
+
                     commentBody = string.Concat(commentBody, " - Imported Team Text: {", string.Join(", ", importedTeams), "}");
                     Comment comment = new Comment()
                     {
@@ -1151,9 +1160,19 @@ namespace Pokedex.Controllers
             {
                 if (!this.User.IsInRole("Owner") && e != null)
                 {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during team generation.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during team generation.";
+                    }
+
                     Comment comment = new Comment()
                     {
-                        Name = string.Concat("Imported Text: ", importedPokemon),
+                        Name = string.Concat(commentBody, " - Imported Text: ", importedPokemon),
                     };
 
                     if (this.User.Identity.Name != null)
