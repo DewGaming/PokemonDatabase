@@ -39,7 +39,7 @@ namespace Pokedex.Controllers
         [Route("mark-as-read")]
         public void MarkAsRead()
         {
-            List<Message> messages = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
+            List<Message> messages = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name);
             foreach (var m in messages.Where(x => !x.IsRead))
             {
                 m.IsRead = true;
@@ -54,7 +54,7 @@ namespace Pokedex.Controllers
         [Route("check-unread-messages")]
         public List<int> CheckUnreadMessages()
         {
-            List<Message> messages = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value)).ToList();
+            List<Message> messages = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name).ToList();
             List<int> counts = new List<int>()
             {
                 messages.Where(x => !x.IsSeen).Count(),
@@ -76,7 +76,7 @@ namespace Pokedex.Controllers
         [Route("update-last-visit")]
         public void UpdateLastVisit()
         {
-            User user = this.dataService.GetObjectByPropertyValue<User>("Id", Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
+            User user = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name);
             user.LastVisit = DateTime.Now.ToUniversalTime();
             this.dataService.UpdateObject(user);
         }
