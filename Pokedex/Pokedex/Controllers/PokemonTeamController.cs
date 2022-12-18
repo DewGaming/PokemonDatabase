@@ -97,26 +97,48 @@ namespace Pokedex.Controllers
         [Route("import_teams")]
         public IActionResult ImportTeams(string importedTeams)
         {
-            int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
-            if (!this.ModelState.IsValid || string.IsNullOrEmpty(importedTeams))
+            try
             {
-                return this.View();
+                int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                if (!this.ModelState.IsValid || string.IsNullOrEmpty(importedTeams))
+                {
+                    return this.View();
+                }
+
+                List<string> pokemonTeams = importedTeams.TrimStart().Split("\r\n===").ToList();
+                for (var i = 1; i < pokemonTeams.Count; i++)
+                {
+                    pokemonTeams[i] = string.Concat("===", pokemonTeams[i]);
+                }
+
+                foreach (var p in pokemonTeams)
+                {
+                    this.CreateTeamFromImport(p, userId);
+                }
+
+                return this.RedirectToAction("PokemonTeams", "User");
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's import.");
+                    commentBody = string.Concat(commentBody, " - Imported Team Text: {", string.Join(", ", importedTeams), "}");
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.AddObject(comment);
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
             }
 
-            importedTeams = importedTeams.TrimStart();
-
-            List<string> pokemonTeams = importedTeams.Split("\r\n===").ToList();
-            for (var i = 1; i < pokemonTeams.Count; i++)
-            {
-                pokemonTeams[i] = string.Concat("===", pokemonTeams[i]);
-            }
-
-            foreach (var p in pokemonTeams)
-            {
-                this.CreateTeamFromImport(p, userId);
-            }
-
-            return this.RedirectToAction("PokemonTeams", "User");
+            return null;
         }
 
         /// <summary>
