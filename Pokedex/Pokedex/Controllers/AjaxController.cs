@@ -877,7 +877,7 @@ namespace Pokedex.Controllers
 
                             foreach (var p in starterList)
                             {
-                                if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                                if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && selectedGame.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                                 {
                                     starterEvolutions.Add(p);
                                 }
@@ -896,7 +896,7 @@ namespace Pokedex.Controllers
 
                             foreach (var p in starterList)
                             {
-                                if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
+                                if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && selectedGame.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                                 {
                                     starterEvolutions.Add(p);
                                 }
@@ -1131,8 +1131,6 @@ namespace Pokedex.Controllers
                             commentBody = "Unknown error during team generation.";
                         }
 
-                        commentBody = string.Concat(commentBody, " - Pokemon Count: ", pokemonCount);
-                        commentBody = string.Concat(commentBody, " - Selected Generation Ids: {", string.Join(", ", selectedGens), "}");
                         if (game != null)
                         {
                             commentBody = string.Concat(commentBody, " - Selected Game: ", game.Name);
@@ -1151,9 +1149,11 @@ namespace Pokedex.Controllers
                             commentBody = string.Concat(commentBody, " - Selected Type: ", selectedType);
                         }
 
-                        commentBody = string.Concat(commentBody, " - Selected Legendary Types: {", string.Join(", ", selectedLegendaries), "}");
-                        commentBody = string.Concat(commentBody, " - Selected Forms: {", string.Join(", ", selectedForms), "}");
+                        commentBody = string.Concat(commentBody, " - Pokemon Count: ", pokemonCount);
+                        commentBody = string.Concat(commentBody, " - Selected Generation Ids: {", string.Join(", ", selectedGens), "}");
                         commentBody = string.Concat(commentBody, " - Selected Evolutions: {", string.Join(", ", selectedEvolutions), "}");
+                        commentBody = string.Concat(commentBody, " - Selected Forms: {", string.Join(", ", selectedForms), "}");
+                        commentBody = string.Concat(commentBody, " - Selected Legendary Types: {", string.Join(", ", selectedLegendaries), "}");
                         commentBody = string.Concat(commentBody, " - Needs Starter: ", needsStarter);
                         commentBody = string.Concat(commentBody, " - Only Legendaries: ", onlyLegendaries);
                         commentBody = string.Concat(commentBody, " - Only Alternate Forms: ", onlyAltForms);
