@@ -173,6 +173,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeam.GameId,
                     Level = 100,
                     Happiness = 255,
@@ -199,6 +200,7 @@ namespace Pokedex.Controllers
                     AllPokemon = this.FillPokemonList(this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name)[pokemonTeamId - 1]),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeamDetail.GameId,
                     Level = 100,
                     Happiness = 255,
@@ -272,6 +274,7 @@ namespace Pokedex.Controllers
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
@@ -307,6 +310,7 @@ namespace Pokedex.Controllers
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
@@ -959,9 +963,9 @@ namespace Pokedex.Controllers
 
                 // Ability converter.
                 Ability ability;
-                string abilityName = remainingImportedText.Split("\r\n")[0];
-                if (abilityName.Contains("Ability: "))
+                if (remainingImportedText.Contains("Ability: "))
                 {
+                    string abilityName = remainingImportedText.Split("\r\n")[0];
                     remainingImportedText = remainingImportedText.Replace(string.Concat(abilityName, "\r\n"), string.Empty);
                     abilityName = abilityName.Split("Ability: ")[1].Trim();
                     ability = this.dataService.GetObjectByPropertyValue<Ability>("Name", abilityName);
@@ -999,6 +1003,16 @@ namespace Pokedex.Controllers
                 {
                     remainingImportedText = remainingImportedText.Replace(string.Concat(remainingImportedText.Split("\r\n")[0], "\r\n"), string.Empty);
                     pokemonTeamDetail.IsShiny = true;
+                }
+
+                // Happiness converter.
+                if (remainingImportedText.Contains("Tera Type:"))
+                {
+                    string teraType = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(teraType, "\r\n"), string.Empty);
+                    teraType = teraType.Trim();
+                    teraType = teraType.Substring(teraType.IndexOf(':') + 2, teraType.Length - (teraType.IndexOf(':') + 2));
+                    pokemonTeamDetail.TeraTypeId = this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Name", teraType).Id;
                 }
 
                 // Happiness converter.
@@ -1163,11 +1177,11 @@ namespace Pokedex.Controllers
                     string commentBody;
                     if (e != null)
                     {
-                        commentBody = string.Concat(e.GetType().ToString(), " error during team generation.");
+                        commentBody = string.Concat(e.GetType().ToString(), " error during team import.");
                     }
                     else
                     {
-                        commentBody = "Unknown error during team generation.";
+                        commentBody = "Unknown error during team import.";
                     }
 
                     Comment comment = new Comment()
