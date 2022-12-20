@@ -869,7 +869,7 @@ namespace Pokedex.Controllers
                         {
                             foreach (var p in allPokemon)
                             {
-                                if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                                if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && selectedGame.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                                 {
                                     evolutions.Add(p);
                                 }
@@ -888,7 +888,7 @@ namespace Pokedex.Controllers
                         {
                             foreach (var p in allPokemon)
                             {
-                                if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id))
+                                if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && selectedGame.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                                 {
                                     evolutions.Add(p);
                                 }
