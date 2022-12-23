@@ -424,10 +424,15 @@ namespace Pokedex.Controllers
         /// <returns>The string confirming the team has been generated. Tells a user they need to be logged in if they aren't.</returns>
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string pokemonTeamName = "Save from Team Randomizer")
+        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string pokemonTeamName)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                if (string.IsNullOrEmpty(pokemonTeamName))
+                {
+                    pokemonTeamName = "Save from Team Randomizer";
+                }
+
                 if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
                 {
                     this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
