@@ -147,10 +147,9 @@ namespace Pokedex.Controllers
         [Route("edit_password")]
         public IActionResult EditPassword(NewPasswordViewModel newPasswordViewModel)
         {
-            User user = this.dataService.GetObjectByPropertyValue<User>("UserId", newPasswordViewModel.UserId);
+            User user = this.dataService.GetObjectByPropertyValue<User>("Id", newPasswordViewModel.UserId);
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
-            PasswordVerificationResult passwordVerificationResult =
-                passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
+            PasswordVerificationResult passwordVerificationResult = passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
 
             if (!this.ModelState.IsValid || passwordVerificationResult == PasswordVerificationResult.Failed)
             {
