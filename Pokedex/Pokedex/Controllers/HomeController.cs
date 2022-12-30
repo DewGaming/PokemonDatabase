@@ -88,12 +88,22 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
+                bool pokedexNumber = false;
                 search = this.FormatPokemonName(search);
 
                 List<PokemonTypeDetail> typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
                                                                  .Where(x => x.Pokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
                                                                  .OrderByDescending(x => x.GenerationId)
                                                                  .ToList();
+
+                if (typeDetails.Count() == 0)
+                {
+                    pokedexNumber = true;
+                    typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
+                        .Where(x => x.Pokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(x => x.GenerationId)
+                        .ToList();
+                }
 
                 List<PokemonTypeDetail> model = new List<PokemonTypeDetail>();
                 foreach (var t in typeDetails)
@@ -106,7 +116,15 @@ namespace Pokedex.Controllers
 
                 model = model.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
 
-                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                List<PokemonFormDetail> altForms = new List<PokemonFormDetail>();
+                if (pokedexNumber)
+                {
+                    altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+                else
+                {
+                    altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
 
                 if (model.Count == 1)
                 {
@@ -162,8 +180,7 @@ namespace Pokedex.Controllers
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").ToList();
-            gamesList = gamesList.Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO").ToList();
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO").ToList();
             List<Game> selectableGames = new List<Game>();
 
             foreach (var gen in generations)
@@ -337,6 +354,61 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// The page that is used to showcase the ev yield of opponent pokemon.
+        /// </summary>
+        /// <returns>Returns the ev trainer page.</returns>
+        [AllowAnonymous]
+        [Route("ev_trainer")]
+        public IActionResult EVTrainer()
+        {
+            this.dataService.AddPageView("EV Trainer Page", this.User.IsInRole("Owner"));
+            List<Generation> generations = this.dataService.GetObjects<Generation>();
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO" && x.GenerationId != 1 && x.GenerationId != 2).ToList();
+            List<Game> selectableGames = new List<Game>();
+            foreach (var gen in generations)
+            {
+                List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
+                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
+                for (var i = 0; i < uniqueGames.Count; i++)
+                {
+                    if (uniqueGames[i].Name == "Fire Red")
+                    {
+                        selectableGames.Add(uniqueGames[i]);
+                        selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
+                    }
+                    else if (i == uniqueGames.Count - 1)
+                    {
+                        selectableGames.Add(new Game()
+                        {
+                            Id = uniqueGames[i].Id,
+                            Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
+                            GenerationId = gen.Id,
+                        });
+                    }
+                    else
+                    {
+                        List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
+                        if (games.Count == 0)
+                        {
+                            selectableGames.Add(uniqueGames[i]);
+                        }
+                        else
+                        {
+                            selectableGames.Add(new Game()
+                            {
+                                Id = uniqueGames[i].Id,
+                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
+                                GenerationId = gen.Id,
+                            });
+                        }
+                    }
+                }
+            }
+
+            return this.View(selectableGames);
+        }
+
+        /// <summary>
         /// The method that is used to specify a generation and alternate form for the pokemon page.
         /// </summary>
         /// <param name="pokemonName">The name of the pokemon.</param>
@@ -375,7 +447,8 @@ namespace Pokedex.Controllers
             selectedGenerationId = 0;
             name = this.FormatPokemonName(name);
 
-            Pokemon pokemon = this.dataService.GetPokemon(name);
+            Pokemon pokemon = this.dataService.GetAllPokemon().Find(x => x.Name == name);
+
             if (pokemon == null)
             {
                 return this.RedirectToAction("AllPokemon", "Home");
@@ -609,6 +682,44 @@ namespace Pokedex.Controllers
             {
                 pokemonViewModel.Form = form;
                 pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
+            }
+
+            HttpWebRequest webRequest;
+            HttpWebResponse imageRequest;
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                {
+                    pokemonViewModel.HasShiny = true;
+                }
+                else
+                {
+                    pokemonViewModel.HasShiny = false;
+                }
+            }
+            catch
+            {
+                pokemonViewModel.HasShiny = false;
+            }
+
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                {
+                    pokemonViewModel.HasHome = true;
+                }
+                else
+                {
+                    pokemonViewModel.HasHome = false;
+                }
+            }
+            catch
+            {
+                pokemonViewModel.HasHome = false;
             }
 
             PokemonLegendaryDetail legendaryType = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");

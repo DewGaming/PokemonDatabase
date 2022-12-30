@@ -47,5 +47,9 @@ namespace Pokedex.DataAccess.Models
         public int? PokemonTeamMovesetId { get; set; }
 
         public PokemonTeamMoveset PokemonTeamMoveset { get; set; }
+
+        public int? TeraTypeId { get; set; }
+
+        public Type TeraType { get; set; }
     }
 }

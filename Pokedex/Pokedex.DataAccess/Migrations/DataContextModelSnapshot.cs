@@ -251,8 +251,8 @@ namespace Pokedex.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(15)")
-                        .HasMaxLength(15);
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -624,12 +624,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<int>("GenderRatioId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("HasShinyImage")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HasThreeDImage")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(4,1)");
 
@@ -762,6 +756,28 @@ namespace Pokedex.DataAccess.Migrations
                     b.ToTable("PokemonCaptureRateDetails");
                 });
 
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonDLCRegionalDexDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PokemonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PokemonId");
+
+                    b.ToTable("PokemonDLCRegionalDexDetails");
+                });
+
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonEggGroupDetail", b =>
                 {
                     b.Property<int>("Id")
@@ -866,6 +882,28 @@ namespace Pokedex.DataAccess.Migrations
                     b.ToTable("PokemonLegendaryDetails");
                 });
 
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonRegionalDexDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PokemonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PokemonId");
+
+                    b.ToTable("PokemonRegionalDexDetails");
+                });
+
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonTeam", b =>
                 {
                     b.Property<int>("Id")
@@ -967,6 +1005,9 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<int?>("PokemonTeamMovesetId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TeraTypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AbilityId");
@@ -982,6 +1023,8 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasIndex("PokemonTeamIVId");
 
                     b.HasIndex("PokemonTeamMovesetId");
+
+                    b.HasIndex("TeraTypeId");
 
                     b.ToTable("PokemonTeamDetails");
                 });
@@ -1471,6 +1514,21 @@ namespace Pokedex.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonDLCRegionalDexDetail", b =>
+                {
+                    b.HasOne("Pokedex.DataAccess.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonEggGroupDetail", b =>
                 {
                     b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
@@ -1537,6 +1595,21 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.LegendaryType", "LegendaryType")
                         .WithMany()
                         .HasForeignKey("LegendaryTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonRegionalDexDetail", b =>
+                {
+                    b.HasOne("Pokedex.DataAccess.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1615,6 +1688,10 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.PokemonTeamMoveset", "PokemonTeamMoveset")
                         .WithMany()
                         .HasForeignKey("PokemonTeamMovesetId");
+
+                    b.HasOne("Pokedex.DataAccess.Models.Type", "TeraType")
+                        .WithMany()
+                        .HasForeignKey("TeraTypeId");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonTypeDetail", b =>

@@ -1,0 +1,26 @@
+@model Pokedex.Models.EVTrainerViewModel;
+
+<div class="grid-container pokemonList">
+    @if (Model.AllPokemon.Count() > 0)
+    {
+        @foreach (var item in Model.AllPokemon)
+        {
+            <div class="shadowed @item.Name">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
+                    <img class="pokemonListPicture" title="@item.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @item.Id, ".png"))"/>
+                </a>
+                <div>
+                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
+                        @('#')@item.PokedexNumber.ToString().PadLeft(4, '0') @item.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id).Form.Name, ")") : string.Empty)
+                    </a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>
+            <h2>There is no Pokémon that gives this combination of EVs</h2>
+        </div>
+    }        
+</div>

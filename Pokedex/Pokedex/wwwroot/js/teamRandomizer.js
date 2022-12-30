@@ -490,14 +490,14 @@ $('.generatorButton').on('click', function () {
             exportString = data.exportString;
             setTimeout(function(){
                 $(".overlay").fadeOut(300);
-            }, 500);
+            });
 
             fillGeneratedTable(data.appConfig);
         })
         .fail(function () {
             setTimeout(function(){
                 $(".overlay").fadeOut(300);
-            }, 500);
+            });
             
             alert("Failed To Get Team!");
         });

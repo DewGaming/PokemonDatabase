@@ -19,6 +19,11 @@ namespace Pokedex.Models
         public List<Nature> AllNatures { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all types.
+        /// </summary>
+        public List<Type> AllTypes { get; set; }
+
+        /// <summary>
         /// Gets or sets the team's game id, if applicable.
         /// </summary>
         public int? GameId { get; set; }

@@ -97,24 +97,57 @@ namespace Pokedex.Controllers
         [Route("import_teams")]
         public IActionResult ImportTeams(string importedTeams)
         {
-            int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
-            if (!this.ModelState.IsValid)
+            try
             {
-                return this.View();
+                int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                if (!this.ModelState.IsValid || string.IsNullOrEmpty(importedTeams))
+                {
+                    return this.View();
+                }
+
+                List<string> pokemonTeams = importedTeams.TrimStart().Split("\r\n===").ToList();
+                for (var i = 1; i < pokemonTeams.Count; i++)
+                {
+                    pokemonTeams[i] = string.Concat("===", pokemonTeams[i]);
+                }
+
+                foreach (var p in pokemonTeams)
+                {
+                    this.CreateTeamFromImport(p, userId);
+                }
+
+                return this.RedirectToAction("PokemonTeams", "User");
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's import.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during the pokemon team's import.";
+                    }
+
+                    commentBody = string.Concat(commentBody, " - Imported Team Text: {", string.Join(", ", importedTeams), "}");
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.AddObject(comment);
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
             }
 
-            List<string> pokemonTeams = importedTeams.Split("\r\n===").ToList();
-            for (var i = 1; i < pokemonTeams.Count; i++)
-            {
-                pokemonTeams[i] = string.Concat("===", pokemonTeams[i]);
-            }
-
-            foreach (var p in pokemonTeams)
-            {
-                this.CreateTeamFromImport(p, userId);
-            }
-
-            return this.RedirectToAction("PokemonTeams", "User");
+            return null;
         }
 
         /// <summary>
@@ -126,7 +159,7 @@ namespace Pokedex.Controllers
         [Route("create_pokemon/{pokemonTeamId:int}")]
         public IActionResult CreatePokemon(int pokemonTeamId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId || pokemonTeams[pokemonTeamId - 1].SixthPokemonId != null)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -140,6 +173,7 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeam.GameId,
                     Level = 100,
                     Happiness = 255,
@@ -163,9 +197,10 @@ namespace Pokedex.Controllers
             {
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
-                    AllPokemon = this.FillPokemonList(this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1]),
+                    AllPokemon = this.FillPokemonList(this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name)[pokemonTeamId - 1]),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeamDetail.GameId,
                     Level = 100,
                     Happiness = 255,
@@ -201,7 +236,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList(),
+                AllPokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon", "User.Username", this.User.Identity.Name),
                 AppConfig = this.appConfig,
             };
 
@@ -218,7 +253,7 @@ namespace Pokedex.Controllers
         [Route("update_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditPokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -239,6 +274,7 @@ namespace Pokedex.Controllers
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
@@ -274,6 +310,7 @@ namespace Pokedex.Controllers
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = pokemonList,
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
@@ -303,7 +340,7 @@ namespace Pokedex.Controllers
         [Route("delete_team/{pokemonTeamId:int}")]
         public IActionResult DeleteTeam(int pokemonTeamId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -353,7 +390,7 @@ namespace Pokedex.Controllers
         [Route("update_ev/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditEV(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon.Pokemon, SecondPokemon.Pokemon, ThirdPokemon.Pokemon, FourthPokemon.Pokemon, FifthPokemon.Pokemon, SixthPokemon.Pokemon", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -437,7 +474,7 @@ namespace Pokedex.Controllers
         [Route("update_moveset/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditMoveset(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon.Pokemon, SecondPokemon.Pokemon, ThirdPokemon.Pokemon, FourthPokemon.Pokemon, FifthPokemon.Pokemon, SixthPokemon.Pokemon", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -501,7 +538,7 @@ namespace Pokedex.Controllers
         [Route("update_iv/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult EditIV(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon.Pokemon, SecondPokemon.Pokemon, ThirdPokemon.Pokemon, FourthPokemon.Pokemon, FifthPokemon.Pokemon, SixthPokemon.Pokemon", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -567,7 +604,7 @@ namespace Pokedex.Controllers
         [Route("delete_team_pokemon/{pokemonTeamId:int}/{pokemonTeamDetailId:int}")]
         public IActionResult DeletePokemon(int pokemonTeamId, int pokemonTeamDetailId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -611,7 +648,7 @@ namespace Pokedex.Controllers
         [Route("update_team/{pokemonTeamId:int}")]
         public IActionResult EditTeam(int pokemonTeamId)
         {
-            PokemonTeam pokemonTeam = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList()[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name)[pokemonTeamId - 1];
             this.FillPokemonTeam(pokemonTeam);
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel()
@@ -926,9 +963,9 @@ namespace Pokedex.Controllers
 
                 // Ability converter.
                 Ability ability;
-                string abilityName = remainingImportedText.Split("\r\n")[0];
-                if (abilityName.Contains("Ability: "))
+                if (remainingImportedText.Contains("Ability: "))
                 {
+                    string abilityName = remainingImportedText.Split("\r\n")[0];
                     remainingImportedText = remainingImportedText.Replace(string.Concat(abilityName, "\r\n"), string.Empty);
                     abilityName = abilityName.Split("Ability: ")[1].Trim();
                     ability = this.dataService.GetObjectByPropertyValue<Ability>("Name", abilityName);
@@ -966,6 +1003,16 @@ namespace Pokedex.Controllers
                 {
                     remainingImportedText = remainingImportedText.Replace(string.Concat(remainingImportedText.Split("\r\n")[0], "\r\n"), string.Empty);
                     pokemonTeamDetail.IsShiny = true;
+                }
+
+                // Happiness converter.
+                if (remainingImportedText.Contains("Tera Type:"))
+                {
+                    string teraType = remainingImportedText.Split("\r\n")[0];
+                    remainingImportedText = remainingImportedText.Replace(string.Concat(teraType, "\r\n"), string.Empty);
+                    teraType = teraType.Trim();
+                    teraType = teraType.Substring(teraType.IndexOf(':') + 2, teraType.Length - (teraType.IndexOf(':') + 2));
+                    pokemonTeamDetail.TeraTypeId = this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Name", teraType).Id;
                 }
 
                 // Happiness converter.
@@ -1127,9 +1174,19 @@ namespace Pokedex.Controllers
             {
                 if (!this.User.IsInRole("Owner") && e != null)
                 {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during team import.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during team import.";
+                    }
+
                     Comment comment = new Comment()
                     {
-                        Name = string.Concat("Imported Text: ", importedPokemon),
+                        Name = string.Concat(commentBody, " - Imported Text: ", importedPokemon),
                     };
 
                     if (this.User.Identity.Name != null)

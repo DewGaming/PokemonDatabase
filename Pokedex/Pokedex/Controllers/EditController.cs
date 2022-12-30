@@ -178,6 +178,42 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("edit_regional_dex/{id:int}")]
+        public IActionResult RegionalDex(int id)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            List<Pokemon> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Game, Pokemon.Game.Generation", "GameId", id).ConvertAll(x => x.Pokemon);
+            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
+            {
+                Game = game,
+                Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
+                PokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => x.Id == y.Id)).ToList(),
+                RegionalDexDetails = this.dataService.GetObjects<PokemonRegionalDexDetail>(includes: "Pokemon, Game"),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("edit_dlc_regional_dex/{id:int}")]
+        public IActionResult DLCRegionalDex(int id)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            List<Pokemon> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Game, Pokemon.Game.Generation", "GameId", id).ConvertAll(x => x.Pokemon);
+            List<Pokemon> regionalDexDetails = this.dataService.GetObjects<PokemonRegionalDexDetail>(includes: "Pokemon, Pokemon.Game, Pokemon.Game.Generation", whereProperty: "GameId", wherePropertyValue: game.Id).ConvertAll(x => x.Pokemon);
+            pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => x.Id == y.Id)).ToList();
+            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
+            {
+                Game = game,
+                Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
+                PokemonList = pokemonList.Where(x => !regionalDexDetails.Any(y => x.Id == y.Id)).ToList(),
+                DLCRegionalDexDetails = this.dataService.GetObjects<PokemonDLCRegionalDexDetail>(includes: "Pokemon, Game"),
+            };
+
+            return this.View(model);
+        }
+
         [Route("edit_game_starters/{id:int}")]
         public IActionResult GameStarter(int id)
         {
@@ -275,7 +311,7 @@ namespace Pokedex.Controllers
 
                 if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                 {
-                    viewModel.GenderRatioString = "Genderless";
+                    viewModel.GenderRatioString = "Gender Unknown";
                 }
                 else if (genderRatio.FemaleRatio == 0)
                 {
@@ -332,7 +368,7 @@ namespace Pokedex.Controllers
 
                         if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = "Genderless";
+                            viewModel.GenderRatioString = "Gender Unknown";
                         }
                         else if (genderRatio.FemaleRatio == 0)
                         {
@@ -383,7 +419,7 @@ namespace Pokedex.Controllers
 
                         if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 0)
                         {
-                            viewModel.GenderRatioString = "Genderless";
+                            viewModel.GenderRatioString = "Gender Unknown";
                         }
                         else if (genderRatio.FemaleRatio == 0)
                         {
@@ -547,10 +583,6 @@ namespace Pokedex.Controllers
 
             this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "3d");
 
-            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id);
-            pokemon.HasThreeDImage = true;
-            this.dataService.UpdateObject(pokemon);
-
             return this.RedirectToAction("Pokemon", "Admin");
         }
 
@@ -610,10 +642,6 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "shiny");
-
-            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id);
-            pokemon.HasShinyImage = true;
-            this.dataService.UpdateObject(pokemon);
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
@@ -1364,11 +1392,19 @@ namespace Pokedex.Controllers
 
             if (classification.Name.Contains("pokemon"))
             {
-                classification.Name = classification.Name.Replace("pokemon", "Pokemon");
+                classification.Name = classification.Name.Replace("pokemon", "Pokémon");
             }
-            else if (!classification.Name.Contains("Pokemon") && !classification.Name.Contains("pokemon"))
+            else if (classification.Name.Contains("Pokemon"))
             {
-                classification.Name = string.Concat(classification.Name.Trim(), " Pokemon");
+                classification.Name = classification.Name.Replace("Pokemon", "Pokémon");
+            }
+            else if (classification.Name.Contains("pokémon"))
+            {
+                classification.Name = classification.Name.Replace("pokémon", "Pokémon");
+            }
+            else if (!classification.Name.Contains("Pokémon"))
+            {
+                classification.Name = string.Concat(classification.Name.Trim(), " Pokémon");
             }
 
             this.dataService.UpdateObject(classification);

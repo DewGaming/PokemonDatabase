@@ -24,7 +24,7 @@
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">
-                        @('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0') @item.Pokemon.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId).Form.Name, ")") : string.Empty)
+                        @('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @item.Pokemon.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId).Form.Name, ")") : string.Empty)
                     </a>
                     <div class="typing">
                         <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>

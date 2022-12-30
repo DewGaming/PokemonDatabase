@@ -31,8 +31,6 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Experience Growth"), Required]
         public int ExperienceGrowthId { get; set; }
         public ExperienceGrowth ExperienceGrowth { get; set; }
-        public bool HasThreeDImage { get; set;  }
-        public bool HasShinyImage { get; set; }
         [Display(Name = "Is a Starter")]
         public bool IsStarter { get; set; }
 

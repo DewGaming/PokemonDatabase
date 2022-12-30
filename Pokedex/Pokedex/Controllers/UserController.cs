@@ -39,7 +39,7 @@ namespace Pokedex.Controllers
         [Route("messages")]
         public IActionResult ViewMessages()
         {
-            List<Message> model = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value));
+            List<Message> model = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name);
 
             return this.View(model);
         }
@@ -53,7 +53,7 @@ namespace Pokedex.Controllers
         [Route("delete_message/{messageId:int}")]
         public IActionResult DeleteMessage(int messageId)
         {
-            Message model = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+            Message model = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name)[messageId - 1];
 
             return this.View(model);
         }
@@ -81,7 +81,7 @@ namespace Pokedex.Controllers
         [Route("reply_to_message/{messageId:int}")]
         public IActionResult ReplyMessage(int messageId)
         {
-            Message originalMessage = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+            Message originalMessage = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name)[messageId - 1];
             Message model = new Message()
             {
                 ReceiverId = originalMessage.SenderId,
@@ -104,7 +104,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Message originalMessage = this.dataService.GetObjects<Message>(whereProperty: "ReceiverId", wherePropertyValue: Convert.ToInt32(this.User.Claims.First(x => x.Type == "UserId").Value))[messageId - 1];
+                Message originalMessage = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name)[messageId - 1];
 
                 Message model = new Message()
                 {
@@ -147,10 +147,9 @@ namespace Pokedex.Controllers
         [Route("edit_password")]
         public IActionResult EditPassword(NewPasswordViewModel newPasswordViewModel)
         {
-            User user = this.dataService.GetObjectByPropertyValue<User>("UserId", newPasswordViewModel.UserId);
+            User user = this.dataService.GetObjectByPropertyValue<User>("Id", newPasswordViewModel.UserId);
             PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
-            PasswordVerificationResult passwordVerificationResult =
-                passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
+            PasswordVerificationResult passwordVerificationResult = passwordHasher.VerifyHashedPassword(null, user.PasswordHash, newPasswordViewModel.OldPassword);
 
             if (!this.ModelState.IsValid || passwordVerificationResult == PasswordVerificationResult.Failed)
             {
@@ -181,7 +180,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Username == this.User.Identity.Name).ToList(),
+                AllPokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon.Pokemon, SecondPokemon.Pokemon, ThirdPokemon.Pokemon, FourthPokemon.Pokemon, FifthPokemon.Pokemon, SixthPokemon.Pokemon", "User.Username", this.User.Identity.Name),
                 AppConfig = this.appConfig,
             };
 

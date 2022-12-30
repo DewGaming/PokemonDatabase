@@ -94,6 +94,7 @@
 .pokemonCount {
   justify-content: left !important;
   margin: 1rem 0 !important;
+  text-align: center;
 }
 
 .container {

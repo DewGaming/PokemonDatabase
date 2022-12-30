@@ -87,6 +87,15 @@
             </div>
         }
         
+        @if (@Model.GameId == 41 || @Model.GameId == 42)
+        {
+            <div class="form-group row">
+                @Html.LabelFor(x => x.PokemonTeamDetail.TeraTypeId, "Tera Type", new { @class = "col-md-2" })
+                @Html.DropDownListFor(x => x.PokemonTeamDetail.TeraTypeId, new SelectList(Model.AllTypes, "Id", "Name"), new { @class = "form-control col-md-8" })
+                @Html.ValidationMessageFor(x => x.PokemonTeamDetail.TeraTypeId)
+            </div>
+        }
+        
         @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20)
         {
             <div class="form-group row">

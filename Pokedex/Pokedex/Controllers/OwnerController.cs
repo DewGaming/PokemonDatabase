@@ -44,7 +44,7 @@ namespace Pokedex.Controllers
                 UsersWithPokemonTeams = new List<User>(),
             };
 
-            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams();
+            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>();
 
             foreach (var u in model.UserList)
             {
@@ -272,8 +272,7 @@ namespace Pokedex.Controllers
         {
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetPokemonTeams().Where(x => x.User.Id == id).ToList(),
-                User = this.dataService.GetObjectByPropertyValue<User>("Id", id),
+                AllPokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon.Pokemon, SecondPokemon.Pokemon, ThirdPokemon.Pokemon, FourthPokemon.Pokemon, FifthPokemon.Pokemon, SixthPokemon.Pokemon", "Id", id).ToList(),
                 AppConfig = this.appConfig,
             };
 

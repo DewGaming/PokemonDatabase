@@ -2,7 +2,7 @@
 @using Pokedex.DataAccess.Models;
 @using System.Collections.Generic;
 @using MoreLinq;
-@model Pokedex.Models.AdminPokemonDropdownViewModel
+@model Pokedex.Models.AdminPokemonDropdownViewModel;
 @{
     Layout = "_Layout";
     string style = string.Empty;
@@ -74,6 +74,8 @@
 
         .official, .shiny {
             position: absolute;
+            left: 0;
+            right: 0;
         }
 
         .home {
@@ -261,16 +263,16 @@
                     }
                     <div class="shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
                         <div class="pokemonImage">
-                            <div class="official current" style="@(!item.Pokemon.HasShinyImage && !item.Pokemon.HasThreeDImage ? "position: relative !important" : "")">
+                            <div class="official current" style="@(!item.HasShiny && !item.HasHome ? "position: relative !important" : "")">
                                 <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                             </div>
-                            @if (@item.Pokemon.HasShinyImage)
+                            @if (@item.HasShiny)
                             {
-                                <div class="shiny" style="@(!item.Pokemon.HasThreeDImage ? "position: relative !important" : "")">
+                                <div class="shiny" style="@(!item.HasHome ? "position: relative !important" : "")">
                                     <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                                 </div>
                             }
-                            @if (@item.Pokemon.HasThreeDImage)
+                            @if (@item.HasHome)
                             {
                                 <div class="home">
                                     <img title="@item.Pokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.HomePokemonImageUrl, @item.Pokemon.Id, ".png"))" />
@@ -294,15 +296,15 @@
                         }
                     </div>
                 </div>
-                @if (@item.Pokemon.HasShinyImage || @item.Pokemon.HasThreeDImage)
+                @if (@item.HasShiny || @item.HasHome)
                 {
                     <div class="pokemonImageButtons">
                         <button class="btn btn-primary officialButton hidden" onclick="officialRender()">View Official Artwork</button>
-                        @if (@item.Pokemon.HasShinyImage)
+                        @if (@item.HasShiny)
                         {
                             <button class="btn btn-primary shinyButton" onclick="shinyRender()">View Shiny Artwork</button>
                         }
-                        @if (@item.Pokemon.HasThreeDImage)
+                        @if (@item.HasHome)
                         {
                             <button class="btn btn-primary homeButton" onclick="homeRender()">View Home Render</button>
                         }
@@ -321,7 +323,7 @@
                         </tr>
                         <tr>
                             <th>Pokedex Number</th>
-                            <td>@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(3, '0')</td>
+                            <td>@('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(4, '0')</td>
                         </tr>
                         <tr>
                             <th>Classification</th>
@@ -538,7 +540,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                     <td>
                                         @if (item.Pokemon.GenderRatio.MaleRatio == 0 && item.Pokemon.GenderRatio.FemaleRatio == 0)
                                         {
-                                            @("Genderless");
+                                            @("Gender Unknown");
                                         }
                                         else
                                         {

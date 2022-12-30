@@ -36,7 +36,7 @@
             <th class="col-md-9" scope="col">Message</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach (var item in Model.OrderByDescending(x => x.Id))
+        @foreach (var item in Model)
         {
             messageCount++;
             <tr>

@@ -54,6 +54,7 @@ var checkTypings = function () {
     }
 }, grabPokemon = function () {
     checkTypings();
+    $(".overlay").fadeIn(300);
     if ($('.primaryList > select').val() != '') {
         $('.pokemonWithTyping').css('display', 'none');
         $('.effectivenessChart').css('display', 'none');
@@ -69,15 +70,19 @@ var checkTypings = function () {
             if ($('.secondaryList > select').val() == '') {
                 $('.effectivenessChart').css('display', 'flex');
             }
+
+            setTimeout(function () {
+                $(".overlay").fadeOut(300);
+            });
         });
     }
     else {
         $('.pokemonWithTyping').css('display', 'none');
-    }
 
-    setTimeout(function () {
-        $(".overlay").fadeOut(300);
-    }, 500);
+        setTimeout(function () {
+            $(".overlay").fadeOut(300);
+        });
+    }
 }, grabTypes = function (generationID) {
     var primaryTypeID = $('.primaryList > select').val(), secondaryTypeID = $('.secondaryList > select').val();
     $('.typeLists').load('/get-types-by-generation/', { 'generationID': generationID }, function () {
@@ -107,12 +112,6 @@ var checkTypings = function () {
 
 $(function () {
     grabTypes($('.generationList > select').val());
-});
-
-jQuery(function ($) {
-    $(document).ajaxSend(function () {
-        $(".overlay").fadeIn(300);
-    })
 });
 
 $(".generationSelectList").on('change', function () {

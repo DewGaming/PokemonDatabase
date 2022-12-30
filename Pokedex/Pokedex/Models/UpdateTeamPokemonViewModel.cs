@@ -24,6 +24,11 @@ namespace Pokedex.Models
         public List<Nature> AllNatures { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all pokemon types.
+        /// </summary>
+        public List<Type> AllTypes { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokemon abilities.
         /// </summary>
         public List<Ability> AllAbilities { get; set; }

@@ -1,0 +1,65 @@
+@using Pokedex.DataAccess.Models;
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.EditGameAvailabilityViewModel
+@{
+    Layout = "_layout";
+}
+
+@section scripts
+{
+    <script src="/js/editRegionalDex.js"></script>
+}
+
+@section styles
+{
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <style>
+        .container {
+            max-width: 85% !important;
+        }
+
+        .flexDiv {
+            flex-wrap: wrap;
+        }
+
+        .regionalDex {
+            flex: 0 0 33%;
+            flex-wrap: wrap;
+            max-width: auto;
+        }
+
+        .regionalDex li {
+            list-style: none;
+        }
+    </style>
+}
+
+<h2>Update @(Model.Game.Name)'s Regional Dex</h2>
+<p>
+    <button onclick="updateRegionalDex(@Model.Game.Id)" class="btn btn-primary" role="button">Save</button>
+</p>
+
+<div class="flexDiv">
+    @foreach(var g in Model.PokemonList.Select(x => x.Game.Generation).Distinct().OrderBy(x => x.Id).ToList())
+    {
+        <div class="gen@(g.Id) regionalDex">
+            <p>Generation @g.Id</p>
+            <ul>
+                @foreach (var p in Model.PokemonList.Where(x => x.Game.GenerationId == g.Id).OrderBy(x => x.PokedexNumber))
+                {
+                    var gameAvail = @Model.RegionalDexDetails.Find(x => x.PokemonId == p.Id && x.GameId == @Model.Game.Id);
+                    <li>
+                        <input id="gen@(g.Id)@(p.Name)" type="checkbox" value="@p.Id" @(gameAvail != null ? "checked=checked" : "") />
+                        <label for="gen@(g.Id)@(p.Name)" class="generatorOptionTitle"><span>@('#')@p.PokedexNumber.ToString().PadLeft(4, '0') @p.Name</span></label>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>

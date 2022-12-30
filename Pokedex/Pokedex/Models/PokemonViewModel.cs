@@ -89,6 +89,16 @@ namespace Pokedex.Models
         public Pokemon OriginalPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a pokemon has a shiny image.
+        /// </summary>
+        public bool HasShiny { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a pokemon has a home image.
+        /// </summary>
+        public bool HasHome { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }

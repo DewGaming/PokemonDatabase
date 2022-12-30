@@ -49,13 +49,13 @@ namespace Pokedex
 
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"), options => options.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: System.TimeSpan.FromSeconds(30), errorNumbersToAdd: null));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
             services.AddDbContext<MyKeysContext>(options =>
             {
-                options.UseSqlServer(this.Configuration.GetConnectionString("MyKeysConnection"));
+                options.UseSqlServer(this.Configuration.GetConnectionString("MyKeysConnection"), options => options.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: System.TimeSpan.FromSeconds(30), errorNumbersToAdd: null));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             })
             .AddDataProtection()
