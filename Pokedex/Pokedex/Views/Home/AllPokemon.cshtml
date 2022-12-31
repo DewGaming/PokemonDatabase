@@ -41,6 +41,10 @@
         .pokemonListPicture {
             backface-visibility: hidden;
         }
+
+        .generations {
+            margin-bottom: 0px !important;
+        }
     </style>
 }
 
@@ -56,7 +60,7 @@
     }
 </p>
 
-<div class="pageButtons">
+<div class="generations">
     @foreach (var id in Model.Select(x => x.GenerationId).Distinct().ToList())
     {
         if (id == 7)

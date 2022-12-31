@@ -13,6 +13,10 @@
         main {
             max-width: 1220px !important;
         }
+
+        .pageButtons {
+            margin-bottom: 10px;
+        }
     </style>
 }
 
@@ -21,7 +25,7 @@
     <script src="/js/pageLookup.js"></script>
 }
 
-<div class="generations">
+<div class="pageButtons">
     @{
         var generations = @Model.TypeChart.Select(x => x.GenerationId).Distinct().ToList();
         generations.Sort();
