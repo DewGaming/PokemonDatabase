@@ -511,7 +511,7 @@ h2 {
   font-weight: bold
 }
 
-.effectivenessChart table td, .evolutions td, .typingChart td {
+.effectivenessChart table td, .typingChart td {
   padding: 0 !important;
 }
 
