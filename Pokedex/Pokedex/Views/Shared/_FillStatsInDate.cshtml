@@ -1,6 +1,13 @@
 @model List<Pokedex.DataAccess.Models.PageStat>;
 
-<h2>Stats for @Model.First().VisitDate.ToString("MMMM dd, yyyy")</h2>
+@if (@Model.First().VisitDate.Date == @Model.Last().VisitDate.Date)
+{
+    <h2>Stats for @Model.First().VisitDate.ToString("MMMM dd, yyyy")</h2>
+}
+else
+{ 
+    <h2>Stats for @Model.First().VisitDate.ToString("MMMM yyyy")</h2>
+}
 
 <table class="table">
     <tbody>
