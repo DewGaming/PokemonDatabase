@@ -2389,7 +2389,7 @@ namespace Pokedex.Controllers
                 pageStats = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList();
             }
 
-            pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
+            pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) == year).ToList();
             List<string> model = pageStats.Select(x => x.VisitDate.ToString("MMMM")).Distinct().ToList();
             return this.PartialView("_FillMonthInYear", model);
         }
@@ -2405,7 +2405,7 @@ namespace Pokedex.Controllers
         public IActionResult GrabDayByMonth(string month, int year, string pokemonPageCheck)
         {
             List<string> model = new List<string>();
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
+            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) == year).ToList();
             pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
 
             if (pokemonPageCheck == "noPokemonPage")
@@ -2431,7 +2431,7 @@ namespace Pokedex.Controllers
         [Route("get-stats-by-date/{day:int}/{month}/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabStatsByDate(int day, string month, int year, string pokemonPageCheck)
         {
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) <= year).ToList();
+            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) == year).ToList();
             pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
             if (day != 0)
             {
