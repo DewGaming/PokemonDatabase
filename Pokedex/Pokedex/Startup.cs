@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pokedex.DataAccess.Models;
+using RobotsTxt;
 
 namespace Pokedex
 {
@@ -72,6 +73,13 @@ namespace Pokedex
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
+
+            services.AddStaticRobotsTxt(robots =>
+            {
+                robots.AddSection(section => section.AddUserAgent("*").Disallow("/admin/"));
+
+                return robots;
+            });
         }
 
         /// <summary>
@@ -108,6 +116,7 @@ namespace Pokedex
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRobotsTxt();
 
             app.UseEndpoints(endpoints =>
             {
