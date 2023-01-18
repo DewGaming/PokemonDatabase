@@ -1,4 +1,4 @@
-function updateRegionalDex(gameId) {
+function updateRegionalDex(gameId, preEvos) {
     var pokemon = [];
     $('.regionalDex input').each(function () {
         if ($(this).is(':checked')) {
@@ -11,7 +11,7 @@ function updateRegionalDex(gameId) {
     $.ajax({
         url: '/update-regional-dex/',
         method: "POST",
-        data: { "gameId": gameId, "pokemonList": pokemon }
+        data: { "gameId": gameId, "pokemonList": pokemon, "addPreEvos": preEvos }
     })
         .done(function (data) {
             window.location = data;
@@ -25,7 +25,7 @@ function updateRegionalDex(gameId) {
         });
 }
 
-function updateDLCRegionalDex(gameId) {
+function updateDLCRegionalDex(gameId, preEvos) {
     var pokemon = [];
     $('.dlcRegionalDex input').each(function () {
         if ($(this).is(':checked')) {
@@ -38,7 +38,7 @@ function updateDLCRegionalDex(gameId) {
     $.ajax({
         url: '/update-dlc-regional-dex/',
         method: "POST",
-        data: { "gameId": gameId, "pokemonList": pokemon }
+        data: { "gameId": gameId, "pokemonList": pokemon, "addPreEvos": preEvos }
     })
         .done(function (data) {
             window.location = data;

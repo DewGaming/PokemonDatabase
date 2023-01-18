@@ -36,7 +36,8 @@
 
 <h2>Update @(Model.Game.Name)'s Regional Dex</h2>
 <p>
-    <button onclick="updateRegionalDex(@Model.Game.Id)" class="btn btn-primary" role="button">Save</button>
+    <button onclick="updateRegionalDex(@Model.Game.Id, true)" class="btn btn-primary" role="button">Save</button>
+    <button onclick="updateRegionalDex(@Model.Game.Id, false)" class="btn btn-primary" role="button">Save Without Pre-Evolutions</button>
 </p>
 
 <div class="flexDiv">

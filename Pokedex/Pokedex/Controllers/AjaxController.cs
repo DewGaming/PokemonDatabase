@@ -1508,9 +1508,10 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="gameId">The game's id.</param>
         /// <param name="pokemonList">The pokemon that are available in the game's regional dex.</param>
+        /// <param name="addPreEvos">Add pre evolutions to regional dex.</param>
         /// <returns>The admin pokemon page.</returns>
         [Route("update-regional-dex")]
-        public string UpdateRegionalDex(int gameId, List<int> pokemonList)
+        public string UpdateRegionalDex(int gameId, List<int> pokemonList, bool addPreEvos)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1535,23 +1536,33 @@ namespace Pokedex.Controllers
                     generationId = 4;
                 }
 
-                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
-
-                pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
-
-                foreach (var p in pokemonList.Intersect(evolutions.Select(x => x.EvolutionPokemonId).ToList()))
+                if (addPreEvos)
                 {
-                    Evolution evolutionDetails = evolutions.Find(x => x.EvolutionPokemonId == p);
-                    if (!pokemonIds.Contains(evolutionDetails.PreevolutionPokemonId))
-                    {
-                        pokemonIds.Add(evolutionDetails.PreevolutionPokemonId);
-                        if (evolutions.FirstOrDefault(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId) != null)
-                        {
-                            pokemonIds.Add(evolutions.First(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId).PreevolutionPokemonId);
-                        }
-                    }
+                    List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
 
-                    pokemonIds.Add(p);
+                    pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
+
+                    foreach (var p in pokemonList.Intersect(evolutions.Select(x => x.EvolutionPokemonId).ToList()))
+                    {
+                        Evolution evolutionDetails = evolutions.Find(x => x.EvolutionPokemonId == p);
+                        if (!pokemonIds.Contains(evolutionDetails.PreevolutionPokemonId))
+                        {
+                            pokemonIds.Add(evolutionDetails.PreevolutionPokemonId);
+                            if (evolutions.FirstOrDefault(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId) != null)
+                            {
+                                pokemonIds.Add(evolutions.First(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId).PreevolutionPokemonId);
+                            }
+                        }
+
+                        pokemonIds.Add(p);
+                    }
+                }
+                else
+                {
+                    foreach (var p in pokemonList)
+                    {
+                        pokemonIds.Add(p);
+                    }
                 }
 
                 foreach (var game in games.ConvertAll(x => x.Id))
@@ -1601,9 +1612,10 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="gameId">The game's id.</param>
         /// <param name="pokemonList">The pokemon that are available in the game dlc's regional dex.</param>
+        /// <param name="addPreEvos">Add pre evolutions to dlc's regional dex.</param>
         /// <returns>The admin pokemon page.</returns>
         [Route("update-dlc-regional-dex")]
-        public string UpdateDLCRegionalDex(int gameId, List<int> pokemonList)
+        public string UpdateDLCRegionalDex(int gameId, List<int> pokemonList, bool addPreEvos)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1628,23 +1640,33 @@ namespace Pokedex.Controllers
                     generationId = 4;
                 }
 
-                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
-
-                pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
-
-                foreach (var p in pokemonList.Intersect(evolutions.Select(x => x.EvolutionPokemonId).ToList()))
+                if (addPreEvos)
                 {
-                    Evolution evolutionDetails = evolutions.Find(x => x.EvolutionPokemonId == p);
-                    if (!pokemonIds.Contains(evolutionDetails.PreevolutionPokemonId))
-                    {
-                        pokemonIds.Add(evolutionDetails.PreevolutionPokemonId);
-                        if (evolutions.FirstOrDefault(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId) != null)
-                        {
-                            pokemonIds.Add(evolutions.First(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId).PreevolutionPokemonId);
-                        }
-                    }
+                    List<Evolution> evolutions = this.dataService.GetObjects<Evolution>().Where(x => x.GenerationId <= generationId).ToList();
 
-                    pokemonIds.Add(p);
+                    pokemonIds.AddRange(pokemonList.Except(evolutions.Select(x => x.EvolutionPokemonId).ToList()));
+
+                    foreach (var p in pokemonList.Intersect(evolutions.Select(x => x.EvolutionPokemonId).ToList()))
+                    {
+                        Evolution evolutionDetails = evolutions.Find(x => x.EvolutionPokemonId == p);
+                        if (!pokemonIds.Contains(evolutionDetails.PreevolutionPokemonId))
+                        {
+                            pokemonIds.Add(evolutionDetails.PreevolutionPokemonId);
+                            if (evolutions.FirstOrDefault(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId) != null)
+                            {
+                                pokemonIds.Add(evolutions.First(x => x.EvolutionPokemonId == evolutionDetails.PreevolutionPokemonId).PreevolutionPokemonId);
+                            }
+                        }
+
+                        pokemonIds.Add(p);
+                    }
+                }
+                else
+                {
+                    foreach (var p in pokemonList)
+                    {
+                        pokemonIds.Add(p);
+                    }
                 }
 
                 foreach (var game in games.ConvertAll(x => x.Id))
