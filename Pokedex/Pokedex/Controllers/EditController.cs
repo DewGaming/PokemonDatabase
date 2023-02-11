@@ -162,58 +162,6 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Games", "Admin");
         }
 
-        [Route("edit_game_availability/{id:int}")]
-        public IActionResult GameAvailability(int id)
-        {
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
-            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
-            {
-                Game = game,
-                Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
-                PokemonList = pokemonList,
-                GameAvailability = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game"),
-            };
-
-            return this.View(model);
-        }
-
-        [Route("edit_regional_dex/{id:int}")]
-        public IActionResult RegionalDex(int id)
-        {
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
-            List<Pokemon> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Game, Pokemon.Game.Generation", "GameId", id).ConvertAll(x => x.Pokemon);
-            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
-            {
-                Game = game,
-                Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
-                PokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => x.Id == y.Id)).ToList(),
-                RegionalDexDetails = this.dataService.GetObjects<PokemonRegionalDexDetail>(includes: "Pokemon, Game"),
-            };
-
-            return this.View(model);
-        }
-
-        [Route("edit_dlc_regional_dex/{id:int}")]
-        public IActionResult DLCRegionalDex(int id)
-        {
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
-            List<Pokemon> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Game, Pokemon.Game.Generation", "GameId", id).ConvertAll(x => x.Pokemon);
-            List<Pokemon> regionalDexDetails = this.dataService.GetObjects<PokemonRegionalDexDetail>(includes: "Pokemon, Pokemon.Game, Pokemon.Game.Generation", whereProperty: "GameId", wherePropertyValue: game.Id).ConvertAll(x => x.Pokemon);
-            pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => x.Id == y.Id)).ToList();
-            EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
-            {
-                Game = game,
-                Games = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
-                PokemonList = pokemonList.Where(x => !regionalDexDetails.Any(y => x.Id == y.Id)).ToList(),
-                DLCRegionalDexDetails = this.dataService.GetObjects<PokemonDLCRegionalDexDetail>(includes: "Pokemon, Game"),
-            };
-
-            return this.View(model);
-        }
-
         [Route("edit_game_starters/{id:int}")]
         public IActionResult GameStarter(int id)
         {
