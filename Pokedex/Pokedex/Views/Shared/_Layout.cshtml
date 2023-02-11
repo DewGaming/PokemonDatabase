@@ -81,16 +81,17 @@
               $('.fixed-nav').addClass('nav-scroll');
           }
       });
+
+      if ($(window).width() >= 935) {
+        $('.dropdown').hover(function(){ 
+          $('.dropdown-toggle', this).trigger('click'); 
+        }); 
+      }
     </script>
 
     @if (this.User.Identity.IsAuthenticated)
     {
       <script>
-        if ($(window).width() >= 935) {
-          $('.dropdown').hover(function(){ 
-            $('.dropdown-toggle', this).trigger('click'); 
-          }); 
-        }
 
         $(document).ready(function () {
             $.ajax({
