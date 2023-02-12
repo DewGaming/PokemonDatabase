@@ -193,7 +193,7 @@ namespace Pokedex.Controllers
                 {
                     try
                     {
-                        webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, id, ".png"));
+                        webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.HomePageImageUrl, id, ".png"));
                         imageRequest = (HttpWebResponse)webRequest.GetResponse();
                         if (imageRequest.StatusCode != HttpStatusCode.OK)
                         {
