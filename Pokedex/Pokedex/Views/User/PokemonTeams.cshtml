@@ -1,9 +1,12 @@
 @model Pokedex.Models.PokemonTeamsViewModel;
+@using System.Net;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Pokémon Teams";
     int teamCount = 0;
     int pokemonCount;
+    HttpWebRequest webRequest;
+    HttpWebResponse imageRequest;
 }
 
 @section styles
@@ -95,7 +98,23 @@
                                                 <div class="pokemonTeamGroup">
                                                     <a class="dropdown-toggle pokemonTeamDropdownButton" data-toggle="dropdown">
                                                         <span class="pokemonTeamPicture">
-                                                            <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.PokemonId, ".png"))" />
+                                                            @if (p.IsShiny)
+                                                            {
+                                                                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.PokemonId, ".png"));
+                                                                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                                                                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                                                                {
+                                                                    <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @p.PokemonId, ".png"))" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.PokemonId, ".png"))" />
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.PokemonId, ".png"))" />
+                                                            }
                                                         </span>
                                                     </a>
                                                     <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
