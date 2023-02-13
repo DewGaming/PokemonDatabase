@@ -2009,6 +2009,7 @@ namespace Pokedex.Controllers
                 {
                     eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
                     pokemonList.Add(this.dataService.GetPokemon("Ditto"));
+                    originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                 }
                 else if (pokemonId == this.dataService.GetPokemon("Ditto").Id)
                 {
