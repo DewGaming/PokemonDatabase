@@ -290,10 +290,48 @@ namespace Pokedex.Controllers
         public IActionResult DayCareEvaluator()
         {
             this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
-            List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.IsBreedingPossible).ToList();
+            List<Generation> generations = this.dataService.GetObjects<Generation>();
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.IsBreedingPossible).ToList();
+            List<Game> selectableGames = new List<Game>();
+
+            foreach (var gen in generations)
+            {
+                List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
+                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
+                for (var i = 0; i < uniqueGames.Count; i++)
+                {
+                    if (i == uniqueGames.Count - 1)
+                    {
+                        selectableGames.Add(new Game()
+                        {
+                            Id = uniqueGames[i].Id,
+                            Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
+                            GenerationId = gen.Id,
+                        });
+                    }
+                    else
+                    {
+                        List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
+                        if (games.Count == 0)
+                        {
+                            selectableGames.Add(uniqueGames[i]);
+                        }
+                        else
+                        {
+                            selectableGames.Add(new Game()
+                            {
+                                Id = uniqueGames[i].Id,
+                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
+                                GenerationId = gen.Id,
+                            });
+                        }
+                    }
+                }
+            }
+
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
-                AllGames = games,
+                AllGames = selectableGames,
                 AppConfig = this.appConfig,
                 GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
             };

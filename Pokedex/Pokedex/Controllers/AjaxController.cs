@@ -2012,23 +2012,20 @@ namespace Pokedex.Controllers
                 }
                 else if (pokemonId == this.dataService.GetPokemon("Ditto").Id)
                 {
-                    Pokemon pokemon;
-                    eggGroupList = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
-                    List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon(gameId);
-                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+                    eggGroupList = this.dataService.GetAllBreedablePokemon(gameId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
                     eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
 
                     foreach (var p in eggGroupList)
                     {
                         if (altFormsList.Find(x => x.Id == p.PokemonId) != null)
                         {
-                            pokemon = this.dataService.GetAltFormWithFormName(p.PokemonId);
+                            p.Pokemon = this.dataService.GetAltFormWithFormName(p.PokemonId);
                         }
 
                         pokemonList.Add(p.Pokemon);
                     }
 
-                    pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                    originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                 }
                 else
                 {
@@ -2044,14 +2041,15 @@ namespace Pokedex.Controllers
                         eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Phione"));
                     }
 
-                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).ToList();
                     eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
+                    eggGroupList = eggGroupList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
                     originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                     List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
 
                     foreach (var p in eggGroupList)
                     {
-                        if ((p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0) || (genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) || (genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
+                        if ((p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0 && p.Pokemon.Name != "Ditto") || (genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) || (genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
                         {
                             finalEggGroupList.Remove(p);
                         }
