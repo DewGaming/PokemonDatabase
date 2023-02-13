@@ -1,0 +1,7 @@
+@model List<Pokedex.DataAccess.Models.Pokemon>;
+
+<option value="">Select Pokémon</option>
+@foreach(var p in this.Model.Distinct())
+{
+    <option value="@p.Id">@p.Name</option>
+}

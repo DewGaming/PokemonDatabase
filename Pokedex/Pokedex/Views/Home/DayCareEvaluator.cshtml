@@ -10,6 +10,11 @@
     <link href="/css/eggGroup.css" rel="stylesheet" type="text/css" />
     <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
     <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <style>
+        .gameList {
+            margin-right: 10px;
+        }
+    </style>
 }
 
 @section scripts
@@ -19,9 +24,13 @@
 
 <div class="evaluator">
     <div class="flexDiv">
+        <div class="gameList">
+            @Html.Label("Games")
+            @Html.DropDownList("Games", new SelectList(@Model.AllGames, "Id", "Name"), "Select Game", new { @class = "form-control gameSelectList" })
+        </div>
         <div class="breedablePokemonList">
             @Html.Label("Breedable Pokémon")
-            @Html.DropDownList("Breedable Pokémon", new SelectList(@Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control eggGroupSelectList" })
+            @Html.DropDownList("Breedable Pokémon", Enumerable.Empty<SelectListItem>(), new { @class = "form-control eggGroupSelectList" })
         </div>
     </div>
 </div>

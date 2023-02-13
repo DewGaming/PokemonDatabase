@@ -74,6 +74,12 @@
             @Html.ValidationMessageFor(x => x.GenerationId)
         </div>
 
+        <div class="form-group row">
+            @Html.LabelFor(x => x.IsBreedingPossible, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.IsBreedingPossible, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.IsBreedingPossible)
+        </div>
+
         <div class="form-group regionList">
             @Html.Label("Regions", "", new { @class = "col-md-2" })
             @Html.ListBoxFor(x => x.RegionIds, new SelectList(Model.AllRegions, "Id", "Name"), new { size = Model.AllRegions.Count(), htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })

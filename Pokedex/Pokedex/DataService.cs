@@ -307,8 +307,9 @@ namespace Pokedex
         /// <summary>
         /// Gets a list of all pokemon that are able to be bred in the day care.
         /// </summary>
+        /// <param name="gameId">The game's id. Defaults to 0 when no game id is given.</param>
         /// <returns>The list of breedable pokemon.</returns>
-        public List<PokemonEggGroupDetail> GetAllBreedablePokemon()
+        public List<PokemonEggGroupDetail> GetAllBreedablePokemon(int gameId = 0)
         {
             List<Pokemon> pokemonList = this.GetObjects<Pokemon>(whereProperty: "IsComplete", wherePropertyValue: true);
 
@@ -332,6 +333,7 @@ namespace Pokedex
                 "Crowned",
                 "Ash",
                 "Starter",
+                "Hero",
             };
 
             foreach (var n in formNames)
@@ -340,12 +342,19 @@ namespace Pokedex
             }
 
             List<PokemonEggGroupDetail> eggGroupDetails = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
-
             List<Pokemon> unbreedablePokemon = this.GetAllPokemon().Where(x => !eggGroupDetails.Any(y => y.PokemonId == x.Id && y.PrimaryEggGroupId != 15)).ToList();
 
             eggGroupDetails = eggGroupDetails.Where(x => !formDetails.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => !unbreedablePokemon.Any(y => y.Id == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => x.Pokemon.IsComplete).ToList();
+
+            if (gameId != 0)
+            {
+                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                List<Pokemon> gameAvailability = this.GetObjects<PokemonGameDetail>(includes: "Pokemon", whereProperty: "GameId", wherePropertyValue: game.Id).ConvertAll(y => y.Pokemon);
+                eggGroupDetails = eggGroupDetails.Where(x => gameAvailability.Any(z => z.Id == x.PokemonId)).ToList();
+            }
+
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
 
             return eggGroupDetails;

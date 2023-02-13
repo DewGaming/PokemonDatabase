@@ -290,22 +290,13 @@ namespace Pokedex.Controllers
         public IActionResult DayCareEvaluator()
         {
             this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
-            List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon();
+            List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.IsBreedingPossible).ToList();
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
-                AllPokemonWithEggGroups = eggGroupDetails,
+                AllGames = games,
                 AppConfig = this.appConfig,
                 GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
             };
-
-            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-
-            foreach (var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.PokemonId)))
-            {
-                e.Pokemon.Name = this.dataService.GetAltFormWithFormName(e.PokemonId).Name;
-            }
-
-            model.AllPokemon = eggGroupDetails.ConvertAll(x => x.Pokemon);
 
             return this.View(model);
         }

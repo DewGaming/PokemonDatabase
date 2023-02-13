@@ -1961,10 +1961,40 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets a list of all pokemon that is capable of breeding with the given pokemon.
         /// </summary>
+        /// <param name="gameId">The game breeding is done in.</param>
+        /// <returns>The fill day care evaluator dropdown shared view.</returns>
+        [Route("get-pokemon-by-egg-group-dropdown")]
+        public IActionResult GetPokemonByEggGroupDropdown(int gameId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon(gameId);
+
+                List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
+
+                foreach (var e in eggGroupDetails.Where(x => altForms.Any(y => y.Id == x.PokemonId)))
+                {
+                   e.Pokemon.Name = this.dataService.GetAltFormWithFormName(e.PokemonId).Name;
+                }
+
+                return this.PartialView("_FillDayCareEvaluatorDropdown", eggGroupDetails.ConvertAll(x => x.Pokemon));
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a list of all pokemon that is capable of breeding with the given pokemon.
+        /// </summary>
         /// <param name="pokemonId">The parent pokemon.</param>
+        /// <param name="gameId">The game breeding is done in.</param>
         /// <returns>The fill day care evaluator shared view.</returns>
         [Route("get-pokemon-by-egg-group")]
-        public IActionResult GetPokemonByEggGroup(int pokemonId)
+        public IActionResult GetPokemonByEggGroup(int pokemonId, int gameId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -1984,7 +2014,7 @@ namespace Pokedex.Controllers
                 {
                     Pokemon pokemon;
                     eggGroupList = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
-                    List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon();
+                    List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon(gameId);
                     eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
                     eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
 
@@ -2003,8 +2033,7 @@ namespace Pokedex.Controllers
                 else
                 {
                     eggGroupList = this.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
-                    List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon();
-                    eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
+                    List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon(gameId);
                     if (eggGroupList.Any(x => x.Pokemon.Name == "Manaphy"))
                     {
                         eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Manaphy"));
@@ -2016,6 +2045,7 @@ namespace Pokedex.Controllers
                     }
 
                     eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+                    eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
                     originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                     List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
 

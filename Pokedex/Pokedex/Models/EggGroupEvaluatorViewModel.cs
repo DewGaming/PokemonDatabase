@@ -19,6 +19,11 @@ namespace Pokedex.Models
         public List<Pokemon> AllPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all pokemon.
+        /// </summary>
+        public List<Game> AllGames { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokemon that are alternate forms.
         /// </summary>
         public List<Pokemon> AllAltForms { get; set; }
