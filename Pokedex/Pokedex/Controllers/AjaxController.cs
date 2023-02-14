@@ -2080,6 +2080,17 @@ namespace Pokedex.Controllers
                     pokemonEggGroupList.Add(searchedEggGroupDetails.SecondaryEggGroup);
                 }
 
+                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                List<Game> gamesWithSameReleaseDate = this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate == game.ReleaseDate).ToList();
+                if (gamesWithSameReleaseDate.Count() > 1)
+                {
+                    game.Name = gamesWithSameReleaseDate.First().Name;
+                    for (var i = 1; i < gamesWithSameReleaseDate.Count(); i++)
+                    {
+                        game.Name += string.Concat(" / ", gamesWithSameReleaseDate[i].Name);
+                    }
+                }
+
                 EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
                 {
                     AllPokemonWithEggGroups = eggGroupList,
@@ -2088,6 +2099,7 @@ namespace Pokedex.Controllers
                     AllOriginalPokemon = originalPokemon.ToList(),
                     AppConfig = this.appConfig,
                     SearchedPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                    SearchedGame = game,
                     PokemonEggGroups = pokemonEggGroupList,
                     GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
                 };

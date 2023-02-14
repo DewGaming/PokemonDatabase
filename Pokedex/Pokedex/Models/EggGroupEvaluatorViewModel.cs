@@ -44,6 +44,11 @@ namespace Pokedex.Models
         public Pokemon SearchedPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets game being searched in.
+        /// </summary>
+        public Game SearchedGame { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokemon egg groups.
         /// </summary>
         public List<EggGroup> PokemonEggGroups { get; set; }
