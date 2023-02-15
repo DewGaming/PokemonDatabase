@@ -2002,63 +2002,27 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Last();
-                GenderRatio genderRatio = this.dataService.GetObjectByPropertyValue<GenderRatio>("Id", searchedEggGroupDetails.Pokemon.GenderRatioId);
-                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
-                List<Pokemon> pokemonList = new List<Pokemon>();
-                List<Pokemon> originalPokemon = new List<Pokemon>();
-
-                if (pokemonId == this.dataService.GetPokemon("Manaphy").Id || pokemonId == this.dataService.GetPokemon("Phione").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0 && pokemonId != this.dataService.GetPokemon("Ditto").Id))
+                try
                 {
-                    eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
-                    pokemonList.Add(this.dataService.GetPokemon("Ditto"));
-                    originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
-                }
-                else if (pokemonId == this.dataService.GetPokemon("Ditto").Id)
-                {
-                    eggGroupList = this.dataService.GetAllBreedablePokemon(gameId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
-                    eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
+                    PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Last();
+                    GenderRatio genderRatio = this.dataService.GetObjectByPropertyValue<GenderRatio>("Id", searchedEggGroupDetails.Pokemon.GenderRatioId);
+                    List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
+                    List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
+                    List<Pokemon> pokemonList = new List<Pokemon>();
+                    List<Pokemon> originalPokemon = new List<Pokemon>();
 
-                    foreach (var p in eggGroupList)
+                    if (pokemonId == this.dataService.GetPokemon("Manaphy").Id || pokemonId == this.dataService.GetPokemon("Phione").Id || (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0 && pokemonId != this.dataService.GetPokemon("Ditto").Id))
                     {
-                        if (altFormsList.Find(x => x.Id == p.PokemonId) != null)
-                        {
-                            p.Pokemon = this.dataService.GetAltFormWithFormName(p.PokemonId);
-                        }
-
-                        pokemonList.Add(p.Pokemon);
+                        eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
+                        pokemonList.Add(this.dataService.GetPokemon("Ditto"));
+                        originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                     }
-
-                    originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
-                }
-                else
-                {
-                    eggGroupList = this.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
-                    List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon(gameId);
-                    if (eggGroupList.Any(x => x.Pokemon.Name == "Manaphy"))
+                    else if (pokemonId == this.dataService.GetPokemon("Ditto").Id)
                     {
-                        eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Manaphy"));
-                    }
+                        eggGroupList = this.dataService.GetAllBreedablePokemon(gameId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+                        eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
 
-                    if (eggGroupList.Any(x => x.Pokemon.Name == "Phione"))
-                    {
-                        eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Phione"));
-                    }
-
-                    eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).ToList();
-                    eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
-                    eggGroupList = eggGroupList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
-                    originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
-                    List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
-
-                    foreach (var p in eggGroupList)
-                    {
-                        if ((p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0 && p.Pokemon.Name != "Ditto") || (genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) || (genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
-                        {
-                            finalEggGroupList.Remove(p);
-                        }
-                        else
+                        foreach (var p in eggGroupList)
                         {
                             if (altFormsList.Find(x => x.Id == p.PokemonId) != null)
                             {
@@ -2067,48 +2031,118 @@ namespace Pokedex.Controllers
 
                             pokemonList.Add(p.Pokemon);
                         }
+
+                        originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                     }
-
-                    eggGroupList = finalEggGroupList;
-                }
-
-                (originalPokemon ??= eggGroupList.ConvertAll(x => x.Pokemon)).RemoveAll(x => !eggGroupList.Select(y => y.PokemonId).Contains(x.Id));
-
-                List<EggGroup> pokemonEggGroupList = new List<EggGroup>
-                {
-                    searchedEggGroupDetails.PrimaryEggGroup,
-                };
-
-                if (searchedEggGroupDetails.SecondaryEggGroup != null)
-                {
-                    pokemonEggGroupList.Add(searchedEggGroupDetails.SecondaryEggGroup);
-                }
-
-                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-                List<Game> gamesWithSameReleaseDate = this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate == game.ReleaseDate).ToList();
-                if (gamesWithSameReleaseDate.Count() > 1)
-                {
-                    game.Name = gamesWithSameReleaseDate.First().Name;
-                    for (var i = 1; i < gamesWithSameReleaseDate.Count(); i++)
+                    else
                     {
-                        game.Name += string.Concat(" / ", gamesWithSameReleaseDate[i].Name);
+                        eggGroupList = this.GetAllPokemonWithSpecificEggGroups((int)searchedEggGroupDetails.PrimaryEggGroupId, searchedEggGroupDetails.SecondaryEggGroupId);
+                        List<PokemonEggGroupDetail> breedablePokemonList = this.dataService.GetAllBreedablePokemon(gameId);
+                        if (eggGroupList.Any(x => x.Pokemon.Name == "Manaphy"))
+                        {
+                            eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Manaphy"));
+                        }
+
+                        if (eggGroupList.Any(x => x.Pokemon.Name == "Phione"))
+                        {
+                            eggGroupList.Remove(eggGroupList.Find(x => x.Pokemon.Name == "Phione"));
+                        }
+
+                        eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).ToList();
+                        eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
+                        eggGroupList = eggGroupList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
+                        originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
+                        List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
+
+                        foreach (var p in eggGroupList)
+                        {
+                            if ((p.Pokemon.GenderRatio.MaleRatio == 0 && p.Pokemon.GenderRatio.FemaleRatio == 0 && p.Pokemon.Name != "Ditto") || (genderRatio.MaleRatio == 100 && p.Pokemon.GenderRatio.MaleRatio == 100) || (genderRatio.FemaleRatio == 100 && p.Pokemon.GenderRatio.FemaleRatio == 100))
+                            {
+                                finalEggGroupList.Remove(p);
+                            }
+                            else
+                            {
+                                if (altFormsList.Find(x => x.Id == p.PokemonId) != null)
+                                {
+                                    p.Pokemon = this.dataService.GetAltFormWithFormName(p.PokemonId);
+                                }
+
+                                pokemonList.Add(p.Pokemon);
+                            }
+                        }
+
+                        eggGroupList = finalEggGroupList;
+                    }
+
+                    (originalPokemon ??= eggGroupList.ConvertAll(x => x.Pokemon)).RemoveAll(x => !eggGroupList.Select(y => y.PokemonId).Contains(x.Id));
+
+                    List<EggGroup> pokemonEggGroupList = new List<EggGroup>
+                    {
+                        searchedEggGroupDetails.PrimaryEggGroup,
+                    };
+
+                    if (searchedEggGroupDetails.SecondaryEggGroup != null)
+                    {
+                        pokemonEggGroupList.Add(searchedEggGroupDetails.SecondaryEggGroup);
+                    }
+
+                    Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                    List<Game> gamesWithSameReleaseDate = this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate == game.ReleaseDate).ToList();
+                    if (gamesWithSameReleaseDate.Count() > 1)
+                    {
+                        game.Name = gamesWithSameReleaseDate.First().Name;
+                        for (var i = 1; i < gamesWithSameReleaseDate.Count(); i++)
+                        {
+                            game.Name += string.Concat(" / ", gamesWithSameReleaseDate[i].Name);
+                        }
+                    }
+
+                    EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
+                    {
+                        AllPokemonWithEggGroups = eggGroupList,
+                        AllPokemon = pokemonList,
+                        AllAltForms = altFormsList,
+                        AllOriginalPokemon = originalPokemon.ToList(),
+                        AppConfig = this.appConfig,
+                        SearchedPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                        SearchedGame = game,
+                        PokemonEggGroups = pokemonEggGroupList,
+                        GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
+                    };
+
+                    return this.PartialView("_FillDayCareEvaluator", model);
+                }
+                catch (Exception e)
+                {
+                    if (!this.User.IsInRole("Owner") && e != null)
+                    {
+                        string commentBody;
+                        if (e != null)
+                        {
+                            commentBody = string.Concat(e.GetType().ToString(), " error while grabbing pokemon by egg group.");
+                        }
+                        else
+                        {
+                            commentBody = "Unknown error while grabbing pokemon by egg group.";
+                        }
+
+                        commentBody = string.Concat(commentBody, " - Pokemon Id: {", string.Join(", ", pokemonId), "}");
+                        commentBody = string.Concat(commentBody, " - Game Id: {", string.Join(", ", gameId), "}");
+                        Comment comment = new Comment()
+                        {
+                            Name = commentBody,
+                        };
+                        if (this.User.Identity.Name != null)
+                        {
+                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        }
+
+                        this.dataService.AddObject(comment);
+                        this.dataService.EmailComment(this.appConfig, comment);
+
+                        this.RedirectToAction("Error", "Index");
                     }
                 }
-
-                EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
-                {
-                    AllPokemonWithEggGroups = eggGroupList,
-                    AllPokemon = pokemonList,
-                    AllAltForms = altFormsList,
-                    AllOriginalPokemon = originalPokemon.ToList(),
-                    AppConfig = this.appConfig,
-                    SearchedPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
-                    SearchedGame = game,
-                    PokemonEggGroups = pokemonEggGroupList,
-                    GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
-                };
-
-                return this.PartialView("_FillDayCareEvaluator", model);
             }
             else
             {
