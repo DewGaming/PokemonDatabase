@@ -225,6 +225,8 @@ namespace Pokedex.Controllers
                     a.Name = string.Concat(a.Name, " (", this.dataService.GetPokemonFormName(a.Id), ")");
                 }
 
+                model.PokemonList.AddRange(model.AltFormList);
+
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
             else
@@ -299,6 +301,8 @@ namespace Pokedex.Controllers
                 {
                     a.Name = string.Concat(a.Name, " (", this.dataService.GetPokemonFormName(a.Id), ")");
                 }
+
+                model.PokemonList.AddRange(model.AltFormList);
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
