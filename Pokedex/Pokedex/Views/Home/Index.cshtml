@@ -56,6 +56,22 @@
         <a href="@this.Url.Action("TypingEvaluator", "Home")"><p><b>Evaluate Type Combinations!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("TypingEvaluator", "Home")" alt="Type Combinations" title="Find out what Pokémon have a specific typing and what that type chart looks like!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "typingLookup.png"))">
     </div>
+    <div class="feature dayCareCombinations">
+        <a href="@this.Url.Action("DayCareEvaluator", "Home")"><p><b>Lookup Day Care Combinations!</b></p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("DayCareEvaluator", "Home")" alt="Lookup Day Care Combinations" title="Find out what Pokémon can be breed together to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareCombinations.png"))">
+    </div>
+    <div class="feature formViewer">
+        <a href="@this.Url.Action("FormEvaluator", "Home")"><p><b>View Alternate Forms!</b></p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("FormEvaluator", "Home")" alt="Form Viewer" title="Find out what Pokémon belong to a particular alternate form!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "formViewer.png"))">
+    </div>
+    <div class="feature teamBuilder">
+        <a href="@this.Url.Action("ExpLeveling", "Home")"><p><b>Level Up Pokemon!</b></p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("ExpLeveling", "Home")" alt="Exp Leveling" title="Find out how many experience candies you need to reach a specific level! Will even provide the optimal experience candies needed!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "expLeveling.png"))">
+    </div>
+    <div class="feature abilityLookup">
+        <a href="@this.Url.Action("AbilityEvaluator", "Home")"><p><b>Lookup Abilities!</b></p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("AbilityEvaluator", "Home")" alt="Ability Lookup" title="Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "abilityLookup.png"))">
+    </div>
     <div class="feature teamBuilder">
         <a href="@this.Url.Action("EVTrainer", "Home")"><p><b>Train Pokemon!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("EVTrainer", "Home")" alt="EV Trainer" title="Find out how to train your Pokémon using the EVs opponent Pokémon give upon defeat!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "evTrainer.png"))">
@@ -63,18 +79,6 @@
     <div class="feature gameAvailability">
         <a href="@this.Url.Action("GameAvailability", "Home")"><p><b>Lookup Game Availability!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("GameAvailability", "Home")" alt="Game Availability" title="Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "gameAvailability.png"))">
-    </div>
-    <div class="feature formViewer">
-        <a href="@this.Url.Action("FormEvaluator", "Home")"><p><b>View Alternate Forms!</b></p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("FormEvaluator", "Home")" alt="Form Viewer" title="Find out what Pokémon belong to a particular alternate form!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "formViewer.png"))">
-    </div>
-    <div class="feature abilityLookup">
-        <a href="@this.Url.Action("AbilityEvaluator", "Home")"><p><b>Lookup Abilities!</b></p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("AbilityEvaluator", "Home")" alt="Ability Lookup" title="Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "abilityLookup.png"))">
-    </div>
-    <div class="feature dayCareCombinations">
-        <a href="@this.Url.Action("DayCareEvaluator", "Home")"><p><b>Lookup Day Care Combinations!</b></p></a>
-        <img class="modalPreview" data-modalUrl="@this.Url.Action("DayCareEvaluator", "Home")" alt="Day Care Combinations" title="Find out what Pokémon can be breed together to produce a Pokémon Egg!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "dayCareCombinations.png"))">
     </div>
 </div>
 <div class="modal">

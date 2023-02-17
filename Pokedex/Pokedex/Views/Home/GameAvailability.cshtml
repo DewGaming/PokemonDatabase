@@ -1,4 +1,4 @@
-@model IEnumerable<Pokedex.DataAccess.Models.Game>;
+@model Pokedex.Models.GameAvailabilityViewModel;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Available Pokémon List";
@@ -35,9 +35,19 @@
 }
 
 <div class="pageButtons">
-    @foreach (var p in Model.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id))
+    @foreach (var g in Model.EdittedGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id))
     {
-        <button class="gameButton" id="Game@(p.Id)" onclick="lookupAvailableGame('@p.Id')">@p.Name</button>
+        string gameColors = string.Concat(g.GameColor, " 50%, ");
+        if (@Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).Count() > 1 && g.Name != "Fire Red" && g.Name != "Leaf Green")
+        {
+            gameColors = string.Concat(gameColors, @Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).ToList()[1].GameColor, " 50%)");
+        }
+        else
+        {
+            gameColors = string.Concat(gameColors, g.GameColor, " 50%)");
+        }
+
+        <button style="@(g.GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupAvailableGame('@g.Id')">@g.Name</button>
     }
 </div>
 

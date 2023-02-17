@@ -169,6 +169,25 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// The page that calculates how long.
+        /// </summary>
+        /// <returns>Returns the all pokemon's page.</returns>
+        [AllowAnonymous]
+        [Route("exp_leveling")]
+        public IActionResult ExpLeveling()
+        {
+            this.dataService.AddPageView("Exp Leveling Page", this.User.IsInRole("Owner"));
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithFormNames();
+            ExpLevelingViewModel model = new ExpLevelingViewModel()
+            {
+                PokemonList = pokemonList,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
         /// The page that allows users to generate randomized teams.
         /// </summary>
         /// <returns>Returns the team randomizer's page.</returns>
@@ -377,7 +396,11 @@ namespace Pokedex.Controllers
         public IActionResult GameAvailability()
         {
             this.dataService.AddPageView("Game Availability Page", this.User.IsInRole("Owner"));
-            List<Game> model = this.GetGamesForEachReleaseDate();
+            GameAvailabilityViewModel model = new GameAvailabilityViewModel()
+            {
+                EdittedGames = this.GetGamesForEachReleaseDate(),
+                UnedittedGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
+            };
 
             return this.View(model);
         }
@@ -862,6 +885,7 @@ namespace Pokedex.Controllers
                         Name = string.Join(" / ", gameList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
                         GenerationId = gameList.First(x => x.ReleaseDate == r).GenerationId,
                         ReleaseDate = r,
+                        GameColor = gameList.First(x => x.ReleaseDate == r).GameColor,
                     });
                 }
                 else

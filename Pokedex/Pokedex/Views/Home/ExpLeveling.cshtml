@@ -1,0 +1,105 @@
+@model Pokedex.Models.ExpLevelingViewModel;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Exp Leveling";
+    ViewBag.Description = "Find out how many experience candies you need to reach a specific level! Will even provide the optimal experience candies needed!";
+}
+
+@section styles
+{
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <style>
+        .flexDiv div {
+            margin-right: 10px;
+        }
+
+        .flexDiv {
+            flex-wrap: wrap;
+        }
+
+        .getCandies {
+            margin-top: 24px;
+        }
+
+        .candyImages div {
+            position: relative;
+        }
+
+        .candyImages img {
+            z-index: -2;
+        }
+
+        .candyImages p {
+            font-weight: bold;
+        }
+
+        .candyAmount {
+	        position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            font-size: 30px;
+        }
+
+        .candyName {
+            text-align: center;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/pageLookup.js" asp-append-version="true"></script>
+    <script src="/js/expLeveling.js" asp-append-version="true"></script>
+}
+
+<div class="evaluator">
+    <div class="flexDiv">
+        <div class="pokemonList">
+            @Html.Label("Pokémon")
+            @Html.DropDownList("Pokémon", new SelectList(@Model.PokemonList, "ExperienceGrowthId", "Name"), "Select Pokémon", new { @class = "form-control pokemonSelectList" })
+        </div>
+        <div class="currentExp">
+            @Html.Label("Current Exp Points")
+            @Html.Editor("Current Exp Points", new { htmlAttributes = new { @type = "number", @min = "0", @max = "1640000", @step = "1", @class = "form-control expObtained" } })
+        </div>
+        <div class="wantedLevel">
+            @Html.Label("Wanted Level")
+            @Html.Editor("Wanted Level", new { htmlAttributes = new { @type = "number", @min = "1", @max = "100", @step = "1", @class = "form-control requestedLevel" } })
+        </div>
+    </div>
+    <div class="flexDiv candyImages">
+        <div class="xsCandy">
+            <img src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyXS.png"))">
+            <p class="candyAmount">0</p>
+            <p class="candyName">XS Candies Needed</p>
+        </div>
+        <div class="sCandy">
+            <img src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyS.png"))">
+            <p class="candyAmount">0</p>
+            <p class="candyName">S Candies Needed</p>
+        </div>
+        <div class="mCandy">
+            <img src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyM.png"))">
+            <p class="candyAmount">0</p>
+            <p class="candyName">M Candies Needed</p>
+        </div>
+        <div class="lCandy">
+            <img src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyL.png"))">
+            <p class="candyAmount">0</p>
+            <p class="candyName">L Candies Needed</p>
+        </div>
+        <div class="xlCandy">
+            <img src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyXL.png"))">
+            <p class="candyAmount">0</p>
+            <p class="candyName">XL Candies Needed</p>
+        </div>
+    </div>
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
