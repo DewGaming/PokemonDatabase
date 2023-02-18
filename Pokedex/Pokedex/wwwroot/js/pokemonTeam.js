@@ -53,7 +53,7 @@ $(document).ready(function () {
             .done(function (data) {
                 var pokemonTeam = data;
                 if (typeof (pokemonTeam) !== "undefined") {
-                    exportString = pokemonTeam[0].exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+                    exportString = pokemonTeam.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
 
                     console.clear();
 

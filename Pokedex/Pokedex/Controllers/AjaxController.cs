@@ -318,42 +318,12 @@ namespace Pokedex.Controllers
         /// <param name="teamId">The team being exported.</param>
         /// <returns>A list of all the pokemon exported to be copied to clipboard.</returns>
         [Route("grab-user-pokemon-team")]
-        public List<ExportPokemonViewModel> ExportUserPokemonTeam(int teamId)
+        public ExportPokemonViewModel ExportUserPokemonTeam(int teamId)
         {
             PokemonTeam pokemonTeam = this.dataService.GetObjectByPropertyValue<PokemonTeam>("Id", teamId, "Game, FirstPokemon, FirstPokemon.Pokemon, FirstPokemon.Pokemon.Game, FirstPokemon.Ability, FirstPokemon.PokemonTeamEV, FirstPokemon.PokemonTeamIV, FirstPokemon.PokemonTeamMoveset, FirstPokemon.BattleItem, FirstPokemon.Nature, FirstPokemon.TeraType, SecondPokemon, SecondPokemon.Pokemon, SecondPokemon.Pokemon.Game, SecondPokemon.Ability, SecondPokemon.PokemonTeamEV, SecondPokemon.PokemonTeamIV, SecondPokemon.PokemonTeamMoveset, SecondPokemon.BattleItem, SecondPokemon.Nature, SecondPokemon.TeraType, ThirdPokemon, ThirdPokemon.Pokemon, ThirdPokemon.Pokemon.Game, ThirdPokemon.Ability, ThirdPokemon.PokemonTeamEV, ThirdPokemon.PokemonTeamIV, ThirdPokemon.PokemonTeamMoveset, ThirdPokemon.BattleItem, ThirdPokemon.Nature, ThirdPokemon.TeraType, FourthPokemon, FourthPokemon.Pokemon, FourthPokemon.Pokemon.Game, FourthPokemon.Ability, FourthPokemon.PokemonTeamEV, FourthPokemon.PokemonTeamIV, FourthPokemon.PokemonTeamMoveset, FourthPokemon.BattleItem, FourthPokemon.Nature, FourthPokemon.TeraType, FifthPokemon, FifthPokemon.Pokemon, FifthPokemon.Pokemon.Game, FifthPokemon.Ability, FifthPokemon.PokemonTeamEV, FifthPokemon.PokemonTeamIV, FifthPokemon.PokemonTeamMoveset, FifthPokemon.BattleItem, FifthPokemon.Nature, FifthPokemon.TeraType, SixthPokemon, SixthPokemon.Pokemon, SixthPokemon.Pokemon.Game, SixthPokemon.Ability, SixthPokemon.PokemonTeamEV, SixthPokemon.PokemonTeamIV, SixthPokemon.PokemonTeamMoveset, SixthPokemon.BattleItem, SixthPokemon.Nature, SixthPokemon.TeraType, User");
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (pokemonTeam.User.Username == this.User.Identity.Name || this.User.IsInRole("Owner")))
             {
-                List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
-                List<PokemonTeamDetail> pokemonList = pokemonTeam.GrabPokemonTeamDetails;
-                if (pokemonList.Count > 0)
-                {
-                    ExportPokemonViewModel pokemonTeamExport = new ExportPokemonViewModel()
-                    {
-                        ExportString = "=== ",
-                        TeamId = pokemonTeam.Id,
-                    };
-
-                    if (pokemonTeam.Game != null)
-                    {
-                        pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, " [gen", pokemonTeam.Game.GenerationId, "] ");
-                    }
-
-                    pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, pokemonTeam.PokemonTeamName, " ===\n\n");
-
-                    for (var i = 0; i < pokemonList.Count; i++)
-                    {
-                        if (i != 0)
-                        {
-                            pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, "\n\n");
-                        }
-
-                        pokemonTeamExport.ExportString = string.Concat(pokemonTeamExport.ExportString, this.FillUserPokemonTeam(pokemonList[i], pokemonTeam.GameId));
-                    }
-
-                    exportList.Add(pokemonTeamExport);
-                }
-
-                return exportList;
+                return this.ExportTeamString(pokemonTeam);
             }
             else
             {
@@ -373,38 +343,10 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "Game, FirstPokemon, FirstPokemon.Pokemon, FirstPokemon.Pokemon.Game, FirstPokemon.Ability, FirstPokemon.PokemonTeamEV, FirstPokemon.PokemonTeamIV, FirstPokemon.PokemonTeamMoveset, FirstPokemon.BattleItem, FirstPokemon.Nature, FirstPokemon.TeraType, SecondPokemon, SecondPokemon.Pokemon, SecondPokemon.Pokemon.Game, SecondPokemon.Ability, SecondPokemon.PokemonTeamEV, SecondPokemon.PokemonTeamIV, SecondPokemon.PokemonTeamMoveset, SecondPokemon.BattleItem, SecondPokemon.Nature, SecondPokemon.TeraType, ThirdPokemon, ThirdPokemon.Pokemon, ThirdPokemon.Pokemon.Game, ThirdPokemon.Ability, ThirdPokemon.PokemonTeamEV, ThirdPokemon.PokemonTeamIV, ThirdPokemon.PokemonTeamMoveset, ThirdPokemon.BattleItem, ThirdPokemon.Nature, ThirdPokemon.TeraType, FourthPokemon, FourthPokemon.Pokemon, FourthPokemon.Pokemon.Game, FourthPokemon.Ability, FourthPokemon.PokemonTeamEV, FourthPokemon.PokemonTeamIV, FourthPokemon.PokemonTeamMoveset, FourthPokemon.BattleItem, FourthPokemon.Nature, FourthPokemon.TeraType, FifthPokemon, FifthPokemon.Pokemon, FifthPokemon.Pokemon.Game, FifthPokemon.Ability, FifthPokemon.PokemonTeamEV, FifthPokemon.PokemonTeamIV, FifthPokemon.PokemonTeamMoveset, FifthPokemon.BattleItem, FifthPokemon.Nature, FifthPokemon.TeraType, SixthPokemon, SixthPokemon.Pokemon, SixthPokemon.Pokemon.Game, SixthPokemon.Ability, SixthPokemon.PokemonTeamEV, SixthPokemon.PokemonTeamIV, SixthPokemon.PokemonTeamMoveset, SixthPokemon.BattleItem, SixthPokemon.Nature, SixthPokemon.TeraType, User", "User.Username", this.User.Identity.Name);
-                List<PokemonTeamDetail> pokemonList;
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
                 foreach (var team in pokemonTeams)
                 {
-                    pokemonList = team.GrabPokemonTeamDetails;
-                    if (pokemonList.Count > 0)
-                    {
-                        ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel
-                        {
-                            ExportString = "=== ",
-                            TeamId = team.Id,
-                        };
-
-                        if (team.Game != null)
-                        {
-                            pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, " [gen", team.Game.GenerationId, "] ");
-                        }
-
-                        pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, team.PokemonTeamName, " ===\n\n");
-
-                        for (var i = 0; i < pokemonList.Count; i++)
-                        {
-                            if (i != 0)
-                            {
-                                pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, "\n\n");
-                            }
-
-                            pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, this.FillUserPokemonTeam(pokemonList[i], team.GameId));
-                        }
-
-                        exportList.Add(pokemonTeam);
-                    }
+                    exportList.Add(this.ExportTeamString(team));
                 }
 
                 return exportList;
@@ -2346,15 +2288,15 @@ namespace Pokedex.Controllers
                 pageStats = pageStats.Select(Selector).ToList();
                 List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id");
                 List<Pokemon> pokemonList = new List<Pokemon>();
-                string altForm;
+                Form altForm;
                 Pokemon pokemon;
                 foreach (var p in pageStats.Select(x => x.Name).Distinct())
                 {
                     if (p.Contains("(") && !p.Contains("Nidoran"))
                     {
-                        altForm = p.Split("(")[1].Replace(")", string.Empty);
-                        pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Split(" (")[0], altForm);
-                        pokemon.Name = string.Concat(pokemon.Name, " (", altForm, ")");
+                        altForm = this.dataService.GetObjectByPropertyValue<Form>("Name", p.Split("(")[1].Replace(")", string.Empty));
+                        pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Split(" (")[0], altForm.Id);
+                        pokemon.Name = string.Concat(pokemon.Name, " (", altForm.Name, ")");
                         pokemonList.Add(pokemon);
                     }
                     else
@@ -2393,7 +2335,7 @@ namespace Pokedex.Controllers
             List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id");
             List<Pokemon> unOrderedPokemonList = new List<Pokemon>();
             List<Pokemon> pokemonList = new List<Pokemon>();
-            string altForm;
+            Form altForm;
             Pokemon pokemon;
             int viewCount = 0;
             List<IGrouping<string, string>> pokemonNames = pageStats.Select(x => x.Name).ToList().GroupBy(x => x).OrderByDescending(x => x.Count()).ToList();
@@ -2408,9 +2350,9 @@ namespace Pokedex.Controllers
 
                 if (p.Key.Contains("(") && !p.Key.Contains("Nidoran"))
                 {
-                    altForm = p.Key.Split("(")[1].Replace(")", string.Empty);
-                    pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Key.Split(" (")[0], altForm);
-                    pokemon.Name = string.Concat(pokemon.Name, " (", altForm, ")");
+                    altForm = this.dataService.GetObjectByPropertyValue<Form>("Name", p.Key.Split("(")[1].Replace(")", string.Empty));
+                    pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Key.Split(" (")[0], altForm.Id);
+                    pokemon.Name = string.Concat(pokemon.Name, " (", altForm.Name, ")");
                     unOrderedPokemonList.Add(pokemon);
                 }
                 else
@@ -2764,30 +2706,6 @@ namespace Pokedex.Controllers
             return movesetString;
         }
 
-        private List<string> GetUserFormDetails(int pokemonId)
-        {
-            string form = string.Empty, itemName = string.Empty;
-            List<string> formDetails = new List<string>();
-            PokemonFormDetail pokemonFormDetail = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId, "AltFormPokemon, OriginalPokemon, Form");
-
-            form = string.Concat(form, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
-
-            List<FormItem> formItems = this.dataService.GetObjects<FormItem>();
-            FormItem formItem = formItems.Find(x => x.PokemonId == pokemonId);
-            if (formItem != null)
-            {
-                itemName = string.Concat(" @ ", formItem.Name);
-            }
-
-            formDetails.Add(form);
-            if (!string.IsNullOrEmpty(itemName))
-            {
-                formDetails.Add(itemName);
-            }
-
-            return formDetails;
-        }
-
         private string ExportPokemonTeam(List<int> pokemonIdList, List<string> abilityList, bool exportAbilities)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -3008,6 +2926,42 @@ namespace Pokedex.Controllers
             return null;
         }
 
+        private ExportPokemonViewModel ExportTeamString(PokemonTeam team)
+        {
+            List<PokemonTeamDetail> pokemonList = team.GrabPokemonTeamDetails;
+            if (pokemonList.Count > 0)
+            {
+                ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel
+                {
+                    ExportString = "=== ",
+                    TeamId = team.Id,
+                };
+
+                if (team.Game != null)
+                {
+                    pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, " [gen", team.Game.GenerationId, "] ");
+                }
+
+                pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, team.PokemonTeamName, " ===\n\n");
+
+                for (var i = 0; i < pokemonList.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                        pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, "\n\n");
+                    }
+
+                    pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, this.FillUserPokemonTeam(pokemonList[i], team.GameId));
+                }
+
+                return pokemonTeam;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? gameId)
         {
             try
@@ -3021,10 +2975,6 @@ namespace Pokedex.Controllers
                 Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
                 List<string> pokemonForm = new List<string>();
                 string pokemonName = string.Empty;
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
-                {
-                    pokemonForm = this.GetUserFormDetails(pokemon.Id);
-                }
 
                 if (!string.IsNullOrEmpty(pokemonTeamDetail.Nickname))
                 {
@@ -3041,8 +2991,9 @@ namespace Pokedex.Controllers
                 }
 
                 pokemonName = string.Concat(pokemonName, pokemon.Name);
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                if ((pokemon.Id != 1760 && this.dataService.CheckIfAltForm(pokemon.Id)) || pokemon.Id == 1692)
                 {
+                    pokemonForm = this.GetUserFormDetails(pokemon.Id);
                     pokemonName = string.Concat(pokemonName, "-", (pokemonForm[0] == "Female") ? "F" : pokemonForm[0]);
                 }
 
@@ -3140,6 +3091,36 @@ namespace Pokedex.Controllers
             }
 
             return null;
+        }
+
+        private List<string> GetUserFormDetails(int pokemonId)
+        {
+            string form = string.Empty, itemName = string.Empty;
+            List<string> formDetails = new List<string>();
+            if (pokemonId == 1692)
+            {
+                form = "Four";
+            }
+            else
+            {
+                PokemonFormDetail pokemonFormDetail = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId, "AltFormPokemon, OriginalPokemon, Form");
+                form = string.Concat(form, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
+            }
+
+            List<FormItem> formItems = this.dataService.GetObjects<FormItem>();
+            FormItem formItem = formItems.Find(x => x.PokemonId == pokemonId);
+            if (formItem != null)
+            {
+                itemName = string.Concat(" @ ", formItem.Name);
+            }
+
+            formDetails.Add(form);
+            if (!string.IsNullOrEmpty(itemName))
+            {
+                formDetails.Add(itemName);
+            }
+
+            return formDetails;
         }
     }
 }

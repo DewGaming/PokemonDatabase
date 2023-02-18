@@ -923,16 +923,19 @@ namespace Pokedex.Controllers
                 pokemonName = pokemonName.Replace('’', '\'');
 
                 // Used to check for alternate form
-                if (pokemonName.LastIndexOf('-') != -1)
+                if ((pokemonName.LastIndexOf('-') != -1 && pokemonName != "Maushold-Four") || pokemonName == "Maushold")
                 {
                     if (pokemonName.Contains("Gmax"))
                     {
                         pokemonName = pokemonName.Replace("-Gmax", "-Gigantamax");
                     }
-
-                    if (pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
+                    else if (pokemonName == "Meowstic-F" || pokemonName == "Indeedee-F")
                     {
                         pokemonName = pokemonName.Replace("-F", "-Female");
+                    }
+                    else if (pokemonName == "Maushold")
+                    {
+                        pokemonName = string.Concat(pokemonName, "-Family-of-Three");
                     }
 
                     List<Form> forms = this.dataService.GetObjects<Form>("Name");
@@ -947,12 +950,16 @@ namespace Pokedex.Controllers
 
                     if (form != null)
                     {
-                        pokemon = this.dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", form.Name), string.Empty), form.Name.Replace('-', ' '));
+                        pokemon = this.dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", form.Name), string.Empty), form.Id);
                     }
                     else
                     {
                         pokemon = this.dataService.GetPokemon(pokemonName);
                     }
+                }
+                else if (pokemonName == "Maushold-Four")
+                {
+                    pokemon = this.dataService.GetPokemon("Maushold");
                 }
                 else
                 {

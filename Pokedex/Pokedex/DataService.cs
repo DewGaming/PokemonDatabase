@@ -267,11 +267,11 @@ namespace Pokedex
         /// Gets the pokemon from a name. This pokemon will be an alternate form and will have the form name be used in the process of searching for it.
         /// </summary>
         /// <param name="pokemonName">The name of the pokemon.</param>
-        /// <param name="formName">The name of the alternate form.</param>
+        /// <param name="formId">The id of the alternate form.</param>
         /// <returns>Returns the alternate pokemon.</returns>
-        public Pokemon GetPokemonFromNameAndFormName(string pokemonName, string formName)
+        public Pokemon GetPokemonFromNameAndFormName(string pokemonName, int formId)
         {
-            return this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: formName).FirstOrDefault(x => x.AltFormPokemon.Name == pokemonName).AltFormPokemon;
+            return this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form", whereProperty: "FormId", wherePropertyValue: formId).FirstOrDefault(x => x.AltFormPokemon.Name == pokemonName).AltFormPokemon;
         }
 
         /// <summary>
