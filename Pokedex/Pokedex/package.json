@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "kpy": "^1.9.0",
-    "npm": "^9.4.0",
+    "npm": "^9.5.0",
     "npx": "^10.2.2",
     "rimraf": "^4.1.2",
     "set-value": "^4.1.0",
@@ -13,7 +13,7 @@
     "deep-extend": "^0.6.0",
     "https-proxy-agent": "^5.0.1",
     "json-schema": "^0.4.0",
-    "minimist": "^1.2.7"
+    "minimist": "^1.2.8"
   },
   "scripts": {
     "build": "npm run remove-build-folders && npm run build-app && npm run copy-to-dist && npm run minify && echo Done!",
