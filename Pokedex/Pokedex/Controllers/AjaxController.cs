@@ -1715,6 +1715,81 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Gets the type chart for the given typing combination.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="typeId">The tera/plate/memory type's id.</param>
+        /// <param name="currentImage">The currently viewed image.</param>
+        /// <returns>The file type evaluator chart shared view.</returns>
+        [Route("get-pokemon-images-with-type")]
+        public IActionResult GetTypingEvaluatorChart(int pokemonId, int typeId, string currentImage)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                if (typeId == 0)
+                {
+                    typeId = 5;
+                }
+
+                Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
+                PokemonImageViewModel model = new PokemonImageViewModel()
+                {
+                    Id = pokemon.Id,
+                    Name = pokemon.Name,
+                    CurrentImage = currentImage,
+                    AppConfig = this.appConfig,
+                    Type = this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", typeId),
+                };
+
+                HttpWebRequest webRequest;
+                HttpWebResponse imageRequest;
+                try
+                {
+                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
+                    imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                    if (imageRequest.StatusCode == HttpStatusCode.OK)
+                    {
+                        model.HasShiny = true;
+                    }
+                    else
+                    {
+                        model.HasShiny = false;
+                    }
+                }
+                catch
+                {
+                    model.HasShiny = false;
+                }
+
+                try
+                {
+                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
+                    imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                    if (imageRequest.StatusCode == HttpStatusCode.OK)
+                    {
+                        model.HasHome = true;
+                    }
+                    else
+                    {
+                        model.HasHome = false;
+                    }
+                }
+                catch
+                {
+                    model.HasHome = false;
+                }
+
+                return this.PartialView("_FillPokemonImages", model);
+            }
+            else
+            {
+                this.RedirectToAction("Home", "Index");
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets a list of generations based on what pokemon are available in the given game.
         /// </summary>
         /// <param name="selectedGame">The game used to filter the generations.</param>
