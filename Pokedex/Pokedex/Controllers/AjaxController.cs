@@ -1582,12 +1582,13 @@ namespace Pokedex.Controllers
         /// <param name="specialAttack">The special attack ev.</param>
         /// <param name="specialDefense">The special defense ev.</param>
         /// <param name="speed">The speed ev.</param>
-        /// <returns>The admin pokemon page.</returns>
+        /// <returns>The list of pokemon with this specific ev yield spread.</returns>
         [Route("get-pokemon-by-ev-yields")]
         public IActionResult GetPokemonByEVYields(int gameId, int health, int attack, int defense, int specialAttack, int specialDefense, int speed)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                int evYieldTotal = health + attack + defense + specialAttack + specialDefense + speed;
                 Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
                 List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
                 List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", game.Id).Select(x => x.Pokemon).ToList();
@@ -1602,6 +1603,20 @@ namespace Pokedex.Controllers
                 }
 
                 pokemonList = evYields.Where(x => x.Health == health && x.Attack == attack && x.Defense == defense && x.SpecialAttack == specialAttack && x.SpecialDefense == specialDefense && x.Speed == speed && pokemonList.Any(y => y.Id == x.PokemonId)).Select(x => x.Pokemon).ToList();
+                if (gameId == 10)
+                {
+                    if (attack == 1 && evYieldTotal == 1)
+                    {
+                        pokemonList.Add(this.dataService.GetObjectByPropertyValue<Pokemon>("Id", 839));
+                    }
+                    else if (attack == 2 && evYieldTotal == 2)
+                    {
+                        pokemonList.Remove(pokemonList.Find(x => x.Id == 839));
+                    }
+                }
+
+                pokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+
                 EVTrainerViewModel pokemonEVYields = new EVTrainerViewModel()
                 {
                     AllPokemon = pokemonList,
