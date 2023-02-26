@@ -325,10 +325,6 @@ namespace Pokedex.Controllers
             {
                 return this.ExportTeamString(pokemonTeam);
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -350,10 +346,6 @@ namespace Pokedex.Controllers
                 }
 
                 return exportList;
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
             }
 
             return null;
@@ -433,10 +425,6 @@ namespace Pokedex.Controllers
                     return "You must be logged in to save a team.";
                 }
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -483,7 +471,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
         }
 
@@ -518,7 +506,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
         }
 
@@ -1130,10 +1118,6 @@ namespace Pokedex.Controllers
                     return null;
                 }
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -1151,10 +1135,6 @@ namespace Pokedex.Controllers
             {
                 List<Ability> pokemonAbilities = this.dataService.GetAbilitiesForPokemon(pokemonId, gameId);
                 return pokemonAbilities;
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
             }
 
             return null;
@@ -1240,10 +1220,6 @@ namespace Pokedex.Controllers
 
                 return this.Json(this.Url.Action("Types", "Admin")).Value.ToString();
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -1267,10 +1243,6 @@ namespace Pokedex.Controllers
                 }
 
                 return this.Json(this.Url.Action("PokemonTeams", "User")).Value.ToString();
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
             }
 
             return null;
@@ -1307,10 +1279,6 @@ namespace Pokedex.Controllers
 
                 return this.Json(this.Url.Action("Pokemon", "Admin")).Value.ToString();
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -1345,10 +1313,6 @@ namespace Pokedex.Controllers
                 }
 
                 return this.Json(this.Url.Action("Game", "Admin")).Value.ToString();
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
             }
 
             return null;
@@ -1439,10 +1403,6 @@ namespace Pokedex.Controllers
 
                 return this.Json(this.Url.Action("GameAvailability", "Home")).Value.ToString();
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -1512,10 +1472,6 @@ namespace Pokedex.Controllers
 
                 return this.Json(this.Url.Action("Games", "Admin")).Value.ToString();
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -1563,10 +1519,6 @@ namespace Pokedex.Controllers
                 }
 
                 return battleItems;
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
             }
 
             return null;
@@ -1634,12 +1586,8 @@ namespace Pokedex.Controllers
 
                 return this.PartialView("_FillEVTrainer", pokemonEVYields);
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
-            return null;
+            return this.RedirectToAction("Index", "Home");
         }
 
         /// <summary>
@@ -1675,10 +1623,6 @@ namespace Pokedex.Controllers
 
                 return genders;
             }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
-            }
 
             return null;
         }
@@ -1701,10 +1645,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -1723,10 +1665,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -1798,10 +1738,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -1862,10 +1800,6 @@ namespace Pokedex.Controllers
 
                         return model;
                     }
-                }
-                else
-                {
-                    this.RedirectToAction("Home", "Index");
                 }
 
                 return null;
@@ -1941,10 +1875,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -1988,10 +1920,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -2017,10 +1947,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -2178,10 +2106,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>
@@ -2225,7 +2151,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                this.RedirectToAction("Home", "Index");
+                return this.RedirectToAction("Index", "Home");
             }
 
             return null;
@@ -2863,10 +2789,6 @@ namespace Pokedex.Controllers
                 }
 
                 return null;
-            }
-            else
-            {
-                this.RedirectToAction("Home", "Index");
             }
 
             return null;

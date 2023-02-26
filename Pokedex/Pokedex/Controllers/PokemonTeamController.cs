@@ -115,8 +115,6 @@ namespace Pokedex.Controllers
                 {
                     this.CreateTeamFromImport(p, userId);
                 }
-
-                return this.RedirectToAction("PokemonTeams", "User");
             }
             catch (Exception e)
             {
@@ -147,7 +145,7 @@ namespace Pokedex.Controllers
                 }
             }
 
-            return null;
+            return this.RedirectToAction("PokemonTeams", "User");
         }
 
         /// <summary>
