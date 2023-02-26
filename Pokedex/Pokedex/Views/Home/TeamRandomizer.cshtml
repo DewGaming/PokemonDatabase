@@ -111,7 +111,7 @@
                 <label for="onlyFullyEvolved" class="generatorOptionTitle">Final Evolution</label>
             </li>
             <span class="generationOptionTitle" id="alternateForms">Alternate Forms</span>
-            @foreach (var formGroup in Model.AllFormGroups)
+            @foreach (var formGroup in Model.AllFormGroupGameDetails.Select(x => x.FormGroup).Distinct())
             {
                 <li class="dropdown-item generatorOption alternateFormCheckbox @(formGroup.Name.ToLower().Replace(" ", string.Empty))FormCheckbox">
                     <input id="@formGroup.Name.Replace(" ", string.Empty)" type="checkbox" value="@formGroup.Name" checked="checked" />

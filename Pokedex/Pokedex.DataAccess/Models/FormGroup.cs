@@ -9,5 +9,20 @@ namespace Pokedex.DataAccess.Models
         public string Name { get; set; }
         [Display(Name = "Will this Form Group appear in the Team Randomizer"), Required]
         public bool AppearInTeamRandomizer { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is FormGroup item))
+            {
+                return false;
+            }
+
+            return this.Id.Equals(item.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
     }
 }

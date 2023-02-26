@@ -251,7 +251,8 @@ namespace Pokedex.Controllers
                 AllGames = selectableGames,
                 AllTypes = types,
                 AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true).ToList(),
+                AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
+                AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup", "AppearInTeamRandomizer", true),
             };
 
             return this.View(model);

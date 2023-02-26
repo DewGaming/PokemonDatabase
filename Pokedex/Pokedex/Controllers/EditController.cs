@@ -99,6 +99,24 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Grabs all games to mark what games the specified form group is limited to.
+        /// </summary>
+        /// <param name="id">The form group's id.</param>
+        /// <returns>The page to specify limited games list.</returns>
+        [Route("edit_form_group_games/{id:int}")]
+        public IActionResult FormGroupGameDetails(int id)
+        {
+            FormGroupGameDetailViewModel model = new FormGroupGameDetailViewModel()
+            {
+                FormGroup = this.dataService.GetObjectByPropertyValue<FormGroup>("Id", id),
+                AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>(whereProperty: "FormGroupId", wherePropertyValue: id),
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
+            };
+
+            return this.View(model);
+        }
+
         [HttpGet]
         [Route("edit_game/{id:int}")]
         public IActionResult Game(int id)

@@ -29,8 +29,18 @@ namespace Pokedex.Models
         public List<LegendaryType> AllLegendaryTypes { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all forms.
+        /// Gets or sets a list of all form groups.
         /// </summary>
         public List<FormGroup> AllFormGroups { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all form group game details.
+        /// </summary>
+        public List<FormGroupGameDetail> AllFormGroupGameDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all games with megas.
+        /// </summary>
+        public List<Game> AllMegaGames { get; set; }
     }
 }

@@ -1,0 +1,39 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.FormGroupGameDetailViewModel
+@{
+    Layout = "_layout";
+}
+
+@section scripts
+{
+    <script src="/js/editFormGroupGameAvailability.js"></script>
+}
+
+@section styles
+{
+    <style>
+        .gameAvailability li {
+            list-style: none;
+        }
+    </style>
+}
+
+<h2>Update @Model.FormGroup.Name's Games List</h2>
+
+<div class="flexDiv">
+    <div class="gameAvailability">
+        <p>Games</p>
+        <ul>
+            @foreach (var g in Model.AllGames.OrderBy(x => x.ReleaseDate))
+            {
+                <li>
+                    <input id="game@(g.Id)" type="checkbox" value="@g.Id" @(Model.AllFormGroupGameDetails.Find(x => x.GameId == g.Id) != null ? "checked=checked" : "") />
+                    <label for="game@(g.Id)" class="generatorOptionTitle"><span>@g.Name</span></label>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<p>
+    <button onclick="updateGameAvailability(@Model.FormGroup.Id)" class="btn btn-primary" role="button">Save</button>
+</p>

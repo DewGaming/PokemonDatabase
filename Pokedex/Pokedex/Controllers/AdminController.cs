@@ -161,6 +161,7 @@ namespace Pokedex.Controllers
             {
                 AllFormGroups = this.dataService.GetObjects<FormGroup>(),
                 AllForms = this.dataService.GetObjects<Form>("Name"),
+                AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>(includes: "Game"),
             };
 
             return this.View(model);

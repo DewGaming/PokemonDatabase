@@ -14,15 +14,29 @@
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Will This Group Appear In Team Randomizer</th>
+            <th scope="col">Games Form Group Limited Too<br>(Only If Appears In Team Randomizer)</th>
             <th scope="col">Actions</th>
         </tr>
-        @foreach (var item in Model.AllFormGroups)
+        @foreach (var item in Model.AllFormGroups.OrderByDescending(x => x.AppearInTeamRandomizer).ThenBy(x => x.Name))
         {
             <tr>
                 <td>@item.Name</td>
                 <td>@(item.AppearInTeamRandomizer ? "Yes" : "No")</td>
+                @if (@Model.AllFormGroupGameDetails.Where(x => x.FormGroupId == item.Id).Count() > 0)
+                {
+                    <td>@String.Join(" / ", Model.AllFormGroupGameDetails.Where(x => x.FormGroupId == item.Id).Select(x => x.Game.Name))</td>
+                }
+                else
+                {
+                    <td>None</td>
+                }
                 <td>
                     <a href="@(this.Url.Action("FormGroup", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (item.AppearInTeamRandomizer)
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("FormGroupGameDetails", "Edit", new { id = item.Id }))">Edit Games List</a>
+                    }
                     @if (!(Model.AllForms.Exists(x => x.FormGroupId == item.Id)))
                     {
                         @('|')

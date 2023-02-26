@@ -1249,6 +1249,41 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the availablity of the specified form group in different games.
+        /// </summary>
+        /// <param name="formGroupId">The form group's id.</param>
+        /// <param name="games">The games the pokemon is able to be used in.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-form-group-game-availability")]
+        public string UpdateFormGroupGameAvailability(int formGroupId, List<int> games)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                FormGroupGameDetail formGroupGameDetail;
+                List<FormGroupGameDetail> existingGameDetails = this.dataService.GetObjects<FormGroupGameDetail>(whereProperty: "FormGroupId", wherePropertyValue: formGroupId);
+
+                foreach (var g in games)
+                {
+                    formGroupGameDetail = new FormGroupGameDetail()
+                    {
+                        FormGroupId = formGroupId,
+                        GameId = g,
+                    };
+                    this.dataService.AddObject(formGroupGameDetail);
+                }
+
+                foreach (var g in existingGameDetails)
+                {
+                    this.dataService.DeleteObject<FormGroupGameDetail>(g.Id);
+                }
+
+                return this.Json(this.Url.Action("FormGroups", "Admin")).Value.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Updates the availablity of the specified pokemon in different games.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
@@ -1783,7 +1818,8 @@ namespace Pokedex.Controllers
                             AllGenerations = availableGenerations,
                             AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= selectedGen.Id).ToList(),
                             AllLegendaryTypes = legendaryTypes,
-                            AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
+                            AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
+                            AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup"),
                         };
 
                         return model;
@@ -1795,7 +1831,8 @@ namespace Pokedex.Controllers
                             AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.GetAllPokemonWithoutForms().Any(y => y.Game.GenerationId == x.Id)).ToList(),
                             AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                             AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                            AllFormGroups = this.dataService.GetObjects<FormGroup>("Name").ToList(),
+                            AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
+                            AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup"),
                         };
 
                         return model;
@@ -2100,7 +2137,11 @@ namespace Pokedex.Controllers
                         this.dataService.AddObject(comment);
                         this.dataService.EmailComment(this.appConfig, comment);
 
-                        this.RedirectToAction("Error", "Index");
+                        return this.RedirectToAction("Error", "Index");
+                    }
+                    else
+                    {
+                        return this.RedirectToAction("Index", "Home");
                     }
                 }
             }
@@ -2153,8 +2194,6 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("Index", "Home");
             }
-
-            return null;
         }
 
         /// <summary>

@@ -182,7 +182,10 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
             data: { 'selectedGame': selectedGame }
         })
             .done(function (data) {
-                var gensChecked = []
+                var gensChecked = [], formsAvailable = $.grep(data.allFormGroupGameDetails, function (n) { return n.gameId == selectedGame; });
+                if (selectedGame == 0) {
+                    formsAvailable = data.allFormGroupGameDetails;
+                }
                 $('.generationCheckbox').each(function () {
                     if ($(this).find('input').prop('checked')) {
                         gensChecked.push($(this).attr('class').split(' ').pop());
@@ -211,7 +214,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $(".starterBoolCheckbox").show();
                 }
 
-                if ($.inArray(selectedGame, ['1', '2', '20', '23', '37']) != -1) {
+                if ($.inArray(selectedGame, ['1', '2', '16', '20', '23', '37']) != -1) {
                     $(".randomAbilityCheckbox").hide();
                     $("#randomAbilityBool").prop('checked', false);
                 }
@@ -232,81 +235,19 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
                     $(".onePokemonFormBoolCheckbox").show();
                 }
 
-                if ($.inArray(selectedGame, ['0', '12', '13', '14', '15', '16']) != -1) {
-                    if (!$('.megaevolutionFormCheckbox').is(':visible')) {
-                        $(".megaevolutionFormCheckbox").show();
+                $.each(data.allFormGroups, function (index, formGroup) {
+                    var checkboxClass = formGroup.name.toLowerCase().concat("FormCheckbox").replace(/\s/g, '');
+                    var checkboxTag = formGroup.name.replace(/\s/g, '');    
+                    if (formsAvailable.find(x => x.formGroup.name == formGroup.name)) {
+                        if (!$('.' + checkboxClass).is(':visible')) {
+                            $('.' + checkboxClass).show();
+                        }
                     }
-
-                    if ($('.megaevolutionFormCheckbox').prop('checked') && !$('.multipleMegaBoolCheckbox').is(':visible')) {
-                        $(".multipleMegaBoolCheckbox").show();
-                    }
-                }
-                else {
-                    $(".multipleMegaBoolCheckbox").hide();
-                    $("#multipleMegaBool").prop('checked', false);
-                    $(".megaevolutionFormCheckbox").hide();
-                    $("#MegaEvolution").prop('checked', false);
-                }
-
-                if (selectedGame == 16) {
-                    $(".randomAbilityCheckbox").hide();
-                    $("#randomAbilityBool").prop('checked', false);
-                }
-
-                if ($.inArray(selectedGame, ['0', '14', '15', '16', '17', '37']) != -1) {
-                    if (!$('.alolanFormCheckbox').is(':visible')) {
-                        $(".alolanFormCheckbox").show();
-                        $('.gen1Checkbox').on('click', function () {
-                            altCheck = checkAltFormChecks();
-                        });
-                    }
-                }
-                else {
-                    $(".alolanFormCheckbox").hide();
-                    $("#Alolan").prop('checked', false);
-                }
-
-                if ($.inArray(selectedGame, ['0', '17']) != -1) {
-                    if (!$('.galarianFormCheckbox').is(':visible')) {
-                        $(".galarianFormCheckbox").show();
-                    }
-
-                    if (!$('.gigantamaxFormCheckbox').is(':visible')) {
-                        $(".gigantamaxFormCheckbox").show();
-                    }
-
-                    if ($('.gigantamaxFormCheckbox').prop('checked') && !$('.multipleGMaxBoolCheckbox').is(':visible')) {
-                        $(".multipleGMaxBoolCheckbox").show();
-                    }
-                }
-                else {
-                    $(".galarianFormCheckbox").hide();
-                    $("#Galarian").prop('checked', false);
-                    $(".gigantamaxFormCheckbox").hide();
-                    $("#Gigantamax").prop('checked', false);
-                    $(".multipleGMaxBoolCheckbox").hide();
-                    $("#multipleGMaxBool").prop('checked', false);
-                }
-
-                if ($.inArray(selectedGame, ['0', '37', '41', '42']) != -1) {
-                    if (!$('.hisuianFormCheckbox').is(':visible')) {
-                        $(".hisuianFormCheckbox").show();
-                    }
-                }
-                else {
-                    $(".hisuianFormCheckbox").hide();
-                    $("#Hisuian").prop('checked', false);
-                }
-
-                if ($.inArray(selectedGame, ['0', '41', '42']) != -1) {
-                    if (!$('.paldeanFormCheckbox').is(':visible')) {
-                        $(".paldeanFormCheckbox").show();
-                    }
-                }
-                else {
-                    $(".paldeanFormCheckbox").hide();
-                    $("#Paldean").prop('checked', false);
-                }
+                    else {
+                        $('.' + checkboxClass).hide();
+                        $('#' + checkboxTag).prop('checked', false);
+                    }                
+                })
 
                 data.pokemonTypes;
 
