@@ -500,85 +500,122 @@ namespace Pokedex.Controllers
             selectedGenerationId = 0;
             name = this.FormatPokemonName(name);
 
-            Pokemon pokemon = this.dataService.GetAllPokemon().Find(x => x.Name == name);
-
-            if (pokemon == null)
+            try
             {
-                return this.RedirectToAction("AllPokemon", "Home");
-            }
-            else
-            {
-                string pokemonName = pokemon.Name;
+                Pokemon pokemon = this.dataService.GetAllPokemon().Find(x => x.Name == name);
 
-                if (pokemonId == 0)
+                if (pokemon == null)
                 {
-                    pokemonId = pokemon.Id;
-                }
-
-                if (generationId == 0)
-                {
-                    generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId).Last().Game.GenerationId;
-                }
-
-                List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
-                PokemonViewModel pokemonDetails = this.GetPokemonDetails(pokemon);
-                pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemon.Id);
-
-                pokemonList.Add(pokemonDetails);
-
-                List<Pokemon> altForms = this.dataService.GetAltForms(pokemonId);
-                if (altForms.Count > 0)
-                {
-                    if (this.dataService.CheckIfAltForm(pokemonId))
-                    {
-                        pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
-                    }
-
-                    Form form;
-                    List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
-                    foreach (var p in altForms)
-                    {
-                        form = formDetails.Find(x => x.AltFormPokemonId == p.Id).Form;
-                        pokemonDetails = this.GetPokemonDetails(p, form);
-
-                        pokemonList.Add(pokemonDetails);
-                    }
-                }
-
-                List<int> pokemonIds = pokemonList.ConvertAll(x => x.Pokemon.Id);
-
-                if (pokemonIds.IndexOf(pokemonId) == -1)
-                {
-                    pokemonId = pokemon.Id;
-                }
-
-                AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
-                {
-                    PokemonList = pokemonList,
-                    PokemonId = pokemonId,
-                    GenerationId = generationId,
-                    LatestGenerationId = this.dataService.GetObjects<Generation>(orderedProperty: "Id").Last().Id,
-                    AllTypes = new List<DataAccess.Models.Type>(),
-                };
-
-                this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
-                this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
-                if (name == "Arceus")
-                {
-                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
-                }
-                else if (name == "Silvally")
-                {
-                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Memory" });
+                    return this.RedirectToAction("AllPokemon", "Home");
                 }
                 else
                 {
-                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
+                    string pokemonName = pokemon.Name;
+
+                    if (pokemonId == 0)
+                    {
+                        pokemonId = pokemon.Id;
+                    }
+
+                    if (generationId == 0)
+                    {
+                        generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId).Last().Game.GenerationId;
+                    }
+
+                    List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
+                    PokemonViewModel pokemonDetails = this.GetPokemonDetails(pokemon);
+                    pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemon.Id);
+
+                    pokemonList.Add(pokemonDetails);
+
+                    List<Pokemon> altForms = this.dataService.GetAltForms(pokemonId);
+                    if (altForms.Count > 0)
+                    {
+                        if (this.dataService.CheckIfAltForm(pokemonId))
+                        {
+                            pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
+                        }
+
+                        Form form;
+                        List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
+                        foreach (var p in altForms)
+                        {
+                            form = formDetails.Find(x => x.AltFormPokemonId == p.Id).Form;
+                            pokemonDetails = this.GetPokemonDetails(p, form);
+
+                            pokemonList.Add(pokemonDetails);
+                        }
+                    }
+
+                    List<int> pokemonIds = pokemonList.ConvertAll(x => x.Pokemon.Id);
+
+                    if (pokemonIds.IndexOf(pokemonId) == -1)
+                    {
+                        pokemonId = pokemon.Id;
+                    }
+
+                    AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
+                    {
+                        PokemonList = pokemonList,
+                        PokemonId = pokemonId,
+                        GenerationId = generationId,
+                        LatestGenerationId = this.dataService.GetObjects<Generation>(orderedProperty: "Id").Last().Id,
+                        AllTypes = new List<DataAccess.Models.Type>(),
+                    };
+
+                    this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
+                    this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
+                    if (name == "Arceus")
+                    {
+                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
+                    }
+                    else if (name == "Silvally")
+                    {
+                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Memory" });
+                    }
+                    else
+                    {
+                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
+                    }
+
+                    model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
+
+                    return this.View(model);
+                }
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner"))
+                {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error while setting up pokemon page.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error while setting up pokemon page.";
+                    }
+
+                    commentBody = string.Concat(commentBody, " - Selected Pokemon: ", name);
+                    commentBody = string.Concat(commentBody, " - Selected Pokemon Id: ", pokemonId);
+                    commentBody = string.Concat(commentBody, " - Selected Generation Id: ", generationId);
+
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.AddObject(comment);
+                    this.dataService.EmailComment(this.appConfig, comment);
                 }
 
-                model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
-
-                return this.View(model);
+                return null;
             }
         }
 
