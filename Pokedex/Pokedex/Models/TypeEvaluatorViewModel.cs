@@ -14,8 +14,8 @@ namespace Pokedex.Models
         public List<Type> AllTypes { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all generations.
+        /// Gets or sets a list of all games.
         /// </summary>
-        public List<Generation> AllGenerations { get; set; }
+        public List<Game> AllGames { get; set; }
     }
 }

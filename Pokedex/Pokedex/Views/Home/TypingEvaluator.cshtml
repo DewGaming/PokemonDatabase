@@ -31,17 +31,13 @@
             min-width: 216.75px;
         }
 
-        .primaryList, .generationList {
+        .primaryList, .gameList {
           margin-right: 10px;
           margin-bottom: 10px;
         }
 
         .flexDiv label {
           margin-bottom: 7.5px;
-        }
-
-        .primaryList, .primaryList>select, .secondaryList, .secondaryList>select, .generationList, .generationList>select {
-          width: 12rem;
         }
 
         .effectivenessChart {
@@ -73,13 +69,13 @@
 
 <div class="evaluator">
     <div class="flexDiv">
-        <div class="generationList">
-            @Html.Label("Generation")
-            <select class="form-control generationSelectList" id="Generation" name="Generation">
-                <option value="0">Every Generation</option>
-                @foreach (var g in Model.AllGenerations)
+        <div class="gameList">
+            @Html.Label("Game")
+            <select class="form-control gameSelectList" id="Game" name="Game">
+                <option value="0">Any Game</option>
+                @foreach (var g in Model.AllGames)
                 {
-                    <option value="@g.Id">@g.GenerationName</option>
+                    <option value="@g.Id">@g.Name</option>
                 }
             </select>
         </div>

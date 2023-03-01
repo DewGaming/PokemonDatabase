@@ -1877,14 +1877,25 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="primaryTypeID">The primary type's id.</param>
         /// <param name="secondaryTypeID">The secondary type's id.</param>
-        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <param name="gameID">The game used to specify the type chart.</param>
         /// <returns>The fill typing evaluator shared view.</returns>
         [Route("get-pokemon-by-typing")]
-        public IActionResult GetPokemonByTyping(int primaryTypeID, int secondaryTypeID, int generationID)
+        public IActionResult GetPokemonByTyping(int primaryTypeID, int secondaryTypeID, int gameID)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeID, secondaryTypeID, generationID);
+                Game game = new Game()
+                {
+                    Id = 0,
+                    Name = "Any Game",
+                };
+
+                if (gameID != 0)
+                {
+                    game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameID);
+                }
+
+                List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeID, secondaryTypeID, game);
                 List<Pokemon> pokemonList = new List<Pokemon>();
 
                 foreach (var p in typingList)
@@ -1905,7 +1916,7 @@ namespace Pokedex.Controllers
                     AllPokemonWithTypes = typingList,
                     AllPokemon = pokemonList,
                     AppConfig = this.appConfig,
-                    GenerationId = generationID,
+                    Game = game,
                 };
 
                 return this.PartialView("_FillTypingEvaluator", model);
@@ -2199,17 +2210,18 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets a list of types that are available in the given generation.
         /// </summary>
-        /// <param name="generationID">The generation's id.</param>
+        /// <param name="gameId">The generation's id.</param>
         /// <returns>The fill typing evaluator types shared view.</returns>
-        [Route("get-types-by-generation")]
-        public IActionResult GrabTypingEvaluatorTypes(int generationID)
+        [Route("get-types-by-game")]
+        public IActionResult GrabTypingEvaluatorTypes(int gameId)
         {
-            if (generationID == 0)
+            if (gameId == 0)
             {
-                generationID = this.dataService.GetObjects<Generation>().Last().Id;
+                gameId = this.dataService.GetObjects<Game>().Last().Id;
             }
 
-            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= generationID).ToList();
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= game.GenerationId).ToList();
             return this.PartialView("_FillTypingEvaluatorTypes", model);
         }
 
@@ -2883,9 +2895,10 @@ namespace Pokedex.Controllers
             return pokemonList;
         }
 
-        private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, int generationId)
+        private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, Game game)
         {
             List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
+                                                        .Where(x => x.GenerationId <= game.GenerationId)
                                                         .GroupBy(x => new { x.PokemonId })
                                                         .Select(x => x.LastOrDefault())
                                                         .ToList();
@@ -2903,11 +2916,9 @@ namespace Pokedex.Controllers
                 pokemonList = pokemonList.Where(x => x.PrimaryTypeId == primaryTypeId && x.SecondaryType == null).ToList();
             }
 
-            if (generationId != 0)
+            if (game.Id != 0)
             {
-                pokemonList = pokemonList.Where(x => x.Pokemon.Game.GenerationId == generationId).Where(x => x.GenerationId <= generationId).ToList();
-
-                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
+                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: game.Id).Select(x => x.PokemonId)).ToList();
 
                 foreach (var pokemon in exclusionList)
                 {

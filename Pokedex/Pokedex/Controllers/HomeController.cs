@@ -267,10 +267,49 @@ namespace Pokedex.Controllers
         public IActionResult TypingEvaluator()
         {
             this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
+            List<Generation> generations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 3).ToList();
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.IsBreedingPossible).ToList();
+            List<Game> selectableGames = new List<Game>();
+
+            foreach (var gen in generations)
+            {
+                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id && x.Id != 37 && x.Id != 43).ToList();
+                List<Game> uniqueGames = allGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
+                for (var i = 0; i < uniqueGames.Count; i++)
+                {
+                    if (i == uniqueGames.Count - 1)
+                    {
+                        selectableGames.Add(new Game()
+                        {
+                            Id = uniqueGames[i].Id,
+                            Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
+                            GenerationId = gen.Id,
+                        });
+                    }
+                    else
+                    {
+                        List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
+                        if (games.Count == 0)
+                        {
+                            selectableGames.Add(uniqueGames[i]);
+                        }
+                        else
+                        {
+                            selectableGames.Add(new Game()
+                            {
+                                Id = uniqueGames[i].Id,
+                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
+                                GenerationId = gen.Id,
+                            });
+                        }
+                    }
+                }
+            }
+
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
-                AllGenerations = this.dataService.GetObjects<Generation>(),
+                AllGames = selectableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
             };
 
             return this.View(model);

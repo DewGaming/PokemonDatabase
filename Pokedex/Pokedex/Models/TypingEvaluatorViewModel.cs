@@ -24,8 +24,8 @@ namespace Pokedex.Models
         public AppConfig AppConfig { get; set; }
 
         /// <summary>
-        /// Gets or sets the generation.
+        /// Gets or sets the game's id.
         /// </summary>
-        public int GenerationId { get; set; }
+        public Game Game { get; set; }
     }
 }
