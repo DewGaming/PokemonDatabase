@@ -98,12 +98,12 @@
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("EVYields", "Edit", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Edit EV Yields</a></li>
         }
-        @if (this.User.IsInRole("Owner") && (!Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId) || (Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))))
+        @if (this.User.IsInRole("Owner") && Model.Pokemon.Name.IndexOf(" (") < 0 && Model.DropdownViewModel.AllPokemon.AllEggGroups.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <hr class="adminOptionSeparator">
             <span class="adminMenuTitle">Add Relations</span>
         }
-        @if (this.User.IsInRole("Owner") && !Model.DropdownViewModel.AllPokemon.AllEvolutions.Exists(x => x.EvolutionPokemonId == Model.Pokemon.Id && x.GenerationId == Model.GenerationId))
+        @if (this.User.IsInRole("Owner"))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("Evolution", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Pre-Evolution</a></li>
         }
