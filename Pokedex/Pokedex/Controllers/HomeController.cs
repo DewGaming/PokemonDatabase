@@ -6,10 +6,11 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
+using System.Reflection;
 using System.Web;
 
 namespace Pokedex.Controllers
@@ -741,21 +742,24 @@ namespace Pokedex.Controllers
         public IActionResult Error()
         {
             this.dataService.AddPageView("Error Page", this.User.IsInRole("Owner"));
-            Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature exceptionHandlerFeature = this.HttpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>() !;
+            Exception error = this.HttpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>().Error;
+            StackTrace stackTrace = new StackTrace(error);
+            StackFrame location = stackTrace.GetFrame(0);
+            MethodBase sourceMethod = location.GetMethod();
 
-            if (!this.User.IsInRole("Owner") && exceptionHandlerFeature != null)
+            if (!this.User.IsInRole("Owner") && error != null)
             {
                 Comment comment = new Comment()
                 {
-                    Name = string.Concat(exceptionHandlerFeature.Error.GetType().ToString(), " (", exceptionHandlerFeature.Error.Message, ")"),
+                    Name = string.Concat(error.GetType().ToString(), " (", error.Message, ")"),
                 };
 
-                if (exceptionHandlerFeature.Error.InnerException != null)
+                if (error.InnerException != null)
                 {
-                    comment.Name = string.Concat(comment.Name, " (", exceptionHandlerFeature.Error.InnerException.Message, ")");
+                    comment.Name = string.Concat(comment.Name, " (", error.InnerException.Message, ")");
                 }
 
-                comment.Name = string.Concat(comment.Name, exceptionHandlerFeature.Error.StackTrace.Replace("   ", " "));
+                comment.Name = string.Concat(comment.Name, " Method: ", sourceMethod.Name, ", Class: ", sourceMethod.DeclaringType.FullName, ", Location: ", location.GetILOffset());
 
                 if (this.User.Identity.Name != null)
                 {
@@ -766,17 +770,17 @@ namespace Pokedex.Controllers
 
                 this.dataService.EmailComment(this.appConfig, comment);
             }
-            else if (exceptionHandlerFeature != null)
+            else if (error != null)
             {
-                string name = string.Concat(exceptionHandlerFeature.Error.GetType().ToString(), " (", exceptionHandlerFeature.Error.Message, ")");
+                string name = string.Concat(error.GetType().ToString(), " (", error.Message, ")");
 
-                if (exceptionHandlerFeature.Error.InnerException != null)
+                if (error.InnerException != null)
                 {
-                    name = string.Concat(name, " (", exceptionHandlerFeature.Error.InnerException.Message, ")");
+                    name = string.Concat(name, " (", error.InnerException.Message, ")");
                 }
 
-                name = string.Concat(name, exceptionHandlerFeature.Error.StackTrace.Replace("   ", " "));
-                return this.Problem(detail: name, title: exceptionHandlerFeature.Error.Message);
+                name = string.Concat(name, error.StackTrace.Replace("   ", " "));
+                return this.Problem(detail: name, title: error.Message);
             }
 
             return this.View();
