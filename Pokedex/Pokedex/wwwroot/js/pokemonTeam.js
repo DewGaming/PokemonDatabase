@@ -51,26 +51,20 @@ $(document).ready(function () {
             data: { 'teamId': $(this).attr('id') }
         })
             .done(function (data) {
-                var pokemonTeam = data;
-                if (typeof (pokemonTeam) !== "undefined") {
-                    exportString = pokemonTeam.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+                if (typeof (data) !== "undefined") {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(data.exportString)
+                            .then(() => {
+                                alert("Team has been copied to your clipboard!");
+                            })
+                            .catch((error) => {
+                                alert("Team was unable to be copied to your clipboard!");
+                            });
 
-                    console.clear();
-
-                    if (exportString.indexOf("No Ability") >= 0) { 
-                        alert("It appears that one of your pokemon does not have an ability, even though it should. The pokemon without an ability will have a \"No Ability\" in it's section");
-                    } 
-
-                    var temp = $("<textarea>");
-                    $("body").append(temp);
-                    $(temp).text(exportString);
-                    $(temp).select();
-                    document.execCommand("copy");
-                    $(temp).remove();
-
-                    console.log(exportString);
-
-                    alert("Team has been copied to your clipboard!");
+                        console.log(data.exportString);
+                    } else {
+                        alert("Team was unable to be copied to your clipboard!");
+                    }
                 }
             })
             .fail(function (jqXHR) {
@@ -98,26 +92,23 @@ $(document).ready(function () {
                     if (typeof (pokemonTeams) !== "undefined") {
                         $.each(pokemonTeams, function (index, item) {
                             if (item.teamId == buttonId) {
-                                exportString = item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+                                exportString = item.exportString;
                             }
                         });
-
-                        console.clear();
-
-                        if (exportString.indexOf("No Ability") >= 0) { 
-                            alert("It appears that one of your pokemon does not have an ability, even though it should. The pokemon without an ability will have a \"No Ability\" in it's section");
-                        }                        
-
-                        var temp = $("<textarea>");
-                        $("body").append(temp);
-                        $(temp).text(exportString);
-                        $(temp).select();
-                        document.execCommand("copy");
-                        $(temp).remove();
-
-                        console.log(exportString);
-
-                        alert("Teams have been copied to your clipboard!");
+    
+                        if (navigator.clipboard) {
+                            navigator.clipboard.writeText(exportString)
+                                .then(() => {
+                                    alert("Team has been copied to your clipboard!");
+                                })
+                                .catch((error) => {
+                                    alert("Team was unable to be copied to your clipboard!");
+                                });
+    
+                            console.log(exportString);
+                        } else {
+                            alert("Team was unable to be copied to your clipboard!");
+                        }
                     }
                 });
 
@@ -128,21 +119,22 @@ $(document).ready(function () {
                             if (index != 0) {
                                 exportString += "\n\n";
                             }
-                            exportString += item.exportString.replace(':', '\:').replace('(', '\(').replace(')', '\)');
+                            exportString += item.exportString;
                         });
-
-                        console.clear();
-
-                        var temp = $("<textarea>");
-                        $("body").append(temp);
-                        $(temp).text(exportString);
-                        $(temp).select();
-                        document.execCommand("copy");
-                        $(temp).remove();
-
-                        console.log(exportString);
-
-                        alert("Teams have been copied to your clipboard!");
+    
+                        if (navigator.clipboard) {
+                            navigator.clipboard.writeText(exportString)
+                                .then(() => {
+                                    alert("Team has been copied to your clipboard!");
+                                })
+                                .catch((error) => {
+                                    alert("Team was unable to be copied to your clipboard!");
+                                });
+    
+                            console.log(exportString);
+                        } else {
+                            alert("Team was unable to be copied to your clipboard!");
+                        }
                     }
                 });
             }

@@ -23,17 +23,13 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         }
 
         if ($(window).width() >= 406) {
-            if (!abilityList.find((o) => { return o["name"] === "Unknown" })) {
-                $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
-            }
+            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
             $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
         }
         else {
             $('<br class="mobileBreak" />').insertAfter('.generatorButton');
             $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.mobileBreak');
-            if (!abilityList.find((o) => { return o["name"] === "Unknown" })) {
-                $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
-            }
+            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
         }
 
         refreshEvents();
@@ -129,16 +125,19 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
         $('.exportTeamButton').off();
 
         $('.exportTeamButton').on('click', function () {
-            console.clear();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(exportString)
+                    .then(() => {
+                        alert("Team has been copied to your clipboard!");
+                    })
+                    .catch((error) => {
+                        alert("Team was unable to be copied to your clipboard!");
+                    });
 
-            var temp = $("<textarea>");
-            $("body").append(temp);
-            $(temp).text(exportString);
-            $(temp).select();
-            document.execCommand("copy");
-            $(temp).remove();
-
-            alert("Team has been copied to your clipboard!");
+                console.log(exportString);
+            } else {
+                alert("Team was unable to be copied to your clipboard!");
+            }
         });
     }, refreshSaveEvent = function () {
         $('.saveTeamButton').off();
