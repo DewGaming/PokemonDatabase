@@ -780,18 +780,22 @@ namespace Pokedex
                 {
                     MailAddress fromAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Website");
                     MailAddress toAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Email");
-                    string body = "Comment";
+                    MailMessage message = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = string.Concat("New Comment for ", appConfig.AppName),
+                        Body = "Comment",
+                    };
 
                     if (comment.CommentorId != null)
                     {
-                        body = string.Concat(body, " by ", this.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
+                        message.Body += string.Concat(" by ", this.GetObjectByPropertyValue<User>("Id", (int)comment.CommentorId).Username);
                     }
                     else
                     {
-                        body = string.Concat(body, " by Anonymous User");
+                        message.Body += string.Concat(" by Anonymous User");
                     }
 
-                    body = string.Concat(body, ": ", comment.Name);
+                    message.Body += string.Concat(": ", comment.Name);
 
                     SmtpClient smtp = new SmtpClient()
                     {
@@ -801,12 +805,6 @@ namespace Pokedex
                         DeliveryMethod = SmtpDeliveryMethod.Network,
                         UseDefaultCredentials = false,
                         Credentials = new NetworkCredential(fromAddress.Address, appConfig.EmailAddressPassword),
-                    };
-
-                    using MailMessage message = new MailMessage(fromAddress, toAddress)
-                    {
-                        Subject = string.Concat("New Comment for ", appConfig.AppName),
-                        Body = body,
                     };
                     smtp.Send(message);
                 }
