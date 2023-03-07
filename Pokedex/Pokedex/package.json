@@ -3,7 +3,7 @@
     "kpy": "^1.9.0",
     "npm": "^9.5.1",
     "npx": "^10.2.2",
-    "rimraf": "^4.1.2",
+    "rimraf": "^4.3.1",
     "set-value": "^4.1.0",
     "uglifycss": "^0.0.29",
     "uglifyjs-folder": "^3.2.0"
