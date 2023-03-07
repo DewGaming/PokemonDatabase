@@ -35,7 +35,7 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
     }
   }
 
-  $('button#Generation' + generation + ', .generations#' + pageName.replace('%', '\\%') + ', .generation' + generation + '#' + pageName.replace('%', '\\%')).addClass('active');
+  $('button#Generation' + generation + ', .generations#' + pageName + ', .generation' + generation + '#' + pageName).addClass('active');
   
   if (!$('.active .pokemonImage>div').hasClass(imageUsed)) {
     $('.current').each(function () {
