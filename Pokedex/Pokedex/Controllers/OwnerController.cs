@@ -261,22 +261,5 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("Pokemon", "Admin");
         }
-
-        /// <summary>
-        /// Opens the page to view a specific saved pokemon team.
-        /// </summary>
-        /// <param name="id">The pokemon team's id.</param>
-        /// <returns>The pokemon team page.</returns>
-        [Route("pokemon_teams/{id:int}")]
-        public IActionResult PokemonTeams(int id)
-        {
-            PokemonTeamsViewModel model = new PokemonTeamsViewModel()
-            {
-                AllPokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon.Pokemon, SecondPokemon.Pokemon, ThirdPokemon.Pokemon, FourthPokemon.Pokemon, FifthPokemon.Pokemon, SixthPokemon.Pokemon", "Id", id).ToList(),
-                AppConfig = this.appConfig,
-            };
-
-            return this.View(model);
-        }
     }
 }
