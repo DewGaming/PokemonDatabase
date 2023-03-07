@@ -805,7 +805,7 @@ namespace Pokedex
 
                     using MailMessage message = new MailMessage(fromAddress, toAddress)
                     {
-                        Subject = "New Comment for Pokéluna",
+                        Subject = string.Concat("New Comment for ", appConfig.AppName),
                         Body = body,
                     };
                     smtp.Send(message);
