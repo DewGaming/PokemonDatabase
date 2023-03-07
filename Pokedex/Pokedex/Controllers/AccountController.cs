@@ -116,12 +116,11 @@ namespace Pokedex.Controllers
         /// The method that is used when a user tries to log in.
         /// </summary>
         /// <param name="loginViewModel">The login credentials.</param>
-        /// <param name="returnUrl">The url the user came from.</param>
         /// <returns>The home page.</returns>
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(LoginViewModel loginViewModel, string returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             if (!this.ModelState.IsValid)
             {
@@ -184,14 +183,7 @@ namespace Pokedex.Controllers
                     AllowRefresh = true,
                 }).ConfigureAwait(false);
 
-            if (string.IsNullOrEmpty(returnUrl))
-            {
-                return this.RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                return this.Redirect(returnUrl);
-            }
+            return this.RedirectToAction("Index", "Home");
         }
 
         /// <summary>
