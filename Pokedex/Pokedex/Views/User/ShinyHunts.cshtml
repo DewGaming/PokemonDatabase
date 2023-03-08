@@ -1,0 +1,158 @@
+@model Pokedex.Models.ShinyHuntsViewModel;
+@using System.Net;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Pokémon ShinyHunts";
+    int shinyHuntCount = 0;
+    int pokemonCount;
+    HttpWebRequest webRequest;
+    HttpWebResponse imageRequest;
+}
+
+@section styles
+{
+    <style>
+        .pokemonShinyHuntGroup {
+            margin-right: 10px;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src=""></script>
+}
+
+<p class="shinyHuntButtons">
+    <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
+    <br>
+    <button class="currentlyHuntingButton btn btn-primary hide">Current Shiny Hunts</button>
+    <button class="currentlyHuntingButton btn btn-primary hide">Current Shiny Hunts</button>
+    @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
+    {
+        <button class="completedHuntsButton btn btn-primary">Completed Shiny Hunts</button>
+    }
+</p>
+
+<div>
+    @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
+    {
+        <div class="page generation pokemonList">
+            <div class="grid-container">
+                @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured).ToList())
+                {
+                    <div class="shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
+                        <a href="@this.Url.Action("Pokemon", "Home", new { name = s.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
+                        <div class="pokemonImages">
+                            @{
+                                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"));
+                                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                            }
+                            @if (imageRequest.StatusCode == HttpStatusCode.OK)
+                            {
+                                <img class="lightshadowed pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"))" />
+                            }
+                            else
+                            {
+                                <img class="lightshadowed pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, s.PokemonId, ".png"))" />
+                            }
+                        </div>
+                        </a>
+                        <div class="description">
+                            <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = s.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@s.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @s.Pokemon.Name</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    
+    @if (Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList().Count() > 0)
+    {
+        <table class="table shinyHunts">
+            <tbody>
+                <tr>
+                    <th scope="col">Pokemon Name</th>
+                    @if (Model.AllShinyHunts.Where(x => !x.IsCaptured && x.Game != null).Count() > 0)
+                    {
+                        <th scope="col">
+                            Game@{
+                                foreach (var hunts in Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList())
+                                {
+                                    if (hunts.Game != null && hunts.Game.Name.Contains('/'))
+                                    {
+                                        @("(s)");
+                                        break;
+                                    }
+                                }
+                            }
+                        </th>
+                    }
+                    <th scope="col">Actions</th>
+                </tr>
+                @foreach(var s in @Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList())
+                {
+                    shinyHuntCount++;
+                    pokemonCount = 0;
+                    <tr>
+                        <td>
+                            <div class="pokemonShinyHuntGroup">
+                                <a class="dropdown-toggle pokemonShinyHuntDropdownButton" data-toggle="dropdown">
+                                    <span class="pokemonShinyHuntPicture">
+                                        @{
+                                            webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"));
+                                            imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                                        }
+                                        @if (imageRequest.StatusCode == HttpStatusCode.OK)
+                                        {
+                                            <img class="lightshadowed pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"))" />
+                                        }
+                                        else
+                                        {
+                                            <img class="lightshadowed pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, s.PokemonId, ".png"))" />
+                                        }
+                                    </span>
+                                </a>
+                                <ul class="pokemonShinyHuntDropdown dropdown-menu dropdown-menu-right">
+                                    <span class="adminMenuTitle">View</span>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("Pokemon", "Home", new { name = s.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon Data</a></li>
+                                    <hr class="adminOptionSeparator">
+                                    <span class="adminMenuTitle">Update</span>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditPokemon", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount, pokemonShinyHuntDetailId = pokemonCount }))">Update Pokémon</a></li>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditEV", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount, pokemonShinyHuntDetailId = pokemonCount }))">Update EVs</a></li>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditIV", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount, pokemonShinyHuntDetailId = pokemonCount }))">Update IVs</a></li>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditMoveset", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount, pokemonShinyHuntDetailId = pokemonCount }))">Update Moveset</a></li>
+                                    <hr class="adminOptionSeparator">
+                                    <span class="adminMenuTitle">Delete</span>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("DeletePokemon", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount, pokemonShinyHuntDetailId = pokemonCount }))">Delete Pokémon</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                        @if (Model.AllShinyHunts.Where(x => x.Game != null).Count() > 0)
+                        {
+                            <td>
+                                @if (s.Game != null)
+                                {
+                                    @s.Game.Name
+                                }
+                                else
+                                {
+                                    @("No Game Selected");
+                                }
+                            </td>
+                        }
+                        <td>
+                            <a class="shinyHuntButton btn btn-primary" title="Edit @s.Id" href="@this.Url.Action("EditShinyHunt", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount })">Edit ShinyHunt</a>
+                            <a class="shinyHuntButton btn btn-primary" title="Delete @s.Id" href="@this.Url.Action("DeleteShinyHunt", "ShinyHunt", new { pokemonShinyHuntId = shinyHuntCount })">Delete ShinyHunt</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.AllShinyHunts.Count() == 0)
+    {
+        <div class="noShinyHunts">No hunts have been started yet.</div>
+    }
+</div>

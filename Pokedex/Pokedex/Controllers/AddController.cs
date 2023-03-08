@@ -464,6 +464,72 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokeball")]
+        public IActionResult Pokeball()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokeball")]
+        public IActionResult Pokeball(Pokeball pokeball)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(pokeball);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_mark")]
+        public IActionResult Mark()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_mark")]
+        public IActionResult Mark(Mark mark)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(mark);
+
+            return this.RedirectToAction("Marks", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_hunting_method")]
+        public IActionResult HuntingMethod()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_hunting_method")]
+        public IActionResult HuntingMethod(HuntingMethod huntingMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(huntingMethod);
+
+            return this.RedirectToAction("HuntingMethods", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_form")]
         public IActionResult Form()
         {

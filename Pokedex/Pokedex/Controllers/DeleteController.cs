@@ -162,6 +162,63 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_mark/{id:int}")]
+        public IActionResult Mark(int id)
+        {
+            Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_mark/{id:int}")]
+        public IActionResult Mark(Mark mark)
+        {
+            this.dataService.DeleteObject<Mark>(mark.Id);
+
+            return this.RedirectToAction("Marks", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_pokeball/{id:int}")]
+        public IActionResult Pokeball(int id)
+        {
+            Pokeball model = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_pokeball/{id:int}")]
+        public IActionResult Pokeball(Pokeball pokeball)
+        {
+            this.dataService.DeleteObject<Pokeball>(pokeball.Id);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
+        [Route("delete_hunting_method/{id:int}")]
+        public IActionResult HuntingMethod(int id)
+        {
+            HuntingMethod model = this.dataService.GetObjectByPropertyValue<HuntingMethod>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_hunting_method/{id:int}")]
+        public IActionResult HuntingMethod(HuntingMethod huntingMethod)
+        {
+            this.dataService.DeleteObject<HuntingMethod>(huntingMethod.Id);
+
+            return this.RedirectToAction("HuntingMethods", "Admin");
+        }
+
+        [HttpGet]
         [Route("delete_egg_cycle/{id:int}")]
         public IActionResult EggCycle(int id)
         {

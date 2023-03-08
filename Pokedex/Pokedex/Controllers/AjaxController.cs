@@ -2558,6 +2558,47 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Grabs all of the pokemon available in the selected game.
+        /// </summary>
+        /// <param name="gameId">The selected game's Id.</param>
+        /// <returns>The list of available pokemon.</returns>
+        [Route("get-pokemon-by-game")]
+        public List<Pokemon> GetPokemonByGame(int gameId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", gameId).ConvertAll(x => x.Pokemon);
+                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
+                foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+                {
+                    p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
+                }
+
+                return pokemonList;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Grabs all of the hunting methods available for the selected game.
+        /// </summary>
+        /// <param name="gameId">The selected game's Id.</param>
+        /// <returns>The list of available hunting methods.</returns>
+        [Route("get-hunting-methods")]
+        public List<HuntingMethod> GetHuntingMethods(int gameId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethod>();
+
+                return huntingMethods;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>

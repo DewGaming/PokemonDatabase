@@ -1326,6 +1326,84 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_pokeball/{id:int}")]
+        public IActionResult Pokeball(int id)
+        {
+            Pokeball model = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_pokeball/{id:int}")]
+        public IActionResult Pokeball(Pokeball pokeball)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Pokeball model = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", pokeball.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(pokeball);
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_mark/{id:int}")]
+        public IActionResult Mark(int id)
+        {
+            Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_mark/{id:int}")]
+        public IActionResult Mark(Mark mark)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", mark.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(mark);
+
+            return this.RedirectToAction("Marks", "Admin");
+        }
+
+        [HttpGet]
+        [Route("edit_hunting_method/{id:int}")]
+        public IActionResult HuntingMethod(int id)
+        {
+            HuntingMethod model = this.dataService.GetObjectByPropertyValue<HuntingMethod>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_hunting_method/{id:int}")]
+        public IActionResult HuntingMethod(HuntingMethod huntingMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                HuntingMethod model = this.dataService.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethod.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(huntingMethod);
+
+            return this.RedirectToAction("HuntingMethods", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_legendary_type/{id:int}")]
         public IActionResult LegendaryType(int id)
         {

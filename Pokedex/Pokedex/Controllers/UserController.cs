@@ -186,5 +186,21 @@ namespace Pokedex.Controllers
 
             return this.View(model);
         }
+
+        /// <summary>
+        /// Transport the user to their shiny hunt page.
+        /// </summary>
+        /// <returns>The shiny hunt page.</returns>
+        [Route("shiny_hunts")]
+        public IActionResult ShinyHunts()
+        {
+            ShinyHuntsViewModel model = new ShinyHuntsViewModel()
+            {
+                AllShinyHunts = this.dataService.GetObjects<ShinyHunt>("Id", "User, Pokemon, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name),
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
     }
 }
