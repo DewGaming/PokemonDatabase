@@ -1759,6 +1759,25 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Checks to see if shiny charm can be used.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>The boolean determining if a shiny charm can be shown.</returns>
+        [Route("check-shiny-charm")]
+        public bool CheckShinyCharm(int gameId)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.Id != 43 && (game.GenerationId >= 6 || game.Id == 11 || game.Id == 29))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>

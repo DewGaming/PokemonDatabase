@@ -23,7 +23,7 @@ var grabPokemon = function () {
                 $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
             }
 
-            $('.hide').each(function () {
+            $('.hide').not('.shinyCharm').each(function () {
                 $(this).removeClass('hide');
             })
 
@@ -49,11 +49,31 @@ var grabPokemon = function () {
         .fail(function () {
             alert("Failed to grab hunting methods!");
         });
+}, checkShinyCharm = function () {
+    $.ajax({
+        url: '/check-shiny-charm/',
+        method: "POST",
+        data: { 'gameId': $('#GameId').val() }
+    })
+        .done(function (data) {
+            if (data && $('.shinyCharm').hasClass('hide')) {
+                $('.shinyCharm').removeClass('hide');
+            } else {
+                if (!$('.shinyCharm').hasClass('hide')) {
+                    $('.shinyCharm').addClass('hide');
+                    $('#HasShinyCharm').prop('checked', false)
+                }
+            }
+        })
+        .fail(function () {
+            alert("Failed to grab hunting methods!");
+        });
 }
 
 $('#GameId').on('change', function () {
     grabPokemon();
     grabHuntingMethod();
+    checkShinyCharm();
 });
 
 $('#PokemonId').on('change', function () {

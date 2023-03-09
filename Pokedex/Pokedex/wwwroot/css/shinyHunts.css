@@ -6,7 +6,7 @@
   margin: 0 5px;
 }
 
-.description {
+.incompletedHunts .description {
   font-size: 24px;
 }
 
@@ -15,14 +15,18 @@
 }
 
 .huntCompletionButtons {
-  margin: 0 3px 3px;
+  margin: 3px;
 }
 
-.huntCompletionButtons button {
+.huntCompletionButtons button, .huntCompletionButtons a {
   width: 49%;
 }
 
-@media (min-width: 487px) {
+.hide {
+  display: none !important;
+}
+
+@media (min-width: 440px) {
   .shadowed {
     min-width: 310px;
   }

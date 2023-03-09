@@ -5,7 +5,7 @@
 @using System.Net;
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Pokémon ShinyHunts";
+    ViewBag.Title = "Shiny Hunts";
     HttpWebRequest webRequest;
     HttpWebResponse imageRequest;
 }
@@ -38,8 +38,25 @@
     }
 </p>
 
-<div class="pageButtons gamesList">
+<div class="pageButtons uncapturedGamesList">
     @foreach (var g in uncapturedGames)
+    {
+        string gameColors = string.Concat(g.GameColor, " 50%, ");
+        if (@Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).Count() > 1 && g.Name != "Fire Red" && g.Name != "Leaf Green")
+        {
+            gameColors = string.Concat(gameColors, @Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).ToList()[1].GameColor, " 50%)");
+        }
+        else
+        {
+            gameColors = string.Concat(gameColors, g.GameColor, " 50%)");
+        }
+
+        <button style="@(g.GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupHuntsInGame('@g.Id')">@g.Name</button>
+    }
+</div>
+
+<div class="pageButtons capturedGamesList hide">
+    @foreach (var g in capturedGames)
     {
         string gameColors = string.Concat(g.GameColor, " 50%, ");
         if (@Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).Count() > 1 && g.Name != "Fire Red" && g.Name != "Leaf Green")
@@ -89,7 +106,7 @@
                     </div>
                     <div class="huntCompletionButtons">
                         <button class="abandonHunt btn btn-danger">Abandon Hunt</button>
-                        <button class="shinyFound btn btn-success">Shiny Found</button>
+                        <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Shiny Found</a>
                     </div>
                 </div>
             }
@@ -118,8 +135,16 @@
                             }
                         </div>
                         <div class="description">
-                            <p><b>@s.Pokemon.Name</b></p>
+                            <p>
+                                <b>@s.Pokemon.Name</b>
+                                @if (s.Nickname != null)
+                                {
+                                    @string.Concat(" (", s.Nickname, ")")
+                                }
+                            </p>
                             <p>Encounters: @s.Encounters</p>
+                            <p>Hunting Method: @s.HuntingMethod.Name</p>
+                            <p>Date of Capture: @s.DateOfCapture.ToShortDateString()</p>
                         </div>
                     </div>
                 </div>

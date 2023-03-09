@@ -153,5 +153,72 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
+
+        /// <summary>
+        /// Starts a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The completed shiny hunt's Id.</param>
+        /// <returns>The shiny hunt page.</returns>
+        [HttpGet]
+        [Route("complete_shiny_hunt/{shinyHuntId:int}")]
+        public IActionResult ShinyFound(int shinyHuntId)
+        {
+            ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Game");
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", shinyHunt.PokemonId);
+            List<string> genders = new List<string>();
+            if (pokemon.GenderRatioId == 1)
+            {
+                genders.Add("Male");
+            }
+            else if (pokemon.GenderRatioId == 9)
+            {
+                genders.Add("Female");
+            }
+            else if (pokemon.GenderRatioId == 10)
+            {
+                genders.Add("Gender Unknown");
+            }
+            else
+            {
+                genders.Add("Male");
+                genders.Add("Female");
+            }
+
+            CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel()
+            {
+                Id = shinyHunt.Id,
+                PokemonHunted = pokemon,
+                UserId = shinyHunt.UserId,
+                PokemonId = shinyHunt.PokemonId,
+                GameId = shinyHunt.GameId,
+                HuntingMethodId = shinyHunt.HuntingMethodId,
+                Encounters = shinyHunt.Encounters,
+                HasShinyCharm = shinyHunt.HasShinyCharm,
+                DateOfCapture = DateTime.Now.Date,
+                AllPokeballs = this.dataService.GetObjects<Pokeball>("Name"),
+                AllGenders = genders,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Completed a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHunt">The completed shiny hunt.</param>
+        /// <returns>The user's shiny hunt page.</returns>
+        [HttpPost]
+        [Route("complete_shiny_hunt/{shinyHuntId:int}")]
+        public IActionResult ShinyFound(CompleteShinyHuntViewModel shinyHunt)
+        {
+            if (this.ModelState.IsValid)
+            {
+                shinyHunt.IsCaptured = true;
+                this.dataService.UpdateObject(shinyHunt);
+            }
+
+            return this.RedirectToAction("ShinyHunts", "User");
+        }
     }
 }
