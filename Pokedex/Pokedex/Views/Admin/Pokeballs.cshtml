@@ -26,6 +26,8 @@
                     @if (this.User.IsInRole("Owner"))
                     {
                         @('|')
+                        <a href="@(this.Url.Action("PokeballImage", "Edit", new { id = item.Id }))">Update Images</a>
+                        @('|')
                         <a href="@(this.Url.Action("Pokeball", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>

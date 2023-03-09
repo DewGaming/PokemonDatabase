@@ -473,7 +473,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_pokeball")]
-        public IActionResult Pokeball(Pokeball pokeball)
+        public IActionResult Pokeball(Pokeball pokeball, IFormFile officialUpload, string officialUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -481,6 +481,8 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.AddObject(pokeball);
+
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, pokeball.Id, this.appConfig, "pokeball");
 
             return this.RedirectToAction("Pokeballs", "Admin");
         }
@@ -962,7 +964,6 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(newPokemon);
 
             this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "2d");
-            this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "3d");
 
             this.dataService.AddObject(new PokemonGameDetail()
             {

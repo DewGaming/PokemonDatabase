@@ -36,6 +36,11 @@ namespace Pokedex
         public string ShinyPokemonImageUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the pokeball image Url.
+        /// </summary>
+        public string OfficialPokeballImageUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the favicon image Url.
         /// </summary>
         public string FaviconImageUrl { get; set; }
@@ -64,6 +69,11 @@ namespace Pokedex
         /// Gets or sets the pokemon's shiny image FTP Url.
         /// </summary>
         public string ShinyPokemonImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pokeball image FTP Url.
+        /// </summary>
+        public string OfficialPokeballImageFTPUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the favicon image FTP Url.

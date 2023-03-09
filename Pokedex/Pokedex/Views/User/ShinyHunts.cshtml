@@ -131,6 +131,10 @@
                         {
                             <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
                         }
+                        @if (s.Pokeball != null)
+                        {
+                            <img class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.PokeballId, ".png"))">
+                        }
                         <div class="pokemonImages">
                             @try
                             {
@@ -151,7 +155,10 @@
                                     @string.Concat(" (", s.Nickname, ")")
                                 }
                             </p>
-                            <p>Encounters: @s.Encounters</p>
+                            @if (@s.Encounters > 0)
+                            {
+                                <p>Encounters: @s.Encounters</p>
+                            }
                             <p>Hunting Method: @s.HuntingMethod.Name</p>
                             <p>Date of Capture: @s.DateOfCapture.ToShortDateString()</p>
                         </div>
