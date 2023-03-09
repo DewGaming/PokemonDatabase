@@ -41,6 +41,11 @@ namespace Pokedex
         public string OfficialPokeballImageUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the mark image Url.
+        /// </summary>
+        public string OfficialMarkImageUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the favicon image Url.
         /// </summary>
         public string FaviconImageUrl { get; set; }
@@ -74,6 +79,11 @@ namespace Pokedex
         /// Gets or sets the pokeball image FTP Url.
         /// </summary>
         public string OfficialPokeballImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mark image FTP Url.
+        /// </summary>
+        public string OfficialMarkImageFTPUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the favicon image FTP Url.

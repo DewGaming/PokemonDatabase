@@ -52,6 +52,12 @@
                 @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.PokeballId)
             </div>
+                
+            <div class="form-group row">
+                @Html.LabelFor(x => x.Nickname, "Nickname", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                @Html.ValidationMessageFor(x => x.Nickname)
+            </div>
 
             <div class="form-group row">
                 @Html.LabelFor(x => x.DateOfCapture, "Date of Capture", new { @class = "col-md-4" })
@@ -71,6 +77,15 @@
                     @Html.LabelFor(x => x.SparklingPowerLevel, "Sparkling Sandwich Power Level", new { @class = "col-md-4" })
                     @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
                     @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
+                </div>
+            }
+
+            @if (@Model.GameHuntedIn.GenerationId >= 8 && @Model.GameId != 35 || @Model.GameId != 36)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.MarkId, "Mark", new { @class = "col-md-4" })
+                    @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
+                    @Html.ValidationMessageFor(x => x.MarkId)
                 </div>
             }
 

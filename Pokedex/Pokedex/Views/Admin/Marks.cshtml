@@ -26,6 +26,8 @@
                     @if (this.User.IsInRole("Owner"))
                     {
                         @('|')
+                        <a href="@(this.Url.Action("MarkImage", "Edit", new { id = item.Id }))">Update Image</a>
+                        @('|')
                         <a href="@(this.Url.Action("Mark", "Delete", new { id = item.Id }))">Delete</a>
                     }
                 </td>

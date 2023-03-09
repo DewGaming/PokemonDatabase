@@ -497,7 +497,7 @@ namespace Pokedex.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("add_mark")]
-        public IActionResult Mark(Mark mark)
+        public IActionResult Mark(Mark mark, IFormFile officialUpload, string officialUrlUpload)
         {
             if (!this.ModelState.IsValid)
             {
@@ -505,6 +505,8 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.AddObject(mark);
+
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, mark.Id, this.appConfig, "mark");
 
             return this.RedirectToAction("Marks", "Admin");
         }

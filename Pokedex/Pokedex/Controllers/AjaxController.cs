@@ -1767,7 +1767,7 @@ namespace Pokedex.Controllers
         public bool CheckShinyCharm(int gameId)
         {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.Id != 43 && (game.GenerationId >= 6 || game.Id == 11 || game.Id == 29))
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && (game.GenerationId >= 6 || gameId == 11 || gameId == 29))
             {
                 return true;
             }
@@ -1785,8 +1785,26 @@ namespace Pokedex.Controllers
         [Route("check-sparkling-power")]
         public bool CheckSparklingPower(int gameId)
         {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (gameId == 41 || gameId == 42))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if marks can be used.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>The boolean determining if a mark can be shown.</returns>
+        [Route("check-mark")]
+        public bool CheckMark(int gameId)
+        {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (game.Id == 41 || game.Id == 42))
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.GenerationId >= 8 && gameId != 35 && gameId != 36)
             {
                 return true;
             }

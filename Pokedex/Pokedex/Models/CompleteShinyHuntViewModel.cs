@@ -14,6 +14,11 @@ namespace Pokedex.Models
         public Pokemon PokemonHunted { get; set; }
 
         /// <summary>
+        /// Gets or sets the game.
+        /// </summary>
+        public Game GameHuntedIn { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokeballs.
         /// </summary>
         public List<Pokeball> AllPokeballs { get; set; }

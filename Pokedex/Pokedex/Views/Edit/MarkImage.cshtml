@@ -1,0 +1,41 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.DataAccess.Models.Mark
+@{
+    Layout = "_layout";
+}
+
+<h2>Update @Model.Name's Image</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Name)
+
+        <div class="form-group row">
+            <label for="PictureFile" class="col-md-2">Upload With File</label>
+            <div class="col-md-8 addMarkImage">
+                <input type="file" accept="image/png" id="PictureFile" name="fileUpload" />
+            </div>
+        </div>
+
+        <p>Or</p>
+
+        <div class="form-group row">
+            <label for="PictureUrl" class="col-md-2">Upload With URL</label>
+            <div class="col-md-8 addMarkImage">
+                <input type="text" accept="image/png" id="PictureUrl" name="urlUpload" />
+            </div>
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Update</button>
+        </p>
+    }
+
+</div>

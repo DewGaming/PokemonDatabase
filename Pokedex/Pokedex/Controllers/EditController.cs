@@ -669,6 +669,46 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("edit_mark_image/{id:int}")]
+        public IActionResult MarkImage(int id)
+        {
+            Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_mark_image/{id:int}")]
+        public IActionResult MarkImage(int id, IFormFile fileUpload, string urlUpload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+
+                return this.View(model);
+            }
+            else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
+            {
+                Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
+            {
+                Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+
+            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "mark");
+
+            return this.RedirectToAction("Marks", "Admin");
+        }
+
+        [HttpGet]
         [Route("edit_typing/{pokemonId:int}/{generationId:int}")]
         public IActionResult Typing(int pokemonId, int generationId)
         {

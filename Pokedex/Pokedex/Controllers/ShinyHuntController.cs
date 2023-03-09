@@ -165,6 +165,9 @@ namespace Pokedex.Controllers
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Game");
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", shinyHunt.PokemonId);
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId);
+            List<Pokeball> pokeballs = this.dataService.GetObjects<Pokeball>("Name");
+            List<Mark> marks = this.dataService.GetObjects<Mark>("Name");
             List<string> genders = new List<string>();
             if (pokemon.GenderRatioId == 1)
             {
@@ -188,6 +191,7 @@ namespace Pokedex.Controllers
             {
                 Id = shinyHunt.Id,
                 PokemonHunted = pokemon,
+                GameHuntedIn = game,
                 UserId = shinyHunt.UserId,
                 PokemonId = shinyHunt.PokemonId,
                 GameId = shinyHunt.GameId,
@@ -196,8 +200,9 @@ namespace Pokedex.Controllers
                 SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
                 HasShinyCharm = shinyHunt.HasShinyCharm,
                 DateOfCapture = DateTime.Now.Date,
-                AllPokeballs = this.dataService.GetObjects<Pokeball>("Name"),
+                AllPokeballs = pokeballs,
                 AllGenders = genders,
+                AllMarks = marks,
                 AppConfig = this.appConfig,
             };
 
