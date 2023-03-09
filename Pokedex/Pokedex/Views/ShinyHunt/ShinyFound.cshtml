@@ -65,6 +65,15 @@
                 @Html.ValidationMessageFor(x => x.Gender)
             </div>
 
+            @if (@Model.GameId == 41 || @Model.GameId == 42)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.SparklingPowerLevel, "Sparkling Sandwich Power Level", new { @class = "col-md-4" })
+                    @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                    @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
+                </div>
+            }
+
             <p>
                 <button type="submit" class="btn btn-primary" role="button">Add</button>
             </p>

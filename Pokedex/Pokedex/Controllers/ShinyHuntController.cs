@@ -193,6 +193,7 @@ namespace Pokedex.Controllers
                 GameId = shinyHunt.GameId,
                 HuntingMethodId = shinyHunt.HuntingMethodId,
                 Encounters = shinyHunt.Encounters,
+                SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
                 HasShinyCharm = shinyHunt.HasShinyCharm,
                 DateOfCapture = DateTime.Now.Date,
                 AllPokeballs = this.dataService.GetObjects<Pokeball>("Name"),

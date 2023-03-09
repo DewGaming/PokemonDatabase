@@ -1778,6 +1778,25 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Checks to see if sparkling power can be used.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>The boolean determining if a sparkling power can be shown.</returns>
+        [Route("check-sparkling-power")]
+        public bool CheckSparklingPower(int gameId)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (game.Id == 41 || game.Id == 42))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>

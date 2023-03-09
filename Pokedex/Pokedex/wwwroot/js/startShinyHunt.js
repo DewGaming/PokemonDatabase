@@ -23,7 +23,7 @@ var grabPokemon = function () {
                 $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
             }
 
-            $('.hide').not('.shinyCharm').each(function () {
+            $('.hide').not('.gameSpecific').each(function () {
                 $(this).removeClass('hide');
             })
 
@@ -56,8 +56,10 @@ var grabPokemon = function () {
         data: { 'gameId': $('#GameId').val() }
     })
         .done(function (data) {
-            if (data && $('.shinyCharm').hasClass('hide')) {
-                $('.shinyCharm').removeClass('hide');
+            if (data) {
+                if ($('.shinyCharm').hasClass('hide')) {
+                    $('.shinyCharm').removeClass('hide');
+                }
             } else {
                 if (!$('.shinyCharm').hasClass('hide')) {
                     $('.shinyCharm').addClass('hide');
@@ -66,7 +68,28 @@ var grabPokemon = function () {
             }
         })
         .fail(function () {
-            alert("Failed to grab hunting methods!");
+            alert("Failed to check shiny charm!");
+        });
+}, checkSparklingPower = function () {
+    $.ajax({
+        url: '/check-sparkling-power/',
+        method: "POST",
+        data: { 'gameId': $('#GameId').val() }
+    })
+        .done(function (data) {
+            if (data) {
+                if ($('.sparklingPower').hasClass('hide')) {
+                    $('.sparklingPower').removeClass('hide');
+                }
+            } else {
+                if (!$('.sparklingPower').hasClass('hide')) {
+                    $('.sparklingPower').addClass('hide');
+                    $('#SparklingPowerLevel').prop('checked', false)
+                }
+            }
+        })
+        .fail(function () {
+            alert("Failed to check sparkling power!");
         });
 }
 
@@ -74,6 +97,7 @@ $('#GameId').on('change', function () {
     grabPokemon();
     grabHuntingMethod();
     checkShinyCharm();
+    checkSparklingPower();
 });
 
 $('#PokemonId').on('change', function () {
