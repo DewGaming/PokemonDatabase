@@ -26,17 +26,15 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
 
   pokemonName = pokemonName.replace("&apos;", "\'");
 
-  while ($('.generation' + generation + '#' + pageName).length == 0)
-  {
+  while ($('.generation' + generation + '#' + pageName).length == 0) {
     generation -= 1
-    if (generation == 0)
-    {
+    if (generation == 0) {
       generation = Number($('#LatestGenerationId').val())
     }
   }
 
   $('button#Generation' + generation + ', .generations#' + pageName + ', .generation' + generation + '#' + pageName).addClass('active');
-  
+
   if (!$('.active .pokemonImage>div').hasClass(imageUsed)) {
     $('.current').each(function () {
       $(this).removeClass('current');
@@ -194,7 +192,7 @@ function lookupAvailableGame(gameId) {
       $('.totalPokemon').prepend($('<h5>').addClass('pokemonCount').text('Total Available Pokémon: ' + $('.grid-container').children().length));
       $('.updater').append($('<a>').attr('href', 'admin/edit_game_availability/' + gameId).addClass('updateButton btn btn-primary').text('Update Game Availability'));
       $('.pokemonList').addClass('active');
-      
+
       setTimeout(function () {
         $(".overlay").fadeOut(300);
       });

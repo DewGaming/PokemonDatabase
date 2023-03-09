@@ -421,8 +421,8 @@ label {
 
 .pokemonImage img {
   width: 100%;
-  width: 300px;
-  height: 300px;
+  max-width: 300px;
+  max-height: 300px;
   padding: 5px;
   -o-object-fit: contain;
   object-fit: contain;
@@ -657,7 +657,7 @@ a {
 
 @media (min-width: 783px) {
   .pokemonImage img {
-    height: 327px;
+    max-height: 327px;
   }
 
   .gameSelector section:last-of-type, .typeSelector section:last-of-type {
