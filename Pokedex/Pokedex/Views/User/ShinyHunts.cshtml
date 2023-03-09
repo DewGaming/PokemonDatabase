@@ -80,6 +80,10 @@
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
                     <div class="pokemonDetails">
+                        @if (s.HasShinyCharm)
+                        {
+                            <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                        }
                         <div class="pokemonImages">
                             @try
                             {
@@ -94,6 +98,7 @@
                         </div>
                         <div class="description">
                             <p><b>@s.Pokemon.Name</b></p>
+                            <p>@s.HuntingMethod.Name</p>
                             <p>Encounters</p>
                             <div class="encounterChangeButtons">
                                 <button class="encounterDecrease btn btn-danger" onclick="incrementEncounter('@s.Id', -1)">-</button>
@@ -122,6 +127,10 @@
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
                     <div class="pokemonDetails">
+                        @if (s.HasShinyCharm)
+                        {
+                            <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                        }
                         <div class="pokemonImages">
                             @try
                             {

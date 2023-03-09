@@ -6,8 +6,8 @@
   margin: 0 5px;
 }
 
-.incompletedHunts .description {
-  font-size: 24px;
+.manualAdjust {
+  margin-top: 5px;
 }
 
 .description p {
@@ -24,6 +24,19 @@
 
 .hide {
   display: none !important;
+}
+
+.shinyCharm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  z-index: 0;
+}
+
+.pokemonDetails {
+  position: relative;
 }
 
 @media (min-width: 440px) {
