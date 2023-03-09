@@ -53,7 +53,7 @@ namespace Pokedex.DataAccess.Models
         public int? MarkId { get; set; }
         public Mark Mark { get; set; }
 
-        [StringLength(6), Display(Name = "Gender")]
+        [Display(Name = "Gender")]
         public string Gender { get; set; }
 
         [Display(Name = "Captured")]

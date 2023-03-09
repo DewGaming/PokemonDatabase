@@ -12,18 +12,26 @@ var grabPokemon = function () {
                 $('#PokemonId').append($('<option>').val(item.id).text(item.name));
             });
 
-            var shinyLink = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
-            $('.pokemonShinyImage').prop('src', shinyLink);
+            var image = new Image();
+            image.src = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
+            image.onload = function () {
+                if (this.width > 0) {
+                    $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
+                }
+            }
+            image.onerror = function () {
+                $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
+            }
 
             $('.hide').each(function () {
                 $(this).removeClass('hide');
             })
-            
+
             $(".overlay").fadeOut(300);
         })
         .fail(function () {
             alert("Failed to grab pokemon!");
-            
+
             $(".overlay").fadeOut(300);
         });
 }, grabHuntingMethod = function () {
@@ -49,6 +57,14 @@ $('#GameId').on('change', function () {
 });
 
 $('#PokemonId').on('change', function () {
-    var shinyLink = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
-    $('.pokemonShinyImage').prop('src', shinyLink);
+    var image = new Image();
+    image.src = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
+    image.onload = function () {
+        if (this.width > 0) {
+            $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
+        }
+    }
+    image.onerror = function () {
+        $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
+    }
 });

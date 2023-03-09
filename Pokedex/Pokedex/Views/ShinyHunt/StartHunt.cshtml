@@ -38,6 +38,7 @@
 
             @Html.Hidden(@Model.AppConfig.WebUrl, string.Empty, new { @class = "webUrl" })
             @Html.Hidden(@Model.AppConfig.ShinyPokemonImageUrl, string.Empty, new { @class = "shinyUrl" })
+            @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
             @Html.HiddenFor(x => x.UserId)
 
             <div class="form-group row">
@@ -56,6 +57,12 @@
                 @Html.LabelFor(x => x.HuntingMethodId, "Shiny Hunting Method", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.HuntingMethodId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.HuntingMethodId)
+            </div>
+
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.HasShinyCharm, "Have the Shiny Charm", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.HasShinyCharm, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.HasShinyCharm)
             </div>
 
             <p>

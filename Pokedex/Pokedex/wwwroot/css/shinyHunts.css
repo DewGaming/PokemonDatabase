@@ -1,0 +1,37 @@
+.pokemonShinyHuntGroup {
+  margin-right: 10px;
+}
+
+.encounters {
+  margin: 0 5px;
+}
+
+.description {
+  font-size: 24px;
+}
+
+.description p {
+  margin: 0;
+}
+
+.huntCompletionButtons {
+  margin: 0 3px 3px;
+}
+
+.huntCompletionButtons button {
+  width: 49%;
+}
+
+@media (min-width: 487px) {
+  .shadowed {
+    min-width: 310px;
+  }
+
+  .shadowed:not(.hide)>.pokemonDetails {
+    display: flex;
+  }
+
+  .pokemonDetails>div {
+    width: 50%;
+  }
+}

@@ -1705,6 +1705,60 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the encounters for a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <param name="increment">The amount to increment.</param>
+        /// <returns>The amount of encounters for this shiny hunt.</returns>
+        [Route("increment-shiny-hunt-encounters")]
+        public int IncrementShinyHuntEncounters(int shinyHuntId, int increment)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+                if (increment == -1 && shinyHunt.Encounters == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    shinyHunt.Encounters += increment;
+                    this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                    return shinyHunt.Encounters;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Updates the encounters for a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <param name="encounters">The amount to encounters.</param>
+        /// <returns>The amount of encounters for this shiny hunt.</returns>
+        [Route("set-shiny-hunt-encounters")]
+        public int SetShinyHuntEncounters(int shinyHuntId, int encounters)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+                if (encounters < 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    shinyHunt.Encounters = encounters;
+                    this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                    return shinyHunt.Encounters;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>

@@ -14,9 +14,14 @@ namespace Pokedex.Models
         public List<ShinyHunt> AllShinyHunts { get; set; }
 
         /// <summary>
-        /// Gets or sets the user of the shiny hunts.
+        /// Gets or sets a list of all editted games.
         /// </summary>
-        public User User { get; set; }
+        public List<Game> EdittedGames { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all uneditted games.
+        /// </summary>
+        public List<Game> UnedittedGames { get; set; }
 
         /// <summary>
         /// Gets or sets the application's configuration.
