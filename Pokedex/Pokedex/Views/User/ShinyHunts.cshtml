@@ -98,7 +98,7 @@
                         </div>
                         <div class="description">
                             <p><b>@s.Pokemon.Name</b></p>
-                            <p>@s.HuntingMethod.Name</p>
+                            <p><b>@s.HuntingMethod.Name</b></p>
                             <p>Encounters</p>
                             <div class="encounterChangeButtons">
                                 <button class="encounterDecrease btn btn-danger" onclick="incrementEncounter('@s.Id', -1)">-</button>
@@ -110,8 +110,9 @@
                         </div>
                     </div>
                     <div class="huntCompletionButtons">
-                        <button class="abandonHunt btn btn-danger">Abandon Hunt</button>
                         <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Shiny Found</a>
+                        <a class="editShinyButton btn" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
+                        <button class="abandonHunt btn btn-danger">Abandon Hunt</button>
                     </div>
                 </div>
             }
@@ -127,18 +128,20 @@
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
                     <div class="pokemonDetails">
-                        @if (s.HasShinyCharm)
-                        {
-                            <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
-                        }
-                        @if (s.Mark != null)
-                        {
-                            <img class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.MarkId, ".png"))">
-                        }
-                        @if (s.Pokeball != null)
-                        {
-                            <img class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.PokeballId, ".png"))">
-                        }
+                        <div class="bonusImages">
+                            @if (s.HasShinyCharm)
+                            {
+                                <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                            }
+                            @if (s.Mark != null)
+                            {
+                                <img class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.MarkId, ".png"))">
+                            }
+                            @if (s.Pokeball != null)
+                            {
+                                <img class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.PokeballId, ".png"))">
+                            }
+                        </div>
                         <div class="pokemonImages">
                             @try
                             {
@@ -166,6 +169,9 @@
                             <p><b>Hunting Method:</b> @s.HuntingMethod.Name</p>
                             <p><b>Date of Capture:</b> @s.DateOfCapture.ToShortDateString()</p>
                         </div>
+                    </div>
+                    <div class="huntEditButton">
+                        <a class="editShinyButton btn" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
                     </div>
                 </div>
             }

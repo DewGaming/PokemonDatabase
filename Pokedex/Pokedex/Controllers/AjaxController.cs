@@ -1781,11 +1781,12 @@ namespace Pokedex.Controllers
         /// Checks to see if sparkling power can be used.
         /// </summary>
         /// <param name="gameId">The game's id.</param>
+        /// <param name="huntingMethodId">The hunting method's id.</param>
         /// <returns>The boolean determining if a sparkling power can be shown.</returns>
         [Route("check-sparkling-power")]
-        public bool CheckSparklingPower(int gameId)
+        public bool CheckSparklingPower(int gameId, int huntingMethodId)
         {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (gameId == 41 || gameId == 42))
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (gameId == 41 || gameId == 42) && huntingMethodId != 4 && huntingMethodId != 5)
             {
                 return true;
             }

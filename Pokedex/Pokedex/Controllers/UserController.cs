@@ -196,6 +196,7 @@ namespace Pokedex.Controllers
         public IActionResult ShinyHunts()
         {
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name);
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow && x.GenerationId >= 2).ToList();
             gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
 
@@ -225,6 +226,10 @@ namespace Pokedex.Controllers
             foreach (var s in shinyHunts)
             {
                 s.Game.Name = edittedGamesList.Find(x => x.Id == s.GameId).Name;
+                if (altFormList.Find(x => x.Id == s.PokemonId) != null)
+                {
+                    s.Pokemon = this.dataService.GetAltFormWithFormName(s.PokemonId);
+                }
             }
 
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()

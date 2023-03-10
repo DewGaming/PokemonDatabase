@@ -1,4 +1,4 @@
-var grabPokemon = function () {
+var grabPokemon = function (pokemonId) {
     $(".overlay").fadeIn(300);
 
     $.ajax({
@@ -11,6 +11,14 @@ var grabPokemon = function () {
             $.each(data, function (index, item) {
                 $('#PokemonId').append($('<option>').val(item.id).text(item.name));
             });
+
+            if (pokemonId !== "") {
+                $('#PokemonId option').each(function () {
+                    if (this.value == pokemonId) {
+                        $('#PokemonId').val(pokemonId);
+                    }
+                });
+            }
 
             var image = new Image();
             image.src = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
@@ -34,7 +42,7 @@ var grabPokemon = function () {
 
             $(".overlay").fadeOut(300);
         });
-}, grabHuntingMethod = function () {
+}, grabHuntingMethod = function (huntingMethodId) {
     $.ajax({
         url: '/get-hunting-methods/',
         method: "POST",
@@ -45,6 +53,14 @@ var grabPokemon = function () {
             $.each(data, function (index, item) {
                 $('#HuntingMethodId').append($('<option>').val(item.id).text(item.name));
             });
+
+            if (huntingMethodId !== "") {
+                $('#HuntingMethodId option').each(function () {
+                    if (this.value == huntingMethodId) {
+                        $('#HuntingMethodId').val(huntingMethodId);
+                    }
+                });
+            }
         })
         .fail(function () {
             alert("Failed to grab hunting methods!");
@@ -74,7 +90,7 @@ var grabPokemon = function () {
     $.ajax({
         url: '/check-sparkling-power/',
         method: "POST",
-        data: { 'gameId': $('#GameId').val() }
+        data: { 'gameId': $('#GameId').val(), 'huntingMethodId': $('#HuntingMethodId').val() }
     })
         .done(function (data) {
             if (data) {
@@ -84,7 +100,7 @@ var grabPokemon = function () {
             } else {
                 if (!$('.sparklingPower').hasClass('hide')) {
                     $('.sparklingPower').addClass('hide');
-                    $('#SparklingPowerLevel').prop('checked', false)
+                    $('#SparklingPowerLevel').val(0)
                 }
             }
         })
@@ -93,10 +109,25 @@ var grabPokemon = function () {
         });
 }
 
+$(document).ready(function () {
+    var pokemonId = $('#PokemonId').val(), huntingMethodId = $('#HuntingMethodId').val();
+    if ($('#GameId').val() !== "") {
+        grabPokemon(pokemonId);
+        grabHuntingMethod(huntingMethodId);
+        checkShinyCharm();
+        checkSparklingPower();
+    }
+});
+
 $('#GameId').on('change', function () {
-    grabPokemon();
-    grabHuntingMethod();
+    var pokemonId = $('#PokemonId').val(), huntingMethodId = $('#HuntingMethodId').val();
+    grabPokemon(pokemonId);
+    grabHuntingMethod(huntingMethodId);
     checkShinyCharm();
+    checkSparklingPower();
+});
+
+$('#HuntingMethodId').on('change', function () {
     checkSparklingPower();
 });
 

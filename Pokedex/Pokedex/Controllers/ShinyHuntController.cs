@@ -42,47 +42,9 @@ namespace Pokedex.Controllers
         [Route("start_hunt")]
         public IActionResult StartHunt()
         {
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now && x.GenerationId >= 2).ToList();
-            List<Game> selectableGames = new List<Game>();
-            List<Game> uniqueGames = gamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
-            for (var i = 0; i < uniqueGames.Count; i++)
-            {
-                if (uniqueGames[i].Name == "Fire Red")
-                {
-                    selectableGames.Add(uniqueGames[i]);
-                    selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
-                }
-                else if (i == uniqueGames.Count - 1)
-                {
-                    selectableGames.Add(new Game()
-                    {
-                        Id = uniqueGames[i].Id,
-                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
-                        GenerationId = uniqueGames[i].GenerationId,
-                    });
-                }
-                else
-                {
-                    List<Game> games = gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
-                    if (games.Count == 0)
-                    {
-                        selectableGames.Add(uniqueGames[i]);
-                    }
-                    else
-                    {
-                        selectableGames.Add(new Game()
-                        {
-                            Id = uniqueGames[i].Id,
-                            Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
-                            GenerationId = uniqueGames[i].GenerationId,
-                        });
-                    }
-                }
-            }
-
             StartShinyHuntViewModel model = new StartShinyHuntViewModel()
             {
-                AllGames = selectableGames,
+                AllGames = this.GetShinyHuntGames(),
                 UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 AppConfig = this.appConfig,
             };
@@ -101,47 +63,9 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now && x.GenerationId >= 2).ToList();
-                List<Game> selectableGames = new List<Game>();
-                List<Game> uniqueGames = gamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
-                for (var i = 0; i < uniqueGames.Count; i++)
-                {
-                    if (uniqueGames[i].Name == "Fire Red")
-                    {
-                        selectableGames.Add(uniqueGames[i]);
-                        selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
-                    }
-                    else if (i == uniqueGames.Count - 1)
-                    {
-                        selectableGames.Add(new Game()
-                        {
-                            Id = uniqueGames[i].Id,
-                            Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
-                            GenerationId = uniqueGames[i].GenerationId,
-                        });
-                    }
-                    else
-                    {
-                        List<Game> games = gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
-                        if (games.Count == 0)
-                        {
-                            selectableGames.Add(uniqueGames[i]);
-                        }
-                        else
-                        {
-                            selectableGames.Add(new Game()
-                            {
-                                Id = uniqueGames[i].Id,
-                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
-                                GenerationId = uniqueGames[i].GenerationId,
-                            });
-                        }
-                    }
-                }
-
                 StartShinyHuntViewModel model = new StartShinyHuntViewModel()
                 {
-                    AllGames = selectableGames,
+                    AllGames = this.GetShinyHuntGames(),
                     UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                     AppConfig = this.appConfig,
                 };
@@ -225,6 +149,128 @@ namespace Pokedex.Controllers
             }
 
             return this.RedirectToAction("ShinyHunts", "User");
+        }
+
+        /// <summary>
+        /// Updates an incomplete shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <returns>The shiny hunt edit page.</returns>
+        [HttpGet]
+        [Route("edit_incomplete_hunt/{shinyHuntId:int}")]
+        public IActionResult EditIncompleteShinyHunt(int shinyHuntId)
+        {
+            ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+            List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", shinyHunt.GameId).ConvertAll(x => x.Pokemon);
+            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
+            foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            {
+                p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
+            }
+
+            StartShinyHuntViewModel model = new StartShinyHuntViewModel()
+            {
+                AllGames = this.GetShinyHuntGames(),
+                AllPokemon = pokemonList,
+                AllHuntingMethods = this.dataService.GetObjects<HuntingMethod>(),
+                Id = shinyHunt.Id,
+                PokemonId = shinyHunt.PokemonId,
+                GameId = shinyHunt.GameId,
+                HuntingMethodId = shinyHunt.HuntingMethodId,
+                SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
+                HasShinyCharm = shinyHunt.HasShinyCharm,
+                Encounters = shinyHunt.Encounters,
+                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Updates an incomplete shiny hunt.
+        /// </summary>
+        /// <param name="shinyHunt">The editted shiny hunt.</param>
+        /// <returns>The user's shiny hunt page.</returns>
+        [HttpPost]
+        [Route("edit_incomplete_hunt/{shinyHuntId:int}")]
+        public IActionResult EditIncompleteShinyHunt(StartShinyHuntViewModel shinyHunt)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id);
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", oldShinyHunt.GameId).ConvertAll(x => x.Pokemon);
+                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
+                foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+                {
+                    p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
+                }
+
+                StartShinyHuntViewModel model = new StartShinyHuntViewModel()
+                {
+                    AllGames = this.GetShinyHuntGames(),
+                    AllPokemon = pokemonList,
+                    AllHuntingMethods = this.dataService.GetObjects<HuntingMethod>(),
+                    Id = oldShinyHunt.Id,
+                    PokemonId = oldShinyHunt.PokemonId,
+                    GameId = oldShinyHunt.GameId,
+                    HuntingMethodId = oldShinyHunt.HuntingMethodId,
+                    SparklingPowerLevel = oldShinyHunt.SparklingPowerLevel,
+                    HasShinyCharm = oldShinyHunt.HasShinyCharm,
+                    Encounters = oldShinyHunt.Encounters,
+                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(shinyHunt);
+
+            return this.RedirectToAction("ShinyHunts", "User");
+        }
+
+        private List<Game> GetShinyHuntGames()
+        {
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now && x.GenerationId >= 2).ToList();
+            List<Game> selectableGames = new List<Game>();
+            List<Game> uniqueGames = gamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
+            for (var i = 0; i < uniqueGames.Count; i++)
+            {
+                if (uniqueGames[i].Name == "Fire Red")
+                {
+                    selectableGames.Add(uniqueGames[i]);
+                    selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
+                }
+                else if (i == uniqueGames.Count - 1)
+                {
+                    selectableGames.Add(new Game()
+                    {
+                        Id = uniqueGames[i].Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
+                        GenerationId = uniqueGames[i].GenerationId,
+                    });
+                }
+                else
+                {
+                    List<Game> games = gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
+                    if (games.Count == 0)
+                    {
+                        selectableGames.Add(uniqueGames[i]);
+                    }
+                    else
+                    {
+                        selectableGames.Add(new Game()
+                        {
+                            Id = uniqueGames[i].Id,
+                            Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
+                            GenerationId = uniqueGames[i].GenerationId,
+                        });
+                    }
+                }
+            }
+
+            return selectableGames;
         }
     }
 }

@@ -19,7 +19,7 @@
         {
             <tr>
                 <td>
-                    @item.Name
+                    @item.Name (@item.NameAddition)
                 </td>
                 <td>
                     <a href="@(this.Url.Action("Mark", "Edit", new { id = item.Id }))">Edit</a>

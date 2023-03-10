@@ -2,6 +2,10 @@
   margin-right: 10px;
 }
 
+.shinyHuntButtons * {
+  margin: 0 5px 5px 0;
+}
+
 .encounters {
   margin: 0 5px;
 }
@@ -10,16 +14,44 @@
   margin-top: 5px;
 }
 
+.bonusImages img {
+  filter: none;
+}
+
 .description p {
   margin: 0;
 }
 
-.huntCompletionButtons {
+.huntCompletionButtons, .huntEditButton {
   margin: 3px;
 }
 
 .huntCompletionButtons button, .huntCompletionButtons a {
-  width: 49%;
+  width: 32%;
+}
+
+.editShinyButton {
+  width: 100%;
+  background-color: #F18E38;
+  border-color: #F18E38;
+}
+
+.editShinyButton:hover {
+  background-color: #E67310;
+  border-color: #CE680E;
+}
+
+.editShinyButton:active {
+  background-color: #CE680E;
+  border-color: #F18E38;
+}
+
+.editShinyButton:focus {
+  box-shadow: 0 0 0 .2rem rgba(182, 92, 13, .5);
+}
+
+.editShinyButton, .editShinyButton:hover, .editShinyButton:active, .editShinyButton:focus {
+  color: #FFF;
 }
 
 .hide {
@@ -46,7 +78,7 @@
 
 .pokeball {
   position: absolute;
-  bottom: 0;
+  top: 100px;
   left: 0;
   width: 50px;
   height: 50px;
@@ -66,7 +98,22 @@
     display: flex;
   }
 
-  .pokemonDetails>div {
+  .pokemonDetails>div:not(.bonusImages) {
     width: 50%;
+  }
+}
+
+@media (max-width: 439px) {
+  .manualAdjust {
+    width: 97%;
+  }
+}
+
+@media (max-width: 534px) {
+  .huntCompletionButtons button, .huntCompletionButtons a, .editShinyButton {
+    height: 62px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
   }
 }

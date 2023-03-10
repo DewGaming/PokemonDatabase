@@ -8,23 +8,23 @@ namespace Pokedex.DataAccess.Models
         public int Id { get; set; }
 
         [Required]
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         public User User { get; set; }
 
         [Required, Display(Name = "Pokémon Hunting")]
-        public int? PokemonId { get; set; }
+        public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
 
         [StringLength(12), Display(Name = "Nickname")]
         public string Nickname { get; set; }
 
         [Required, Display(Name = "Game Hunting In")]
-        public int? GameId { get; set; }
+        public int GameId { get; set; }
         public Game Game { get; set; }
 
         [Required, Display(Name = "Hunting Method")]
-        public int? HuntingMethodId { get; set; }
+        public int HuntingMethodId { get; set; }
         public HuntingMethod HuntingMethod { get; set; }
 
         [Display(Name = "Shiny Charm")]
