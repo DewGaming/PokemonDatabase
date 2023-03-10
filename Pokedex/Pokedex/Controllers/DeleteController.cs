@@ -42,7 +42,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Generation>(generation.Id);
 
-            return this.RedirectToAction("Generations", "Admin");
+            return this.RedirectToAction("Generations", "Owner");
         }
 
         [HttpGet]
@@ -69,7 +69,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Region>(region.Id);
 
-            return this.RedirectToAction("Regions", "Admin");
+            return this.RedirectToAction("Regions", "Owner");
         }
 
         [HttpGet]
@@ -113,7 +113,7 @@ namespace Pokedex.Controllers
 
             this.dataService.DeleteObject<Game>(game.Id);
 
-            return this.RedirectToAction("Games", "Admin");
+            return this.RedirectToAction("Games", "Owner");
         }
 
         [HttpGet]
@@ -139,7 +139,7 @@ namespace Pokedex.Controllers
 
             this.dataService.DeleteObject<Type>(type.Id);
 
-            return this.RedirectToAction("Types", "Admin");
+            return this.RedirectToAction("Types", "Owner");
         }
 
         [HttpGet]
@@ -158,7 +158,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Nature>(nature.Id);
 
-            return this.RedirectToAction("Natures", "Admin");
+            return this.RedirectToAction("Natures", "Owner");
         }
 
         [HttpGet]
@@ -177,7 +177,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Mark>(mark.Id);
 
-            return this.RedirectToAction("Marks", "Admin");
+            return this.RedirectToAction("Marks", "Owner");
         }
 
         [HttpGet]
@@ -196,7 +196,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Pokeball>(pokeball.Id);
 
-            return this.RedirectToAction("Pokeballs", "Admin");
+            return this.RedirectToAction("Pokeballs", "Owner");
         }
 
         [HttpGet]
@@ -215,7 +215,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<HuntingMethod>(huntingMethod.Id);
 
-            return this.RedirectToAction("HuntingMethods", "Admin");
+            return this.RedirectToAction("HuntingMethods", "Owner");
         }
 
         [HttpGet]
@@ -234,7 +234,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<EggCycle>(eggCycle.Id);
 
-            return this.RedirectToAction("EggCycles", "Admin");
+            return this.RedirectToAction("EggCycles", "Owner");
         }
 
         [HttpGet]
@@ -253,7 +253,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<ExperienceGrowth>(experienceGrowth.Id);
 
-            return this.RedirectToAction("ExperienceGrowths", "Admin");
+            return this.RedirectToAction("ExperienceGrowths", "Owner");
         }
 
         [HttpGet]
@@ -272,7 +272,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<GenderRatio>(genderRatio.Id);
 
-            return this.RedirectToAction("GenderRatios", "Admin");
+            return this.RedirectToAction("GenderRatios", "Owner");
         }
 
         [HttpGet]
@@ -291,7 +291,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<CaptureRate>(captureRate.Id);
 
-            return this.RedirectToAction("CaptureRates", "Admin");
+            return this.RedirectToAction("CaptureRates", "Owner");
         }
 
         [HttpGet]
@@ -310,7 +310,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<BaseHappiness>(baseHappiness.Id);
 
-            return this.RedirectToAction("BaseHappinesses", "Admin");
+            return this.RedirectToAction("BaseHappinesses", "Owner");
         }
 
         [HttpGet]
@@ -329,7 +329,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<EvolutionMethod>(evolutionMethod.Id);
 
-            return this.RedirectToAction("EvolutionMethods", "Admin");
+            return this.RedirectToAction("EvolutionMethods", "Owner");
         }
 
         [HttpGet]
@@ -348,7 +348,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<BattleItem>(battleItem.Id);
 
-            return this.RedirectToAction("BattleItems", "Admin");
+            return this.RedirectToAction("BattleItems", "Owner");
         }
 
         [HttpGet]
@@ -367,7 +367,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Ability>(ability.Id);
 
-            return this.RedirectToAction("Abilities", "Admin");
+            return this.RedirectToAction("Abilities", "Owner");
         }
 
         [HttpGet]
@@ -386,7 +386,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Form>(form.Id);
 
-            return this.RedirectToAction("Forms", "Admin");
+            return this.RedirectToAction("Forms", "Owner");
         }
 
         [HttpGet]
@@ -405,7 +405,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<LegendaryType>(legendaryType.Id);
 
-            return this.RedirectToAction("LegendaryTypes", "Admin");
+            return this.RedirectToAction("LegendaryTypes", "Owner");
         }
 
         [HttpGet]
@@ -434,7 +434,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<EggGroup>(eggGroup.Id);
 
-            return this.RedirectToAction("EggGroups", "Admin");
+            return this.RedirectToAction("EggGroups", "Owner");
         }
 
         [HttpGet]
@@ -453,7 +453,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<FormItem>(formItem.Id);
 
-            return this.RedirectToAction("FormItems", "Admin");
+            return this.RedirectToAction("FormItems", "Owner");
         }
 
         [HttpGet]
@@ -472,7 +472,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<FormGroup>(formGroup.Id);
 
-            return this.RedirectToAction("FormGroups", "Admin");
+            return this.RedirectToAction("FormGroups", "Owner");
         }
 
         [HttpGet]
@@ -491,7 +491,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.DeleteObject<Classification>(classification.Id);
 
-            return this.RedirectToAction("Classifications", "Admin");
+            return this.RedirectToAction("Classifications", "Owner");
         }
     }
 }

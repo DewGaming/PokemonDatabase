@@ -112,7 +112,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.AddObject(new DataAccess.Models.Generation());
 
-            return this.RedirectToAction("Generations", "Admin");
+            return this.RedirectToAction("Generations", "Owner");
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(region);
 
-            return this.RedirectToAction("Regions", "Admin");
+            return this.RedirectToAction("Regions", "Owner");
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(formItem);
 
-            return this.RedirectToAction("FormItems", "Admin");
+            return this.RedirectToAction("FormItems", "Owner");
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(formGroup);
 
-            return this.RedirectToAction("FormGroups", "Admin");
+            return this.RedirectToAction("FormGroups", "Owner");
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(type);
 
-            return this.RedirectToAction("Types", "Admin");
+            return this.RedirectToAction("Types", "Owner");
         }
 
         [HttpGet]
@@ -307,7 +307,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(eggCycle);
 
-            return this.RedirectToAction("EggCycles", "Admin");
+            return this.RedirectToAction("EggCycles", "Owner");
         }
 
         [HttpGet]
@@ -329,7 +329,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(experienceGrowth);
 
-            return this.RedirectToAction("ExperienceGrowths", "Admin");
+            return this.RedirectToAction("ExperienceGrowths", "Owner");
         }
 
         [HttpGet]
@@ -351,7 +351,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(genderRatio);
 
-            return this.RedirectToAction("GenderRatios", "Admin");
+            return this.RedirectToAction("GenderRatios", "Owner");
         }
 
         [HttpGet]
@@ -373,7 +373,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(legendaryType);
 
-            return this.RedirectToAction("LegendaryTypes", "Admin");
+            return this.RedirectToAction("LegendaryTypes", "Owner");
         }
 
         [HttpGet]
@@ -395,7 +395,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(eggGroup);
 
-            return this.RedirectToAction("EggGroups", "Admin");
+            return this.RedirectToAction("EggGroups", "Owner");
         }
 
         [HttpGet]
@@ -438,7 +438,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(classification);
 
-            return this.RedirectToAction("Classifications", "Admin");
+            return this.RedirectToAction("Classifications", "Owner");
         }
 
         [HttpGet]
@@ -460,7 +460,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(nature);
 
-            return this.RedirectToAction("Natures", "Admin");
+            return this.RedirectToAction("Natures", "Owner");
         }
 
         [HttpGet]
@@ -484,7 +484,7 @@ namespace Pokedex.Controllers
 
             this.dataService.UploadImages(officialUpload, officialUrlUpload, pokeball.Id, this.appConfig, "pokeball");
 
-            return this.RedirectToAction("Pokeballs", "Admin");
+            return this.RedirectToAction("Pokeballs", "Owner");
         }
 
         [HttpGet]
@@ -508,7 +508,7 @@ namespace Pokedex.Controllers
 
             this.dataService.UploadImages(officialUpload, officialUrlUpload, mark.Id, this.appConfig, "mark");
 
-            return this.RedirectToAction("Marks", "Admin");
+            return this.RedirectToAction("Marks", "Owner");
         }
 
         [HttpGet]
@@ -530,7 +530,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(huntingMethod);
 
-            return this.RedirectToAction("HuntingMethods", "Admin");
+            return this.RedirectToAction("HuntingMethods", "Owner");
         }
 
         [HttpGet]
@@ -562,7 +562,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(form);
 
-            return this.RedirectToAction("Forms", "Admin");
+            return this.RedirectToAction("Forms", "Owner");
         }
 
         [HttpGet]
@@ -584,7 +584,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(evolutionMethod);
 
-            return this.RedirectToAction("EvolutionMethods", "Admin");
+            return this.RedirectToAction("EvolutionMethods", "Owner");
         }
 
         [HttpGet]
@@ -606,7 +606,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(captureRate);
 
-            return this.RedirectToAction("CaptureRates", "Admin");
+            return this.RedirectToAction("CaptureRates", "Owner");
         }
 
         [HttpGet]
@@ -632,7 +632,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(ability);
 
-            return this.RedirectToAction("Abilities", "Admin");
+            return this.RedirectToAction("Abilities", "Owner");
         }
 
         [HttpGet]
@@ -654,7 +654,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(baseHappiness);
 
-            return this.RedirectToAction("BaseHappinesses", "Admin");
+            return this.RedirectToAction("BaseHappinesses", "Owner");
         }
 
         [HttpGet]
@@ -699,7 +699,7 @@ namespace Pokedex.Controllers
                 this.dataService.AddObject(gameRegionDetail);
             }
 
-            return this.RedirectToAction("Games", "Admin");
+            return this.RedirectToAction("Games", "Owner");
         }
 
         [HttpGet]
@@ -741,7 +741,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -784,7 +784,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -820,7 +820,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(battleItem);
 
-            return this.RedirectToAction("BattleItems", "Admin");
+            return this.RedirectToAction("BattleItems", "Owner");
         }
 
         [HttpGet]
@@ -1124,7 +1124,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -1173,7 +1173,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -1213,7 +1213,7 @@ namespace Pokedex.Controllers
 
             this.dataService.UpdateObject(pokemonAbilities);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            return this.RedirectToAction("Pokemon", "Owner");
         }
 
         [HttpGet]
@@ -1257,7 +1257,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -1300,7 +1300,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -1342,7 +1342,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("Pokemon", "Admin");
+                return this.RedirectToAction("Pokemon", "Owner");
             }
         }
 
@@ -1379,7 +1379,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(pokemonLegendaryDetails);
 
-            return this.RedirectToAction("Pokemon", "Admin");
+            return this.RedirectToAction("Pokemon", "Owner");
         }
     }
 }

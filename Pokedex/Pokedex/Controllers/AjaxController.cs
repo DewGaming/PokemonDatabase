@@ -1218,7 +1218,7 @@ namespace Pokedex.Controllers
                     this.dataService.DeleteObject<TypeChart>(t.Id);
                 }
 
-                return this.Json(this.Url.Action("Types", "Admin")).Value.ToString();
+                return this.Json(this.Url.Action("Types", "Owner")).Value.ToString();
             }
 
             return null;
@@ -1277,7 +1277,7 @@ namespace Pokedex.Controllers
                     this.dataService.DeleteObject<FormGroupGameDetail>(g.Id);
                 }
 
-                return this.Json(this.Url.Action("FormGroups", "Admin")).Value.ToString();
+                return this.Json(this.Url.Action("FormGroups", "Owner")).Value.ToString();
             }
 
             return null;
@@ -1312,7 +1312,7 @@ namespace Pokedex.Controllers
                     this.dataService.DeleteObject<PokemonGameDetail>(g.Id);
                 }
 
-                return this.Json(this.Url.Action("Pokemon", "Admin")).Value.ToString();
+                return this.Json(this.Url.Action("Pokemon", "Owner")).Value.ToString();
             }
 
             return null;
@@ -1347,7 +1347,7 @@ namespace Pokedex.Controllers
                     this.dataService.DeleteObject<GameStarterDetail>(g.Id);
                 }
 
-                return this.Json(this.Url.Action("Game", "Admin")).Value.ToString();
+                return this.Json(this.Url.Action("Game", "Owner")).Value.ToString();
             }
 
             return null;
@@ -1505,7 +1505,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                return this.Json(this.Url.Action("Games", "Admin")).Value.ToString();
+                return this.Json(this.Url.Action("Games", "Owner")).Value.ToString();
             }
 
             return null;

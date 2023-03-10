@@ -1,26 +1,26 @@
 @using System.Security.Claims
 @{
-    string dropdownWidth, dropdownHeight, generalColumnWidth, adminColumnWidth;
+    string dropdownWidth, dropdownHeight, generalColumnWidth, ownerColumnWidth;
     if (this.User.IsInRole("Owner"))
     {
         dropdownWidth = "37rem";
         dropdownHeight = "24.5rem";
         generalColumnWidth = "40%";
-        adminColumnWidth = "30%";
+        ownerColumnWidth = "30%";
     }
     else if (this.User.IsInRole("Admin"))
-    {
-        dropdownWidth = "37rem";
-        dropdownHeight = "22rem";
-        generalColumnWidth = "40%";
-        adminColumnWidth = "30%";
-    }
-    else
     {
         dropdownWidth = "13rem";
         dropdownHeight = "15rem";
         generalColumnWidth = "100%";
-        adminColumnWidth = "";
+        ownerColumnWidth = "";
+    }
+    else
+    {
+        dropdownWidth = "13rem";
+        dropdownHeight = "13.5rem";
+        generalColumnWidth = "100%";
+        ownerColumnWidth = "";
     }
 }
 
@@ -33,22 +33,19 @@
                 <span class="accountOptionHeader">General Options</span>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="@this.Url.Action("PokemonTeams", "User")">Pokémon Teams</a>
-                @if (this.User.IsInRole("Owner"))
+                @if (this.User.IsInRole("Admin"))
                 {
                     <a class="dropdown-item" href="@this.Url.Action("ShinyHunts", "User")">Shiny Hunts</a>
                 }
-                @if (this.User.IsInRole("Admin"))
+                @if (this.User.IsInRole("Owner"))
                 {
                     <div class="dropdown-divider"></div>
                     <span class="accountOptionHeader">Admin Options</span>
                     <div class="dropdown-divider"></div>
-                    @if (this.User.IsInRole("Owner"))
-                    {
-                        <a class="dropdown-item" href="@this.Url.Action("Users", "Owner")">Users</a>
-                        <a class="dropdown-item" href="@this.Url.Action("Comments", "Owner")">Comments</a>
-                    }
-                    <a class="dropdown-item" href="@this.Url.Action("PageStats", "Admin")">View Page Stats</a>
-                    <a class="dropdown-item" href="@this.Url.Action("PokemonPageStats", "Admin")">View Pokémon Page Stats</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Users", "Owner")">Users</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Comments", "Owner")">Comments</a>
+                    <a class="dropdown-item" href="@this.Url.Action("PageStats", "Owner")">View Page Stats</a>
+                    <a class="dropdown-item" href="@this.Url.Action("PokemonPageStats", "Owner")">View Pokémon Page Stats</a>
                 }
                 <div class="dropdown-divider"></div>
                 <span class="accountOptionHeader">Account Options</span>
@@ -57,36 +54,36 @@
                 <a class="dropdown-item" href="@this.Url.Action("EditPassword", "User")">Change Password</a>
                 <a class="dropdown-item" href="@this.Url.Action("Logout", "Account")">Logout</a>
             </div>
-            @if (this.User.IsInRole("Admin"))
+            @if (this.User.IsInRole("Owner"))
             {
                 <span class="accountOptionHeader">Edit Tables</span>
                 <div class="dropdown-divider"></div>
-                <div class="column" style="width: @adminColumnWidth">
-                    <a class="dropdown-item" href="@this.Url.Action("Abilities", "Admin")">Abilities</a>
-                    <a class="dropdown-item" href="@this.Url.Action("BaseHappinesses", "Admin")">Base Happiness</a>
-                    <a class="dropdown-item" href="@this.Url.Action("BattleItems", "Admin")">Battle Items</a>
-                    <a class="dropdown-item" href="@this.Url.Action("CaptureRates", "Admin")">Capture Rates</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Classifications", "Admin")">Classifications</a>
-                    <a class="dropdown-item" href="@this.Url.Action("EggCycles", "Admin")">Egg Cycles</a>
-                    <a class="dropdown-item" href="@this.Url.Action("EggGroups", "Admin")">Egg Groups</a>
-                    <a class="dropdown-item" href="@this.Url.Action("ExperienceGrowths", "Admin")">Experience Growths</a>
-                    <a class="dropdown-item" href="@this.Url.Action("EvolutionMethods", "Admin")">Evolution Methods</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Forms", "Admin")">Forms</a>
-                    <a class="dropdown-item" href="@this.Url.Action("FormItems", "Admin")">Form Items</a>
-                    <a class="dropdown-item" href="@this.Url.Action("FormGroups", "Admin")">Form Groups</a>
+                <div class="column" style="width: @ownerColumnWidth">
+                    <a class="dropdown-item" href="@this.Url.Action("Abilities", "Owner")">Abilities</a>
+                    <a class="dropdown-item" href="@this.Url.Action("BaseHappinesses", "Owner")">Base Happiness</a>
+                    <a class="dropdown-item" href="@this.Url.Action("BattleItems", "Owner")">Battle Items</a>
+                    <a class="dropdown-item" href="@this.Url.Action("CaptureRates", "Owner")">Capture Rates</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Classifications", "Owner")">Classifications</a>
+                    <a class="dropdown-item" href="@this.Url.Action("EggCycles", "Owner")">Egg Cycles</a>
+                    <a class="dropdown-item" href="@this.Url.Action("EggGroups", "Owner")">Egg Groups</a>
+                    <a class="dropdown-item" href="@this.Url.Action("ExperienceGrowths", "Owner")">Experience Growths</a>
+                    <a class="dropdown-item" href="@this.Url.Action("EvolutionMethods", "Owner")">Evolution Methods</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Forms", "Owner")">Forms</a>
+                    <a class="dropdown-item" href="@this.Url.Action("FormItems", "Owner")">Form Items</a>
+                    <a class="dropdown-item" href="@this.Url.Action("FormGroups", "Owner")">Form Groups</a>
                 </div>
-                <div class="column" style="width: @adminColumnWidth">
-                    <a class="dropdown-item" href="@this.Url.Action("Games", "Admin")">Games</a>
-                    <a class="dropdown-item" href="@this.Url.Action("GenderRatios", "Admin")">Gender Ratios</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Generations", "Admin")">Generations</a>
-                    <a class="dropdown-item" href="@this.Url.Action("HuntingMethods", "Admin")">Hunting Methods</a>
-                    <a class="dropdown-item" href="@this.Url.Action("LegendaryTypes", "Admin")">Legendary Types</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Natures", "Admin")">Natures</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Marks", "Admin")">Marks</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Pokeballs", "Admin")">Pokeballs</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Pokemon", "Admin")">Pokémon</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Regions", "Admin")">Regions</a>
-                    <a class="dropdown-item" href="@this.Url.Action("Types", "Admin")">Types</a>
+                <div class="column" style="width: @ownerColumnWidth">
+                    <a class="dropdown-item" href="@this.Url.Action("Games", "Owner")">Games</a>
+                    <a class="dropdown-item" href="@this.Url.Action("GenderRatios", "Owner")">Gender Ratios</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Generations", "Owner")">Generations</a>
+                    <a class="dropdown-item" href="@this.Url.Action("HuntingMethods", "Owner")">Hunting Methods</a>
+                    <a class="dropdown-item" href="@this.Url.Action("LegendaryTypes", "Owner")">Legendary Types</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Natures", "Owner")">Natures</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Marks", "Owner")">Marks</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Pokeballs", "Owner")">Pokeballs</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Pokemon", "Owner")">Pokémon</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Regions", "Owner")">Regions</a>
+                    <a class="dropdown-item" href="@this.Url.Action("Types", "Owner")">Types</a>
                 </div>
             }
         </div>

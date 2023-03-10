@@ -195,7 +195,7 @@ namespace Pokedex.Controllers
         [Route("shiny_hunts")]
         public IActionResult ShinyHunts()
         {
-            if (this.User.IsInRole("Owner"))
+            if (this.User.IsInRole("Admin"))
             {
                 List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name);
                 List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
