@@ -1,0 +1,88 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.StartShinyHuntViewModel
+@{
+    Layout = "_layout";
+    ViewBag.Title = "Start Shiny Hunt";
+}
+
+@section styles
+{
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <style>
+        .flexDiv > div {
+            width: 50%;
+        }
+
+        .pokemonShinyImage {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/startShinyHunt.js"></script>
+}
+
+<h2>Start Shiny Hunt</h2>
+
+<div class="flexDiv">
+    <div class="form-horizontal">
+        @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary()
+
+            @Html.Hidden(@Model.AppConfig.WebUrl, string.Empty, new { @class = "webUrl" })
+            @Html.Hidden(@Model.AppConfig.ShinyPokemonImageUrl, string.Empty, new { @class = "shinyUrl" })
+            @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
+            @Html.HiddenFor(x => x.UserId)
+
+            <div class="form-group row">
+                @Html.LabelFor(x => x.GameId, "Game", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.GameId, new SelectList(Model.AllGames, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.GameId)
+            </div>
+
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.PokemonId, "Pokemon", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.PokemonId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.PokemonId)
+            </div>
+
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.HuntingMethodId, "Shiny Hunting Method", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.HuntingMethodId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.HuntingMethodId)
+            </div>
+
+            <div class="form-group row gameSpecific sparklingPower hide">
+                @Html.LabelFor(x => x.SparklingPowerLevel, "Sparkling Sandwich Power Level", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
+            </div>
+
+            <div class="form-group row gameSpecific shinyCharm hide">
+                @Html.LabelFor(x => x.HasShinyCharm, "Have the Shiny Charm", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.HasShinyCharm, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.HasShinyCharm)
+            </div>
+
+            <p>
+                <button type="submit" class="btn btn-primary" role="button">Add</button>
+            </p>
+        }
+    </div>
+    <div>
+        <img class="shadowed pokemonShinyImage hide"/>
+    </div>
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>

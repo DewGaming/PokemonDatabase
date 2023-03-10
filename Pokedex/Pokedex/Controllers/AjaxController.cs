@@ -1705,6 +1705,117 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the encounters for a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <param name="increment">The amount to increment.</param>
+        /// <returns>The amount of encounters for this shiny hunt.</returns>
+        [Route("increment-shiny-hunt-encounters")]
+        public int IncrementShinyHuntEncounters(int shinyHuntId, int increment)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+                if (increment == -1 && shinyHunt.Encounters == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    shinyHunt.Encounters += increment;
+                    this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                    return shinyHunt.Encounters;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Updates the encounters for a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <param name="encounters">The amount to encounters.</param>
+        /// <returns>The amount of encounters for this shiny hunt.</returns>
+        [Route("set-shiny-hunt-encounters")]
+        public int SetShinyHuntEncounters(int shinyHuntId, int encounters)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+                if (encounters < 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    shinyHunt.Encounters = encounters;
+                    this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                    return shinyHunt.Encounters;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Checks to see if shiny charm can be used.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>The boolean determining if a shiny charm can be shown.</returns>
+        [Route("check-shiny-charm")]
+        public bool CheckShinyCharm(int gameId)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && (game.GenerationId >= 6 || gameId == 11 || gameId == 29))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if sparkling power can be used.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <param name="huntingMethodId">The hunting method's id.</param>
+        /// <returns>The boolean determining if a sparkling power can be shown.</returns>
+        [Route("check-sparkling-power")]
+        public bool CheckSparklingPower(int gameId, int huntingMethodId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (gameId == 41 || gameId == 42) && huntingMethodId != 4 && huntingMethodId != 5)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if marks can be used.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>The boolean determining if a mark can be shown.</returns>
+        [Route("check-mark")]
+        public bool CheckMark(int gameId)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.GenerationId >= 8 && gameId != 35 && gameId != 36)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
@@ -2555,6 +2666,47 @@ namespace Pokedex.Controllers
         public void ShinyPokemonFound()
         {
             this.dataService.AddPageView("Shiny Pokemon found in Team Randomizer", false);
+        }
+
+        /// <summary>
+        /// Grabs all of the pokemon available in the selected game.
+        /// </summary>
+        /// <param name="gameId">The selected game's Id.</param>
+        /// <returns>The list of available pokemon.</returns>
+        [Route("get-pokemon-by-game")]
+        public List<Pokemon> GetPokemonByGame(int gameId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", gameId).ConvertAll(x => x.Pokemon);
+                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
+                foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+                {
+                    p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
+                }
+
+                return pokemonList;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Grabs all of the hunting methods available for the selected game.
+        /// </summary>
+        /// <param name="gameId">The selected game's Id.</param>
+        /// <returns>The list of available hunting methods.</returns>
+        [Route("get-hunting-methods")]
+        public List<HuntingMethod> GetHuntingMethods(int gameId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethod>();
+
+                return huntingMethods;
+            }
+
+            return null;
         }
 
         /// <summary>

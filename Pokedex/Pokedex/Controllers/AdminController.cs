@@ -271,6 +271,30 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("mark")]
+        public IActionResult Marks()
+        {
+            List<Mark> model = this.dataService.GetObjects<Mark>("Name");
+
+            return this.View(model);
+        }
+
+        [Route("pokeball")]
+        public IActionResult Pokeballs()
+        {
+            List<Pokeball> model = this.dataService.GetObjects<Pokeball>("Name");
+
+            return this.View(model);
+        }
+
+        [Route("hunting_method")]
+        public IActionResult HuntingMethods()
+        {
+            List<HuntingMethod> model = this.dataService.GetObjects<HuntingMethod>("Name");
+
+            return this.View(model);
+        }
+
         [Route("battle_item")]
         public IActionResult BattleItems()
         {

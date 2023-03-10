@@ -1,0 +1,37 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Pokeball>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="natureTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("Pokeball", "Add")" role="button">Add Pokeball</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("Pokeball", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("PokeballImage", "Edit", new { id = item.Id }))">Update Image</a>
+                        @('|')
+                        <a href="@(this.Url.Action("Pokeball", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,0 +1,119 @@
+.pokemonShinyHuntGroup {
+  margin-right: 10px;
+}
+
+.shinyHuntButtons * {
+  margin: 0 5px 5px 0;
+}
+
+.encounters {
+  margin: 0 5px;
+}
+
+.manualAdjust {
+  margin-top: 5px;
+}
+
+.bonusImages img {
+  filter: none;
+}
+
+.description p {
+  margin: 0;
+}
+
+.huntCompletionButtons, .huntEditButton {
+  margin: 3px;
+}
+
+.huntCompletionButtons button, .huntCompletionButtons a {
+  width: 32%;
+}
+
+.editShinyButton {
+  width: 100%;
+  background-color: #F18E38;
+  border-color: #F18E38;
+}
+
+.editShinyButton:hover {
+  background-color: #E67310;
+  border-color: #CE680E;
+}
+
+.editShinyButton:active {
+  background-color: #CE680E;
+  border-color: #F18E38;
+}
+
+.editShinyButton:focus {
+  box-shadow: 0 0 0 .2rem rgba(182, 92, 13, .5);
+}
+
+.editShinyButton, .editShinyButton:hover, .editShinyButton:active, .editShinyButton:focus {
+  color: #FFF;
+}
+
+.hide {
+  display: none !important;
+}
+
+.shinyCharm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  z-index: 1;
+}
+
+.pokemonMark {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  z-index: 1;
+}
+
+.pokeball {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  z-index: 1;
+}
+
+.pokemonDetails {
+  position: relative;
+}
+
+@media (min-width: 440px) {
+  .shadowed {
+    min-width: 310px;
+  }
+
+  .shadowed:not(.hide)>.pokemonDetails {
+    display: flex;
+  }
+
+  .pokemonDetails>div:not(.bonusImages) {
+    width: 50%;
+  }
+}
+
+@media (max-width: 439px) {
+  .manualAdjust {
+    width: 97%;
+  }
+}
+
+@media (max-width: 534px) {
+  .huntCompletionButtons button, .huntCompletionButtons a, .editShinyButton {
+    height: 62px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

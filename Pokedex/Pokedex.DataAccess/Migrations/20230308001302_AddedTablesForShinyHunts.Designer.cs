@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230308001302_AddedTablesForShinyHunts")]
+    partial class AddedTablesForShinyHunts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -572,10 +574,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameAddition")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1208,55 +1206,32 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DateOfCapture")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("DuringCommunityDay")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Encounters")
-                        .HasColumnType("int");
-
                     b.Property<int?>("GameId")
                         .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("HasShinyCharm")
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(6)")
+                        .HasMaxLength(6);
 
                     b.Property<int?>("HuntingMethodId")
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsCaptured")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("MarkId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Nickname")
-                        .HasColumnType("nvarchar(12)")
-                        .HasMaxLength(12);
-
                     b.Property<int?>("PokeballId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("PokemonId")
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int>("SparklingPowerLevel")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UserId")
                         .IsRequired()
                         .HasColumnType("int");
-
-                    b.Property<bool>("UsingLures")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -1840,7 +1815,9 @@ namespace Pokedex.DataAccess.Migrations
 
                     b.HasOne("Pokedex.DataAccess.Models.Pokeball", "Pokeball")
                         .WithMany()
-                        .HasForeignKey("PokeballId");
+                        .HasForeignKey("PokeballId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
                         .WithMany()

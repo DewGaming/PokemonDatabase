@@ -464,6 +464,76 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_pokeball")]
+        public IActionResult Pokeball()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_pokeball")]
+        public IActionResult Pokeball(Pokeball pokeball, IFormFile officialUpload, string officialUrlUpload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(pokeball);
+
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, pokeball.Id, this.appConfig, "pokeball");
+
+            return this.RedirectToAction("Pokeballs", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_mark")]
+        public IActionResult Mark()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_mark")]
+        public IActionResult Mark(Mark mark, IFormFile officialUpload, string officialUrlUpload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(mark);
+
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, mark.Id, this.appConfig, "mark");
+
+            return this.RedirectToAction("Marks", "Admin");
+        }
+
+        [HttpGet]
+        [Route("add_hunting_method")]
+        public IActionResult HuntingMethod()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_hunting_method")]
+        public IActionResult HuntingMethod(HuntingMethod huntingMethod)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(huntingMethod);
+
+            return this.RedirectToAction("HuntingMethods", "Admin");
+        }
+
+        [HttpGet]
         [Route("add_form")]
         public IActionResult Form()
         {
@@ -896,7 +966,6 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(newPokemon);
 
             this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "2d");
-            this.dataService.UploadImages(officialUpload, officialUrlUpload, newPokemon.Id, this.appConfig, "3d");
 
             this.dataService.AddObject(new PokemonGameDetail()
             {

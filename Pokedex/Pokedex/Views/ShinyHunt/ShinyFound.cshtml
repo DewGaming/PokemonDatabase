@@ -1,0 +1,106 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.CompleteShinyHuntViewModel
+@{
+    Layout = "_layout";
+    ViewBag.Title = "Complete Shiny Hunt";
+}
+
+@section styles
+{
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <style>
+        .flexDiv > div {
+            width: 50%;
+        }
+
+        .pokemonShinyImage {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/completeShinyHunt.js"></script>
+}
+
+<h2>Complete Shiny Hunt for @Model.PokemonHunted.Name</h2>
+
+<div class="flexDiv">
+    <div class="form-horizontal">
+        @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary()
+
+            @Html.Hidden(@Model.AppConfig.WebUrl, string.Empty, new { @class = "webUrl" })
+            @Html.Hidden(@Model.AppConfig.ShinyPokemonImageUrl, string.Empty, new { @class = "shinyUrl" })
+            @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.UserId)
+            @Html.HiddenFor(x => x.PokemonId)
+            @Html.HiddenFor(x => x.GameId)
+            @Html.HiddenFor(x => x.HuntingMethodId)
+            @Html.HiddenFor(x => x.Encounters)
+            @Html.HiddenFor(x => x.HasShinyCharm)
+
+            <div class="form-group row">
+                @Html.LabelFor(x => x.PokeballId, "Pokeball", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.PokeballId)
+            </div>
+                
+            <div class="form-group row">
+                @Html.LabelFor(x => x.Nickname, "Nickname", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                @Html.ValidationMessageFor(x => x.Nickname)
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(x => x.DateOfCapture, "Date of Capture", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.DateOfCapture, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.DateOfCapture)
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(x => x.Gender, "Gender", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.Gender, new SelectList(Model.AllGenders), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.Gender)
+            </div>
+
+            @if ((@Model.GameId == 41 || @Model.GameId == 42) && @Model.HuntingMethodId != 4 && @Model.HuntingMethodId != 5)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.SparklingPowerLevel, "Sparkling Sandwich Power Level", new { @class = "col-md-4" })
+                    @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                    @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
+                </div>
+            }
+
+            @if (@Model.GameHuntedIn.GenerationId >= 8 && @Model.GameId != 35 && @Model.GameId != 36 && @Model.HuntingMethodId != 4 && @Model.HuntingMethodId != 5)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.MarkId, "Mark", new { @class = "col-md-4" })
+                    @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
+                    @Html.ValidationMessageFor(x => x.MarkId)
+                </div>
+            }
+
+            <p>
+                <button type="submit" class="btn btn-primary" role="button">Add</button>
+            </p>
+        }
+    </div>
+    <div>
+        <img class="shadowed pokemonShinyImage"/>
+    </div>
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>

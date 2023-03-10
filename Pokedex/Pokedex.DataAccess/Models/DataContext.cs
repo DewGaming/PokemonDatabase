@@ -65,5 +65,9 @@ namespace Pokedex.DataAccess.Models
         public DbSet<PageStat> PageStats { get; set; }
         public DbSet<GameStarterDetail> GameStarterDetails { get; set; }
         public DbSet<FormGroupGameDetail> FormGroupGameDetails { get; set; }
+        public DbSet<ShinyHunt> ShinyHunts { get; set; }
+        public DbSet<HuntingMethod> HuntingMethods { get; set; }
+        public DbSet<Pokeball> Pokeballs { get; set; }
+        public DbSet<Mark> Marks { get; set; }
     }
 }

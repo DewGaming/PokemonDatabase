@@ -313,3 +313,29 @@ function lookupPopularity() {
     $('.year.pageStatList').addClass('active');
   });
 }
+
+function lookupHuntsInGame(gameId) {
+  if (!$('.active').is($('#Game' + gameId))) {
+    $('button').each(function () {
+      $(this).removeClass('active');
+    });
+
+    $('.pokemonList').removeClass('active');
+
+    $('.shadowed.hide').each(function () {
+      $(this).removeClass('hide');
+    });
+
+    $('div.shadowed').not('.HuntGame' + gameId).each(function () {
+      $(this).addClass('hide');
+    });
+
+    $('.gameHuntingIn').not('.hide').each(function () {
+      $(this).addClass('hide');
+    });
+
+    $('button#Game' + gameId).addClass('active');
+    $('.pokemonList').addClass('active');
+    $('.active.hide').removeClass('active');
+  }
+}

@@ -692,6 +692,14 @@ namespace Pokedex
             {
                 imageUrlPath = appConfig.ShinyPokemonImageFTPUrl;
             }
+            else if (imageType == "pokeball")
+            {
+                imageUrlPath = appConfig.OfficialPokeballImageFTPUrl;
+            }
+            else if (imageType == "mark")
+            {
+                imageUrlPath = appConfig.OfficialMarkImageFTPUrl;
+            }
 
             if (fileUpload == null && urlUpload != null)
             {
