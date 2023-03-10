@@ -33,7 +33,10 @@
                 <span class="accountOptionHeader">General Options</span>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="@this.Url.Action("PokemonTeams", "User")">Pokémon Teams</a>
-                <a class="dropdown-item" href="@this.Url.Action("ShinyHunts", "User")">Shiny Hunts</a>
+                @if (this.User.IsInRole("Owner"))
+                {
+                    <a class="dropdown-item" href="@this.Url.Action("ShinyHunts", "User")">Shiny Hunts</a>
+                }
                 @if (this.User.IsInRole("Admin"))
                 {
                     <div class="dropdown-divider"></div>

@@ -14,7 +14,7 @@ namespace Pokedex.Controllers
     /// <summary>
     /// The class that handles all ShinyHunt related requests.
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "Owner")]
     [Route("")]
     public class ShinyHuntController : Controller
     {
