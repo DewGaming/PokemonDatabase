@@ -1,3 +1,9 @@
+.grid-container > div {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
 .pokemonShinyHuntGroup {
   margin-right: 10px;
 }
@@ -96,6 +102,7 @@
 
   .shadowed:not(.hide)>.pokemonDetails {
     display: flex;
+    height: 100%;
   }
 
   .pokemonDetails>div:not(.bonusImages) {

@@ -162,12 +162,16 @@
                                     @string.Concat(" (", s.Nickname, ")")
                                 }
                             </p>
+                            <p><b>Hunting Method:</b> @s.HuntingMethod.Name</p>
                             @if (@s.Encounters > 0)
                             {
                                 <p><b>Encounters:</b> @s.Encounters</p>
                             }
-                            <p><b>Hunting Method:</b> @s.HuntingMethod.Name</p>
-                            <p><b>Date of Capture:</b> @s.DateOfCapture.ToShortDateString()</p>
+                            <p><b>Date of Capture:</b> @s.DateOfCapture.ToString("MMMM d, yyyy")</p>
+                            @if (@s.SparklingPowerLevel > 0)
+                            {
+                                <p><b>Sparkling Power Level:</b> @s.SparklingPowerLevel</p>
+                            }
                         </div>
                     </div>
                     <div class="huntEditButton">
