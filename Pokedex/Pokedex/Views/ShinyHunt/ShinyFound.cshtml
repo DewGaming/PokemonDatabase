@@ -9,14 +9,42 @@
 {
     <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
     <style>
-        .flexDiv > div {
-            width: 50%;
+        .completeShinyHunt .form-group {
+            margin-left: 0px !important;
+            margin-right: 0px !important;
         }
 
-        .pokemonShinyImage {
-            width: 75%;
-            height: 75%;
-            object-fit: contain;
+        @@media (min-width: 576px)
+        {
+            .completeShinyHunt {
+                display: flex;
+            }
+
+            .completeShinyHunt > div {
+                width: 50%;
+            }
+
+            .pokemonShinyImage {
+                width: 85%;
+                height: 85%;
+                object-fit: contain;
+                margin: 20px;
+            }
+        }
+
+        @@media (max-width: 575px)
+        {
+            .pokemonShinyImage {
+                max-height: 85px;
+                object-fit: contain;
+                position: absolute;
+                top: 90px;
+                right: 12px;
+            }
+
+            h2 {
+                max-width: 50%;
+            }
         }
     </style>
 }
@@ -28,7 +56,7 @@
 
 <h2>Complete Shiny Hunt for @Model.PokemonHunted.Name</h2>
 
-<div class="flexDiv">
+<div class="completeShinyHunt">
     <div class="form-horizontal">
         @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {

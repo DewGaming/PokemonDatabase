@@ -9,14 +9,38 @@
 {
     <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
     <style>
-        .flexDiv > div {
-            width: 50%;
+        .editShinyHunt .form-group {
+            margin-left: 0px !important;
+            margin-right: 0px !important;
         }
 
-        .pokemonShinyImage {
-            width: 75%;
-            height: 75%;
-            object-fit: contain;
+        @@media (min-width: 576px)
+        {
+            .editShinyHunt {
+                display: flex;
+            }
+
+            .editShinyHunt > div {
+                width: 50%;
+            }
+
+            .pokemonShinyImage {
+                width: 85%;
+                height: 85%;
+                object-fit: contain;
+                margin: 20px;
+            }
+        }
+
+        @@media (max-width: 575px)
+        {
+            .pokemonShinyImage {
+                max-height: 75px;
+                object-fit: contain;
+                position: absolute;
+                top: 75px;
+                right: 12px;
+            }
         }
     </style>
 }
@@ -28,7 +52,7 @@
 
 <h2>Edit Shiny Hunt</h2>
 
-<div class="flexDiv">
+<div class="editShinyHunt">
     <div class="form-horizontal">
         @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
