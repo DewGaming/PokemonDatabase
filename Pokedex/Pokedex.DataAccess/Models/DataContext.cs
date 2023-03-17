@@ -69,5 +69,7 @@ namespace Pokedex.DataAccess.Models
         public DbSet<HuntingMethod> HuntingMethods { get; set; }
         public DbSet<Pokeball> Pokeballs { get; set; }
         public DbSet<Mark> Marks { get; set; }
+        public DbSet<HuntingMethodGameDetail> HuntingMethodGameDetails { get; set; }
+        public DbSet<MarkGameDetail> MarkGameDetails { get; set; }
     }
 }

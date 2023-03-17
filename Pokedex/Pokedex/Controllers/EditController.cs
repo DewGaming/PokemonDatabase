@@ -1409,7 +1409,14 @@ namespace Pokedex.Controllers
         [Route("edit_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {
-            Pokeball model = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id);
+            Pokeball pokeball = this.dataService.GetObjectByPropertyValue<Pokeball>("Id", id);
+            PokeballViewModel model = new PokeballViewModel()
+            {
+                Id = pokeball.Id,
+                Name = pokeball.Name,
+                GenerationId = pokeball.GenerationId,
+                AllGenerations = this.dataService.GetObjects<Generation>(),
+            };
 
             return this.View(model);
         }
