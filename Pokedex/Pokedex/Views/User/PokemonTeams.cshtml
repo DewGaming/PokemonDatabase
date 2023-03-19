@@ -102,7 +102,7 @@
                                                             {
                                                                 @try
                                                                 {
-                                                                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.Id, ".png"));
+                                                                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.PokemonId, ".png"));
                                                                     imageRequest = (HttpWebResponse)webRequest.GetResponse();
                                                                     <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @p.PokemonId, ".png"))" />
                                                                 }
