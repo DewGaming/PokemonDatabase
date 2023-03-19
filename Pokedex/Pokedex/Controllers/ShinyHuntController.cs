@@ -482,6 +482,21 @@ namespace Pokedex.Controllers
 
                     break;
                 default:
+                    if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
+                    {
+                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
+                    }
+
+                    if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
+                    {
+                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
+                    }
+
+                    if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
+                    {
+                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
+                    }
+
                     selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).ToList();
                     break;
             }
