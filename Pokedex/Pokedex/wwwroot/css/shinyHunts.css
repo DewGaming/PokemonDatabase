@@ -28,12 +28,16 @@
   margin: 0;
 }
 
-.huntCompletionButtons, .huntEditButton {
+.huntUncapturedButtons, .huntCapturedButtons {
   margin: 3px;
 }
 
-.huntCompletionButtons button, .huntCompletionButtons a {
+.huntUncapturedButtons button, .huntUncapturedButtons a {
   width: 32%;
+}
+
+.huntCapturedButtons a {
+  width: 49%;
 }
 
 .editShinyButton {
@@ -117,7 +121,7 @@
 }
 
 @media (max-width: 534px) {
-  .huntCompletionButtons button, .huntCompletionButtons a, .editShinyButton {
+  .huntUncapturedButtons button, .huntUncapturedButtons a, .editShinyButton {
     height: 62px;
     display: inline-flex;
     justify-content: center;

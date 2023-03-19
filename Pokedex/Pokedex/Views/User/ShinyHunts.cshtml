@@ -109,10 +109,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="huntCompletionButtons">
+                    <div class="huntUncapturedButtons">
                         <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Shiny Found</a>
                         <a class="editShinyButton btn" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
-                        <button class="abandonHunt btn btn-danger">Abandon Hunt</button>
+                        <a class="btn btn-danger abandonHunt" href="@(this.Url.Action("DeleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id }))">Abandon Hunt</a>
                     </div>
                 </div>
             }
@@ -174,8 +174,9 @@
                             }
                         </div>
                     </div>
-                    <div class="huntEditButton">
+                    <div class="huntCapturedButtons">
                         <a class="editShinyButton btn" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
+                        <a class="btn btn-danger abandonHunt" href="@(this.Url.Action("DeleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id }))">Delete Hunt</a>
                     </div>
                 </div>
             }

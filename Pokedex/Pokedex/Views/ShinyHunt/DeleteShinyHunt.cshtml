@@ -1,0 +1,141 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.DeleteShinyHuntViewModel
+@{
+    string pageTitle;
+    Layout = "_Layout";
+    if (@Model.IsCaptured)
+    {
+        pageTitle = "Delete Shiny Hunt";
+    }
+    else
+    {
+        pageTitle = "Abandon Shiny Hunt";
+    }
+    ViewBag.Title = pageTitle;
+}
+
+@section styles
+{
+    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <style>
+        .deleteShinyHunt .form-group {
+            margin-left: 0px !important;
+            margin-right: 0px !important;
+        }
+
+        @@media (min-width: 576px)
+        {
+            .deleteShinyHunt {
+                display: flex;
+            }
+
+            .deleteShinyHunt > div {
+                width: 50%;
+            }
+
+            .pokemonShinyImage {
+                width: 85%;
+                height: 85%;
+                object-fit: contain;
+                margin: 20px;
+            }
+        }
+
+        @@media (max-width: 575px)
+        {
+            .pokemonShinyImage {
+                max-height: 75px;
+                object-fit: contain;
+                position: absolute;
+                top: 75px;
+                right: 12px;
+            }
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/deleteShinyHunt.js"></script>
+}
+
+<h2>@pageTitle</h2>
+
+<div class="deleteShinyHunt">
+    <div class="form-horizontal">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.Hidden(@Model.AppConfig.WebUrl, string.Empty, new { @class = "webUrl" })
+            @Html.Hidden(@Model.AppConfig.ShinyPokemonImageUrl, string.Empty, new { @class = "shinyUrl" })
+            @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Pokemon.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Pokemon.Name):
+                @if (!string.IsNullOrEmpty(@Model.Nickname))
+                {
+                    @Html.DisplayFor(x => string.Concat(x.Pokemon.Name, " (", x.Nickname, ")"), new { htmlAttributes = new { @class = "form-control" } })
+                }
+                else
+                {
+                    @Html.DisplayFor(x => x.Pokemon.Name, new { htmlAttributes = new { @class = "form-control" } })
+                }
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Game.Name, "Shiny Hunt's Game"):
+                @Html.DisplayFor(x => x.Game.Name, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.HuntingMethod.Name, "The Hunting Method"):
+                @Html.DisplayFor(x => x.HuntingMethod.Name, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.HasShinyCharm, "Used a Shiny Charm"):
+                @(@Model.HasShinyCharm ? "Yes" : "No")
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Encounters):
+                @Html.DisplayFor(x => x.Encounters, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+
+            @if (@Model.IsCaptured)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(x => x.DateOfCapture):
+                    @Html.DisplayFor(x => x.DateOfCapture, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Pokeball.Name, "Pokeball Used"):
+                    @Html.DisplayFor(x => x.Pokeball.Name, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+
+                @if (@Model.Mark != null)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Mark.Name, "Mark Found With"):
+                        @Html.DisplayFor(x => x.Mark.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Gender):
+                    @Html.DisplayFor(x => x.Gender, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            }
+
+            <p>
+                <button type="submit" class="btn btn-danger" role="button">Delete</button>
+            </p>
+        }
+    </div>
+    <div>
+        <img class="shadowed pokemonShinyImage"/>
+    </div>
+</div>

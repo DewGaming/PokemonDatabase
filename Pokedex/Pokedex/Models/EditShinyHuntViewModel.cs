@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Pokedex.Models
 {
     /// <summary>
-    /// The class that is used to represent the complete pokemon team page view model.
+    /// The class that is used to represent the edit shiny hunt view model.
     /// </summary>
     public class EditShinyHuntViewModel : ShinyHunt
     {

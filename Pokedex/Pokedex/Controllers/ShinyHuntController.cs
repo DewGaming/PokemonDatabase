@@ -228,7 +228,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Updates an complete shiny hunt.
+        /// Updates a complete shiny hunt.
         /// </summary>
         /// <param name="shinyHuntId">The shiny hunt's id.</param>
         /// <returns>The shiny hunt edit page.</returns>
@@ -294,7 +294,7 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Updates an complete shiny hunt.
+        /// Updates a complete shiny hunt.
         /// </summary>
         /// <param name="shinyHunt">The editted shiny hunt.</param>
         /// <returns>The user's shiny hunt page.</returns>
@@ -362,6 +362,58 @@ namespace Pokedex.Controllers
             }
 
             this.dataService.UpdateObject(shinyHunt);
+
+            return this.RedirectToAction("ShinyHunts", "User");
+        }
+
+        /// <summary>
+        /// Deletes a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <returns>The shiny hunt delete page.</returns>
+        [HttpGet]
+        [Route("delete_shiny_hunt/{shinyHuntId:int}")]
+        public IActionResult DeleteShinyHunt(int shinyHuntId)
+        {
+            ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Pokemon, Game, HuntingMethod, Pokeball, Mark");
+            List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", shinyHunt.GameId).ConvertAll(x => x.Pokemon);
+            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
+            foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            {
+                p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
+            }
+
+            DeleteShinyHuntViewModel model = new DeleteShinyHuntViewModel()
+            {
+                Id = shinyHunt.Id,
+                Pokemon = shinyHunt.Pokemon,
+                Game = shinyHunt.Game,
+                Nickname = shinyHunt.Nickname,
+                DateOfCapture = shinyHunt.DateOfCapture,
+                HuntingMethod = shinyHunt.HuntingMethod,
+                Pokeball = shinyHunt.Pokeball,
+                Gender = shinyHunt.Gender,
+                Mark = shinyHunt.Mark,
+                HasShinyCharm = shinyHunt.HasShinyCharm,
+                Encounters = shinyHunt.Encounters,
+                IsCaptured = shinyHunt.IsCaptured,
+                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Deletes a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHunt">The deleteted shiny hunt.</param>
+        /// <returns>The user's shiny hunt page.</returns>
+        [HttpPost]
+        [Route("delete_shiny_hunt/{shinyHuntId:int}")]
+        public IActionResult DeleteShinyHunt(DeleteShinyHuntViewModel shinyHunt)
+        {
+            this.dataService.DeleteObject<ShinyHunt>(shinyHunt.Id);
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
