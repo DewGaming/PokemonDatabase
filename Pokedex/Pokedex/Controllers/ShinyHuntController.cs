@@ -169,7 +169,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
-                AllHuntingMethods = this.GetHuntingMethods(),
+                AllHuntingMethods = this.GetHuntingMethods(shinyHunt.GameId),
                 Id = shinyHunt.Id,
                 PokemonId = shinyHunt.PokemonId,
                 GameId = shinyHunt.GameId,
@@ -207,7 +207,7 @@ namespace Pokedex.Controllers
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
-                    AllHuntingMethods = this.GetHuntingMethods(),
+                    AllHuntingMethods = this.GetHuntingMethods(oldShinyHunt.GameId),
                     Id = oldShinyHunt.Id,
                     PokemonId = oldShinyHunt.PokemonId,
                     GameId = oldShinyHunt.GameId,
@@ -267,7 +267,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
-                AllHuntingMethods = this.GetHuntingMethods(),
+                AllHuntingMethods = this.GetHuntingMethods(shinyHunt.GameId),
                 AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllMarks = this.dataService.GetObjects<Mark>(),
                 AllGenders = genders,
@@ -335,7 +335,7 @@ namespace Pokedex.Controllers
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
-                    AllHuntingMethods = this.GetHuntingMethods(),
+                    AllHuntingMethods = this.GetHuntingMethods(oldShinyHunt.GameId),
                     AllPokeballs = this.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId),
                     AllMarks = this.dataService.GetObjects<Mark>(),
                     AllGenders = genders,
