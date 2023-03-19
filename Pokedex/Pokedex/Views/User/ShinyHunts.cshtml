@@ -89,24 +89,25 @@
                             {
                                 webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"));
                                 imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"))" />
+                                <img onclick="incrementEncounter('@s.Id', 1)" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"))" />
                             }
                             catch
                             {
-                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, s.PokemonId, ".png"))" />
+                                <img onclick="incrementEncounter('@s.Id', 1)" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, s.PokemonId, ".png"))" />
                             }
                         </div>
                         <div class="description">
                             <p><b>@s.Pokemon.Name</b></p>
                             <p><b>@s.HuntingMethod.Name</b></p>
-                            <p>Encounters</p>
-                            <div class="encounterChangeButtons">
+                            <div class="encounterButtons">
                                 <button class="encounterDecrease btn btn-danger" onclick="incrementEncounter('@s.Id', -1)">-</button>
-                                <span class="encounters">@s.Encounters</span>
+                                    <div class="encounterCounter">
+                                        <p>Encounters</p>
+                                        <span class="encounters">@s.Encounters</span>
+                                    </div>
                                 <button class="encounterIncrease btn btn-success" onclick="incrementEncounter('@s.Id', 1)">+</button>
-                                <br>
-                                <button class="manualAdjust btn btn-primary" onclick="adjustEncountersManually('@s.Id')">Adjust Manually</button>
                             </div>
+                            <button class="manualAdjust btn btn-primary" onclick="adjustEncountersManually('@s.Id')">Adjust Manually</button>
                         </div>
                     </div>
                     <div class="huntUncapturedButtons">
