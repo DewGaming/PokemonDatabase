@@ -129,6 +129,7 @@ $('#GameId').on('change', function () {
 
 $('#HuntingMethodId').on('change', function () {
     checkSparklingPower();
+    checkShinyCharm();
 });
 
 $('#PokemonId').on('change', function () {
