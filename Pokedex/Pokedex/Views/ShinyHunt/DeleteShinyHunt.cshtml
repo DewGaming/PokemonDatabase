@@ -74,13 +74,14 @@
             @Html.HiddenFor(x => x.Pokemon.Id)
 
             <div class="form-group">
-                @Html.LabelFor(x => x.Pokemon.Name):
                 @if (!string.IsNullOrEmpty(@Model.Nickname))
                 {
-                    @Html.DisplayFor(x => string.Concat(x.Pokemon.Name, " (", x.Nickname, ")"), new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.Label("Pokemon Name")
+                    @string.Concat(": ", Model.Pokemon.Name, " (", Model.Nickname, ")")
                 }
                 else
                 {
+                    @Html.LabelFor(x => x.Pokemon.Name)@(": ")
                     @Html.DisplayFor(x => x.Pokemon.Name, new { htmlAttributes = new { @class = "form-control" } })
                 }
             </div>
