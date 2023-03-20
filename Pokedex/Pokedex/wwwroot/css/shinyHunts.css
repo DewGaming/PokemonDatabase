@@ -136,7 +136,7 @@
 }
 
 @media (max-width: 534px) {
-  .huntUncapturedButtons button, .huntUncapturedButtons a, .editShinyButton {
+  .huntUncapturedButtons a, .huntCapturedButtons a {
     height: 62px;
     display: inline-flex;
     justify-content: center;
