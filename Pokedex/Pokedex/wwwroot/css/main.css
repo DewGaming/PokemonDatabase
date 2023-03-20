@@ -384,7 +384,7 @@ main {
   border-width: 0
 }
 
-.generationOptionSeparator, .adminOptionSeparator {
+.generationOptionSeparator, .adminOptionSeparator, .buttonSeparator {
   margin: 5px 0;
   border-top-width: 1px !important;
   padding: 0 !important

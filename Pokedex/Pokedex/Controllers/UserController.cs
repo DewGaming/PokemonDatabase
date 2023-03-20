@@ -197,11 +197,10 @@ namespace Pokedex.Controllers
         {
             if (this.User.IsInRole("Admin"))
             {
-                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name);
+                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name);
                 List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
                 List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow && x.GenerationId >= 2).ToList();
                 gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
-
                 List<Game> edittedGamesList = new List<Game>();
                 foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
                 {

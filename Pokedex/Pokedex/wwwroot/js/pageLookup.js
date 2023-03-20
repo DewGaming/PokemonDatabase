@@ -314,7 +314,7 @@ function lookupPopularity() {
   });
 }
 
-function lookupHuntsInGame(gameId) {
+function lookupHuntsInGame(element, gameId) {
   if (!$('.active').is($('#Game' + gameId))) {
     $('button').each(function () {
       $(this).removeClass('active');
@@ -326,13 +326,19 @@ function lookupHuntsInGame(gameId) {
       $(this).removeClass('hide');
     });
 
-    $('div.shadowed').not('.HuntGame' + gameId).each(function () {
-      $(this).addClass('hide');
-    });
+    if (!$(element).hasClass('incompleteAllGames') && !$(element).hasClass('completeAllGames')) {
+      $('div.shadowed').not('.HuntGame' + gameId).each(function () {
+        $(this).addClass('hide');
+      });
 
-    $('.gameHuntingIn').not('.hide').each(function () {
-      $(this).addClass('hide');
-    });
+      $('.gameHuntedIn').each(function () {
+        $(this).addClass('hide');
+      });
+    } else {
+      $('.gameHuntedIn').each(function () {
+        $(this).removeClass('hide');
+      });
+    }
 
     $('button#Game' + gameId).addClass('active');
     $('.pokemonList').addClass('active');

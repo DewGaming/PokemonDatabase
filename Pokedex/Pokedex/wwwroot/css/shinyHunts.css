@@ -1,4 +1,4 @@
-.grid-container > div {
+.grid-container>div {
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
@@ -17,7 +17,7 @@
 }
 
 .manualAdjust {
-  min-width: 166px;
+  width: 97%;
   margin-top: 5px;
 }
 
@@ -30,7 +30,11 @@
 }
 
 .huntUncapturedButtons, .huntCapturedButtons {
-  margin: 3px;
+  margin-bottom: 3px;
+}
+
+.encounterButtons button {
+  margin: 0 3px;
 }
 
 .huntUncapturedButtons button, .huntUncapturedButtons a {
@@ -71,8 +75,7 @@
 }
 
 .encounterButtons button {
-  width: 50px;
-  height: 50px;
+  width: 48.25%;
 }
 
 .hide {
@@ -110,6 +113,14 @@
   position: relative;
 }
 
+.grid-container>div {
+  flex-basis: 20%;
+}
+
+.encounterButtons p {
+  margin-bottom: 0;
+}
+
 @media (min-width: 440px) {
   .shadowed {
     min-width: 310px;
@@ -126,9 +137,6 @@
 }
 
 @media (max-width: 439px) {
-  .manualAdjust {
-    width: 97%;
-  }
   .encounterButtons button {
     width: 100%;
     margin: 0 3px;
