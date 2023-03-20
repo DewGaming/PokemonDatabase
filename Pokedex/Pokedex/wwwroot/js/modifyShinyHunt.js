@@ -69,7 +69,7 @@ var grabPokemon = function (pokemonId) {
     $.ajax({
         url: '/check-shiny-charm/',
         method: "POST",
-        data: { 'gameId': $('#GameId').val() }
+        data: { 'gameId': $('#GameId').val(), 'huntingMethodId': $('#HuntingMethodId').val() }
     })
         .done(function (data) {
             if (data) {

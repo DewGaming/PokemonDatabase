@@ -481,6 +481,17 @@ namespace Pokedex.Controllers
                     }
 
                     break;
+                case "Event":
+                    if (game.GenerationId <= 3)
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                    }
+                    else
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 24).ToList();
+                    }
+
+                    break;
                 default:
                     if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
                     {
