@@ -57,7 +57,7 @@
 </div>
 
 <div class="pageButtons capturedGamesList hide">
-    <button class="gameButton completeAllGames" id="Game0" onclick="lookupHuntsInGame(this, '0')">All Games</button>
+    <button class="gameButton completeAllGames active" id="Game0" onclick="lookupHuntsInGame(this, '0')">All Games</button>
     @foreach (var g in capturedGames)
     {
         string gameColors = string.Concat(g.GameColor, " 50%, ");

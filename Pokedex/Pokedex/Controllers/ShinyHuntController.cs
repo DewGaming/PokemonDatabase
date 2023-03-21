@@ -508,6 +508,19 @@ namespace Pokedex.Controllers
                         selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
                     }
 
+                    if (game.Id == 37)
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
+                        foreach (var p in selectablePokeballs)
+                        {
+                            p.Name = p.Name.Replace(" (Hisui)", string.Empty);
+                        }
+                    }
+                    else
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
+                    }
+
                     selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).ToList();
                     break;
             }
