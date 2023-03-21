@@ -794,6 +794,9 @@ namespace Pokedex.Controllers
         /// <returns>Returns the pokemon's details.</returns>
         private PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form = null)
         {
+            List<Game> games = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
+            games.Remove(games.Find(x => x.Id == 43));
+
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
             {
                 Pokemon = pokemon,
@@ -807,7 +810,7 @@ namespace Pokedex.Controllers
                 PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id),
                 Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
-                GamesAvailableIn = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game),
+                GamesAvailableIn = games,
                 AppConfig = this.appConfig,
             };
 
