@@ -73,12 +73,12 @@ var grabPokemon = function (pokemonId) {
     })
         .done(function (data) {
             if (data) {
-                if ($('.shinyCharm').hasClass('hide')) {
-                    $('.shinyCharm').removeClass('hide');
+                if ($('.shinyCharmCheckbox').hasClass('hide')) {
+                    $('.shinyCharmCheckbox').removeClass('hide');
                 }
             } else {
-                if (!$('.shinyCharm').hasClass('hide')) {
-                    $('.shinyCharm').addClass('hide');
+                if (!$('.shinyCharmCheckbox').hasClass('hide')) {
+                    $('.shinyCharmCheckbox').addClass('hide');
                     $('#HasShinyCharm').prop('checked', false)
                 }
             }

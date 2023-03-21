@@ -121,6 +121,11 @@
   margin-bottom: 0;
 }
 
+.startShinyForm .form-group, .completeShinyHunt .form-group, .editShinyHunt .form-group {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
 @media (min-width: 440px) {
   .shadowed {
     min-width: 310px;
@@ -136,6 +141,26 @@
   }
 }
 
+@media (min-width: 576px) {
+  .startShinyForm, .completeShinyHunt, .editShinyHunt {
+    display: flex;
+  }
+
+  .startShinyForm>div, .completeShinyHunt>div, .editShinyHunt>div {
+    width: 50%;
+  }
+
+  .pokemonShinyImage {
+    width: 85%;
+    height: 85%;
+    max-height: 400px;
+    object-fit: contain;
+    margin: 20px;
+  }
+}
+
+@media (min-width: 576px) {}
+
 @media (max-width: 439px) {
   .encounterButtons button {
     width: 100%;
@@ -149,5 +174,15 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+@media (max-width: 575px) {
+  .pokemonShinyImage {
+    max-height: 75px;
+    object-fit: contain;
+    position: absolute;
+    top: 75px;
+    right: 12px;
   }
 }
