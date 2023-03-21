@@ -949,7 +949,6 @@ namespace Pokedex.Controllers
         private List<Game> GetGamesForEachReleaseDate()
         {
             List<Game> gameList = this.dataService.GetObjects<Game>("ReleaseDate, Id");
-            gameList.Remove(gameList.Find(x => x.Id == 43));
             if (!this.User.IsInRole("Owner"))
             {
                 gameList = gameList.Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();

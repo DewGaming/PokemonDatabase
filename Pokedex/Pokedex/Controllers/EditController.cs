@@ -184,7 +184,12 @@ namespace Pokedex.Controllers
         public IActionResult GameAvailability(int id)
         {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames();
+            if (id != 43)
+            {
+                pokemonList = pokemonList.Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
+            }
+
             EditGameAvailabilityViewModel model = new EditGameAvailabilityViewModel()
             {
                 Game = game,
