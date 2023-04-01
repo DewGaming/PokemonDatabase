@@ -5,10 +5,8 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
 
 namespace Pokedex.Controllers
 {
@@ -77,8 +75,11 @@ namespace Pokedex.Controllers
         public void UpdateLastVisit()
         {
             User user = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name);
-            user.LastVisit = DateTime.Now.ToUniversalTime();
-            this.dataService.UpdateObject(user);
+            if (user != null)
+            {
+                user.LastVisit = DateTime.Now.ToUniversalTime();
+                this.dataService.UpdateObject(user);
+            }
         }
 
         /// <summary>
