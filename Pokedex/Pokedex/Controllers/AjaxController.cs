@@ -3052,10 +3052,14 @@ namespace Pokedex.Controllers
         private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, Game game)
         {
             List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
-                                                        .Where(x => x.GenerationId <= game.GenerationId)
                                                         .GroupBy(x => new { x.PokemonId })
                                                         .Select(x => x.LastOrDefault())
                                                         .ToList();
+
+            if (game.Id != 0)
+            {
+                pokemonList = pokemonList.Where(x => x.GenerationId <= game.GenerationId).ToList();
+            }
 
             if (secondaryTypeId != 0 && secondaryTypeId != 100)
             {
