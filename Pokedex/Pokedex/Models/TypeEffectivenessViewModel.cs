@@ -31,5 +31,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of types immune to the pokemon.
         /// </summary>
         public List<string> ImmuneTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application configuration.
+        /// </summary>
+        public AppConfig AppConfig { get; set; }
     }
 }

@@ -75,7 +75,14 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(shinyHunt);
 
-            return this.RedirectToAction("ShinyHunts", "User");
+            if (shinyHunt.HuntingMethodId == 8)
+            {
+                return this.RedirectToAction("ShinyFound", "ShinyHunt", new { shinyHuntId = shinyHunt.Id });
+            }
+            else
+            {
+                return this.RedirectToAction("ShinyHunts", "User");
+            }
         }
 
         /// <summary>
@@ -169,7 +176,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
-                AllHuntingMethods = this.GetHuntingMethods(shinyHunt.GameId),
+                AllHuntingMethods = this.dataService.GrabHuntingMethods(shinyHunt.GameId),
                 Id = shinyHunt.Id,
                 PokemonId = shinyHunt.PokemonId,
                 GameId = shinyHunt.GameId,
@@ -207,7 +214,7 @@ namespace Pokedex.Controllers
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
-                    AllHuntingMethods = this.GetHuntingMethods(oldShinyHunt.GameId),
+                    AllHuntingMethods = this.dataService.GrabHuntingMethods(oldShinyHunt.GameId),
                     Id = oldShinyHunt.Id,
                     PokemonId = oldShinyHunt.PokemonId,
                     GameId = oldShinyHunt.GameId,
@@ -267,7 +274,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
-                AllHuntingMethods = this.GetHuntingMethods(shinyHunt.GameId),
+                AllHuntingMethods = this.dataService.GrabHuntingMethods(shinyHunt.GameId),
                 AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllMarks = this.dataService.GetObjects<Mark>(),
                 AllGenders = genders,
@@ -335,7 +342,7 @@ namespace Pokedex.Controllers
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
-                    AllHuntingMethods = this.GetHuntingMethods(oldShinyHunt.GameId),
+                    AllHuntingMethods = this.dataService.GrabHuntingMethods(oldShinyHunt.GameId),
                     AllPokeballs = this.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId),
                     AllMarks = this.dataService.GetObjects<Mark>(),
                     AllGenders = genders,
@@ -526,19 +533,6 @@ namespace Pokedex.Controllers
             }
 
             return selectablePokeballs.OrderBy(x => x.GenerationId).ThenBy(x => x.Name).ToList();
-        }
-
-        private List<HuntingMethod> GetHuntingMethods(int gameId)
-        {
-            List<HuntingMethod> selectableHuntingMethods = this.dataService.GetObjects<HuntingMethod>();
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-
-            if (game.Id != 17 && game.Id != 32)
-            {
-                selectableHuntingMethods.Remove(selectableHuntingMethods.Find(x => x.Id == 9));
-            }
-
-            return selectableHuntingMethods.OrderBy(x => x.Name).ToList();
         }
     }
 }

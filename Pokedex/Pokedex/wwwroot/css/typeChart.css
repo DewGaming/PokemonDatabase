@@ -26,22 +26,9 @@
 }
 
 .type-icon {
-  margin: 2px 0 2px;
-  background: #dbdbdb;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  color: #fff;
-  font-size: .75rem;
-  font-weight: normal;
-  line-height: 1.5rem;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-  text-transform: uppercase;
-}
-
-.type-icon {
   display: inline-block;
-  width: 66px;
+  width: 78px;
+  margin: 5px 0;
 }
 
 .type-table thead th, .type-table tbody th {

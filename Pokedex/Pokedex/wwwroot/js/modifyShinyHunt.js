@@ -61,6 +61,8 @@ var grabPokemon = function (pokemonId) {
                     }
                 });
             }
+            
+            checkCommunityDay();
         })
         .fail(function () {
             alert("Failed to grab hunting methods!");
@@ -86,6 +88,18 @@ var grabPokemon = function (pokemonId) {
         .fail(function () {
             alert("Failed to check shiny charm!");
         });
+}, checkCommunityDay = function () {
+    var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val()
+    if (gameId == 43 && huntingMethodId == 1) {
+        if ($('.communityDayCheckbox').hasClass('hide')) {
+            $('.communityDayCheckbox').removeClass('hide');
+        }
+    } else {
+        if (!$('.communityDayCheckbox').hasClass('hide')) {
+            $('.communityDayCheckbox').addClass('hide');
+            $('#DuringCommunityDay').prop('checked', false)
+        }
+    }
 }, checkSparklingPower = function () {
     $.ajax({
         url: '/check-sparkling-power/',
@@ -128,8 +142,9 @@ $('#GameId').on('change', function () {
 });
 
 $('#HuntingMethodId').on('change', function () {
-    checkSparklingPower();
     checkShinyCharm();
+    checkCommunityDay();
+    checkSparklingPower();
 });
 
 $('#PokemonId').on('change', function () {

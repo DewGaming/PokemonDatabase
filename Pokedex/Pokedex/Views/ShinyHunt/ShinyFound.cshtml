@@ -50,8 +50,17 @@
             @Html.HiddenFor(x => x.PokemonId)
             @Html.HiddenFor(x => x.GameId)
             @Html.HiddenFor(x => x.HuntingMethodId)
-            @Html.HiddenFor(x => x.Encounters)
             @Html.HiddenFor(x => x.HasShinyCharm)
+            @Html.HiddenFor(x => x.DuringCommunityDay)
+
+            @if (@Model.HuntingMethodId != 8)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.Encounters, "Encounters", new { @class = "col-md-4" })
+                    @Html.EditorFor(x => x.Encounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
+                    @Html.ValidationMessageFor(x => x.Encounters)
+                </div>
+            }
 
             <div class="form-group row">
                 @Html.LabelFor(x => x.PokeballId, "Pokeball", new { @class = "col-md-4" })
@@ -67,7 +76,7 @@
 
             <div class="form-group row">
                 @Html.LabelFor(x => x.DateOfCapture, "Date of Capture", new { @class = "col-md-4" })
-                @Html.EditorFor(x => x.DateOfCapture, new { @class = "form-control col-md-6" })
+                @Html.EditorFor(x => x.DateOfCapture, new { htmlAttributes = new { @class = "form-control col-md-6" } })
                 @Html.ValidationMessageFor(x => x.DateOfCapture)
             </div>
 

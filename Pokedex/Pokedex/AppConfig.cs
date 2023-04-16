@@ -46,6 +46,11 @@ namespace Pokedex
         public string OfficialMarkImageUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the type image Url.
+        /// </summary>
+        public string TypeImageUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the favicon image Url.
         /// </summary>
         public string FaviconImageUrl { get; set; }

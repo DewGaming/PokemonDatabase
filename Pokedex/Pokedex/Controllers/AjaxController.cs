@@ -2656,6 +2656,7 @@ namespace Pokedex.Controllers
                 WeakAgainst = weakAgainst,
                 SuperStrongAgainst = superStrongAgainst,
                 SuperWeakAgainst = superWeakAgainst,
+                AppConfig = this.appConfig,
             };
 
             return effectivenessChart;
@@ -2703,7 +2704,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethod>();
+                List<HuntingMethod> huntingMethods = this.dataService.GrabHuntingMethods(gameId);
 
                 return huntingMethods;
             }

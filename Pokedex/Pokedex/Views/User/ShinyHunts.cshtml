@@ -100,9 +100,23 @@
                         </div>
                         <div class="description">
                             <p><b>@s.Pokemon.Name</b></p>
-                            <p class="gameHuntedIn"><b>Game:</b> @s.Game.Name</p>
-                            <p><b>Hunting Method:</b> @s.HuntingMethod.Name</p>
-                            <p><b>Encounters:</b> <span class="encounters">@s.Encounters</span></p>
+                            <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
+                            @if (@s.DuringCommunityDay)
+                            {
+                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name (During Community Day)</p>
+                            }
+                            else
+                            {
+                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
+                            }
+                            @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
+                            {
+                                <p><b>Eggs: </b><span class="encounters">@s.Encounters</span></p>
+                            }
+                            else
+                            {
+                                <p><b>Encounters: </b><span class="encounters">@s.Encounters</span></p>
+                            }
                         </div>
                     </div>
                     <hr class="buttonSeparator">
@@ -167,16 +181,30 @@
                                     @string.Concat(" (", s.Nickname, ")")
                                 }
                             </p>
-                            <p class="gameHuntedIn"><b>Game:</b> @s.Game.Name</p>
-                            <p><b>Hunting Method:</b> @s.HuntingMethod.Name</p>
+                            <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
+                            @if (@s.DuringCommunityDay)
+                            {
+                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name (During Community Day)</p>
+                            }
+                            else
+                            {
+                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
+                            }
                             @if (@s.Encounters > 0)
                             {
-                                <p><b>Encounters:</b> @s.Encounters</p>
+                                if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
+                                {
+                                    <p><b>Eggs: </b>@s.Encounters</p>
+                                }
+                                else
+                                {
+                                    <p><b>Encounters: </b>@s.Encounters</p>
+                                }
                             }
-                            <p><b>Date of Capture:</b> @s.DateOfCapture.ToString("MMMM d, yyyy")</p>
+                            <p><b>Date of Capture: </b>@s.DateOfCapture.ToString("MMMM d, yyyy")</p>
                             @if (@s.SparklingPowerLevel > 0)
                             {
-                                <p><b>Sparkling Power Level:</b> @s.SparklingPowerLevel</p>
+                                <p><b>Sparkling Power Level: </b>@s.SparklingPowerLevel</p>
                             }
                         </div>
                     </div>

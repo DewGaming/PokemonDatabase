@@ -19,10 +19,10 @@
                     {
                         <tr>
                             <td>
-                                <div class="pokemon-type type-icon type-@Model.SuperStrongAgainst[i].ToLower().Substring(0, @Model.SuperStrongAgainst[i].IndexOf(" Quad"))">@Model.SuperStrongAgainst[i].Substring(0, @Model.SuperStrongAgainst[i].IndexOf(" Quad"))</div>
+                                <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.SuperStrongAgainst[i].ToLower().Substring(0, @Model.SuperStrongAgainst[i].IndexOf(" Quad")).ToLower(), ".png"))">
                                 @if (@Model.SuperStrongAgainst.ElementAtOrDefault(i+1) != null)
                                 {
-                                    <div class="pokemon-type type-icon type-@Model.SuperStrongAgainst[i+1].ToLower().Substring(0, @Model.SuperStrongAgainst[i+1].IndexOf(" Quad"))">@Model.SuperStrongAgainst[i+1].Substring(0, @Model.SuperStrongAgainst[i+1].IndexOf(" Quad"))</div>
+                                <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.SuperStrongAgainst[i+1].ToLower().Substring(0, @Model.SuperStrongAgainst[i+1].IndexOf(" Quad")).ToLower(), ".png"))">
                                 }
                             </td>
                         </tr>
@@ -40,10 +40,10 @@
                 {
                     <tr>
                         <td>
-                            <div class="pokemon-type type-icon type-@Model.StrongAgainst[i].ToLower()">@Model.StrongAgainst[i]</div>
+                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.StrongAgainst[i].ToLower(), ".png"))">
                             @if (@Model.StrongAgainst.ElementAtOrDefault(i+1) != null)
                             {
-                                <div class="pokemon-type type-icon type-@Model.StrongAgainst[i+1].ToLower()">@Model.StrongAgainst[i+1]</div>
+                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.StrongAgainst[i+1].ToLower(), ".png"))">
                             }
                         </td>
                     </tr>
@@ -74,10 +74,10 @@ else
                     {
                         <tr>
                             <td>
-                                <div class="pokemon-type type-icon type-@Model.SuperWeakAgainst[i].ToLower().Substring(0, @Model.SuperWeakAgainst[i].IndexOf(" Quad"))">@Model.SuperWeakAgainst[i].Substring(0, @Model.SuperWeakAgainst[i].IndexOf(" Quad"))</div>
+                                <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.SuperWeakAgainst[i].ToLower().Substring(0, @Model.SuperWeakAgainst[i].IndexOf(" Quad")).ToLower(), ".png"))">
                                 @if (@Model.SuperWeakAgainst.ElementAtOrDefault(i+1) != null)
                                 {
-                                    <div class="pokemon-type type-icon type-@Model.SuperWeakAgainst[i+1].ToLower().Substring(0, @Model.SuperWeakAgainst[i+1].IndexOf(" Quad"))">@Model.SuperWeakAgainst[i+1].Substring(0, @Model.SuperWeakAgainst[i+1].IndexOf(" Quad"))</div>
+                                <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.SuperWeakAgainst[i+1].ToLower().Substring(0, @Model.SuperWeakAgainst[i+1].IndexOf(" Quad")).ToLower(), ".png"))">
                                 }
                             </td>
                         </tr>
@@ -95,10 +95,10 @@ else
                 {
                     <tr>
                         <td>
-                            <div class="pokemon-type type-icon type-@Model.WeakAgainst[i].ToLower()">@Model.WeakAgainst[i]</div>
+                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.WeakAgainst[i].ToLower(), ".png"))">
                             @if (@Model.WeakAgainst.ElementAtOrDefault(i+1) != null)
                             {
-                                <div class="pokemon-type type-icon type-@Model.WeakAgainst[i+1].ToLower()">@Model.WeakAgainst[i+1]</div>
+                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.WeakAgainst[i+1].ToLower(), ".png"))">
                             }
                         </td>
                     </tr>
@@ -117,10 +117,10 @@ else
                 {
                     <tr>
                         <td>
-                            <div class="pokemon-type type-icon type-@Model.ImmuneTo[i].ToLower()">@Model.ImmuneTo[i]</div>
+                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.ImmuneTo[i].ToLower(), ".png"))">
                             @if (@Model.ImmuneTo.ElementAtOrDefault(i+1) != null)
                             {
-                                <div class="pokemon-type type-icon type-@Model.ImmuneTo[i+1].ToLower()">@Model.ImmuneTo[i+1]</div>
+                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.ImmuneTo[i+1].ToLower(), ".png"))">
                             }
                         </td>
                     </tr>
