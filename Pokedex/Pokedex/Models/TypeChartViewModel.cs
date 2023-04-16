@@ -22,5 +22,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of types.
         /// </summary>
         public List<Generation> AllGenerations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application's config.
+        /// </summary>
+        public AppConfig AppConfig { get; set; }
     }
 }

@@ -65,7 +65,7 @@
                             @foreach (var item in types)
                             {
                                 <th>
-                                    <span class="type-icon type-@item.ToLower() type-cell type-abbr" title="@item">@item.Substring(0, 3)</span>
+                                    <img title="@item" class="type-icon type-@item.ToLower() type-cell type-abbr" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @item, "Icon.png"))">
                                 </th>
                             }
                         </tr>
@@ -75,7 +75,7 @@
                         {
                             <tr>
                                 <th>
-                                    <span class="type-icon type-@atk.ToLower() type-cell">@atk</span>
+                                    <img title="@atk" class="type-icon type-@atk.ToLower() type-cell type-abbr" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @atk, "Icon.png"))">
                                 </th>
                                 @foreach (var def in types)
                                 {

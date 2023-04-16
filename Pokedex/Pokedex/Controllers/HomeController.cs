@@ -673,6 +673,7 @@ namespace Pokedex.Controllers
                 TypeChart = this.dataService.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend"),
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                 AllGenerations = this.dataService.GetObjects<Generation>("Id"),
+                AppConfig = this.appConfig,
             };
 
             return this.View(model);

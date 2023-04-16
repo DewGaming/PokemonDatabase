@@ -42,6 +42,7 @@
 
 .type-table tbody th {
   padding-right: 7.5px;
+  float: right;
 }
 
 .type-normal {
