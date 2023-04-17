@@ -157,6 +157,10 @@
                             {
                                 <img class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.MarkId, ".png"))">
                             }
+                            @if (s.IsAlpha)
+                            {
+                                <img class="pokemonAlpha pokemonListPicture" title="Alpha" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, "alpha.png"))">
+                            }
                             @if (s.Pokeball != null)
                             {
                                 <img class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.PokeballId, ".png"))">

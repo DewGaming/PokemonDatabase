@@ -36,6 +36,9 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Using Lures")]
         public bool UsingLures { get; set; }
 
+        [Display(Name = "Alpha Pokemon")]
+        public bool IsAlpha { get; set; }
+
         [Display(Name = "Sparkling Power Sandwich Level"), Range(0, 3)]
         public int SparklingPowerLevel { get; set; }
 

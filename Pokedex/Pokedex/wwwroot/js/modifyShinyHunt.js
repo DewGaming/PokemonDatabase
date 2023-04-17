@@ -88,6 +88,18 @@ var grabPokemon = function (pokemonId) {
         .fail(function () {
             alert("Failed to check shiny charm!");
         });
+}, checkAlpha = function () {
+    var gameId = $('#GameId').val()
+    if (gameId == 37) {
+        if ($('.alphaCheckbox').hasClass('hide')) {
+            $('.alphaCheckbox').removeClass('hide');
+        }
+    } else {
+        if (!$('.alphaCheckbox').hasClass('hide')) {
+            $('.alphaCheckbox').addClass('hide');
+            $('#IsAlpha').prop('checked', false)
+        }
+    }
 }, checkCommunityDay = function () {
     var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val()
     if (gameId == 43 && huntingMethodId == 1) {
@@ -128,6 +140,7 @@ $(document).ready(function () {
     if ($('#GameId').val() !== "") {
         grabPokemon(pokemonId);
         grabHuntingMethod(huntingMethodId);
+        checkAlpha();
         checkShinyCharm();
         checkSparklingPower();
     }
@@ -137,6 +150,7 @@ $('#GameId').on('change', function () {
     var pokemonId = $('#PokemonId').val(), huntingMethodId = $('#HuntingMethodId').val();
     grabPokemon(pokemonId);
     grabHuntingMethod(huntingMethodId);
+    checkAlpha();
     checkShinyCharm();
     checkSparklingPower();
 });

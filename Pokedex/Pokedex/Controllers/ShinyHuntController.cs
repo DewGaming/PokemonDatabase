@@ -293,6 +293,7 @@ namespace Pokedex.Controllers
                 HasShinyCharm = shinyHunt.HasShinyCharm,
                 Encounters = shinyHunt.Encounters,
                 IsCaptured = shinyHunt.IsCaptured,
+                IsAlpha = shinyHunt.IsAlpha,
                 UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 AppConfig = this.appConfig,
             };
@@ -361,6 +362,7 @@ namespace Pokedex.Controllers
                     HasShinyCharm = oldShinyHunt.HasShinyCharm,
                     Encounters = oldShinyHunt.Encounters,
                     IsCaptured = oldShinyHunt.IsCaptured,
+                    IsAlpha = oldShinyHunt.IsAlpha,
                     UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                     AppConfig = this.appConfig,
                 };

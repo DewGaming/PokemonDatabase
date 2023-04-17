@@ -50,7 +50,6 @@
             @Html.HiddenFor(x => x.PokemonId)
             @Html.HiddenFor(x => x.GameId)
             @Html.HiddenFor(x => x.HuntingMethodId)
-            @Html.HiddenFor(x => x.HasShinyCharm)
             @Html.HiddenFor(x => x.DuringCommunityDay)
 
             @if (@Model.HuntingMethodId != 8)
@@ -85,6 +84,21 @@
                 @Html.DropDownListFor(x => x.Gender, new SelectList(Model.AllGenders), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.Gender)
             </div>
+
+            <div class="form-group row gameSpecific shinyCharmCheckbox hide">
+                @Html.LabelFor(x => x.HasShinyCharm, "Have the Shiny Charm", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.HasShinyCharm, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.HasShinyCharm)
+            </div>
+
+            @if (@Model.GameId == 37)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.IsAlpha, "Found as Alpha", new { @class = "col-md-4" })
+                    @Html.EditorFor(x => x.IsAlpha, new { @class = "form-control col-md-6" })
+                    @Html.ValidationMessageFor(x => x.IsAlpha)
+                </div>
+            }
 
             @if ((@Model.GameId == 41 || @Model.GameId == 42) && @Model.HuntingMethodId != 4 && @Model.HuntingMethodId != 5)
             {
