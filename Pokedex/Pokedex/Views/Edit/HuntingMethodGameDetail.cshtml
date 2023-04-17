@@ -1,0 +1,39 @@
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Pokedex.Models.HuntingMethodGameViewModel
+@{
+    Layout = "_layout";
+}
+
+@section scripts
+{
+    <script src="/js/editHuntingMethodGameAvailability.js"></script>
+}
+
+@section styles
+{
+    <style>
+        .gameAvailability li {
+            list-style: none;
+        }
+    </style>
+}
+
+<h2>Update @Model.HuntingMethod.Name's Game Availability</h2>
+
+<div class="flexDiv">
+    <div class="gameAvailability">
+        <p>Games</p>
+        <ul>
+            @foreach (var g in Model.AllGames.OrderBy(x => x.ReleaseDate))
+            {
+                <li>
+                    <input id="game@(g.Id)" type="checkbox" value="@g.Id" @(Model.HuntingMethodGameDetails.Find(x => x.GameId == g.Id) != null ? "checked=checked" : "") />
+                    <label for="game@(g.Id)" class="generatorOptionTitle"><span>@g.Name</span></label>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<p>
+    <button onclick="updateGameAvailability(@Model.HuntingMethod.Id)" class="btn btn-primary" role="button">Save</button>
+</p>

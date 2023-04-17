@@ -835,7 +835,12 @@ namespace Pokedex
 
             if (game.Id != 17 && game.Id != 32)
             {
-                selectableHuntingMethods.Remove(selectableHuntingMethods.Find(x => x.Id == 9));
+                selectableHuntingMethods = selectableHuntingMethods.Where(x => x.Id != 9 && x.Id != 15).ToList();
+            }
+
+            if (game.Id != 37)
+            {
+                selectableHuntingMethods = selectableHuntingMethods.Where(x => x.Id != 7).ToList();
             }
 
             if (game.Id == 43)

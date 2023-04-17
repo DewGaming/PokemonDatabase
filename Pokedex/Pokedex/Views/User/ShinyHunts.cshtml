@@ -31,10 +31,10 @@
 
 <p class="shinyHuntButtons">
     <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
-    <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideIncomplete()">Current Shiny Hunts</button>
+    <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideComplete()">Current Shiny Hunts</button>
     @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
     {
-        <button class="completedHuntsButton btn btn-primary" onclick="hideComplete()">Completed Shiny Hunts</button>
+        <button class="completedHuntsButton btn btn-primary" onclick="hideIncomplete()">Completed Shiny Hunts</button>
     }
 </p>
 
@@ -142,6 +142,7 @@
 @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
 {
     <div class="page generation pokemonList completedHunts hide">
+        <h5 class="pokemonCount">Total Shinies Found: <span class="shiniesFoundCount"></span></h5>
         <div class="grid-container">
             @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ThenBy(x => x.Id).ToList())
             {

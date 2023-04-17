@@ -340,6 +340,12 @@ function lookupHuntsInGame(element, gameId) {
       });
     }
 
+    if (gameId != 0) {
+      $('.shiniesFoundCount').html($('.HuntGame' + gameId).length)
+    } else {
+      $('.shiniesFoundCount').html($('.grid-container').children().length)
+    }
+
     $('button#Game' + gameId).addClass('active');
     $('.pokemonList').addClass('active');
     $('.active.hide').removeClass('active');

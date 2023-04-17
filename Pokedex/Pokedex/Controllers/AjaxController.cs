@@ -1320,6 +1320,41 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the availablity of the specified hunting method in different games.
+        /// </summary>
+        /// <param name="huntingMethodId">The hunting method's id.</param>
+        /// <param name="games">The games the pokemon is able to be used in.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-hunting-method-game-availability")]
+        public string UpdateHuntingMethodGameAvailability(int huntingMethodId, List<int> games)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                HuntingMethodGameDetail huntingMethodGameDetail;
+                List<HuntingMethodGameDetail> existingGameDetails = this.dataService.GetObjects<HuntingMethodGameDetail>("Game.GenerationId, GameId, Id", "HuntingMethod, Game", "HuntingMethodId", huntingMethodId);
+
+                foreach (var g in games)
+                {
+                    huntingMethodGameDetail = new HuntingMethodGameDetail()
+                    {
+                        HuntingMethodId = huntingMethodId,
+                        GameId = g,
+                    };
+                    this.dataService.AddObject(huntingMethodGameDetail);
+                }
+
+                foreach (var g in existingGameDetails)
+                {
+                    this.dataService.DeleteObject<HuntingMethodGameDetail>(g.Id);
+                }
+
+                return this.Json(this.Url.Action("HuntingMethods", "Owner")).Value.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Updates the availablity of the specified pokemon in different games.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
@@ -2704,7 +2739,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<HuntingMethod> huntingMethods = this.dataService.GrabHuntingMethods(gameId);
+                List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", gameId).ConvertAll(x => x.HuntingMethod);
 
                 return huntingMethods;
             }

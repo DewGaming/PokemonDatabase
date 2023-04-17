@@ -176,7 +176,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
-                AllHuntingMethods = this.dataService.GrabHuntingMethods(shinyHunt.GameId),
+                AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 Id = shinyHunt.Id,
                 PokemonId = shinyHunt.PokemonId,
                 GameId = shinyHunt.GameId,
@@ -214,7 +214,7 @@ namespace Pokedex.Controllers
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
-                    AllHuntingMethods = this.dataService.GrabHuntingMethods(oldShinyHunt.GameId),
+                    AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     Id = oldShinyHunt.Id,
                     PokemonId = oldShinyHunt.PokemonId,
                     GameId = oldShinyHunt.GameId,
@@ -274,7 +274,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
-                AllHuntingMethods = this.dataService.GrabHuntingMethods(shinyHunt.GameId),
+                AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllMarks = this.dataService.GetObjects<Mark>(),
                 AllGenders = genders,
@@ -342,7 +342,7 @@ namespace Pokedex.Controllers
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
-                    AllHuntingMethods = this.dataService.GrabHuntingMethods(oldShinyHunt.GameId),
+                    AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AllPokeballs = this.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId),
                     AllMarks = this.dataService.GetObjects<Mark>(),
                     AllGenders = genders,

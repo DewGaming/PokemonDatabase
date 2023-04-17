@@ -99,6 +99,19 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("edit_hunting_method_game_availability/{huntingMethodId:int}")]
+        public IActionResult HuntingMethodGameDetail(int huntingMethodId)
+        {
+            HuntingMethodGameViewModel model = new HuntingMethodGameViewModel()
+            {
+                HuntingMethod = this.dataService.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId),
+                HuntingMethodGameDetails = this.dataService.GetObjects<HuntingMethodGameDetail>("Game.GenerationId, GameId, Id", "HuntingMethod, Game", "HuntingMethodId", huntingMethodId),
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.GenerationId >= 2).ToList(),
+            };
+
+            return this.View(model);
+        }
+
         /// <summary>
         /// Grabs all games to mark what games the specified form group is limited to.
         /// </summary>

@@ -31,7 +31,7 @@ function adjustEncountersManually(shinyHuntId) {
     }
 }
 
-function hideComplete() {
+function hideIncomplete() {
     $('.incompletedHunts').addClass('hide');
     $('.completedHunts').removeClass('hide');
     if ($('.incompletedHunts').hasClass('active')) {
@@ -42,9 +42,12 @@ function hideComplete() {
     $('.currentlyHuntingButton').removeClass('hide');
     $('.uncapturedGamesList').addClass('hide');
     $('.capturedGamesList').removeClass('hide');
+    if ($('.shiniesFoundCount').html() == "") {
+        $('.shiniesFoundCount').html($('.grid-container').children().length)
+    }
 }
 
-function hideIncomplete() {
+function hideComplete() {
     $('.completedHunts').addClass('hide');
     $('.incompletedHunts').removeClass('hide');
     if ($('.completedHunts').hasClass('active')) {
