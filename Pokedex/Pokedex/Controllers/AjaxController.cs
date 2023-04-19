@@ -1804,7 +1804,7 @@ namespace Pokedex.Controllers
         public bool CheckShinyCharm(int gameId, int huntingMethodId)
         {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && (game.GenerationId >= 6 || gameId == 11 || gameId == 29) && huntingMethodId != 8)
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && (game.GenerationId >= 6 || gameId == 11 || gameId == 29) && huntingMethodId != 8 && huntingMethodId != 14)
             {
                 return true;
             }
@@ -1823,7 +1823,7 @@ namespace Pokedex.Controllers
         [Route("check-sparkling-power")]
         public bool CheckSparklingPower(int gameId, int huntingMethodId)
         {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (gameId == 41 || gameId == 42) && huntingMethodId != 4 && huntingMethodId != 5)
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (gameId == 41 || gameId == 42) && huntingMethodId != 4 && huntingMethodId != 5 && huntingMethodId != 14)
             {
                 return true;
             }
