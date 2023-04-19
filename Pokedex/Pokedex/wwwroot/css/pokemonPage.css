@@ -6,7 +6,8 @@
   line-height: 13px;
 }
 
-.pokemonData th, .pokemonTraining th {
+.pokemonData th,
+.pokemonTraining th {
   min-width: 134px;
 }
 
@@ -22,7 +23,8 @@
   margin: 0 10px;
 }
 
-.surroundingPokemon a, .surroundingPokemon a:hover {
+.surroundingPokemon a,
+.surroundingPokemon a:hover {
   color: grey !important;
   text-decoration: none;
 }
@@ -48,7 +50,9 @@
 }
 
 @media (max-width: 934px) {
-  .evolutionTable, .preEvolutionTable {
+
+  .evolutionTable,
+  .preEvolutionTable {
     width: 100% !important;
   }
 

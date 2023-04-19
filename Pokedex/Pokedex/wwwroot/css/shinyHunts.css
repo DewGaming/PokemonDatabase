@@ -29,7 +29,8 @@
   margin: 0;
 }
 
-.huntUncapturedButtons, .huntCapturedButtons {
+.huntUncapturedButtons,
+.huntCapturedButtons {
   margin-bottom: 3px;
 }
 
@@ -37,7 +38,8 @@
   margin: 0 3px;
 }
 
-.huntUncapturedButtons button, .huntUncapturedButtons a {
+.huntUncapturedButtons button,
+.huntUncapturedButtons a {
   width: 32%;
 }
 
@@ -65,7 +67,10 @@
   box-shadow: 0 0 0 .2rem rgba(182, 92, 13, .5);
 }
 
-.editShinyButton, .editShinyButton:hover, .editShinyButton:active, .editShinyButton:focus {
+.editShinyButton,
+.editShinyButton:hover,
+.editShinyButton:active,
+.editShinyButton:focus {
   color: #FFF;
 }
 
@@ -91,7 +96,8 @@
   z-index: 1;
 }
 
-.pokemonMark, .pokemonAlpha {
+.pokemonMark,
+.pokemonAlpha {
   position: absolute;
   top: 50px;
   left: 0;
@@ -121,7 +127,9 @@
   margin-bottom: 0;
 }
 
-.startShinyForm .form-group, .completeShinyHunt .form-group, .editShinyHunt .form-group {
+.startShinyForm .form-group,
+.completeShinyHunt .form-group,
+.editShinyHunt .form-group {
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
@@ -142,11 +150,16 @@
 }
 
 @media (min-width: 576px) {
-  .startShinyForm, .completeShinyHunt, .editShinyHunt {
+
+  .startShinyForm,
+  .completeShinyHunt,
+  .editShinyHunt {
     display: flex;
   }
 
-  .startShinyForm>div, .completeShinyHunt>div, .editShinyHunt>div {
+  .startShinyForm>div,
+  .completeShinyHunt>div,
+  .editShinyHunt>div {
     width: 50%;
   }
 
@@ -169,7 +182,9 @@
 }
 
 @media (max-width: 534px) {
-  .huntUncapturedButtons a, .huntCapturedButtons a {
+
+  .huntUncapturedButtons a,
+  .huntCapturedButtons a {
     height: 62px;
     display: inline-flex;
     justify-content: center;

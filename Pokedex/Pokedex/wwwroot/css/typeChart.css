@@ -31,7 +31,8 @@
   margin: 5px 0;
 }
 
-.type-table thead th, .type-table tbody th {
+.type-table thead th,
+.type-table tbody th {
   border-width: 0px;
   padding: 1px;
 }
@@ -134,7 +135,8 @@
   margin: 0;
 }
 
-.type-table th, .type-table td {
+.type-table th,
+.type-table td {
   padding: 0;
   border: 1px solid #f0f0f0;
 }
@@ -163,7 +165,8 @@
   width: 28px;
 }
 
-.type-fx-cell, .type-fx-icon {
+.type-fx-cell,
+.type-fx-icon {
   color: #ffdd57;
   font-size: .625rem;
   width: 28px;
@@ -176,7 +179,8 @@
   border: 1px solid #f0f0f0;
 }
 
-.type-fx-25, .type-fx-50 {
+.type-fx-25,
+.type-fx-50 {
   font-size: .75rem;
 }
 
@@ -231,13 +235,18 @@
 }
 
 @media (min-width: 820px) {
-  .type-cell, .type-fx-cell, .type-fx-icon {
+
+  .type-cell,
+  .type-fx-cell,
+  .type-fx-icon {
     height: 36px;
     font-size: .75rem;
     line-height: 34px;
   }
 
-  .type-abbr, .type-fx-cell, .type-fx-icon {
+  .type-abbr,
+  .type-fx-cell,
+  .type-fx-icon {
     width: 36px;
   }
 
@@ -245,11 +254,13 @@
     line-height: 1rem;
   }
 
-  .type-fx-cell, .type-fx-icon {
+  .type-fx-cell,
+  .type-fx-icon {
     font-size: .75rem;
   }
 
-  .type-fx-25, .type-fx-50 {
+  .type-fx-25,
+  .type-fx-50 {
     font-size: .875rem;
   }
 }

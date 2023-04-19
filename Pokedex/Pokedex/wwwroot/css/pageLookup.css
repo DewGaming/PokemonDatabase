@@ -26,7 +26,8 @@
   border-spacing: 0;
 }
 
-.page th, .page td {
+.page th,
+.page td {
   padding: 4px 10px;
 }
 
@@ -45,7 +46,8 @@
   width: 100%;
 }
 
-.pageButtons button, .generations button {
+.pageButtons button,
+.generations button {
   list-style: none;
   flex: 1 1 0;
   min-width: auto;
@@ -61,7 +63,8 @@
   transition: color .2s, background-color .2s;
 }
 
-.generations button.active, .pageButtons button.active {
+.generations button.active,
+.pageButtons button.active {
   background: #fff !important;
   border-bottom-color: #fff !important;
   -webkit-text-stroke: 0px #404040;
@@ -69,11 +72,13 @@
   text-shadow: 0 0 transparent;
 }
 
-.generations button, .gameButton {
+.generations button,
+.gameButton {
   text-shadow: 1.25px 1.25px black;
 }
 
-.generations button.active, .gameButton.active {
+.generations button.active,
+.gameButton.active {
   text-shadow: 0 0 transparent;
 }
 

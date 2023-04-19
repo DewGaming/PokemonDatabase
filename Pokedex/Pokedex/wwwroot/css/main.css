@@ -62,7 +62,8 @@
   max-width: 1000px;
 }
 
-.modalCaption, .modalDescription {
+.modalCaption,
+.modalDescription {
   margin: auto;
   display: block;
   width: 90%;
@@ -71,7 +72,9 @@
   padding-bottom: 5px;
 }
 
-.modalImage, .modalCaption, .modalDescription {
+.modalImage,
+.modalCaption,
+.modalDescription {
   -webkit-animation-name: zoom;
   animation-name: zoom;
   -webkit-animation-duration: 0.6s;
@@ -80,21 +83,21 @@
 
 @-webkit-keyframes zoom {
   from {
-    transform: scale(0)
+    transform: scale(0);
   }
 
   to {
-    transform: scale(1)
+    transform: scale(1);
   }
 }
 
 @keyframes zoom {
   from {
-    transform: scale(0)
+    transform: scale(0);
   }
 
   to {
-    transform: scale(1)
+    transform: scale(1);
   }
 }
 
@@ -161,15 +164,15 @@
 }
 
 .addPokemonImage {
-  padding-left: 0
+  padding-left: 0;
 }
 
 .accountOptionHeader {
-  margin-left: 10px
+  margin-left: 10px;
 }
 
 .teamButtons .btn {
-  margin-bottom: .25rem
+  margin-bottom: .25rem;
 }
 
 #search {
@@ -177,7 +180,7 @@
 }
 
 .generatorSection {
-  min-width: 125px
+  min-width: 125px;
 }
 
 .grid-container {
@@ -200,13 +203,13 @@
 }
 
 .grid-container .typing {
-  font-size: 0
+  font-size: 0;
 }
 
 .grid-container .typing div {
   margin: 0 2.5px 5px;
   width: 45%;
-  max-width: 150px
+  max-width: 150px;
 }
 
 .pokemonName {
@@ -233,30 +236,31 @@
 .attemptCounter {
   padding: 0;
   height: 30px;
-  width: 30px
+  width: 30px;
 }
 
 hr.dropdown-line {
-  margin: .25rem 0
+  margin: .25rem 0;
 }
 
 .dropdown-menu {
-  min-width: auto
+  min-width: auto;
 }
 
 .check-box {
-  width: auto
+  width: auto;
 }
 
 .collapse-button {
-  margin: 5px 0
+  margin: 5px 0;
 }
 
 .collapse-button:focus {
-  outline: 0
+  outline: 0;
 }
 
-.search-bar input, .search-bar .search-button {
+.search-bar input,
+.search-bar .search-button {
   list-style: none;
   padding: .25rem 0;
   line-height: 1rem;
@@ -281,12 +285,12 @@ hr.dropdown-line {
 }
 
 .reset-button:hover {
-  color: black
+  color: black;
 }
 
 .reset-button {
   color: gray;
-  margin-left: 5px
+  margin-left: 5px;
 }
 
 .search-bar {
@@ -323,14 +327,16 @@ main {
 }
 
 .accountDropdown .dropdown-item {
-  padding: 0 1.5rem !important
+  padding: 0 1.5rem !important;
 }
 
-.differentForms, .differentFormsMobile {
-  padding-top: 5px
+.differentForms,
+.differentFormsMobile {
+  padding-top: 5px;
 }
 
-.differentForms button, .differentFormsMobile button {
+.differentForms button,
+.differentFormsMobile button {
   background: 0;
   border: 0;
   cursor: pointer;
@@ -342,81 +348,90 @@ main {
 .table tbody tr:first-of-type * {
   border-top-width: 0;
   padding-bottom: 10px;
-  font-size: 1rem
+  font-size: 1rem;
 }
 
 .pokemonTeamGroup {
   position: relative;
   display: inline-flex;
-  padding-bottom: 0 !important
+  padding-bottom: 0 !important;
 }
 
 .pokemonTeamDropdown {
-  border-top-width: 1px !important
+  border-top-width: 1px !important;
 }
 
 .pokemonTeamDropdown li {
-  padding-bottom: 0 !important
+  padding-bottom: 0 !important;
 }
 
-.pokemonTables, .typing {
+.pokemonTables,
+.typing {
   flex-wrap: wrap;
   justify-content: flex-start;
 }
 
 .pokemonTables table {
-  width: 100%
+  width: 100%;
 }
 
 .effectivenessChart {
-  display: flex
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.StrongAgainst, .WeakAgainst {
-  margin-right: 1rem
+.StrongAgainst,
+.WeakAgainst {
+  margin-right: 1rem;
 }
 
 .noRowBorders td {
-  border-width: 0
+  border-width: 0;
 }
 
 .teamRandomizerTable td {
-  border-width: 0
+  border-width: 0;
 }
 
-.generationOptionSeparator, .adminOptionSeparator, .buttonSeparator {
+.generationOptionSeparator,
+.adminOptionSeparator,
+.buttonSeparator {
   margin: 5px 0;
   border-top-width: 1px !important;
-  padding: 0 !important
+  padding: 0 !important;
 }
 
 .generationOptionTitle {
-  margin-left: 5px
+  margin-left: 5px;
 }
 
-.generatorDropdown, .generatorButton, .exportTeamButton, .saveTeamButton {
-  height: 50px
+.generatorDropdown,
+.generatorButton,
+.exportTeamButton,
+.saveTeamButton {
+  height: 50px;
 }
 
-.generatorOptionTitle, .adminMenuTitle {
-  padding-left: 5px
+.generatorOptionTitle,
+.adminMenuTitle {
+  padding-left: 5px;
 }
 
 .teamRandomizer:hover .dropdown-menu {
-  display: flex
+  display: flex;
 }
 
 .dropdown-menu {
-  margin-top: 0
+  margin-top: 0;
 }
 
 label {
-  margin-bottom: 0
+  margin-bottom: 0;
 }
 
 .pokemonInfo {
   width: 100%;
-  max-width: 24.5rem
+  max-width: 24.5rem;
 }
 
 .pokemonImage img {
@@ -431,26 +446,34 @@ label {
 .pokemonPicture img {
   display: block;
   margin-left: auto;
-  margin-right: auto
+  margin-right: auto;
 }
 
-.previousPokemon, .nextPokemon {
+.previousPokemon,
+.nextPokemon {
   width: 50%;
 }
 
-.previousPokemon, .previousPokemon table {
-  float: left
+.previousPokemon,
+.previousPokemon table {
+  float: left;
 }
 
-.nextPokemon, .nextPokemon table {
-  float: right
+.nextPokemon,
+.nextPokemon table {
+  float: right;
 }
 
 .evolutionPokemon {
   width: 100%;
 }
 
-.evolutionTable a, .evolutionTable a:hover, .evolutionTable p, .preEvolutionTable a, .preEvolutionTable a:hover, .preEvolutionTable p {
+.evolutionTable a,
+.evolutionTable a:hover,
+.evolutionTable p,
+.preEvolutionTable a,
+.preEvolutionTable a:hover,
+.preEvolutionTable p {
   color: black !important;
 }
 
@@ -467,7 +490,7 @@ label {
 }
 
 .hide {
-  display: none
+  display: none;
 }
 
 .pokemonTeamPokemon {
@@ -486,11 +509,11 @@ label {
 }
 
 .addNextButton {
-  margin-left: 5px
+  margin-left: 5px;
 }
 
 .pokemonTeamPokemonTable {
-  margin: -10px
+  margin: -10px;
 }
 
 .evolutionImage img {
@@ -502,30 +525,33 @@ label {
   padding: 0 10px;
 }
 
-.pokemonTypingTable table, .teraTypeSelectList {
+.pokemonTypingTable table,
+.teraTypeSelectList {
   width: 172px;
 }
 
 h2 {
   font-size: 1.25rem;
-  font-weight: bold
+  font-weight: bold;
 }
 
-.effectivenessChart table td, .typingChart td {
+.effectivenessChart table td,
+.typingChart td {
   padding: 0 !important;
 }
 
 .generatorPicture {
-  padding: 10px
+  padding: 10px;
 }
 
-.baseStatTable td, .evYieldTable td {
+.baseStatTable td,
+.evYieldTable td {
   padding-left: 10px;
-  padding-bottom: 5px
+  padding-bottom: 5px;
 }
 
 .baseStatTable th {
-  font-size: 1rem !important
+  font-size: 1rem !important;
 }
 
 .pokemonTables {
@@ -534,20 +560,20 @@ h2 {
 
 .pokemonTables th {
   width: 1px;
-  white-space: nowrap
+  white-space: nowrap;
 }
 
 .pokemonStats .statBar {
-  border: 1px solid black
+  border: 1px solid black;
 }
 
 .pokemonStats tr td:last-child {
-  text-align: right
+  text-align: right;
 }
 
 .pokemonStats .statBar {
   height: 20px;
-  min-width: 3px
+  min-width: 3px;
 }
 
 .tableWithHeaders thead th {
@@ -560,96 +586,102 @@ h2 {
 }
 
 .evolutions th {
-  font-size: 1rem
+  font-size: 1rem;
 }
 
 .maleRatio {
-  color: #3273dc
+  color: #3273dc;
 }
 
 .femaleRatio {
-  color: #ff6bce
+  color: #ff6bce;
 }
 
 .teamRandomizer .generatorPicture {
-  text-align: center
+  text-align: center;
 }
 
-.generatorButton, .exportTeamButton, .saveTeamButton, .teamRandomizer {
+.generatorButton,
+.exportTeamButton,
+.saveTeamButton,
+.teamRandomizer {
   margin-bottom: 5px;
 }
 
 a {
-  outline: 0
+  outline: 0;
 }
 
 .typingSelectList {
-  width: 200px
+  width: 200px;
 }
 
 .incomplete {
-  background-color: rgba(255, 0, 0, 0.8) !important
+  background-color: rgba(255, 0, 0, 0.8) !important;
 }
 
 .review {
-  background-color: rgba(0, 255, 0, 0.8) !important
+  background-color: rgba(0, 255, 0, 0.8) !important;
 }
 
 .flexDiv {
-  display: flex
+  display: flex;
 }
 
-.effectivenessChart td div, .typingChart td div {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.effectivenessChart td div,
+.typingChart td div {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
-.effectivenessChart td div:first-child, .typingChart td div:first-child {
-    margin-left: 5px;
+.effectivenessChart td div:first-child,
+.typingChart td div:first-child {
+  margin-left: 5px;
 }
 
-.effectivenessChart td div:last-child, .typingChart td div:last-child {
-    margin-right: 5px;
+.effectivenessChart td div:last-child,
+.typingChart td div:last-child {
+  margin-right: 5px;
 }
 
 .slider {
   padding: 0;
 }
 
-@media(min-width:935px) {
+@media(min-width: 935px) {
   .navbar-expand-custom {
     flex-flow: row nowrap;
-    justify-content: flex-start
+    justify-content: flex-start;
   }
 
   .navbar-expand-custom .navbar-nav {
-    flex-direction: row
+    flex-direction: row;
   }
 
   .navbar-expand-custom .navbar-nav .nav-link {
     padding-right: .5rem;
-    padding-left: .5rem
+    padding-left: .5rem;
   }
 
   .navbar-expand-custom .navbar-collapse {
     display: flex !important;
-    flex-basis: auto
+    flex-basis: auto;
   }
 
   .navbar-expand-custom .navbar-toggler {
-    display: none
+    display: none;
   }
 
   .navbar-expand-custom .navbar-nav .dropdown-menu {
-    position: absolute
+    position: absolute;
   }
 
   .search-bar {
-    margin: 0
+    margin: 0;
   }
 }
 
-@media(max-width:934px) {
+@media(max-width: 934px) {
   .close {
     top: 75px;
   }
@@ -660,12 +692,13 @@ a {
     max-height: 327px;
   }
 
-  .gameSelector section:last-of-type, .typeSelector section:last-of-type {
+  .gameSelector section:last-of-type,
+  .typeSelector section:last-of-type {
     margin-top: 25px;
   }
 }
 
-@media(min-width:346px) {
+@media(min-width: 346px) {
   .navbar-nav .form-group {
     display: -ms-flexbox;
     display: flex;
@@ -685,7 +718,7 @@ a {
   }
 }
 
-@media(max-width:345px) {
+@media(max-width: 345px) {
   .form-inline .form-group {
     width: 100%;
   }
@@ -700,6 +733,6 @@ a {
   }
 
   .search-bar {
-    margin-bottom: 2rem
+    margin-bottom: 2rem;
   }
 }
