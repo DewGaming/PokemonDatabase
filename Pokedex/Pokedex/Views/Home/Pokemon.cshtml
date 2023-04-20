@@ -1,3 +1,4 @@
+@using Pokedex.Models;
 @using Pokedex.DataAccess.Models;
 @using System.Collections.Generic;
 @using MoreLinq;
@@ -8,6 +9,11 @@
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     ViewBag.Description = string.Concat("View the information for the ", @Model.PokemonList.FirstOrDefault().Pokemon.Classification.Name, ", ", @Model.PokemonList.FirstOrDefault().Pokemon.Name, "!");
     ViewBag.Image = @Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.OfficialPokemonImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"));
+    AdminPokemonViewModel adminPokemon = null;
+    if (this.User.IsInRole("Owner"))
+    {
+        adminPokemon = new AdminPokemonViewModel() { DropdownViewModel = Model.AdminDropdown.DropdownViewModel };
+    }
     int[] generations = null;
 }
 
@@ -123,12 +129,7 @@
                 border-top-right-radius: 0;
             }
 
-            .typingChart .typing, .StrongAgainst, .WeakAgainst {
-                width: 100%;
-                margin-right: 0;
-            }
-
-            .pokemonTypingTable table {
+            .typingChart .typing, .StrongAgainst, .WeakAgainst, .ImmuneTo, .pokemonTypingTable table, .teraTypingList, #TeraTypes {
                 width: 100%;
                 margin-right: 0;
             }
@@ -207,6 +208,10 @@
 {
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
+    @if (this.User.IsInRole("Admin"))
+    {
+        adminPokemon.Pokemon = item.Pokemon;
+    }
     
     <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">    
         @if (!item.Pokemon.IsComplete)
@@ -245,6 +250,7 @@
                 }
             }
         }
+
         if (item.Evolutions.OrderByDescending(x => x.GenerationId).Where(x => x.GenerationId <= g).Count() > 0)
         {
             foreach (var e in item.Evolutions.OrderByDescending(x => x.GenerationId).DistinctBy(x => x.EvolutionPokemonId))
@@ -254,6 +260,11 @@
                     evolutions.Add(item.Evolutions.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g && x.EvolutionPokemonId == e.EvolutionPokemonId));
                 }
             }
+        }
+
+        if (this.User.IsInRole("Owner"))
+        {
+            adminPokemon.GenerationId = g;
         }
 
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
@@ -325,6 +336,10 @@
                 }
             </div>
             <div class="pokemonInfo pokemonData pokemonTables">
+                @if (this.User.IsInRole("Admin"))
+                {
+                    @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
+                }
                 <h2>Pokémon Details</h2>
                 <table class="pokedexNumber">
                     <tbody>

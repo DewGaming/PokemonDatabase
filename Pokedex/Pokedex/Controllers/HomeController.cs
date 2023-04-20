@@ -603,6 +603,29 @@ namespace Pokedex.Controllers
                         AllTypes = new List<DataAccess.Models.Type>(),
                     };
 
+                    if (this.User.IsInRole("Owner"))
+                    {
+                        AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
+                        DropdownViewModel dropdownViewModel = new DropdownViewModel()
+                        {
+                            AllPokemon = allAdminPokemon,
+                            AppConfig = this.appConfig,
+                        };
+                        AdminGenerationTableViewModel adminDropdown = new AdminGenerationTableViewModel()
+                        {
+                            PokemonList = new List<Pokemon>(),
+                            DropdownViewModel = dropdownViewModel,
+                            AppConfig = this.appConfig,
+                        };
+
+                        foreach (var p in pokemonList)
+                        {
+                            adminDropdown.PokemonList.Add(p.Pokemon);
+                        }
+
+                        model.AdminDropdown = adminDropdown;
+                    }
+
                     this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
                     this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
                     if (name == "Arceus")

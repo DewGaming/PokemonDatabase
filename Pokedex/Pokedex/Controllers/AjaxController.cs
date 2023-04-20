@@ -2716,8 +2716,32 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", gameId).ConvertAll(x => x.Pokemon);
-                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", gameId).ConvertAll(x => x.Pokemon).Where(x => x.IsComplete == true).ToList();
+                List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+                List<Pokemon> altFormsList = formDetails.ConvertAll(x => x.AltFormPokemon).Where(x => x.IsComplete == true).ToList();
+                List<string> formNames = new List<string>()
+                {
+                    "Mega",
+                    "Mega X",
+                    "Mega Y",
+                    "Sunny",
+                    "Rainy",
+                    "Snowy",
+                    "Zen",
+                    "Galar Zen",
+                    "Noice",
+                    "School",
+                    "Core",
+                    "Blade",
+                    "Crowned",
+                    "Ash",
+                    "Starter",
+                    "Hero",
+                };
+
+                formDetails = formDetails.Where(x => formNames.Any(y => y == x.Form.Name)).ToList();
+                pokemonList = pokemonList.Where(x => !formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+
                 foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
                 {
                     p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");

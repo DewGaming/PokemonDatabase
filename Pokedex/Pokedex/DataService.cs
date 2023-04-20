@@ -355,8 +355,6 @@ namespace Pokedex
         /// <returns>The list of breedable pokemon.</returns>
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon(int gameId = 0)
         {
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>(whereProperty: "IsComplete", wherePropertyValue: true);
-
             List<PokemonFormDetail> formDetails = new List<PokemonFormDetail>();
             List<string> formNames = new List<string>()
             {
