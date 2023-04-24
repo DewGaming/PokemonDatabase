@@ -9,11 +9,6 @@ namespace Pokedex.Models
     public class ShinyDexViewModel
     {
         /// <summary>
-        /// Gets or sets a list of all non alt form pokemon.
-        /// </summary>
-        public List<PokemonShinyHuntDetails> AllOriginalPokemon { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of all pokemon.
         /// </summary>
         public List<PokemonShinyHuntDetails> AllPokemon { get; set; }

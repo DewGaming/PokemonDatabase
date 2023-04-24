@@ -35,7 +35,6 @@
     @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
     {
         <button class="completedHuntsButton btn btn-primary" onclick="hideIncomplete()">Completed Shiny Hunts</button>
-        <a class="shinyDexProgressButton btn btn-primary" href="@this.Url.Action("ShinyDexProgress", "ShinyHunt")" role="button">Check Shiny Dex Progress</a>
     }
 </p>
 

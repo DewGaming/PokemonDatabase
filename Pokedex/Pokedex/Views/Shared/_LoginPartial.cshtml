@@ -1,24 +1,15 @@
 @using System.Security.Claims
 @{
-    string dropdownWidth, dropdownHeight, generalColumnWidth, ownerColumnWidth;
+    string dropdownWidth, generalColumnWidth, ownerColumnWidth;
     if (this.User.IsInRole("Owner"))
     {
         dropdownWidth = "37rem";
-        dropdownHeight = "24.5rem";
         generalColumnWidth = "40%";
         ownerColumnWidth = "30%";
-    }
-    else if (this.User.IsInRole("Admin"))
-    {
-        dropdownWidth = "13rem";
-        dropdownHeight = "15rem";
-        generalColumnWidth = "100%";
-        ownerColumnWidth = "";
     }
     else
     {
         dropdownWidth = "13rem";
-        dropdownHeight = "13.5rem";
         generalColumnWidth = "100%";
         ownerColumnWidth = "";
     }
@@ -28,7 +19,7 @@
 {
     <li class="nav-item dropdown accountDropdown">
         <a class="nav-link dropdown-toggle" href="" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-        <div class="dropdown-menu" style="width: @dropdownWidth; height: @dropdownHeight" aria-labelledby="userDropdown">
+        <div class="dropdown-menu" style="width: @dropdownWidth" aria-labelledby="userDropdown">
             <div class="column" style="width: @generalColumnWidth">
                 <span class="accountOptionHeader">General Options</span>
                 <div class="dropdown-divider"></div>
@@ -36,6 +27,7 @@
                 @if (this.User.IsInRole("Admin"))
                 {
                     <a class="dropdown-item" href="@this.Url.Action("ShinyHunts", "User")">Shiny Hunts</a>
+                    <a class="dropdown-item" href="@this.Url.Action("ShinyDexProgress", "ShinyHunt")">Shiny Dex Completion</a>
                 }
                 @if (this.User.IsInRole("Owner"))
                 {

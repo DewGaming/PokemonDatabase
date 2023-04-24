@@ -54,7 +54,6 @@ namespace Pokedex.Controllers
 
             ShinyDexViewModel model = new ShinyDexViewModel()
             {
-                AllOriginalPokemon = pokemonShinyHuntList.Where(x => altFormList.Any(y => x.Pokemon.Id != y.Id)).ToList(),
                 AllPokemon = pokemonShinyHuntList,
                 AppConfig = this.appConfig,
             };
