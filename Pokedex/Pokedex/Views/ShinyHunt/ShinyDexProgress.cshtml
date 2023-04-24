@@ -34,8 +34,8 @@
 </p>
 
 <div class="page active generation pokemonList completedHunts">
-    <h5 class="pokemonCount shiniesFoundPercentNoAlts">Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round((float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>
-    <h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => x.IsCaptured)/@Model.AllPokemon.Count()): <span></span>@Math.Round((float)Model.AllPokemon.Count(x => x.IsCaptured) / Model.AllPokemon.Count(), 2)%</h5>
+    <h5 class="pokemonCount shiniesFoundPercentNoAlts">Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>
+    <h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => x.IsCaptured)/@Model.AllPokemon.Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => x.IsCaptured) / Model.AllPokemon.Count(), 2)%</h5>
     <div class="grid-container">
         @foreach (var p in Model.AllPokemon)
         {
