@@ -324,7 +324,6 @@ namespace Pokedex
                 "Galar Zen",
                 "Noice",
                 "School",
-                "Core",
                 "Blade",
                 "Crowned",
                 "Ash",

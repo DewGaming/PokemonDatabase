@@ -35,6 +35,34 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Shows shiny dex progress.
+        /// </summary>
+        /// <returns>The shiny dex progress page.</returns>
+        [Route("shiny_dex_progress")]
+        public IActionResult ShinyDexProgress()
+        {
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithFormNames();
+            List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
+            List<PokemonShinyHuntDetails> pokemonShinyHuntList = new List<PokemonShinyHuntDetails>();
+
+            pokemonCaptured = pokemonList.Where(x => pokemonCaptured.Any(y => y.Id == x.Id)).ToList();
+            pokemonShinyHuntList = pokemonCaptured.ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = true, IsAltForm = altFormList.Exists(y => x.Id == y.Id) });
+            pokemonShinyHuntList.AddRange(pokemonList.Where(x => !pokemonCaptured.Any(y => x.Id == y.Id)).ToList().ConvertAll(x => new PokemonShinyHuntDetails { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id) }));
+            pokemonShinyHuntList = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList();
+
+            ShinyDexViewModel model = new ShinyDexViewModel()
+            {
+                AllOriginalPokemon = pokemonShinyHuntList.Where(x => altFormList.Any(y => x.Pokemon.Id != y.Id)).ToList(),
+                AllPokemon = pokemonShinyHuntList,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
         /// Starts a shiny hunt.
         /// </summary>
         /// <returns>The shiny hunt page.</returns>

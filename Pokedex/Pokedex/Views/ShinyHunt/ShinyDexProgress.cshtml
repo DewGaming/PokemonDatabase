@@ -1,0 +1,79 @@
+@model Pokedex.Models.ShinyDexViewModel;
+@using System.Net;
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Shiny Dex Progress";
+    HttpWebResponse imageRequest;
+}
+
+@section styles
+{
+    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <style>
+        p {
+            margin: 0 !important;
+        }
+
+        .uncaptured img {
+            filter: brightness(0);
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="/js/shinyHunts.js"></script>
+}
+
+<p class="shinyHuntButtons">
+    <button class="hideAltFormsButton btn btn-primary hide" onclick="hideAltForms()">Non Alternate Forms</button>
+    @if (Model.AllOriginalPokemon.Count(x => x.IsAltForm) > 0)
+    {
+        <button class="showAltFormsButton btn btn-primary" onclick="showAltForms()">Include Alternate Forms</button>
+    }
+</p>
+
+<div class="page active generation pokemonList completedHunts">
+    <h5 class="pokemonCount shiniesFoundPercentNoAlts">Shiny Dex Completion Percentage: <span></span>@Math.Round((float)Model.AllPokemon.Count(x => !x.IsAltForm) / Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured), 2)%</h5>
+    <h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Shiny Dex Completion Percentage: <span></span>@Math.Round((float)Model.AllPokemon.Count() / Model.AllPokemon.Count(x => x.IsCaptured), 2)%</h5>
+    <div class="grid-container">
+        @foreach (var p in Model.AllPokemon)
+        {
+            @if (p.IsCaptured)
+            {
+                <div class="shadowed @p.Pokemon.Name@(p.IsAltForm ? " altForm hide" : "")">
+                    <div class="pokemonImages">
+                        @try
+                        {
+                            imageRequest = (HttpWebResponse)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png")).GetResponse();
+                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
+                        }
+                        catch
+                        {
+                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
+                        }
+                    </div>
+                    <div class="description">
+                        <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="shadowed @p.Pokemon.Name uncaptured@(p.IsAltForm ? " altForm hide" : "")">
+                    <div class="pokemonImages">
+                        <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
+                    </div>
+                    <div class="description">
+                        <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@if (Model.AllPokemon.Count(x => x.IsCaptured) == 0)
+{
+    <div class="noShinyHunts">No hunts have been started yet.</div>
+}

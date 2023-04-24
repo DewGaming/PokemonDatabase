@@ -59,3 +59,19 @@ function hideComplete() {
     $('.capturedGamesList').addClass('hide');
     $('.uncapturedGamesList').removeClass('hide');
 }
+
+function hideAltForms() {
+    $('.altForm').addClass('hide');
+    $('.hideAltFormsButton').addClass('hide');
+    $('.showAltFormsButton').removeClass('hide');
+    $('.shiniesFoundPercentWithAlts').addClass('hide');
+    $('.shiniesFoundPercentNoAlts').removeClass('hide');
+}
+
+function showAltForms() {
+    $('.altForm').removeClass('hide');
+    $('.hideAltFormsButton').removeClass('hide');
+    $('.showAltFormsButton').addClass('hide');
+    $('.shiniesFoundPercentWithAlts').removeClass('hide');
+    $('.shiniesFoundPercentNoAlts').addClass('hide');
+}
