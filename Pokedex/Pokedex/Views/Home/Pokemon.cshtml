@@ -44,8 +44,16 @@
             font-weight: bold;
         }
 
-        .differentForms {
-            text-align: center;
+        .formButtons {
+            overflow: scroll;
+            max-height: 275px;
+            width: 100%;
+        }
+
+        .formButtonsMobile {
+            overflow: scroll;
+            max-height: 150px;
+            width: 100%;
         }
         
         .pokemonImage {
@@ -108,6 +116,15 @@
             line-height: 15.6px;
             margin-left: 2px;
             display: block;
+        }
+
+        .formButtons, .formButtonsMobile {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .formButtons::-webkit-scrollbar, .formButtonsMobile::-webkit-scrollbar { 
+            display: none;
         }
         
         @@media(max-width:934px) {
@@ -274,6 +291,7 @@
                     {
                         <div class="differentForms">
                             <h2 class="formHeader">Forms</h2>
+                            <div class="formButtons">
                             @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                             {
                                 iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
@@ -283,6 +301,7 @@
                                     </button>
                                 </div>
                             }
+                            </div>
                         </div>
                     }
                     <div class="shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
@@ -307,7 +326,7 @@
                         {
                             <div class="differentFormsMobile">
                                 <h2>Different Forms</h2>
-                                <div class="formButtons">
+                                <div class="formButtonsMobile">
                                     @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                                     {
                                         iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
