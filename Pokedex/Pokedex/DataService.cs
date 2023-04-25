@@ -331,7 +331,7 @@ namespace Pokedex
                 "Hero",
             };
             List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<PokemonFormDetail> altFormDetailList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+            List<PokemonFormDetail> altFormDetailList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
             List<Pokemon> fullAltFormList = altFormDetailList.ConvertAll(x => x.AltFormPokemon);
             List<Pokemon> altFormList = altFormDetailList.Where(x => !formNames.Any(y => y == x.Form.Name)).Select(x => x.AltFormPokemon).ToList();
             pokemonList = pokemonList.Where(x => !fullAltFormList.Any(y => y.Id == x.Id)).ToList();

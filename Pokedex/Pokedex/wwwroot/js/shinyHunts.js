@@ -61,17 +61,65 @@ function hideComplete() {
 }
 
 function hideAltForms() {
-    $('.altForm').addClass('hide');
-    $('.hideAltFormsButton').addClass('hide');
-    $('.showAltFormsButton').removeClass('hide');
-    $('.shiniesFoundPercentWithAlts').addClass('hide');
-    $('.shiniesFoundPercentNoAlts').removeClass('hide');
+    $('.altForm').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('.hideAltFormsButton').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('.showAltFormsButton').each(function () {
+        $(this).removeClass('hide');
+    });
+
+    $('.shiniesFoundPercentWithAlts').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('.shiniesFoundPercentNoAlts').each(function () {
+        $(this).removeClass('hide');
+    });
 }
 
 function showAltForms() {
-    $('.altForm').removeClass('hide');
-    $('.hideAltFormsButton').removeClass('hide');
-    $('.showAltFormsButton').addClass('hide');
-    $('.shiniesFoundPercentWithAlts').removeClass('hide');
-    $('.shiniesFoundPercentNoAlts').addClass('hide');
+    $('.altForm').each(function () {
+        $(this).removeClass('hide');
+    });
+
+    $('.hideAltFormsButton').each(function () {
+        $(this).removeClass('hide');
+    });
+
+    $('.showAltFormsButton').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('.shiniesFoundPercentWithAlts').each(function () {
+        $(this).removeClass('hide');
+    });
+
+    $('.shiniesFoundPercentNoAlts').each(function () {
+        $(this).addClass('hide');
+    });
+}
+
+function lookupGeneration(generationId) {
+    $('.active').each(function () {
+        $(this).removeClass('active');
+    });
+
+    $('.generationPercentage:not(.hide)').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('button#Generation' + generationId).addClass('active');
+
+    $('.page.generation' + generationId).each(function () {
+        $(this).addClass('active');
+    });
+
+    $('.generationPercentage.generation' + generationId).each(function () {
+        $(this).removeClass('hide');
+    });
 }

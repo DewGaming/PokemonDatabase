@@ -4,6 +4,7 @@
     Layout = "_Layout";
     ViewBag.Title = "Shiny Dex Progress";
     HttpWebResponse imageRequest;
+    string gameColors = string.Empty;
 }
 
 @section styles
@@ -33,45 +34,72 @@
     }
 </p>
 
-<div class="page active generation pokemonList completedHunts">
-    <h5 class="pokemonCount shiniesFoundPercentNoAlts">Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>
-    <h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => x.IsCaptured)/@Model.AllPokemon.Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => x.IsCaptured) / Model.AllPokemon.Count(), 2)%</h5>
-    <div class="grid-container">
-        @foreach (var p in Model.AllPokemon)
-        {
-            @if (p.IsCaptured)
-            {
-                <div class="shadowed @p.Pokemon.Name@(p.IsAltForm ? " altForm hide" : "")">
-                    <div class="pokemonImages">
-                        @try
-                        {
-                            imageRequest = (HttpWebResponse)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png")).GetResponse();
-                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
-                        }
-                        catch
-                        {
-                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
-                        }
-                    </div>
-                    <div class="description">
-                        <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="shadowed @p.Pokemon.Name uncaptured@(p.IsAltForm ? " altForm hide" : "")">
-                    <div class="pokemonImages">
-                        <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
-                    </div>
-                    <div class="description">
-                        <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
-                    </div>
-                </div>
-            }
-        }
+<h5 class="pokemonCount shiniesFoundPercentNoAlts">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>
+<h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => x.IsCaptured)/@Model.AllPokemon.Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => x.IsCaptured) / Model.AllPokemon.Count(), 2)%</h5>
+@foreach (var g in Model.AllGames.Select(x => x.GenerationId).Distinct().ToList())
+{
+    <div class="generation@(g) generationPercentage hide">
+        <h5 class="pokemonCount shiniesFoundPercentNoAlts">Generation @(g) Shiny Dex Completion Percentage (@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm), 2)%</h5>
+        <h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Generation @(g) Shiny Dex Completion Percentage (@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => x.IsCaptured)/@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => x.IsCaptured) / Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(), 2)%</h5>
     </div>
+}
+
+<div class="generations">
+    @foreach (var id in Model.AllGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).Select(x => x.GenerationId).Distinct().ToList())
+    {
+        if (id == 7)
+        {
+            gameColors = string.Concat(@Model.AllGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).Where(x => x.GenerationId == id).ToList()[1].GameColor, " 50%, ", @Model.AllGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).Where(x => x.GenerationId == id).ToList()[2].GameColor, " 50%)");
+        }
+        else
+        {
+            gameColors = string.Concat(@Model.AllGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).Where(x => x.GenerationId == id).ToList()[0].GameColor, " 50%, ", @Model.AllGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).Where(x => x.GenerationId == id).ToList()[1].GameColor, " 50%)");
+        }
+
+        <button style="@(Model.AllGames.First(x => x.GenerationId == id).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" id="Generation@(id)" onclick="lookupGeneration('@id')">Generation @id</button>
+    }
 </div>
+
+@foreach (var g in Model.AllGames.Select(x => x.GenerationId).Distinct().ToList())
+{
+    <div class="page generation@(g) pokemonList completedHunts">
+        <div class="grid-container">
+            @foreach (var p in Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g))
+            {
+                @if (p.IsCaptured)
+                {
+                    <div class="shadowed @p.Pokemon.Name@(p.IsAltForm ? " altForm hide" : "")">
+                        <div class="pokemonImages">
+                            @try
+                            {
+                                imageRequest = (HttpWebResponse)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png")).GetResponse();
+                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
+                            }
+                            catch
+                            {
+                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
+                            }
+                        </div>
+                        <div class="description">
+                            <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="shadowed @p.Pokemon.Name uncaptured@(p.IsAltForm ? " altForm hide" : "")">
+                        <div class="pokemonImages">
+                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
+                        </div>
+                        <div class="description">
+                            <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
 
 @if (Model.AllPokemon.Count(x => x.IsCaptured) == 0)
 {

@@ -41,10 +41,10 @@ namespace Pokedex.Controllers
         [Route("shiny_dex_progress")]
         public IActionResult ShinyDexProgress()
         {
-            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
             List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithFormNames();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
             List<PokemonShinyHuntDetails> pokemonShinyHuntList = new List<PokemonShinyHuntDetails>();
 
             pokemonCaptured = pokemonList.Where(x => pokemonCaptured.Any(y => y.Id == x.Id)).ToList();
@@ -55,6 +55,7 @@ namespace Pokedex.Controllers
             ShinyDexViewModel model = new ShinyDexViewModel()
             {
                 AllPokemon = pokemonShinyHuntList,
+                AllGames = this.dataService.GetObjects<Game>(),
                 AppConfig = this.appConfig,
             };
 
