@@ -341,9 +341,9 @@ function lookupHuntsInGame(element, gameId) {
     }
 
     if (gameId != 0) {
-      $('.shiniesFoundCount').html($('.HuntGame' + gameId).length)
+      $('.shiniesFoundCount').html($('.completedHunts .HuntGame' + gameId).length)
     } else {
-      $('.shiniesFoundCount').html($('.grid-container').children().length)
+      $('.shiniesFoundCount').html($('.completedHunts .grid-container').children().length)
     }
 
     $('button#Game' + gameId).addClass('active');

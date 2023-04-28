@@ -43,7 +43,7 @@ function hideIncomplete() {
     $('.uncapturedGamesList').addClass('hide');
     $('.capturedGamesList').removeClass('hide');
     if ($('.shiniesFoundCount').html() == "") {
-        $('.shiniesFoundCount').html($('.grid-container').children().length)
+        $('.shiniesFoundCount').html($('.completedHunts .grid-container').children().length)
     }
 }
 
