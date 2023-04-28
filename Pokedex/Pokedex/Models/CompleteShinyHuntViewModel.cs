@@ -34,6 +34,11 @@ namespace Pokedex.Models
         public List<Mark> AllMarks { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all hunting methods.
+        /// </summary>
+        public List<HuntingMethod> AllHuntingMethods { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's config.
         /// </summary>
         public AppConfig AppConfig { get; set; }

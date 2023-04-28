@@ -813,34 +813,6 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Grabs the hunting methods available for a specific game.
-        /// </summary>
-        /// <param name="gameId">The game Id.</param>
-        /// <returns>A list of the game's available hunting methods.</returns>
-        public List<HuntingMethod> GrabHuntingMethods(int gameId)
-        {
-            List<HuntingMethod> selectableHuntingMethods = this.GetObjects<HuntingMethod>();
-            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
-
-            if (game.Id != 17 && game.Id != 32)
-            {
-                selectableHuntingMethods = selectableHuntingMethods.Where(x => x.Id != 9 && x.Id != 15).ToList();
-            }
-
-            if (game.Id != 37)
-            {
-                selectableHuntingMethods = selectableHuntingMethods.Where(x => x.Id != 7).ToList();
-            }
-
-            if (game.Id == 43)
-            {
-                selectableHuntingMethods = selectableHuntingMethods.Where(x => x.Id == 1 || x.Id == 4).ToList();
-            }
-
-            return selectableHuntingMethods.ToList();
-        }
-
-        /// <summary>
         /// Formats the image for use as a main page image.
         /// </summary>
         /// <param name="file">The file being formatted.</param>
