@@ -69,7 +69,7 @@
         <div class="grid-container">
             @foreach (var p in Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g))
             {
-                <div class="shadowed @p.Pokemon.Name@(p.IsAltForm ? " altForm hide" : "")">
+                <div class="shadowed @p.Pokemon.Name@(!p.IsCaptured ? " uncaptured" : "")@(p.IsAltForm ? " altForm hide" : "")">
                     <div class="pokemonImages">
                         <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
                     </div>
