@@ -224,14 +224,8 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                foreach (var s in shinyHunts)
-                {
-                    s.Game.Name = edittedGamesList.Find(x => x.Id == s.GameId).Name;
-                    if (altFormList.Find(x => x.Id == s.PokemonId) != null)
-                    {
-                        s.Pokemon = this.dataService.GetAltFormWithFormName(s.PokemonId);
-                    }
-                }
+                shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
+                shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
 
                 ShinyHuntsViewModel model = new ShinyHuntsViewModel()
                 {

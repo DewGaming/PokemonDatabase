@@ -6,8 +6,6 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Shiny Hunts";
-    HttpWebRequest webRequest;
-    HttpWebResponse imageRequest;
 }
 
 @{
@@ -87,16 +85,7 @@
                             <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
                         }
                         <div class="pokemonImages">
-                            @try
-                            {
-                                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"));
-                                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                                <img onclick="incrementEncounter('@s.Id', 1)" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"))" />
-                            }
-                            catch
-                            {
-                                <img onclick="incrementEncounter('@s.Id', 1)" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, s.PokemonId, ".png"))" />
-                            }
+                            <img onclick="incrementEncounter('@s.Id', 1)" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
                         </div>
                         <div class="description">
                             <p><b>@s.Pokemon.Name</b></p>
@@ -144,7 +133,7 @@
     <div class="page generation pokemonList completedHunts hide">
         <h5 class="pokemonCount">Total Shinies Found: <span class="shiniesFoundCount"></span></h5>
         <div class="grid-container">
-            @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ThenBy(x => x.Id).ToList())
+            @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ThenBy(x => x.DateOfCapture).ThenBy(x => x.Id).ToList())
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
                     <div class="pokemonDetails">
@@ -155,7 +144,7 @@
                             }
                             @if (s.Mark != null)
                             {
-                                <img class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.MarkId, ".png"))">
+                                <img class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.Mark.Id, ".png"))">
                             }
                             @if (s.IsAlpha)
                             {
@@ -163,20 +152,11 @@
                             }
                             @if (s.Pokeball != null)
                             {
-                                <img class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.PokeballId, ".png"))">
+                                <img class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.Pokeball.Id, ".png"))">
                             }
                         </div>
                         <div class="pokemonImages">
-                            @try
-                            {
-                                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"));
-                                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.PokemonId, ".png"))" />
-                            }
-                            catch
-                            {
-                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, s.PokemonId, ".png"))" />
-                            }
+                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
                         </div>
                         <div class="description">
                             <p>

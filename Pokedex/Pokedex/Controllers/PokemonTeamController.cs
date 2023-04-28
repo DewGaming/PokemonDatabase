@@ -713,12 +713,8 @@ namespace Pokedex.Controllers
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
             }
 
-            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-
-            foreach (var p in pokemonList.Where(x => altForms.Any(y => y.Id == x.Id)).ToList())
-            {
-                p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
-            }
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
+            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x = this.dataService.GetAltFormWithFormName(x.Id));
 
             return pokemonList.OrderBy(x => x.Name).ToList();
         }

@@ -304,11 +304,8 @@ namespace Pokedex.Controllers
         public IActionResult BattleItems()
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
-            {
-                p.Name = this.dataService.GetAltFormWithFormName(p.Id).Name;
-            }
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
+            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x = this.dataService.GetAltFormWithFormName(x.Id));
 
             BattleItemViewModel model = new BattleItemViewModel()
             {
