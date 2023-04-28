@@ -207,7 +207,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                model.PokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x = this.dataService.GetAltFormWithFormName(x.Id));
+                model.PokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -265,7 +265,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                model.PokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x = this.dataService.GetAltFormWithFormName(x.Id));
+                model.PokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -2640,7 +2640,7 @@ namespace Pokedex.Controllers
             {
                 List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", gameId).ConvertAll(x => x.Pokemon).Where(x => x.IsComplete == true).ToList();
                 List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
-                List<Pokemon> altFormsList = formDetails.ConvertAll(x => x.AltFormPokemon).Where(x => x.IsComplete == true).ToList();
+                List<Pokemon> altFormList = formDetails.ConvertAll(x => x.AltFormPokemon);
                 List<string> formNames = new List<string>()
                 {
                     "Mega",
@@ -2653,7 +2653,6 @@ namespace Pokedex.Controllers
                     "Galar Zen",
                     "Noice",
                     "School",
-                    "Core",
                     "Blade",
                     "Crowned",
                     "Ash",
@@ -2663,11 +2662,7 @@ namespace Pokedex.Controllers
 
                 formDetails = formDetails.Where(x => formNames.Any(y => y == x.Form.Name)).ToList();
                 pokemonList = pokemonList.Where(x => !formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-
-                foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
-                {
-                    p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
-                }
+                pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
 
                 return pokemonList;
             }

@@ -20,16 +20,7 @@ var grabPokemon = function (pokemonId) {
                 });
             }
 
-            var image = new Image();
-            image.src = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
-            image.onload = function () {
-                if (this.width > 0) {
-                    $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
-                }
-            }
-            image.onerror = function () {
-                $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
-            }
+            $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
 
             $('.hide').not('.gameSpecific').each(function () {
                 $(this).removeClass('hide');
@@ -162,14 +153,5 @@ $('#HuntingMethodId').on('change', function () {
 });
 
 $('#PokemonId').on('change', function () {
-    var image = new Image();
-    image.src = $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png';
-    image.onload = function () {
-        if (this.width > 0) {
-            $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
-        }
-    }
-    image.onerror = function () {
-        $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
-    }
+    $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
 });
