@@ -83,9 +83,15 @@ function hideAltForms() {
 }
 
 function showAltForms() {
-    $('.altForm').each(function () {
+    $('.altForm.uncaptured').each(function () {
         $(this).removeClass('hide');
     });
+
+    if ($('.showCapturedButton').hasClass('hide')) {
+        $('.altForm:not(.uncaptured)').each(function () {
+            $(this).removeClass('hide');
+        });
+    }
 
     $('.hideAltFormsButton').each(function () {
         $(this).removeClass('hide');
@@ -100,6 +106,40 @@ function showAltForms() {
     });
 
     $('.shiniesFoundPercentNoAlts').each(function () {
+        $(this).addClass('hide');
+    });
+}
+
+function hideCaptured() {
+    $('.shadowed:not(.uncaptured)').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('.hideCapturedButton').each(function () {
+        $(this).addClass('hide');
+    });
+
+    $('.showCapturedButton').each(function () {
+        $(this).removeClass('hide');
+    });
+}
+
+function showCaptured() {
+    $('.shadowed:not(.uncaptured):not(.altForm)').each(function () {
+        $(this).removeClass('hide');
+    });
+
+    if ($('.showAltFormsButton').hasClass('hide')) {
+        $('.shadowed.altForm:not(.uncaptured)').each(function () {
+            $(this).removeClass('hide');
+        });
+    }
+
+    $('.hideCapturedButton').each(function () {
+        $(this).removeClass('hide');
+    });
+
+    $('.showCapturedButton').each(function () {
         $(this).addClass('hide');
     });
 }
