@@ -42,19 +42,17 @@ namespace Pokedex.Controllers
         public IActionResult ShinyDexProgress()
         {
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithFormNames();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
-            List<PokemonShinyHuntDetails> pokemonShinyHuntList = new List<PokemonShinyHuntDetails>();
-
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithFormNames();
             pokemonCaptured = pokemonList.Where(x => pokemonCaptured.Any(y => y.Id == x.Id)).ToList();
-            pokemonShinyHuntList = pokemonCaptured.ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = true, IsAltForm = altFormList.Exists(y => x.Id == y.Id) });
-            pokemonShinyHuntList.AddRange(pokemonList.Where(x => !pokemonCaptured.Any(y => x.Id == y.Id)).ToList().ConvertAll(x => new PokemonShinyHuntDetails { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id) }));
-            pokemonShinyHuntList = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
+
+            List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id) });
+            pokemonShinyHuntList.Where(x => pokemonCaptured.Any(y => y.Id == x.Pokemon.Id)).ToList().ForEach(x => x.IsCaptured = true);
 
             ShinyDexViewModel model = new ShinyDexViewModel()
             {
-                AllPokemon = pokemonShinyHuntList,
+                AllPokemon = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList(),
                 AllGames = this.dataService.GetObjects<Game>(),
                 AppConfig = this.appConfig,
             };

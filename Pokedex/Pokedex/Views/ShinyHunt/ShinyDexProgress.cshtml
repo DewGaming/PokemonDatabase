@@ -3,7 +3,6 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Shiny Dex Progress";
-    HttpWebResponse imageRequest;
     string gameColors = string.Empty;
 }
 
@@ -17,6 +16,10 @@
 
         .uncaptured img {
             filter: brightness(0);
+        }
+
+        .generations {
+            margin-bottom: 0px !important;
         }
     </style>
 }
@@ -66,36 +69,14 @@
         <div class="grid-container">
             @foreach (var p in Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g))
             {
-                @if (p.IsCaptured)
-                {
-                    <div class="shadowed @p.Pokemon.Name@(p.IsAltForm ? " altForm hide" : "")">
-                        <div class="pokemonImages">
-                            @try
-                            {
-                                imageRequest = (HttpWebResponse)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png")).GetResponse();
-                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
-                            }
-                            catch
-                            {
-                                <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
-                            }
-                        </div>
-                        <div class="description">
-                            <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
-                        </div>
+                <div class="shadowed @p.Pokemon.Name@(p.IsAltForm ? " altForm hide" : "")">
+                    <div class="pokemonImages">
+                        <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
                     </div>
-                }
-                else
-                {
-                    <div class="shadowed @p.Pokemon.Name uncaptured@(p.IsAltForm ? " altForm hide" : "")">
-                        <div class="pokemonImages">
-                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, p.Pokemon.Id, ".png"))" />
-                        </div>
-                        <div class="description">
-                            <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
-                        </div>
+                    <div class="description">
+                        <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
                     </div>
-                }
+                </div>
             }
         </div>
     </div>

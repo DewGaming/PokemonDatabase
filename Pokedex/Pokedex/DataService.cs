@@ -310,13 +310,14 @@ namespace Pokedex
         /// <returns>Returns the list of all pokemon.</returns>
         public List<Pokemon> GetAllPokemonWithFormNames()
         {
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+            List<Pokemon> altFormList = formDetails.ConvertAll(x => x.AltFormPokemon);
             List<string> formNames = new List<string>()
             {
                 "Mega",
                 "Mega X",
                 "Mega Y",
-                "Gigantamax",
-                "Low Key Gigantamax",
                 "Sunny",
                 "Rainy",
                 "Snowy",
@@ -330,21 +331,12 @@ namespace Pokedex
                 "Starter",
                 "Hero",
             };
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<PokemonFormDetail> altFormDetailList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
-            List<Pokemon> fullAltFormList = altFormDetailList.ConvertAll(x => x.AltFormPokemon);
-            List<Pokemon> altFormList = altFormDetailList.Where(x => !formNames.Any(y => y == x.Form.Name)).Select(x => x.AltFormPokemon).ToList();
-            pokemonList = pokemonList.Where(x => !fullAltFormList.Any(y => y.Id == x.Id)).ToList();
 
-            foreach (var p in altFormList)
-            {
-                p.Name = string.Concat(p.Name, " (", this.GetPokemonFormName(p.Id), ")");
-            }
+            formDetails = formDetails.Where(x => formNames.Any(y => y == x.Form.Name)).ToList();
+            pokemonList = pokemonList.Where(x => !formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
 
-            pokemonList.AddRange(altFormList);
-            pokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
-
-            return pokemonList;
+            return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
 
         /// <summary>
