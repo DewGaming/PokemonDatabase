@@ -657,6 +657,22 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Gets a list of all of the pokemon teams a user has, sorted with no games first, then by the game itself.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <returns>A list of sorted pokemon teams.</returns>
+        public List<PokemonTeam> GetPokemonTeams(string username)
+        {
+            List<PokemonTeam> teams = this.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon, FirstPokemon.Pokemon, SecondPokemon, SecondPokemon.Pokemon, ThirdPokemon, ThirdPokemon.Pokemon, FourthPokemon, FourthPokemon.Pokemon, FifthPokemon, FifthPokemon.Pokemon, SixthPokemon, SixthPokemon.Pokemon", "User.Username", username);
+            List<PokemonTeam> teamsWithGames = teams.Where(x => x.Game != null).OrderBy(x => x.Game.ReleaseDate).ThenBy(x => x.GameId).ThenBy(x => x.Id).ToList();
+            List<PokemonTeam> teamsWithoutGames = teams.Where(x => x.Game == null).OrderBy(x => x.Id).ToList();
+            List<PokemonTeam> pokemonTeams = teamsWithoutGames;
+            pokemonTeams.AddRange(teamsWithGames);
+
+            return pokemonTeams;
+        }
+
+        /// <summary>
         /// Uploades a given image to the pokemon images folder.
         /// </summary>
         /// <param name="fileUpload">The file being uploaded.</param>
