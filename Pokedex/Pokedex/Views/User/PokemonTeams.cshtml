@@ -1,12 +1,11 @@
 @model Pokedex.Models.PokemonTeamsViewModel;
-@using System.Net;
+@using Pokedex.DataAccess.Models;
 @{
     Layout = "_Layout";
     ViewBag.Title = "Pokémon Teams";
     int teamCount = 0;
     int pokemonCount;
-    HttpWebRequest webRequest;
-    HttpWebResponse imageRequest;
+    List<PokemonTeam> teams = Model.AllPokemonTeams.OrderBy(x => x.Game.ReleaseDate).ThenBy(x => x.GameId).ThenBy(x => x.Id).ToList();
 }
 
 @section styles
@@ -26,7 +25,7 @@
 <p class="teamButtons">
     <a class="btn btn-primary" href="@this.Url.Action("CreateTeam", "PokemonTeam")" role="button">Create New Team</a>
     <a class="btn btn-primary" href="@this.Url.Action("ImportTeams", "PokemonTeam")" role="button">Import Teams</a>
-    @if (Model.AllPokemonTeams.ToList().Count > 0)
+    @if (teams.Count > 0)
     {
         <a class="btn btn-primary" href="@this.Url.Action("DeleteTeams", "PokemonTeam")" role="button">Delete Teams</a>
     }
@@ -34,19 +33,19 @@
 </p>
 
 <div>
-    @if (Model.AllPokemonTeams.ToList().Count > 0)
+    @if (teams.Count > 0)
     {
         <table class="table pokemonTeam">
             <tbody>
-                @for(var i = 0; i < Model.AllPokemonTeams.Count; i++)
+                @for(var i = 0; i < teams.Count; i++)
                 {
                     <tr>
                         <th scope="col">Team Name</th>
-                        @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
+                        @if (teams.Where(x => x.Game != null).Count() > 0)
                         {
                             <th scope="col">
                                 Game@{
-                                    foreach (var team in Model.AllPokemonTeams)
+                                    foreach (var team in teams)
                                     {
                                         if (team.Game != null && team.Game.Name.Contains('/'))
                                         {
@@ -62,13 +61,13 @@
                     teamCount++;
                     pokemonCount = 0;
                     <tr>
-                        <td>@Model.AllPokemonTeams[i].PokemonTeamName</td>
-                        @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
+                        <td>@teams[i].PokemonTeamName</td>
+                        @if (teams.Where(x => x.Game != null).Count() > 0)
                         {
                             <td>
-                                @if (@Model.AllPokemonTeams[i].Game != null)
+                                @if (@teams[i].Game != null)
                                 {
-                                    @Model.AllPokemonTeams[i].Game.Name
+                                    @teams[i].Game.Name
                                 }
                                 else
                                 {
@@ -77,12 +76,12 @@
                             </td>
                         }
                         <td>
-                            <a class="teamButton btn btn-primary" title="Edit @Model.AllPokemonTeams[i].PokemonTeamName" href="@this.Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
-                            @if (@Model.AllPokemonTeams[i].FirstPokemon != null)
+                            <a class="teamButton btn btn-primary" title="Edit @teams[i].PokemonTeamName" href="@this.Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
+                            @if (@teams[i].FirstPokemon != null)
                             {
-                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
+                                <button id="@teams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @teams[i].PokemonTeamName">Export Team</button>
                             }
-                            <a class="teamButton btn btn-primary" title="Delete @Model.AllPokemonTeams[i].PokemonTeamName" href="@this.Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
+                            <a class="teamButton btn btn-primary" title="Delete @teams[i].PokemonTeamName" href="@this.Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
                         </td>
                     </tr>
                     <tr>
@@ -92,7 +91,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            @foreach (var p in @Model.AllPokemonTeams[i].GrabPokemonTeamDetails)
+                                            @foreach (var p in @teams[i].GrabPokemonTeamDetails)
                                             {
                                                 pokemonCount++;
                                                 <div class="pokemonTeamGroup">
@@ -100,16 +99,7 @@
                                                         <span class="pokemonTeamPicture">
                                                             @if (p.IsShiny)
                                                             {
-                                                                @try
-                                                                {
-                                                                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.Model.AppConfig.WebUrl, this.Model.AppConfig.ShinyPokemonImageUrl, p.PokemonId, ".png"));
-                                                                    imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                                                                    <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @p.PokemonId, ".png"))" />
-                                                                }
-                                                                catch
-                                                                {
-                                                                    <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @p.PokemonId, ".png"))" />
-                                                                }
+                                                                <img class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @p.PokemonId, ".png"))" />
                                                             }
                                                             else
                                                             {
@@ -132,7 +122,7 @@
                                                     </ul>
                                                 </div>
                                             }
-                                            @if (@Model.AllPokemonTeams[i].GrabPokemonTeamDetails.Count < 6)
+                                            @if (@teams[i].GrabPokemonTeamDetails.Count < 6)
                                             {
                                                 <a href="@this.Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
                                                     <img class="lightshadowed addButton" title="Add Pokémon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, "/images/general/addButton.png"))" />

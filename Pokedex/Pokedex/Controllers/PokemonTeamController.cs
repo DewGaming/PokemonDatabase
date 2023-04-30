@@ -195,7 +195,7 @@ namespace Pokedex.Controllers
             {
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
-                    AllPokemon = this.FillPokemonList(this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name)[pokemonTeamId - 1]),
+                    AllPokemon = this.FillPokemonList(this.GetPokemonTeamByIndex(pokemonTeamId)),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
@@ -258,7 +258,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
+                PokemonTeam pokemonTeam = this.GetPokemonTeamByIndex(pokemonTeamId);
                 PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
 
                 if (pokemonTeamDetail.Nature == null)
@@ -345,7 +345,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
+                PokemonTeam pokemonTeam = this.GetPokemonTeamByIndex(pokemonTeamId);
                 PokemonTeamViewModel model = new PokemonTeamViewModel()
                 {
                     Id = pokemonTeam.Id,
@@ -395,7 +395,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeamEV pokemonEV = this.dataService.GetObjectByPropertyValue<PokemonTeamEV>("Id", (int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamEVId);
+                PokemonTeamEV pokemonEV = this.dataService.GetObjectByPropertyValue<PokemonTeamEV>("Id", (int)this.GetPokemonTeamByIndex(pokemonTeamId).GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamEVId);
                 PokemonTeamEVViewModel model = new PokemonTeamEVViewModel()
                 {
                     Id = pokemonEV.Id,
@@ -479,7 +479,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeamMoveset pokemonMoveset = this.dataService.GetObjectByPropertyValue<PokemonTeamMoveset>("Id", (int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamMovesetId);
+                PokemonTeamMoveset pokemonMoveset = this.dataService.GetObjectByPropertyValue<PokemonTeamMoveset>("Id", (int)this.GetPokemonTeamByIndex(pokemonTeamId).GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamMovesetId);
                 PokemonTeamMovesetViewModel model = new PokemonTeamMovesetViewModel()
                 {
                     Id = pokemonMoveset.Id,
@@ -543,7 +543,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeamIV pokemonIV = this.dataService.GetObjectByPropertyValue<PokemonTeamIV>("Id", (int)pokemonTeams[pokemonTeamId - 1].GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamIVId);
+                PokemonTeamIV pokemonIV = this.dataService.GetObjectByPropertyValue<PokemonTeamIV>("Id", (int)this.GetPokemonTeamByIndex(pokemonTeamId).GrabPokemonTeamDetails[pokemonTeamDetailId - 1].PokemonTeamIVId);
                 PokemonTeamIVViewModel model = new PokemonTeamIVViewModel()
                 {
                     Id = pokemonIV.Id,
@@ -609,7 +609,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
+                PokemonTeam pokemonTeam = this.GetPokemonTeamByIndex(pokemonTeamId);
                 PokemonTeamDetail pokemonTeamDetail = this.GetPokemonTeamDetail(pokemonTeam.GrabPokemonTeamDetailIds()[pokemonTeamDetailId - 1]);
                 PokemonTeamDetailViewModel model = new PokemonTeamDetailViewModel()
                 {
@@ -646,7 +646,7 @@ namespace Pokedex.Controllers
         [Route("update_team/{pokemonTeamId:int}")]
         public IActionResult EditTeam(int pokemonTeamId)
         {
-            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name)[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.GetPokemonTeamByIndex(pokemonTeamId);
             this.FillPokemonTeam(pokemonTeam);
 
             UpdatePokemonTeamViewModel model = new UpdatePokemonTeamViewModel()
@@ -1461,6 +1461,11 @@ namespace Pokedex.Controllers
         {
             return this.dataService.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature")
                 .Find(x => x.Id == id);
+        }
+
+        private PokemonTeam GetPokemonTeamByIndex(int id)
+        {
+            return this.dataService.GetObjects<PokemonTeam>("Game.ReleaseDate, GameId, Id", "User, Game, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon", "User.Username", this.User.Identity.Name)[id - 1];
         }
     }
 }
