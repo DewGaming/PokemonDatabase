@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title class="pageTitle">@ViewBag.Title</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/main.css" rel="stylesheet" type="text/css">
@@ -27,8 +27,8 @@
     <meta name="twitter:type" content="website">
     <meta name="twitter:image" content="@ViewBag.Image">
     <meta name="twitter:description" content="@ViewBag.Description">
-</head>
-<body>
+  </head>
+  <body>
     <nav class="fixed-nav navbar navbar-expand-custom navbar-dark bg-dark mb-4">
       <a class="navbar-brand" style="padding: 0;" href="@this.Url.Action("Index", "Home")">
         <img class="pageLogo" style="height: 50px;" src="https://pokemondatabase.azurewebsites.net/images/general/pageLogo.png" />
@@ -66,9 +66,8 @@
     </nav>
 
     <main role="main" class="container">
-        @RenderBody()
+      @RenderBody()
     </main>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" type="text/javascript"></script>
@@ -135,5 +134,5 @@
     }
 
     @RenderSection("scripts", required: false)
-</body>
+  </body>
 </html>

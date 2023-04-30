@@ -42,6 +42,7 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Sparkling Power Sandwich Level"), Range(0, 3)]
         public int SparklingPowerLevel { get; set; }
 
+        [DataType(DataType.Date)]
         [Display(Name = "Date Captured")]
         public DateTime DateOfCapture { get; set; }
 
