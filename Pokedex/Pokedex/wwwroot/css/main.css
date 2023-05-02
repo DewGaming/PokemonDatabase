@@ -310,8 +310,11 @@ main {
 .shadowed img {
   -webkit-filter: drop-shadow(2px 2px 2px #222);
   filter: url("data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='5'/><feOffset dx='2' dy='2' result='offsetblur'/><feFlood flood-color='rgba(2,2,2,1)'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow");
-  -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=2, OffY=2, Color='#222')";
-  filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=2, OffY=2, Color='#222')";
+}
+
+.typing img {
+  filter: none !important;
+  margin: 2px;
 }
 
 .lightshadowed {
