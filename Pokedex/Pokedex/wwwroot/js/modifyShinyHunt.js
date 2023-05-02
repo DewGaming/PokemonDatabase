@@ -26,12 +26,35 @@ var grabPokemon = function (pokemonId) {
                 $(this).removeClass('hide');
             })
 
+            refreshGenders();
+
             $(".overlay").fadeOut(300);
         })
         .fail(function () {
             alert("Failed to grab pokemon!");
 
             $(".overlay").fadeOut(300);
+        });
+}, refreshGenders = function () {
+    $.ajax({
+        url: '/get-pokemon-genders/',
+        method: "POST",
+        data: { 'pokemonId': $('#PokemonId').val() }
+    })
+        .done(function (data) {
+            if (data.length == 3) {
+                data.shift();
+            }
+            $('#Gender').empty();
+            $.each(data, function (index, item) {
+                if (item == "None") {
+                    item = "Gender Unknown"
+                }
+                $('#Gender').append($('<option>').text(item));
+            });
+        })
+        .fail(function () {
+            alert("Failed to grab genders!");
         });
 }, grabHuntingMethod = function (huntingMethodId) {
     $.ajax({
@@ -52,7 +75,7 @@ var grabPokemon = function (pokemonId) {
                     }
                 });
             }
-            
+
             checkCommunityDay();
         })
         .fail(function () {
@@ -154,4 +177,5 @@ $('#HuntingMethodId').on('change', function () {
 
 $('#PokemonId').on('change', function () {
     $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
+    refreshGenders();
 });
