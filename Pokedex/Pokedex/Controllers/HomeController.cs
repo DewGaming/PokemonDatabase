@@ -178,7 +178,7 @@ namespace Pokedex.Controllers
         public IActionResult ExpLeveling()
         {
             this.dataService.AddPageView("Exp Leveling Page", this.User.IsInRole("Owner"));
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemonWithFormNames();
+            List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames();
             ExpLevelingViewModel model = new ExpLevelingViewModel()
             {
                 PokemonList = pokemonList,

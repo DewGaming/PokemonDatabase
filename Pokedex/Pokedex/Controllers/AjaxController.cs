@@ -2638,33 +2638,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", gameId).ConvertAll(x => x.Pokemon).Where(x => x.IsComplete == true).ToList();
-                List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
-                List<Pokemon> altFormList = formDetails.ConvertAll(x => x.AltFormPokemon);
-                List<string> formNames = new List<string>()
-                {
-                    "Mega",
-                    "Mega X",
-                    "Mega Y",
-                    "Sunny",
-                    "Rainy",
-                    "Snowy",
-                    "Zen",
-                    "Galar Zen",
-                    "Noice",
-                    "School",
-                    "Blade",
-                    "Crowned",
-                    "Ash",
-                    "Starter",
-                    "Hero",
-                };
-
-                formDetails = formDetails.Where(x => formNames.Any(y => y == x.Form.Name)).ToList();
-                pokemonList = pokemonList.Where(x => !formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
-
-                return pokemonList;
+                return this.dataService.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete == true).ToList();
             }
 
             return null;

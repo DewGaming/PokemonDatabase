@@ -40,6 +40,12 @@
             @Html.ValidationMessageFor(x => x.NeedsItem)
         </div>
 
+        <div class="form-group row">
+            @Html.LabelFor(x => x.OnlyDuringBattle, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.OnlyDuringBattle, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.OnlyDuringBattle)
+        </div>
+
         <p>
             <button type="submit" class="btn btn-primary" role="button">Save</button>
         </p>

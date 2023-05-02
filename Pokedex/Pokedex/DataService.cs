@@ -307,34 +307,23 @@ namespace Pokedex
         /// <summary>
         /// Gets a list of all pokemon.
         /// </summary>
+        /// <param name="gameId">The game's id. Optional.</param>
         /// <returns>Returns the list of all pokemon.</returns>
-        public List<Pokemon> GetAllPokemonWithFormNames()
+        public List<Pokemon> GetNonBattlePokemonWithFormNames(int gameId = 0)
         {
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
-            List<Pokemon> altFormList = formDetails.ConvertAll(x => x.AltFormPokemon);
-            List<string> formNames = new List<string>()
+            List<Pokemon> pokemonList = new List<Pokemon>();
+            if (gameId != 0)
             {
-                "Mega",
-                "Mega X",
-                "Mega Y",
-                "Sunny",
-                "Rainy",
-                "Snowy",
-                "Zen",
-                "Galar Zen",
-                "Noice",
-                "School",
-                "Blade",
-                "Crowned",
-                "Ash",
-                "Starter",
-                "Hero",
-            };
+                pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.EggCycle, Pokemon.GenderRatio, Pokemon.Classification, Pokemon.Game, Pokemon.Game.Generation, Pokemon.ExperienceGrowth", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
+            }
+            else
+            {
+                pokemonList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            }
 
-            formDetails = formDetails.Where(x => formNames.Any(y => y == x.Form.Name)).ToList();
-            pokemonList = pokemonList.Where(x => !formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+            List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+            pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+            pokemonList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
@@ -346,38 +335,11 @@ namespace Pokedex
         /// <returns>The list of breedable pokemon.</returns>
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon(int gameId = 0)
         {
-            List<PokemonFormDetail> formDetails = new List<PokemonFormDetail>();
-            List<string> formNames = new List<string>()
-            {
-                "Mega",
-                "Mega X",
-                "Mega Y",
-                "Gigantamax",
-                "Low Key Gigantamax",
-                "Sunny",
-                "Rainy",
-                "Snowy",
-                "Zen",
-                "Galar Zen",
-                "Noice",
-                "School",
-                "Core",
-                "Blade",
-                "Crowned",
-                "Ash",
-                "Starter",
-                "Hero",
-            };
-
-            foreach (var n in formNames)
-            {
-                formDetails.AddRange(this.GetObjects<PokemonFormDetail>(includes: "OriginalPokemon, AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: n));
-            }
-
+            List<Pokemon> battleOnlyForms = this.GetObjects<PokemonFormDetail>(includes: "OriginalPokemon, AltFormPokemon, Form", whereProperty: "Form.OnlyDuringBattle", wherePropertyValue: true).ConvertAll(x => x.AltFormPokemon);
             List<PokemonEggGroupDetail> eggGroupDetails = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
             List<Pokemon> unbreedablePokemon = this.GetAllPokemon().Where(x => !eggGroupDetails.Any(y => y.PokemonId == x.Id && y.PrimaryEggGroupId != 15)).ToList();
 
-            eggGroupDetails = eggGroupDetails.Where(x => !formDetails.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList();
+            eggGroupDetails = eggGroupDetails.Where(x => !battleOnlyForms.Any(y => y.Id == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => !unbreedablePokemon.Any(y => y.Id == x.PokemonId)).ToList();
             eggGroupDetails = eggGroupDetails.Where(x => x.Pokemon.IsComplete).ToList();
 

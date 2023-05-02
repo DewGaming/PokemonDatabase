@@ -40,5 +40,11 @@ namespace Pokedex.DataAccess.Models
         /// Gets or sets the necessity of an item.
         /// </summary>
         public bool NeedsItem { get; set; }
+
+        [Display(Name="Only Available During Battle"), Required]
+        /// <summary>
+        /// Gets or sets whether or not it is only available during a pokemon battle.
+        /// </summary>
+        public bool OnlyDuringBattle { get; set; }
     }
 }
