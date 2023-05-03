@@ -1,7 +1,7 @@
 @{
   string defaultTitle = "Pokéluna";
   string defaultDescription = "Welcome to Pokéluna!";
-  string defaultImage = "https://pokemondatabase.azurewebsites.net/images/general/redesignIcon.png";
+  string defaultImage = "https://pokeluna.net/images/general/redesignIcon.png";
 	ViewBag.Title = string.IsNullOrEmpty(ViewBag.Title as string) ? defaultTitle : string.Concat(ViewBag.Title, " | ", defaultTitle);
   ViewBag.Description = string.IsNullOrEmpty(ViewBag.Description as string) ? defaultDescription : ViewBag.Description;
   ViewBag.Image = string.IsNullOrEmpty(ViewBag.Image as string) ? defaultImage : ViewBag.Image;
@@ -31,7 +31,7 @@
   <body>
     <nav class="fixed-nav navbar navbar-expand-custom navbar-dark bg-dark mb-4">
       <a class="navbar-brand" style="padding: 0;" href="@this.Url.Action("Index", "Home")">
-        <img class="pageLogo" style="height: 50px;" src="https://pokemondatabase.azurewebsites.net/images/general/pageLogo.png" />
+        <img class="pageLogo" style="height: 50px;" src="https://pokeluna.net/images/general/pageLogo.png" />
       </a>
       <button class="navbar-toggler collapse-button" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

@@ -20,7 +20,7 @@
             </a>
             <div class="description">
                 <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</a>
-                <div class="typing">
+                <div class="pokemonTyping">
                     @if (p.PrimaryType.Name == "None")
                     {
                         <div class="pokemon-type type-icon type-none">@("???")</div>
