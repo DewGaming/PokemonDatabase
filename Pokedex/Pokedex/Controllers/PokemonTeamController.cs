@@ -157,7 +157,7 @@ namespace Pokedex.Controllers
         [Route("create_pokemon/{pokemonTeamId:int}")]
         public IActionResult CreatePokemon(int pokemonTeamId)
         {
-            List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User", "User.Username", this.User.Identity.Name);
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams(this.User.Identity.Name);
             if (pokemonTeams.Count < pokemonTeamId || pokemonTeams[pokemonTeamId - 1].SixthPokemonId != null)
             {
                 return this.RedirectToAction("PokemonTeams", "User");
@@ -207,7 +207,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            PokemonTeam pokemonTeam = this.dataService.GetObjects<PokemonTeam>(includes: "User", whereProperty: "User.Username", wherePropertyValue: this.User.Identity.Name)[pokemonTeamId - 1];
+            PokemonTeam pokemonTeam = this.GetPokemonTeamByIndex(pokemonTeamId);
 
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
