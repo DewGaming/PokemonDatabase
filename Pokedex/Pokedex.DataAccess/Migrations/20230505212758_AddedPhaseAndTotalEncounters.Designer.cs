@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230505212758_AddedPhaseAndTotalEncounters")]
+    partial class AddedPhaseAndTotalEncounters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1269,6 +1271,9 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<bool>("DuringCommunityDay")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Encounters")
+                        .HasColumnType("int");
+
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
@@ -1293,9 +1298,6 @@ namespace Pokedex.DataAccess.Migrations
                     b.Property<string>("Nickname")
                         .HasColumnType("nvarchar(12)")
                         .HasMaxLength(12);
-
-                    b.Property<int>("Phases")
-                        .HasColumnType("int");
 
                     b.Property<int?>("PokeballId")
                         .HasColumnType("int");

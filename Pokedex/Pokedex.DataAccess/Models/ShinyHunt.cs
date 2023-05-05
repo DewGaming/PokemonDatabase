@@ -46,8 +46,14 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Date Captured")]
         public DateTime DateOfCapture { get; set; }
 
-        [Display(Name = "Number of Encounters")]
-        public int Encounters { get; set; }
+        [Display(Name = "Number of Phases")]
+        public int Phases { get; set; }
+
+        [Display(Name = "Number of Current Phase Encounters")]
+        public int CurrentPhaseEncounters { get; set; }
+
+        [Display(Name = "Number of Total Encounters")]
+        public int TotalEncounters { get; set; }
 
         [Display(Name = "Pokéball Used")]
         public int? PokeballId { get; set; }

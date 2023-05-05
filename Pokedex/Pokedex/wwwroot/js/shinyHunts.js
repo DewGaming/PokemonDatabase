@@ -1,8 +1,8 @@
-function incrementEncounter(shinyHuntId, increment) {
+function incrementEncounter(shinyHuntId) {
     $.ajax({
         url: '/increment-shiny-hunt-encounters/',
         method: "POST",
-        data: { "shinyHuntId": shinyHuntId, "increment": increment }
+        data: { "shinyHuntId": shinyHuntId, "increment": 1 }
     })
         .done(function (data) {
             $('.Hunt' + shinyHuntId + ' .encounters').html(data);

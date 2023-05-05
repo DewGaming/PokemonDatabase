@@ -31,7 +31,6 @@
             @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
             @Html.HiddenFor(x => x.Id)
             @Html.HiddenFor(x => x.UserId)
-            @Html.HiddenFor(x => x.Encounters)
 
             <div class="form-group row">
                 @Html.LabelFor(x => x.GameId, "Game", new { @class = "col-md-4" })
@@ -49,6 +48,24 @@
                 @Html.LabelFor(x => x.HuntingMethodId, "Shiny Hunting Method", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.HuntingMethodId, new SelectList(Model.AllHuntingMethods, "Id", "Name"), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.HuntingMethodId)
+            </div>
+
+            <div class="form-group row gameSpecific currentPhaseEncounters">
+                @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0" } })
+                @Html.ValidationMessageFor(x => x.CurrentPhaseEncounters)
+            </div>
+
+            <div class="form-group row gameSpecific totalEncounters">
+                @Html.LabelFor(x => x.TotalEncounters, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.TotalEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0" } })
+                @Html.ValidationMessageFor(x => x.TotalEncounters)
+            </div>
+
+            <div class="form-group row gameSpecific phases">
+                @Html.LabelFor(x => x.Phases, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.Phases, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="1" } })
+                @Html.ValidationMessageFor(x => x.Phases)
             </div>
 
             <div class="form-group row gameSpecific sparklingPower hide">

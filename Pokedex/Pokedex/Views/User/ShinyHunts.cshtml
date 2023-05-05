@@ -85,7 +85,7 @@
                             <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
                         }
                         <div class="pokemonImages">
-                            <img onclick="incrementEncounter('@s.Id', 1)" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
+                            <img onclick="incrementEncounter('@s.Id')" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
                         </div>
                         <div class="description">
                             <p><b>@s.Pokemon.Name</b></p>
@@ -100,26 +100,30 @@
                             }
                             @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
                             {
-                                <p><b>Eggs: </b><span class="encounters">@s.Encounters</span></p>
+                                <p><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
                             else
                             {
-                                <p><b>Encounters: </b><span class="encounters">@s.Encounters</span></p>
+                                <p><b>Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
+                            }
+                            @if (@s.Phases > 1)
+                            {
+                                <p><b>Current Phase: </b>@s.Phases</p>
                             }
                         </div>
                     </div>
+                    <div class="encounterButtons">
+                        <button class="manualAdjust btn btn-primary" onclick="adjustEncountersManually('@s.Id')">Adjust Encounters</button>
+                        <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                    </div>
                     <hr class="buttonSeparator">
-                    <div class="encounterTracker">
-                        <div class="encounterButtons">
-                            <button class="encounterDecrease btn btn-danger" onclick="incrementEncounter('@s.Id', -1)">Decrease Encounters</button>
-                            <button class="encounterIncrease btn btn-success" onclick="incrementEncounter('@s.Id', 1)">Increase Encounters</button>
-                        </div>
-                        <button class="manualAdjust btn btn-primary" onclick="adjustEncountersManually('@s.Id')">Adjust Encounters Manually</button>
+                    <div class="shinyFoundButtons">
+                        <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
+                        <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Target Shiny Found</a>
                     </div>
                     <hr class="buttonSeparator">
                     <div class="huntUncapturedButtons">
-                        <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Shiny Found</a>
-                        <a class="editShinyButton btn" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
+                        <a class="editShinyButton btn" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
                         <a class="btn btn-danger abandonHunt" href="@(this.Url.Action("DeleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id }))">Delete Hunt</a>
                     </div>
                 </div>
@@ -175,16 +179,32 @@
                             {
                                 <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
                             }
-                            @if (@s.Encounters > 0)
+                            @if (@s.TotalEncounters > 0)
                             {
+                                @if (@s.CurrentPhaseEncounters > 0 && @s.CurrentPhaseEncounters != @s.TotalEncounters)
+                                {
+                                    if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5)
+                                    {
+                                        <p><b>Last Phase Eggs: </b>@s.CurrentPhaseEncounters</p>
+                                    }
+                                    else
+                                    {
+                                        <p><b>Last Phase Encounters: </b>@s.CurrentPhaseEncounters</p>
+                                    }
+                                }
+
                                 if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
                                 {
-                                    <p><b>Eggs: </b>@s.Encounters</p>
+                                    <p><b>Total Eggs: </b>@s.TotalEncounters</p>
                                 }
                                 else
                                 {
-                                    <p><b>Encounters: </b>@s.Encounters</p>
+                                    <p><b>Total Encounters: </b>@s.TotalEncounters</p>
                                 }
+                            }
+                            @if (@s.Phases > 1)
+                            {
+                                <p><b>Total Phases: </b>@s.Phases</p>
                             }
                             <p><b>Date of Capture: </b>@s.DateOfCapture.ToString("MMMM d, yyyy")</p>
                             @if (@s.SparklingPowerLevel > 0)

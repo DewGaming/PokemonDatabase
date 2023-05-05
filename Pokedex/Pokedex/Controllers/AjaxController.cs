@@ -1714,15 +1714,15 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-                if (increment == -1 && shinyHunt.Encounters == 0)
+                if (increment == -1 && shinyHunt.CurrentPhaseEncounters == 0)
                 {
                     return 0;
                 }
                 else
                 {
-                    shinyHunt.Encounters += increment;
+                    shinyHunt.CurrentPhaseEncounters += increment;
                     this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
-                    return shinyHunt.Encounters;
+                    return shinyHunt.CurrentPhaseEncounters;
                 }
             }
 
@@ -1747,9 +1747,9 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    shinyHunt.Encounters = encounters;
+                    shinyHunt.CurrentPhaseEncounters = encounters;
                     this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
-                    return shinyHunt.Encounters;
+                    return shinyHunt.CurrentPhaseEncounters;
                 }
             }
 

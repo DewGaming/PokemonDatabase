@@ -16,13 +16,12 @@
   margin: 0 5px;
 }
 
-.manualAdjust {
-  width: 97%;
-  margin-top: 5px;
-}
-
 .bonusImages img {
   filter: none;
+}
+
+.pokemonDetails {
+  margin: 0 0 5px;
 }
 
 .description p {
@@ -34,16 +33,10 @@
   margin-bottom: 3px;
 }
 
+.shinyFoundButtons a,
+.huntUncapturedButtons a,
+.huntCapturedButtons a,
 .encounterButtons button {
-  margin: 0 3px;
-}
-
-.huntUncapturedButtons button,
-.huntUncapturedButtons a {
-  width: 32%;
-}
-
-.huntCapturedButtons a {
   width: 49%;
 }
 
@@ -72,15 +65,6 @@
 .editShinyButton:active,
 .editShinyButton:focus {
   color: #FFF;
-}
-
-.encounterButtons {
-  display: flex;
-  justify-content: center;
-}
-
-.encounterButtons button {
-  width: 48.25%;
 }
 
 .hide {
@@ -172,19 +156,11 @@
   }
 }
 
-@media (min-width: 576px) {}
-
-@media (max-width: 439px) {
-  .encounterButtons button {
-    width: 100%;
-    margin: 0 3px;
-  }
-}
-
-@media (max-width: 534px) {
-
+@media (max-width: 449px) {
+  .shinyFoundButtons a,
   .huntUncapturedButtons a,
-  .huntCapturedButtons a {
+  .huntCapturedButtons a,
+  .encounterButtons button {
     height: 62px;
     display: inline-flex;
     justify-content: center;

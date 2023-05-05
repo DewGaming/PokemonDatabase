@@ -29,10 +29,11 @@
 
 @section scripts
 {
+    <script src="/js/modifyShinyHunt.js"></script>
     <script src="/js/completeShinyHunt.js"></script>
 }
 
-<h2>Complete Shiny Hunt for @Model.PokemonHunted.Name</h2>
+<h2>Complete Phase for @Model.PokemonHunted.Name</h2>
 
 <div class="completeShinyHunt">
     <div class="form-horizontal">
@@ -45,24 +46,22 @@
             @Html.Hidden(@Model.AppConfig.WebUrl, string.Empty, new { @class = "webUrl" })
             @Html.Hidden(@Model.AppConfig.ShinyPokemonImageUrl, string.Empty, new { @class = "shinyUrl" })
             @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
-            @Html.HiddenFor(x => x.Id)
             @Html.HiddenFor(x => x.UserId)
-            @Html.HiddenFor(x => x.PokemonId)
             @Html.HiddenFor(x => x.GameId)
             @Html.HiddenFor(x => x.DuringCommunityDay)
+
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.PokemonId, "Pokemon", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.PokemonId)
+            </div>
 
             @if (@Model.HuntingMethodId != 8)
             {
                 <div class="form-group row">
-                    @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
+                    @Html.LabelFor(x => x.CurrentPhaseEncounters, "Number of Encounters", new { @class = "col-md-4" })
                     @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
                     @Html.ValidationMessageFor(x => x.CurrentPhaseEncounters)
-                </div>
-
-                <div class="form-group row">
-                    @Html.LabelFor(x => x.TotalEncounters, new { @class = "col-md-4" })
-                    @Html.EditorFor(x => x.TotalEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
-                    @Html.ValidationMessageFor(x => x.TotalEncounters)
                 </div>
             }
 
