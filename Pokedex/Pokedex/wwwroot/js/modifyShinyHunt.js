@@ -76,7 +76,7 @@ var grabPokemon = function (pokemonId) {
                 });
             }
 
-            checkCommunityDay();
+            checkFunctions();
         })
         .fail(function () {
             alert("Failed to grab hunting methods!");
@@ -147,6 +147,23 @@ var grabPokemon = function (pokemonId) {
         .fail(function () {
             alert("Failed to check sparkling power!");
         });
+}, checkLure = function () {
+    var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val()
+    if ((gameId == 16 || gameId == 28) && (huntingMethodId == 1 || huntingMethodId == 16)) {
+        if ($('.lureCheckbox').hasClass('hide')) {
+            $('.lureCheckbox').removeClass('hide');
+        }
+    } else {
+        if (!$('.lureCheckbox').hasClass('hide')) {
+            $('.lureCheckbox').addClass('hide');
+            $('#UsingLures').prop('checked', false)
+        }
+    }
+}, checkFunctions = function () {
+    checkLure();
+    checkAlpha();
+    checkShinyCharm();
+    checkSparklingPower();
 }
 
 $(document).ready(function () {
@@ -154,9 +171,7 @@ $(document).ready(function () {
     if ($('#GameId').val() !== "") {
         grabPokemon(pokemonId);
         grabHuntingMethod(huntingMethodId);
-        checkAlpha();
-        checkShinyCharm();
-        checkSparklingPower();
+        checkFunctions();
     }
 });
 
@@ -164,15 +179,10 @@ $('#GameId').on('change', function () {
     var pokemonId = $('#PokemonId').val(), huntingMethodId = $('#HuntingMethodId').val();
     grabPokemon(pokemonId);
     grabHuntingMethod(huntingMethodId);
-    checkAlpha();
-    checkShinyCharm();
-    checkSparklingPower();
 });
 
 $('#HuntingMethodId').on('change', function () {
-    checkShinyCharm();
-    checkCommunityDay();
-    checkSparklingPower();
+    checkFunctions();
 });
 
 $('#PokemonId').on('change', function () {

@@ -49,6 +49,7 @@
             @Html.HiddenFor(x => x.UserId)
             @Html.HiddenFor(x => x.PokemonId)
             @Html.HiddenFor(x => x.GameId)
+            @Html.HiddenFor(x => x.UsingLures)
             @Html.HiddenFor(x => x.DuringCommunityDay)
 
             @if (@Model.HuntingMethodId != 8)
@@ -111,14 +112,11 @@
                 </div>
             }
 
-            @if ((@Model.GameId == 41 || @Model.GameId == 42) && @Model.HuntingMethodId != 4 && @Model.HuntingMethodId != 5)
-            {
-                <div class="form-group row">
-                    @Html.LabelFor(x => x.SparklingPowerLevel, "Sparkling Sandwich Power Level", new { @class = "col-md-4" })
-                    @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
-                    @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
-                </div>
-            }
+            <div class="form-group row gameSpecific sparklingPower hide">
+                @Html.LabelFor(x => x.SparklingPowerLevel, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
+            </div>
 
             @if (@Model.GameHuntedIn.GenerationId >= 8 && @Model.GameId != 35 && @Model.GameId != 36 && @Model.GameId != 37 && @Model.HuntingMethodId != 4 && @Model.HuntingMethodId != 5)
             {
@@ -128,6 +126,12 @@
                     @Html.ValidationMessageFor(x => x.MarkId)
                 </div>
             }
+
+            <div class="form-group row gameSpecific lureCheckbox hide">
+                @Html.LabelFor(x => x.UsingLures, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.UsingLures, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.UsingLures)
+            </div>
 
             <p>
                 <button type="submit" class="btn btn-primary" role="button">Mark as Found</button>

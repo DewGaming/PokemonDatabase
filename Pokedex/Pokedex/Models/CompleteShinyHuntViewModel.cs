@@ -9,6 +9,15 @@ namespace Pokedex.Models
     public class CompleteShinyHuntViewModel : ShinyHunt
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CompleteShinyHuntViewModel"/> class.
+        /// </summary>
+        /// <param name="shinyHunt">The shiny hunt.</param>
+        public CompleteShinyHuntViewModel(ShinyHunt shinyHunt)
+            : base(shinyHunt)
+        {
+        }
+
+        /// <summary>
         /// Gets or sets the pokemon.
         /// </summary>
         public Pokemon PokemonHunted { get; set; }

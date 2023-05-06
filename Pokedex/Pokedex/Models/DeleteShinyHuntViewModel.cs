@@ -9,6 +9,15 @@ namespace Pokedex.Models
     public class DeleteShinyHuntViewModel : ShinyHunt
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="DeleteShinyHuntViewModel"/> class.
+        /// </summary>
+        /// <param name="shinyHunt">The shiny hunt.</param>
+        public DeleteShinyHuntViewModel(ShinyHunt shinyHunt)
+            : base(shinyHunt)
+        {
+        }
+
+        /// <summary>
         /// Gets or sets the application's config.
         /// </summary>
         public AppConfig AppConfig { get; set; }

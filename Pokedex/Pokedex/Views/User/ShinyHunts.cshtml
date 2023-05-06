@@ -211,6 +211,10 @@
                             {
                                 <p><b>Sparkling Power Level: </b>@s.SparklingPowerLevel</p>
                             }
+                            @if (@s.PhaseOfHunt != null)
+                            {
+                                <p><b>Found While Hunting: </b>@s.PhaseOfHunt.Pokemon.Name</p>
+                            }
                         </div>
                     </div>
                     <div class="huntCapturedButtons">

@@ -9,6 +9,23 @@ namespace Pokedex.Models
     public class StartShinyHuntViewModel : ShinyHunt
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="StartShinyHuntViewModel"/> class.
+        /// </summary>
+        public StartShinyHuntViewModel()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StartShinyHuntViewModel"/> class.
+        /// </summary>
+        /// <param name="shinyHunt">The shiny hunt.</param>
+        public StartShinyHuntViewModel(ShinyHunt shinyHunt)
+            : base(shinyHunt)
+        {
+        }
+
+        /// <summary>
         /// Gets or sets a list of all games.
         /// </summary>
         public List<Game> AllGames { get; set; }

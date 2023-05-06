@@ -151,19 +151,11 @@ namespace Pokedex.Controllers
                 genders.Add("Female");
             }
 
-            CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel()
+            CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
                 Id = shinyHunt.Id,
                 PokemonHunted = pokemon,
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
-                UserId = shinyHunt.UserId,
-                PokemonId = shinyHunt.PokemonId,
-                GameId = shinyHunt.GameId,
-                HuntingMethodId = shinyHunt.HuntingMethodId,
-                CurrentPhaseEncounters = shinyHunt.CurrentPhaseEncounters,
-                TotalEncounters = shinyHunt.TotalEncounters + shinyHunt.CurrentPhaseEncounters,
-                SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
-                HasShinyCharm = shinyHunt.HasShinyCharm,
                 DateOfCapture = DateTime.Now.Date,
                 AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllGenders = genders,
@@ -230,17 +222,10 @@ namespace Pokedex.Controllers
                 genders.Add("Female");
             }
 
-            CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel()
+            CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
                 PokemonHunted = pokemon,
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
-                UserId = shinyHunt.UserId,
-                GameId = shinyHunt.GameId,
-                HuntingMethodId = shinyHunt.HuntingMethodId,
-                CurrentPhaseEncounters = shinyHunt.CurrentPhaseEncounters,
-                TotalEncounters = shinyHunt.TotalEncounters + shinyHunt.CurrentPhaseEncounters,
-                SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
-                HasShinyCharm = shinyHunt.HasShinyCharm,
                 DateOfCapture = DateTime.Now.Date,
                 AllPokemon = pokemonList,
                 AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
@@ -267,6 +252,7 @@ namespace Pokedex.Controllers
             {
                 shinyHunt.IsCaptured = true;
                 shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
+                shinyHunt.PhaseOfHuntId = shinyHuntId;
                 this.dataService.AddObject(shinyHunt);
 
                 ShinyHunt originalShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
@@ -296,21 +282,11 @@ namespace Pokedex.Controllers
                 p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
             }
 
-            EditShinyHuntViewModel model = new EditShinyHuntViewModel()
+            EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
             {
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
-                Id = shinyHunt.Id,
-                PokemonId = shinyHunt.PokemonId,
-                GameId = shinyHunt.GameId,
-                HuntingMethodId = shinyHunt.HuntingMethodId,
-                SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
-                HasShinyCharm = shinyHunt.HasShinyCharm,
-                CurrentPhaseEncounters = shinyHunt.CurrentPhaseEncounters,
-                TotalEncounters = shinyHunt.TotalEncounters,
-                Phases = shinyHunt.Phases,
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 AppConfig = this.appConfig,
             };
 
@@ -336,21 +312,11 @@ namespace Pokedex.Controllers
                     p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
                 }
 
-                EditShinyHuntViewModel model = new EditShinyHuntViewModel()
+                EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
                 {
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
-                    Id = oldShinyHunt.Id,
-                    PokemonId = oldShinyHunt.PokemonId,
-                    GameId = oldShinyHunt.GameId,
-                    HuntingMethodId = oldShinyHunt.HuntingMethodId,
-                    SparklingPowerLevel = oldShinyHunt.SparklingPowerLevel,
-                    HasShinyCharm = oldShinyHunt.HasShinyCharm,
-                    CurrentPhaseEncounters = oldShinyHunt.CurrentPhaseEncounters,
-                    TotalEncounters = oldShinyHunt.TotalEncounters,
-                    Phases = oldShinyHunt.Phases,
-                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                     AppConfig = this.appConfig,
                 };
 
@@ -398,33 +364,16 @@ namespace Pokedex.Controllers
                 genders.Add("Female");
             }
 
-            EditShinyHuntViewModel model = new EditShinyHuntViewModel()
+            EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
             {
+                PokemonHunted = shinyHunt.Pokemon,
+                GameHuntedIn = shinyHunt.Game,
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllMarks = this.dataService.GetObjects<Mark>(),
                 AllGenders = genders,
-                Id = shinyHunt.Id,
-                PokemonId = shinyHunt.PokemonId,
-                GameId = shinyHunt.GameId,
-                PokemonHunted = shinyHunt.Pokemon,
-                GameHuntedIn = shinyHunt.Game,
-                Nickname = shinyHunt.Nickname,
-                DateOfCapture = shinyHunt.DateOfCapture,
-                HuntingMethodId = shinyHunt.HuntingMethodId,
-                PokeballId = shinyHunt.PokeballId,
-                Gender = shinyHunt.Gender,
-                MarkId = shinyHunt.MarkId,
-                SparklingPowerLevel = shinyHunt.SparklingPowerLevel,
-                HasShinyCharm = shinyHunt.HasShinyCharm,
-                CurrentPhaseEncounters = shinyHunt.CurrentPhaseEncounters,
-                TotalEncounters = shinyHunt.TotalEncounters,
-                Phases = shinyHunt.Phases,
-                IsCaptured = shinyHunt.IsCaptured,
-                IsAlpha = shinyHunt.IsAlpha,
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 AppConfig = this.appConfig,
             };
 
@@ -469,37 +418,30 @@ namespace Pokedex.Controllers
                     genders.Add("Female");
                 }
 
-                EditShinyHuntViewModel model = new EditShinyHuntViewModel()
+                EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
                 {
+                    PokemonHunted = oldShinyHunt.Pokemon,
+                    GameHuntedIn = oldShinyHunt.Game,
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AllPokeballs = this.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId),
                     AllMarks = this.dataService.GetObjects<Mark>(),
                     AllGenders = genders,
-                    Id = oldShinyHunt.Id,
-                    PokemonId = oldShinyHunt.PokemonId,
-                    GameId = oldShinyHunt.GameId,
-                    PokemonHunted = oldShinyHunt.Pokemon,
-                    GameHuntedIn = oldShinyHunt.Game,
-                    Nickname = oldShinyHunt.Nickname,
-                    DateOfCapture = oldShinyHunt.DateOfCapture,
-                    HuntingMethodId = oldShinyHunt.HuntingMethodId,
-                    PokeballId = oldShinyHunt.PokeballId,
-                    Gender = oldShinyHunt.Gender,
-                    MarkId = oldShinyHunt.MarkId,
-                    SparklingPowerLevel = oldShinyHunt.SparklingPowerLevel,
-                    HasShinyCharm = oldShinyHunt.HasShinyCharm,
-                    CurrentPhaseEncounters = oldShinyHunt.CurrentPhaseEncounters,
-                    TotalEncounters = oldShinyHunt.TotalEncounters,
-                    Phases = oldShinyHunt.Phases,
-                    IsCaptured = oldShinyHunt.IsCaptured,
-                    IsAlpha = oldShinyHunt.IsAlpha,
                     UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                     AppConfig = this.appConfig,
                 };
 
                 return this.View(model);
+            }
+
+            if (shinyHunt.CurrentPhaseEncounters > 0 && shinyHunt.TotalEncounters == 0)
+            {
+                shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
+            }
+            else if (shinyHunt.TotalEncounters > 0 && shinyHunt.CurrentPhaseEncounters == 0)
+            {
+                shinyHunt.CurrentPhaseEncounters = shinyHunt.TotalEncounters;
             }
 
             this.dataService.UpdateObject(shinyHunt);
@@ -524,22 +466,8 @@ namespace Pokedex.Controllers
                 p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
             }
 
-            DeleteShinyHuntViewModel model = new DeleteShinyHuntViewModel()
+            DeleteShinyHuntViewModel model = new DeleteShinyHuntViewModel(shinyHunt)
             {
-                Id = shinyHunt.Id,
-                Pokemon = shinyHunt.Pokemon,
-                Game = shinyHunt.Game,
-                Nickname = shinyHunt.Nickname,
-                DateOfCapture = shinyHunt.DateOfCapture,
-                HuntingMethod = shinyHunt.HuntingMethod,
-                Pokeball = shinyHunt.Pokeball,
-                Gender = shinyHunt.Gender,
-                Mark = shinyHunt.Mark,
-                HasShinyCharm = shinyHunt.HasShinyCharm,
-                CurrentPhaseEncounters = shinyHunt.CurrentPhaseEncounters,
-                TotalEncounters = shinyHunt.TotalEncounters,
-                IsCaptured = shinyHunt.IsCaptured,
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 AppConfig = this.appConfig,
             };
 
