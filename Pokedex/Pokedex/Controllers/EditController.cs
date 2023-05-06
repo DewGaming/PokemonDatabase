@@ -1155,6 +1155,7 @@ namespace Pokedex.Controllers
                 Randomizable = form.Randomizable,
                 FormGroupId = form.FormGroupId,
                 NeedsItem = form.NeedsItem,
+                OnlyDuringBattle = form.OnlyDuringBattle,
                 AllFormGroups = this.dataService.GetObjects<FormGroup>(),
             };
 
@@ -1168,14 +1169,15 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Form newForm = this.dataService.GetObjectByPropertyValue<Form>("Id", form.Id);
+                Form oldForm = this.dataService.GetObjectByPropertyValue<Form>("Id", form.Id);
                 FormModelViewModel model = new FormModelViewModel()
                 {
-                    Id = newForm.Id,
-                    Name = newForm.Name,
-                    Randomizable = newForm.Randomizable,
-                    FormGroupId = newForm.FormGroupId,
-                    NeedsItem = newForm.NeedsItem,
+                    Id = oldForm.Id,
+                    Name = oldForm.Name,
+                    Randomizable = oldForm.Randomizable,
+                    FormGroupId = oldForm.FormGroupId,
+                    NeedsItem = oldForm.NeedsItem,
+                    OnlyDuringBattle = oldForm.OnlyDuringBattle,
                     AllFormGroups = this.dataService.GetObjects<FormGroup>(),
                 };
 
