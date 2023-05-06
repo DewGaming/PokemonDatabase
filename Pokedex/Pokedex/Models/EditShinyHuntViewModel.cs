@@ -11,6 +11,14 @@ namespace Pokedex.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="EditShinyHuntViewModel"/> class.
         /// </summary>
+        public EditShinyHuntViewModel()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditShinyHuntViewModel"/> class.
+        /// </summary>
         /// <param name="shinyHunt">The shiny hunt.</param>
         public EditShinyHuntViewModel(ShinyHunt shinyHunt)
             : base(shinyHunt)
