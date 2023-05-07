@@ -151,6 +151,8 @@ namespace Pokedex.Controllers
                 genders.Add("Female");
             }
 
+            shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
+
             CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
                 Id = shinyHunt.Id,
