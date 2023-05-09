@@ -166,7 +166,7 @@
             }
         }
     </style>
-    @if (this.User.IsInRole("Admin"))
+    @if (this.User.IsInRole("Owner"))
     {
         <style>
             .btn-group {
@@ -225,12 +225,12 @@
 {
     string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
-    @if (this.User.IsInRole("Admin"))
+    @if (this.User.IsInRole("Owner"))
     {
         adminPokemon.Pokemon = item.Pokemon;
     }
     
-    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">    
+    <div class="generations@(@item.Pokemon.Id == @Model.PokemonId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">    
         @if (!item.Pokemon.IsComplete)
         {
             <hr style="width: 100%;margin-top: 0;margin-bottom: 0;">
@@ -249,7 +249,7 @@
                 gameColors = string.Concat(gameColors, @item.GamesAvailableIn.Where(x => x.GenerationId == g).ToList()[0].GameColor, " 50%)");
             }
 
-            <button style="@(item.GamesAvailableIn.First(x => x.GenerationId == g).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)"class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
+            <button style="@(item.GamesAvailableIn.First(x => x.GenerationId == g).GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)"class="@(@g == @Model.GenerationId ? "active" : string.Empty)" onclick="lookupPokemon('@item.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@item.Pokemon.Name.Replace("'", "&apos;")', '@g')" id="Generation@(g)">Generation @(g)</button>
         }
     </div>
 
@@ -284,7 +284,7 @@
             adminPokemon.GenerationId = g;
         }
 
-        <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
+        <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
             <div class="pokemonInfo pokemonPicture pokemonTables">
                 <div style="@(Model.PokemonList.Count() > 1 ? "display: flex" : string.Empty)">
                     @if (Model.PokemonList.Count() > 1)
@@ -296,7 +296,7 @@
                             {
                                 iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
                                 <div class="@button.Pokemon.Name">
-                                    <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
+                                    <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
                                         <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.OfficialPokemonImageUrl, @button.Pokemon.Id, ".png"))" />
                                     </button>
                                 </div>
@@ -330,7 +330,7 @@
                                     @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                                     {
                                         iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
-                                        <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
+                                        <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
                                             <img class="lightshadowed" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.OfficialPokemonImageUrl, @button.Pokemon.Id, ".png"))" />
                                         </button>
                                     }
@@ -355,7 +355,7 @@
                 }
             </div>
             <div class="pokemonInfo pokemonData pokemonTables">
-                @if (this.User.IsInRole("Admin"))
+                @if (this.User.IsInRole("Owner"))
                 {
                     @await Html.PartialAsync("_AdminPokemonDropdown", adminPokemon)
                 }
