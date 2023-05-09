@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -531,7 +532,7 @@ namespace Pokedex
         /// <returns>The view model used for the pokemon's type chart.</returns>
         public List<PokemonTypeChartViewModel> GetTypeChartPokemon(int pokemonId)
         {
-            List<Type> typeList = this.GetObjects<Type>("Name");
+            List<DataAccess.Models.Type> typeList = this.GetObjects<DataAccess.Models.Type>("Name");
             List<PokemonTypeDetail> pokemonTypes = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemonId);
             List<TypeChart> typeChart = this.GetObjects<TypeChart>("AttackId, DefendId", "Attack, Defend");
             List<TypeChart> primaryTypeChart = new List<TypeChart>();
@@ -606,15 +607,55 @@ namespace Pokedex
         /// Deletes a pokemon team.
         /// </summary>
         /// <param name="id">The id of the team being deleted.</param>
-        public void DeletePokemonTeam(int id)
+        /// <param name="user">The user that called this method. Only used if there is an error.</param>
+        /// <param name="appConfig">The application's config. Only used if there is an error.</param>
+        public void DeletePokemonTeam(int id, System.Security.Claims.ClaimsPrincipal user, AppConfig appConfig)
         {
-            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
-            List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
-            this.DeleteObject<PokemonTeam>(pokemonTeam.Id);
-
-            foreach (var p in pokemonTeamDetailIds)
+            List<int> pokemonTeamDetailIds = new List<int>();
+            try
             {
-                this.DeleteObject<PokemonTeamDetail>(p);
+                PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
+                pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
+                this.DeleteObject<PokemonTeam>(pokemonTeam.Id);
+
+                foreach (var p in pokemonTeamDetailIds)
+                {
+                    this.DeleteObject<PokemonTeamDetail>(p);
+                }
+            }
+            catch (Exception e)
+            {
+                if (!user.IsInRole("Owner") && e != null)
+                {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's deletion.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during the pokemon team's deletion.";
+                    }
+
+                    commentBody = string.Concat(commentBody, " - Deleted Team Id: {", id, "}");
+                    if (pokemonTeamDetailIds.Count() > 0)
+                    {
+                        commentBody = string.Concat(commentBody, " - Deleted Team Detail Id(s): {", string.Join(", ", pokemonTeamDetailIds), "}");
+                    }
+
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+
+                    if (user.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.GetObjectByPropertyValue<User>("Username", user.Identity.Name).Id;
+                    }
+
+                    this.AddObject(comment);
+                    this.EmailComment(appConfig, comment);
+                }
             }
         }
 

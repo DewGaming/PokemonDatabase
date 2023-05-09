@@ -1202,7 +1202,7 @@ namespace Pokedex.Controllers
 
                 foreach (var t in pokemonTeams)
                 {
-                    this.dataService.DeletePokemonTeam(t.Id);
+                    this.dataService.DeletePokemonTeam(t.Id, this.User, this.appConfig);
                 }
 
                 return this.Json(this.Url.Action("PokemonTeams", "User")).Value.ToString();

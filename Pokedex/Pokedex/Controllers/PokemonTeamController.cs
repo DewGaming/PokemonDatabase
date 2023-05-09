@@ -373,7 +373,7 @@ namespace Pokedex.Controllers
         [Route("delete_team/{pokemonTeamId:int}")]
         public IActionResult DeleteTeam(PokemonTeam pokemonTeam)
         {
-            this.dataService.DeletePokemonTeam(pokemonTeam.Id);
+            this.dataService.DeletePokemonTeam(pokemonTeam.Id, this.User, this.appConfig);
 
             return this.RedirectToAction("PokemonTeams", "User");
         }
@@ -1178,7 +1178,7 @@ namespace Pokedex.Controllers
                     string commentBody;
                     if (e != null)
                     {
-                        commentBody = string.Concat(e.GetType().ToString(), " error during team import.");
+                        commentBody = string.Concat(e.GetType().ToString(), " error during team.");
                     }
                     else
                     {
