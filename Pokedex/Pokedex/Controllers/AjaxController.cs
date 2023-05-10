@@ -2633,12 +2633,12 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="gameId">The selected game's Id.</param>
         /// <returns>The list of available pokemon.</returns>
-        [Route("get-pokemon-by-game")]
-        public List<Pokemon> GetPokemonByGame(int gameId)
+        [Route("get-shiny-huntable-pokemon-by-game")]
+        public List<Pokemon> GetShinyHuntablePokemonByGame(int gameId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.dataService.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete == true).ToList();
+                return this.dataService.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
             }
 
             return null;

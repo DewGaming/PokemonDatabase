@@ -16,6 +16,8 @@ namespace Pokedex.DataAccess.Models
         public decimal Weight { get; set; }
         [Required]
         public bool IsComplete { get; set; }
+        [Required, Display(Name = "Is Always Shiny Locked")]
+        public bool IsShinyLocked { get; set; }
         [Display(Name = "Egg Cycle Count"), Required]
         public int EggCycleId { get; set; }
         public EggCycle EggCycle { get; set; }

@@ -2,7 +2,7 @@ var grabPokemon = function (pokemonId) {
     $(".overlay").fadeIn(300);
 
     $.ajax({
-        url: '/get-pokemon-by-game/',
+        url: '/get-shiny-huntable-pokemon-by-game/',
         method: "POST",
         data: { 'gameId': $('#GameId').val() }
     })
