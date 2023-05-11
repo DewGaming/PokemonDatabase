@@ -173,6 +173,8 @@ $(document).ready(function () {
         grabHuntingMethod(huntingMethodId);
         checkFunctions();
     }
+    
+    $("#PokemonId").select2();
 });
 
 $('#GameId').on('change', function () {
