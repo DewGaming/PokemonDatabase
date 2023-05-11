@@ -35,7 +35,7 @@ namespace Pokedex.DataAccess.Models
         /// </summary>
         public FormGroup FormGroup { get; set; }
 
-        [Display(Name="Requires An item To Use"), Required]
+        [Display(Name="Requires An Item To Use"), Required]
         /// <summary>
         /// Gets or sets the necessity of an item.
         /// </summary>
