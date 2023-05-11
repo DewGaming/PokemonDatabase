@@ -485,7 +485,15 @@ namespace Pokedex.Controllers
         [Route("delete_shiny_hunt/{shinyHuntId:int}")]
         public IActionResult DeleteShinyHunt(DeleteShinyHuntViewModel shinyHunt)
         {
+            List<ShinyHunt> phaseHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHunt.Id);
+
             this.dataService.DeleteObject<ShinyHunt>(shinyHunt.Id);
+
+            foreach (var sh in phaseHunts)
+            {
+                sh.PhaseOfHuntId = null;
+                this.dataService.UpdateObject(sh);
+            }
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
