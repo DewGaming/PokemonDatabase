@@ -14,6 +14,11 @@ namespace Pokedex.Models
         public List<PokemonShinyHuntDetails> AllPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all shiny hunts.
+        /// </summary>
+        public List<ShinyHunt> AllShinyHunts { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all games.
         /// </summary>
         public List<Game> AllGames { get; set; }

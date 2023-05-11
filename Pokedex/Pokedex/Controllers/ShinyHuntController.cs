@@ -41,6 +41,7 @@ namespace Pokedex.Controllers
         [Route("shiny_dex_progress")]
         public IActionResult ShinyDexProgress()
         {
+            int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
             List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
@@ -54,6 +55,7 @@ namespace Pokedex.Controllers
             ShinyDexViewModel model = new ShinyDexViewModel()
             {
                 AllPokemon = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList(),
+                AllShinyHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "UserId", wherePropertyValue: userId),
                 AllGames = this.dataService.GetObjects<Game>(),
                 AppConfig = this.appConfig,
             };

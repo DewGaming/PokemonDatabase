@@ -18,6 +18,10 @@
             filter: brightness(0);
         }
 
+        .uncaptured .captureTotal {
+            display: none;
+        }
+
         .generations {
             margin-bottom: 0px !important;
         }
@@ -80,6 +84,7 @@
                     </div>
                     <div class="description">
                         <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
+                        <p class="captureTotal@(!p.IsCaptured ? " uncaptured" : "")"><b>Total Captured:</b> @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id).Count()</p>
                     </div>
                 </div>
             }
