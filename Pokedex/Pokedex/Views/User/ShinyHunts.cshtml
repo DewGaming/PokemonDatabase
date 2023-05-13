@@ -76,7 +76,7 @@
 {
     <div class="page active generation pokemonList incompletedHunts">
         <div class="grid-container">
-            @foreach (var s in Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList())
+            @foreach (var s in Model.AllShinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).Where(x => !x.IsCaptured).ToList())
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
                     <div class="pokemonDetails">
