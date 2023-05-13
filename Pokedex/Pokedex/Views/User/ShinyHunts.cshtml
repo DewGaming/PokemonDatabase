@@ -29,10 +29,10 @@
 
 <p class="shinyHuntButtons">
     <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
-    <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideComplete()">Current Shiny Hunts</button>
+    <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideComplete()">View In-Progress Shiny Hunts</button>
     @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
     {
-        <button class="completedHuntsButton btn btn-primary" onclick="hideIncomplete()">Completed Shiny Hunts</button>
+        <button class="completedHuntsButton btn btn-primary" onclick="hideIncomplete()">View Successful Shiny Hunts</button>
     }
 </p>
 

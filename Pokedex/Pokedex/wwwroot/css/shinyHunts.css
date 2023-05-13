@@ -40,6 +40,10 @@
   width: 49%;
 }
 
+.shinyHuntButtons a {
+  margin-bottom: 5px;
+}
+
 .select2-container {
   width: 100% !important;
 }
