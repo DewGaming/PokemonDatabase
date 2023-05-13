@@ -76,9 +76,11 @@ $(document).ready(function () {
     if ($('#PokemonTeamDetail_BattleItemId').length && $('#PokemonTeamDetail_BattleItemId').val().length != 0) {
         battleItem = $('#PokemonTeamDetail_BattleItemId option[value=' + $('#PokemonTeamDetail_BattleItemId').val() + ']').text();
     }
+
     refreshGenders();
     grabAbilities();
     refreshHeldItems();
+    $("#PokemonTeamDetail_PokemonId").select2();
 });
 
 $('#PokemonTeamDetail_PokemonId').on('change', function () {
