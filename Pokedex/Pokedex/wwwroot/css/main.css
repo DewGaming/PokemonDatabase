@@ -2,6 +2,11 @@
   cursor: help;
 }
 
+.form-group.row {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
 .pokemonListPicture {
   width: 150px;
   height: 150px;

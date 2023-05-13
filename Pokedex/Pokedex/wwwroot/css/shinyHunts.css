@@ -115,13 +115,6 @@
   margin-bottom: 0;
 }
 
-.startShinyForm .form-group,
-.completeShinyHunt .form-group,
-.editShinyHunt .form-group {
-  margin-left: 0px !important;
-  margin-right: 0px !important;
-}
-
 @media (min-width: 440px) {
   .shadowed {
     min-width: 310px;
