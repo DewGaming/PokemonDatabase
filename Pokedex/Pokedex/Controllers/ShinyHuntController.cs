@@ -154,6 +154,10 @@ namespace Pokedex.Controllers
             }
 
             shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
+            if (shinyHunt.Phases < 1)
+            {
+                shinyHunt.Phases = 1;
+            }
 
             CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
@@ -257,6 +261,7 @@ namespace Pokedex.Controllers
                 shinyHunt.IsCaptured = true;
                 shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
                 shinyHunt.PhaseOfHuntId = shinyHuntId;
+                shinyHunt.Phases = 1;
                 this.dataService.AddObject(shinyHunt);
 
                 ShinyHunt originalShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
