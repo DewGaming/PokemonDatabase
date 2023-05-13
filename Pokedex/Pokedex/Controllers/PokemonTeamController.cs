@@ -702,7 +702,7 @@ namespace Pokedex.Controllers
         /// <returns>The pokemon list.</returns>
         private List<Pokemon> FillPokemonList(PokemonTeam pokemonTeam)
         {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon().ToList();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
             if (pokemonTeam.GameId != null)
             {
                 List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: (int)pokemonTeam.GameId);
