@@ -16,3 +16,9 @@
 .select2-selection__arrow {
     top: 6px !important;
 }
+
+@media (min-width: 768px) {
+    .select2-container {
+        max-width: 66.666667%;
+    }
+}
