@@ -165,10 +165,9 @@ namespace Pokedex.Controllers
             else
             {
                 PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
-                List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
-                    AllPokemon = pokemonList,
+                    AllPokemon = this.FillPokemonList(pokemonTeam),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
@@ -266,11 +265,10 @@ namespace Pokedex.Controllers
                     pokemonTeamDetail.NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id;
                 }
 
-                List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);
                 UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel()
                 {
                     PokemonTeamDetail = pokemonTeamDetail,
-                    AllPokemon = pokemonList,
+                    AllPokemon = this.FillPokemonList(pokemonTeam),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
@@ -301,12 +299,10 @@ namespace Pokedex.Controllers
 
             if (!this.ModelState.IsValid)
             {
-                List<Pokemon> pokemonList = this.FillPokemonList(pokemonTeam);
-
                 UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel()
                 {
                     PokemonTeamDetail = pokemonTeamDetail,
-                    AllPokemon = pokemonList,
+                    AllPokemon = this.FillPokemonList(pokemonTeam),
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
@@ -716,7 +712,7 @@ namespace Pokedex.Controllers
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
             pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
 
-            return pokemonList.OrderBy(x => x.Name).ToList();
+            return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
 
         /// <summary>
