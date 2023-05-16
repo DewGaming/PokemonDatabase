@@ -102,10 +102,6 @@
                             {
                                 <p><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
-                            else if (@s.HuntingMethodId == 15 )
-                            {
-                                <p><b>Runs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
-                            }
                             else
                             {
                                 <p><b>Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
@@ -191,10 +187,6 @@
                                     {
                                         <p><b>Last Phase Eggs: </b>@s.CurrentPhaseEncounters</p>
                                     }
-                                    else if (@s.HuntingMethodId == 15)
-                                    {
-                                        <p><b>Last Phase Runs: </b>@s.CurrentPhaseEncounters</p>
-                                    }
                                     else
                                     {
                                         <p><b>Last Phase Encounters: </b>@s.CurrentPhaseEncounters</p>
@@ -204,10 +196,6 @@
                                 if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
                                 {
                                     <p><b>Total Eggs: </b>@s.TotalEncounters</p>
-                                }
-                                else if (@s.HuntingMethodId == 15)
-                                {
-                                    <p><b>Total Runs: </b>@s.TotalEncounters</p>
                                 }
                                 else
                                 {
