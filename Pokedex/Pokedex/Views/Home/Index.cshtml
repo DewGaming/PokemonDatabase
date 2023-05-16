@@ -51,7 +51,7 @@
     @if (this.User.IsInRole("Admin"))
     {
         <div class="feature shinyHunts">
-            <a href="@this.Url.Action("FormEvaluator", "Home")"><p><b>Track Shiny Hunts!</b></p></a>
+            <a href="@this.Url.Action("ShinyHunts", "User")"><p><b>Track Shiny Hunts!</b></p></a>
             <img class="modalPreview" data-modalUrl="@this.Url.Action("ShinyHunts", "User")" alt="Shiny Hunts" title="Keep track of all of you current and successful shiny hunts! Additional &quot;Shiny Dex Completion&quot; page available to track progress for a shiny living dex!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunts.png"))">
         </div>
     }
