@@ -1,0 +1,40 @@
+.flexDiv div {
+    margin-right: 10px;
+}
+
+.flexDiv {
+    flex-wrap: wrap;
+}
+
+.getCandies {
+    margin-top: 24px;
+}
+
+.candyImages div {
+    position: relative;
+}
+
+.candyImages img {
+    z-index: -2;
+}
+
+.candyImages p {
+    font-weight: bold;
+}
+
+.candyAmount {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    font-size: 30px;
+}
+
+.candyName {
+    text-align: center;
+}
+
+.select2-container {
+    max-width: none !important;
+}

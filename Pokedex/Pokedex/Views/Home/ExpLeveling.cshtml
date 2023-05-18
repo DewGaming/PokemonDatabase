@@ -7,58 +7,22 @@
 
 @section styles
 {
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" asp-append-version="true" />
-    <style>
-        .flexDiv div {
-            margin-right: 10px;
-        }
-
-        .flexDiv {
-            flex-wrap: wrap;
-        }
-
-        .getCandies {
-            margin-top: 24px;
-        }
-
-        .candyImages div {
-            position: relative;
-        }
-
-        .candyImages img {
-            z-index: -2;
-        }
-
-        .candyImages p {
-            font-weight: bold;
-        }
-
-        .candyAmount {
-	        position: absolute;
-            top: 42%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            font-size: 30px;
-        }
-
-        .candyName {
-            text-align: center;
-        }
-    </style>
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/expLeveling.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/select2.css" rel="stylesheet" asp-append-version="true" />
 }
 
 @section scripts
 {
-    <script src="/js/pageLookup.js" asp-append-version="true"></script>
-    <script src="/js/expLeveling.js" asp-append-version="true"></script>
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
+    <script src="~/js/expLeveling.js" asp-append-version="true"></script>
 }
 
 <div class="evaluator">
     <div class="flexDiv">
         <div class="pokemonList">
             @Html.Label("Pokémon")
-            @Html.DropDownList("Pokémon", new SelectList(@Model.PokemonList, "ExperienceGrowthId", "Name"), "Select Pokémon", new { @class = "form-control pokemonSelectList" })
+            @Html.DropDownList("Pokemon", new SelectList(@Model.PokemonList, "ExperienceGrowthId", "Name"), "Select Pokémon", new { @class = "form-control pokemonSelectList" })
         </div>
         <div class="currentExp">
             @Html.Label("Current Exp Points")

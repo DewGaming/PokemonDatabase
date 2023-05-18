@@ -718,6 +718,8 @@ $(function () {
     if ($('.expObtained').val() > 0) {
         calculateLevelFromExp($('.expObtained').val());
     }
+
+    $("#Pokemon").select2();
 });
 
 $(".pokemonSelectList").on('change', function () {
