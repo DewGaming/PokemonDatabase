@@ -117,6 +117,7 @@ namespace Pokedex
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseRobotsTxt();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
