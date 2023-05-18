@@ -1,19 +1,18 @@
 @model Pokedex.Models.TeamRandomizerListViewModel;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Team Randomizer";
     ViewBag.Description = "Create a randomized Pokémon team using the many different options available. You may even find a shiny while randomizing!";
 }
 
 @section styles
 {
-    <link href="/css/teamRandomizer.css" rel="stylesheet" type="text/css" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/teamRandomizer.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
 }
 
 @section scripts
 {
-    <script src="/js/teamRandomizer.js"></script>
+    <script src="~/js/teamRandomizer.js" asp-append-version="true"></script>
 }
 
 <div class="btn-group teamRandomizer gameSelector">

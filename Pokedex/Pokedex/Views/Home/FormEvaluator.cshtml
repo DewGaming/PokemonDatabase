@@ -1,19 +1,18 @@
 @model List<Pokedex.DataAccess.Models.Form>;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Form Viewer";
     ViewBag.Description = "Find out what Pokémon are part of different forms!";
 }
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
 }
 
 @section scripts
 {
-    <script src="/js/formEvaluator.js"></script>
+    <script src="~/js/formEvaluator.js" asp-append-version="true"></script>
 }
 
 <div>

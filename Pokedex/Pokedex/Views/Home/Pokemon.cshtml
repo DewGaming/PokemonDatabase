@@ -4,7 +4,6 @@
 @using MoreLinq;
 @model Pokedex.Models.AdminPokemonDropdownViewModel;
 @{
-    Layout = "_Layout";
     string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     ViewBag.Description = string.Concat("View the information for the ", @Model.PokemonList.FirstOrDefault().Pokemon.Classification.Name, ", ", @Model.PokemonList.FirstOrDefault().Pokemon.Name, "!");
@@ -21,9 +20,9 @@
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pokemonPage.css" rel="stylesheet" asp-append-version="true" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
@@ -178,8 +177,8 @@
 
 @section scripts
 {
-    <script src="/js/pokemonPage.js"></script>
-    <script src="/js/pageLookup.js"></script>
+    <script src="~/js/pokemonPage.js" asp-append-version="true"></script>
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
 }
 
 @Html.HiddenFor(x => x.LatestGenerationId)

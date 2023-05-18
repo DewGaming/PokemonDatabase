@@ -1,7 +1,6 @@
 @using Pokedex.DataAccess.Models;
 @model Pokedex.Models.PokemonViewModel
 @{
-    Layout = "_Layout";
     Evolution preEvolution = null;
     if (Model.PreEvolutions.Count() > 0)
     {
@@ -13,9 +12,9 @@
 
 @section styles
 {
-    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/pokemonPage.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pokemonPage.css" rel="stylesheet" asp-append-version="true" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.FaviconImageUrl, @Model.Pokemon.Id, ".png"))" />
     <style>
         .pokemonImage h4 {
@@ -54,7 +53,7 @@
 
 @section scripts
 {
-    <script src="/js/calculateCaptureRate.js"></script>
+    <script src="~/js/calculateCaptureRate.js" asp-append-version="true"></script>
 }
 
 <p class="adminButtons">

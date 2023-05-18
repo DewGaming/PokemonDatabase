@@ -1,18 +1,14 @@
 @using Pokedex.DataAccess.Models;
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.EditGameAvailabilityViewModel
-@{
-    Layout = "_layout";
-}
 
 @section scripts
 {
-    <script src="/js/editGameAvailability.js"></script>
+    <script src="~/js/editGameAvailability.js" asp-append-version="true"></script>
 }
 
 @section styles
 {
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .container {
             max-width: 85% !important;

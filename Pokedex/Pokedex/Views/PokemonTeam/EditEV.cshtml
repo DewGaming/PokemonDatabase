@@ -1,13 +1,11 @@
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.PokemonTeamEVViewModel
 @{
-    Layout = "_layout";
     ViewBag.Title = "Edit EVs";
 }
 
 @section scripts
 {
-    <script src="/js/editEVs.js"></script>
+    <script src="~/js/editEVs.js" asp-append-version="true"></script>
     <script>
         $(setupLabels(@Model.Health, @Model.Attack, @Model.Defense, @Model.SpecialAttack, @Model.SpecialDefense, @Model.Speed));
     </script>

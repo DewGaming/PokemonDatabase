@@ -1,13 +1,12 @@
 @using MoreLinq;
 @model List<Pokedex.DataAccess.Models.PageStat>;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Pokémon Page Stats";
 }
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .page table th{
             font-weight: bold;
@@ -22,7 +21,7 @@
 
 @section scripts
 {
-    <script src="/js/pageLookup.js"></script>
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
 }
 
 <div style="display: none" class="pokemonPageCheck" id="pokemonPage"></div>

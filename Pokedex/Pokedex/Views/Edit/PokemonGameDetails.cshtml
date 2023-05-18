@@ -1,12 +1,8 @@
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.PokemonGameViewModel
-@{
-    Layout = "_layout";
-}
 
 @section scripts
 {
-    <script src="/js/editPokemonGameAvailability.js"></script>
+    <script src="~/js/editPokemonGameAvailability.js" asp-append-version="true"></script>
 }
 
 @section styles

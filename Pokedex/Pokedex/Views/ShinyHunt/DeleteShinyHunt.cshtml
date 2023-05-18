@@ -1,8 +1,6 @@
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.DeleteShinyHuntViewModel
 @{
     string pageTitle;
-    Layout = "_Layout";
     if (@Model.IsCaptured)
     {
         pageTitle = "Delete Shiny Hunt";
@@ -16,7 +14,7 @@
 
 @section styles
 {
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .deleteShinyHunt .form-group {
             margin-left: 0px !important;
@@ -56,7 +54,7 @@
 
 @section scripts
 {
-    <script src="/js/deleteShinyHunt.js"></script>
+    <script src="~/js/deleteShinyHunt.js" asp-append-version="true"></script>
 }
 
 <h2>@pageTitle</h2>

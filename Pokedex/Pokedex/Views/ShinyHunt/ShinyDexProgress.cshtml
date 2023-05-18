@@ -1,14 +1,13 @@
 @model Pokedex.Models.ShinyDexViewModel;
 @using System.Net;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Shiny Dex Progress";
     string gameColors = string.Empty;
 }
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
     <style>
         p {
             margin: 0 !important;
@@ -34,7 +33,7 @@
 
 @section scripts
 {
-    <script src="/js/shinyHunts.js"></script>
+    <script src="~/js/shinyHunts.js" asp-append-version="true"></script>
 }
 
 <p class="shinyHuntButtons">

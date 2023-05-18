@@ -1,14 +1,12 @@
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.CompleteShinyHuntViewModel
 @{
-    Layout = "_layout";
     ViewBag.Title = "Complete Shiny Hunt";
 }
 
 @section styles
 {
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
-    <link href="/css/shinyHunts.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/shinyHunts.css" rel="stylesheet" asp-append-version="true" />
     <style>
         @@media (max-width: 575px)
         {
@@ -29,7 +27,7 @@
 
 @section scripts
 {
-    <script src="/js/completeShinyHunt.js"></script>
+    <script src="~/js/completeShinyHunt.js" asp-append-version="true"></script>
 }
 
 <h2>Complete Shiny Hunt for @Model.PokemonHunted.Name</h2>

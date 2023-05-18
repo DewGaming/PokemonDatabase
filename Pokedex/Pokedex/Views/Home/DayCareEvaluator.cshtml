@@ -1,15 +1,14 @@
 @model Pokedex.Models.EggGroupEvaluatorViewModel;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Day Care Combinations";
     ViewBag.Description = "Find out what Pokémon can be breed together to produce a Pokémon Egg!";
 }
 
 @section styles
 {
-    <link href="/css/eggGroup.css" rel="stylesheet" type="text/css" asp-append-version="true" />
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" asp-append-version="true" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+    <link href="~/css/eggGroup.css" rel="stylesheet" asp-append-version="true" asp-append-version="true" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" asp-append-version="true" />
     <style>
         .gameList {
             margin-right: 10px;
@@ -19,7 +18,7 @@
 
 @section scripts
 {
-    <script src="/js/dayCareEvaluator.js" asp-append-version="true"></script>
+    <script src="~/js/dayCareEvaluator.js" asp-append-version="true" asp-append-version="true"></script>
 }
 
 <div class="evaluator">

@@ -1,6 +1,5 @@
 @model Pokedex.Models.TypeEvaluatorViewModel
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Typing Lookup";
     ViewBag.Description = string.Concat("Find out what Pokémon have a specific typing and what that type chart looks like!");
     var primaryItems = Model.AllTypes.Prepend(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Type Selected" });
@@ -10,9 +9,9 @@
 
 @section styles
 {
-    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .quad-icon {
             margin-left: 5px;
@@ -64,7 +63,7 @@
 
 @section scripts
 {
-    <script src="/js/typingEvaluator.js"></script>
+    <script src="~/js/typingEvaluator.js" asp-append-version="true"></script>
 }
 
 <div class="overlay">

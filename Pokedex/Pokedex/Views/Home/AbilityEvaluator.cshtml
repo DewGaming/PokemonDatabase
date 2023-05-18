@@ -1,6 +1,5 @@
 @model Pokedex.Models.AbilityEvaluatorViewModel
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Ability Lookup";
     ViewBag.Description = "Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!";
     var abilities = Model.AllAbilities.Prepend(new Pokedex.DataAccess.Models.Ability { Id = 0, Name = "No Ability Selected" });
@@ -8,8 +7,8 @@
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .generationList {
             margin-right: 10px;
@@ -60,7 +59,7 @@
 
 @section scripts
 {
-    <script src="/js/abilityEvaluator.js"></script>
+    <script src="~/js/abilityEvaluator.js" asp-append-version="true"></script>
 }
 
 <div>

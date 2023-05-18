@@ -1,8 +1,4 @@
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.DataAccess.Models.EVYield
-@{
-    Layout = "_layout";
-}
 
 @section styles
 {
@@ -15,7 +11,7 @@
 
 @section scripts
 {
-    <script src="/js/editEVYields.js"></script>
+    <script src="~/js/editEVYields.js" asp-append-version="true" asp-append-version="true"></script>
     <script>
         $(setupLabels(0, 0, 0, 0, 0, 0));
     </script>

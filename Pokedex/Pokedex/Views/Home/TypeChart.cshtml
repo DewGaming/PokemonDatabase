@@ -1,14 +1,13 @@
 @model Pokedex.Models.TypeChartViewModel;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Type Chart";
     ViewBag.Description = "View the different type charts from different Pokémon generations!";
 }
 
 @section styles
 {
-    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
     <style>
         main {
             max-width: 1220px !important;
@@ -22,7 +21,7 @@
 
 @section scripts
 {
-    <script src="/js/pageLookup.js"></script>
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
 }
 
 <div class="pageButtons">

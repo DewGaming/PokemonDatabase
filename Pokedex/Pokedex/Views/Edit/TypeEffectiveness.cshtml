@@ -1,18 +1,16 @@
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Pokedex.Models.EditTypeChartViewModel
 @{
-    Layout = "_layout";
     string typeName = Model.Types.Find(x => x.Id == Model.TypeId).Name;
 }
 
 @section scripts
 {
-    <script src="/js/editTypeChart.js"></script>
+    <script src="~/js/editTypeChart.js" asp-append-version="true"></script>
 }
 
 @section styles
 {
-    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .typeChart li {
             list-style: none;

@@ -1,14 +1,13 @@
 @model IEnumerable<Pokedex.DataAccess.Models.Game>;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "EV Trainer";
     ViewBag.Description = "Find out how to train your Pokémon using the EVs opponent Pokémon give upon defeat!";
 }
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .gameList {
           margin-bottom: 10px;
@@ -22,7 +21,7 @@
 
 @section scripts
 {
-    <script src="/js/evYields.js"></script>
+    <script src="~/js/evYields.js" asp-append-version="true"></script>
 }
 
 <div class="evaluator">

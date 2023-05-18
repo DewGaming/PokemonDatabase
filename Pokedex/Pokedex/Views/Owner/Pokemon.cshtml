@@ -1,16 +1,13 @@
 @model List<int>;
-@{
-    Layout = "_Layout";
-}
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
 }
 
 @section scripts
 {
-    <script src="/js/pageLookup.js"></script>
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
     <script>
         $(document).ready(function() {
             $('.allPokemon').hide();

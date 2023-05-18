@@ -1,7 +1,4 @@
 @model List<Pokedex.DataAccess.Models.Comment>;
-@{
-    Layout = "_Layout";
-}
 
 @if (@Model.Where(x => !x.IsCompleted).ToList().Count() > 0)
 {

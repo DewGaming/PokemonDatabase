@@ -1,7 +1,6 @@
 @model Pokedex.Models.PokemonTeamsViewModel;
 @using Pokedex.DataAccess.Models;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Pokémon Teams";
     int teamCount = 0;
     int pokemonCount;
@@ -18,7 +17,7 @@
 
 @section scripts
 {
-    <script src="/js/pokemonTeam.js"></script>
+    <script src="~/js/pokemonTeam.js" asp-append-version="true"></script>
 }
 
 <p class="teamButtons">

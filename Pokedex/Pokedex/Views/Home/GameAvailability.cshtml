@@ -1,15 +1,14 @@
 @model Pokedex.Models.GameAvailabilityViewModel;
 @{
-    Layout = "_Layout";
     ViewBag.Title = "Available Pokémon List";
     ViewBag.Description = "Find out what different Pokémon can appear in each game! Especially useful starting with Sword and Shield!";
 }
 
 @section styles
 {
-    <link href="/css/pageLookup.css" rel="stylesheet" type="text/css" />
-    <link href="/css/typeChart.css" rel="stylesheet" type="text/css" />
-    <link href="/css/ajaxSpinner.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .updateButton {
             margin: 0 3px;
@@ -31,7 +30,7 @@
 
 @section scripts
 {
-    <script src="/js/pageLookup.js"></script>
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
 }
 
 <div class="pageButtons">
