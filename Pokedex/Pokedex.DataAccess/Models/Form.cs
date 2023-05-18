@@ -46,5 +46,11 @@ namespace Pokedex.DataAccess.Models
         /// Gets or sets whether or not it is only available during a pokemon battle.
         /// </summary>
         public bool OnlyDuringBattle { get; set; }
+
+        [Display(Name="Fusion Form"), Required]
+        /// <summary>
+        /// Gets or sets whether or not it is only possible through fusion.
+        /// </summary>
+        public bool FusionForm { get; set; }
     }
 }
