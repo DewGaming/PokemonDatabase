@@ -25,6 +25,10 @@
         .generations {
             margin-bottom: 0px !important;
         }
+
+        .generationHeaders {
+            margin: 5px;
+        }
     </style>
 }
 
@@ -57,6 +61,7 @@
 }
 
 <div class="generations">
+    <button id="Generation0" onclick="lookupGeneration(0)">All Generations</button>
     @foreach (var id in Model.AllGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).Select(x => x.GenerationId).Distinct().ToList())
     {
         if (id == 7)
@@ -75,6 +80,7 @@
 @foreach (var g in Model.AllGames.Select(x => x.GenerationId).Distinct().ToList())
 {
     <div class="page generation@(g) pokemonList completedHunts">
+        <h5 class="generationHeaders"><b>Generation @(g)</b></h5>
         <div class="grid-container">
             @foreach (var p in Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g))
             {

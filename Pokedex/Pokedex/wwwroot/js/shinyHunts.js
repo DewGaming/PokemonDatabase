@@ -155,11 +155,25 @@ function lookupGeneration(generationId) {
 
     $('button#Generation' + generationId).addClass('active');
 
-    $('.page.generation' + generationId).each(function () {
-        $(this).addClass('active');
-    });
-
     $('.generationPercentage.generation' + generationId).each(function () {
         $(this).removeClass('hide');
     });
+
+    if (generationId != 0) {
+        $('.page.generation' + generationId).each(function () {
+            $(this).addClass('active');
+        });
+
+        $('.generationHeaders').each(function () {
+            $(this).hide();
+        });
+    } else {
+        $('.page').each(function () {
+            $(this).addClass('active');
+        });
+
+        $('.generationHeaders').each(function () {
+            $(this).show();
+        });
+    }
 }
