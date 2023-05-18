@@ -323,7 +323,7 @@ namespace Pokedex
             }
 
             List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
-            pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+            pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle || x.Form.FusionForm).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
             pokemonList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
