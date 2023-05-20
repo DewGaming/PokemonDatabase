@@ -195,53 +195,46 @@ namespace Pokedex.Controllers
         [Route("shiny_hunts")]
         public IActionResult ShinyHunts()
         {
-            if (this.User.IsInRole("Admin"))
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name);
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow && x.GenerationId >= 2).ToList();
+            gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+            List<Game> edittedGamesList = new List<Game>();
+            foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
             {
-                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name);
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
-                List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow && x.GenerationId >= 2).ToList();
-                gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
-                List<Game> edittedGamesList = new List<Game>();
-                foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
+                if (gamesList.First(x => x.ReleaseDate == r).Id != 4)
                 {
-                    if (gamesList.First(x => x.ReleaseDate == r).Id != 4)
+                    edittedGamesList.Add(new Game()
                     {
-                        edittedGamesList.Add(new Game()
-                        {
-                            Id = gamesList.First(x => x.ReleaseDate == r).Id,
-                            Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
-                            GenerationId = gamesList.First(x => x.ReleaseDate == r).GenerationId,
-                            ReleaseDate = r,
-                            GameColor = gamesList.First(x => x.ReleaseDate == r).GameColor,
-                        });
-                    }
-                    else
+                        Id = gamesList.First(x => x.ReleaseDate == r).Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                        GenerationId = gamesList.First(x => x.ReleaseDate == r).GenerationId,
+                        ReleaseDate = r,
+                        GameColor = gamesList.First(x => x.ReleaseDate == r).GameColor,
+                    });
+                }
+                else
+                {
+                    foreach (var g in gamesList.Where(x => x.ReleaseDate == r).ToList())
                     {
-                        foreach (var g in gamesList.Where(x => x.ReleaseDate == r).ToList())
-                        {
-                            edittedGamesList.Add(g);
-                        }
+                        edittedGamesList.Add(g);
                     }
                 }
-
-                shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
-                shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
-                shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.Id == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon = this.dataService.GetAltFormWithFormName(x.PhaseOfHunt.PokemonId));
-
-                ShinyHuntsViewModel model = new ShinyHuntsViewModel()
-                {
-                    AllShinyHunts = shinyHunts,
-                    EdittedGames = edittedGamesList,
-                    UnedittedGames = gamesList,
-                    AppConfig = this.appConfig,
-                };
-
-                return this.View(model);
             }
-            else
+
+            shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
+            shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
+            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.Id == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon = this.dataService.GetAltFormWithFormName(x.PhaseOfHunt.PokemonId));
+
+            ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
-                return this.RedirectToAction("Index", "Home");
-            }
+                AllShinyHunts = shinyHunts,
+                EdittedGames = edittedGamesList,
+                UnedittedGames = gamesList,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
         }
     }
 }

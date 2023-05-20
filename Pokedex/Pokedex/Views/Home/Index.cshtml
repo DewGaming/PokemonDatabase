@@ -45,13 +45,10 @@
         <a href="@this.Url.Action("TeamRandomizer", "Home")"><p><b>Randomize Teams!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menus to create a randomized Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
     </div>
-    @if (this.User.IsInRole("Admin"))
-    {
-        <div class="feature shinyHunts">
-            <a href="@this.Url.Action("ShinyHunts", "User")"><p><b>Track Shiny Hunts!</b></p></a>
-            <img class="modalPreview" data-modalUrl="@this.Url.Action("ShinyHunts", "User")" alt="Shiny Hunts" title="Keep track of all of you current and successful shiny hunts! Additional &quot;Shiny Dex Completion&quot; page available to track progress for a shiny living dex!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunts.png"))">
-        </div>
-    }
+    <div class="feature shinyHunts">
+        <a href="@this.Url.Action("ShinyHunts", "User")"><p><b>Track Shiny Hunts!</b></p></a>
+        <img class="modalPreview" data-modalUrl="@this.Url.Action("ShinyHunts", "User")" alt="Shiny Hunts" title="Keep track of all of you current and successful shiny hunts! Additional &quot;Shiny Dex Completion&quot; page available to track progress for a shiny living dex!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunts.png"))">
+    </div>
     <div class="feature teamBuilder">
         <a href="@this.Url.Action("PokemonTeams", "User")"><p><b>Build Teams!</b></p></a>
         <img class="modalPreview" data-modalUrl="@this.Url.Action("PokemonTeams", "User")" alt="Team Builder" title="Build different teams with the given options, or import them from Pokémon Showdown!  Once saved, you can export them to Showdown as well! Requires you to be logged into your account to use." src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonTeams.png"))">
