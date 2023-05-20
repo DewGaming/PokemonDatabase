@@ -81,7 +81,7 @@ namespace Pokedex.Controllers
             {
                 new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.IsOwner ? "Owner" : user.IsAdmin ? "Admin" : "User"),
+                new Claim(ClaimTypes.Role, user.IsOwner ? "Owner" : user.IsTester ? "Tester" : "User"),
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(
@@ -160,12 +160,12 @@ namespace Pokedex.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, "Owner"));
             }
 
-            if (user.IsAdmin)
+            if (user.IsTester)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             }
 
-            if (!user.IsOwner && !user.IsAdmin)
+            if (!user.IsOwner && !user.IsTester)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "User"));
             }

@@ -15,7 +15,7 @@ namespace Pokedex.Controllers
     /// <summary>
     /// The class that handles the editing of the database.
     /// </summary>
-    [Authorize(Roles = "Admin,Owner")]
+    [Authorize(Roles = "Owner")]
     [Route("admin")]
     public class EditController : Controller
     {
@@ -56,9 +56,9 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            if (user.IsOwner && !user.IsAdmin)
+            if (user.IsOwner && !user.IsTester)
             {
-                user.IsAdmin = true;
+                user.IsTester = true;
             }
 
             this.dataService.UpdateObject(user);

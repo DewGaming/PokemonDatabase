@@ -26,11 +26,8 @@
                 <span class="accountOptionHeader">General Options</span>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="@this.Url.Action("PokemonTeams", "User")">Pokémon Teams</a>
-                @if (this.User.IsInRole("Admin"))
-                {
-                    <a class="dropdown-item" href="@this.Url.Action("ShinyHunts", "User")">Shiny Hunts</a>
-                    <a class="dropdown-item" href="@this.Url.Action("ShinyDexProgress", "ShinyHunt")">Shiny Dex Completion</a>
-                }
+                <a class="dropdown-item" href="@this.Url.Action("ShinyHunts", "User")">Shiny Hunts</a>
+                <a class="dropdown-item" href="@this.Url.Action("ShinyDexProgress", "ShinyHunt")">Shiny Dex Completion</a>
                 @if (this.User.IsInRole("Owner"))
                 {
                     <div class="dropdown-divider"></div>

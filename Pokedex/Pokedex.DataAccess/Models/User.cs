@@ -23,7 +23,7 @@ namespace Pokedex.DataAccess.Models
         public bool IsOwner { get; set; }
 
         [Required]
-        [Display(Name = "Is Admin")]
-        public bool IsAdmin { get; set; }
+        [Display(Name = "Is Tester")]
+        public bool IsTester { get; set; }
     }
 }

@@ -14,7 +14,7 @@
             @foreach (var item in Model.UserList)
             {
                 <tr>
-                    <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsAdmin ? " (Admin)" : "")</td>
+                    <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsTester ? " (Tester)" : "")</td>
                     <td>@TimeZoneInfo.ConvertTimeFromUtc(item.LastVisit, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("MMMM dd yyyy h:mm tt")</td>
                     <td>
                         @if (item.Id != 1)
