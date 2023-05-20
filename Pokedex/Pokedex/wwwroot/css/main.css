@@ -16,6 +16,14 @@
   padding: 5px;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  text-decoration: underline;
+}
+
 #importedTeams {
   height: 70%;
 }

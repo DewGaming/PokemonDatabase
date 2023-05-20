@@ -2,10 +2,27 @@ function incrementEncounter(shinyHuntId) {
     $.ajax({
         url: '/increment-shiny-hunt-encounters/',
         method: "POST",
-        data: { "shinyHuntId": shinyHuntId, "increment": 1 }
+        data: { "shinyHuntId": shinyHuntId }
     })
         .done(function (data) {
             $('.Hunt' + shinyHuntId + ' .encounters').html(data);
+        })
+        .fail(function () {
+            alert("Update Failed!");
+        });
+}
+
+function incrementPhase(shinyHuntId) {
+    $.ajax({
+        url: '/increment-shiny-hunt-phases/',
+        method: "POST",
+        data: { "shinyHuntId": shinyHuntId }
+    })
+        .done(function (data) {
+            $('.Hunt' + shinyHuntId + ' .phases').html(data);
+            $('.Hunt' + shinyHuntId + ' .encounterP b').html('Current Phase Encounters: ')
+            $('.Hunt' + shinyHuntId + ' .encounters').html(0);
+            $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
         })
         .fail(function () {
             alert("Update Failed!");
@@ -28,6 +45,25 @@ function adjustEncountersManually(shinyHuntId) {
             });
     } else if (encounters != null) {
         alert("Entered Encounters Need to be a Number")
+    }
+}
+
+function adjustPhasesManually(shinyHuntId) {
+    var phases = prompt("Total Number of Phases");
+    if ($.isNumeric(phases)) {
+        $.ajax({
+            url: '/set-shiny-hunt-phases/',
+            method: "POST",
+            data: { "shinyHuntId": shinyHuntId, "phases": phases }
+        })
+            .done(function (data) {
+                $('.Hunt' + shinyHuntId + ' .phases').html(data);
+            })
+            .fail(function () {
+                alert("Update Failed!");
+            });
+    } else if (phases != null) {
+        alert("Entered Phases Need to be a Number")
     }
 }
 

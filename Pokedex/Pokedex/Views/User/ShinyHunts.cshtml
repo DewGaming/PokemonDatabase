@@ -77,7 +77,7 @@
         <div class="grid-container">
             @foreach (var s in Model.AllShinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).Where(x => !x.IsCaptured).ToList())
             {
-                <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
+                <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name">
                     <div class="pokemonDetails">
                         @if (s.HasShinyCharm)
                         {
@@ -99,21 +99,18 @@
                             }
                             @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
                             {
-                                <p><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
+                                <p class="encounterP pointer" onclick="adjustEncountersManually('@s.Id')"><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
                             else
                             {
-                                <p><b>Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
+                                <p class="encounterP pointer" onclick="adjustEncountersManually('@s.Id')"><b>@(s.Phases > 1 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
-                            @if (@s.Phases > 1)
-                            {
-                                <p><b>Current Phase: </b>@s.Phases</p>
-                            }
+                            <p class="phaseCounter pointer@(s.Phases > 1 ? "" : " hide")" onclick="adjustPhasesManually('@s.Id')"><b>Current Phase: </b><span class="phases">@s.Phases</span></p>
                         </div>
                     </div>
                     <div class="encounterButtons">
-                        <button class="manualAdjust btn btn-primary" onclick="adjustEncountersManually('@s.Id')">Adjust Encounters</button>
                         <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                        <button class="encounterIncrease btn btn-primary" onclick="incrementPhase('@s.Id')">Increase Phases</button>
                     </div>
                     <hr class="buttonSeparator">
                     <div class="shinyFoundButtons">
