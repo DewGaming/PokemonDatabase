@@ -1805,15 +1805,49 @@ namespace Pokedex.Controllers
         [Route("check-shiny-charm")]
         public bool CheckShinyCharm(int gameId, int huntingMethodId)
         {
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && (game.GenerationId >= 6 || gameId == 11 || gameId == 29) && huntingMethodId != 8 && huntingMethodId != 14)
+            try
             {
-                return true;
+                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && ((game != null && game.GenerationId >= 6) || gameId == 11 || gameId == 29) && huntingMethodId != 8 && huntingMethodId != 14)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            catch (Exception e)
             {
-                return false;
-            }
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during shiny charm check.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during shiny charm check.";
+                    }
+
+                    commentBody = string.Concat(commentBody, " - Selected Game Id: ", gameId);
+                    commentBody = string.Concat(commentBody, " - Selected Hunting Method Id: ", huntingMethodId);
+
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
+
+                return null;
         }
 
         /// <summary>
