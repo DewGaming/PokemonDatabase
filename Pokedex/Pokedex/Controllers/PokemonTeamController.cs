@@ -969,7 +969,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate <= DateTime.Now).Last().Id)[0];
+                    ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate <= DateTime.Now).Last().Id, this.User, this.appConfig)[0];
                 }
 
                 pokemonTeamDetail.AbilityId = ability.Id;

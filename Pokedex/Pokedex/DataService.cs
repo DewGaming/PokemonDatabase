@@ -416,41 +416,97 @@ namespace Pokedex
         /// </summary>
         /// <param name="pokemonId">The pokemon id.</param>
         /// <param name="gameId">The game id.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="appConfig">The application config.</param>
         /// <returns>Returns the list of abilities.</returns>
-        public List<Ability> GetAbilitiesForPokemon(int pokemonId, int gameId)
+        public List<Ability> GetAbilitiesForPokemon(int pokemonId, int gameId, System.Security.Claims.ClaimsPrincipal user, AppConfig appConfig)
         {
-            if (gameId == 0)
+            try
             {
-                List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game", "PokemonId", pokemonId).Select(x => x.Game).ToList();
-                games = games.Where(x => x.Id != 37).ToList();
-                gameId = games.Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
-            }
+                if (gameId == 0)
+                {
+                    List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game", "PokemonId", pokemonId).Select(x => x.Game).ToList();
+                    games = games.Where(x => x.Id != 37).ToList();
+                    gameId = games.Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
+                }
 
-            List<Ability> abilityList = new List<Ability>();
-            if (gameId != 1 && gameId != 21 && gameId != 20 && gameId != 2 && gameId != 22 && gameId != 23 && gameId != 37)
+                List<Ability> abilityList = new List<Ability>();
+                if (gameId != 1 && gameId != 21 && gameId != 20 && gameId != 2 && gameId != 22 && gameId != 23 && gameId != 37)
+                {
+                    Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                    List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
+                    PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
+
+                    abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
+                    if (pokemonAbilityDetail.SecondaryAbility != null)
+                    {
+                        abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
+                    }
+
+                    if (pokemonAbilityDetail.HiddenAbility != null)
+                    {
+                        abilityList.Add(pokemonAbilityDetail.HiddenAbility);
+                    }
+
+                    if (pokemonAbilityDetail.SpecialEventAbility != null)
+                    {
+                        abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
+                    }
+                }
+
+                return abilityList;
+            }
+            catch (Exception e)
             {
-                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
-                List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
-                PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
-
-                abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
-                if (pokemonAbilityDetail.SecondaryAbility != null)
+                if (!user.IsInRole("Owner"))
                 {
-                    abilityList.Add(pokemonAbilityDetail.SecondaryAbility);
+                    string commentBody;
+                    Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                    Pokemon pokemon = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
+
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error while grabbing pokemon abilities.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error while grabbing pokemon abilities.";
+                    }
+
+                    if (game != null)
+                    {
+                        commentBody = string.Concat(commentBody, " - Selected Game: ", game.Name);
+                    }
+                    else
+                    {
+                        commentBody = string.Concat(commentBody, " - Selected Game: ", gameId);
+                    }
+
+                    if (pokemon != null)
+                    {
+                        commentBody = string.Concat(commentBody, " - Selected Pokemon: ", pokemon.Name, " (ID: ", pokemon.Id, ")");
+                    }
+                    else
+                    {
+                        commentBody = string.Concat(commentBody, " - Selected Pokemon: ", pokemonId);
+                    }
+
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+
+                    if (user.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.GetObjectByPropertyValue<User>("Username", user.Identity.Name).Id;
+                    }
+
+                    this.AddObject(comment);
+                    this.EmailComment(appConfig, comment);
                 }
 
-                if (pokemonAbilityDetail.HiddenAbility != null)
-                {
-                    abilityList.Add(pokemonAbilityDetail.HiddenAbility);
-                }
-
-                if (pokemonAbilityDetail.SpecialEventAbility != null)
-                {
-                    abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
-                }
+                return null;
             }
-
-            return abilityList;
         }
 
         /// <summary>

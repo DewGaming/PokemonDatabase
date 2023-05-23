@@ -362,7 +362,7 @@ namespace Pokedex.Controllers
                         }
                         else
                         {
-                            ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, selectedGame)[0];
+                            ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, selectedGame, this.User, this.appConfig)[0];
                         }
 
                         pokemonTeamDetail = new PokemonTeamDetail()
@@ -1096,7 +1096,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Ability> pokemonAbilities = this.dataService.GetAbilitiesForPokemon(pokemonId, gameId);
+                List<Ability> pokemonAbilities = this.dataService.GetAbilitiesForPokemon(pokemonId, gameId, this.User, this.appConfig);
                 return pokemonAbilities;
             }
 
