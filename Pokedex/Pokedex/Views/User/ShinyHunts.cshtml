@@ -95,7 +95,7 @@
         <div class="grid-container">
             @foreach (var s in incompleteHunts)
             {
-                <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(s.IsPinned ? " HuntGamePin" : "") shadowed @s.Pokemon.Name">
+                <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(incompleteHunts.Count(x => x.IsPinned) > 0 ? (s.IsPinned ? " HuntGamePin" : " hide") : "") shadowed @s.Pokemon.Name">
                     <div class="pokemonDetails">
                         @if (s.HasShinyCharm)
                         {
