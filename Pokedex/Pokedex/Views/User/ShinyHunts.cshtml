@@ -38,8 +38,8 @@
 </p>
 
 <div class="pageButtons uncapturedGamesList">
-    <button class="gameButton pinnedHunts@(incompleteHunts.Count(x => x.IsPinned) > 0 ? "" : " hide")" id="GamePin" onclick="lookupHuntsInGame(this, 'Pin')">Pinned Hunts</button>
-    <button class="gameButton incompleteAllGames active" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
+    <button class="gameButton pinnedHunts@(incompleteHunts.Count(x => x.IsPinned) > 0 ? " active" : " hide")" id="GamePin" onclick="lookupHuntsInGame(this, 'Pin')">Pinned Hunts</button>
+    <button class="gameButton incompleteAllGames@(incompleteHunts.Count(x => x.IsPinned) > 0 ? "" : " active")" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
     @foreach (var g in uncapturedGames)
     {
         string gameColors = string.Concat(g.GameColor, " 50%, ");
@@ -87,7 +87,7 @@
                             <img class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
                         }
                         <div class="pokemonImages">
-                            <img onclick="incrementEncounter('@s.Id')" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
+                            <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
                         </div>
                         <div class="description">
                             <p onclick="togglePin('@s.Id')" class="pin@(s.IsPinned ? " hide" : "")">📌</p>
