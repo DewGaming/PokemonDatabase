@@ -56,30 +56,30 @@
   margin-bottom: 5px;
 }
 
-.editShinyButton {
+.orangeButton {
   width: 100%;
   background-color: #F18E38;
   border-color: #F18E38;
 }
 
-.editShinyButton:hover {
+.orangeButton:hover {
   background-color: #E67310;
   border-color: #CE680E;
 }
 
-.editShinyButton:active {
+.orangeButton:active {
   background-color: #CE680E;
   border-color: #F18E38;
 }
 
-.editShinyButton:focus {
+.orangeButton:focus {
   box-shadow: 0 0 0 .2rem rgba(182, 92, 13, .5);
 }
 
-.editShinyButton,
-.editShinyButton:hover,
-.editShinyButton:active,
-.editShinyButton:focus {
+.orangeButton,
+.orangeButton:hover,
+.orangeButton:active,
+.orangeButton:focus {
   color: #FFF;
 }
 

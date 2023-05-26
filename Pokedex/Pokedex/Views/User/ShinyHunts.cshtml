@@ -114,8 +114,8 @@
                         </div>
                     </div>
                     <div class="encounterButtons">
+                        <button class="phaseIncrease btn orangeButton" onclick="incrementPhase('@s.Id')">Increase Phases</button>
                         <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
-                        <button class="encounterIncrease btn btn-primary" onclick="incrementPhase('@s.Id')">Increase Phases</button>
                     </div>
                     <hr class="buttonSeparator">
                     <div class="shinyFoundButtons">
@@ -124,7 +124,7 @@
                     </div>
                     <hr class="buttonSeparator">
                     <div class="huntUncapturedButtons">
-                        <a class="editShinyButton btn" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
+                        <a class="btn orangeButton" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
                         <a class="btn btn-danger abandonHunt" href="@(this.Url.Action("DeleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id }))">Delete Hunt</a>
                     </div>
                 </div>
@@ -219,7 +219,7 @@
                         </div>
                     </div>
                     <div class="huntCapturedButtons">
-                        <a class="editShinyButton btn" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
+                        <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
                         <a class="btn btn-danger abandonHunt" href="@(this.Url.Action("DeleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id }))">Delete Hunt</a>
                     </div>
                 </div>
