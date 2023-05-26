@@ -1847,7 +1847,8 @@ namespace Pokedex.Controllers
                     this.dataService.EmailComment(this.appConfig, comment);
                 }
 
-                return null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -1886,6 +1887,26 @@ namespace Pokedex.Controllers
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Toggles whether a shiny hunt is pinned or not.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <returns>The boolean determining if a mark can be shown.</returns>
+        [Route("toggle-hunt-pin")]
+        public bool ToggleHuntPin(int shinyHuntId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt hunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+                hunt.IsPinned = !hunt.IsPinned;
+                this.dataService.UpdateObject(hunt);
+
+                return hunt.IsPinned;
+            }
+
+            return false;
         }
 
         /// <summary>

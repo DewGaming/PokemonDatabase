@@ -6,13 +6,14 @@
 @{
     ViewBag.Title = "Shiny Hunts";
     ViewBag.Description = "Keep track of all of you current and successful shiny hunts!";
-}
-
-@{
+    List<ShinyHunt> incompleteHunts = new List<ShinyHunt>();
+    List<ShinyHunt> completeHunts = new List<ShinyHunt>();
     List<Game> uncapturedGames = new List<Game>();
     List<Game> capturedGames = new List<Game>();
-    uncapturedGames = @Model.EdittedGames.Where(x => Model.AllShinyHunts.Where(x => !x.IsCaptured).DistinctBy(x => x.Game).Any(y => y.GameId == x.Id)).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
-    capturedGames = @Model.EdittedGames.Where(x => Model.AllShinyHunts.Where(x => x.IsCaptured).DistinctBy(x => x.Game).Any(y => y.GameId == x.Id)).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+    incompleteHunts = Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList();
+    completeHunts = Model.AllShinyHunts.Where(x => x.IsCaptured).ToList();
+    uncapturedGames = @Model.EdittedGames.Where(x => incompleteHunts.DistinctBy(x => x.Game).Any(y => y.GameId == x.Id)).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+    capturedGames = @Model.EdittedGames.Where(x => completeHunts.DistinctBy(x => x.Game).Any(y => y.GameId == x.Id)).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
 }
 
 @section styles
@@ -30,13 +31,14 @@
 <p class="shinyHuntButtons">
     <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
     <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideComplete()">View In-Progress Shiny Hunts</button>
-    @if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
+    @if (completeHunts.Count > 0)
     {
         <button class="completedHuntsButton btn btn-primary" onclick="hideIncomplete()">View Successful Shiny Hunts</button>
     }
 </p>
 
 <div class="pageButtons uncapturedGamesList">
+    <button class="gameButton pinnedHunts@(incompleteHunts.Count(x => x.IsPinned) > 0 ? "" : " hide")" id="GamePin" onclick="lookupHuntsInGame(this, 'Pin')">Pinned Hunts</button>
     <button class="gameButton incompleteAllGames active" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
     @foreach (var g in uncapturedGames)
     {
@@ -72,13 +74,13 @@
     }
 </div>
 
-@if (Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList().Count > 0)
+@if (incompleteHunts.Count() > 0)
 {
     <div class="page active generation pokemonList incompletedHunts">
         <div class="grid-container">
-            @foreach (var s in Model.AllShinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).Where(x => !x.IsCaptured).ToList())
+            @foreach (var s in incompleteHunts)
             {
-                <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name">
+                <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(s.IsPinned ? " HuntGamePin" : "") shadowed @s.Pokemon.Name">
                     <div class="pokemonDetails">
                         @if (s.HasShinyCharm)
                         {
@@ -88,6 +90,8 @@
                             <img onclick="incrementEncounter('@s.Id')" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, s.Pokemon.Id, ".png"))" />
                         </div>
                         <div class="description">
+                            <p onclick="togglePin('@s.Id')" class="pin@(s.IsPinned ? " hide" : "")">📌</p>
+                            <p onclick="togglePin('@s.Id')" class="pinned@(s.IsPinned ? "" : " hide")">📌</p>
                             <p><b>@s.Pokemon.Name</b></p>
                             <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
                             @if (@s.DuringCommunityDay)
@@ -129,7 +133,7 @@
     </div>
 }
 
-@if (Model.AllShinyHunts.Where(x => x.IsCaptured).ToList().Count > 0)
+@if (completeHunts.Count > 0)
 {
     <div class="page generation pokemonList completedHunts hide">
         <h5 class="pokemonCount">Total Shinies Found: <span class="shiniesFoundCount"></span></h5>

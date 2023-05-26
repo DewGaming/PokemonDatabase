@@ -35,6 +35,7 @@ namespace Pokedex.DataAccess.Models
             Mark = shinyHunt.Mark;
             Gender = shinyHunt.Gender;
             IsCaptured = shinyHunt.IsCaptured;
+            IsPinned = shinyHunt.IsPinned;
             PhaseOfHuntId = shinyHunt.PhaseOfHuntId;
             PhaseOfHunt = shinyHunt.PhaseOfHunt;
         }
@@ -102,6 +103,9 @@ namespace Pokedex.DataAccess.Models
 
         [Display(Name = "Captured")]
         public bool IsCaptured { get; set; }
+
+        [Display(Name = "Pinned")]
+        public bool IsPinned { get; set; }
 
         [Display(Name = "Phase of This Hunt")]
         public int? PhaseOfHuntId { get; set; }

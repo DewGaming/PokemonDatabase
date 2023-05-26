@@ -1,3 +1,41 @@
+function lookupHuntsInGame(element, gameId) {
+    if (!$('.active').is($('#Game' + gameId))) {
+        $('button').each(function () {
+            $(this).removeClass('active');
+        });
+
+        $('.pokemonList').removeClass('active');
+
+        $('.shadowed.hide').each(function () {
+            $(this).removeClass('hide');
+        });
+
+        if (!$(element).hasClass('incompleteAllGames') && !$(element).hasClass('completeAllGames')) {
+            $('div.shadowed').not('.HuntGame' + gameId).each(function () {
+                $(this).addClass('hide');
+            });
+
+            $('.gameHuntedIn').each(function () {
+                $(this).addClass('hide');
+            });
+        } else {
+            $('.gameHuntedIn').each(function () {
+                $(this).removeClass('hide');
+            });
+        }
+
+        if (gameId != '0') {
+            $('.shiniesFoundCount').html($('.completedHunts .HuntGame' + gameId).length)
+        } else {
+            $('.shiniesFoundCount').html($('.completedHunts .grid-container').children().length)
+        }
+
+        $('button#Game' + gameId).addClass('active');
+        $('.pokemonList').addClass('active');
+        $('.active.hide').removeClass('active');
+    }
+}
+
 function incrementEncounter(shinyHuntId) {
     $.ajax({
         url: '/increment-shiny-hunt-encounters/',
@@ -30,7 +68,8 @@ function incrementPhase(shinyHuntId) {
 }
 
 function adjustEncountersManually(shinyHuntId) {
-    var encounters = prompt("Total Number of Encounters");
+    var currentEncounters = $('.Hunt' + shinyHuntId + ' .encounters').html();
+    var encounters = prompt("Total Number of Encounters", currentEncounters);
     if ($.isNumeric(encounters)) {
         $.ajax({
             url: '/set-shiny-hunt-encounters/',
@@ -212,4 +251,32 @@ function lookupGeneration(generationId) {
             $(this).show();
         });
     }
+}
+
+function togglePin(shinyHuntId) {
+    $.ajax({
+        url: '/toggle-hunt-pin/',
+        method: "POST",
+        data: { "shinyHuntId": shinyHuntId }
+    })
+        .done(function (data) {
+            if (data) {
+                $('.Hunt' + shinyHuntId).addClass('HuntGamePin');
+                $('.Hunt' + shinyHuntId + ' .pin').addClass('hide');
+                $('.Hunt' + shinyHuntId + ' .pinned').removeClass('hide');
+                if ($('.pinnedHunts').hasClass('hide')) {
+                    $('.pinnedHunts').removeClass('hide');
+                }
+            } else {
+                $('.Hunt' + shinyHuntId).removeClass('HuntGamePin');
+                $('.Hunt' + shinyHuntId + ' .pin').removeClass('hide');
+                $('.Hunt' + shinyHuntId + ' .pinned').addClass('hide');
+                if ($('.pinnedHunts').hasClass('active')) {
+                    $('.Hunt' + shinyHuntId).addClass('hide');
+                }
+            }
+        })
+        .fail(function () {
+            alert("Update Failed!");
+        });
 }

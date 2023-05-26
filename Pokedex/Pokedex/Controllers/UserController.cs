@@ -229,7 +229,7 @@ namespace Pokedex.Controllers
 
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
-                AllShinyHunts = shinyHunts,
+                AllShinyHunts = shinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
                 EdittedGames = edittedGamesList,
                 UnedittedGames = gamesList,
                 AppConfig = this.appConfig,
