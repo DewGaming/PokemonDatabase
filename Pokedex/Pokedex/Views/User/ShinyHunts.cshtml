@@ -26,6 +26,21 @@
 {
     <script src="~/js/pageLookup.js" asp-append-version="true"></script>
     <script src="~/js/shinyHunts.js" asp-append-version="true"></script>
+    <script>
+        $(document).on("keypress", function (e) {
+            if (!$(".incompletedHunts").hasClass("hide")) {
+                var key = e.which - 49;
+                if (key >= 48 && key <= 56) {
+                    key -= 48;
+                }
+
+                if (key > 0 && key <= 8) {
+                    var hunt = $(".grid-container").children().not(".hide")[key];
+                    $(hunt).find('.encounterIncrease').trigger('click');
+                }
+            }
+        });
+    </script>
 }
 
 <p class="shinyHuntButtons">
