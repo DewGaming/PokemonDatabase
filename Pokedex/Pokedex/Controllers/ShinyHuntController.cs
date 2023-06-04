@@ -102,6 +102,7 @@ namespace Pokedex.Controllers
             }
 
             shinyHunt.Phases = 1;
+            shinyHunt.IncrementAmount = 1;
 
             this.dataService.AddObject(shinyHunt);
 

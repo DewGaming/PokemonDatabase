@@ -40,7 +40,7 @@ function incrementEncounter(shinyHuntId) {
     $.ajax({
         url: '/increment-shiny-hunt-encounters/',
         method: "POST",
-        data: { "shinyHuntId": shinyHuntId }
+        data: { "shinyHuntId": shinyHuntId, "incrementAmount": $('.Hunt' + shinyHuntId + ' .increments').html() }
     })
         .done(function (data) {
             $('.Hunt' + shinyHuntId + ' .encounters').html(data);
@@ -88,7 +88,8 @@ function adjustEncountersManually(shinyHuntId) {
 }
 
 function adjustPhasesManually(shinyHuntId) {
-    var phases = prompt("Total Number of Phases");
+    var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
+    var phases = prompt("Total Number of Phases", currentPhases);
     if ($.isNumeric(phases)) {
         $.ajax({
             url: '/set-shiny-hunt-phases/',
@@ -102,6 +103,26 @@ function adjustPhasesManually(shinyHuntId) {
                 alert("Update Failed!");
             });
     } else if (phases != null) {
+        alert("Entered Phases Need to be a Number")
+    }
+}
+
+function adjustIncrements(shinyHuntId) {
+    var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
+    var increments = prompt("Increment Amount", currentIncrements);
+    if ($.isNumeric(increments)) {
+        $.ajax({
+            url: '/set-shiny-hunt-increments/',
+            method: "POST",
+            data: { "shinyHuntId": shinyHuntId, "increments": increments }
+        })
+            .done(function (data) {
+                $('.Hunt' + shinyHuntId + ' .increments').html(data);
+            })
+            .fail(function () {
+                alert("Update Failed!");
+            });
+    } else if (increments != null) {
         alert("Entered Phases Need to be a Number")
     }
 }

@@ -29,6 +29,7 @@ namespace Pokedex.DataAccess.Models
             Phases = shinyHunt.Phases;
             CurrentPhaseEncounters = shinyHunt.CurrentPhaseEncounters;
             TotalEncounters = shinyHunt.TotalEncounters;
+            IncrementAmount = shinyHunt.IncrementAmount;
             PokeballId = shinyHunt.PokeballId;
             Pokeball = shinyHunt.Pokeball;
             MarkId = shinyHunt.MarkId;
@@ -89,6 +90,9 @@ namespace Pokedex.DataAccess.Models
 
         [Display(Name = "Number of Total Encounters")]
         public int TotalEncounters { get; set; }
+
+        [Display(Name = "Increment Amount")]
+        public int IncrementAmount { get; set; }
 
         [Display(Name = "Pokéball Used")]
         public int? PokeballId { get; set; }

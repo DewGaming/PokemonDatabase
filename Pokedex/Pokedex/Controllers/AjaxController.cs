@@ -1706,15 +1706,16 @@ namespace Pokedex.Controllers
         /// Increments the encounters for a shiny hunt.
         /// </summary>
         /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <param name="incrementAmount">The amount of increments done when clicking "Increase Encounters". Defaults is 1.</param>
         /// <returns>The amount of encounters for this shiny hunt.</returns>
         [Route("increment-shiny-hunt-encounters")]
-        public int IncrementShinyHuntEncounters(int shinyHuntId)
+        public int IncrementShinyHuntEncounters(int shinyHuntId, int incrementAmount = 1)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-                shinyHunt.CurrentPhaseEncounters++;
-                this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                shinyHunt.CurrentPhaseEncounters += incrementAmount;
+                this.dataService.UpdateObject(shinyHunt);
                 return shinyHunt.CurrentPhaseEncounters;
             }
 
@@ -1735,7 +1736,7 @@ namespace Pokedex.Controllers
                 shinyHunt.Phases++;
                 shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
                 shinyHunt.CurrentPhaseEncounters = 0;
-                this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                this.dataService.UpdateObject(shinyHunt);
                 return shinyHunt.Phases;
             }
 
@@ -1761,7 +1762,7 @@ namespace Pokedex.Controllers
                 else
                 {
                     shinyHunt.CurrentPhaseEncounters = encounters;
-                    this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                    this.dataService.UpdateObject(shinyHunt);
                     return shinyHunt.CurrentPhaseEncounters;
                 }
             }
@@ -1788,8 +1789,35 @@ namespace Pokedex.Controllers
                 else
                 {
                     shinyHunt.Phases = phases;
-                    this.dataService.UpdateObject<ShinyHunt>(shinyHunt);
+                    this.dataService.UpdateObject(shinyHunt);
                     return shinyHunt.Phases;
+                }
+            }
+
+            return 1;
+        }
+
+        /// <summary>
+        /// Updates the increments for a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt's id.</param>
+        /// <param name="increments">The amount to increments.</param>
+        /// <returns>The amount of increments for this shiny hunt.</returns>
+        [Route("set-shiny-hunt-increments")]
+        public int SetShinyHuntIncrements(int shinyHuntId, int increments)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+                if (increments < 1)
+                {
+                    return 1;
+                }
+                else
+                {
+                    shinyHunt.IncrementAmount = increments;
+                    this.dataService.UpdateObject(shinyHunt);
+                    return shinyHunt.IncrementAmount;
                 }
             }
 

@@ -30,6 +30,7 @@
             @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
             @Html.HiddenFor(x => x.Id)
             @Html.HiddenFor(x => x.UserId)
+            @Html.HiddenFor(x => x.IsPinned)
 
             <div class="form-group row">
                 @Html.LabelFor(x => x.GameId, "Game", new { @class = "col-md-4" })
