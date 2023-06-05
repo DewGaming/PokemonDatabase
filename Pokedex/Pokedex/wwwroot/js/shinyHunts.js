@@ -283,15 +283,15 @@ function togglePin(shinyHuntId) {
         .done(function (data) {
             if (data) {
                 $('.Hunt' + shinyHuntId).addClass('HuntGamePin');
-                $('.Hunt' + shinyHuntId + ' .pin').addClass('hide');
-                $('.Hunt' + shinyHuntId + ' .pinned').removeClass('hide');
+                $('.Hunt' + shinyHuntId + ' .pin').addClass('pinned');
+                $('.Hunt' + shinyHuntId + ' .pinned').removeClass('pin');
                 if ($('.pinnedHunts').hasClass('hide')) {
                     $('.pinnedHunts').removeClass('hide');
                 }
             } else {
                 $('.Hunt' + shinyHuntId).removeClass('HuntGamePin');
-                $('.Hunt' + shinyHuntId + ' .pin').removeClass('hide');
-                $('.Hunt' + shinyHuntId + ' .pinned').addClass('hide');
+                $('.Hunt' + shinyHuntId + ' .pinned').addClass('pin');
+                $('.Hunt' + shinyHuntId + ' .pin').removeClass('pinned');
                 if ($('.pinnedHunts').hasClass('active')) {
                     $('.Hunt' + shinyHuntId).addClass('hide');
                 }

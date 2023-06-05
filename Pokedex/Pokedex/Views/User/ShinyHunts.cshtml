@@ -107,8 +107,7 @@
                             </a>
                         </div>
                         <div class="description">
-                            <p onclick="togglePin('@s.Id')" class="pin@(s.IsPinned ? " hide" : "")">📌</p>
-                            <p onclick="togglePin('@s.Id')" class="pinned@(s.IsPinned ? "" : " hide")">📌</p>
+                            <p onclick="togglePin('@s.Id')" class="@(s.IsPinned ? "pinned" : "pin")">📌</p>
                             <p><b>@s.Pokemon.Name</b></p>
                             <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
                             <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
