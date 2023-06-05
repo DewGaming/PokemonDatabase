@@ -61,7 +61,6 @@ var grabAbilities = function () {
 $(document).ready(function () {
     $('#BattleItemId').parent().hide();
     $('#Gender').parent().hide();
-
     $("#PokemonId").select2();
 });
 

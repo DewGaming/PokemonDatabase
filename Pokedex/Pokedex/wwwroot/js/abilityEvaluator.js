@@ -36,6 +36,8 @@ var grabPokemon = function () {
             grabPokemon();
         });
 
+        $(".abilitySelectList").select2();
+
         grabPokemon();
     });
 };
