@@ -85,7 +85,7 @@
             {
                 <div class="shadowed @p.Pokemon.Name@(!p.IsCaptured ? " uncaptured" : "")@(p.IsAltForm ? " altForm hide" : "")">
                     <div class="pokemonImages">
-                        <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @p.Pokemon.Id, generationId = g })">
+                        <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @p.Pokemon.Id, generationId = g })" target="_blank">
                             <img class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, p.Pokemon.Id, ".png"))" />
                         </a>
                     </div>
