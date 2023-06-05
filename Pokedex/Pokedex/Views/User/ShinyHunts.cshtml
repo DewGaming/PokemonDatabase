@@ -109,14 +109,7 @@
                             <p onclick="togglePin('@s.Id')" class="pinned@(s.IsPinned ? "" : " hide")">📌</p>
                             <p><b>@s.Pokemon.Name</b></p>
                             <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
-                            @if (@s.DuringCommunityDay)
-                            {
-                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name (During Community Day)</p>
-                            }
-                            else
-                            {
-                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
-                            }
+                            <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
                             <p class="encounterIncrement pointer" onclick="adjustIncrements('@s.Id')"><b>Increment Amount: </b><span class="increments">@s.IncrementAmount</span></p>
                             @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
                             {
@@ -188,14 +181,7 @@
                                 }
                             </p>
                             <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
-                            @if (@s.DuringCommunityDay)
-                            {
-                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name (During Community Day)</p>
-                            }
-                            else
-                            {
-                                <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
-                            }
+                            <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
                             @if (@s.TotalEncounters > 0)
                             {
                                 @if (@s.CurrentPhaseEncounters > 0 && @s.CurrentPhaseEncounters != @s.TotalEncounters)

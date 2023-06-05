@@ -21,7 +21,6 @@ namespace Pokedex.DataAccess.Models
             HuntingMethodId = shinyHunt.HuntingMethodId;
             HuntingMethod = shinyHunt.HuntingMethod;
             HasShinyCharm = shinyHunt.HasShinyCharm;
-            DuringCommunityDay = shinyHunt.DuringCommunityDay;
             UsingLures = shinyHunt.UsingLures;
             IsAlpha = shinyHunt.IsAlpha;
             SparklingPowerLevel = shinyHunt.SparklingPowerLevel;
@@ -65,9 +64,6 @@ namespace Pokedex.DataAccess.Models
 
         [Display(Name = "Have the Shiny Charm")]
         public bool HasShinyCharm { get; set; }
-
-        [Display(Name = "During Community Day")]
-        public bool DuringCommunityDay { get; set; }
 
         [Display(Name = "Using Lures")]
         public bool UsingLures { get; set; }

@@ -60,12 +60,6 @@
                 @Html.ValidationMessageFor(x => x.HasShinyCharm)
             </div>
 
-            <div class="form-group row gameSpecific communityDayCheckbox hide">
-                @Html.LabelFor(x => x.DuringCommunityDay, new { @class = "col-md-4" })
-                @Html.EditorFor(x => x.DuringCommunityDay, new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.DuringCommunityDay)
-            </div>
-
             <div class="form-group row gameSpecific lureCheckbox hide">
                 @Html.LabelFor(x => x.UsingLures, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.UsingLures, new { @class = "form-control col-md-6" })

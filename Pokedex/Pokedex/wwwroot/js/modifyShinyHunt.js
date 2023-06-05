@@ -114,18 +114,6 @@ var grabPokemon = function (pokemonId) {
             $('#IsAlpha').prop('checked', false)
         }
     }
-}, checkCommunityDay = function () {
-    var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val()
-    if (gameId == 43 && huntingMethodId == 1) {
-        if ($('.communityDayCheckbox').hasClass('hide')) {
-            $('.communityDayCheckbox').removeClass('hide');
-        }
-    } else {
-        if (!$('.communityDayCheckbox').hasClass('hide')) {
-            $('.communityDayCheckbox').addClass('hide');
-            $('#DuringCommunityDay').prop('checked', false)
-        }
-    }
 }, checkSparklingPower = function () {
     $.ajax({
         url: '/check-sparkling-power/',
