@@ -504,6 +504,21 @@ namespace Pokedex.Controllers
         /// <summary>
         /// The method that is used to specify a generation and alternate form for the pokemon page.
         /// </summary>
+        /// <param name="pokemonId">The ID of the pokemon.</param>
+        /// <param name="generationId">The ID of the generation.</param>
+        /// <returns>Returns the pokemon page's method.</returns>
+        [AllowAnonymous]
+        [Route("pokemon/{pokemonId:int}/{generationId:int}")]
+        public IActionResult PokemonWithOnlyId(int pokemonId, int generationId)
+        {
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
+
+            return this.RedirectToAction("PokemonWithId", "Home", new { pokemonName = pokemon.Name.ToLower(), pokemonId, generationId });
+        }
+
+        /// <summary>
+        /// The method that is used to specify a generation and alternate form for the pokemon page.
+        /// </summary>
         /// <param name="pokemonName">The name of the pokemon.</param>
         /// <param name="pokemonId">The ID of the pokemon.</param>
         /// <param name="generationId">The ID of the generation.</param>
@@ -513,7 +528,7 @@ namespace Pokedex.Controllers
         public IActionResult PokemonWithId(string pokemonName, int pokemonId, int generationId)
         {
             selectedPokemonId = pokemonId;
-            if (generationId > this.dataService.GetObjects<PokemonGameDetail>(includes: "Game", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).Last().GenerationId)
+            if (generationId > this.dataService.GetObjects<PokemonGameDetail>(includes: "Game", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).Last().GenerationId || generationId < this.dataService.GetObjects<PokemonGameDetail>(includes: "Game", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).First().GenerationId)
             {
                 selectedGenerationId = 0;
             }
@@ -523,30 +538,6 @@ namespace Pokedex.Controllers
             }
 
             return this.RedirectToAction("Pokemon", "Home", new { name = pokemonName });
-        }
-
-        /// <summary>
-        /// The method that is used to specify a generation and alternate form for the pokemon page.
-        /// </summary>
-        /// <param name="pokemonId">The ID of the pokemon.</param>
-        /// <param name="generationId">The ID of the generation.</param>
-        /// <returns>Returns the pokemon page's method.</returns>
-        [AllowAnonymous]
-        [Route("pokemon/{pokemonId:int}/{generationId:int}")]
-        public IActionResult PokemonWithOnlyId(int pokemonId, int generationId)
-        {
-            selectedPokemonId = pokemonId;
-            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
-            if (generationId > this.dataService.GetObjects<PokemonGameDetail>(includes: "Game", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Select(x => x.Game).Last().GenerationId)
-            {
-                selectedGenerationId = 0;
-            }
-            else
-            {
-                selectedGenerationId = generationId;
-            }
-
-            return this.RedirectToAction("Pokemon", "Home", new { name = pokemon.Name });
         }
 
         /// <summary>

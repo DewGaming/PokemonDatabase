@@ -331,6 +331,37 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Gets a list of all pokemon huntable including additional forms.
+        /// </summary>
+        /// <param name="pokemonList">The list of huntable pokemon.</param>
+        /// <param name="generationId">The game hunting in.</param>
+        /// <returns>Returns the list of all pokemon.</returns>
+        public List<Pokemon> GetAdditionalHuntableForms(List<Pokemon> pokemonList, int generationId)
+        {
+            if (generationId == 3)
+            {
+                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
+                List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Deoxys").ToList();
+                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
+                deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                pokemonList.AddRange(deoxysList);
+                pokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            }
+            else if (generationId == 6)
+            {
+                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
+                List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Zygarde").ToList();
+                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
+                zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+                zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                pokemonList.AddRange(zygardeList);
+                pokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            }
+
+            return pokemonList;
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are able to be bred in the day care.
         /// </summary>
         /// <param name="gameId">The game's id. Defaults to 0 when no game id is given.</param>

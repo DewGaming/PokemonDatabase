@@ -2761,7 +2761,14 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.dataService.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
+                List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
+                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                if (game.GenerationId == 3 || game.GenerationId == 6)
+                {
+                    pokemonList = this.dataService.GetAdditionalHuntableForms(pokemonList, game.GenerationId);
+                }
+
+                return pokemonList;
             }
 
             return null;
