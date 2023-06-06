@@ -313,9 +313,11 @@ namespace Pokedex
         public List<Pokemon> GetNonBattlePokemonWithFormNames(int gameId = 0)
         {
             List<Pokemon> pokemonList = new List<Pokemon>();
+            Game game = new Game();
             if (gameId != 0)
             {
                 pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.EggCycle, Pokemon.GenderRatio, Pokemon.Classification, Pokemon.Game, Pokemon.Game.Generation, Pokemon.ExperienceGrowth", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
+                game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             }
             else
             {
@@ -325,40 +327,19 @@ namespace Pokedex
             pokemonList = pokemonList.Where(x => x.IsComplete).ToList();
             List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
             pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle || x.Form.FusionForm).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+
+            if (gameId != 0)
+            {
+                // Gets future evolutions that are possible.
+                List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game").Where(x => x.GenerationId > game.GenerationId).ToList();
+                List<Pokemon> futureEvolutions = evolutions.Where(x => pokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
+                futureEvolutions = futureEvolutions.Where(x => x.Game.GenerationId > game.GenerationId).ToList();
+                pokemonList.AddRange(futureEvolutions.Distinct());
+            }
+
             pokemonList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
-        }
-
-        /// <summary>
-        /// Gets a list of all pokemon huntable including additional forms.
-        /// </summary>
-        /// <param name="pokemonList">The list of huntable pokemon.</param>
-        /// <param name="generationId">The game hunting in.</param>
-        /// <returns>Returns the list of all pokemon.</returns>
-        public List<Pokemon> GetAdditionalHuntableForms(List<Pokemon> pokemonList, int generationId)
-        {
-            if (generationId == 3)
-            {
-                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
-                List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Deoxys").ToList();
-                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
-                deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
-                pokemonList.AddRange(deoxysList);
-                pokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
-            }
-            else if (generationId == 6)
-            {
-                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
-                List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Zygarde").ToList();
-                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
-                zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
-                pokemonList.AddRange(zygardeList);
-                pokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
-            }
-
-            return pokemonList;
         }
 
         /// <summary>
@@ -761,6 +742,38 @@ namespace Pokedex
             pokemonTeams.AddRange(teamsWithGames);
 
             return pokemonTeams;
+        }
+
+        /// <summary>
+        /// Gets a list of huntable pokemon.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>A list of pokemon huntable.</returns>
+        public List<Pokemon> GetHuntablePokemon(int gameId)
+        {
+            List<Pokemon> pokemonList = this.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
+            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+
+            // Gets extra forms made available in future generations.
+            if (game.GenerationId == 3)
+            {
+                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
+                List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Deoxys").ToList();
+                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
+                deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                pokemonList.AddRange(deoxysList);
+            }
+            else if (game.GenerationId == 6)
+            {
+                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
+                List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Zygarde").ToList();
+                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
+                zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+                zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                pokemonList.AddRange(zygardeList);
+            }
+
+            return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
 
         /// <summary>

@@ -204,7 +204,7 @@ namespace Pokedex.Controllers
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Game");
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", shinyHunt.PokemonId);
-            List<Pokemon> pokemonList = this.GetHuntablePokemon(shinyHunt.GameId);
+            List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
 
             List<string> genders = new List<string>();
             if (pokemon.GenderRatioId == 1)
@@ -279,7 +279,7 @@ namespace Pokedex.Controllers
         public IActionResult EditIncompleteShinyHunt(int shinyHuntId)
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-            List<Pokemon> pokemonList = this.GetHuntablePokemon(shinyHunt.GameId);
+            List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
 
             EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
             {
@@ -304,7 +304,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id);
-                List<Pokemon> pokemonList = this.GetHuntablePokemon(oldShinyHunt.GameId);
+                List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(oldShinyHunt.GameId);
 
                 EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
                 {
@@ -332,7 +332,7 @@ namespace Pokedex.Controllers
         public IActionResult EditCompleteShinyHunt(int shinyHuntId)
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Pokemon, Game");
-            List<Pokemon> pokemonList = this.GetHuntablePokemon(shinyHunt.GameId);
+            List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
 
             List<string> genders = new List<string>();
             if (shinyHunt.Pokemon.GenderRatioId == 1)
@@ -381,7 +381,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id, "Pokemon, Game");
-                List<Pokemon> pokemonList = this.GetHuntablePokemon(oldShinyHunt.GameId);
+                List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(oldShinyHunt.GameId);
 
                 List<string> genders = new List<string>();
                 if (oldShinyHunt.Pokemon.GenderRatioId == 1)
@@ -588,18 +588,6 @@ namespace Pokedex.Controllers
             }
 
             return selectablePokeballs.OrderBy(x => x.GenerationId).ThenBy(x => x.Name).ToList();
-        }
-
-        private List<Pokemon> GetHuntablePokemon(int gameId)
-        {
-            List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            if (game.GenerationId == 3 || game.GenerationId == 6)
-            {
-                pokemonList = this.dataService.GetAdditionalHuntableForms(pokemonList, game.GenerationId);
-            }
-
-            return pokemonList;
         }
     }
 }
