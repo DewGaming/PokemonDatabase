@@ -7,7 +7,7 @@
         {
             <div class="shadowed @item.Name">
                 <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
-                    <img class="pokemonListPicture" title="@item.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @item.Id, ".png"))"/>
+                    <img class="pokemonListPicture" loading="lazy" title="@item.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @item.Id, ".png"))"/>
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">

@@ -15,7 +15,7 @@
         <div class="shadowed @p.Pokemon.Name@(p.Pokemon.IsComplete ? "" : " incomplete")">
             <a href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
             <div class="pokemonImages">
-                <img class="pokemonListPicture" title="@p.Pokemon.Name" src="@Url.Content(@pokemonImageUrl)">
+                <img class="pokemonListPicture" title="@p.Pokemon.Name" loading="lazy" src="@Url.Content(@pokemonImageUrl)">
             </div>
             </a>
             <div class="description">
@@ -27,10 +27,10 @@
                     }
                     else
                     {
-                        <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.PrimaryType.Name.ToLower(), ".png"))">
+                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.PrimaryType.Name.ToLower(), ".png"))">
                         @if (p.SecondaryType != null)
                         {
-                            <img class="pokemon-type type-icon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.SecondaryType.Name.ToLower(), ".png"))">
+                            <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.SecondaryType.Name.ToLower(), ".png"))">
                         }
                     }
                 </div>

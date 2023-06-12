@@ -3,11 +3,11 @@
 <div class="official@(Model.CurrentImage == "official" ? " current" : "")" style="@(!Model.HasShiny && !Model.HasHome ? "position: relative !important" : "")">
     @if (@Model.Type.Name == "Normal")
     {
-        <img title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Id, ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Id, ".png"))" />
     }
     else
     {
-        <img title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
     }
 </div>
 @if (@Model.HasShiny)
@@ -15,11 +15,11 @@
     <div class="shiny@(Model.CurrentImage == "shiny" ? " current" : "")" style="@(!Model.HasHome ? "position: relative !important" : "")">
     @if (@Model.Type.Name == "Normal")
     {
-        <img title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Id, ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Id, ".png"))" />
     }
     else
     {
-        <img title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
     }
     </div>
 }
@@ -28,11 +28,11 @@
     <div class="home@(Model.CurrentImage == "home" ? " current" : "")">
     @if (@Model.Type.Name == "Normal")
     {
-        <img title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.HomePokemonImageUrl, @Model.Id, ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.HomePokemonImageUrl, @Model.Id, ".png"))" />
     }
     else
     {
-        <img title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.HomePokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.HomePokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
     }
     </div>
 }
