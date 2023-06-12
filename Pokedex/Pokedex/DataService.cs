@@ -787,11 +787,14 @@ namespace Pokedex
         public async void UploadImages(IFormFile fileUpload, string urlUpload, int pokemonId, AppConfig appConfig, string imageType)
         {
             string imageUrlPath = string.Empty;
+            string iconUrlPath = string.Empty;
             IFormFile upload;
+            IFormFile resizedUpload;
 
             if (imageType == "2d")
             {
                 imageUrlPath = appConfig.OfficialPokemonImageFTPUrl;
+                iconUrlPath = appConfig.IconImageFTPUrl;
             }
             else if (imageType == "3d")
             {
@@ -800,6 +803,7 @@ namespace Pokedex
             else if (imageType == "shiny")
             {
                 imageUrlPath = appConfig.ShinyPokemonImageFTPUrl;
+                iconUrlPath = appConfig.ShinyIconImageFTPUrl;
             }
             else if (imageType == "pokeball")
             {
@@ -828,7 +832,14 @@ namespace Pokedex
 
             if (upload != null)
             {
-                upload = this.TrimImage(upload);
+                if (imageType == "pokeball" || imageType == "mark")
+                {
+                    resizedUpload = this.TrimImage(upload, 50, 50, true);
+                }
+                else
+                {
+                    resizedUpload = this.TrimImage(upload, 350, 350);
+                }
 
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, pokemonId.ToString(), ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
@@ -836,7 +847,7 @@ namespace Pokedex
 
                 using (Stream requestStream = request.GetRequestStream())
                 {
-                    await upload.CopyToAsync(requestStream).ConfigureAwait(false);
+                    await resizedUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                 }
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -844,17 +855,34 @@ namespace Pokedex
                     System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                if (imageType == "2d")
+                if (imageType == "2d" || imageType == "shiny")
                 {
-                    IFormFile favIconUpload = this.FormatFavIcon(upload);
+                    IFormFile iconUpload = this.TrimImage(upload, 64, 64, true);
 
-                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, appConfig.FaviconImageFTPUrl, pokemonId.ToString(), ".png"));
+                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, iconUrlPath, pokemonId.ToString(), ".png"));
                     request.Method = WebRequestMethods.Ftp.UploadFile;
                     request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
 
                     using (Stream requestStream = request.GetRequestStream())
                     {
-                        await favIconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
+                        await iconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
+                    }
+
+                    using FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                }
+
+                if (imageType == "2d")
+                {
+                    IFormFile gridUpload = this.TrimImage(upload, 150, 150);
+
+                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, appConfig.GridImageFTPUrl, pokemonId.ToString(), ".png"));
+                    request.Method = WebRequestMethods.Ftp.UploadFile;
+                    request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
+
+                    using (Stream requestStream = request.GetRequestStream())
+                    {
+                        await gridUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                     }
 
                     using FtpWebResponse response = (FtpWebResponse)request.GetResponse();
@@ -936,8 +964,11 @@ namespace Pokedex
         /// Formats the image for use as a main page image.
         /// </summary>
         /// <param name="file">The file being formatted.</param>
+        /// <param name="width">The new width of the image. Defaults is 0.</param>
+        /// <param name="height">The new height of the image. Defaults is 0.</param>
+        /// <param name="icon">Whether or not this image is an icon. Default is false.</param>
         /// <returns>The formatted file.</returns>
-        private IFormFile TrimImage(IFormFile file)
+        private IFormFile TrimImage(IFormFile file, int width = 0, int height = 0, bool icon = false)
         {
             using (MemoryStream ms = new MemoryStream())
             {
@@ -945,40 +976,20 @@ namespace Pokedex
                 byte[] fileBytes = ms.ToArray();
                 using MagickImage image = new MagickImage(fileBytes);
                 image.Trim();
+                image.Resize(new MagickGeometry(width, height));
                 MemoryStream strm = new MemoryStream();
                 image.RePage();
-                image.Quality = 100;
+                if (icon)
+                {
+                    image.Quality = 75;
+                }
+                else
+                {
+                    image.Quality = 100;
+                }
+
                 image.Settings.SetDefine(MagickFormat.WebP, "lossless", true);
                 image.Settings.SetDefine(MagickFormat.WebP, "method", "6");
-                image.Write(strm, MagickFormat.WebP);
-                file = new FormFile(strm, 0, strm.Length, file.Name, file.FileName);
-            }
-
-            return file;
-        }
-
-        /// <summary>
-        /// Formats the image for use as a favicon.
-        /// </summary>
-        /// <param name="file">The file being formatted.</param>
-        /// <returns>The formatted file.</returns>
-        private IFormFile FormatFavIcon(IFormFile file)
-        {
-            using MemoryStream ms = new MemoryStream();
-            file.CopyTo(ms);
-            byte[] fileBytes = ms.ToArray();
-            using (MagickImage image = new MagickImage(fileBytes))
-            {
-                image.Trim();
-                image.VirtualPixelMethod = VirtualPixelMethod.Transparent;
-                image.SetArtifact("distort:viewport", string.Concat(System.Math.Max(image.Width, image.Height).ToString(), 'x', System.Math.Max(image.Width, image.Height).ToString(), '-', System.Math.Max((image.Height - image.Width) / 2, 0).ToString(), '-', System.Math.Max((image.Width - image.Height) / 2, 0).ToString()));
-                image.FilterType = FilterType.Point;
-                image.Distort(DistortMethod.ScaleRotateTranslate, 0);
-                image.Quality = 75;
-                image.FilterType = FilterType.Catrom;
-                image.Resize(64, 64);
-                MemoryStream strm = new MemoryStream();
-                image.RePage();
                 image.Write(strm, MagickFormat.Png);
                 file = new FormFile(strm, 0, strm.Length, file.Name, file.FileName);
             }

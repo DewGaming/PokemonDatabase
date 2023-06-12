@@ -7,7 +7,7 @@
     string style = string.Empty;
     ViewBag.Title = @Model.PokemonList.FirstOrDefault().Pokemon.Name;
     ViewBag.Description = string.Concat("View the information for the ", @Model.PokemonList.FirstOrDefault().Pokemon.Classification.Name, ", ", @Model.PokemonList.FirstOrDefault().Pokemon.Name, "!");
-    ViewBag.Image = @Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.OfficialPokemonImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"));
+    ViewBag.Image = @Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.GridImageUrl, @Model.PokemonList.FirstOrDefault().Pokemon.Id, ".png"));
     AdminPokemonViewModel adminPokemon = null;
     if (this.User.IsInRole("Owner"))
     {
@@ -23,7 +23,7 @@
     <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/pokemonPage.css" rel="stylesheet" asp-append-version="true" />
-    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.FaviconImageUrl, @Model.PokemonId, ".png"))" />
+    <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.PokemonList.FirstOrDefault().AppConfig.WebUrl, @Model.PokemonList.FirstOrDefault().AppConfig.IconImageUrl, @Model.PokemonId, ".png"))" />
 
     <style>
         .surroundingPokemon {
@@ -199,7 +199,7 @@
                     </td>
                     <td>
                         <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name" loading="lazy" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.OfficialPokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[0].Id, ".png"))" />
+                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[0].Name" loading="lazy" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.IconImageUrl, @Model.PokemonList.First().SurroundingPokemon[0].Id, ".png"))" />
                         </a>
                     </td>
                 </tr>
@@ -210,7 +210,7 @@
                 <tr>
                     <td>
                         <a href="@this.Url.Action("Pokemon", "Home", new { name = Model.PokemonList.First().SurroundingPokemon[1].Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">
-                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name" loading="lazy" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.OfficialPokemonImageUrl, @Model.PokemonList.First().SurroundingPokemon[1].Id, ".png"))" />
+                            <img class="lightshadowed" title="@Model.PokemonList.First().SurroundingPokemon[1].Name" loading="lazy" src="@Url.Content(string.Concat(@Model.PokemonList.First().AppConfig.WebUrl, @Model.PokemonList.First().AppConfig.IconImageUrl, @Model.PokemonList.First().SurroundingPokemon[1].Id, ".png"))" />
                         </a>
                     </td>
                     <td>
@@ -228,7 +228,7 @@
 }
 @foreach (var item in Model.PokemonList)
 {
-    string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.FaviconImageUrl, item.Pokemon.Id, ".png"));
+    string iconLink = Url.Content(string.Concat(item.AppConfig.WebUrl, item.AppConfig.IconImageUrl, item.Pokemon.Id, ".png"));
     generations = item.GamesAvailableIn.Select(x => x.GenerationId).Distinct().ToArray();
     @if (this.User.IsInRole("Owner"))
     {
@@ -299,10 +299,10 @@
                             <div class="formButtons">
                             @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                             {
-                                iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                                iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.IconImageUrl, button.Pokemon.Id, ".png"));
                                 <div class="@button.Pokemon.Name">
                                     <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
-                                        <img class="lightshadowed" title="@button.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.OfficialPokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                                        <img class="lightshadowed" title="@button.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.IconImageUrl, @button.Pokemon.Id, ".png"))" />
                                     </button>
                                 </div>
                             }
@@ -334,9 +334,9 @@
                                 <div class="formButtonsMobile">
                                     @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
                                     {
-                                        iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.FaviconImageUrl, button.Pokemon.Id, ".png"));
+                                        iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.IconImageUrl, button.Pokemon.Id, ".png"));
                                         <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
-                                            <img class="lightshadowed" loading="lazy" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.OfficialPokemonImageUrl, @button.Pokemon.Id, ".png"))" />
+                                            <img class="lightshadowed" loading="lazy" title="@button.Pokemon.Name" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.IconImageUrl, @button.Pokemon.Id, ".png"))" />
                                         </button>
                                     }
                                 </div>
@@ -1043,13 +1043,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             @if (@preEvolution.PreevolutionPokemon.Name.Contains(" ("))
                                             {
                                                 <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Substring(0, preEvolution.PreevolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                             else
                                             {
                                                 <a class="evolutionImage" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = preEvolution.PreevolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = preEvolution.PreevolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                         </th>
@@ -1101,13 +1101,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             @if (@evolution.EvolutionPokemon.Name.Contains(" ("))
                                             {
                                                 <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Substring(0, evolution.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                             else
                                             {
                                                 <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolution.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolution.EvolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                         </th>
@@ -1139,13 +1139,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             @if (@evolutionList[i].EvolutionPokemon.Name.Contains(" ("))
                                             {
                                                 <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i].EvolutionPokemon.Name.Substring(0, evolutionList[i].EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i].EvolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@evolutionList[i].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i].EvolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@evolutionList[i].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @evolutionList[i].EvolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                             else
                                             {
                                                 <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i].EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i].EvolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@evolutionList[i].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i].EvolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@evolutionList[i].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @evolutionList[i].EvolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                         </th>
@@ -1169,13 +1169,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                                 @if (@evolutionList[i+1].EvolutionPokemon.Name.Contains(" ("))
                                                 {
                                                     <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i+1].EvolutionPokemon.Name.Substring(0, evolutionList[i+1].EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i+1].EvolutionPokemonId, generationId = @g })">
-                                                        <img class="lightshadowed" loading="lazy" title="@evolutionList[i+1].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i+1].EvolutionPokemon.Id, ".png"))" />
+                                                        <img class="lightshadowed" loading="lazy" title="@evolutionList[i+1].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @evolutionList[i+1].EvolutionPokemon.Id, ".png"))" />
                                                     </a>
                                                 }
                                                 else
                                                 {
                                                     <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = evolutionList[i+1].EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = evolutionList[i+1].EvolutionPokemonId, generationId = @g })">
-                                                        <img class="lightshadowed" loading="lazy" title="@evolutionList[i+1].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @evolutionList[i+1].EvolutionPokemon.Id, ".png"))" />
+                                                        <img class="lightshadowed" loading="lazy" title="@evolutionList[i+1].EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, @evolutionList[i+1].EvolutionPokemon.Id, ".png"))" />
                                                     </a>
                                                 }
                                             </th>
@@ -1205,13 +1205,13 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             @if (e.EvolutionPokemon.Name.Contains(" ("))
                                             {
                                                 <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = e.EvolutionPokemon.Name.Substring(0, e.EvolutionPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = e.EvolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@e.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, e.EvolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@e.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, e.EvolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                             else
                                             {
                                                 <a class="evolutionImage"  href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = e.EvolutionPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = e.EvolutionPokemonId, generationId = @g })">
-                                                    <img class="lightshadowed" loading="lazy" title="@e.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, e.EvolutionPokemon.Id, ".png"))" />
+                                                    <img class="lightshadowed" loading="lazy" title="@e.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.IconImageUrl, e.EvolutionPokemon.Id, ".png"))" />
                                                 </a>
                                             }
                                         </th>

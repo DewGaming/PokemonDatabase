@@ -51,9 +51,19 @@ namespace Pokedex
         public string TypeImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the favicon image Url.
+        /// Gets or sets the icon image Url.
         /// </summary>
-        public string FaviconImageUrl { get; set; }
+        public string IconImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shiny icon image Url.
+        /// </summary>
+        public string ShinyIconImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the grid image Url.
+        /// </summary>
+        public string GridImageUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the general image Url.
@@ -91,9 +101,19 @@ namespace Pokedex
         public string OfficialMarkImageFTPUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the favicon image FTP Url.
+        /// Gets or sets the icon image FTP Url.
         /// </summary>
-        public string FaviconImageFTPUrl { get; set; }
+        public string IconImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shiny icon image FTP Url.
+        /// </summary>
+        public string ShinyIconImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the grid image FTP Url.
+        /// </summary>
+        public string GridImageFTPUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the FTP server username.
