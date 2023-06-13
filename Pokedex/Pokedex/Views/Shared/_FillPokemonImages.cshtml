@@ -15,11 +15,11 @@
     <div class="shiny@(Model.CurrentImage == "shiny" ? " current" : "")" style="@(!Model.HasHome ? "position: relative !important" : "")">
     @if (@Model.Type.Name == "Normal")
     {
-        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyImageUrl, @Model.Id, ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Id, ".png"))" />
     }
     else
     {
-        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
+        <img loading="lazy" title="@Model.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyPokemonImageUrl, @Model.Id, "-", @Model.Type.Name.ToLower(), ".png"))" />
     }
     </div>
 }
