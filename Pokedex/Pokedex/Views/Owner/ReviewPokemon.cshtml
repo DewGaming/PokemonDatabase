@@ -62,7 +62,7 @@
         {
             <div class="differentForms">
                 <h2>Original Form</h2>
-                <img loading="lazy" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.OriginalPokemon.Id, ".png"))" />
+                <img loading="lazy" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @Model.OriginalPokemon.Id, ".png"))" />
             </div>
         }
     </div>
@@ -356,7 +356,7 @@
                         <tbody class="evolutionPokemon">
                             <tr>
                                 <th>
-                                    <img loading="lazy" class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                                    <img loading="lazy" class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
                                     <span class="evolutionLink">@preEvolution.PreevolutionPokemon.Name</span>
                                 </th>
                                 <td>
@@ -385,7 +385,7 @@
                             {
                                 <tr>
                                     <th>
-                                        <img loading="lazy" class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
+                                        <img loading="lazy" class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                         <span class="evolutionLink">@evolution.EvolutionPokemon.Name</span>
                                     </th>
                                     <td>

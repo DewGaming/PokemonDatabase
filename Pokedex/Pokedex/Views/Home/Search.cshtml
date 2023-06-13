@@ -19,7 +19,7 @@
         {
             <div class="shadowed @item.Pokemon.Name@(item.Pokemon.IsComplete ? "" : " incomplete")">
                 <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">
-                    <img class="pokemonListPicture" title="@item.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))"/>
+                    <img class="pokemonListPicture" title="@item.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @item.Pokemon.Id, ".png"))"/>
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">

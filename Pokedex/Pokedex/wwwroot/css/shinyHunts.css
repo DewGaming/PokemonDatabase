@@ -159,7 +159,8 @@
   .pokemonShinyImage {
     width: 85%;
     height: 85%;
-    max-height: 400px;
+    max-width: 350px;
+    max-height: 350px;
     object-fit: contain;
     margin: 20px;
   }
@@ -186,6 +187,7 @@
 
 @media (max-width: 575px) {
   .pokemonShinyImage {
+    max-width: 75px;
     max-height: 75px;
     object-fit: contain;
     position: absolute;
