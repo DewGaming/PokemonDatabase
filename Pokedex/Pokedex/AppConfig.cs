@@ -66,6 +66,11 @@ namespace Pokedex
         public string GridImageUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the shiny grid image Url.
+        /// </summary>
+        public string ShinyGridImageUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the general image Url.
         /// </summary>
         public string GeneralImageUrl { get; set; }
@@ -114,6 +119,11 @@ namespace Pokedex
         /// Gets or sets the grid image FTP Url.
         /// </summary>
         public string GridImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shiny grid image FTP Url.
+        /// </summary>
+        public string ShinyGridImageFTPUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the FTP server username.

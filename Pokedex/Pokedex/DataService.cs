@@ -788,6 +788,7 @@ namespace Pokedex
         {
             string imageUrlPath = string.Empty;
             string iconUrlPath = string.Empty;
+            string gridUrlPath = string.Empty;
             IFormFile upload;
             IFormFile resizedUpload;
 
@@ -795,6 +796,7 @@ namespace Pokedex
             {
                 imageUrlPath = appConfig.OfficialPokemonImageFTPUrl;
                 iconUrlPath = appConfig.IconImageFTPUrl;
+                gridUrlPath = appConfig.GridImageFTPUrl;
             }
             else if (imageType == "3d")
             {
@@ -804,6 +806,7 @@ namespace Pokedex
             {
                 imageUrlPath = appConfig.ShinyPokemonImageFTPUrl;
                 iconUrlPath = appConfig.ShinyIconImageFTPUrl;
+                gridUrlPath = appConfig.ShinyGridImageFTPUrl;
             }
             else if (imageType == "pokeball")
             {
@@ -868,15 +871,14 @@ namespace Pokedex
                         await iconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                     }
 
-                    using FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                }
+                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    {
+                        System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    }
 
-                if (imageType == "2d")
-                {
                     IFormFile gridUpload = this.TrimImage(upload, 150, 150);
 
-                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, appConfig.GridImageFTPUrl, pokemonId.ToString(), ".png"));
+                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, gridUrlPath, pokemonId.ToString(), ".png"));
                     request.Method = WebRequestMethods.Ftp.UploadFile;
                     request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
 
@@ -885,8 +887,10 @@ namespace Pokedex
                         await gridUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                     }
 
-                    using FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    {
+                        System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    }
                 }
             }
             else
