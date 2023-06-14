@@ -41,7 +41,7 @@ namespace Pokedex.Controllers
         public IActionResult ShinyDexProgress()
         {
             int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
-            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
             List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
@@ -54,7 +54,7 @@ namespace Pokedex.Controllers
             ShinyDexViewModel model = new ShinyDexViewModel()
             {
                 AllPokemon = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList(),
-                AllShinyHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "UserId", wherePropertyValue: userId),
+                AllShinyHunts = shinyHunts,
                 AllGames = this.dataService.GetObjects<Game>(),
                 AppConfig = this.appConfig,
             };
