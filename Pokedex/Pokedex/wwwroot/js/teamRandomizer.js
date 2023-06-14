@@ -8,7 +8,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString
 
         for (var i = 0; i < originalNames.length; i++) {
             var imageLocation = appConfig.officialPokemonImageUrl;
-            if (Math.floor((Math.random() * 4096) + 1) == 4096 && originalNames[i].hasShinyImage) {
+            if (Math.floor((Math.random() * 4096) + 1) == 4096 && !originalNames[i].isShinyLocked) {
                 console.log("Shiny Pokemon!");
                 imageLocation = appConfig.shinyPokemonImageUrl;
                 $.ajax({
