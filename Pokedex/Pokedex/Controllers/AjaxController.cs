@@ -491,9 +491,10 @@ namespace Pokedex.Controllers
         /// <param name="onePokemonForm">Whether or not only one form of a pokemon is allowed for generation.</param>
         /// <param name="randomAbility">Whether or not randomized abilities will also be generated.</param>
         /// <param name="noRepeatType">Whether or not repeat types are allowed for generation.</param>
+        /// <param name="allowIncomplete">Whether or not incomplete pokemon can appear.</param>
         /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool needsStarter, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedType, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool needsStarter, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType, bool allowIncomplete)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -556,6 +557,11 @@ namespace Pokedex.Controllers
                     }
 
                     List<Pokemon> allPokemon = this.GetAllPokemonWithoutForms();
+                    if (!allowIncomplete)
+                    {
+                        allPokemon = allPokemon.Where(x => x.IsComplete).ToList();
+                    }
+
                     List<Evolution> allEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod");
                     List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "PrimaryType, SecondaryType");
                     if (selectedGame.Id != 0)
