@@ -7,6 +7,8 @@ var grabPokemonDropdown = function (gameId) {
             $('.eggGroupSelectList').load('/get-pokemon-by-egg-group-dropdown/', { 'gameId': gameId }, function () {
                 setTimeout(function () {
                     $(".overlay").fadeOut(300);
+
+                    $(".eggGroupSelectList").select2();
                 });
             });
         }
