@@ -14,7 +14,9 @@ function lookupHuntsInGame(element, gameId) {
             $('div.shadowed').not('.HuntGame' + gameId).each(function () {
                 $(this).addClass('hide');
             });
+        }
 
+        if (!$(element).hasClass('incompleteAllGames') && !$(element).hasClass('pinnedHunts') && !$(element).hasClass('completeAllGames')) {
             $('.gameHuntedIn').each(function () {
                 $(this).addClass('hide');
             });
