@@ -282,10 +282,30 @@ function lookupMonth(month) {
   });
 }
 
+function lookupYearStats(month) {
+  $('.month button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  var monthString = month;
+  if (month < 10) {
+    monthString = '0' + month;
+  }
+
+  $('.month.pageStatList').removeClass('active');
+  $('.day.pageStatList').empty();
+  $('button#Month' + monthString).addClass('active');
+
+  $('.month.pageStatList').load('/get-stats-by-date/' + 0 + '/' + 0 + '/' + $('.pageButtons.year .active').attr('id').replace('Year', '') + '/' + $('.pokemonPageCheck').attr('id'), function () {
+    $('.month.pageStatList').addClass('active');
+  });
+}
+
 function lookupDay(day) {
   $('.day button').each(function () {
     $(this).removeClass('active');
   });
+
   var dayString = day;
   if (day < 10) {
     dayString = '0' + day;
