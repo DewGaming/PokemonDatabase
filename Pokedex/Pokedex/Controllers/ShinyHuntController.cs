@@ -6,7 +6,6 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Pokedex.Controllers
@@ -14,6 +13,7 @@ namespace Pokedex.Controllers
     /// <summary>
     /// The class that handles all ShinyHunt related requests.
     /// </summary>
+    [Authorize]
     [Route("")]
     public class ShinyHuntController : Controller
     {
