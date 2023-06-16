@@ -1,6 +1,17 @@
 @model Pokedex.Models.PokemonPageStatsViewModel;
 
-<h2>Stats for @Model.PageStatList.First().VisitDate.ToString("MMMM dd, yyyy")</h2>
+@if (@Model.PageStatList.First().VisitDate.Date == @Model.PageStatList.Last().VisitDate.Date)
+{
+    <h2>Stats for @Model.PageStatList.First().VisitDate.ToString("MMMM dd, yyyy")</h2>
+}
+else if (@Model.PageStatList.First().VisitDate.Date.Month == @Model.PageStatList.Last().VisitDate.Date.Month)
+{ 
+    <h2>Stats for @Model.PageStatList.First().VisitDate.ToString("MMMM yyyy")</h2>
+}
+else
+{ 
+    <h2>Stats for @Model.PageStatList.First().VisitDate.ToString("yyyy")</h2>
+}
 
 <div class="grid-container">
     @foreach (var p in Model.PokemonList)
