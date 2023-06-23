@@ -1,0 +1,23 @@
+p {
+    margin: 0 !important;
+}
+
+.uncaptured img {
+    filter: brightness(0);
+}
+
+.uncaptured .captureTotal {
+    display: none;
+}
+
+.generations {
+    margin-bottom: 0px !important;
+}
+
+.generationHeaders {
+    margin: 5px;
+}
+
+.shinyHuntButtons button {
+    margin-bottom: 5px;
+}
