@@ -83,11 +83,12 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Starts a shiny hunt.
         /// </summary>
+        /// <param name="numberOfHunts">The number of hunts being added. Either one hunt or multiple.</param>
         /// <param name="shinyHunt">The started shiny hunt.</param>
         /// <returns>The user's shiny hunt page.</returns>
         [HttpPost]
         [Route("start_hunt")]
-        public IActionResult StartHunt(StartShinyHuntViewModel shinyHunt)
+        public IActionResult StartHunt(string numberOfHunts, StartShinyHuntViewModel shinyHunt)
         {
             if (!this.ModelState.IsValid)
             {
@@ -112,7 +113,18 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("ShinyHunts", "User");
+                if (numberOfHunts == "oneHunt")
+                {
+                    return this.RedirectToAction("ShinyHunts", "User");
+                }
+                else if (numberOfHunts == "multipleHunts")
+                {
+                    return this.RedirectToAction("StartHunt", "ShinyHunt");
+                }
+                else
+                {
+                    return this.RedirectToAction("ShinyHunts", "User");
+                }
             }
         }
 
