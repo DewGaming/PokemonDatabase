@@ -799,38 +799,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_battle_item")]
-        public IActionResult BattleItem()
-        {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
-
-            BattleItemViewModel model = new BattleItemViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id > 1).ToList(),
-                AllPokemon = pokemonList,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_battle_item")]
-        public IActionResult BattleItem(BattleItem battleItem)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
-
-            this.dataService.AddObject(battleItem);
-
-            return this.RedirectToAction("BattleItems", "Owner");
-        }
-
-        [HttpGet]
         [Route("add_pokemon")]
         public IActionResult Pokemon()
         {

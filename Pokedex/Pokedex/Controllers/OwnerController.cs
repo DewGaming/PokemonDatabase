@@ -300,23 +300,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("battle_item")]
-        public IActionResult BattleItems()
-        {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
-
-            BattleItemViewModel model = new BattleItemViewModel()
-            {
-                AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
-                AllPokemonTeamDetails = this.dataService.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature"),
-                AllPokemon = pokemonList,
-            };
-
-            return this.View(model);
-        }
-
         /// <summary>
         /// Allows owners to view all users on the site.
         /// </summary>

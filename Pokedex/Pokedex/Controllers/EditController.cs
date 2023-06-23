@@ -231,56 +231,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_battle_item/{id:int}")]
-        public IActionResult BattleItem(int id)
-        {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
-
-            BattleItem battleItem = this.dataService.GetObjectByPropertyValue<BattleItem>("Id", id);
-            BattleItemViewModel model = new BattleItemViewModel()
-            {
-                Id = battleItem.Id,
-                Name = battleItem.Name,
-                GenerationId = battleItem.GenerationId,
-                AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 1).ToList(),
-                AllPokemon = pokemonList,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_battle_item/{id:int}")]
-        public IActionResult BattleItem(BattleItem battleItem)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
-
-                BattleItem item = this.dataService.GetObjectByPropertyValue<BattleItem>("Id", battleItem.Id);
-                BattleItemViewModel model = new BattleItemViewModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    GenerationId = item.GenerationId,
-                    AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 1).ToList(),
-                    AllPokemon = pokemonList,
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(battleItem);
-
-            return this.RedirectToAction("BattleItems", "Owner");
-        }
-
-        [HttpGet]
         [Route("edit_pokemon/{id:int}")]
         public IActionResult Pokemon(int id)
         {

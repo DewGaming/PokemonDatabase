@@ -272,7 +272,6 @@ namespace Pokedex.Controllers
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                    AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
                 };
 
@@ -306,7 +305,6 @@ namespace Pokedex.Controllers
                     AllNatures = this.dataService.GetObjects<Nature>("Name"),
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                    AllBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon"),
                     GameId = pokemonTeam.GameId,
                 };
 
@@ -872,11 +870,7 @@ namespace Pokedex.Controllers
                 if (pokemonName.IndexOf(" @ ") != -1)
                 {
                     string itemName = pokemonName.Split(" @ ")[1];
-                    BattleItem battleItem = this.dataService.GetObjectByPropertyValue<BattleItem>("Name", itemName);
-                    if (battleItem != null)
-                    {
-                        pokemonTeamDetail.BattleItemId = battleItem.Id;
-                    }
+                    pokemonTeamDetail.BattleItemString = itemName;
 
                     pokemonName = pokemonName.Split(string.Concat(" @ ", itemName))[0];
                 }
@@ -1455,7 +1449,7 @@ namespace Pokedex.Controllers
 
         private PokemonTeamDetail GetPokemonTeamDetail(int id)
         {
-            return this.dataService.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, BattleItem, Nature")
+            return this.dataService.GetObjects<PokemonTeamDetail>(includes: "Pokemon, Pokemon.Game.Generation, Ability, PokemonTeamEV, PokemonTeamIV, PokemonTeamMoveset, Nature")
                 .Find(x => x.Id == id);
         }
 

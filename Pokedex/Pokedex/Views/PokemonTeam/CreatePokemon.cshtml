@@ -95,12 +95,12 @@
             </div>
         }
         
-        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20)
+        @if (@Model.GameId != 1 && @Model.GameId != 20 && @Model.GameId != 21)
         {
             <div class="form-group row">
-                @Html.LabelFor(x => x.BattleItemId, "Held Item", new { @class = "col-md-2" })
-                @Html.DropDownListFor(x => x.BattleItemId, Enumerable.Empty<SelectListItem>(), string.Empty, new { @class = "form-control col-md-8" })
-                @Html.ValidationMessageFor(x => x.BattleItemId)
+                @Html.LabelFor(x => x.BattleItemString, "Held Item", new { @class = "col-md-2" })
+                @Html.EditorFor(x => x.BattleItemString, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" }})
+                @Html.ValidationMessageFor(x => x.BattleItemString)
             </div>
         }
 

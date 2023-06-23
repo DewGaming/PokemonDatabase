@@ -28,9 +28,7 @@ namespace Pokedex.DataAccess.Models
 
         public Ability Ability { get; set; }
 
-        public int? BattleItemId { get; set; }
-
-        public BattleItem BattleItem { get; set; }
+        public string BattleItemString { get; set; }
         
         public int? NatureId { get; set; }
 

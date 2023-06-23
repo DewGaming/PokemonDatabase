@@ -34,11 +34,6 @@ namespace Pokedex.Models
         public List<Ability> AllAbilities { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all battle items.
-        /// </summary>
-        public List<BattleItem> AllBattleItems { get; set; }
-
-        /// <summary>
         /// Gets or sets the pokemon team's game id.
         /// </summary>
         public int? GameId { get; set; }

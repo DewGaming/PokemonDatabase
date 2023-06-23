@@ -333,25 +333,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_battle_item/{id:int}")]
-        public IActionResult BattleItem(int id)
-        {
-            BattleItem model = this.dataService.GetObjectByPropertyValue<BattleItem>("Id", id);
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_battle_item/{id:int}")]
-        public IActionResult BattleItem(BattleItem battleItem)
-        {
-            this.dataService.DeleteObject<BattleItem>(battleItem.Id);
-
-            return this.RedirectToAction("BattleItems", "Owner");
-        }
-
-        [HttpGet]
         [Route("delete_ability/{id:int}")]
         public IActionResult Ability(int id)
         {

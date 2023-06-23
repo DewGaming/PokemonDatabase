@@ -283,7 +283,7 @@ namespace Pokedex.Controllers
         [Route("grab-user-pokemon-team")]
         public ExportPokemonViewModel ExportUserPokemonTeam(int teamId)
         {
-            PokemonTeam pokemonTeam = this.dataService.GetObjectByPropertyValue<PokemonTeam>("Id", teamId, "Game, FirstPokemon, FirstPokemon.Pokemon, FirstPokemon.Pokemon.Game, FirstPokemon.Ability, FirstPokemon.PokemonTeamEV, FirstPokemon.PokemonTeamIV, FirstPokemon.PokemonTeamMoveset, FirstPokemon.BattleItem, FirstPokemon.Nature, FirstPokemon.TeraType, SecondPokemon, SecondPokemon.Pokemon, SecondPokemon.Pokemon.Game, SecondPokemon.Ability, SecondPokemon.PokemonTeamEV, SecondPokemon.PokemonTeamIV, SecondPokemon.PokemonTeamMoveset, SecondPokemon.BattleItem, SecondPokemon.Nature, SecondPokemon.TeraType, ThirdPokemon, ThirdPokemon.Pokemon, ThirdPokemon.Pokemon.Game, ThirdPokemon.Ability, ThirdPokemon.PokemonTeamEV, ThirdPokemon.PokemonTeamIV, ThirdPokemon.PokemonTeamMoveset, ThirdPokemon.BattleItem, ThirdPokemon.Nature, ThirdPokemon.TeraType, FourthPokemon, FourthPokemon.Pokemon, FourthPokemon.Pokemon.Game, FourthPokemon.Ability, FourthPokemon.PokemonTeamEV, FourthPokemon.PokemonTeamIV, FourthPokemon.PokemonTeamMoveset, FourthPokemon.BattleItem, FourthPokemon.Nature, FourthPokemon.TeraType, FifthPokemon, FifthPokemon.Pokemon, FifthPokemon.Pokemon.Game, FifthPokemon.Ability, FifthPokemon.PokemonTeamEV, FifthPokemon.PokemonTeamIV, FifthPokemon.PokemonTeamMoveset, FifthPokemon.BattleItem, FifthPokemon.Nature, FifthPokemon.TeraType, SixthPokemon, SixthPokemon.Pokemon, SixthPokemon.Pokemon.Game, SixthPokemon.Ability, SixthPokemon.PokemonTeamEV, SixthPokemon.PokemonTeamIV, SixthPokemon.PokemonTeamMoveset, SixthPokemon.BattleItem, SixthPokemon.Nature, SixthPokemon.TeraType, User");
+            PokemonTeam pokemonTeam = this.dataService.GetObjectByPropertyValue<PokemonTeam>("Id", teamId, "Game, FirstPokemon, FirstPokemon.Pokemon, FirstPokemon.Pokemon.Game, FirstPokemon.Ability, FirstPokemon.PokemonTeamEV, FirstPokemon.PokemonTeamIV, FirstPokemon.PokemonTeamMoveset, FirstPokemon.Nature, FirstPokemon.TeraType, SecondPokemon, SecondPokemon.Pokemon, SecondPokemon.Pokemon.Game, SecondPokemon.Ability, SecondPokemon.PokemonTeamEV, SecondPokemon.PokemonTeamIV, SecondPokemon.PokemonTeamMoveset, SecondPokemon.Nature, SecondPokemon.TeraType, ThirdPokemon, ThirdPokemon.Pokemon, ThirdPokemon.Pokemon.Game, ThirdPokemon.Ability, ThirdPokemon.PokemonTeamEV, ThirdPokemon.PokemonTeamIV, ThirdPokemon.PokemonTeamMoveset, ThirdPokemon.Nature, ThirdPokemon.TeraType, FourthPokemon, FourthPokemon.Pokemon, FourthPokemon.Pokemon.Game, FourthPokemon.Ability, FourthPokemon.PokemonTeamEV, FourthPokemon.PokemonTeamIV, FourthPokemon.PokemonTeamMoveset, FourthPokemon.Nature, FourthPokemon.TeraType, FifthPokemon, FifthPokemon.Pokemon, FifthPokemon.Pokemon.Game, FifthPokemon.Ability, FifthPokemon.PokemonTeamEV, FifthPokemon.PokemonTeamIV, FifthPokemon.PokemonTeamMoveset, FifthPokemon.Nature, FifthPokemon.TeraType, SixthPokemon, SixthPokemon.Pokemon, SixthPokemon.Pokemon.Game, SixthPokemon.Ability, SixthPokemon.PokemonTeamEV, SixthPokemon.PokemonTeamIV, SixthPokemon.PokemonTeamMoveset, SixthPokemon.Nature, SixthPokemon.TeraType, User");
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && (pokemonTeam.User.Username == this.User.Identity.Name || this.User.IsInRole("Owner")))
             {
                 return this.ExportTeamString(pokemonTeam);
@@ -301,7 +301,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "Game, FirstPokemon, FirstPokemon.Pokemon, FirstPokemon.Pokemon.Game, FirstPokemon.Ability, FirstPokemon.PokemonTeamEV, FirstPokemon.PokemonTeamIV, FirstPokemon.PokemonTeamMoveset, FirstPokemon.BattleItem, FirstPokemon.Nature, FirstPokemon.TeraType, SecondPokemon, SecondPokemon.Pokemon, SecondPokemon.Pokemon.Game, SecondPokemon.Ability, SecondPokemon.PokemonTeamEV, SecondPokemon.PokemonTeamIV, SecondPokemon.PokemonTeamMoveset, SecondPokemon.BattleItem, SecondPokemon.Nature, SecondPokemon.TeraType, ThirdPokemon, ThirdPokemon.Pokemon, ThirdPokemon.Pokemon.Game, ThirdPokemon.Ability, ThirdPokemon.PokemonTeamEV, ThirdPokemon.PokemonTeamIV, ThirdPokemon.PokemonTeamMoveset, ThirdPokemon.BattleItem, ThirdPokemon.Nature, ThirdPokemon.TeraType, FourthPokemon, FourthPokemon.Pokemon, FourthPokemon.Pokemon.Game, FourthPokemon.Ability, FourthPokemon.PokemonTeamEV, FourthPokemon.PokemonTeamIV, FourthPokemon.PokemonTeamMoveset, FourthPokemon.BattleItem, FourthPokemon.Nature, FourthPokemon.TeraType, FifthPokemon, FifthPokemon.Pokemon, FifthPokemon.Pokemon.Game, FifthPokemon.Ability, FifthPokemon.PokemonTeamEV, FifthPokemon.PokemonTeamIV, FifthPokemon.PokemonTeamMoveset, FifthPokemon.BattleItem, FifthPokemon.Nature, FifthPokemon.TeraType, SixthPokemon, SixthPokemon.Pokemon, SixthPokemon.Pokemon.Game, SixthPokemon.Ability, SixthPokemon.PokemonTeamEV, SixthPokemon.PokemonTeamIV, SixthPokemon.PokemonTeamMoveset, SixthPokemon.BattleItem, SixthPokemon.Nature, SixthPokemon.TeraType, User", "User.Username", this.User.Identity.Name);
+                List<PokemonTeam> pokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "Game, FirstPokemon, FirstPokemon.Pokemon, FirstPokemon.Pokemon.Game, FirstPokemon.Ability, FirstPokemon.PokemonTeamEV, FirstPokemon.PokemonTeamIV, FirstPokemon.PokemonTeamMoveset, FirstPokemon.Nature, FirstPokemon.TeraType, SecondPokemon, SecondPokemon.Pokemon, SecondPokemon.Pokemon.Game, SecondPokemon.Ability, SecondPokemon.PokemonTeamEV, SecondPokemon.PokemonTeamIV, SecondPokemon.PokemonTeamMoveset, SecondPokemon.Nature, SecondPokemon.TeraType, ThirdPokemon, ThirdPokemon.Pokemon, ThirdPokemon.Pokemon.Game, ThirdPokemon.Ability, ThirdPokemon.PokemonTeamEV, ThirdPokemon.PokemonTeamIV, ThirdPokemon.PokemonTeamMoveset, ThirdPokemon.Nature, ThirdPokemon.TeraType, FourthPokemon, FourthPokemon.Pokemon, FourthPokemon.Pokemon.Game, FourthPokemon.Ability, FourthPokemon.PokemonTeamEV, FourthPokemon.PokemonTeamIV, FourthPokemon.PokemonTeamMoveset, FourthPokemon.Nature, FourthPokemon.TeraType, FifthPokemon, FifthPokemon.Pokemon, FifthPokemon.Pokemon.Game, FifthPokemon.Ability, FifthPokemon.PokemonTeamEV, FifthPokemon.PokemonTeamIV, FifthPokemon.PokemonTeamMoveset, FifthPokemon.Nature, FifthPokemon.TeraType, SixthPokemon, SixthPokemon.Pokemon, SixthPokemon.Pokemon.Game, SixthPokemon.Ability, SixthPokemon.PokemonTeamEV, SixthPokemon.PokemonTeamIV, SixthPokemon.PokemonTeamMoveset, SixthPokemon.Nature, SixthPokemon.TeraType, User", "User.Username", this.User.Identity.Name);
                 List<ExportPokemonViewModel> exportList = new List<ExportPokemonViewModel>();
                 foreach (var team in pokemonTeams)
                 {
@@ -1510,54 +1510,6 @@ namespace Pokedex.Controllers
                 }
 
                 return this.Json(this.Url.Action("Games", "Owner")).Value.ToString();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets a list of battle items for a pokemon.
-        /// </summary>
-        /// <param name="pokemonId">The pokemon the item belongs to.</param>
-        /// <param name="generationId">The generation used to sort the available items.</param>
-        /// <returns>The list of available battle items.</returns>
-        [Route("get-pokemon-battle-items")]
-        public List<BattleItem> GetPokemonBattleItems(int pokemonId, int generationId)
-        {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                List<BattleItem> battleItems = new List<BattleItem>();
-                List<FormItem> formItems = this.dataService.GetFormItems().Where(x => x.PokemonId == pokemonId).ToList();
-                if (formItems.Count == 0)
-                {
-                    Generation generation = this.dataService.GetObjectByPropertyValue<Generation>("Id", generationId);
-                    List<BattleItem> allBattleItems = this.dataService.GetObjects<BattleItem>("GenerationId, Name", "Generation, Pokemon");
-                    battleItems.AddRange(allBattleItems.Where(x => !x.OnlyInThisGeneration && x.PokemonId == null).ToList());
-                    if (generation != null)
-                    {
-                        battleItems = battleItems.Where(x => x.Generation.Id <= generation.Id).ToList();
-                        if (allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList().Count > 0)
-                        {
-                            battleItems.AddRange(allBattleItems.Where(x => x.OnlyInThisGeneration && x.GenerationId == generation.Id).ToList());
-                        }
-
-                        if (allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList().Count > 0)
-                        {
-                            battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId && x.Generation.Id <= generation.Id).ToList());
-                        }
-                    }
-                    else
-                    {
-                        if (allBattleItems.Where(x => x.PokemonId == pokemonId).ToList().Count > 0)
-                        {
-                            battleItems.AddRange(allBattleItems.Where(x => x.PokemonId == pokemonId).ToList());
-                        }
-                    }
-
-                    battleItems = battleItems.OrderBy(x => x.Name).ToList();
-                }
-
-                return battleItems;
             }
 
             return null;
@@ -3314,9 +3266,9 @@ namespace Pokedex.Controllers
                 {
                     pokemonName = string.Concat(pokemonName, pokemonForm[1]);
                 }
-                else if (pokemonTeamDetail.BattleItemId != null && generationId != 1)
+                else if (!string.IsNullOrEmpty(pokemonTeamDetail.BattleItemString) && generationId != 1)
                 {
-                    pokemonName = string.Concat(pokemonName, " @ ", pokemonTeamDetail.BattleItem.Name);
+                    pokemonName = string.Concat(pokemonName, " @ ", pokemonTeamDetail.BattleItemString);
                 }
 
                 string pokemonTeamString = pokemonName;

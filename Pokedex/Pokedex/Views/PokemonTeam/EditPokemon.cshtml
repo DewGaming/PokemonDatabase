@@ -99,12 +99,12 @@
             </div>
         }
         
-        @if (@Model.GameId != 1 && @Model.GameId != 21 && @Model.GameId != 20)
+        @if (@Model.GameId != 1 && @Model.GameId != 20 && @Model.GameId != 21)
         {
             <div class="form-group row">
-                @Html.LabelFor(x => x.PokemonTeamDetail.BattleItemId, "Held Item", new { @class = "col-md-2" })
-                @Html.DropDownListFor(x => x.PokemonTeamDetail.BattleItemId, new SelectList(Model.AllBattleItems, "Id", "Name"), string.Empty, new { @class = "form-control col-md-8" })
-                @Html.ValidationMessageFor(x => x.PokemonTeamDetail.BattleItemId)
+                @Html.LabelFor(x => x.PokemonTeamDetail.BattleItemString, "Held Item", new { @class = "col-md-2" })
+                @Html.EditorFor(x => x.PokemonTeamDetail.BattleItemString, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" }})
+                @Html.ValidationMessageFor(x => x.PokemonTeamDetail.BattleItemString)
             </div>
         }
 
