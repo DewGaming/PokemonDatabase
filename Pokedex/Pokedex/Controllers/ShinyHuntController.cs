@@ -220,24 +220,7 @@ namespace Pokedex.Controllers
                 p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
             }
 
-            List<string> genders = new List<string>();
-            if (pokemon.GenderRatioId == 1)
-            {
-                genders.Add("Male");
-            }
-            else if (pokemon.GenderRatioId == 9)
-            {
-                genders.Add("Female");
-            }
-            else if (pokemon.GenderRatioId == 10)
-            {
-                genders.Add("Gender Unknown");
-            }
-            else
-            {
-                genders.Add("Male");
-                genders.Add("Female");
-            }
+            List<string> genders = this.dataService.GrabGenders(pokemon.Id);
 
             shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
             if (shinyHunt.Phases < 1)
@@ -291,25 +274,7 @@ namespace Pokedex.Controllers
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Game");
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", shinyHunt.PokemonId);
             List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
-
-            List<string> genders = new List<string>();
-            if (pokemon.GenderRatioId == 1)
-            {
-                genders.Add("Male");
-            }
-            else if (pokemon.GenderRatioId == 9)
-            {
-                genders.Add("Female");
-            }
-            else if (pokemon.GenderRatioId == 10)
-            {
-                genders.Add("Gender Unknown");
-            }
-            else
-            {
-                genders.Add("Male");
-                genders.Add("Female");
-            }
+            List<string> genders = this.dataService.GrabGenders(shinyHunt.PokemonId);
 
             CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
@@ -419,25 +384,7 @@ namespace Pokedex.Controllers
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Pokemon, Game");
             List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
-
-            List<string> genders = new List<string>();
-            if (shinyHunt.Pokemon.GenderRatioId == 1)
-            {
-                genders.Add("Male");
-            }
-            else if (shinyHunt.Pokemon.GenderRatioId == 9)
-            {
-                genders.Add("Female");
-            }
-            else if (shinyHunt.Pokemon.GenderRatioId == 10)
-            {
-                genders.Add("Gender Unknown");
-            }
-            else
-            {
-                genders.Add("Male");
-                genders.Add("Female");
-            }
+            List<string> genders = this.dataService.GrabGenders(shinyHunt.PokemonId);
 
             EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
             {
@@ -468,25 +415,7 @@ namespace Pokedex.Controllers
             {
                 ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id, "Pokemon, Game");
                 List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(oldShinyHunt.GameId);
-
-                List<string> genders = new List<string>();
-                if (oldShinyHunt.Pokemon.GenderRatioId == 1)
-                {
-                    genders.Add("Male");
-                }
-                else if (oldShinyHunt.Pokemon.GenderRatioId == 9)
-                {
-                    genders.Add("Female");
-                }
-                else if (oldShinyHunt.Pokemon.GenderRatioId == 10)
-                {
-                    genders.Add("Gender Unknown");
-                }
-                else
-                {
-                    genders.Add("Male");
-                    genders.Add("Female");
-                }
+                List<string> genders = this.dataService.GrabGenders(oldShinyHunt.PokemonId);
 
                 EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
                 {

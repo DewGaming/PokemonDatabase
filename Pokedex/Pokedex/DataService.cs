@@ -855,6 +855,37 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Creates a list of strings for the available genders of a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>A list of genders in string form.</returns>
+        public List<string> GrabGenders(int pokemonId)
+        {
+            List<string> genders = new List<string>();
+            GenderRatio genderRatio = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").GenderRatio;
+            if (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0)
+            {
+                genders.Add("None");
+            }
+            else if (genderRatio.MaleRatio == 0)
+            {
+                genders.Add("Female");
+            }
+            else if (genderRatio.FemaleRatio == 0)
+            {
+                genders.Add("Male");
+            }
+            else
+            {
+                genders.Add(string.Empty);
+                genders.Add("Male");
+                genders.Add("Female");
+            }
+
+            return genders;
+        }
+
+        /// <summary>
         /// Uploades a given image to the pokemon images folder.
         /// </summary>
         /// <param name="fileUpload">The file being uploaded.</param>

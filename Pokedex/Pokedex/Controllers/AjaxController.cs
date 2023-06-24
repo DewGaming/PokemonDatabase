@@ -1591,28 +1591,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<string> genders = new List<string>();
-                GenderRatio genderRatio = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").GenderRatio;
-                if (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0)
-                {
-                    genders.Add("None");
-                }
-                else if (genderRatio.MaleRatio == 0)
-                {
-                    genders.Add("Female");
-                }
-                else if (genderRatio.FemaleRatio == 0)
-                {
-                    genders.Add("Male");
-                }
-                else
-                {
-                    genders.Add(string.Empty);
-                    genders.Add("Male");
-                    genders.Add("Female");
-                }
-
-                return genders;
+                return this.dataService.GrabGenders(pokemonId);
             }
 
             return null;

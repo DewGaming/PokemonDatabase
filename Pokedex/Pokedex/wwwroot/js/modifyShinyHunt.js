@@ -51,7 +51,7 @@ var grabPokemon = function (pokemonId) {
                 $('#Gender').append($('<option>').text(item));
             });
 
-            if (gender != null && gender != '' && data.find(x => x == gender)) {
+            if (data.find(x => x == gender)) {
                 $('#Gender').val(gender);
             }
         })
