@@ -36,15 +36,13 @@ var grabPokemon = function (pokemonId) {
             $(".overlay").fadeOut(300);
         });
 }, refreshGenders = function () {
+    var gender = $('#Gender').val();
     $.ajax({
         url: '/get-pokemon-genders/',
         method: "POST",
         data: { 'pokemonId': $('#PokemonId').val() }
     })
         .done(function (data) {
-            if (data.length == 3) {
-                data.shift();
-            }
             $('#Gender').empty();
             $.each(data, function (index, item) {
                 if (item == "None") {
@@ -52,6 +50,10 @@ var grabPokemon = function (pokemonId) {
                 }
                 $('#Gender').append($('<option>').text(item));
             });
+
+            if (gender != null && gender != '' && data.find(x => x == gender)) {
+                $('#Gender').val(gender);
+            }
         })
         .fail(function () {
             alert("Failed to grab genders!");

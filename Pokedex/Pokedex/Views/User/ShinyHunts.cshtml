@@ -98,11 +98,11 @@
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(incompleteHunts.Count(x => x.IsPinned) > 0 ? (s.IsPinned ? " HuntGamePin" : " hide") : "") shadowed @s.Pokemon.Name">
                     <div class="pokemonDetails">
-                        @if (s.HasShinyCharm)
-                        {
-                            <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
-                        }
                         <div class="pokemonImages">
+                            @if (s.HasShinyCharm)
+                            {
+                                <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                            }
                             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
                                 <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" />
                             </a>
@@ -153,25 +153,29 @@
             {
                 <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
                     <div class="pokemonDetails">
-                        <div class="bonusImages">
-                            @if (s.HasShinyCharm)
-                            {
-                                <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
-                            }
-                            @if (s.Mark != null)
-                            {
-                                <img loading="lazy" class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.Mark.Id, ".png"))">
-                            }
-                            @if (s.IsAlpha)
-                            {
-                                <img loading="lazy" class="pokemonAlpha pokemonListPicture" title="Alpha" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, "alpha.png"))">
-                            }
-                            @if (s.Pokeball != null)
-                            {
-                                <img loading="lazy" class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.Pokeball.Id, ".png"))">
-                            }
-                        </div>
                         <div class="pokemonImages">
+                            <div class="bonusImages">
+                                @if (s.HasShinyCharm)
+                                {
+                                    <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                                }
+                                @if (s.Mark != null)
+                                {
+                                    <img loading="lazy" class="pokemonMark pokemonListPicture" title="@s.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.Mark.Id, ".png"))">
+                                }
+                                @if (s.IsAlpha)
+                                {
+                                    <img loading="lazy" class="pokemonAlpha pokemonListPicture" title="Alpha" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, "alpha.png"))">
+                                }
+                                @if (s.Pokeball != null)
+                                {
+                                    <img loading="lazy" class="pokeball pokemonListPicture" title="@s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.Pokeball.Id, ".png"))">
+                                }
+                                @if (s.Gender == "Male" || s.Gender == "Female")
+                                {
+                                    <img loading="lazy" class="gender pokemonListPicture" title="@s.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @s.Gender.ToLower(), ".png"))">
+                                }
+                            </div>
                             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
                                 <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" />
                             </a>
