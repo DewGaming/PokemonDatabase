@@ -2747,6 +2747,45 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Grabs all of the pokeballs available for the selected game.
+        /// </summary>
+        /// <param name="gameId">The selected game's Id.</param>
+        /// <param name="huntingMethodId">The selected hunting method's Id.</param>
+        /// <returns>The list of available pokeballs.</returns>
+        [Route("get-shiny-hunt-pokeballs")]
+        public List<Pokeball> GetShinyHuntPokeballs(int gameId, int huntingMethodId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<Pokeball> pokeballs = this.dataService.GetPokeballs(gameId, huntingMethodId);
+
+                return pokeballs;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Grabs all of the marks available for the selected game.
+        /// </summary>
+        /// <param name="gameId">The selected game's Id.</param>
+        /// <param name="huntingMethodId">The selected hunting method's Id.</param>
+        /// <returns>The list of available marks.</returns>
+        [Route("get-shiny-hunt-marks")]
+        public List<Mark> GetShinyHuntMarks(int gameId, int huntingMethodId)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.GenerationId >= 8 && gameId != 35 && gameId != 36 && gameId != 37 && huntingMethodId != 4 && huntingMethodId != 5)
+            {
+                List<Mark> marks = this.dataService.GetObjects<Mark>("Name");
+
+                return marks;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>

@@ -316,12 +316,12 @@ namespace Pokedex
             Game game = new Game();
             if (gameId != 0)
             {
-                pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.EggCycle, Pokemon.GenderRatio, Pokemon.Classification, Pokemon.Game, Pokemon.Game.Generation, Pokemon.ExperienceGrowth", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
+                pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.GenderRatio", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
                 game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             }
             else
             {
-                pokemonList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                pokemonList = this.GetObjects<Pokemon>(includes: "GenderRatio");
             }
 
             pokemonList = pokemonList.Where(x => x.IsComplete).ToList();
@@ -758,7 +758,7 @@ namespace Pokedex
             if (game.GenerationId == 3)
             {
                 pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
-                List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Deoxys").ToList();
+                List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Deoxys").ToList();
                 List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
                 deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
                 pokemonList.AddRange(deoxysList);
@@ -766,7 +766,7 @@ namespace Pokedex
             else if (game.GenerationId == 6)
             {
                 pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
-                List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Name == "Zygarde").ToList();
+                List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Zygarde").ToList();
                 List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
                 zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
                 zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);

@@ -45,6 +45,7 @@
 
 <p class="shinyHuntButtons">
     <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
+    <a class="btn btn-primary" href="@this.Url.Action("AddCompletedHunt", "ShinyHunt")" role="button">Add Completed Hunt</a>
     <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideComplete()">View In-Progress Shiny Hunts</button>
     @if (completeHunts.Count > 0)
     {

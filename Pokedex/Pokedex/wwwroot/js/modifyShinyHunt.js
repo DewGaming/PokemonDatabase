@@ -147,9 +147,78 @@ var grabPokemon = function (pokemonId) {
             $('#UsingLures').prop('checked', false)
         }
     }
+}, checkMarks = function () {
+    if ($('#MarkId').length) {
+        var gameId = $('#GameId').val(), markId = $('#MarkId').val();
+        $.ajax({
+            url: '/get-shiny-hunt-marks/',
+            method: "POST",
+            data: { 'gameId': gameId, 'huntingMethodId': $('#HuntingMethodId').val() }
+        })
+            .done(function (data) {
+                $('#MarkId').empty();
+                $('#MarkId').append($('<option>'));
+                $.each(data, function (index, item) {
+                    $('#MarkId').append($('<option>').val(item.id).text(item.name));
+                });
+
+                if (markId != "" && markId != null && data.find(x => x.id = markId)) {
+                    $('#MarkId option').each(function () {
+                        if (this.value == markId) {
+                            $('#MarkId').val(markId);
+                        }
+                    });
+                }
+
+                if (data != null) {
+                    if ($('.marks').hasClass('hide')) {
+                        $('.marks').removeClass('hide');
+                    }
+                } else {
+                    if (!$('.marks').hasClass('hide')) {
+                        $('.marks').addClass('hide');
+                    }
+                }
+            })
+            .fail(function () {
+                alert("Failed to grab marks!");
+            });
+    }
+}, checkPokeballs = function () {
+    if ($('#PokeballId').length) {
+        var gameId = $('#GameId').val(), pokeballId = $('#PokeballId').val();
+        $.ajax({
+            url: '/get-shiny-hunt-pokeballs/',
+            method: "POST",
+            data: { 'gameId': gameId, 'huntingMethodId': $('#HuntingMethodId').val() }
+        })
+            .done(function (data) {
+                $('#PokeballId').empty();
+                $.each(data, function (index, item) {
+                    $('#PokeballId').append($('<option>').val(item.id).text(item.name));
+                });
+
+                if (pokeballId != "" && pokeballId != null && data.find(x => x.id = pokeballId)) {
+                    $('#PokeballId option').each(function () {
+                        if (this.value == pokeballId) {
+                            $('#PokeballId').val(pokeballId);
+                        }
+                    });
+                } else if (gameId == 37) {
+                    $('#PokeballId').val(11);
+                } else {
+                    $('#PokeballId').val(1);
+                }
+            })
+            .fail(function () {
+                alert("Failed to grab pokeballs!");
+            });
+    }
 }, checkFunctions = function () {
     checkLure();
     checkAlpha();
+    checkMarks();
+    checkPokeballs();
     checkShinyCharm();
     checkSparklingPower();
 }
@@ -161,7 +230,7 @@ $(document).ready(function () {
         grabHuntingMethod(huntingMethodId);
         checkFunctions();
     }
-    
+
     $("#PokemonId").select2();
 });
 

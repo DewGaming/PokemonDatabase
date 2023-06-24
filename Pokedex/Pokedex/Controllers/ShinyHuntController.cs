@@ -129,6 +129,80 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Starts a shiny hunt.
+        /// </summary>
+        /// <returns>The shiny hunt page.</returns>
+        [HttpGet]
+        [Route("add_completed_hunt")]
+        public IActionResult AddCompletedHunt()
+        {
+            AddCompletedShinyHuntViewModel model = new AddCompletedShinyHuntViewModel()
+            {
+                AllGames = this.GetShinyHuntGames(),
+                DateOfCapture = DateTime.Now.Date,
+                Phases = 1,
+                IncrementAmount = 1,
+                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Starts a shiny hunt.
+        /// </summary>
+        /// <param name="numberOfHunts">The number of hunts being added. Either one hunt or multiple.</param>
+        /// <param name="shinyHunt">The started shiny hunt.</param>
+        /// <returns>The user's shiny hunt page.</returns>
+        [HttpPost]
+        [Route("add_completed_hunt")]
+        public IActionResult AddCompletedHunt(string numberOfHunts, AddCompletedShinyHuntViewModel shinyHunt)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                AddCompletedShinyHuntViewModel model = new AddCompletedShinyHuntViewModel()
+                {
+                    AllGames = this.GetShinyHuntGames(),
+                    AllMarks = this.dataService.GetObjects<Mark>("Name"),
+                    DateOfCapture = DateTime.Now.Date,
+                    Phases = 1,
+                    IncrementAmount = 1,
+                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.View(model);
+            }
+
+            shinyHunt.IsCaptured = true;
+
+            if (shinyHunt.CurrentPhaseEncounters > 0 && shinyHunt.TotalEncounters == 0)
+            {
+                shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
+            }
+            else if (shinyHunt.TotalEncounters > 0 && shinyHunt.CurrentPhaseEncounters == 0)
+            {
+                shinyHunt.CurrentPhaseEncounters = shinyHunt.TotalEncounters;
+            }
+
+            this.dataService.AddObject(shinyHunt);
+
+            if (numberOfHunts == "oneHunt")
+            {
+                return this.RedirectToAction("ShinyHunts", "User");
+            }
+            else if (numberOfHunts == "multipleHunts")
+            {
+                return this.RedirectToAction("AddCompletedHunt", "ShinyHunt");
+            }
+            else
+            {
+                return this.RedirectToAction("ShinyHunts", "User");
+            }
+        }
+
+        /// <summary>
         /// Complete a shiny hunt.
         /// </summary>
         /// <param name="shinyHuntId">The completed shiny hunt's Id.</param>
