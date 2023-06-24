@@ -829,6 +829,11 @@ namespace Pokedex
                         selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
                     }
 
+                    if (game.Id == 16 || game.Id == 28 || game.Id == 43)
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId == 1 || x.Id == 20).ToList();
+                    }
+
                     if (game.Id == 37)
                     {
                         selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
