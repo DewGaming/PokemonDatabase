@@ -777,6 +777,79 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Gets a list of pokeballs available for shiny hunts.
+        /// </summary>
+        /// <param name="gameId">The game the shiny hunt is taking place in.</param>
+        /// <param name="huntingMethodId">The type of shiny hunt.</param>
+        /// <returns>The available pokeballs.</returns>
+        public List<Pokeball> GetPokeballs(int gameId, int huntingMethodId)
+        {
+            List<Pokeball> selectablePokeballs = this.GetObjects<Pokeball>();
+            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+            HuntingMethod huntingMethod = this.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId);
+
+            switch (huntingMethod.Name)
+            {
+                case "Breeding":
+                case "Masuda Method":
+                    if (game.GenerationId <= 5)
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                    }
+                    else
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId && x.Id != 4 && x.Id != 24).ToList();
+                    }
+
+                    break;
+                case "Event":
+                    if (game.GenerationId <= 3)
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                    }
+                    else
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 24).ToList();
+                    }
+
+                    break;
+                default:
+                    if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
+                    {
+                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
+                    }
+
+                    if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
+                    {
+                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
+                    }
+
+                    if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
+                    {
+                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
+                    }
+
+                    if (game.Id == 37)
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
+                        foreach (var p in selectablePokeballs)
+                        {
+                            p.Name = p.Name.Replace(" (Hisui)", string.Empty);
+                        }
+                    }
+                    else
+                    {
+                        selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
+                    }
+
+                    selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).ToList();
+                    break;
+            }
+
+            return selectablePokeballs.OrderBy(x => x.Name).ToList();
+        }
+
+        /// <summary>
         /// Uploades a given image to the pokemon images folder.
         /// </summary>
         /// <param name="fileUpload">The file being uploaded.</param>

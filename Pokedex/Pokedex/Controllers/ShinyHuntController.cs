@@ -177,7 +177,7 @@ namespace Pokedex.Controllers
                 PokemonHunted = pokemon,
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
                 DateOfCapture = DateTime.Now.Date,
-                AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
+                AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllGenders = genders,
                 AllMarks = this.dataService.GetObjects<Mark>("Name"),
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
@@ -243,7 +243,7 @@ namespace Pokedex.Controllers
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
                 DateOfCapture = DateTime.Now.Date,
                 AllPokemon = pokemonList,
-                AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
+                AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllGenders = genders,
                 AllMarks = this.dataService.GetObjects<Mark>("Name"),
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
@@ -372,7 +372,7 @@ namespace Pokedex.Controllers
                 AllGames = this.GetShinyHuntGames(),
                 AllPokemon = pokemonList,
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
-                AllPokeballs = this.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
+                AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId),
                 AllMarks = this.dataService.GetObjects<Mark>(),
                 AllGenders = genders,
                 AppConfig = this.appConfig,
@@ -421,7 +421,7 @@ namespace Pokedex.Controllers
                     AllGames = this.GetShinyHuntGames(),
                     AllPokemon = pokemonList,
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
-                    AllPokeballs = this.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId),
+                    AllPokeballs = this.dataService.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId),
                     AllMarks = this.dataService.GetObjects<Mark>(),
                     AllGenders = genders,
                     UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
@@ -533,73 +533,6 @@ namespace Pokedex.Controllers
             }
 
             return selectableGames;
-        }
-
-        private List<Pokeball> GetPokeballs(int gameId, int huntingMethodId)
-        {
-            List<Pokeball> selectablePokeballs = this.dataService.GetObjects<Pokeball>();
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            HuntingMethod huntingMethod = this.dataService.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId);
-
-            switch (huntingMethod.Name)
-            {
-                case "Breeding":
-                case "Masuda Method":
-                    if (game.GenerationId <= 5)
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
-                    }
-                    else
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId && x.Id != 4 && x.Id != 24).ToList();
-                    }
-
-                    break;
-                case "Event":
-                    if (game.GenerationId <= 3)
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
-                    }
-                    else
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 24).ToList();
-                    }
-
-                    break;
-                default:
-                    if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
-                    {
-                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
-                    }
-
-                    if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
-                    {
-                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
-                    }
-
-                    if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
-                    {
-                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
-                    }
-
-                    if (game.Id == 37)
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
-                        foreach (var p in selectablePokeballs)
-                        {
-                            p.Name = p.Name.Replace(" (Hisui)", string.Empty);
-                        }
-                    }
-                    else
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
-                    }
-
-                    selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).ToList();
-                    break;
-            }
-
-            return selectablePokeballs.OrderBy(x => x.GenerationId).ThenBy(x => x.Name).ToList();
         }
     }
 }
