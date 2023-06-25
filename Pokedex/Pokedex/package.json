@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "kpy": "^1.9.0",
-    "npm": "^9.6.3",
+    "npm": "^9.7.2",
     "npx": "^10.2.2",
-    "rimraf": "^4.4.1",
+    "rimraf": "^5.0.1",
     "set-value": "^4.1.0",
     "uglifycss": "^0.0.29",
     "uglifyjs-folder": "^3.2.0"
@@ -11,7 +11,7 @@
   "devDependencies": {
     "cryptiles": "^4.1.3",
     "deep-extend": "^0.6.0",
-    "https-proxy-agent": "^5.0.1",
+    "https-proxy-agent": "^7.0.0",
     "json-schema": "^0.4.0",
     "minimist": "^1.2.8"
   },
