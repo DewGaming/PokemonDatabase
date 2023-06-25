@@ -124,7 +124,7 @@
   z-index: 1;
 }
 
-.pokemonImages {
+.pokemonDetails>div {
   position: relative;
 }
 
