@@ -1347,7 +1347,11 @@ namespace Pokedex.Controllers
         [Route("edit_nature/{id:int}")]
         public IActionResult Nature(int id)
         {
-            Nature model = this.dataService.GetObjectByPropertyValue<Nature>("Id", id);
+            Nature nature = this.dataService.GetObjectByPropertyValue<Nature>("Id", id);
+            NatureStatViewModel model = new NatureStatViewModel(nature)
+            {
+                AllStats = this.dataService.GetObjects<Stat>(),
+            };
 
             return this.View(model);
         }
@@ -1359,7 +1363,10 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                Nature model = this.dataService.GetObjectByPropertyValue<Nature>("Id", nature.Id);
+                NatureStatViewModel model = new NatureStatViewModel(nature)
+                {
+                    AllStats = this.dataService.GetObjects<Stat>(),
+                };
 
                 return this.View(model);
             }
@@ -1367,6 +1374,42 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(nature);
 
             return this.RedirectToAction("Natures", "Owner");
+        }
+
+        /// <summary>
+        /// The page used to modify a stat in the database.
+        /// </summary>
+        /// <param name="id">The id of the stat being modified.</param>
+        /// <returns>The stat editting page.</returns>
+        [HttpGet]
+        [Route("edit_stat/{id:int}")]
+        public IActionResult Stat(int id)
+        {
+            Stat model = this.dataService.GetObjectByPropertyValue<Stat>("Id", id);
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// The page used to modify a stat in the database.
+        /// </summary>
+        /// <param name="stat">The stat being modified.</param>
+        /// <returns>The stats page.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_stat/{id:int}")]
+        public IActionResult Stat(Stat stat)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Stat model = this.dataService.GetObjectByPropertyValue<Stat>("Id", stat.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(stat);
+
+            return this.RedirectToAction("Stats", "Owner");
         }
 
         [HttpGet]

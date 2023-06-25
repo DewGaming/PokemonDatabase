@@ -10,6 +10,8 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Stat Being Raised</th>
+            <th scope="col">Stat Being Lowered</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model)
@@ -17,6 +19,18 @@
             <tr>
                 <td>
                     @item.Name
+                </td>
+                <td>
+                    @if (item.RaisedStat != null)
+                    {
+                        @item.RaisedStat.Name;
+                    }
+                </td>
+                <td>
+                    @if (item.LoweredStat != null)
+                    {
+                        @item.LoweredStat.Name;
+                    }
                 </td>
                 <td>
                     <a href="@(this.Url.Action("Nature", "Edit", new { id = item.Id }))">Edit</a>

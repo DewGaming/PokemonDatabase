@@ -271,7 +271,15 @@ namespace Pokedex.Controllers
         [Route("nature")]
         public IActionResult Natures()
         {
-            List<Nature> model = this.dataService.GetObjects<Nature>("Name");
+            List<Nature> model = this.dataService.GetObjects<Nature>("Name", "RaisedStat, LoweredStat");
+
+            return this.View(model);
+        }
+
+        [Route("stat")]
+        public IActionResult Stats()
+        {
+            List<Stat> model = this.dataService.GetObjects<Stat>("Name");
 
             return this.View(model);
         }

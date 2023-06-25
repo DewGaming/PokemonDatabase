@@ -445,7 +445,12 @@ namespace Pokedex.Controllers
         [Route("add_nature")]
         public IActionResult Nature()
         {
-            return this.View();
+            NatureStatViewModel model = new NatureStatViewModel()
+            {
+                AllStats = this.dataService.GetObjects<Stat>(),
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -455,12 +460,48 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                NatureStatViewModel model = new NatureStatViewModel()
+                {
+                    AllStats = this.dataService.GetObjects<Stat>(),
+                };
+
+                return this.View(model);
             }
 
             this.dataService.AddObject(nature);
 
             return this.RedirectToAction("Natures", "Owner");
+        }
+
+        /// <summary>
+        /// The page used to create a new stat in the database.
+        /// </summary>
+        /// <returns>The page to create the stat.</returns>
+        [HttpGet]
+        [Route("add_stat")]
+        public IActionResult Stat()
+        {
+            return this.View();
+        }
+
+        /// <summary>
+        /// The page used to create a new stat in the database.
+        /// </summary>
+        /// <param name="stat">The stat being craated.</param>
+        /// <returns>The stats page.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_stat")]
+        public IActionResult Stat(Stat stat)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(stat);
+
+            return this.RedirectToAction("Stats", "Owner");
         }
 
         [HttpGet]

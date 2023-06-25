@@ -1,4 +1,4 @@
-@model Pokedex.DataAccess.Models.Nature
+@model Pokedex.Models.NatureStatViewModel
 
 <h2>Add Nature</h2>
 
@@ -14,6 +14,18 @@
             @Html.LabelFor(x => x.Name, new { @class = "col-md-2" })
             @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Name)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.RaisedStatId, "Stat Being Raised", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.RaisedStatId, new SelectList(Model.AllStats, "Id", "Name"), "", new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.RaisedStatId)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.LoweredStatId, "Stat Being Lowered", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.LoweredStatId, new SelectList(Model.AllStats, "Id", "Name"), "", new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.LoweredStatId)
         </div>
 
         <p>

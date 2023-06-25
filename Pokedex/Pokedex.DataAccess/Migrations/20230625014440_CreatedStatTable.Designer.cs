@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230625014440_CreatedStatTable")]
+    partial class CreatedStatTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -651,22 +653,12 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("LoweredStatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
-                    b.Property<int?>("RaisedStatId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("LoweredStatId");
-
-                    b.HasIndex("RaisedStatId");
 
                     b.ToTable("Natures");
                 });
@@ -1612,17 +1604,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Pokedex.DataAccess.Models.Nature", b =>
-                {
-                    b.HasOne("Pokedex.DataAccess.Models.Stat", "LoweredStat")
-                        .WithMany()
-                        .HasForeignKey("LoweredStatId");
-
-                    b.HasOne("Pokedex.DataAccess.Models.Stat", "RaisedStat")
-                        .WithMany()
-                        .HasForeignKey("RaisedStatId");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.Pokeball", b =>

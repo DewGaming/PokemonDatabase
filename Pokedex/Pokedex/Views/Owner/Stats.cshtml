@@ -1,0 +1,36 @@
+@model IEnumerable<Pokedex.DataAccess.Models.Stat>;
+
+<div class="statTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("Stat", "Add")" role="button">Add Stat</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Abbreviation</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Abbreviation
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("Stat", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("Stat", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
