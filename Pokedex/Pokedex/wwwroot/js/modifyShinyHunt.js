@@ -40,7 +40,7 @@ var grabPokemon = function (pokemonId) {
     $.ajax({
         url: '/get-pokemon-genders/',
         method: "POST",
-        data: { 'pokemonId': $('#PokemonId').val() }
+        data: { 'pokemonId': $('#PokemonId').val(), 'useCase': 'shinyHunt' }
     })
         .done(function (data) {
             $('#Gender').empty();

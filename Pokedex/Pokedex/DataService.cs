@@ -858,14 +858,22 @@ namespace Pokedex
         /// Creates a list of strings for the available genders of a pokemon.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="useCase">The use case of this method. Only used to determine what no gender is listed as.</param>
         /// <returns>A list of genders in string form.</returns>
-        public List<string> GrabGenders(int pokemonId)
+        public List<string> GrabGenders(int pokemonId, string useCase)
         {
             List<string> genders = new List<string>();
             GenderRatio genderRatio = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").GenderRatio;
             if (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0)
             {
-                genders.Add("None");
+                if (useCase == "shinyHunt")
+                {
+                    genders.Add("Gender Unknown");
+                }
+                else
+                {
+                    genders.Add("None");
+                }
             }
             else if (genderRatio.MaleRatio == 0)
             {

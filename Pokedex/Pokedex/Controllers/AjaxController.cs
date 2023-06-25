@@ -1585,13 +1585,14 @@ namespace Pokedex.Controllers
         /// Gets the available genders for a pokemon.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="useCase">The use case of this method.</param>
         /// <returns>A list of available genders.</returns>
         [Route("get-pokemon-genders")]
-        public List<string> GetPokemonGenders(int pokemonId)
+        public List<string> GetPokemonGenders(int pokemonId, string useCase)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.dataService.GrabGenders(pokemonId);
+                return this.dataService.GrabGenders(pokemonId, useCase);
             }
 
             return null;
