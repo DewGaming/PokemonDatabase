@@ -316,16 +316,16 @@ namespace Pokedex
             Game game = new Game();
             if (gameId != 0)
             {
-                pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.GenderRatio", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
+                pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.GenderRatio, Pokemon.Game", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
                 game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             }
             else
             {
-                pokemonList = this.GetObjects<Pokemon>(includes: "GenderRatio");
+                pokemonList = this.GetObjects<Pokemon>(includes: "GenderRatio, Game");
             }
 
             pokemonList = pokemonList.Where(x => x.IsComplete).ToList();
-            List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
+            List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
             pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle || x.Form.FusionForm).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
 
             if (gameId != 0)

@@ -40,6 +40,7 @@ namespace Pokedex.Controllers
         [Route("shiny_dex_progress")]
         public IActionResult ShinyDexProgress()
         {
+            this.dataService.AddPageView("Shiny Dex Progression Page", this.User.IsInRole("Owner"));
             int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
