@@ -1,6 +1,7 @@
 using ImageMagick;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
@@ -747,33 +748,83 @@ namespace Pokedex
         /// <summary>
         /// Gets a list of huntable pokemon.
         /// </summary>
-        /// <param name="gameId">The game's id.</param>
+        /// <param name="gameId">The game's id. Defaults to 0.</param>
         /// <returns>A list of pokemon huntable.</returns>
-        public List<Pokemon> GetHuntablePokemon(int gameId)
+        public List<Pokemon> GetHuntablePokemon(int gameId = 0)
         {
             List<Pokemon> pokemonList = this.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
-            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+            if (gameId != 0)
+            {
+                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
 
-            // Gets extra forms made available in future generations.
-            if (game.GenerationId == 3)
-            {
-                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
-                List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Deoxys").ToList();
-                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
-                deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
-                pokemonList.AddRange(deoxysList);
-            }
-            else if (game.GenerationId == 6)
-            {
-                pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
-                List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Zygarde").ToList();
-                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
-                zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
-                pokemonList.AddRange(zygardeList);
+                // Gets extra forms made available in future generations.
+                if (game.GenerationId == 3)
+                {
+                    pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
+                    List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Deoxys").ToList();
+                    List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
+                    deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                    pokemonList.AddRange(deoxysList);
+                }
+                else if (game.GenerationId == 6)
+                {
+                    pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
+                    List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Zygarde").ToList();
+                    List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
+                    zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+                    zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                    pokemonList.AddRange(zygardeList);
+                }
             }
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+        }
+
+        /// <summary>
+        /// Gets the list of games possible to shiny hunt in and formats it for the shiny hunt pages.
+        /// </summary>
+        /// <returns>The list of shiny huntable games.</returns>
+        public List<Game> GetShinyHuntGames()
+        {
+            List<Game> gamesList = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now && x.GenerationId >= 2).ToList();
+            List<Game> selectableGames = new List<Game>();
+            List<Game> uniqueGames = gamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
+            for (var i = 0; i < uniqueGames.Count; i++)
+            {
+                if (uniqueGames[i].Name == "Fire Red")
+                {
+                    selectableGames.Add(uniqueGames[i]);
+                    selectableGames.Add(this.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
+                }
+                else if (i == uniqueGames.Count - 1)
+                {
+                    selectableGames.Add(new Game()
+                    {
+                        Id = uniqueGames[i].Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
+                        GenerationId = uniqueGames[i].GenerationId,
+                    });
+                }
+                else
+                {
+                    List<Game> games = gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
+                    if (games.Count == 0)
+                    {
+                        selectableGames.Add(uniqueGames[i]);
+                    }
+                    else
+                    {
+                        selectableGames.Add(new Game()
+                        {
+                            Id = uniqueGames[i].Id,
+                            Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
+                            GenerationId = uniqueGames[i].GenerationId,
+                        });
+                    }
+                }
+            }
+
+            return selectableGames;
         }
 
         /// <summary>

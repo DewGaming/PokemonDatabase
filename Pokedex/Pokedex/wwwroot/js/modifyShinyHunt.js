@@ -1,37 +1,35 @@
-var grabPokemon = function (pokemonId) {
+var grabGames = function (gameId) {
     $(".overlay").fadeIn(300);
 
     $.ajax({
-        url: '/get-shiny-huntable-pokemon-by-game/',
+        url: '/get-games-by-shiny-huntable-pokemon/',
         method: "POST",
-        data: { 'gameId': $('#GameId').val() }
+        data: { 'pokemonId': $('#PokemonId').val() }
     })
         .done(function (data) {
-            $('#PokemonId').empty();
+            $('#GameId').empty();
             $.each(data, function (index, item) {
-                $('#PokemonId').append($('<option>').val(item.id).text(item.name));
+                $('#GameId').append($('<option>').val(item.id).text(item.name));
             });
 
-            if (pokemonId !== "") {
-                $('#PokemonId option').each(function () {
-                    if (this.value == pokemonId) {
-                        $('#PokemonId').val(pokemonId);
+            if (gameId !== "") {
+                $('#GameId option').each(function () {
+                    if (this.value == gameId) {
+                        $('#GameId').val(gameId);
                     }
                 });
             }
-
-            $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
 
             $('.hide').not('.gameSpecific').each(function () {
                 $(this).removeClass('hide');
             })
 
-            refreshGenders();
+            grabHuntingMethod($('#HuntingMethodId').val())
 
             $(".overlay").fadeOut(300);
         })
         .fail(function () {
-            alert("Failed to grab pokemon!");
+            alert("Failed to grab games!");
 
             $(".overlay").fadeOut(300);
         });
@@ -226,20 +224,23 @@ var grabPokemon = function (pokemonId) {
 }
 
 $(document).ready(function () {
-    var pokemonId = $('#PokemonId').val(), huntingMethodId = $('#HuntingMethodId').val();
-    if ($('#GameId').val() !== "") {
-        grabPokemon(pokemonId);
+    var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val();
+    if ($('#PokemonId').val() !== "") {
+        grabGames(gameId);
         grabHuntingMethod(huntingMethodId);
-        checkFunctions();
+        $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
     }
 
     $("#PokemonId").select2();
 });
 
 $('#GameId').on('change', function () {
-    var pokemonId = $('#PokemonId').val(), huntingMethodId = $('#HuntingMethodId').val();
-    grabPokemon(pokemonId);
-    grabHuntingMethod(huntingMethodId);
+    grabHuntingMethod($('#HuntingMethodId').val());
+});
+
+$('#PokemonId').on('change', function () {
+    grabGames($('#GameId').val());
+    refreshGenders();
 });
 
 $('#HuntingMethodId').on('change', function () {

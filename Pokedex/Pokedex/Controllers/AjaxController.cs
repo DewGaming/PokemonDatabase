@@ -2709,6 +2709,24 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Grabs all of the games available for the selected pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The selected pokemon's Id.</param>
+        /// <returns>The list of available games.</returns>
+        [Route("get-games-by-shiny-huntable-pokemon")]
+        public List<Game> GetGamesByShinyHuntablePokemon(int pokemonId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", pokemonId).ConvertAll(x => x.Game);
+                List<Game> games = this.dataService.GetShinyHuntGames();
+                return games.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Grabs all of the hunting methods available for the selected game.
         /// </summary>
         /// <param name="gameId">The selected game's Id.</param>
