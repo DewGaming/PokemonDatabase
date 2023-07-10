@@ -12,8 +12,7 @@
     ViewBag.Title = pageTitle;
 }
 
-@section styles
-{
+@section styles {
     <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .deleteShinyHunt .form-group {
@@ -21,13 +20,12 @@
             margin-right: 0px !important;
         }
 
-        @@media (min-width: 576px)
-        {
+        @@media (min-width: 576px) {
             .deleteShinyHunt {
                 display: flex;
             }
 
-            .deleteShinyHunt > div {
+            .deleteShinyHunt>div {
                 width: 50%;
             }
 
@@ -36,11 +34,12 @@
                 height: 85%;
                 object-fit: contain;
                 margin: 20px;
+                max-width: 350px;
+                max-height: 350px;
             }
         }
 
-        @@media (max-width: 575px)
-        {
+        @@media (max-width: 575px) {
             .pokemonShinyImage {
                 max-height: 75px;
                 object-fit: contain;
@@ -52,8 +51,7 @@
     </style>
 }
 
-@section scripts
-{
+@section scripts {
     <script src="~/js/deleteShinyHunt.js" asp-append-version="true"></script>
 }
 
@@ -79,7 +77,8 @@
                 }
                 else
                 {
-                    @Html.LabelFor(x => x.Pokemon.Name)@(": ")
+                    @Html.LabelFor(x => x.Pokemon.Name)
+                    @(": ")
                     @Html.DisplayFor(x => x.Pokemon.Name, new { htmlAttributes = new { @class = "form-control" } })
                 }
             </div>
@@ -140,6 +139,6 @@
         }
     </div>
     <div>
-        <img loading="lazy" class="shadowed pokemonShinyImage"/>
+        <img loading="lazy" class="shadowed pokemonShinyImage" />
     </div>
 </div>

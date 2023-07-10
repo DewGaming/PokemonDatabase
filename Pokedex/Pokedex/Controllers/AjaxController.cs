@@ -329,64 +329,115 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                if (string.IsNullOrEmpty(pokemonTeamName))
+                try
                 {
-                    pokemonTeamName = "Save from Team Randomizer";
-                }
-
-                if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
-                {
-                    this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
-                    PokemonTeam pokemonTeam = new PokemonTeam()
+                    if (string.IsNullOrEmpty(pokemonTeamName))
                     {
-                        PokemonTeamName = pokemonTeamName,
-                        UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
-                    };
-
-                    if (selectedGame != 0)
-                    {
-                        pokemonTeam.GameId = selectedGame;
+                        pokemonTeamName = "Save from Team Randomizer";
                     }
 
-                    Pokemon pokemon;
-                    Ability ability;
-                    PokemonTeamDetail pokemonTeamDetail;
-
-                    for (var i = 0; i < pokemonIdList.Count; i++)
+                    if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
                     {
-                        pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonIdList[i], "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-
-                        if (exportAbilities)
+                        this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
+                        PokemonTeam pokemonTeam = new PokemonTeam()
                         {
-                            ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityIdList[i]);
+                            PokemonTeamName = pokemonTeamName,
+                            UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                        };
+
+                        if (selectedGame != 0)
+                        {
+                            pokemonTeam.GameId = selectedGame;
+                        }
+
+                        Pokemon pokemon;
+                        Ability ability;
+                        PokemonTeamDetail pokemonTeamDetail;
+
+                        for (var i = 0; i < pokemonIdList.Count; i++)
+                        {
+                            pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonIdList[i], "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                            if (exportAbilities)
+                            {
+                                ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityIdList[i]);
+                            }
+                            else
+                            {
+                                ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, selectedGame, this.User, this.appConfig)[0];
+                            }
+
+                            pokemonTeamDetail = new PokemonTeamDetail()
+                            {
+                                PokemonId = pokemon.Id,
+                                AbilityId = ability.Id,
+                                NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
+                                Level = 100,
+                                Happiness = 255,
+                            };
+
+                            this.dataService.AddPokemonTeamDetail(pokemonTeamDetail);
+
+                            pokemonTeam.InsertPokemon(pokemonTeamDetail);
+                        }
+
+                        this.dataService.AddObject(pokemonTeam);
+
+                        return string.Concat("Team \"", pokemonTeam.PokemonTeamName, "\" has been added successfully!");
+                    }
+                    else
+                    {
+                        return "You must be logged in to save a team.";
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!this.User.IsInRole("Owner"))
+                    {
+                        string commentBody;
+                        Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame);
+
+                        if (e != null)
+                        {
+                            commentBody = string.Concat(e.GetType().ToString(), " error while saving generated team.");
                         }
                         else
                         {
-                            ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, selectedGame, this.User, this.appConfig)[0];
+                            commentBody = "Unknown error while saving generated team.";
                         }
 
-                        pokemonTeamDetail = new PokemonTeamDetail()
+                        if (game != null)
                         {
-                            PokemonId = pokemon.Id,
-                            AbilityId = ability.Id,
-                            NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
-                            Level = 100,
-                            Happiness = 255,
+                            commentBody = string.Concat(commentBody, " - Selected Game: ", game.Name);
+                        }
+                        else
+                        {
+                            commentBody = string.Concat(commentBody, " - Selected Game: ", selectedGame);
+                        }
+
+                        commentBody = string.Concat(commentBody, " - Generated Pokemon Ids: {", string.Join(", ", pokemonIdList), "}");
+                        commentBody = string.Concat(commentBody, " - Generated Ability List: {", string.Join(", ", abilityIdList), "}");
+                        commentBody = string.Concat(commentBody, " - Export Abilities: ", exportAbilities);
+                        commentBody = string.Concat(commentBody, " - Pokemon Team Name: ", pokemonTeamName);
+
+                        Comment comment = new Comment()
+                        {
+                            Name = commentBody,
                         };
 
-                        this.dataService.AddPokemonTeamDetail(pokemonTeamDetail);
+                        if (this.User.Identity.Name != null)
+                        {
+                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        }
 
-                        pokemonTeam.InsertPokemon(pokemonTeamDetail);
+                        this.dataService.AddObject(comment);
+
+                        this.dataService.EmailComment(this.appConfig, comment);
                     }
 
-                    this.dataService.AddObject(pokemonTeam);
-
-                    return string.Concat("Team \"", pokemonTeam.PokemonTeamName, "\" has been added successfully!");
+                    return null;
                 }
-                else
-                {
-                    return "You must be logged in to save a team.";
-                }
+                
             }
 
             return null;
