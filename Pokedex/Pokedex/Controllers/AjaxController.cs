@@ -437,7 +437,6 @@ namespace Pokedex.Controllers
 
                     return null;
                 }
-                
             }
 
             return null;

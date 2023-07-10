@@ -344,11 +344,13 @@ namespace Pokedex.Controllers
         public IActionResult SendMessage(int commentId)
         {
             Comment comment = this.dataService.GetObjectByPropertyValue<Comment>("Id", commentId);
+            User receiver = this.dataService.GetObjectByPropertyValue<User>("Id", comment.CommentorId);
 
             Message model = new Message()
             {
                 SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
                 ReceiverId = comment.CommentorId,
+                Receiver = receiver,
                 MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\" "),
             };
 
