@@ -338,6 +338,7 @@ namespace Pokedex.Controllers
 
                     if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
                     {
+                        Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame);
                         this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
                         PokemonTeam pokemonTeam = new PokemonTeam()
                         {
@@ -351,30 +352,33 @@ namespace Pokedex.Controllers
                         }
 
                         Pokemon pokemon;
-                        Ability ability;
+                        Ability ability = null;
                         PokemonTeamDetail pokemonTeamDetail;
 
                         for (var i = 0; i < pokemonIdList.Count; i++)
                         {
                             pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonIdList[i], "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
-                            if (exportAbilities)
-                            {
-                                ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityIdList[i]);
-                            }
-                            else
-                            {
-                                ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, selectedGame, this.User, this.appConfig)[0];
-                            }
-
                             pokemonTeamDetail = new PokemonTeamDetail()
                             {
                                 PokemonId = pokemon.Id,
-                                AbilityId = ability.Id,
                                 NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                                 Level = 100,
                                 Happiness = 255,
                             };
+
+                            if (game.GenerationId >= 3)
+                            {
+                                if (exportAbilities)
+                                {
+                                    ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityIdList[i]);
+                                }
+
+                                if (ability != null)
+                                {
+                                    pokemonTeamDetail.AbilityId = ability.Id;
+                                }
+                            }
 
                             this.dataService.AddPokemonTeamDetail(pokemonTeamDetail);
 

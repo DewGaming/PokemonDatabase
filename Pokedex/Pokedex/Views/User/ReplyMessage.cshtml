@@ -1,6 +1,6 @@
 @model Pokedex.DataAccess.Models.Message
 
-<h2>Reply to Message</h2>
+<h2>Reply to Message@(@Model.SenderId == 1 ? string.Concat(" from ", @Model.Receiver.Username) : string.Empty)</h2>
 
 <div class="form-horizontal">
 

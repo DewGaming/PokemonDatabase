@@ -82,10 +82,12 @@ namespace Pokedex.Controllers
         [Route("reply_to_message/{messageId:int}")]
         public IActionResult ReplyMessage(int messageId)
         {
-            Message originalMessage = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name)[messageId - 1];
+            Message originalMessage = this.dataService.GetObjects<Message>(includes: "Sender, Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name)[messageId - 1];
+
             Message model = new Message()
             {
                 ReceiverId = originalMessage.SenderId,
+                Receiver = originalMessage.Sender,
                 SenderId = originalMessage.ReceiverId,
                 MessageTitle = string.Concat("Re: ", originalMessage.MessageTitle),
             };
