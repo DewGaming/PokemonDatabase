@@ -367,7 +367,7 @@ namespace Pokedex.Controllers
                                 Happiness = 255,
                             };
 
-                            if (game.GenerationId >= 3)
+                            if (selectedGame == 0 || game.GenerationId >= 3)
                             {
                                 if (exportAbilities)
                                 {
