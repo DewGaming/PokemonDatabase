@@ -1,340 +1,348 @@
-var pokemonList, pokemonURLs, abilityList, typeList, exportString
-    , fillGeneratedTable = function (appConfig) {
-        for (var i = 0; i < 6; i++) {
-            $('.teamRandomizerResults').append($('<div>', {
-                class: "generatorPicture shadowed pokemon" + (i + 1)
-            }));
+var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGeneratedTable = function (appConfig) {
+    for (var i = 0; i < 6; i++) {
+        $('.teamRandomizerResults').append($('<div>', {
+            class: "generatorPicture shadowed pokemon" + (i + 1)
+        }));
+    }
+
+    for (var i = 0; i < originalNames.length; i++) {
+        var imageLocation = appConfig.officialPokemonImageUrl;
+        if (Math.floor((Math.random() * 4096) + 1) == 4096 && !originalNames[i].isShinyLocked) {
+            console.log("Shiny Pokemon!");
+            $('.pokemon' + (i + 1)).addClass('shiny');
+            imageLocation = appConfig.shinyPokemonImageUrl;
+            $.ajax({
+                url: '/shiny-pokemon-found/',
+                method: 'POST'
+            })
+        }
+        $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img loading="lazy" title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + imageLocation + pokemonList[i].id + '.png" /></a>');
+        if ($(randomAbilityBool).prop('checked')) {
+            $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
+        }
+    }
+
+    if ($(window).width() >= 406) {
+        $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
+        $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
+    }
+    else {
+        $('<br class="mobileBreak" />').insertAfter('.generatorButton');
+        $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.mobileBreak');
+        $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
+    }
+
+    refreshEvents();
+}, checkLegendaryChecks = function () {
+    var boxChecked = false;
+    $('.legendaryCheckbox input').each(function () {
+        if ($(this).prop('checked')) {
+            boxChecked = true;
+            return false;
+        }
+    });
+
+    if (!boxChecked) {
+        if ($('.legendaryBoolCheckbox').is(':visible')) {
+            $(".legendaryBoolCheckbox").hide();
+            $("#legendaryBool").prop('checked', false);
+        }
+    }
+    else {
+        $(".legendaryBoolCheckbox").show();
+    }
+}, checkAltFormChecks = function () {
+    var boxChecked = false;
+    $('.alternateFormCheckbox input').each(function () {
+        if ($(this).prop('checked')) {
+            boxChecked = true;
+            return false;
+        }
+    });
+
+    if (!boxChecked) {
+        if ($('.altFormBoolCheckbox').is(':visible')) {
+            $(".altFormBoolCheckbox").hide();
+            $("#altFormBool").prop('checked', false);
         }
 
-        for (var i = 0; i < originalNames.length; i++) {
-            var imageLocation = appConfig.officialPokemonImageUrl;
-            if (Math.floor((Math.random() * 4096) + 1) == 4096 && !originalNames[i].isShinyLocked) {
-                console.log("Shiny Pokemon!");
-                imageLocation = appConfig.shinyPokemonImageUrl;
-                $.ajax({
-                    url: '/shiny-pokemon-found/',
-                    method: 'POST'
+        if ($('.onePokemonFormBoolCheckbox').is(':visible')) {
+            $(".onePokemonFormBoolCheckbox").hide();
+            $("#onePokemonFormBool").prop('checked', false);
+        }
+    }
+    else {
+        $(".altFormBoolCheckbox").show();
+        $(".onePokemonFormBoolCheckbox").show();
+    }
+}, checkMegaCheck = function () {
+    var boxChecked = false;
+    if ($('#MegaEvolution').prop('checked')) {
+        boxChecked = true;
+    }
+
+    if (!boxChecked) {
+        if ($('.multipleMegaBoolCheckbox').is(':visible')) {
+            $(".multipleMegaBoolCheckbox").hide();
+            $("#multipleMegaBool").prop('checked', false);
+        }
+    }
+    else {
+        $(".multipleMegaBoolCheckbox").show();
+    }
+}, checkGigantamaxCheck = function () {
+    var boxChecked = false;
+    if ($('#Gigantamax').prop('checked')) {
+        boxChecked = true;
+    }
+
+    if (!boxChecked) {
+        if ($('.multipleGMaxBoolCheckbox').is(':visible')) {
+            $(".multipleGMaxBoolCheckbox").hide();
+            $("#multipleGMaxBool").prop('checked', false);
+        }
+    }
+    else {
+        $(".multipleGMaxBoolCheckbox").show();
+    }
+}, generatorMenuCheck = function () {
+    if ($(window).width() < 768) {
+        $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
+    }
+    else {
+        $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
+    }
+}, removeEventButtons = function () {
+    $('.exportTeamButton').remove();
+    $('.saveTeamButton').remove();
+    if ($(window).width() < 405) {
+        $('.mobileBreak').remove();
+    }
+}, refreshEvents = function () {
+    refreshExportEvent();
+    refreshSaveEvent();
+}, refreshExportEvent = function () {
+    $('.exportTeamButton').off();
+
+    $('.exportTeamButton').on('click', function () {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(exportString)
+                .then(() => {
+                    alert("Team has been copied to your clipboard!");
                 })
-            }
-            $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img loading="lazy" title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + imageLocation + pokemonList[i].id + '.png" /></a>');
-            if ($(randomAbilityBool).prop('checked')) {
-                $('.pokemon' + (i + 1)).append('<div title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</div>')
-            }
-        }
+                .catch((error) => {
+                    alert("Team was unable to be copied to your clipboard!");
+                });
 
-        if ($(window).width() >= 406) {
-            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.typeSelector');
-            $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.generatorButton');
+            console.log(exportString);
+        } else {
+            alert("Team was unable to be copied to your clipboard!");
         }
-        else {
-            $('<br class="mobileBreak" />').insertAfter('.generatorButton');
-            $('<button class="btn btn-primary exportTeamButton">Export Team</button>').insertAfter('.mobileBreak');
-            $('<button class="btn btn-primary saveTeamButton">Save Team</button>').insertAfter('.mobileBreak');
-        }
+    });
+}, refreshSaveEvent = function () {
+    $('.saveTeamButton').off();
 
-        refreshEvents();
-    }, checkLegendaryChecks = function () {
-        var boxChecked = false;
-        $('.legendaryCheckbox input').each(function () {
-            if ($(this).prop('checked')) {
-                boxChecked = true;
-                return false;
+    $('.saveTeamButton').on('click', function () {
+        var pokemonStringList = [], shinyPokemonList = [], abilityIdList = [];
+        var teamName = prompt("Please Enter Team Name");
+        pokemonList.forEach(function (item) {
+            pokemonStringList.push(item.id);
+        });
+
+        $('.generatorPicture').each(function () {
+            if ($(this).hasClass('shiny')) {
+                shinyPokemonList.push(true);
+            } else {
+                shinyPokemonList.push(false);
             }
         });
 
-        if (!boxChecked) {
-            if ($('.legendaryBoolCheckbox').is(':visible')) {
-                $(".legendaryBoolCheckbox").hide();
-                $("#legendaryBool").prop('checked', false);
-            }
+        if (randomAbilityBool) {
+            abilityList.forEach(function (item) {
+                abilityIdList.push(item.id);
+            });
         }
-        else {
-            $(".legendaryBoolCheckbox").show();
-        }
-    }, checkAltFormChecks = function () {
-        var boxChecked = false;
-        $('.alternateFormCheckbox input').each(function () {
+
+        $('.gameRadioOption input').each(function () {
             if ($(this).prop('checked')) {
-                boxChecked = true;
-                return false;
+                selectedGame = this.value;
             }
         });
 
-        if (!boxChecked) {
-            if ($('.altFormBoolCheckbox').is(':visible')) {
-                $(".altFormBoolCheckbox").hide();
-                $("#altFormBool").prop('checked', false);
+        $.ajax({
+            url: '/save-pokemon-team/',
+            method: 'POST',
+            data: { 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'shinyPokemonList': shinyPokemonList, 'abilityIdList': abilityIdList, 'exportAbilities': $("#randomAbilityBool").is(":checked"), 'pokemonTeamName': teamName }
+        })
+            .done(function (data) {
+                alert(data);
+            })
+            .fail(function (jqXHR) {
+                alert(jqXHR.statusText);
+            });
+    });
+}, refreshGenerationsByGame = function () {
+    var selectedGame = $('.gameRadioOption input:checked').val();
+    $.ajax({
+        url: '/get-generations/',
+        method: 'POST',
+        data: { 'selectedGame': selectedGame }
+    })
+        .done(function (data) {
+            var gensChecked = [], formsAvailable = $.grep(data.allFormGroupGameDetails, function (n) { return n.gameId == selectedGame; });
+            if (selectedGame == 0) {
+                formsAvailable = data.allFormGroupGameDetails;
+            }
+            $('.generationCheckbox').each(function () {
+                if ($(this).find('input').prop('checked')) {
+                    gensChecked.push($(this).attr('class').split(' ').pop());
+                }
+            })
+
+            $(".generationCheckbox").remove();
+
+            $.each(data.allGenerations, function () {
+                var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
+                var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id);
+                var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text(this.generationName);
+                $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+                $("#generations").append($(dropdownItem));
+            });
+
+            $.each(gensChecked, function (index, gen) {
+                $('.' + gen + ' input').prop('checked', true);
+            })
+
+            if ($.inArray(selectedGame, ['0']) != -1) {
+                $(".starterBoolCheckbox").hide();
+                $("#starterBool").prop('checked', false);
+            }
+            else {
+                $(".starterBoolCheckbox").show();
             }
 
-            if ($('.onePokemonFormBoolCheckbox').is(':visible')) {
+            if ($.inArray(selectedGame, ['1', '2', '16', '20', '23', '37']) != -1) {
+                $(".randomAbilityCheckbox").hide();
+                $("#randomAbilityBool").prop('checked', false);
+            }
+            else {
+                $(".randomAbilityCheckbox").show();
+            }
+
+            if ($.inArray(selectedGame, ['1', '2', '20', '23']) != -1) {
+                $("#alternateForms").hide();
+                $(".otherFormCheckbox").hide();
+                $("#Other").prop('checked', false);
                 $(".onePokemonFormBoolCheckbox").hide();
                 $("#onePokemonFormBool").prop('checked', false);
             }
-        }
-        else {
-            $(".altFormBoolCheckbox").show();
-            $(".onePokemonFormBoolCheckbox").show();
-        }
-    }, checkMegaCheck = function () {
-        var boxChecked = false;
-        if ($('#MegaEvolution').prop('checked')) {
-            boxChecked = true;
-        }
-
-        if (!boxChecked) {
-            if ($('.multipleMegaBoolCheckbox').is(':visible')) {
-                $(".multipleMegaBoolCheckbox").hide();
-                $("#multipleMegaBool").prop('checked', false);
-            }
-        }
-        else {
-            $(".multipleMegaBoolCheckbox").show();
-        }
-    }, checkGigantamaxCheck = function () {
-        var boxChecked = false;
-        if ($('#Gigantamax').prop('checked')) {
-            boxChecked = true;
-        }
-
-        if (!boxChecked) {
-            if ($('.multipleGMaxBoolCheckbox').is(':visible')) {
-                $(".multipleGMaxBoolCheckbox").hide();
-                $("#multipleGMaxBool").prop('checked', false);
-            }
-        }
-        else {
-            $(".multipleGMaxBoolCheckbox").show();
-        }
-    }, generatorMenuCheck = function () {
-        if ($(window).width() < 768) {
-            $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
-        }
-        else {
-            $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
-        }
-    }, removeEventButtons = function () {
-        $('.exportTeamButton').remove();
-        $('.saveTeamButton').remove();
-        if ($(window).width() < 405) {
-            $('.mobileBreak').remove();
-        }
-    }, refreshEvents = function () {
-        refreshExportEvent();
-        refreshSaveEvent();
-    }, refreshExportEvent = function () {
-        $('.exportTeamButton').off();
-
-        $('.exportTeamButton').on('click', function () {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(exportString)
-                    .then(() => {
-                        alert("Team has been copied to your clipboard!");
-                    })
-                    .catch((error) => {
-                        alert("Team was unable to be copied to your clipboard!");
-                    });
-
-                console.log(exportString);
-            } else {
-                alert("Team was unable to be copied to your clipboard!");
-            }
-        });
-    }, refreshSaveEvent = function () {
-        $('.saveTeamButton').off();
-
-        $('.saveTeamButton').on('click', function () {
-            var pokemonStringList = [], abilityIdList = [];
-            var teamName = prompt("Please Enter Team Name");
-            pokemonList.forEach(function (item) {
-                pokemonStringList.push(item.id);
-            });
-
-            if (randomAbilityBool) {
-                abilityList.forEach(function (item) {
-                    abilityIdList.push(item.id);
-                });
+            else {
+                $("#alternateForms").show();
+                $(".otherFormCheckbox").show();
+                $(".onePokemonFormBoolCheckbox").show();
             }
 
-            $('.gameRadioOption input').each(function () {
-                if ($(this).prop('checked')) {
-                    selectedGame = this.value;
+            $.each(data.allFormGroups, function (index, formGroup) {
+                var checkboxClass = formGroup.name.toLowerCase().concat("FormCheckbox").replace(/\s/g, '');
+                var checkboxTag = formGroup.name.replace(/\s/g, '');
+                if (formsAvailable.find(x => x.formGroup.name == formGroup.name)) {
+                    if (!$('.' + checkboxClass).is(':visible')) {
+                        $('.' + checkboxClass).show();
+                    }
                 }
-            });
-
-            $.ajax({
-                url: '/save-pokemon-team/',
-                method: 'POST',
-                data: { 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'abilityIdList': abilityIdList, 'exportAbilities': $("#randomAbilityBool").is(":checked"), 'pokemonTeamName': teamName }
+                else {
+                    $('.' + checkboxClass).hide();
+                    $('#' + checkboxTag).prop('checked', false);
+                }
             })
-                .done(function (data) {
-                    alert(data);
-                })
-                .fail(function (jqXHR) {
-                    alert(jqXHR.statusText);
-                });
-        });
-    }, refreshGenerationsByGame = function () {
-        var selectedGame = $('.gameRadioOption input:checked').val();
-        $.ajax({
-            url: '/get-generations/',
-            method: 'POST',
-            data: { 'selectedGame': selectedGame }
-        })
-            .done(function (data) {
-                var gensChecked = [], formsAvailable = $.grep(data.allFormGroupGameDetails, function (n) { return n.gameId == selectedGame; });
-                if (selectedGame == 0) {
-                    formsAvailable = data.allFormGroupGameDetails;
-                }
-                $('.generationCheckbox').each(function () {
-                    if ($(this).find('input').prop('checked')) {
-                        gensChecked.push($(this).attr('class').split(' ').pop());
-                    }
-                })
 
-                $(".generationCheckbox").remove();
+            data.pokemonTypes;
 
-                $.each(data.allGenerations, function () {
-                    var dropdownItem = $("<li>").addClass("dropdown-item generationOption generationCheckbox gen" + this.id + "Checkbox");
-                    var dropdownInput = $("<input>").attr("id", "gen" + this.id).attr("type", "checkbox").val(this.id);
-                    var dropdownLabel = $("<label>").attr("for", "gen" + this.id).addClass("generatorOptionTitle").text(this.generationName);
-                    $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                    $("#generations").append($(dropdownItem));
-                });
+            var typeId = $('input[name=typeSelection]:checked').val();
 
-                $.each(gensChecked, function (index, gen) {
-                    $('.' + gen + ' input').prop('checked', true);
-                })
+            $('.typeRadioOption').remove();
 
-                if ($.inArray(selectedGame, ['0']) != -1) {
-                    $(".starterBoolCheckbox").hide();
-                    $("#starterBool").prop('checked', false);
-                }
-                else {
-                    $(".starterBoolCheckbox").show();
-                }
+            var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
+            var dropdownInput = $("<input>").attr("id", "type0").attr("name", "typeSelection").attr("type", "radio").val(0).attr("checked", "checked");;
+            var dropdownLabel = $("<label>").attr("for", "type0").addClass("generatorOptionTitle").text("Any Type");
+            $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+            $("#types").append($(dropdownItem));
 
-                if ($.inArray(selectedGame, ['1', '2', '16', '20', '23', '37']) != -1) {
-                    $(".randomAbilityCheckbox").hide();
-                    $("#randomAbilityBool").prop('checked', false);
-                }
-                else {
-                    $(".randomAbilityCheckbox").show();
-                }
+            let len = Math.ceil(data.allTypes.length / 2);
 
-                if ($.inArray(selectedGame, ['1', '2', '20', '23']) != -1) {
-                    $("#alternateForms").hide();
-                    $(".otherFormCheckbox").hide();
-                    $("#Other").prop('checked', false);
-                    $(".onePokemonFormBoolCheckbox").hide();
-                    $("#onePokemonFormBool").prop('checked', false);
-                }
-                else {
-                    $("#alternateForms").show();
-                    $(".otherFormCheckbox").show();
-                    $(".onePokemonFormBoolCheckbox").show();
-                }
-
-                $.each(data.allFormGroups, function (index, formGroup) {
-                    var checkboxClass = formGroup.name.toLowerCase().concat("FormCheckbox").replace(/\s/g, '');
-                    var checkboxTag = formGroup.name.replace(/\s/g, '');    
-                    if (formsAvailable.find(x => x.formGroup.name == formGroup.name)) {
-                        if (!$('.' + checkboxClass).is(':visible')) {
-                            $('.' + checkboxClass).show();
-                        }
-                    }
-                    else {
-                        $('.' + checkboxClass).hide();
-                        $('#' + checkboxTag).prop('checked', false);
-                    }                
-                })
-
-                data.pokemonTypes;
-
-                var typeId = $('input[name=typeSelection]:checked').val();
-
-                $('.typeRadioOption').remove();
-
+            for (let i = 0; i < len; i++) {
                 var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
-                var dropdownInput = $("<input>").attr("id", "type0").attr("name", "typeSelection").attr("type", "radio").val(0).attr("checked", "checked");;
-                var dropdownLabel = $("<label>").attr("for", "type0").addClass("generatorOptionTitle").text("Any Type");
+                var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
+                var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
                 $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                $("#types").append($(dropdownItem));
+                $(".typeSelector section:first-of-type").append($(dropdownItem));
+            }
 
-                let len = Math.ceil(data.allTypes.length / 2);
+            for (let i = len; i < data.allTypes.length; i++) {
+                var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
+                var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
+                var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
+                $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+                $(".typeSelector section:last-of-type").append($(dropdownItem));
+            }
 
-                for (let i = 0; i < len; i++) {
-                    var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
-                    var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
-                    var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
-                    $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                    $(".typeSelector section:first-of-type").append($(dropdownItem));
-                }
+            $("input[name=typeSelection][value=" + typeId + "]").prop('checked', true);
 
-                for (let i = len; i < data.allTypes.length; i++) {
-                    var dropdownItem = $("<li>").addClass("dropdown-item generationOption typeRadioOption");
-                    var dropdownInput = $("<input>").attr("id", "type" + data.allTypes[i].id).attr("name", "typeSelection").attr("type", "radio").val(data.allTypes[i].id);
-                    var dropdownLabel = $("<label>").attr("for", "type" + data.allTypes[i].id).addClass("generatorOptionTitle").text(data.allTypes[i].name);
-                    $(dropdownItem).append(dropdownInput).append(dropdownLabel);
-                    $(".typeSelector section:last-of-type").append($(dropdownItem));
-                }
+            $('.typeRadioOption input').off()
 
-                $("input[name=typeSelection][value=" + typeId + "]").prop('checked', true);
-
-                $('.typeRadioOption input').off()
-
-                $('.typeRadioOption input').on('click', function () {
-                    checkTyping();
-                    checkOtherOptions();
-                });
-
-                megaCheck = checkMegaCheck();
-                altCheck = checkAltFormChecks();
-                legendCheck = checkLegendaryChecks();
+            $('.typeRadioOption input').on('click', function () {
+                checkTyping();
                 checkOtherOptions();
-            })
-            .fail(function () {
-                alert("Failed To Get Generations!");
             });
-    }, checkTyping = function () {
-        var boxChecked = false;
-        if ($('.typeRadioOption input:checked').val() == "0") {
-            boxChecked = true;
-        }
 
-        if (!boxChecked) {
-            if ($('.noRepeatTypeBoolCheckbox').is(':visible')) {
-                $(".noRepeatTypeBoolCheckbox").hide();
-                $("#noRepeatTypeBool").prop('checked', false);
-            }
-        }
-        else {
-            $(".noRepeatTypeBoolCheckbox").show();
-        }
-    }, checkOtherOptions = function () {
-        var isVisible = 0;
-
-        $('.otherOption').each(function () {
-            if ($(this).css('display') != 'none') {
-                isVisible++;
-            }
+            megaCheck = checkMegaCheck();
+            altCheck = checkAltFormChecks();
+            legendCheck = checkLegendaryChecks();
+            checkOtherOptions();
+        })
+        .fail(function () {
+            alert("Failed To Get Generations!");
         });
+}, checkTyping = function () {
+    var boxChecked = false;
+    if ($('.typeRadioOption input:checked').val() == "0") {
+        boxChecked = true;
+    }
 
-        if (isVisible == 0) {
-            $('#otherOptions').hide();
+    if (!boxChecked) {
+        if ($('.noRepeatTypeBoolCheckbox').is(':visible')) {
+            $(".noRepeatTypeBoolCheckbox").hide();
+            $("#noRepeatTypeBool").prop('checked', false);
         }
-        else {
-            $('#otherOptions').show();
+    }
+    else {
+        $(".noRepeatTypeBoolCheckbox").show();
+    }
+}, checkOtherOptions = function () {
+    var isVisible = 0;
+
+    $('.otherOption').each(function () {
+        if ($(this).css('display') != 'none') {
+            isVisible++;
         }
-    }, updateDropdown = function () {
-        refreshGenerationsByGame();
-        checkAltFormChecks();
-        checkLegendaryChecks();
-        checkMegaCheck();
-        checkGigantamaxCheck();
-        checkTyping();
-        checkOtherOptions();
-        generatorMenuCheck();
-    };
+    });
+
+    if (isVisible == 0) {
+        $('#otherOptions').hide();
+    }
+    else {
+        $('#otherOptions').show();
+    }
+}, updateDropdown = function () {
+    refreshGenerationsByGame();
+    checkAltFormChecks();
+    checkLegendaryChecks();
+    checkMegaCheck();
+    checkGigantamaxCheck();
+    checkTyping();
+    checkOtherOptions();
+    generatorMenuCheck();
+};
 
 $(function () {
     updateDropdown();
@@ -410,11 +418,11 @@ $('.generatorButton').on('click', function () {
             selectedType = this.value;
         }
     });
-    
+
     $(".overlay").fadeIn(300);
-    
+
     $('.teamRandomizerResults div').each(function () { $(this).remove() });
-    
+
     removeEventButtons();
 
     $.ajax({
@@ -428,17 +436,17 @@ $('.generatorButton').on('click', function () {
             pokemonURLs = data.pokemonURLs;
             abilityList = data.pokemonAbilities;
             exportString = data.exportString;
-            setTimeout(function(){
+            setTimeout(function () {
                 $(".overlay").fadeOut(300);
             });
 
             fillGeneratedTable(data.appConfig);
         })
         .fail(function () {
-            setTimeout(function(){
+            setTimeout(function () {
                 $(".overlay").fadeOut(300);
             });
-            
+
             alert("Failed To Get Team!");
         });
 });

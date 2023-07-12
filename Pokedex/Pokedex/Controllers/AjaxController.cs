@@ -319,13 +319,14 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="selectedGame">The game selected in the randomizer.</param>
         /// <param name="pokemonIdList">The list of ids of the pokemon generated.</param>
+        /// <param name="shinyPokemonList">The list of trues and falses if the pokemon generated is shiny.</param>
         /// <param name="abilityIdList">The list of abilities generated alongside the pokemon.</param>
         /// <param name="exportAbilities">Check to see if generated abilities are to be exported.</param>
         /// <param name="pokemonTeamName">The given pokemon team name. Defaults to "Save from Team Randomizer" if no name given.</param>
         /// <returns>The string confirming the team has been generated. Tells a user they need to be logged in if they aren't.</returns>
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<int> abilityIdList, bool exportAbilities, string pokemonTeamName)
+        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<bool> shinyPokemonList, List<int> abilityIdList, bool exportAbilities, string pokemonTeamName)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -378,6 +379,11 @@ namespace Pokedex.Controllers
                                 {
                                     pokemonTeamDetail.AbilityId = ability.Id;
                                 }
+                            }
+
+                            if ((selectedGame != 0 || game.GenerationId >= 2) && shinyPokemonList[i])
+                            {
+                                pokemonTeamDetail.IsShiny = true;
                             }
 
                             this.dataService.AddPokemonTeamDetail(pokemonTeamDetail);
