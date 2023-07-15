@@ -681,17 +681,13 @@ namespace Pokedex
         /// <param name="appConfig">The application's config. Only used if there is an error.</param>
         public void DeletePokemonTeam(int id, System.Security.Claims.ClaimsPrincipal user, AppConfig appConfig)
         {
-            List<int> pokemonTeamDetailIds = new List<int>();
+            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
+            List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
+            int teamDetailId = 0;
+
             try
             {
-                PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
-                pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
                 this.DeleteObject<PokemonTeam>(pokemonTeam.Id);
-
-                foreach (var p in pokemonTeamDetailIds)
-                {
-                    this.DeleteObject<PokemonTeamDetail>(p);
-                }
             }
             catch (Exception e)
             {
@@ -725,6 +721,49 @@ namespace Pokedex
 
                     this.AddObject(comment);
                     this.EmailComment(appConfig, comment);
+                }
+            }
+
+            if (pokemonTeamDetailIds.Count() > 0)
+            {
+                try
+                {
+                    foreach (var p in pokemonTeamDetailIds)
+                    {
+                        teamDetailId = p;
+                        this.DeleteObject<PokemonTeamDetail>(teamDetailId);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!user.IsInRole("Owner") && e != null)
+                    {
+                        string commentBody;
+                        if (e != null)
+                        {
+                            commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team detail's deletion.");
+                        }
+                        else
+                        {
+                            commentBody = "Unknown error during the pokemon team's deletion.";
+                        }
+
+                        commentBody = string.Concat(commentBody, " - Deleted Team Id: {", id, "}");
+                        commentBody = string.Concat(commentBody, " - Deleted Team Detail Id: {", string.Join(", ", teamDetailId), "}");
+
+                        Comment comment = new Comment()
+                        {
+                            Name = commentBody,
+                        };
+
+                        if (user.Identity.Name != null)
+                        {
+                            comment.CommentorId = this.GetObjectByPropertyValue<User>("Username", user.Identity.Name).Id;
+                        }
+
+                        this.AddObject(comment);
+                        this.EmailComment(appConfig, comment);
+                    }
                 }
             }
         }
