@@ -178,7 +178,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
                 alert(data);
             })
             .fail(function (jqXHR) {
-                alert(jqXHR.statusText);
+                alert('Failed to save pokemon team. Website owner has been notified.');
             });
     });
 }, refreshGenerationsByGame = function () {

@@ -332,6 +332,22 @@ namespace Pokedex.Controllers
             {
                 try
                 {
+                    // Used for testing errors.
+                    // selectedGame = 0;
+                    // pokemonIdList = new List<int>()
+                    // {
+                    //     1552, 1386, 1433, 1423, 1432, 1405
+                    // };
+                    // shinyPokemonList = new List<bool>()
+                    // {
+                    //     false, false, false, false, false, false
+                    // };
+                    // abilityIdList = new List<int>()
+                    // {
+                    //     107, 49, 51, 236, 161, 162
+                    // };
+                    // exportAbilities = false;
+                    // pokemonTeamName = "test";
                     if (string.IsNullOrEmpty(pokemonTeamName))
                     {
                         pokemonTeamName = "Save from Team Randomizer";
@@ -381,7 +397,7 @@ namespace Pokedex.Controllers
                                 }
                             }
 
-                            if ((selectedGame != 0 || game.GenerationId >= 2) && shinyPokemonList[i])
+                            if ((selectedGame == 0 || game.GenerationId >= 2) && shinyPokemonList[i])
                             {
                                 pokemonTeamDetail.IsShiny = true;
                             }
@@ -426,6 +442,7 @@ namespace Pokedex.Controllers
                         }
 
                         commentBody = string.Concat(commentBody, " - Generated Pokemon Ids: {", string.Join(", ", pokemonIdList), "}");
+                        commentBody = string.Concat(commentBody, " - Generated Shiny Pokemon: {", string.Join(", ", shinyPokemonList), "}");
                         commentBody = string.Concat(commentBody, " - Generated Ability List: {", string.Join(", ", abilityIdList), "}");
                         commentBody = string.Concat(commentBody, " - Export Abilities: ", exportAbilities);
                         commentBody = string.Concat(commentBody, " - Pokemon Team Name: ", pokemonTeamName);
