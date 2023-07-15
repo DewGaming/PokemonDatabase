@@ -896,6 +896,38 @@ namespace Pokedex
             List<Pokeball> selectablePokeballs = this.GetObjects<Pokeball>();
             Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             HuntingMethod huntingMethod = this.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId);
+            if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
+            {
+                selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
+            }
+
+            if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
+            {
+                selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
+            }
+
+            if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
+            {
+                selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
+            }
+
+            if (game.Id == 16 || game.Id == 28 || game.Id == 43)
+            {
+                selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId == 1 || x.Id == 20).ToList();
+            }
+
+            if (game.Id == 37)
+            {
+                selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
+                foreach (var p in selectablePokeballs)
+                {
+                    p.Name = p.Name.Replace(" (Hisui)", string.Empty);
+                }
+            }
+            else
+            {
+                selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
+            }
 
             switch (huntingMethod.Name)
             {
@@ -923,44 +955,10 @@ namespace Pokedex
 
                     break;
                 default:
-                    if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
-                    {
-                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
-                    }
-
-                    if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
-                    {
-                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
-                    }
-
-                    if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
-                    {
-                        selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
-                    }
-
-                    if (game.Id == 16 || game.Id == 28 || game.Id == 43)
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId == 1 || x.Id == 20).ToList();
-                    }
-
-                    if (game.Id == 37)
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
-                        foreach (var p in selectablePokeballs)
-                        {
-                            p.Name = p.Name.Replace(" (Hisui)", string.Empty);
-                        }
-                    }
-                    else
-                    {
-                        selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
-                    }
-
-                    selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).ToList();
                     break;
             }
 
-            return selectablePokeballs.OrderBy(x => x.Name).ToList();
+            return selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).OrderBy(x => x.Name).ToList();
         }
 
         /// <summary>
