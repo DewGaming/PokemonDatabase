@@ -165,10 +165,11 @@ namespace Pokedex.Controllers
             else
             {
                 PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
+                List<Nature> natures = this.dataService.GetObjects<Nature>("Name", "RaisedStat, LoweredStat");
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
                     AllPokemon = this.FillPokemonList(pokemonTeam),
-                    AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllNatures = natures,
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeam.GameId,
@@ -700,17 +701,14 @@ namespace Pokedex.Controllers
         /// <returns>The pokemon list.</returns>
         private List<Pokemon> FillPokemonList(PokemonTeam pokemonTeam)
         {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
             if (pokemonTeam.GameId != null)
             {
-                List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: (int)pokemonTeam.GameId);
-                pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
+                return this.dataService.GetPokemonWithFormNames((int)pokemonTeam.GameId);
             }
-
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            pokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
-
-            return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            else
+            {
+                return this.dataService.GetPokemonWithFormNames();
+            }
         }
 
         /// <summary>

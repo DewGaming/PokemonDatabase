@@ -307,11 +307,12 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Gets a list of all pokemon.
+        /// Gets a list of all pokemon with form names for alternate forms.
         /// </summary>
         /// <param name="gameId">The game's id. Optional.</param>
+        /// <param name="noBattleOnlyForms">Whether or not battle only forms will be excluded. Optional.</param>
         /// <returns>Returns the list of all pokemon.</returns>
-        public List<Pokemon> GetNonBattlePokemonWithFormNames(int gameId = 0)
+        public List<Pokemon> GetPokemonWithFormNames(int gameId = 0, bool noBattleOnlyForms = false)
         {
             List<Pokemon> pokemonList = new List<Pokemon>();
             Game game = new Game();
@@ -327,18 +328,36 @@ namespace Pokedex
 
             pokemonList = pokemonList.Where(x => x.IsComplete).ToList();
             List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
-            pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle || x.Form.FusionForm).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+            if (noBattleOnlyForms)
+            {
+                pokemonList = pokemonList.Where(x => !formDetails.Where(x => x.Form.OnlyDuringBattle || x.Form.FusionForm).Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+            }
+
+            pokemonList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+
+            return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+        }
+
+        /// <summary>
+        /// Gets a list of all pokemon.
+        /// </summary>
+        /// <param name="gameId">The game's id. Optional.</param>
+        /// <returns>Returns the list of all pokemon.</returns>
+        public List<Pokemon> GetNonBattlePokemonWithFormNames(int gameId = 0)
+        {
+            List<Pokemon> pokemonList = this.GetPokemonWithFormNames(gameId, true);
 
             if (gameId != 0)
             {
                 // Gets future evolutions that are possible.
+                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
                 List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game").Where(x => x.GenerationId > game.GenerationId).ToList();
                 List<Pokemon> futureEvolutions = evolutions.Where(x => pokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
-                futureEvolutions = futureEvolutions.Where(x => x.Game.GenerationId > game.GenerationId).ToList();
+                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
+                futureEvolutions = futureEvolutions.Where(x => x.Game.GenerationId > game.GenerationId).Distinct().ToList();
+                futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
                 pokemonList.AddRange(futureEvolutions.Distinct());
             }
-
-            pokemonList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
