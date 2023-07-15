@@ -251,3 +251,7 @@ $('#PokemonId').on('change', function () {
     $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
     refreshGenders();
 });
+
+$('.submitButtons').on('click', function () {
+    $(".overlay").fadeIn(300);
+});
