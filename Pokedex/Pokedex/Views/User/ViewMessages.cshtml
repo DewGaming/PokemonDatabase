@@ -40,6 +40,10 @@
             messageCount++;
             <tr>
                 <td>
+                    @if (this.User.IsInRole("Owner"))
+                    {
+                        <b>From @item.Sender.Username: </b>
+                    }
                     @if (item.IsRead == false)
                     {
                         <b>@item.MessageTitle</b>

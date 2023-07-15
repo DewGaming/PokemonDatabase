@@ -40,7 +40,7 @@ namespace Pokedex.Controllers
         [Route("messages")]
         public IActionResult ViewMessages()
         {
-            List<Message> model = this.dataService.GetObjects<Message>(includes: "Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name);
+            List<Message> model = this.dataService.GetObjects<Message>(includes: "Sender, Receiver", whereProperty: "Receiver.Username", wherePropertyValue: this.User.Identity.Name);
 
             return this.View(model);
         }
