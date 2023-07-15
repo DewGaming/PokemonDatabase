@@ -166,6 +166,14 @@ namespace Pokedex.Controllers
             {
                 PokemonTeam pokemonTeam = pokemonTeams[pokemonTeamId - 1];
                 List<Nature> natures = this.dataService.GetObjects<Nature>("Name", "RaisedStat, LoweredStat");
+                foreach (var n in natures)
+                {
+                    if (n.RaisedStat != null && n.LoweredStat != null)
+                    {
+                        n.Name = string.Concat(n.Name, " (+", n.RaisedStat.Abbreviation, ", -", n.LoweredStat.Abbreviation, ")");
+                    }
+                }
+
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
                     AllPokemon = this.FillPokemonList(pokemonTeam),
@@ -193,10 +201,19 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
+                List<Nature> natures = this.dataService.GetObjects<Nature>("Name", "RaisedStat, LoweredStat");
+                foreach (var n in natures)
+                {
+                    if (n.RaisedStat != null && n.LoweredStat != null)
+                    {
+                        n.Name = string.Concat(n.Name, " (+", n.RaisedStat.Abbreviation, ", -", n.LoweredStat.Abbreviation, ")");
+                    }
+                }
+
                 CreateTeamPokemonViewModel model = new CreateTeamPokemonViewModel()
                 {
                     AllPokemon = this.FillPokemonList(this.GetPokemonTeamByIndex(pokemonTeamId)),
-                    AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllNatures = natures,
                     NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeamDetail.GameId,
@@ -266,11 +283,20 @@ namespace Pokedex.Controllers
                     pokemonTeamDetail.NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id;
                 }
 
+                List<Nature> natures = this.dataService.GetObjects<Nature>("Name", "RaisedStat, LoweredStat");
+                foreach (var n in natures)
+                {
+                    if (n.RaisedStat != null && n.LoweredStat != null)
+                    {
+                        n.Name = string.Concat(n.Name, " (+", n.RaisedStat.Abbreviation, ", -", n.LoweredStat.Abbreviation, ")");
+                    }
+                }
+
                 UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel()
                 {
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = this.FillPokemonList(pokemonTeam),
-                    AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllNatures = natures,
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     GameId = pokemonTeam.GameId,
@@ -299,11 +325,20 @@ namespace Pokedex.Controllers
 
             if (!this.ModelState.IsValid)
             {
+                List<Nature> natures = this.dataService.GetObjects<Nature>("Name", "RaisedStat, LoweredStat");
+                foreach (var n in natures)
+                {
+                    if (n.RaisedStat != null && n.LoweredStat != null)
+                    {
+                        n.Name = string.Concat(n.Name, " (+", n.RaisedStat.Abbreviation, ", -", n.LoweredStat.Abbreviation, ")");
+                    }
+                }
+
                 UpdateTeamPokemonViewModel model = new UpdateTeamPokemonViewModel()
                 {
                     PokemonTeamDetail = pokemonTeamDetail,
                     AllPokemon = this.FillPokemonList(pokemonTeam),
-                    AllNatures = this.dataService.GetObjects<Nature>("Name"),
+                    AllNatures = natures,
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     GameId = pokemonTeam.GameId,
