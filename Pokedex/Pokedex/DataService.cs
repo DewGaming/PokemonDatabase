@@ -161,8 +161,14 @@ namespace Pokedex
         public void UpdateObject<TEntity>(TEntity entity)
             where TEntity : class
         {
-            this.dataContext.Set<TEntity>().Update(entity);
-            this.dataContext.SaveChanges();
+            try
+            {
+                this.dataContext.Set<TEntity>().Update(entity);
+                this.dataContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -1203,7 +1209,11 @@ namespace Pokedex
                 file.CopyTo(ms);
                 byte[] fileBytes = ms.ToArray();
                 using MagickImage image = new MagickImage(fileBytes);
-                image.Trim();
+                if (!icon)
+                {
+                    image.Trim();
+                }
+
                 image.Resize(new MagickGeometry(width, height));
                 MemoryStream strm = new MemoryStream();
                 image.RePage();
