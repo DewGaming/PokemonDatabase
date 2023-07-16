@@ -50,7 +50,6 @@
 }
 
 @media (max-width: 934px) {
-
   .evolutionTable,
   .preEvolutionTable {
     width: 100% !important;
@@ -61,6 +60,16 @@
   }
 
   .evolutionPokemon934 {
+    display: table-row-group;
+  }
+}
+
+@media (min-width: 935px) {
+  .evolutionPokemon934 {
+    display: none;
+  }
+
+  .evolutionPokemon935 {
     display: table-row-group;
   }
 }
@@ -76,12 +85,22 @@
   }
 }
 
-@media (min-width: 935px) {
-  .evolutionPokemon934 {
+@media (max-width: 1856px) {
+  .evolutionPokemon1857 {
     display: none;
   }
 
-  .evolutionPokemon935 {
+  .evolutionPokemon1856 {
+    display: table-row-group;
+  }
+}
+
+@media (min-width: 1857px) {
+  .evolutionPokemon1856 {
+    display: none;
+  }
+
+  .evolutionPokemon1857 {
     display: table-row-group;
   }
 }

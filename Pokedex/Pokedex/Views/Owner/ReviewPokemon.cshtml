@@ -34,6 +34,23 @@
         .differentForms img {
             margin-left: 0;
         }
+
+        .pokemonTypingTable table {
+            width: 100% !important;
+        }
+        
+        .typingChart .typing td, .effectivenessChart td {
+          margin-left: 2px;
+          display: block;
+        }
+
+        .type-icon {
+            width: 49% !important;
+        }
+
+        .pokemonEvos p {
+            margin-bottom: 0;
+        }
     </style>
 }
 
@@ -54,20 +71,36 @@
 <hr>
 
 <div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
-    <div class="pokemonInfo pokemonPicture pokemonTables shadowed">
-        <div class="pokemonImage">
-            <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
-        </div>
+    <div class="pokemonInfo pokemonPicture pokemonTables">
         @if (Model.OriginalPokemon != null)
         {
-            <div class="differentForms">
-                <h2>Original Form</h2>
-                <img loading="lazy" class="lightshadowed" title="@Model.OriginalPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @Model.OriginalPokemon.Id, ".png"))" />
+            <div style="display: flex">
+                <div class="differentForms">
+                    <h2 class="formHeader">Original</h2>
+                    <div class="formButtons">
+                        <div class="@Model.Pokemon.Name">
+                            <img class="lightshadowed" title="@Model.OriginalPokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @Model.OriginalPokemon.Id, ".png"))" />
+                        </div>
+                    </div>
+                </div>
+                <div class="shadowed pokemonWithForms">
+                    <div class="pokemonImage">
+                        <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="shadowed pokemonWithForms">
+                <div class="pokemonImage">
+                    <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+                </div>
             </div>
         }
     </div>
     <div class="pokemonInfo pokemonData pokemonTables">
-        <h2>Pokémon Data</h2>
+        <h2>Pokémon Details</h2>
         <table class="pokedexNumber">
             <tbody>
                 <tr>
@@ -115,7 +148,7 @@
                 </tr>
                 <tr>
                     <th>
-                        @if (Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility == null && Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility == null)
+                        @if (Model.Abilities.OrderByDescending(x => x.GenerationId).First().SecondaryAbility == null && Model.Abilities.OrderByDescending(x => x.GenerationId).First().HiddenAbility == null)
                         {
                             @("Ability")
                         }
@@ -125,31 +158,111 @@
                         }
                     </th>
                     <td>
-                        <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryAbility.Description">
-                            @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryAbility.Name
+                        <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First().PrimaryAbility.Description">
+                            @Model.Abilities.OrderByDescending(x => x.GenerationId).First().PrimaryAbility.Name
                         </span>
-                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility != null)
+                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First().SecondaryAbility != null)
                         {
                             <br>
-                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility.Description">
-                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryAbility.Name
+                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First().SecondaryAbility.Description">
+                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First().SecondaryAbility.Name
                             </span>
                         }
-                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility != null)
+                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First().HiddenAbility != null)
                         {
                             <br>
-                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility.Description">
-                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).HiddenAbility.Name (Hidden)
+                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First().HiddenAbility.Description">
+                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First().HiddenAbility.Name (Hidden)
                             </span>
                         }
-                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialEventAbility != null)
+                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First().SpecialEventAbility != null)
                         {
                             <br>
-                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialEventAbility.Description">
-                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialEventAbility.Name (Special Event Ability)
+                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First().SpecialEventAbility.Description">
+                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First().SpecialEventAbility.Name (Special Event Ability)
                             </span>
                         }
                     </td>
+                </tr>
+                <tr>
+                    <th>
+                        @if (Model.Pokemon.Game.Name.IndexOf('/') > -1)
+                        {
+                            @("Games of Origin");
+                        }
+                        else
+                        {
+                            @("Game of Origin");
+                        }
+                    </th>
+                    <td>
+                        @if (Model.Pokemon.Game.Name == "Pokémon GO")
+                        {
+                            @("Pokémon GO");
+                        }
+                        else
+                        {
+                            @String.Join(" / ", Model.GamesAvailableIn.Where(x => x.ReleaseDate == Model.Pokemon.Game.ReleaseDate).Select(x => x.Name))
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pokemonInfo pokemonTraining pokemonTables">
+        <h2>More Pokémon Details</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>EV Yield</th>
+                    <td>
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First().Health != 0)
+                        {
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First().Health@(" Health");
+                            <br>
+                        }
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First().Attack != 0)
+                        {
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First().Attack@(" Attack");
+                            <br>
+                        }
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First().Defense != 0)
+                        {
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First().Defense@(" Defense");
+                            <br>
+                        }
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First().SpecialAttack != 0)
+                        {
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First().SpecialAttack@(" Sp. Attack");
+                            <br>
+                        }
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First().SpecialDefense != 0)
+                        {
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First().SpecialDefense@(" Sp. Defense");
+                            <br>
+                        }
+                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First().Speed != 0)
+                        {
+                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First().Speed@(" Speed");
+                            <br>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Catch Rate</th>
+                    <td class="catchRate">@Model.CaptureRates.Last(x => x.PokemonId == @Model.Pokemon.Id).CaptureRate.CatchRate</td>
+                </tr>
+                <tr>
+                    <th>Experience Growth</th>
+                    <td>
+                        @Model.Pokemon.ExperienceGrowth.Name
+                        <br>
+                        (@Model.Pokemon.ExperienceGrowth.ExpPointTotal XP)
+                    </td>
+                </tr>
+                <tr>
+                    <th>Base Happiness</th>
+                    <td>@Model.BaseHappinesses.Last(x => x.PokemonId == @Model.Pokemon.Id).BaseHappiness.Happiness</td>
                 </tr>
                 <tr>
                     <th>Gender Ratio</th>
@@ -178,90 +291,51 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>
-                        @if (Model.Pokemon.Game.Name.IndexOf('/') > -1)
-                        {
-                            @("Games of Origin");
-                        }
-                        else
-                        {
-                            @("Game of Origin");
-                        }
-                    </th>
+                    @if (Model.EggGroups.OrderByDescending(x => x.GenerationId).First().SecondaryEggGroup != null)
+                    {
+                        <th>Egg Groups</th>
+                    }
+                    else
+                    {
+                        <th>Egg Group</th>
+                    }
                     <td>
-                        @Model.Pokemon.Game.Name
+                        @Model.EggGroups.OrderByDescending(x => x.GenerationId).First().PrimaryEggGroup.Name
+                        @if (Model.EggGroups.OrderByDescending(x => x.GenerationId).First().SecondaryEggGroup != null)
+                        {
+                            <br>
+                            @Model.EggGroups.OrderByDescending(x => x.GenerationId).First().SecondaryEggGroup.Name
+                        }
+                    </td>
+                </tr>
+                <tr>
+                   <th>Egg Cycles</th>
+                   <td>
+                       @Model.Pokemon.EggCycle.CycleCount Cycles
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div>
-        <div class="pokemonInfo typing pokemonTables">
-            <h2>Typing</h2>
-            <div class="pokemon-type type-icon type-@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryType.Name.ToLower()">@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryType.Name</div>
-            @if (@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryType != null)
-            {
-                <div class="pokemon-type type-icon type-@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryType.Name.ToLower()">@Model.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryType.Name</div>
-            }
+    <div class="pokemonInfo typing pokemonTables">
+        <div class="pokemonInfo pokemonTypingTable pokemonTables">
+            <div class="typingChart">
+                <div class="typing">
+                    <h2>Typing</h2>
+                    <table>
+                        <tr>
+                            <td>
+                                <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.Typings.OrderByDescending(x => x.GenerationId).First().PrimaryType.Name.ToLower(), ".png"))">
+                                @if (@Model.Typings.OrderByDescending(x => x.GenerationId).First().SecondaryType != null)
+                                {
+                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.Typings.OrderByDescending(x => x.GenerationId).First().SecondaryType.Name.ToLower(), ".png"))">
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="pokemonInfo pokemonTraining pokemonTables">
-        <h2>Training</h2>
-        <table>
-            <tbody>
-                <tr>
-                    <th>EV Yield</th>
-                    <td>
-                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health != 0)
-                        {
-                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health@(" Health");
-                            <br>
-                        }
-                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack != 0)
-                        {
-                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack@(" Attack");
-                            <br>
-                        }
-                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense != 0)
-                        {
-                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense@(" Defense");
-                            <br>
-                        }
-                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack != 0)
-                        {
-                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack@(" Sp. Attack");
-                            <br>
-                        }
-                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense != 0)
-                        {
-                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense@(" Sp. Defense");
-                            <br>
-                        }
-                        @if (Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed != 0)
-                        {
-                            @Model.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed@(" Speed");
-                            <br>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <th>Catch Rate</th>
-                    <td class="catchRate">@Model.CaptureRates.Last(x => x.PokemonId == @Model.Pokemon.Id).CaptureRate.CatchRate</td>
-                </tr>
-                <tr>
-                    <th>Experience Growth</th>
-                    <td>
-                        @Model.Pokemon.ExperienceGrowth.Name
-                        <br>
-                        (@Model.Pokemon.ExperienceGrowth.ExpPointTotal XP)
-                    </td>
-                </tr>
-                <tr>
-                    <th>Base Happiness</th>
-                    <td>@Model.BaseHappinesses.Last(x => x.PokemonId == @Model.Pokemon.Id).BaseHappiness.Happiness</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
     <div class="pokemonInfo pokemonStats pokemonTables">
         <h2>Base Stats</h2>
@@ -269,139 +343,114 @@
             <tbody>
                 <tr>
                     <th class="Health" scope="col">Health</th>
-                    <td class="statData"><div class="health statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health * 100 / 255m)%;"></div></td>
-                    <td class="Health">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Health</td>
+                    <td class="statData"><div class="health statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Health * 100 / 255m)%;"></div></td>
+                    <td class="Health">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Health</td>
                 </tr>
                 <tr>
                     <th class="Attack" scope="col">Attack</th>
-                    <td class="statData"><div class="attack statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack * 100 / 255m)%;"></div></td>
-                    <td class="Attack">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Attack</td>
+                    <td class="statData"><div class="attack statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Attack * 100 / 255m)%;"></div></td>
+                    <td class="Attack">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Attack</td>
                 </tr>
                 <tr>
                     <th class="Defense" scope="col">Defense</th>
-                    <td class="statData"><div class="defense statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense * 100 / 255m)%;"></div></td>
-                    <td class="Defense">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Defense</td>
+                    <td class="statData"><div class="defense statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Defense * 100 / 255m)%;"></div></td>
+                    <td class="Defense">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Defense</td>
                 </tr>
                 <tr>
                     <th class="SpecialAttack" scope="col">Sp. Attack</th>
-                    <td class="statData"><div class="specialAttack statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack * 100 / 255m)%;"></div></td>
-                    <td class="SpecialAttack">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialAttack</td>
+                    <td class="statData"><div class="specialAttack statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().SpecialAttack * 100 / 255m)%;"></div></td>
+                    <td class="SpecialAttack">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().SpecialAttack</td>
                 </tr>
                 <tr>
                     <th class="SpecialDefense" scope="col">Sp. Defense</th>
-                    <td class="statData"><div class="specialDefense statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense * 100 / 255m)%;"></div></td>
-                    <td class="SpecialDefense">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SpecialDefense</td>
+                    <td class="statData"><div class="specialDefense statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().SpecialDefense * 100 / 255m)%;"></div></td>
+                    <td class="SpecialDefense">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().SpecialDefense</td>
                 </tr>
                 <tr>
                     <th class="Speed" scope="col">Speed</th>
-                    <td class="statData"><div class="speed statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed * 100 / 255m)%;"></div></td>
-                    <td class="Speed">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).Speed</td>
+                    <td class="statData"><div class="speed statBar" style="width: @(@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Speed * 100 / 255m)%;"></div></td>
+                    <td class="Speed">@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().Speed</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
                     <th class="baseStatTotal" scope="col">Total</th>
-                    <td colspan="2" class="baseStatTotal"><b>@Model.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).StatTotal</b></td>
+                    <td colspan="2" class="baseStatTotal"><b>@Model.BaseStats.OrderByDescending(x => x.GenerationId).First().StatTotal</b></td>
                 </tr>
             </tfoot>
         </table>
     </div>
-    <div class="pokemonInfo pokemonBreedingAndEvos pokemonTables">
-        <div class="pokemonBreeding">
-            <h2>Breeding</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        @if (Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryEggGroup != null)
-                        {
-                            <th>Egg Groups</th>
-                        }
-                        else
-                        {
-                            <th>Egg Group</th>
-                        }
-                        <td>
-                            @Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).PrimaryEggGroup.Name
-                            @if (Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryEggGroup != null)
-                            {
-                                <br>
-                                @Model.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.Pokemon.Game.GenerationId).SecondaryEggGroup.Name
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                       <th>Egg Cycles</th>
-                       <td>
-                           @Model.Pokemon.EggCycle.CycleCount Cycles
-                           <br>
-                           (@(Model.Pokemon.EggCycle.CycleCount * 257)-@(Model.Pokemon.EggCycle.CycleCount * 257 + 256) Steps to Hatch)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        @if (preEvolution != null || Model.Evolutions.Count > 0)
-        {
-            <br>
+    @if (Model.PreEvolutions.Count() > 0)
+    {
+        <div class="pokemonInfo pokemonEvos pokemonTables">
             <div class="evolutions">
-                @if (preEvolution != null)
+                <h2>
+                    @if (Model.PreEvolutions.Count() > 1)
+                    {
+                        @("Pre-Evolutions");
+                    }
+                    else
+                    {
+                        @("Pre-Evolution");
+                    }
+                </h2>
+                <table class="preEvolutionTable">
+                    <tbody class="evolutionPokemon">
+                        <tr>
+                            <th>
+                                <img class="lightshadowed" loading="lazy" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
+                            </th>
+                            <td>
+                                <p class="evolutionLink">@preEvolution.PreevolutionPokemon.Name - @preEvolution.EvolutionMethod.Name</p>
+                                @if (preEvolution.EvolutionDetails != null)
+                                {
+                                    <p>@preEvolution.EvolutionDetails</p>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    @if (Model.Evolutions.Count() > 0)
+    {
+        <div class="pokemonInfo pokemonEvos pokemonTables evolutions">
+            <h2>
+                @if (Model.Evolutions.Count() > 1 || (Model.Pokemon.PokedexNumber == 412 && Model.Pokemon.Id != 610))
                 {
-                    <table class="preEvolutionTable tableWithHeaders">
-                        <thead>
-                            <tr>
-                                <th><h2>Pre-Evolution</h2></th>
-                                <th><h2>Evolved By</h2></th>
-                            </tr>
-                        </thead>
-                        <tbody class="evolutionPokemon">
+                    @("Evolutions");
+                }
+                else
+                {
+                    @("Evolution");
+                }
+            </h2>
+            <table class="evolutionTable">
+                @{
+                    List<Evolution> evolutionList = Model.Evolutions.OrderBy(x => x.EvolutionPokemon.PokedexNumber).ThenBy(x => x.EvolutionPokemon.Id).ToList();
+                }
+                @if (Model.Evolutions.Count() > 0)
+                {
+                    <tbody class="evolutionPokemon">
+                        @foreach (var evolution in evolutionList)
+                        {
                             <tr>
                                 <th>
-                                    <img loading="lazy" class="lightshadowed" title="@preEvolution.PreevolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @preEvolution.PreevolutionPokemon.Id, ".png"))" />
-                                    <span class="evolutionLink">@preEvolution.PreevolutionPokemon.Name</span>
+                                    <img class="lightshadowed" loading="lazy" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
                                 </th>
                                 <td>
-                                    @preEvolution.EvolutionMethod.Name
-                                    @if (@preEvolution.EvolutionDetails != null)
+                                    <p class="evolutionLink">@evolution.EvolutionPokemon.Name - @evolution.EvolutionMethod.Name</p>
+                                    @if (evolution.EvolutionDetails != null)
                                     {
-                                        <br>
-                                        @(string.Concat(" (", @preEvolution.EvolutionDetails, ")"));
+                                        <p>@evolution.EvolutionDetails</p>
                                     }
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
+                        }
+                    </tbody>
                 }
-                @if (Model.Evolutions.Count > 0)
-                {
-                    <table class="evolutionTable tableWithHeaders">
-                        <thead>
-                            <tr>
-                                <th><h2>Evolution</h2></th>
-                                <th><h2>Evolves By</h2></th>
-                            </tr>
-                        </thead>
-                        <tbody class="evolutionPokemon">
-                            @foreach (var evolution in Model.Evolutions)
-                            {
-                                <tr>
-                                    <th>
-                                        <img loading="lazy" class="lightshadowed" title="@evolution.EvolutionPokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @evolution.EvolutionPokemon.Id, ".png"))" />
-                                        <span class="evolutionLink">@evolution.EvolutionPokemon.Name</span>
-                                    </th>
-                                    <td>
-                                        @evolution.EvolutionMethod.Name
-                                        @if (@evolution.EvolutionDetails != null)
-                                        {
-                                            <br>
-                                            @(string.Concat(" (", @evolution.EvolutionDetails, ")"));
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            </div>
-        }
-    </div>
+            </table>
+        </div>
+    }
 </div>

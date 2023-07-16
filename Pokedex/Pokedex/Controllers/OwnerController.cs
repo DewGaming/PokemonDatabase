@@ -482,6 +482,13 @@ namespace Pokedex.Controllers
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {
+                if (this.dataService.CheckIfAltForm(pokemonId))
+                {
+                    pokemon.Name = this.dataService.GetAltFormWithFormName(pokemonId).Name;
+                }
+
+                List<Game> games = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
+                games.Remove(games.Find(x => x.Id == 43));
                 PokemonViewModel model = new PokemonViewModel()
                 {
                     Pokemon = pokemon,
@@ -495,6 +502,7 @@ namespace Pokedex.Controllers
                     PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id),
                     Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id),
                     Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
+                    GamesAvailableIn = games,
                     AppConfig = this.appConfig,
                 };
 
