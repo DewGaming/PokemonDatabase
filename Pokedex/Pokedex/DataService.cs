@@ -313,6 +313,89 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Gets all of the details for a pokemon.
+        /// </summary>
+        /// <param name="pokemon">The pokemon needing their details.</param>
+        /// <param name="appConfig">The application's configuration.</param>
+        /// <param name="form">The alternate form if it applies.</param>
+        /// <returns>Returns the pokemon's details.</returns>
+        public PokemonViewModel GetPokemonDetails(Pokemon pokemon, AppConfig appConfig, Form form = null)
+        {
+            List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
+            games.Remove(games.Find(x => x.Id == 43));
+
+            PokemonViewModel pokemonViewModel = new PokemonViewModel()
+            {
+                Pokemon = pokemon,
+                BaseHappinesses = this.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
+                BaseStats = this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
+                EVYields = this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
+                Typings = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                Abilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                EggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                CaptureRates = this.GetPokemonWithCaptureRates(pokemon.Id),
+                PreEvolutions = this.GetPreEvolution(pokemon.Id),
+                Evolutions = this.GetPokemonEvolutions(pokemon.Id),
+                Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
+                GamesAvailableIn = games,
+                AppConfig = appConfig,
+            };
+
+            if (form != null)
+            {
+                pokemonViewModel.Form = form;
+                pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
+            }
+
+            HttpWebRequest webRequest;
+            HttpWebResponse imageRequest;
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                {
+                    pokemonViewModel.HasShiny = true;
+                }
+                else
+                {
+                    pokemonViewModel.HasShiny = false;
+                }
+            }
+            catch
+            {
+                pokemonViewModel.HasShiny = false;
+            }
+
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                {
+                    pokemonViewModel.HasHome = true;
+                }
+                else
+                {
+                    pokemonViewModel.HasHome = false;
+                }
+            }
+            catch
+            {
+                pokemonViewModel.HasHome = false;
+            }
+
+            PokemonLegendaryDetail legendaryType = this.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
+
+            if (legendaryType != null)
+            {
+                pokemonViewModel.LegendaryType = legendaryType.LegendaryType;
+            }
+
+            return pokemonViewModel;
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon with form names for alternate forms.
         /// </summary>
         /// <param name="gameId">The game's id. Optional.</param>
@@ -850,7 +933,16 @@ namespace Pokedex
         /// <returns>The list of shiny huntable games.</returns>
         public List<Game> GetShinyHuntGames()
         {
-            List<Game> gamesList = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now && x.GenerationId >= 2).ToList();
+            return this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+        }
+
+        /// <summary>
+        /// Gets the list of games grouped by release date.
+        /// </summary>
+        /// <returns>The list of games grouped by release date.</returns>
+        public List<Game> GetGamesGroupedByReleaseDate()
+        {
+            List<Game> gamesList = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
             List<Game> selectableGames = new List<Game>();
             List<Game> uniqueGames = gamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
             for (var i = 0; i < uniqueGames.Count; i++)

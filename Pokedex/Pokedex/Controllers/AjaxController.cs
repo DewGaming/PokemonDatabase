@@ -2434,6 +2434,55 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Grabs the details about two pokemon given the games provided.
+        /// </summary>
+        /// <param name="firstPokemonId">The id of the first pokemon.</param>
+        /// <param name="firstGameId">The game from which the first pokemon's details will be grabbed.</param>
+        /// <param name="secondPokemonId">The id of the second pokemon.</param>
+        /// <param name="secondGameId">The game from which the second pokemon's details will be grabbed.</param>
+        /// <returns>The pokemon difference shared view.</returns>
+        [Route("get-pokemon-differences")]
+        public IActionResult GrabPokemonDifferences(int firstPokemonId, int firstGameId, int secondPokemonId, int secondGameId)
+        {
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
+            Form form = null;
+            if (altForms.Exists(x => x.AltFormPokemonId == firstPokemonId))
+            {
+                form = altForms.Find(x => x.AltFormPokemonId == firstPokemonId).Form;
+            }
+
+            PokemonViewModel firstPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == firstPokemonId), this.appConfig, form);            
+            if (altForms.Exists(x => x.AltFormPokemonId == secondPokemonId))
+            {
+                form = altForms.Find(x => x.AltFormPokemonId == secondPokemonId).Form;
+            }
+
+            PokemonViewModel secondPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == secondPokemonId), this.appConfig, form);
+            List<Game> games = this.dataService.GetObjects<Game>();
+            List<Game> selectedGames = new List<Game>
+            {
+                games.Find(x => x.Id == firstGameId),
+                games.Find(x => x.Id == secondGameId),
+            };
+
+            List<PokemonViewModel> pokemonViewList = new List<PokemonViewModel>
+            {
+                firstPokemonDetails,
+                secondPokemonDetails,
+            };
+
+            PokemonDifferenceSharedViewModel model = new PokemonDifferenceSharedViewModel()
+            {
+                AllPokemon = pokemonViewList,
+                AllGames = selectedGames,
+                AppConfig = this.appConfig,
+            };
+
+            return this.PartialView("_FillPokemonDifferences", model);
+        }
+
+        /// <summary>
         /// Gets a list of abilities that are available in the given generation.
         /// </summary>
         /// <param name="generationId">The generation's id.</param>
@@ -2797,6 +2846,24 @@ namespace Pokedex.Controllers
             {
                 List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", pokemonId).ConvertAll(x => x.Game);
                 List<Game> games = this.dataService.GetShinyHuntGames();
+                return games.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Grabs all of the games available for the selected pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The selected pokemon's Id.</param>
+        /// <returns>The list of available games.</returns>
+        [Route("get-games-by-pokemon")]
+        public List<Game> GetGamesByPokemon(int pokemonId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", pokemonId).ConvertAll(x => x.Game);
+                List<Game> games = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43).ToList();
                 return games.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
             }
 

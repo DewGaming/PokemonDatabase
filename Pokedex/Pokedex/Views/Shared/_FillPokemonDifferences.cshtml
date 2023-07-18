@@ -1,0 +1,908 @@
+@using Pokedex.Models;
+@using Pokedex.DataAccess.Models;
+@model Pokedex.Models.PokemonDifferenceSharedViewModel;
+
+@{
+    PokemonViewModel firstPokemon = Model.AllPokemon.First();
+    PokemonViewModel secondPokemon = Model.AllPokemon.Last();
+    Game firstGame = Model.AllGames.First();
+    Game secondGame = Model.AllGames.Last();
+    PokemonTypeDetail firstPokemonTyping = firstPokemon.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+    PokemonTypeDetail secondPokemonTyping = secondPokemon.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
+    BaseStat firstPokemonBaseStats = firstPokemon.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+    BaseStat secondPokemonBaseStats = secondPokemon.BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
+    PokemonAbilityDetail firstPokemonAbility = null;
+    PokemonAbilityDetail secondPokemonAbility = null;
+    EVYield firstPokemonEVYield = null;
+    EVYield secondPokemonEVYield = null;
+    if (firstGame.GenerationId > 2)
+    {
+        firstPokemonAbility = firstPokemon.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+        firstPokemonEVYield = firstPokemon.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+        secondPokemonAbility = secondPokemon.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
+        secondPokemonEVYield = secondPokemon.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
+    }
+
+    PokemonEggGroupDetail firstPokemonEggGroup = null;
+    PokemonEggGroupDetail secondPokemonEggGroup = null;
+    if (secondGame.GenerationId > 1)
+    {
+        firstPokemonEggGroup = firstPokemon.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+        secondPokemonEggGroup = secondPokemon.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
+    }
+
+    string height, weight, gameOrigin;
+    int feet = 0, inches = 0;
+}
+
+<div class="pokemonInfo pokemonData pokemonTables">
+    <h2>Pokémon Details</h2>
+    <table>
+        <tbody>
+            <tr>
+                <th colspan="2">Pokémon Name</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.Name == secondPokemon.Pokemon.Name)
+                {
+                    <td colspan="2" class="match">@firstPokemon.Pokemon.Name</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <td class="noMatch">@Model.AllPokemon[i].Pokemon.Name</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Pokedex Number</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.PokedexNumber == secondPokemon.Pokemon.PokedexNumber)
+                {
+                    <td colspan="2" class="match">@firstPokemon.Pokemon.PokedexNumber.ToString().PadLeft(4, '0')</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <td class="noMatch">@Model.AllPokemon[i].Pokemon.PokedexNumber.ToString().PadLeft(4, '0')</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Classification</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.Classification.Name == secondPokemon.Pokemon.Classification.Name)
+                {
+                    <td colspan="2" class="match">@firstPokemon.Pokemon.Classification.Name</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <td class="noMatch">@Model.AllPokemon[i].Pokemon.Classification.Name</td>
+                    }
+                }
+            </tr>
+            @if (firstPokemon.LegendaryType != null || secondPokemon.LegendaryType != null)
+            {
+                <tr>
+                    <th colspan="2">Legendary Classification</th>
+                </tr>
+                <tr>
+                    @if (firstPokemon.LegendaryType != null && secondPokemon.LegendaryType != null && firstPokemon.LegendaryType.Type == secondPokemon.LegendaryType.Type)
+                    {
+                        <td colspan="2" class="match">@firstPokemon.LegendaryType.Type</td>
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < 2; i++)
+                        {
+                            @if (Model.AllPokemon[i].LegendaryType != null)
+                            {
+                                <td class="noMatch">@Model.AllPokemon[i].LegendaryType.Type</td>
+                            }
+                            else
+                            {
+                                <td class="noMatch">Not Legendary</td>
+                            }
+                        }
+                    }
+                </tr>
+            }
+            <tr>
+                <th colspan="2">Height</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.Height == secondPokemon.Pokemon.Height)
+                {
+                    if (firstPokemon.Pokemon.Height != 0m)
+                    {
+                        feet = 0;
+                        inches = (int)Math.Round((@firstPokemon.Pokemon.Height / 0.0254m), 0);
+                        while(inches >= 12)
+                        {
+                            feet++;
+                            inches -= 12;
+                        }
+                        height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (firstPokemon.Form != null && firstPokemon.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @firstPokemon.Pokemon.Height.ToString("F1"), (firstPokemon.Form != null && firstPokemon.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                    }
+                    else
+                    {
+                        height = "???' ???\" (??? m)";
+                    }
+                    <td colspan="2" class="match">@height</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        if (Model.AllPokemon[i].Pokemon.Height != 0m)
+                        {
+                            feet = 0;
+                            inches = (int)Math.Round((@Model.AllPokemon[i].Pokemon.Height / 0.0254m), 0);
+                            while(inches >= 12)
+                            {
+                                feet++;
+                                inches -= 12;
+                            }
+                            height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (Model.AllPokemon[i].Form != null && Model.AllPokemon[i].Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @Model.AllPokemon[i].Pokemon.Height.ToString("F1"), (Model.AllPokemon[i].Form != null && Model.AllPokemon[i].Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                        }
+                        else
+                        {
+                            height = "???' ???\" (??? m)";
+                        }
+                        <td class="noMatch">@height</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Weight</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.Weight == secondPokemon.Pokemon.Weight)
+                {
+                    if (@firstPokemon.Pokemon.Weight != 0m)
+                    {
+                        weight = string.Concat(Math.Round(@firstPokemon.Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####"), " lbs (", firstPokemon.Pokemon.Weight.ToString("0.####"), " kg)");
+                    }
+                    else
+                    {
+                        weight = "??? lbs (??? kg)";
+                    }
+                    <td colspan="2" class="match">@weight</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        if (@Model.AllPokemon[i].Pokemon.Weight != 0m)
+                        {
+                            weight = string.Concat(Math.Round(@Model.AllPokemon[i].Pokemon.Weight * (decimal)2.2046226, 1).ToString("0.####"), " lbs (", Model.AllPokemon[i].Pokemon.Weight.ToString("0.####"), " kg)");
+                        }
+                        else
+                        {
+                            weight = "??? lbs (??? kg)";
+                        }
+                        <td class="noMatch">@weight</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Typing</th>
+            </tr>
+            <tr>
+                @if (firstPokemonTyping.PrimaryTypeId == secondPokemonTyping.PrimaryTypeId && ((firstPokemonTyping.SecondaryType == null && secondPokemonTyping.SecondaryType == null) || (firstPokemonTyping.SecondaryType != null && secondPokemonTyping.SecondaryType != null && firstPokemonTyping.SecondaryTypeId == secondPokemonTyping.SecondaryTypeId)))
+                {
+                    <td colspan="2" class="match">
+                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @firstPokemonTyping.PrimaryType.Name.ToLower(), ".png"))">
+                        @if (firstPokemon.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId).SecondaryType != null)
+                        {
+                            <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @firstPokemonTyping.SecondaryType.Name.ToLower(), ".png"))">
+                        }
+                    </td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <td class="noMatch">
+                            <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.AllPokemon[i].Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryType.Name.ToLower(), ".png"))">
+                            @if (Model.AllPokemon[i].Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryType != null)
+                            {
+                                <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @Model.AllPokemon[i].Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryType.Name.ToLower(), ".png"))">
+                            }
+                        </td>
+                    }
+                }
+            </tr>
+            @if (firstGame.GenerationId >= 3 || secondGame.GenerationId >= 3)
+            {
+                <tr>
+                    <th colspan="2">
+                        @if ((firstPokemonAbility != null && (firstPokemonAbility.SecondaryAbility != null || firstPokemonAbility.HiddenAbility != null || firstPokemonAbility.SpecialEventAbility != null)) || (secondPokemonAbility != null && (secondPokemonAbility.SecondaryAbility != null || secondPokemonAbility.HiddenAbility != null || secondPokemonAbility.SpecialEventAbility != null)))
+                        {
+                            @("Abilities")
+                        }
+                        else
+                        {
+                            @("Ability")
+                        }
+                    </th>
+                </tr>
+                @if ((firstPokemonAbility != null && firstPokemonAbility.PrimaryAbility != null) || (secondPokemonAbility != null && secondPokemonAbility.PrimaryAbility != null))
+                {
+                    <tr class="abilities primaryAbility">
+                        @if (firstPokemonAbility != null && firstPokemonAbility.PrimaryAbility != null && secondPokemonAbility != null && secondPokemonAbility.PrimaryAbility != null && firstPokemonAbility.PrimaryAbilityId == secondPokemonAbility.PrimaryAbilityId)
+                        {
+                            <td colspan="2" class="match">@firstPokemonAbility.PrimaryAbility.Name</td>
+                        }
+                        else
+                        {
+                            @for (var i = 0; i < 2; i++)
+                            {
+                                @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryAbility != null)
+                                {
+                                    <td class="noMatch">@Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryAbility.Name</td>
+                                }
+                                else
+                                {
+                                    <td class="noMatch">No Primary Ability</td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+                @if ((firstPokemonAbility != null && firstPokemonAbility.SecondaryAbility != null) || (secondPokemonAbility != null && secondPokemonAbility.SecondaryAbility != null))
+                {
+                    <tr class="abilities secondaryAbility">
+                        @if (firstPokemonAbility != null && firstPokemonAbility.SecondaryAbility != null && secondPokemonAbility != null && secondPokemonAbility.SecondaryAbility != null && firstPokemonAbility.SecondaryAbilityId == secondPokemonAbility.SecondaryAbilityId)
+                        {
+                            <td colspan="2" class="match">@firstPokemonAbility.SecondaryAbility.Name</td>
+                        }
+                        else
+                        {
+                            @for (var i = 0; i < 2; i++)
+                            {
+                                @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryAbility != null)
+                                {
+                                    <td class="noMatch">@Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryAbility.Name</td>
+                                }
+                                else
+                                {
+                                    <td class="noMatch">No Secondary Ability</td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+                @if ((firstPokemonAbility != null && firstPokemonAbility.HiddenAbility != null) || (secondPokemonAbility != null && secondPokemonAbility.HiddenAbility != null))
+                {
+                    <tr class="abilities hiddenAbility">
+                        @if (firstPokemonAbility != null && firstPokemonAbility.HiddenAbility != null && secondPokemonAbility != null && secondPokemonAbility.HiddenAbility != null && firstPokemonAbility.HiddenAbilityId == secondPokemonAbility.HiddenAbilityId)
+                        {
+                            <td colspan="2" class="match">@firstPokemonAbility.HiddenAbility.Name</td>
+                        }
+                        else
+                        {
+                            @for (var i = 0; i < 2; i++)
+                            {
+                                @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).HiddenAbility != null)
+                                {
+                                    <td class="noMatch">@Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).HiddenAbility.Name</td>
+                                }
+                                else
+                                {
+                                    <td class="noMatch">No Hidden Ability</td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+                @if ((firstPokemonAbility != null && firstPokemonAbility.SpecialEventAbility != null) || (secondPokemonAbility != null && secondPokemonAbility.SpecialEventAbility != null))
+                {
+                    <tr class="abilities specialEventAbility">
+                        @if (firstPokemonAbility != null && firstPokemonAbility.SpecialEventAbility != null && secondPokemonAbility != null && secondPokemonAbility.SpecialEventAbility != null && firstPokemonAbility.SpecialEventAbilityId == secondPokemonAbility.SpecialEventAbilityId)
+                        {
+                            <td colspan="2" class="match">@firstPokemonAbility.SpecialEventAbility.Name</td>
+                        }
+                        else
+                        {
+                            @for (var i = 0; i < 2; i++)
+                            {
+                                @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialEventAbility != null)
+                                {
+                                    <td class="noMatch">@Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialEventAbility.Name</td>
+                                }
+                                else
+                                {
+                                    <td class="noMatch">No Special Event Ability</td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+                <tr>
+                    <th colspan="2">
+                        @if (firstPokemon.Pokemon.Game.Name.IndexOf('/') > -1 && secondPokemon.Pokemon.Game.Name.IndexOf('/') > -1)
+                        {
+                            @("Games of Origin");
+                        }
+                        else
+                        {
+                            @("Game of Origin");
+                        }
+                    </th>
+                </tr>
+                <tr>
+                    @if (firstPokemon.Pokemon.GameId == secondPokemon.Pokemon.GameId)
+                    {
+                        @if (firstPokemon.Pokemon.Game.Name == "Pokémon GO")
+                        {
+                            gameOrigin = "Pokémon GO";
+                        }
+                        else
+                        {
+                            gameOrigin = @String.Join(" / ", firstPokemon.GamesAvailableIn.Where(x => x.ReleaseDate == firstPokemon.Pokemon.Game.ReleaseDate).Select(x => x.Name));
+                        }
+                        <td colspan="2" class="match">@gameOrigin</td>
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < 2; i++)
+                        {
+                            @if (Model.AllPokemon[i].Pokemon.Game.Name == "Pokémon GO")
+                            {
+                                gameOrigin = "Pokémon GO";
+                            }
+                            else
+                            {
+                                gameOrigin = @String.Join(" / ", Model.AllPokemon[i].GamesAvailableIn.Where(x => x.ReleaseDate == Model.AllPokemon[i].Pokemon.Game.ReleaseDate).Select(x => x.Name));
+                            }
+                            <td class="noMatch">@gameOrigin</td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="pokemonInfo pokemonTraining pokemonTables">
+    <h2 class="morePokemonDetails">More Pokémon Details</h2>
+    <table>
+        <tbody>
+            @if ((firstGame.GenerationId != 1 && firstPokemon.EggGroups.Count() > 0) || (secondGame.GenerationId != 1 && secondPokemon.EggGroups.Count() > 0) || (firstGame.GenerationId >= 3 && firstPokemon.EVYields.Count() > 0) || (secondGame.GenerationId >= 3 && secondPokemon.EVYields.Count() > 0) || firstPokemon.CaptureRates.Count() > 0 || secondPokemon.CaptureRates.Count() > 0 || firstPokemon.Pokemon.ExperienceGrowthId != 8 || secondPokemon.Pokemon.ExperienceGrowthId != 8 || firstPokemon.BaseHappinesses.Count() > 0 || secondPokemon.BaseHappinesses.Count() > 0)
+            {
+                @if ((firstGame.GenerationId >= 3 && firstPokemon.EVYields.Count() > 0) || (secondGame.GenerationId >= 3 && secondPokemon.EVYields.Count() > 0))
+                {
+                    <tr>
+                        <th colspan="2">EV Yield</th>
+                    </tr>
+                    @if ((firstPokemonEVYield != null && firstPokemonEVYield.Health > 0) || (secondPokemonEVYield != null && secondPokemonEVYield.Health > 0))
+                    {
+                        <tr class="evYields health">
+                            @if (firstPokemonEVYield != null && secondPokemonEVYield != null && firstPokemonEVYield.Health == secondPokemonEVYield.Health)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEVYield.Health@(" Health")</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId) != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Health@(" Health")</td>
+                                    }
+                                    else if (Model.AllGames[i].GenerationId <= 2)
+                                    {
+                                        <td class="noMatch">Unknown</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">0 Health</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    @if ((firstPokemonEVYield != null && firstPokemonEVYield.Attack > 0) || (secondPokemonEVYield != null && secondPokemonEVYield.Attack > 0))
+                    {
+                        <tr class="evYields attack">
+                            @if (firstPokemon.Pokemon.Id == secondPokemon.Pokemon.Id && firstPokemon.Pokemon.Id == 839 && ((firstGame.Id == 10 && secondGame.Id == 11) || (firstGame.Id == 11 && secondGame.Id == 10)))
+                            {
+                                @if (firstGame.Id == 10)
+                                {
+                                    <td class="noMatch">1 Attack</td>
+                                    <td class="noMatch">2 Attack</td>
+                                }
+                                else
+                                {
+                                    <td class="noMatch">2 Attack</td>
+                                    <td class="noMatch">1 Attack</td>
+                                }
+                            }
+                            else if ((firstPokemonEVYield != null && secondPokemonEVYield != null && firstPokemonEVYield.Attack == secondPokemonEVYield.Attack) || (firstPokemon.Pokemon.Id == 839 && secondPokemon.Pokemon.Id == 839 && ((firstGame.Id == 11 && secondGame.GenerationId >= 6) || (secondGame.Id == 11 && firstGame.GenerationId >= 6))))
+                            {
+                                if (firstPokemon.Pokemon.Id == 839 && secondPokemon.Pokemon.Id == 839 && ((firstGame.Id == 11 && secondGame.GenerationId >= 6) || (secondGame.Id == 11 && firstGame.GenerationId >= 6)))
+                                {
+                                    <td colspan="2" class="match">2 Attack</td>
+                                }
+                                else
+                                {
+                                    <td colspan="2" class="match">@firstPokemonEVYield.Attack@(" Attack")</td>
+                                }
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId) != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Attack@(" Attack")</td>
+                                    }
+                                    else if (Model.AllGames[i].GenerationId <= 2)
+                                    {
+                                        <td class="noMatch">Unknown</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">0 Attack</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    @if ((firstPokemonEVYield != null && firstPokemonEVYield.Defense > 0) || (secondPokemonEVYield != null && secondPokemonEVYield.Defense > 0))
+                    {
+                        <tr class="evYields defense">
+                            @if (firstPokemonEVYield != null && secondPokemonEVYield != null && firstPokemonEVYield.Defense == secondPokemonEVYield.Defense)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEVYield.Defense@(" Defense")</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId) != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Defense@(" Defense")</td>
+                                    }
+                                    else if (Model.AllGames[i].GenerationId <= 2)
+                                    {
+                                        <td class="noMatch">Unknown</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">0 Defense</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    @if ((firstPokemonEVYield != null && firstPokemonEVYield.SpecialAttack > 0) || (secondPokemonEVYield != null && secondPokemonEVYield.SpecialAttack > 0))
+                    {
+                        <tr class="evYields specialAttack">
+                            @if (firstPokemonEVYield != null && secondPokemonEVYield != null && firstPokemonEVYield.SpecialAttack == secondPokemonEVYield.SpecialAttack)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEVYield.SpecialAttack@(" Special Attack")</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId) != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialAttack@(" Special Attack")</td>
+                                    }
+                                    else if (Model.AllGames[i].GenerationId <= 2)
+                                    {
+                                        <td class="noMatch">Unknown</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">0 Special Attack</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    @if ((firstPokemonEVYield != null && firstPokemonEVYield.SpecialDefense > 0) || (secondPokemonEVYield != null && secondPokemonEVYield.SpecialDefense > 0))
+                    {
+                        <tr class="evYields specialDefense">
+                            @if (firstPokemonEVYield != null && secondPokemonEVYield != null && firstPokemonEVYield.SpecialDefense == secondPokemonEVYield.SpecialDefense)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEVYield.SpecialDefense@(" Special Defense")</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId) != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialDefense@(" Special Defense")</td>
+                                    }
+                                    else if (Model.AllGames[i].GenerationId <= 2)
+                                    {
+                                        <td class="noMatch">Unknown</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">0 Special Defense</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    @if ((firstPokemonEVYield != null && firstPokemonEVYield.Speed > 0) || (secondPokemonEVYield != null && secondPokemonEVYield.Speed > 0))
+                    {
+                        <tr class="evYields speed">
+                            @if (firstPokemonEVYield != null && secondPokemonEVYield != null && firstPokemonEVYield.Speed == secondPokemonEVYield.Speed)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEVYield.Speed@(" Speed")</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId) != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Speed@(" Speed")</td>
+                                    }
+                                    else if (Model.AllGames[i].GenerationId <= 2)
+                                    {
+                                        <td class="noMatch">Unknown</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">0 Speed</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                <tr>
+                    <th colspan="2">Catch Rate</th>
+                </tr>
+                <tr>
+                    @if (firstPokemon.CaptureRates.Find(x => x.PokemonId == firstPokemon.Pokemon.Id && x.GenerationId <= firstGame.GenerationId).CaptureRate.CatchRate == secondPokemon.CaptureRates.Find(x => x.PokemonId == secondPokemon.Pokemon.Id && x.GenerationId <= secondGame.GenerationId).CaptureRate.CatchRate)
+                    {
+                        <td colspan="2" class="match">@firstPokemon.CaptureRates.Find(x => x.PokemonId == firstPokemon.Pokemon.Id && x.GenerationId <= firstGame.GenerationId).CaptureRate.CatchRate</td>
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < 2; i++)
+                        {
+                            <td class="noMatch">@Model.AllPokemon[i].CaptureRates.Find(x => x.PokemonId == Model.AllPokemon[i].Pokemon.Id && x.GenerationId <= Model.AllGames[i].GenerationId).CaptureRate.CatchRate</td>
+                        }
+                    }
+                </tr>
+                <tr>
+                    <th colspan="2">Experience Growth</th>
+                </tr>
+                <tr>
+                    @if (firstPokemon.Pokemon.ExperienceGrowth.ExpPointTotal == secondPokemon.Pokemon.ExperienceGrowth.ExpPointTotal)
+                    {
+                        <td colspan="2" class="match">
+                            <span class="cursorHelp" title='@firstPokemon.Pokemon.ExperienceGrowth.ExpPointTotal.ToString("N0") XP to Level 100'>@firstPokemon.Pokemon.ExperienceGrowth.Name</span>
+                        </td>
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < 2; i++)
+                        {
+                            <td class="noMatch">
+                                <span class="cursorHelp" title='@Model.AllPokemon[i].Pokemon.ExperienceGrowth.ExpPointTotal.ToString("N0") XP to Level 100'>@Model.AllPokemon[i].Pokemon.ExperienceGrowth.Name</span>
+                            </td>
+                        }
+                    }
+                </tr>
+                @if (firstPokemon.BaseHappinesses.Count() > 0 || secondPokemon.BaseHappinesses.Count() > 0)
+                {
+                    <tr>
+                        <th colspan="2">Base Happiness</th>
+                    </tr>
+                    <tr>
+                        @if (firstPokemon.BaseHappinesses.Find(x => x.PokemonId == firstPokemon.Pokemon.Id && x.GenerationId <= firstGame.GenerationId).BaseHappiness.Happiness == secondPokemon.BaseHappinesses.Find(x => x.PokemonId == secondPokemon.Pokemon.Id && x.GenerationId <= secondGame.GenerationId).BaseHappiness.Happiness)
+                        {
+                            <td colspan="2" class="match">@firstPokemon.BaseHappinesses.Find(x => x.PokemonId == firstPokemon.Pokemon.Id && x.GenerationId <= firstGame.GenerationId).BaseHappiness.Happiness</td>
+                        }
+                        else
+                        {
+                            @for (var i = 0; i < 2; i++)
+                            {
+                                <td class="noMatch">@Model.AllPokemon[i].BaseHappinesses.Find(x => x.PokemonId == Model.AllPokemon[i].Pokemon.Id && x.GenerationId <= Model.AllGames[i].GenerationId).BaseHappiness.Happiness</td>
+                            }
+                        }
+                    </tr>
+                }
+                @if (firstGame.GenerationId > 1 || secondGame.GenerationId > 1)
+                {
+                    <tr>
+                        <th colspan="2">Gender Ratio</th>
+                    </tr>
+                    <tr>
+                        @if (firstGame.GenerationId > 1 && secondGame.GenerationId > 1 && firstPokemon.Pokemon.GenderRatioId == secondPokemon.Pokemon.GenderRatioId)
+                        {
+                            <td colspan="2" class="match">
+                                @if (firstPokemon.Pokemon.GenderRatio.MaleRatio == 0 && firstPokemon.Pokemon.GenderRatio.FemaleRatio == 0)
+                                {
+                                    @("Gender Unknown")
+                                }
+                                else
+                                {
+                                    if (firstPokemon.Pokemon.GenderRatio.FemaleRatio == 0)
+                                    {
+                                        @firstPokemon.Pokemon.GenderRatio.MaleRatio@("% Male");
+                                    }
+                                    else if (firstPokemon.Pokemon.GenderRatio.MaleRatio == 0)
+                                    {
+                                        @firstPokemon.Pokemon.GenderRatio.FemaleRatio@("% Female")
+                                    }
+                                    else if (firstPokemon.Pokemon.GenderRatioId == 12)
+                                    {
+                                        @("???")
+                                    }
+                                    else
+                                    {
+                                        @string.Concat(firstPokemon.Pokemon.GenderRatio.MaleRatio, "% Male")
+                                            <br>
+                                        @string.Concat(firstPokemon.Pokemon.GenderRatio.FemaleRatio, "% Female")
+                                    }
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            for (var i = 0; i < 2; i++)
+                            {
+                                <td class="noMatch">
+                                    @if ((Model.AllPokemon[i].Pokemon.GenderRatio.MaleRatio == 0 && Model.AllPokemon[i].Pokemon.GenderRatio.FemaleRatio == 0) || Model.AllGames[i].GenerationId == 1)
+                                    {
+                                        @("Gender Unknown")
+                                    }
+                                    else
+                                    {
+                                        if (Model.AllPokemon[i].Pokemon.GenderRatio.FemaleRatio == 0)
+                                        {
+                                            @Model.AllPokemon[i].Pokemon.GenderRatio.MaleRatio@("% Male")
+                                        }
+                                        else if (Model.AllPokemon[i].Pokemon.GenderRatio.MaleRatio == 0)
+                                        {
+                                            @Model.AllPokemon[i].Pokemon.GenderRatio.FemaleRatio@("% Female")
+                                        }
+                                        else if (Model.AllPokemon[i].Pokemon.GenderRatioId == 12)
+                                        {
+                                            @("???")
+                                        }
+                                        else
+                                        {
+                                            @string.Concat(Model.AllPokemon[i].Pokemon.GenderRatio.MaleRatio, "% Male")
+                                            <br>
+                                            @string.Concat(Model.AllPokemon[i].Pokemon.GenderRatio.FemaleRatio, "% Female")
+                                        }
+                                    }
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+                @if (firstGame.GenerationId > 1 || secondGame.GenerationId > 1)
+                {
+                    <tr>
+                        <th colspan="2">
+                            @if (firstPokemonEggGroup.SecondaryEggGroup != null || secondPokemonEggGroup.SecondaryEggGroup != null)
+                            {
+                                @("Egg Groups")
+                            }
+                            else
+                            {
+                                @("Egg Group")
+                            }
+                        </th>
+                    </tr>
+                    @if ((firstPokemonEggGroup != null && firstPokemonEggGroup.PrimaryEggGroup != null) || (secondPokemonEggGroup != null && secondPokemonEggGroup.PrimaryEggGroup != null))
+                    {
+                        <tr class="eggGroups primaryEggGroup">
+                            @if (firstPokemonEggGroup != null && firstPokemonEggGroup.PrimaryEggGroup != null && secondPokemonEggGroup != null && secondPokemonEggGroup.PrimaryEggGroup != null && firstPokemonEggGroup.PrimaryEggGroupId == secondPokemonEggGroup.PrimaryEggGroupId)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEggGroup.PrimaryEggGroup.Name</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryEggGroup != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryEggGroup.Name</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">No Primary Egg Group</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    @if ((firstPokemonEggGroup != null && firstPokemonEggGroup.SecondaryEggGroup != null) || (secondPokemonEggGroup != null && secondPokemonEggGroup.SecondaryEggGroup != null))
+                    {
+                        <tr class="eggGroups secondaryEggGroup">
+                            @if (firstPokemonEggGroup != null && firstPokemonEggGroup.SecondaryEggGroup != null && secondPokemonEggGroup != null && secondPokemonEggGroup.SecondaryEggGroup != null && firstPokemonEggGroup.SecondaryEggGroupId == secondPokemonEggGroup.SecondaryEggGroupId)
+                            {
+                                <td colspan="2" class="match">@firstPokemonEggGroup.SecondaryEggGroup.Name</td>
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < 2; i++)
+                                {
+                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryEggGroup != null)
+                                    {
+                                        <td class="noMatch">@Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryEggGroup.Name</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="noMatch">No Secondary Egg Group</td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                    <tr>
+                       <th colspan="2">Egg Cycles</th>
+                    </tr>
+                    <tr>
+                        @if (firstPokemon.Pokemon.EggCycleId == secondPokemon.Pokemon.EggCycleId)
+                        {
+                            <td colspan="2" class="match">
+                               <span class="cursorHelp" title='@((firstPokemon.Pokemon.EggCycle.CycleCount * 257).ToString("N0")) - @((firstPokemon.Pokemon.EggCycle.CycleCount * 257 + 256).ToString("N0")) Steps to Hatch'>@firstPokemon.Pokemon.EggCycle.CycleCount Egg Cycles</span>
+                            </td>
+                        }
+                        else
+                        {
+                            for (var i = 0; i < 2; i++)
+                            {
+                                <td class="noMatch">
+                                    <span class="cursorHelp" title='@((Model.AllPokemon[i].Pokemon.EggCycle.CycleCount * 257).ToString("N0")) - @((Model.AllPokemon[i].Pokemon.EggCycle.CycleCount * 257 + 256).ToString("N0")) Steps to Hatch'>@Model.AllPokemon[i].Pokemon.EggCycle.CycleCount Egg Cycles</span>
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="pokemonInfo pokemonStats pokemonTables">
+    <h2>Base Stats</h2>
+    <table>
+        <tbody>
+            <tr>
+                <th colspan="2">Health</th>
+            </tr>
+            <tr>
+                @if (firstPokemonBaseStats.Health == secondPokemonBaseStats.Health)
+                {
+                    <td colspan="2" class="match">@firstPokemonBaseStats.Health</td>
+                }
+                else
+                {
+                    for (var i = 0; i < 2; i++)
+                    {
+                    <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Health</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Attack</th>
+            </tr>
+            <tr>
+                @if (firstPokemonBaseStats.Attack == secondPokemonBaseStats.Attack)
+                {
+                    <td colspan="2" class="match">@firstPokemonBaseStats.Attack</td>
+                }
+                else
+                {
+                    for (var i = 0; i < 2; i++)
+                    {
+                    <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Attack</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Defense</th>
+            </tr>
+            <tr>
+                @if (firstPokemonBaseStats.Defense == secondPokemonBaseStats.Defense)
+                {
+                    <td colspan="2" class="match">@firstPokemonBaseStats.Defense</td>
+                }
+                else
+                {
+                    for (var i = 0; i < 2; i++)
+                    {
+                    <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Defense</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">
+                    @if (firstGame.GenerationId == 1 && secondGame.GenerationId == 1)
+                    {
+                        @("Special")
+                    }
+                    else
+                    {
+                        @("Sp. Attack")
+                    }
+                </th>
+            </tr>
+            <tr>
+                @if (firstPokemonBaseStats.SpecialAttack == secondPokemonBaseStats.SpecialAttack)
+                {
+                    <td colspan="2" class="match">@firstPokemonBaseStats.SpecialAttack</td>
+                }
+                else
+                {
+                    for (var i = 0; i < 2; i++)
+                    {
+                    <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialAttack</td>
+                    }
+                }
+            </tr>
+            @if (firstGame.GenerationId > 1 || secondGame.GenerationId > 1)
+            {
+                <tr>
+                    <th colspan="2">Sp. Defense</th>
+                </tr>
+                <tr>
+                    @if (firstPokemonBaseStats.SpecialDefense == secondPokemonBaseStats.SpecialDefense)
+                    {
+                        <td colspan="2" class="match">@firstPokemonBaseStats.SpecialDefense</td>
+                    }
+                    else
+                    {
+                        for (var i = 0; i < 2; i++)
+                        {
+                        <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialDefense</td>
+                        }
+                    }
+                </tr>
+            }
+            <tr>
+                <th colspan="2">Speed</th>
+            </tr>
+            <tr>
+                @if (firstPokemonBaseStats.Speed == secondPokemonBaseStats.Speed)
+                {
+                    <td colspan="2" class="match">@firstPokemonBaseStats.Speed</td>
+                }
+                else
+                {
+                    for (var i = 0; i < 2; i++)
+                    {
+                    <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).Speed</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <th colspan="2">Total</th>
+            </tr>
+            <tr>
+                @if (firstPokemonBaseStats.StatTotal == secondPokemonBaseStats.StatTotal)
+                {
+                    <td colspan="2" class="match"><b>@firstPokemonBaseStats.StatTotal</b></td>
+                }
+                else
+                {
+                    for (var i = 0; i < 2; i++)
+                    {
+                    <td class="noMatch"><b>@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).StatTotal</b></td>
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>

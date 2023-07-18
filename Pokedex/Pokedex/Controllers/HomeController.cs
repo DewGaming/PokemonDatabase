@@ -200,50 +200,14 @@ namespace Pokedex.Controllers
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO").ToList();
-            List<Game> selectableGames = new List<Game>();
+            List<Game> selectableGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO").ToList();
 
             foreach (var gen in generations)
             {
                 List<Pokemon> pokemonInGen = allPokemon.Where(x => x.Game.GenerationId == gen.Id).ToList();
-                if (pokemonInGen.Count != 0)
+                if (pokemonInGen.Count == 0)
                 {
-                    List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
-                    List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
-                    for (var i = 0; i < uniqueGames.Count; i++)
-                    {
-                        if (uniqueGames[i].Name == "Fire Red")
-                        {
-                            selectableGames.Add(uniqueGames[i]);
-                            selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
-                        }
-                        else if (i == uniqueGames.Count - 1)
-                        {
-                            selectableGames.Add(new Game()
-                            {
-                                Id = uniqueGames[i].Id,
-                                Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
-                                GenerationId = gen.Id,
-                            });
-                        }
-                        else
-                        {
-                            List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
-                            if (games.Count == 0)
-                            {
-                                selectableGames.Add(uniqueGames[i]);
-                            }
-                            else
-                            {
-                                selectableGames.Add(new Game()
-                                {
-                                    Id = uniqueGames[i].Id,
-                                    Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
-                                    GenerationId = gen.Id,
-                                });
-                            }
-                        }
-                    }
+                    selectableGames.RemoveAll(x => x.GenerationId == gen.Id);
                 }
             }
 
@@ -578,7 +542,7 @@ namespace Pokedex.Controllers
                     }
 
                     List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
-                    PokemonViewModel pokemonDetails = this.GetPokemonDetails(pokemon);
+                    PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, this.appConfig);
                     pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemon.Id);
 
                     pokemonList.Add(pokemonDetails);
@@ -596,7 +560,7 @@ namespace Pokedex.Controllers
                         foreach (var p in altForms)
                         {
                             form = formDetails.Find(x => x.AltFormPokemonId == p.Id).Form;
-                            pokemonDetails = this.GetPokemonDetails(p, form);
+                            pokemonDetails = this.dataService.GetPokemonDetails(p, this.appConfig, form);
 
                             pokemonList.Add(pokemonDetails);
                         }
@@ -718,6 +682,24 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// The page that is used to showcase the different type charts throughout the generations.
+        /// </summary>
+        /// <returns>The type chart page.</returns>
+        [AllowAnonymous]
+        [Route("pokemon_difference")]
+        public IActionResult PokemonDifference()
+        {
+            this.dataService.AddPageView("Pokemon Difference Page", this.User.IsInRole("Owner"));
+            PokemonDifferenceViewModel model = new PokemonDifferenceViewModel()
+            {
+                AllPokemon = this.dataService.GetPokemonWithFormNames(),
+                AppConfig = this.appConfig,
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
         /// The page used for users to create comments regarding the website.
         /// </summary>
         /// <returns>Returns the comment page.</returns>
@@ -823,88 +805,6 @@ namespace Pokedex.Controllers
             }
 
             return this.View();
-        }
-
-        /// <summary>
-        /// Gets all of the details for a pokemon.
-        /// </summary>
-        /// <param name="pokemon">The pokemon needing their details.</param>
-        /// <param name="form">The alternate form if it applies.</param>
-        /// <returns>Returns the pokemon's details.</returns>
-        private PokemonViewModel GetPokemonDetails(Pokemon pokemon, Form form = null)
-        {
-            List<Game> games = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
-            games.Remove(games.Find(x => x.Id == 43));
-
-            PokemonViewModel pokemonViewModel = new PokemonViewModel()
-            {
-                Pokemon = pokemon,
-                BaseHappinesses = this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
-                BaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
-                EVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
-                Typings = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
-                PreEvolutions = this.dataService.GetPreEvolution(pokemon.Id),
-                Evolutions = this.dataService.GetPokemonEvolutions(pokemon.Id),
-                Effectiveness = this.dataService.GetTypeChartPokemon(pokemon.Id),
-                GamesAvailableIn = games,
-                AppConfig = this.appConfig,
-            };
-
-            if (form != null)
-            {
-                pokemonViewModel.Form = form;
-                pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
-            }
-
-            HttpWebRequest webRequest;
-            HttpWebResponse imageRequest;
-            try
-            {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
-                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                if (imageRequest.StatusCode == HttpStatusCode.OK)
-                {
-                    pokemonViewModel.HasShiny = true;
-                }
-                else
-                {
-                    pokemonViewModel.HasShiny = false;
-                }
-            }
-            catch
-            {
-                pokemonViewModel.HasShiny = false;
-            }
-
-            try
-            {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(this.appConfig.WebUrl, this.appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
-                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                if (imageRequest.StatusCode == HttpStatusCode.OK)
-                {
-                    pokemonViewModel.HasHome = true;
-                }
-                else
-                {
-                    pokemonViewModel.HasHome = false;
-                }
-            }
-            catch
-            {
-                pokemonViewModel.HasHome = false;
-            }
-
-            PokemonLegendaryDetail legendaryType = this.dataService.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
-
-            if (legendaryType != null)
-            {
-                pokemonViewModel.LegendaryType = legendaryType.LegendaryType;
-            }
-
-            return pokemonViewModel;
         }
 
         private List<Pokemon> GetSurroundingPokemon(int pokemonId)

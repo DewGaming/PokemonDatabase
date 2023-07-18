@@ -62,6 +62,10 @@
         <img class="modalPreview" loading="lazy" data-modalUrl="@this.Url.Action("AbilityEvaluator", "Home")" alt="Ability Lookup" title="Find out what Pokémon have a specific ability, whether it's their primary, secondary, or hidden ability, and what that ability does!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "abilityLookup.png"))">
     </div>
     <div class="feature teamBuilder">
+        <a href="@this.Url.Action("PokemonDifference", "Home")"><p><b>Compare Different Pokemon!</b></p></a>
+        <img class="modalPreview" loading="lazy" data-modalUrl="@this.Url.Action("PokemonDifference", "Home")" alt="Pokemon Differences" title="Compare two different Pokémon to see what is similar and what is different between them! You can even see differences pokemon can have between different games as well!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "pokemonDifferences.png"))">
+    </div>
+    <div class="feature teamBuilder">
         <a href="@this.Url.Action("ExpLeveling", "Home")"><p><b>Level Up Pokemon!</b></p></a>
         <img class="modalPreview" loading="lazy" data-modalUrl="@this.Url.Action("ExpLeveling", "Home")" alt="Exp Leveling" title="Find out how many experience candies you need to reach a specific level! Will even provide the optimal experience candies needed!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "expLeveling.png"))">
     </div>

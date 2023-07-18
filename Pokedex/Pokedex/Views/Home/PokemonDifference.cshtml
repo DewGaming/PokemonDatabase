@@ -1,0 +1,134 @@
+@model Pokedex.Models.PokemonDifferenceViewModel;
+@{
+    ViewBag.Title = "Pokémon Differences";
+    ViewBag.Description = string.Concat("View the differences between Pokémon, by it two different Pokémon or the same Pokémon from different games!");
+}
+
+@section styles
+{
+    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pokemonPage.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" asp-append-version="true" />
+    <link href="~/css/select2.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        .select2-container {
+            max-width: none !important;
+        }
+
+        .flexDiv {
+            flex-wrap: wrap;
+        }
+
+        .pokemonList {
+            margin-right: 5px;
+        }
+
+        .gameList {
+            margin-right: 10px;
+            max-width: 75%;
+        }
+
+        .secondPokemon {
+            margin-bottom: 5px;
+        }
+
+        .compareButton {
+            height: 36px;
+        }
+
+        .match {
+            background-color: lightgreen;
+        }
+
+        .noMatch {
+            background-color: lightcoral;
+        }
+
+        .page tr {
+            background: #eaeaea !important;
+        }
+
+        .page th {
+            font-weight: bold;
+        }
+
+        .page td {
+            text-align: center;
+            border: 3px #c8c8c8;
+            border-style: solid none;
+            width: 50%;
+        }
+
+        .page .noMatch {
+            border-width: 3px 2px;
+            border-style: solid;
+        }
+
+        .page .noMatch:first-child {
+            border-left: none;
+        }
+
+        .page .noMatch:last-child {
+            border-right: none;
+        }
+
+        .page tr:last-child td, .abilities:not(:last-child) td, .evYields:not(:last-child) td, .eggGroups:not(:last-child) td {
+            border-bottom: none;
+        }
+
+        .type-icon {
+            margin: 0;
+        }
+
+        .pokemonTables {
+            padding: 0;
+            margin: 0 0.5rem;
+        }
+
+        .pokemonStats tr td:last-child {
+            text-align: center;
+        }
+    </style>
+}
+
+@section scripts
+{
+    <script src="~/js/pokemonDifference.js" asp-append-version="true"></script>
+}
+
+<div>
+    <div class="evaluator">
+        <div class="flexDiv">
+            <div class="firstPokemon flexDiv">
+                <div class="pokemonList">
+                    @Html.Label("Select First Pokémon")
+                    @Html.DropDownList("FirstPokemon", new SelectList(@Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control firstPokemonSelectList" })
+                </div>
+                <div class="gameList hide">
+                    @Html.Label("Select First Pokémon's Game")
+                    @Html.DropDownList("FirstGame", Enumerable.Empty<SelectListItem>(), new { @class = "form-control firstGameSelectList" })
+                </div>
+            </div>
+            <div class="secondPokemon flexDiv">
+                <div class="pokemonList">
+                    @Html.Label("Select Second Pokémon")
+                    @Html.DropDownList("SecondPokemon", new SelectList(@Model.AllPokemon, "Id", "Name"), "", new { @class = "form-control secondPokemonSelectList" })
+                </div>
+                <div class="gameList hide">
+                    @Html.Label("Select Second Pokémon's Game")
+                    @Html.DropDownList("SecondGame", Enumerable.Empty<SelectListItem>(), new { @class = "form-control secondGameSelectList" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary compareButton hide" onclick="comparePokemon()">View Differences</button>
+    <br>
+    <div class="pokemonDifferences page"></div>
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
