@@ -2444,42 +2444,79 @@ namespace Pokedex.Controllers
         [Route("get-pokemon-differences")]
         public IActionResult GrabPokemonDifferences(int firstPokemonId, int firstGameId, int secondPokemonId, int secondGameId)
         {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
-            Form form = null;
-            if (altForms.Exists(x => x.AltFormPokemonId == firstPokemonId))
+            try
             {
-                form = altForms.Find(x => x.AltFormPokemonId == firstPokemonId).Form;
+                List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
+                Form form = null;
+                if (altForms.Exists(x => x.AltFormPokemonId == firstPokemonId))
+                {
+                    form = altForms.Find(x => x.AltFormPokemonId == firstPokemonId).Form;
+                }
+
+                PokemonViewModel firstPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == firstPokemonId), this.appConfig, form);
+                if (altForms.Exists(x => x.AltFormPokemonId == secondPokemonId))
+                {
+                    form = altForms.Find(x => x.AltFormPokemonId == secondPokemonId).Form;
+                }
+
+                PokemonViewModel secondPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == secondPokemonId), this.appConfig, form);
+                List<Game> games = this.dataService.GetObjects<Game>();
+                List<Game> selectedGames = new List<Game>
+                {
+                    games.Find(x => x.Id == firstGameId),
+                    games.Find(x => x.Id == secondGameId),
+                };
+
+                List<PokemonViewModel> pokemonViewList = new List<PokemonViewModel>
+                {
+                    firstPokemonDetails,
+                    secondPokemonDetails,
+                };
+
+                PokemonDifferenceSharedViewModel model = new PokemonDifferenceSharedViewModel()
+                {
+                    AllPokemon = pokemonViewList,
+                    AllGames = selectedGames,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.PartialView("_FillPokemonDifferences", model);
+            }
+            catch (Exception e)
+            {
+                if (!this.User.IsInRole("Owner") && e != null)
+                {
+                    string commentBody;
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's export.");
+                    }
+                    else
+                    {
+                        commentBody = "Unknown error during the pokemon team's export.";
+                    }
+
+                    commentBody = string.Concat(commentBody, " - First Pokemon Id: ", firstPokemonId);
+                    commentBody = string.Concat(commentBody, " - First Game Id: ", firstGameId);
+                    commentBody = string.Concat(commentBody, " - Second Pokemon Id: ", secondPokemonId);
+                    commentBody = string.Concat(commentBody, " - Second Game Id: ", secondGameId);
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+
+                    if (this.User.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                    }
+
+                    this.dataService.AddObject(comment);
+                    this.dataService.EmailComment(this.appConfig, comment);
+                }
             }
 
-            PokemonViewModel firstPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == firstPokemonId), this.appConfig, form);            
-            if (altForms.Exists(x => x.AltFormPokemonId == secondPokemonId))
-            {
-                form = altForms.Find(x => x.AltFormPokemonId == secondPokemonId).Form;
-            }
-
-            PokemonViewModel secondPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == secondPokemonId), this.appConfig, form);
-            List<Game> games = this.dataService.GetObjects<Game>();
-            List<Game> selectedGames = new List<Game>
-            {
-                games.Find(x => x.Id == firstGameId),
-                games.Find(x => x.Id == secondGameId),
-            };
-
-            List<PokemonViewModel> pokemonViewList = new List<PokemonViewModel>
-            {
-                firstPokemonDetails,
-                secondPokemonDetails,
-            };
-
-            PokemonDifferenceSharedViewModel model = new PokemonDifferenceSharedViewModel()
-            {
-                AllPokemon = pokemonViewList,
-                AllGames = selectedGames,
-                AppConfig = this.appConfig,
-            };
-
-            return this.PartialView("_FillPokemonDifferences", model);
+            return null;
         }
 
         /// <summary>
