@@ -2936,7 +2936,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Pokeball> pokeballs = this.dataService.GetPokeballs(gameId, huntingMethodId);
+                List<Pokeball> pokeballs = this.dataService.GetPokeballs(gameId, huntingMethodId, this.User, this.appConfig);
 
                 return pokeballs;
             }

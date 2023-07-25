@@ -789,12 +789,13 @@ namespace Pokedex
         /// <param name="appConfig">The application's config. Only used if there is an error.</param>
         public void DeletePokemonTeam(int id, System.Security.Claims.ClaimsPrincipal user, AppConfig appConfig)
         {
-            PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
-            List<int> pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
             int teamDetailId = 0;
+            List<int> pokemonTeamDetailIds = new List<int>();
 
             try
             {
+                PokemonTeam pokemonTeam = this.GetObjectByPropertyValue<PokemonTeam>("Id", id);
+                pokemonTeamDetailIds = pokemonTeam.GrabPokemonTeamDetailIds();
                 this.DeleteObject<PokemonTeam>(pokemonTeam.Id);
             }
             catch (Exception e)
@@ -988,75 +989,131 @@ namespace Pokedex
         /// </summary>
         /// <param name="gameId">The game the shiny hunt is taking place in.</param>
         /// <param name="huntingMethodId">The type of shiny hunt.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="appConfig">The application config.</param>
         /// <returns>The available pokeballs.</returns>
-        public List<Pokeball> GetPokeballs(int gameId, int huntingMethodId)
+        public List<Pokeball> GetPokeballs(int gameId, int huntingMethodId, System.Security.Claims.ClaimsPrincipal user, AppConfig appConfig)
         {
-            List<Pokeball> selectablePokeballs = this.GetObjects<Pokeball>();
-            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
-            HuntingMethod huntingMethod = this.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId);
-            if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
+            try
             {
-                selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
-            }
-
-            if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
-            {
-                selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
-            }
-
-            if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
-            {
-                selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
-            }
-
-            if (game.Id == 16 || game.Id == 28 || game.Id == 43)
-            {
-                selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId == 1 || x.Id == 20).ToList();
-            }
-
-            if (game.Id == 37)
-            {
-                selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
-                foreach (var p in selectablePokeballs)
+                List<Pokeball> selectablePokeballs = this.GetObjects<Pokeball>();
+                Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                HuntingMethod huntingMethod = this.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId);
+                if ((game.GenerationId != 5 && game.GenerationId < 8) || game.Id == 35 || game.Id == 36)
                 {
-                    p.Name = p.Name.Replace(" (Hisui)", string.Empty);
+                    selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 25));
                 }
-            }
-            else
-            {
-                selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
-            }
 
-            switch (huntingMethod.Name)
-            {
-                case "Breeding":
-                case "Masuda Method":
-                    if (game.GenerationId <= 5)
+                if ((game.GenerationId > 4 && game.GenerationId < 8) || game.GenerationId == 9)
+                {
+                    selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 5));
+                }
+
+                if (game.GenerationId != 2 && game.Id != 9 && game.Id != 26 && game.Id != 17 && game.Id != 32)
+                {
+                    selectablePokeballs.Remove(selectablePokeballs.Find(x => x.Id == 13));
+                }
+
+                if (game.Id == 16 || game.Id == 28 || game.Id == 43)
+                {
+                    selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId == 1 || x.Id == 20).ToList();
+                }
+
+                if (game.Id == 37)
+                {
+                    selectablePokeballs = selectablePokeballs.Where(x => x.Name.Contains("Hisui")).ToList();
+                    foreach (var p in selectablePokeballs)
                     {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                        p.Name = p.Name.Replace(" (Hisui)", string.Empty);
+                    }
+                }
+                else
+                {
+                    selectablePokeballs = selectablePokeballs.Where(x => !x.Name.Contains("Hisui")).ToList();
+                }
+
+                switch (huntingMethod.Name)
+                {
+                    case "Breeding":
+                    case "Masuda Method":
+                        if (game.GenerationId <= 5)
+                        {
+                            selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                        }
+                        else
+                        {
+                            selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId && x.Id != 4 && x.Id != 24).ToList();
+                        }
+
+                        break;
+                    case "Event":
+                        if (game.GenerationId <= 3)
+                        {
+                            selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                        }
+                        else
+                        {
+                            selectablePokeballs = selectablePokeballs.Where(x => x.Id == 24).ToList();
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+
+                return selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).OrderBy(x => x.Name).ToList();
+            }
+            catch (Exception e)
+            {
+                if (!user.IsInRole("Owner"))
+                {
+                    string commentBody;
+                    Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
+                    HuntingMethod huntingMethod = this.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId);
+
+                    if (e != null)
+                    {
+                        commentBody = string.Concat(e.GetType().ToString(), " error while grabbing shiny hunting pokeballs.");
                     }
                     else
                     {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId && x.Id != 4 && x.Id != 24).ToList();
+                        commentBody = "Unknown error while grabbing shiny hunting pokeballs.";
                     }
 
-                    break;
-                case "Event":
-                    if (game.GenerationId <= 3)
+                    if (game != null)
                     {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
+                        commentBody = string.Concat(commentBody, " - Selected Game: ", game.Name);
                     }
                     else
                     {
-                        selectablePokeballs = selectablePokeballs.Where(x => x.Id == 24).ToList();
+                        commentBody = string.Concat(commentBody, " - Selected Game: ", gameId);
                     }
 
-                    break;
-                default:
-                    break;
-            }
+                    if (huntingMethod != null)
+                    {
+                        commentBody = string.Concat(commentBody, " - Selected Hunting Method: ", huntingMethod.Name, " (ID: ", huntingMethod.Id, ")");
+                    }
+                    else
+                    {
+                        commentBody = string.Concat(commentBody, " - Selected Hunting Method: ", huntingMethodId);
+                    }
 
-            return selectablePokeballs.Where(x => x.GenerationId <= game.GenerationId).OrderBy(x => x.Name).ToList();
+                    Comment comment = new Comment()
+                    {
+                        Name = commentBody,
+                    };
+
+                    if (user.Identity.Name != null)
+                    {
+                        comment.CommentorId = this.GetObjectByPropertyValue<User>("Username", user.Identity.Name).Id;
+                    }
+
+                    this.AddObject(comment);
+                    this.EmailComment(appConfig, comment);
+                }
+
+                return null;
+            }
         }
 
         /// <summary>
