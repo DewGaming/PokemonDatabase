@@ -19,15 +19,23 @@
     {
         firstPokemonAbility = firstPokemon.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
         firstPokemonEVYield = firstPokemon.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+    }
+    
+    if (secondGame.GenerationId > 2)
+    {
         secondPokemonAbility = secondPokemon.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
         secondPokemonEVYield = secondPokemon.EVYields.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
     }
 
     PokemonEggGroupDetail firstPokemonEggGroup = null;
     PokemonEggGroupDetail secondPokemonEggGroup = null;
-    if (secondGame.GenerationId > 1)
+    if (firstGame.GenerationId > 1)
     {
         firstPokemonEggGroup = firstPokemon.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= firstGame.GenerationId);
+    }
+
+    if (secondGame.GenerationId > 1)
+    {
         secondPokemonEggGroup = secondPokemon.EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= secondGame.GenerationId);
     }
 
@@ -694,7 +702,7 @@
                 {
                     <tr>
                         <th colspan="2">
-                            @if (firstPokemonEggGroup.SecondaryEggGroup != null || secondPokemonEggGroup.SecondaryEggGroup != null)
+                            @if ((firstPokemonEggGroup != null && firstPokemonEggGroup.SecondaryEggGroup != null) || (secondPokemonEggGroup != null && secondPokemonEggGroup.SecondaryEggGroup != null))
                             {
                                 @("Egg Groups")
                             }
@@ -866,7 +874,14 @@
                     {
                         for (var i = 0; i < 2; i++)
                         {
-                        <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialDefense</td>
+                            @if (Model.AllGames[i].GenerationId == 1)
+                            {
+                                <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialAttack</td>
+                            }
+                            else
+                            {
+                                <td class="noMatch">@Model.AllPokemon[i].BaseStats.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialDefense</td>
+                            }
                         }
                     }
                 </tr>
