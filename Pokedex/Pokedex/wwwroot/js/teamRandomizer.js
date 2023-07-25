@@ -305,15 +305,13 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
         });
 }, checkTyping = function () {
     var boxChecked = false;
-    if ($('.typeRadioOption input:checked').val() == "0") {
+    if ($('.typeRadioOption input:checked').val() != "0") {
         boxChecked = true;
     }
 
-    if (!boxChecked) {
-        if ($('.noRepeatTypeBoolCheckbox').is(':visible')) {
-            $(".noRepeatTypeBoolCheckbox").hide();
-            $("#noRepeatTypeBool").prop('checked', false);
-        }
+    if (boxChecked) {
+        $(".noRepeatTypeBoolCheckbox").hide();
+        $("#noRepeatTypeBool").prop('checked', false);
     }
     else {
         $(".noRepeatTypeBoolCheckbox").show();
