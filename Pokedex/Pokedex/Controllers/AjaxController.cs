@@ -618,7 +618,7 @@ namespace Pokedex.Controllers
 
                     allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     allPokemon = this.FilterLegendaries(allPokemon, selectedLegendaries, onlyLegendaries);
-                    allPokemon = this.FilterForms(allPokemon, selectedForms, onlyAltForms, multipleMegas, multipleGMax);
+                    allPokemon = this.FilterForms(allPokemon, selectedForms, selectedGame, onlyAltForms, multipleMegas, multipleGMax);
                     (allPokemon, starterList) = this.FilterEvolutions(allPokemon, starterList, selectedEvolutions, selectedGame);
 
                     if (selectedType != 0)
@@ -3074,7 +3074,7 @@ namespace Pokedex.Controllers
             }
         }
 
-        private List<Pokemon> FilterForms(List<Pokemon> pokemonList, List<string> formList, bool onlyAltForms, bool multipleMegas, bool multipleGMax)
+        private List<Pokemon> FilterForms(List<Pokemon> pokemonList, List<string> formList, Game game, bool onlyAltForms, bool multipleMegas, bool multipleGMax)
         {
             try
             {
@@ -3122,6 +3122,11 @@ namespace Pokedex.Controllers
                 {
                     List<Pokemon> alternateForms = altFormList.ConvertAll(x => x.AltFormPokemon);
                     pokemonList = pokemonList.Where(x => alternateForms.Any(y => y.Id == x.Id)).ToList();
+                }
+
+                if (game != null)
+                {
+                    pokemonList = pokemonList.Where(x => x.Game.GenerationId <= game.GenerationId).ToList();
                 }
 
                 return pokemonList;
