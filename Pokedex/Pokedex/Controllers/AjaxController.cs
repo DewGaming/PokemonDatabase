@@ -1324,6 +1324,62 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the availablity of the pokemon in a specified game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <param name="markList">The marks that are available in the given game.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-mark-games")]
+        public string UpdateMarkGame(int gameId, List<int> markList)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<MarkGameDetail> existingMarkStarters = new List<MarkGameDetail>();
+                List<MarkGameDetail> newMarkStarters = new List<MarkGameDetail>();
+                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.GenerationId >= 8).ToList();
+                DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
+                games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
+                int generationId = games.First().GenerationId;
+
+                foreach (var game in games.ConvertAll(x => x.Id))
+                {
+                    newMarkStarters = new List<MarkGameDetail>();
+                    existingMarkStarters = this.dataService.GetObjects<MarkGameDetail>(includes: "Mark, Game", whereProperty: "GameId", wherePropertyValue: game);
+
+                    foreach (var m in markList)
+                    {
+                        if (existingMarkStarters.Find(x => x.MarkId == m && x.GameId == game) == null)
+                        {
+                            newMarkStarters.Add(new MarkGameDetail()
+                            {
+                                GameId = game,
+                                MarkId = m,
+                            });
+                        }
+                        else
+                        {
+                            existingMarkStarters.Remove(existingMarkStarters.Find(x => x.MarkId == m && x.GameId == game));
+                        }
+                    }
+
+                    foreach (var g in newMarkStarters)
+                    {
+                        this.dataService.AddObject(g);
+                    }
+
+                    foreach (var g in existingMarkStarters)
+                    {
+                        this.dataService.DeleteObject<MarkGameDetail>(g.Id);
+                    }
+                }
+
+                return this.Json(this.Url.Action("Games", "Owner")).Value.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Updates the pokemon list that give the specified evs.
         /// </summary>
         /// <param name="gameId">The generation's id.</param>
@@ -2687,7 +2743,7 @@ namespace Pokedex.Controllers
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.GenerationId >= 8 && gameId != 35 && gameId != 36 && gameId != 37 && huntingMethodId != 4 && huntingMethodId != 5)
             {
-                List<Mark> marks = this.dataService.GetObjects<Mark>("Name");
+                List<Mark> marks = this.dataService.GetObjects<MarkGameDetail>("Mark.Name", "Mark", "GameId", gameId).ConvertAll(x => x.Mark);
 
                 return marks;
             }

@@ -1,0 +1,41 @@
+@using Pokedex.DataAccess.Models;
+@model Pokedex.Models.EditMarkGameViewModel;
+
+@section scripts
+{
+    <script src="~/js/editMarkGames.js" asp-append-version="true"></script>
+}
+
+@section styles
+{
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        .markGameAvailability li {
+            list-style: none;
+        }
+    </style>
+}
+
+<h2>Update @(Model.Game.Name)'s Marks</h2>
+<p>
+    <button onclick="updateMarkGames(@Model.Game.Id)" class="btn btn-primary" role="button">Save</button>
+</p>
+
+<div class="markGameAvailability">
+    <ul>
+        @foreach (var m in Model.AllMarks.OrderBy(x => x.Name))
+        {
+            var gameAvail = @Model.MarkGameDetails.Find(x => x.MarkId == m.Id && x.GameId == @Model.Game.Id);
+            <li>
+                <input id="@(m.Name)" type="checkbox" value="@m.Id" @(gameAvail != null ? "checked=checked" : "") />
+                <label for="@(m.Name)" class="generatorOptionTitle"><span>@m.Name</span></label>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>

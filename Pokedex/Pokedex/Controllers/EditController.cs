@@ -230,6 +230,19 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("edit_mark_game_availability/{id:int}")]
+        public IActionResult MarkGameAvailability(int id)
+        {
+            EditMarkGameViewModel model = new EditMarkGameViewModel()
+            {
+                Game = this.dataService.GetObjectByPropertyValue<Game>("Id", id),
+                AllMarks = this.dataService.GetObjects<Mark>(),
+                MarkGameDetails = this.dataService.GetObjects<MarkGameDetail>(includes: "Game, Mark", whereProperty: "GameId", wherePropertyValue: id),
+            };
+
+            return this.View(model);
+        }
+
         [HttpGet]
         [Route("edit_pokemon/{id:int}")]
         public IActionResult Pokemon(int id)
