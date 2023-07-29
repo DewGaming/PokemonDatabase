@@ -642,7 +642,7 @@ namespace Pokedex.Controllers
                                     originalPokemonId = pokemon.Id;
                                 }
 
-                                List<Pokemon> altForms = this.dataService.GetAltForms(originalPokemonId);
+                                List<Pokemon> altForms = pokemonFormDetails.Where(x => x.OriginalPokemonId == originalPokemonId).Select(x => x.AltFormPokemon).ToList();
 
                                 if (pokemonForm != null)
                                 {
@@ -660,21 +660,11 @@ namespace Pokedex.Controllers
 
                                 if (typing != null)
                                 {
-                                    List<DataAccess.Models.Type> selectedPokemonTyping = new List<DataAccess.Models.Type>()
-                                    {
-                                        typing.PrimaryType,
-                                    };
+                                    allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == typing.PrimaryTypeId || y.SecondaryTypeId == typing.PrimaryTypeId) && y.PokemonId == x.Id)).ToList();
 
                                     if (typing.SecondaryType != null)
                                     {
-                                        selectedPokemonTyping.Add(typing.SecondaryType);
-                                    }
-
-                                    pokemonTypeDetails.Remove(pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id));
-
-                                    foreach (var t in selectedPokemonTyping)
-                                    {
-                                        allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == t.Id || y.SecondaryTypeId == t.Id) && y.PokemonId == x.Id)).ToList();
+                                        allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == typing.SecondaryTypeId || y.SecondaryTypeId == typing.SecondaryTypeId) && y.PokemonId == x.Id)).ToList();
                                     }
                                 }
                             }
