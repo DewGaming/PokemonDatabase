@@ -3250,6 +3250,11 @@ namespace Pokedex.Controllers
                     allEvolutions = allEvolutions.Where(x => x.PreevolutionPokemon.Game.ReleaseDate <= game.ReleaseDate && x.EvolutionPokemon.Game.ReleaseDate <= game.ReleaseDate).ToList();
                 }
 
+                if (game.Id == 16)
+                {
+                    allEvolutions = allEvolutions.Where(x => x.GenerationId == 1 || x.PreevolutionPokemonId == 1339).ToList();
+                }
+
                 if (evolutionList.Count > 0 && evolutionList.Count() < 3)
                 {
                     List<Pokemon> evolutions = new List<Pokemon>();
@@ -3258,7 +3263,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 evolutions.Add(p);
                             }
@@ -3266,7 +3271,7 @@ namespace Pokedex.Controllers
 
                         foreach (var p in starterList)
                         {
-                            if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
+                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 starterEvolutions.Add(p);
                             }
@@ -3277,7 +3282,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 evolutions.Add(p);
                             }
@@ -3285,7 +3290,7 @@ namespace Pokedex.Controllers
 
                         foreach (var p in starterList)
                         {
-                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 starterEvolutions.Add(p);
                             }
@@ -3296,7 +3301,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 evolutions.Add(p);
                             }
@@ -3304,7 +3309,7 @@ namespace Pokedex.Controllers
 
                         foreach (var p in starterList)
                         {
-                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 starterEvolutions.Add(p);
                             }
