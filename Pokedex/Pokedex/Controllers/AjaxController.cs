@@ -681,10 +681,12 @@ namespace Pokedex.Controllers
                         }
                     }
 
+                    List<int> pokemonIds = pokemonList.ConvertAll(x => x.Id);
+
                     TeamRandomizerViewModel model = new TeamRandomizerViewModel()
                     {
                         AllPokemonChangedNames = pokemonList,
-                        AllPokemonOriginalNames = pokemonList.Where(x => pokemonDetails.Any(y => y.Id == x.Id)).ToList(),
+                        AllPokemonOriginalNames = pokemonDetails.Where(x => pokemonIds.Any(y => y == x.Id)).OrderBy(x => pokemonIds.IndexOf(x.Id)).ToList(),
                         PokemonAbilities = new List<Ability>(),
                         PokemonURLs = new List<string>(),
                         AppConfig = this.appConfig,
@@ -3114,7 +3116,8 @@ namespace Pokedex.Controllers
 
                 if (game.Id != 0)
                 {
-                    pokemonList = pokemonList.Where(x => x.Game.GenerationId <= game.GenerationId).ToList();
+                    List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>(whereProperty: "GameId", wherePropertyValue: game.Id);
+                    pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
                 }
 
                 return pokemonList;
