@@ -586,6 +586,10 @@ namespace Pokedex.Controllers
                     {
                         selectedGame = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
                     }
+                    else
+                    {
+                        needsStarter = false;
+                    }
 
                     List<Pokemon> starterList = new List<Pokemon>();
                     if (needsStarter && selectedGame.Id != 0)
@@ -783,7 +787,7 @@ namespace Pokedex.Controllers
                         }
                         else
                         {
-                            commentBody = string.Concat(commentBody, " - Selected Game: 0");
+                            commentBody = string.Concat(commentBody, " - Selected Game: ", selectedGameId);
                         }
 
                         if (type != null)
@@ -2211,11 +2215,11 @@ namespace Pokedex.Controllers
                     string commentBody;
                     if (e != null)
                     {
-                        commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon team's export.");
+                        commentBody = string.Concat(e.GetType().ToString(), " error during the pokemon comparison.");
                     }
                     else
                     {
-                        commentBody = "Unknown error during the pokemon team's export.";
+                        commentBody = "Unknown error during the pokemon comparison.";
                     }
 
                     commentBody = string.Concat(commentBody, " - First Pokemon Id: ", firstPokemonId);
@@ -2907,6 +2911,11 @@ namespace Pokedex.Controllers
             {
                 try
                 {
+                    if (abilityList.Count() <= 0)
+                    {
+                        exportAbilities = false;
+                    }
+
                     string pokemonTeam = string.Empty;
                     Pokemon pokemon;
 

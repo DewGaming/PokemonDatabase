@@ -943,8 +943,9 @@ namespace Pokedex
         /// <returns>The list of games grouped by release date.</returns>
         public List<Game> GetGamesGroupedByReleaseDate()
         {
-            List<Game> gamesList = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
+            List<Game> gamesList = new List<Game>();
             List<Game> selectableGames = new List<Game>();
+            gamesList = this.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
             List<Game> uniqueGames = gamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
             for (var i = 0; i < uniqueGames.Count; i++)
             {
