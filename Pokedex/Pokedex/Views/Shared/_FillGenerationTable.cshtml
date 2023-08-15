@@ -21,17 +21,10 @@
             <div class="description">
                 <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() })">#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</a>
                 <div class="pokemonTyping">
-                    @if (p.PrimaryType.Name == "None")
+                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.PrimaryType.Name.ToLower(), ".png"))">
+                    @if (p.SecondaryType != null)
                     {
-                        <div class="pokemon-type type-icon type-none">@("???")</div>
-                    }
-                    else
-                    {
-                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.PrimaryType.Name.ToLower(), ".png"))">
-                        @if (p.SecondaryType != null)
-                        {
-                            <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.SecondaryType.Name.ToLower(), ".png"))">
-                        }
+                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.TypeImageUrl, @p.SecondaryType.Name.ToLower(), ".png"))">
                     }
                 </div>
             </div>
