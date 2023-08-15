@@ -270,6 +270,10 @@ namespace Pokedex.Controllers
                 {
                     viewModel.GenderRatioString = "Gender Unknown";
                 }
+                else if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 100)
+                {
+                    viewModel.GenderRatioString = "Gender Not Revealed";
+                }
                 else if (genderRatio.FemaleRatio == 0)
                 {
                     viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
@@ -284,6 +288,7 @@ namespace Pokedex.Controllers
                 }
 
                 model.AllGenderRatios.Add(viewModel);
+                model.AllGenderRatios.OrderBy(x => x.GenderRatioString).ToList();
             }
 
             if (this.dataService.CheckIfAltForm(id))
@@ -327,6 +332,10 @@ namespace Pokedex.Controllers
                         {
                             viewModel.GenderRatioString = "Gender Unknown";
                         }
+                        else if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 100)
+                        {
+                            viewModel.GenderRatioString = "Gender Not Revealed";
+                        }
                         else if (genderRatio.FemaleRatio == 0)
                         {
                             viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
@@ -341,6 +350,7 @@ namespace Pokedex.Controllers
                         }
 
                         model.AllGenderRatios.Add(viewModel);
+                        model.AllGenderRatios.OrderBy(x => x.GenderRatioString).ToList();
                     }
                 }
                 else
@@ -378,6 +388,10 @@ namespace Pokedex.Controllers
                         {
                             viewModel.GenderRatioString = "Gender Unknown";
                         }
+                        else if (genderRatio.MaleRatio == genderRatio.FemaleRatio && genderRatio.MaleRatio == 100)
+                        {
+                            viewModel.GenderRatioString = "Gender Not Revealed";
+                        }
                         else if (genderRatio.FemaleRatio == 0)
                         {
                             viewModel.GenderRatioString = string.Concat(genderRatio.MaleRatio, "% Male");
@@ -392,6 +406,7 @@ namespace Pokedex.Controllers
                         }
 
                         model.AllGenderRatios.Add(viewModel);
+                        model.AllGenderRatios.OrderBy(x => x.GenderRatioString).ToList();
                     }
                 }
                 else
