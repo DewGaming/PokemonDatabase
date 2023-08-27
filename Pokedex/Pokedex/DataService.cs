@@ -931,10 +931,28 @@ namespace Pokedex
         /// <summary>
         /// Gets the list of games possible to shiny hunt in and formats it for the shiny hunt pages.
         /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
         /// <returns>The list of shiny huntable games.</returns>
-        public List<Game> GetShinyHuntGames()
+        public List<Game> GetShinyHuntGames(int pokemonId)
         {
-            return this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+            Pokemon pokemon = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
+            List<Game> pokemonGamesIn = this.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
+            List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+            List<Game> possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+
+            // Gets extra forms made available in future generations.
+            if (pokemon.Name == "Deoxys")
+            {
+                possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
+                possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 3 && x.Id != 39 && x.Id != 40));
+            }
+            else if (pokemon.Name == "Zygarde")
+            {
+                possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
+                possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
+            }
+
+            return possibleGames.OrderBy(x => x.GenerationId).ThenBy(x => x.Id).ToList();
         }
 
         /// <summary>

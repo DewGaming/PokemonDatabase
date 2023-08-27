@@ -2581,22 +2581,6 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Grabs all of the pokemon available in the selected game.
-        /// </summary>
-        /// <param name="gameId">The selected game's Id.</param>
-        /// <returns>The list of available pokemon.</returns>
-        [Route("get-shiny-huntable-pokemon-by-game")]
-        public List<Pokemon> GetShinyHuntablePokemonByGame(int gameId)
-        {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                return this.dataService.GetHuntablePokemon(gameId);
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Grabs all of the games available for the selected pokemon.
         /// </summary>
         /// <param name="pokemonId">The selected pokemon's Id.</param>
@@ -2606,9 +2590,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", pokemonId).ConvertAll(x => x.Game);
-                List<Game> games = this.dataService.GetShinyHuntGames();
-                return games.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                return this.dataService.GetShinyHuntGames(pokemonId);
             }
 
             return null;

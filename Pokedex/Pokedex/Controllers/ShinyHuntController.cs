@@ -324,13 +324,12 @@ namespace Pokedex.Controllers
         public IActionResult EditIncompleteShinyHunt(int shinyHuntId)
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-            List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", shinyHunt.PokemonId).ConvertAll(x => x.Game);
-            List<Game> gamesList = this.dataService.GetShinyHuntGames();
+            List<Game> gamesList = this.dataService.GetShinyHuntGames(shinyHunt.PokemonId);
 
             EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
             {
                 AllPokemon = this.dataService.GetHuntablePokemon(),
-                AllGames = gamesList.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList(),
+                AllGames = gamesList,
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 AppConfig = this.appConfig,
             };
@@ -350,13 +349,12 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id);
-                List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", oldShinyHunt.PokemonId).ConvertAll(x => x.Game);
-                List<Game> gamesList = this.dataService.GetShinyHuntGames();
+                List<Game> gamesList = this.dataService.GetShinyHuntGames(oldShinyHunt.PokemonId);
 
                 EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
                 {
                     AllPokemon = this.dataService.GetHuntablePokemon(),
-                    AllGames = gamesList.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList(),
+                    AllGames = gamesList,
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AppConfig = this.appConfig,
                 };
@@ -379,8 +377,7 @@ namespace Pokedex.Controllers
         public IActionResult EditCompleteShinyHunt(int shinyHuntId)
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Pokemon, Game");
-            List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", shinyHunt.PokemonId).ConvertAll(x => x.Game);
-            List<Game> gamesList = this.dataService.GetShinyHuntGames();
+            List<Game> gamesList = this.dataService.GetShinyHuntGames(shinyHunt.PokemonId);
             List<string> genders = this.dataService.GrabGenders(shinyHunt.PokemonId, "shinyHunt");
 
             EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
@@ -388,7 +385,7 @@ namespace Pokedex.Controllers
                 PokemonHunted = shinyHunt.Pokemon,
                 GameHuntedIn = shinyHunt.Game,
                 AllPokemon = this.dataService.GetHuntablePokemon(),
-                AllGames = gamesList.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList(),
+                AllGames = gamesList,
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId, this.User, this.appConfig),
                 AllMarks = this.dataService.GetObjects<Mark>(),
@@ -411,8 +408,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id, "Pokemon, Game");
-                List<Game> pokemonGamesIn = this.dataService.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", oldShinyHunt.PokemonId).ConvertAll(x => x.Game);
-                List<Game> gamesList = this.dataService.GetShinyHuntGames();
+                List<Game> gamesList = this.dataService.GetShinyHuntGames(oldShinyHunt.PokemonId);
                 List<string> genders = this.dataService.GrabGenders(oldShinyHunt.PokemonId, "shinyHunt");
 
                 EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
@@ -420,7 +416,7 @@ namespace Pokedex.Controllers
                     PokemonHunted = oldShinyHunt.Pokemon,
                     GameHuntedIn = oldShinyHunt.Game,
                     AllPokemon = this.dataService.GetHuntablePokemon(),
-                    AllGames = gamesList.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList(),
+                    AllGames = gamesList,
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AllPokeballs = this.dataService.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId, this.User, this.appConfig),
                     AllMarks = this.dataService.GetObjects<Mark>(),
