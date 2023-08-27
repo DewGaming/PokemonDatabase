@@ -935,12 +935,14 @@ namespace Pokedex
         /// <returns>The list of shiny huntable games.</returns>
         public List<Game> GetShinyHuntGames(int pokemonId)
         {
-            Pokemon pokemon = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
-            List<Game> pokemonGamesIn = this.GetObjects<PokemonGameDetail>("GameId", "Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game");
+            Pokemon pokemon = pokemonList.Find(x => x.Id == pokemonId);
+            List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
+            List<Game> pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == pokemon.Id).ToList().ConvertAll(x => x.Game);
             List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
             List<Game> possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
 
-            // Gets extra forms made available in future generations.
+            // Gets other games for extra forms introduced in future generations.
             if (pokemon.Name == "Deoxys")
             {
                 possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
@@ -950,6 +952,22 @@ namespace Pokedex
             {
                 possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
                 possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
+            }
+
+            // Gets other games for evolutions introduced in future generations.
+            List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
+            Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == pokemon.Id);
+            int preevolution = pokemon.Id;
+            while (evolution != null && evolution.PreevolutionPokemon != null)
+            {
+                preevolution = evolution.PreevolutionPokemonId;
+                evolution = evolutionList.Find(x => x.EvolutionPokemonId == preevolution);
+            }
+
+            if (preevolution != pokemon.Id)
+            {
+                pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
+                possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
             }
 
             return possibleGames.OrderBy(x => x.GenerationId).ThenBy(x => x.Id).ToList();
