@@ -41,7 +41,7 @@ namespace Pokedex.Controllers
         public IActionResult ShinyDexProgress()
         {
             this.dataService.AddPageView("Shiny Dex Progression Page", this.User.IsInRole("Owner"));
-            int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+            int userId = this.dataService.GetCurrentUser(this.User).Id;
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
             List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
@@ -74,7 +74,7 @@ namespace Pokedex.Controllers
             StartShinyHuntViewModel model = new StartShinyHuntViewModel()
             {
                 AllPokemon = this.dataService.GetHuntablePokemon(),
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                UserId = this.dataService.GetCurrentUser(this.User).Id,
                 AppConfig = this.appConfig,
             };
 
@@ -96,7 +96,7 @@ namespace Pokedex.Controllers
                 StartShinyHuntViewModel model = new StartShinyHuntViewModel()
                 {
                     AllPokemon = this.dataService.GetHuntablePokemon(),
-                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    UserId = this.dataService.GetCurrentUser(this.User).Id,
                     AppConfig = this.appConfig,
                 };
 
@@ -143,7 +143,7 @@ namespace Pokedex.Controllers
                 DateOfCapture = DateTime.Now.Date,
                 Phases = 1,
                 IncrementAmount = 1,
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                UserId = this.dataService.GetCurrentUser(this.User).Id,
                 AppConfig = this.appConfig,
             };
 
@@ -169,7 +169,7 @@ namespace Pokedex.Controllers
                     DateOfCapture = DateTime.Now.Date,
                     Phases = 1,
                     IncrementAmount = 1,
-                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    UserId = this.dataService.GetCurrentUser(this.User).Id,
                     AppConfig = this.appConfig,
                 };
 
@@ -421,7 +421,7 @@ namespace Pokedex.Controllers
                     AllPokeballs = this.dataService.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId, this.User, this.appConfig),
                     AllMarks = this.dataService.GetObjects<Mark>(),
                     AllGenders = genders,
-                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    UserId = this.dataService.GetCurrentUser(this.User).Id,
                     AppConfig = this.appConfig,
                 };
 

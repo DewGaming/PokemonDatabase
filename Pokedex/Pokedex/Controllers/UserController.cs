@@ -135,7 +135,7 @@ namespace Pokedex.Controllers
         {
             NewPasswordViewModel model = new NewPasswordViewModel()
             {
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                UserId = this.dataService.GetCurrentUser(this.User).Id,
             };
 
             return this.View(model);

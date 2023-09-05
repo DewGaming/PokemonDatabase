@@ -44,7 +44,7 @@ namespace Pokedex.Controllers
             CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel()
             {
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
-                UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                UserId = this.dataService.GetCurrentUser(this.User).Id,
             };
 
             model.AllGames.Remove(model.AllGames.Find(x => x.Id == 43));
@@ -66,7 +66,7 @@ namespace Pokedex.Controllers
                 CreatePokemonTeamViewModel model = new CreatePokemonTeamViewModel()
                 {
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList(),
-                    UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    UserId = this.dataService.GetCurrentUser(this.User).Id,
                 };
 
                 return this.View(model);
@@ -99,7 +99,7 @@ namespace Pokedex.Controllers
         {
             try
             {
-                int userId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                int userId = this.dataService.GetCurrentUser(this.User).Id;
                 if (!this.ModelState.IsValid || string.IsNullOrEmpty(importedTeams))
                 {
                     return this.View();
@@ -137,7 +137,7 @@ namespace Pokedex.Controllers
                     };
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -1215,7 +1215,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.EmailComment(this.appConfig, comment);

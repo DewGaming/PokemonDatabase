@@ -1333,6 +1333,16 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Gets the User class for the current user using the ClaimsPrincipal object.
+        /// </summary>
+        /// <param name="user">The ClaimsPrincipal object of the current user.</param>
+        /// <returns>The current user's User object.</returns>
+        public User GetCurrentUser(System.Security.Claims.ClaimsPrincipal user)
+        {
+            return this.GetObjectByPropertyValue<User>("Username", user.Identity.Name);
+        }
+
+        /// <summary>
         /// Sends an email with a given comment.
         /// </summary>
         /// <param name="appConfig">The configuration for the application.</param>

@@ -74,7 +74,7 @@ namespace Pokedex.Controllers
         [Route("update-last-visit")]
         public void UpdateLastVisit()
         {
-            User user = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name);
+            User user = this.dataService.GetCurrentUser(this.User);
             if (user != null)
             {
                 user.LastVisit = DateTime.Now.ToUniversalTime();
@@ -353,14 +353,14 @@ namespace Pokedex.Controllers
                         pokemonTeamName = "Save from Team Randomizer";
                     }
 
-                    if (this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name) != null)
+                    if (this.dataService.GetCurrentUser(this.User) != null)
                     {
                         Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame);
                         this.dataService.AddPageView("Save Pokemon Team from Team Randomizer", this.User.IsInRole("Owner"));
                         PokemonTeam pokemonTeam = new PokemonTeam()
                         {
                             PokemonTeamName = pokemonTeamName,
-                            UserId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                            UserId = this.dataService.GetCurrentUser(this.User).Id,
                         };
 
                         if (selectedGame != 0)
@@ -454,7 +454,7 @@ namespace Pokedex.Controllers
 
                         if (this.User.Identity.Name != null)
                         {
-                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                            comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                         }
 
                         this.dataService.AddObject(comment);
@@ -822,7 +822,7 @@ namespace Pokedex.Controllers
 
                         if (this.User.Identity.Name != null)
                         {
-                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                            comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                         }
 
                         this.dataService.AddObject(comment);
@@ -1609,7 +1609,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.EmailComment(this.appConfig, comment);
@@ -1835,7 +1835,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.EmailComment(this.appConfig, comment);
@@ -2075,7 +2075,7 @@ namespace Pokedex.Controllers
                         };
                         if (this.User.Identity.Name != null)
                         {
-                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                            comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                         }
 
                         this.dataService.AddObject(comment);
@@ -2233,7 +2233,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -2950,7 +2950,7 @@ namespace Pokedex.Controllers
                         };
                         if (this.User.Identity.Name != null)
                         {
-                            comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                            comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                         }
 
                         this.dataService.AddObject(comment);
@@ -3043,7 +3043,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -3140,7 +3140,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -3330,7 +3330,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -3396,7 +3396,7 @@ namespace Pokedex.Controllers
 
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -3488,7 +3488,7 @@ namespace Pokedex.Controllers
                     };
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);
@@ -3655,7 +3655,7 @@ namespace Pokedex.Controllers
                     };
                     if (this.User.Identity.Name != null)
                     {
-                        comment.CommentorId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id;
+                        comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
                     this.dataService.AddObject(comment);

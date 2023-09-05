@@ -348,7 +348,7 @@ namespace Pokedex.Controllers
 
             Message model = new Message()
             {
-                SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                SenderId = this.dataService.GetCurrentUser(this.User).Id,
                 ReceiverId = comment.CommentorId,
                 Receiver = receiver,
                 MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\" "),
@@ -373,7 +373,7 @@ namespace Pokedex.Controllers
 
                 Message model = new Message()
                 {
-                    SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    SenderId = this.dataService.GetCurrentUser(this.User).Id,
                     ReceiverId = comment.CommentorId,
                     MessageTitle = string.Concat("Regaring your comment \"", comment.Name, "\""),
                 };
@@ -399,7 +399,7 @@ namespace Pokedex.Controllers
 
             MessageViewModel model = new MessageViewModel()
             {
-                SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                SenderId = this.dataService.GetCurrentUser(this.User).Id,
                 AllUsers = users,
             };
 
@@ -422,7 +422,7 @@ namespace Pokedex.Controllers
 
                 MessageViewModel model = new MessageViewModel()
                 {
-                    SenderId = this.dataService.GetObjectByPropertyValue<User>("Username", this.User.Identity.Name).Id,
+                    SenderId = this.dataService.GetCurrentUser(this.User).Id,
                     AllUsers = users,
                 };
 
