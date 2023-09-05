@@ -25,5 +25,17 @@ namespace Pokedex.DataAccess.Models
         [Required]
         [Display(Name = "Is Tester")]
         public bool IsTester { get; set; }
+
+        [Required]
+        [Display(Name = "Show Shiny Alternate Forms")]
+        public bool ShowShinyAltForms { get; set; }
+
+        [Required]
+        [Display(Name = "Show Shiny Gender Differences")]
+        public bool ShowShinyGenderDifferences { get; set; }
+
+        [Required]
+        [Display(Name = "Hide Captured Shiny Pokemon")]
+        public bool HideCapturedShinyPokemon { get; set; }
     }
 }

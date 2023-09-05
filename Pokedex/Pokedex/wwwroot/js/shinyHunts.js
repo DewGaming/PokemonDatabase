@@ -163,21 +163,31 @@ function hideAltForms() {
         $(this).addClass('hide');
     });
 
-    $('.hideAltFormsButton').each(function () {
-        $(this).addClass('hide');
-    });
+    $.ajax({
+        url: '/toggle-shiny-alt-forms/',
+        method: "POST",
+        data: { 'altFormToggle': 'hide' }
+    })
+        .done(function () {
+            $('.hideAltFormsButton').each(function () {
+                $(this).addClass('hide');
+            });
+        
+            $('.showAltFormsButton').each(function () {
+                $(this).removeClass('hide');
+            });
+        
+            $('.shiniesFoundPercentWithAlts').each(function () {
+                $(this).addClass('hide');
+            });
 
-    $('.showAltFormsButton').each(function () {
-        $(this).removeClass('hide');
-    });
-
-    $('.shiniesFoundPercentWithAlts').each(function () {
-        $(this).addClass('hide');
-    });
-
-    $('.shiniesFoundPercentNoAlts').each(function () {
-        $(this).removeClass('hide');
-    });
+            $('.shiniesFoundPercentNoAlts').each(function () {
+                $(this).removeClass('hide');
+            });
+        })
+        .fail(function () {
+            alert("Failed to toggle shiny alt forms!");
+        });
 }
 
 function showAltForms() {
@@ -191,21 +201,31 @@ function showAltForms() {
         });
     }
 
-    $('.hideAltFormsButton').each(function () {
-        $(this).removeClass('hide');
-    });
+    $.ajax({
+        url: '/toggle-shiny-alt-forms/',
+        method: "POST",
+        data: { 'altFormToggle': 'show' }
+    })
+        .done(function () {
+            $('.showAltFormsButton').each(function () {
+                $(this).addClass('hide');
+            });
+        
+            $('.hideAltFormsButton').each(function () {
+                $(this).removeClass('hide');
+            });
+        
+            $('.shiniesFoundPercentNoAlts').each(function () {
+                $(this).addClass('hide');
+            });
 
-    $('.showAltFormsButton').each(function () {
-        $(this).addClass('hide');
-    });
-
-    $('.shiniesFoundPercentWithAlts').each(function () {
-        $(this).removeClass('hide');
-    });
-
-    $('.shiniesFoundPercentNoAlts').each(function () {
-        $(this).addClass('hide');
-    });
+            $('.shiniesFoundPercentWithAlts').each(function () {
+                $(this).removeClass('hide');
+            });
+        })
+        .fail(function () {
+            alert("Failed to toggle shiny alt forms!");
+        });
 }
 
 function hideCaptured() {
@@ -213,13 +233,23 @@ function hideCaptured() {
         $(this).addClass('hide');
     });
 
-    $('.hideCapturedButton').each(function () {
-        $(this).addClass('hide');
-    });
-
-    $('.showCapturedButton').each(function () {
-        $(this).removeClass('hide');
-    });
+    $.ajax({
+        url: '/toggle-captured-shinies/',
+        method: "POST",
+        data: { 'capturedShiniesToggle': 'hide' }
+    })
+        .done(function () {
+            $('.hideCapturedButton').each(function () {
+                $(this).addClass('hide');
+            });
+        
+            $('.showCapturedButton').each(function () {
+                $(this).removeClass('hide');
+            });
+        })
+        .fail(function () {
+            alert("Failed to toggle captured shinies!");
+        });
 }
 
 function showCaptured() {
@@ -233,13 +263,23 @@ function showCaptured() {
         });
     }
 
-    $('.hideCapturedButton').each(function () {
-        $(this).removeClass('hide');
-    });
+    $.ajax({
+        url: '/toggle-captured-shinies/',
+        method: "POST",
+        data: { 'capturedShiniesToggle': 'show' }
+    })
+        .done(function () {
+            $('.showCapturedButton').each(function () {
+                $(this).addClass('hide');
+            });
 
-    $('.showCapturedButton').each(function () {
-        $(this).addClass('hide');
-    });
+            $('.hideCapturedButton').each(function () {
+                $(this).removeClass('hide');
+            });
+        })
+        .fail(function () {
+            alert("Failed to toggle captured shinies!");
+        });
 }
 
 function lookupGeneration(generationId) {

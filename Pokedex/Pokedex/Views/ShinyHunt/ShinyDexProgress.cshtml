@@ -17,25 +17,25 @@
 }
 
 <p class="shinyHuntButtons">
-    <button class="hideAltFormsButton btn btn-primary hide" onclick="hideAltForms()">Hide Alternate Forms</button>
+    <button class="hideAltFormsButton btn btn-primary@(Model.CurrentUser.ShowShinyAltForms ? "" : " hide")" onclick="hideAltForms()">Hide Alternate Forms</button>
     @if (Model.AllPokemon.Count(x => x.IsAltForm) > 0)
     {
-        <button class="showAltFormsButton btn btn-primary" onclick="showAltForms()">Show Alternate Forms</button>
+        <button class="showAltFormsButton btn btn-primary@(!@Model.CurrentUser.ShowShinyAltForms ? "" : " hide")" onclick="showAltForms()">Show Alternate Forms</button>
     }
-    <button class="showCapturedButton btn btn-primary hide" onclick="showCaptured()">Show Captured Pokemon</button>
+    <button class="showCapturedButton btn btn-primary@(!Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : "")"" onclick="showCaptured()">Show Captured Pokemon</button>
     @if (Model.AllPokemon.Count(x => x.IsCaptured) > 0)
     {
-        <button class="hideCapturedButton btn btn-primary" onclick="hideCaptured()">Hide Captured Pokemon</button>
+        <button class="hideCapturedButton btn btn-primary@(@Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : "")" onclick="hideCaptured()">Hide Captured Pokemon</button>
     }
 </p>
 
-<h5 class="pokemonCount shiniesFoundPercentNoAlts">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>
-<h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => x.IsCaptured)/@Model.AllPokemon.Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => x.IsCaptured) / Model.AllPokemon.Count(), 2)%</h5>
+<h5 class="pokemonCount shiniesFoundPercentNoAlts@(!Model.CurrentUser.ShowShinyAltForms ? "" : " hide")">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>
+<h5 class="pokemonCount shiniesFoundPercentWithAlts@(Model.CurrentUser.ShowShinyAltForms ? "" : " hide")">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => x.IsCaptured)/@Model.AllPokemon.Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => x.IsCaptured) / Model.AllPokemon.Count(), 2)%</h5>
 @foreach (var g in Model.AllGames.Select(x => x.GenerationId).Distinct().ToList())
 {
     <div class="generation@(g) generationPercentage hide">
-        <h5 class="pokemonCount shiniesFoundPercentNoAlts">Generation @(g) Shiny Dex Completion Percentage (@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm), 2)%</h5>
-        <h5 class="pokemonCount shiniesFoundPercentWithAlts hide">Generation @(g) Shiny Dex Completion Percentage (@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => x.IsCaptured)/@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => x.IsCaptured) / Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(), 2)%</h5>
+        <h5 class="pokemonCount shiniesFoundPercentNoAlts@(!Model.CurrentUser.ShowShinyAltForms ? "" : " hide")">Generation @(g) Shiny Dex Completion Percentage (@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => !x.IsAltForm), 2)%</h5>
+        <h5 class="pokemonCount shiniesFoundPercentWithAlts@(Model.CurrentUser.ShowShinyAltForms ? "" : " hide")">Generation @(g) Shiny Dex Completion Percentage (@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => x.IsCaptured)/@Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count()): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(x => x.IsCaptured) / Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g).Count(), 2)%</h5>
     </div>
 }
 
@@ -63,7 +63,7 @@
         <div class="grid-container">
             @foreach (var p in Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g))
             {
-                <div class="shadowed @p.Pokemon.Name@(!p.IsCaptured ? " uncaptured" : "")@(p.IsAltForm ? " altForm hide" : "")">
+                <div class="shadowed @p.Pokemon.Name@(!p.IsCaptured ? " uncaptured" : (@Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : ""))@(p.IsAltForm ? (@Model.CurrentUser.ShowShinyAltForms ? " altForm" : " altForm hide") : "")">
                     <div class="pokemonImages">
                         <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @p.Pokemon.Id, generationId = g })" target="_blank">
                             <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @p.Pokemon.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, p.Pokemon.Id, ".png"))" />

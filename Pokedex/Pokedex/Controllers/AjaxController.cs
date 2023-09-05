@@ -2672,6 +2672,87 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Toggles whether or not a user will see alternate forms on the shiny dex progression page upon visiting it.
+        /// </summary>
+        /// <param name="altFormToggle">Tells the method whether or not the user wants shiny alternate forms to be shown.</param>
+        [Route("toggle-shiny-alt-forms")]
+        public void ToggleShinyAltForms(string altFormToggle)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && this.User.Identity.Name != null)
+            {
+                User user = this.dataService.GetCurrentUser(this.User);
+                switch (altFormToggle)
+                {
+                    case "hide":
+                        user.ShowShinyAltForms = false;
+                        break;
+                    case "show":
+                        user.ShowShinyAltForms = true;
+                        break;
+                    default:
+                        user.ShowShinyAltForms = false;
+                        break;
+                }
+
+                this.dataService.UpdateObject<User>(user);
+            }
+        }
+
+        /// <summary>
+        /// Toggles whether or not a user will see gender differences on the shiny dex progression page upon visiting it.
+        /// </summary>
+        /// <param name="genderDifferenceToggle">Tells the method whether or not the user wants shiny gender differences to be shown.</param>
+        [Route("toggle-shiny-gender-differences")]
+        public void ToggleShinyGenderDifferences(string genderDifferenceToggle)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && this.User.Identity.Name != null)
+            {
+                User user = this.dataService.GetCurrentUser(this.User);
+                switch (genderDifferenceToggle)
+                {
+                    case "hide":
+                        user.ShowShinyGenderDifferences = false;
+                        break;
+                    case "show":
+                        user.ShowShinyGenderDifferences = true;
+                        break;
+                    default:
+                        user.ShowShinyGenderDifferences = false;
+                        break;
+                }
+
+                this.dataService.UpdateObject<User>(user);
+            }
+        }
+
+        /// <summary>
+        /// Toggles whether or not a user will see pokemon already captured shiny on the shiny dex progression page upon visiting it.
+        /// </summary>
+        /// <param name="capturedShiniesToggle">Tells the method whether or not the user wants pokemon already captured shiny to be shown.</param>
+        [Route("toggle-captured-shinies")]
+        public void ToggleCapturedShinies(string capturedShiniesToggle)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && this.User.Identity.Name != null)
+            {
+                User user = this.dataService.GetCurrentUser(this.User);
+                switch (capturedShiniesToggle)
+                {
+                    case "hide":
+                        user.HideCapturedShinyPokemon = true;
+                        break;
+                    case "show":
+                        user.HideCapturedShinyPokemon = false;
+                        break;
+                    default:
+                        user.HideCapturedShinyPokemon = false;
+                        break;
+                }
+
+                this.dataService.UpdateObject<User>(user);
+            }
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>

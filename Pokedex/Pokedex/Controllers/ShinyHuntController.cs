@@ -57,6 +57,7 @@ namespace Pokedex.Controllers
                 AllPokemon = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList(),
                 AllShinyHunts = shinyHunts,
                 AllGames = this.dataService.GetObjects<Game>(),
+                CurrentUser = this.dataService.GetCurrentUser(this.User),
                 AppConfig = this.appConfig,
             };
 

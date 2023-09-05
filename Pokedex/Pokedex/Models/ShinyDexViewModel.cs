@@ -27,5 +27,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all abilities.
         /// </summary>
         public AppConfig AppConfig { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current user.
+        /// </summary>
+        public User CurrentUser { get; set; }
     }
 }
