@@ -900,7 +900,7 @@ namespace Pokedex
         /// <returns>A list of pokemon huntable.</returns>
         public List<Pokemon> GetHuntablePokemon(int gameId = 0)
         {
-            List<Pokemon> pokemonList = this.GetNonBattlePokemonWithFormNames(gameId).Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
+            List<Pokemon> pokemonList = this.GetNonBattlePokemonWithFormNames(gameId).Where(x => !x.IsShinyLocked).ToList();
             if (gameId != 0)
             {
                 Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
