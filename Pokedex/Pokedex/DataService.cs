@@ -415,7 +415,6 @@ namespace Pokedex
                 pokemonList = this.GetObjects<Pokemon>(includes: "GenderRatio, Game");
             }
 
-            pokemonList = pokemonList.Where(x => x.IsComplete).ToList();
             List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
             if (noBattleOnlyForms)
             {

@@ -44,7 +44,7 @@ namespace Pokedex.Controllers
             int userId = this.dataService.GetCurrentUser(this.User).Id;
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
-            List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => x.IsComplete && !x.IsShinyLocked).ToList();
+            List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => !x.IsShinyLocked).ToList();
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
             List<Pokemon> primals = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: "Primal").ConvertAll(x => x.AltFormPokemon);
             pokemonList = pokemonList.Where(x => !primals.Any(y => y.Id == x.Id)).ToList();
