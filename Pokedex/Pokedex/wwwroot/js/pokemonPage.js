@@ -14,7 +14,7 @@ var officialRender = function() {
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .shinyButton').addClass('hidden');
 }, grabTypingChart = function (primaryType, generationId) {
-    $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryType, 'secondaryTypeID': '0', 'generationID': generationId }, function () {
+    $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryType, 'secondaryTypeID': '0', 'generationID': generationId }, function () {
         if ($('.typing-table-strong').children().length > 0) {
             $(".StrongAgainst").css("display", "block");
         }
@@ -37,7 +37,7 @@ var officialRender = function() {
         }
     });
 }, grabTypingChartByPokemon = function (pokemonId, generationId) {
-    $('.effectivenessChart').load('/get-typing-evaluator-chart-by-pokemon/', { 'pokemonId': pokemonId, 'generationID': generationId }, function () {
+    $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart-by-pokemon/', { 'pokemonId': pokemonId, 'generationID': generationId }, function () {
         if ($('.typing-table-strong').children().length > 0) {
             $(".StrongAgainst").css("display", "block");
         }
@@ -67,9 +67,9 @@ $('span[title]').on('click', function() {
 
 $('.teraTypeSelectList').on('change', function () {
     var generationId = $('#' + $('.page.active').attr('id') + '.page.active').attr('class').split(' ')[1].split('generation')[1];
-    var teraType = $('.generation' + generationId + ' .teraTypingList > select').val();
-    var pokemonId = $('#PokemonId').val();
-    var currentImage = $('.pokemonImage .current').attr("class").split(' ')[0]
+    var teraType = $(this).val();
+    var currentImage = $('.page.active .pokemonImage .current').attr("class").split(' ')[0];
+    var pokemonId = $('.page.active .pokemonImage .current img').attr("id");
     if (teraType != 0) {
         grabTypingChart(teraType, generationId);
     } else {
