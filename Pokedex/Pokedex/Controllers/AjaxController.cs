@@ -5,6 +5,7 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -2750,6 +2751,59 @@ namespace Pokedex.Controllers
 
                 this.dataService.UpdateObject<User>(user);
             }
+        }
+
+        /// <summary>
+        /// Inserts Ogerpon's Tera ability into the pokemon page.
+        /// </summary>
+        /// <param name="pokemonId">The Pokemon's Id. Used to modify the description of the ability.</param>
+        [Route("grab-ogerpon-tera-ability")]
+        public Ability GrabOgerponTeraAbility(int pokemonId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && this.User.Identity.Name != null)
+            {
+                // Embody Aspect's internal id.
+                Ability teraAbility = this.dataService.GetObjectByPropertyValue<Ability>("Id", 314);
+                switch (pokemonId)
+                {
+                    // Regular Ogerpon's internal id.
+                    case 1768:
+                        // Uses default description.
+                        break;
+                    // Wellspring Mask Ogerpon's internal id.
+                    case 1879:
+                        teraAbility.Description = "The Pokémon's heart fills with memories, causing the Wellspring Mask to shine and the Pokémon's Sp. Def stat to be boosted.";
+                        break;
+                    // Hearthflame Mask Ogerpon's internal id.
+                    case 1880:
+                        teraAbility.Description = "The Pokémon's heart fills with memories, causing the Hearthflame Mask to shine and the Pokémon's Attack stat to be boosted.";
+                        break;
+                    // Cornerstone Mask Ogerpon's internal id.
+                    case 1881:
+                        teraAbility.Description = "The Pokémon's heart fills with memories, causing the Cornerstone Mask to shine and the Pokémon's Defense stat to be boosted.";
+                        break;
+                }
+                return teraAbility;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the abilities for the given Ogerpon form combination.
+        /// </summary>
+        /// <param name="pokemonId">Ogerpon's id.</param>
+        /// <returns>The regular ability of Ogerpon.</returns>
+        [Route("grab-ogerpon-regular-ability")]
+        public Ability GrabOgerponRegularAbility(int pokemonId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonAbilityDetail pokemonAbilityDetail = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "PrimaryAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Find(x => x.GenerationId == 9);
+                return pokemonAbilityDetail.PrimaryAbility;
+            }
+
+            return null;
         }
 
         /// <summary>

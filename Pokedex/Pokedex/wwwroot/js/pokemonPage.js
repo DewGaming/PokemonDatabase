@@ -59,6 +59,26 @@ var officialRender = function() {
             $(".ImmuneTo").css("display", "none");
         }
     });
+}, grabOgerponTeraAbility = function (pokemonId) {
+    $.ajax({
+        url: '/grab-ogerpon-tera-ability/',
+        method: "POST",
+        data: { 'pokemonId': pokemonId }
+    })
+        .done(function (data) {
+            $('.page.active .abilities .cursorHelp').html(data.name);
+            $('.page.active .abilities .cursorHelp').attr('title', 'Ability Name: ' + data.name + ' Description: ' + data.description);
+        });
+}, grabOgerponRegularAbility = function (pokemonId) {
+    $.ajax({
+        url: '/grab-ogerpon-regular-ability/',
+        method: "POST",
+        data: { 'pokemonId': pokemonId }
+    })
+        .done(function (data) {
+            $('.page.active .abilities .cursorHelp').html(data.name);
+            $('.page.active .abilities .cursorHelp').attr('title', 'Ability Name: ' + data.name + ' Description: ' + data.description);
+        });
 }
 
 $('span[title]').on('click', function() {
@@ -78,5 +98,11 @@ $('.teraTypeSelectList').on('change', function () {
 
     if (pokemonId == '741' || pokemonId == '1301') {
         $('.pokemonPicture .pokemonImage').load('/get-pokemon-images-with-type/', { 'pokemonId': pokemonId, 'typeId': teraType, 'currentImage': currentImage });
+    } else if ($('#Pokemon_Name').val() == 'Ogerpon') {
+        if (teraType != 0) {
+            grabOgerponTeraAbility(pokemonId);
+        } else {
+            grabOgerponRegularAbility(pokemonId);
+        }
     }
 });

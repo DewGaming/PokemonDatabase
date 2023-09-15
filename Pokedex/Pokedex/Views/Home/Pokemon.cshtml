@@ -186,6 +186,7 @@
 }
 
 @Html.HiddenFor(x => x.LatestGenerationId)
+@Html.HiddenFor(x => x.PokemonList.First().Pokemon.Name)
 
 <table class="surroundingPokemon pokemonPicture">
     <tr>
@@ -300,7 +301,7 @@
                                 iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.IconImageUrl, button.Pokemon.Id, ".png"));
                                 <div class="@button.Pokemon.Name">
                                     <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
-                                        <img class="lightshadowed" title="@button.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.IconImageUrl, @button.Pokemon.Id, ".png"))" />
+                                        <img class="lightshadowed" title="@button.Pokemon.Name" id="@button.Pokemon.Id" loading="lazy" src="@Url.Content(string.Concat(@button.AppConfig.WebUrl, @button.AppConfig.IconImageUrl, @button.Pokemon.Id, ".png"))" />
                                     </button>
                                 </div>
                             }
@@ -310,18 +311,18 @@
                     <div class="shadowed@(Model.PokemonList.Count() > 1 ? " pokemonWithForms" : string.Empty)">
                         <div class="pokemonImage">
                             <div class="official current" style="@(!item.HasShiny && !item.HasHome ? "position: relative !important" : "")">
-                                <img title="@item.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                                <img title="@item.Pokemon.Name" id="@item.Pokemon.Id" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                             </div>
                             @if (@item.HasShiny)
                             {
                                 <div class="shiny" style="@(!item.HasHome ? "position: relative !important" : "")">
-                                    <img title="@item.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                                    <img title="@item.Pokemon.Name" id="@item.Pokemon.Id" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.ShinyPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                                 </div>
                             }
                             @if (@item.HasHome)
                             {
                                 <div class="home">
-                                    <img title="@item.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.HomePokemonImageUrl, @item.Pokemon.Id, ".png"))" />
+                                    <img title="@item.Pokemon.Name" id="@item.Pokemon.Id" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.HomePokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                                 </div>
                             }
                         </div>
@@ -432,7 +433,7 @@
                         </tr>
                         @if (g > 2)
                         {
-                            <tr>
+                            <tr class="abilities">
                                 <th>
                                     @if (item.Abilities.Count() == 0 || item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryAbility == null && item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SpecialEventAbility == null && (item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).HiddenAbility == null || g < 5))
                                     {
@@ -743,12 +744,41 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             <h2>RKS Memory</h2>
                                         }
                                     }
+                                    else if (Model.PokemonList.First().Pokemon.Name == "Ogerpon")
+                                    {
+                                        <h2>Terastallized</h2>
+                                    }
                                     else
                                     {
                                         <h2>Tera Typing</h2>
                                     }
                                 </label>
-                                @Html.DropDownList("TeraTypes", new SelectList(@Model.AllTypes.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                                @if (Model.PokemonList.First().Pokemon.Name == "Ogerpon")
+                                {
+                                    <select class="form-control teraTypeSelectList ogerponTera" id="TeraTypes" name="TeraTypes">
+                                        <option value="0">Not Terastallized</option>
+                                        @if (item.Pokemon.Id == 1768)
+                                        {
+                                            <option value="1">Grass</option>
+                                        }
+                                        else if (item.Pokemon.Id == 1879)
+                                        {
+                                            <option value="3">Water</option>
+                                        }
+                                        else if (item.Pokemon.Id == 1880)
+                                        {
+                                            <option value="4">Fire</option>
+                                        }
+                                        else if (item.Pokemon.Id == 1881)
+                                        {
+                                            <option value="18">Rock</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("TeraTypes", new SelectList(@Model.AllTypes.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                                }
                             </div>
                         }
                     </div>
