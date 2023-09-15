@@ -104,7 +104,7 @@
                                 <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
                             }
                             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
-                                <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" />
+                                <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" alt="@s.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" />
                             </a>
                         </div>
                         <div class="description">
@@ -177,7 +177,7 @@
                                 }
                             </div>
                             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
-                                <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" />
+                                <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" alt="@s.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" />
                             </a>
                         </div>
                         <div class="description">
