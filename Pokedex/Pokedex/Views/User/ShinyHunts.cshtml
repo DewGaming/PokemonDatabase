@@ -151,7 +151,7 @@
         <div class="grid-container">
             @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ThenBy(x => x.DateOfCapture).ThenBy(x => x.Id).ToList())
             {
-                <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name@(s.Pokemon.IsComplete ? "" : " incomplete")">
+                <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name">
                     <div class="pokemonDetails">
                         <div class="pokemonImages">
                             <div class="bonusImages">
