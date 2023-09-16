@@ -580,6 +580,11 @@ namespace Pokedex.Controllers
                 try
                 {
                     Random rnd = new Random();
+                    if (pokemonCount > 6)
+                    {
+                        pokemonCount = 6;
+                    }
+
                     List<Pokemon> pokemonDetails = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
                     Game selectedGame = new Game();
@@ -2770,19 +2775,24 @@ namespace Pokedex.Controllers
                     case 1768:
                         // Uses default description.
                         break;
+
                     // Wellspring Mask Ogerpon's internal id.
                     case 1879:
                         teraAbility.Description = "The Pokémon's heart fills with memories, causing the Wellspring Mask to shine and the Pokémon's Sp. Def stat to be boosted.";
                         break;
+
                     // Hearthflame Mask Ogerpon's internal id.
                     case 1880:
+
                         teraAbility.Description = "The Pokémon's heart fills with memories, causing the Hearthflame Mask to shine and the Pokémon's Attack stat to be boosted.";
                         break;
+
                     // Cornerstone Mask Ogerpon's internal id.
                     case 1881:
                         teraAbility.Description = "The Pokémon's heart fills with memories, causing the Cornerstone Mask to shine and the Pokémon's Defense stat to be boosted.";
                         break;
                 }
+
                 return teraAbility;
             }
 
