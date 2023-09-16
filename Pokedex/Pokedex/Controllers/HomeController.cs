@@ -232,13 +232,13 @@ namespace Pokedex.Controllers
         public IActionResult TypingEvaluator()
         {
             this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
-            List<Generation> generations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 3).ToList();
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.IsBreedingPossible).ToList();
+            List<Generation> generations = this.dataService.GetObjects<Generation>().ToList();
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").ToList();
             List<Game> selectableGames = new List<Game>();
 
             foreach (var gen in generations)
             {
-                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id && x.Id != 37 && x.Id != 43).ToList();
+                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id && x.Id != 43).ToList();
                 List<Game> uniqueGames = allGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
                 for (var i = 0; i < uniqueGames.Count; i++)
                 {
@@ -249,6 +249,7 @@ namespace Pokedex.Controllers
                             Id = uniqueGames[i].Id,
                             Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
                             GenerationId = gen.Id,
+                            ReleaseDate = uniqueGames[i].ReleaseDate,
                         });
                     }
                     else
@@ -265,16 +266,19 @@ namespace Pokedex.Controllers
                                 Id = uniqueGames[i].Id,
                                 Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
                                 GenerationId = gen.Id,
+                                ReleaseDate = uniqueGames[i].ReleaseDate,
                             });
                         }
                     }
                 }
             }
 
+            selectableGames = selectableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
+
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
-                AllGames = selectableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
+                AllGames = selectableGames,
             };
 
             return this.View(model);
@@ -297,10 +301,7 @@ namespace Pokedex.Controllers
             };
 
             // Removes the first and second generation from the list, as abilities were introduced in the third generation.
-            foreach (var g in generations.Where(x => x.Id != 1 && x.Id != 2))
-            {
-                model.AllGenerations.Add(g);
-            }
+            model.AllGenerations = generations.Where(x => x.Id != 1 && x.Id != 2).ToList();
 
             return this.View(model);
         }
@@ -861,6 +862,11 @@ namespace Pokedex.Controllers
             if (pokemonName.Contains("type"))
             {
                 pokemonName = "Type: Null";
+            }
+
+            if (pokemonName.Contains("_(") && !pokemonName.Contains("nidoran"))
+            {
+                pokemonName = pokemonName.Split("_(")[0];
             }
 
             if (pokemonName.Contains('_'))

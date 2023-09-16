@@ -112,6 +112,7 @@ var checkTypings = function () {
 
 $(function () {
     grabTypes($('.gameList > select').val());
+    $('.gameSelectList').select2();
 });
 
 $(".gameSelectList").on('change', function () {
