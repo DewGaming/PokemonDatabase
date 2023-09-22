@@ -966,7 +966,8 @@ namespace Pokedex
             if (preevolution != pokemon.Id)
             {
                 pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
-                possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                gamesAvailable = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                possibleGames.AddRange(gamesAvailable.Where(x => !possibleGames.Any(y => y.Id == x.Id)).ToList());
             }
 
             return possibleGames.OrderBy(x => x.GenerationId).ThenBy(x => x.Id).ToList();
