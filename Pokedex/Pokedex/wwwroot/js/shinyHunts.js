@@ -39,31 +39,30 @@ function lookupHuntsInGame(element, gameId) {
 }
 
 function incrementEncounter(shinyHuntId) {
+    var currentEncounters = parseInt($('.Hunt' + shinyHuntId + ' .encounters').html());
+    var incrementAmount = parseInt($('.Hunt' + shinyHuntId + ' .increments').html());
+    $('.Hunt' + shinyHuntId + ' .encounters').html(currentEncounters + incrementAmount);
     $.ajax({
-        url: '/increment-shiny-hunt-encounters/',
+        url: '/set-shiny-hunt-encounters/',
         method: "POST",
-        data: { "shinyHuntId": shinyHuntId, "incrementAmount": $('.Hunt' + shinyHuntId + ' .increments').html() }
+        data: { "shinyHuntId": shinyHuntId, "encounters": currentEncounters + incrementAmount }
     })
-        .done(function (data) {
-            $('.Hunt' + shinyHuntId + ' .encounters').html(data);
-        })
         .fail(function () {
             alert("Update Failed!");
         });
 }
 
 function incrementPhase(shinyHuntId) {
+    var currentPhases = parseInt($('.Hunt' + shinyHuntId + ' .phases').html());
+    $('.Hunt' + shinyHuntId + ' .phases').html(currentPhases + 1);
+    $('.Hunt' + shinyHuntId + ' .encounterP b').html('Current Phase Encounters: ')
+    $('.Hunt' + shinyHuntId + ' .encounters').html(0);
+    $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
     $.ajax({
         url: '/increment-shiny-hunt-phases/',
         method: "POST",
-        data: { "shinyHuntId": shinyHuntId }
+        data: { "shinyHuntId": shinyHuntId, "phases": currentPhases + 1 }
     })
-        .done(function (data) {
-            $('.Hunt' + shinyHuntId + ' .phases').html(data);
-            $('.Hunt' + shinyHuntId + ' .encounterP b').html('Current Phase Encounters: ')
-            $('.Hunt' + shinyHuntId + ' .encounters').html(0);
-            $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
-        })
         .fail(function () {
             alert("Update Failed!");
         });
@@ -73,14 +72,12 @@ function adjustEncountersManually(shinyHuntId) {
     var currentEncounters = $('.Hunt' + shinyHuntId + ' .encounters').html();
     var encounters = prompt("Total Number of Encounters", currentEncounters);
     if ($.isNumeric(encounters)) {
+        $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
         $.ajax({
             url: '/set-shiny-hunt-encounters/',
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "encounters": encounters }
         })
-            .done(function (data) {
-                $('.Hunt' + shinyHuntId + ' .encounters').html(data);
-            })
             .fail(function () {
                 alert("Update Failed!");
             });
@@ -93,14 +90,12 @@ function adjustPhasesManually(shinyHuntId) {
     var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
     var phases = prompt("Total Number of Phases", currentPhases);
     if ($.isNumeric(phases)) {
+        $('.Hunt' + shinyHuntId + ' .phases').html(phases);
         $.ajax({
             url: '/set-shiny-hunt-phases/',
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "phases": phases }
         })
-            .done(function (data) {
-                $('.Hunt' + shinyHuntId + ' .phases').html(data);
-            })
             .fail(function () {
                 alert("Update Failed!");
             });
@@ -113,14 +108,12 @@ function adjustIncrements(shinyHuntId) {
     var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
     var increments = prompt("Increment Amount", currentIncrements);
     if ($.isNumeric(increments)) {
+        $('.Hunt' + shinyHuntId + ' .increments').html(increments);
         $.ajax({
             url: '/set-shiny-hunt-increments/',
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "increments": increments }
         })
-            .done(function (data) {
-                $('.Hunt' + shinyHuntId + ' .increments').html(data);
-            })
             .fail(function () {
                 alert("Update Failed!");
             });
