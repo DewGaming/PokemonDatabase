@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
@@ -249,9 +250,11 @@ namespace Pokedex.Controllers
         [Route("delete_teams")]
         public IActionResult DeleteTeams()
         {
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams(this.User.Identity.Name);
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon, SecondPokemon, ThirdPokemon, FourthPokemon, FifthPokemon, SixthPokemon", "User.Username", this.User.Identity.Name),
+                AllPokemonTeams = pokemonTeams,
+                AllGames = pokemonTeams.ConvertAll(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(x => x.Id).ToList(),
                 AppConfig = this.appConfig,
             };
 

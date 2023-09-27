@@ -6,11 +6,9 @@ namespace Pokedex.DataAccess.Models
     public class Game
     {
         public int Id { get; set; }
-        [StringLength(50)]
-        [Required]
+        [Required, StringLength(50)]
         public string Name { get; set; }
-        [Display(Name = "Release Date")]
-        [Required]
+        [Required, Display(Name = "Release Date")]
         public DateTime ReleaseDate { get; set; }
         [Required, Display(Name = "Generation")]
         public int GenerationId { get; set; }

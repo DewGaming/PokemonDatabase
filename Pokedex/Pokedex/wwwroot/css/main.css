@@ -508,29 +508,6 @@ label {
   display: none;
 }
 
-.pokemonTeamPokemon {
-  width: 3rem;
-  -o-object-fit: contain;
-  object-fit: contain;
-}
-
-.pokemonTeamPicture {
-  display: inline-block;
-  text-align: center;
-}
-
-.teamButton {
-  margin-bottom: 6px;
-}
-
-.addNextButton {
-  margin-left: 5px;
-}
-
-.pokemonTeamPokemonTable {
-  margin: -10px;
-}
-
 .evolutionImage img {
   margin-right: -10px;
   margin-left: -5px;

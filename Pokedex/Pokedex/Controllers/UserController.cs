@@ -181,9 +181,11 @@ namespace Pokedex.Controllers
         [Route("pokemon_teams")]
         public IActionResult PokemonTeams()
         {
+            List<PokemonTeam> pokemonTeams = this.dataService.GetPokemonTeams(this.User.Identity.Name);
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
-                AllPokemonTeams = this.dataService.GetPokemonTeams(this.User.Identity.Name),
+                AllPokemonTeams = pokemonTeams,
+                AllGames = pokemonTeams.ConvertAll(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(x => x.Id).ToList(),
                 AppConfig = this.appConfig,
             };
 

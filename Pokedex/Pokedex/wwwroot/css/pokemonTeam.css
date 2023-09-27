@@ -1,0 +1,25 @@
+.pokemonTeam {
+    flex-basis: 100% !important;
+}
+
+.teamOptionButtons a,
+.teamOptionButtons button {
+    width: 32%;
+}
+
+.pokemonList {
+    padding: 7.5px 10px;
+    width: 100%;
+}
+
+.pokemonList > div {
+    padding: 2.5px;
+    margin: 2.5px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.addButton {
+    width: 150px;
+    height: 150px;
+}

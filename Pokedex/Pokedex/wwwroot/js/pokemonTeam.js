@@ -40,7 +40,36 @@ var pokemonTeams, exportString, deleteTeams = function () {
         .fail(function () {
             alert("Update Failed!");
         });
-};
+}, lookupTeamsInGame = function(gameId) {
+    if (!$('.active').is($('#Game' + gameId))) {
+        $('button').each(function () {
+            $(this).removeClass('active');
+        });
+
+        $('.pokemonTeams').removeClass('active');
+
+        $('.pokemonTeam.hide').each(function () {
+            $(this).removeClass('hide');
+        });
+
+        if (gameId != 0) {
+            $('div.pokemonTeam').not('.TeamGame' + gameId).each(function () {
+                $(this).addClass('hide');
+            });
+            $('.gameTeamIn').each(function () {
+                $(this).addClass('hide');
+            });
+        } else {
+            $('.gameTeamIn').each(function () {
+                $(this).removeClass('hide');
+            });
+        }
+
+        $('button#Game' + gameId).addClass('active');
+        $('.pokemonTeams').addClass('active');
+        $('.active.hide').removeClass('active');
+    }
+}
 
 $(document).ready(function () {
     $('.pokemonTeamButton').on("click", function () {
@@ -81,20 +110,13 @@ $(document).ready(function () {
         .done(function (data) {
             pokemonTeams = data;
             if (pokemonTeams.length != 0) {
-                $('.hide').each(function () {
-                    $(this).removeClass('hide');
-                });
-
+                $('.pokemonTeamsButton').removeClass('hide');
                 $('.pokemonTeamButton').unbind("click");
 
                 $('.pokemonTeamButton').on("click", function () {
                     var buttonId = $(this).attr('id')
                     if (typeof (pokemonTeams) !== "undefined") {
-                        $.each(pokemonTeams, function (index, item) {
-                            if (item.teamId == buttonId) {
-                                exportString = item.exportString;
-                            }
-                        });
+                        exportString = pokemonTeams.find(x => x.teamId == buttonId).exportString;
     
                         if (navigator.clipboard) {
                             navigator.clipboard.writeText(exportString)
@@ -114,13 +136,7 @@ $(document).ready(function () {
 
                 $('.pokemonTeamsButton').on("click", function () {
                     if (typeof (pokemonTeams) !== "undefined") {
-                        exportString = "";
-                        $.each(pokemonTeams, function (index, item) {
-                            if (index != 0) {
-                                exportString += "\n\n";
-                            }
-                            exportString += item.exportString;
-                        });
+                        exportString = pokemonTeams.map(x => x.exportString).join("\n\n");
     
                         if (navigator.clipboard) {
                             navigator.clipboard.writeText(exportString)

@@ -3590,13 +3590,15 @@ namespace Pokedex.Controllers
         private ExportPokemonViewModel ExportTeamString(PokemonTeam team)
         {
             List<PokemonTeamDetail> pokemonList = team.GrabPokemonTeamDetails;
+            ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel
+            {
+                ExportString = string.Empty,
+                TeamId = team.Id,
+            };
+
             if (pokemonList.Count > 0)
             {
-                ExportPokemonViewModel pokemonTeam = new ExportPokemonViewModel
-                {
-                    ExportString = "=== ",
-                    TeamId = team.Id,
-                };
+                pokemonTeam.ExportString = "=== ";
 
                 if (team.Game != null)
                 {
@@ -3614,13 +3616,9 @@ namespace Pokedex.Controllers
 
                     pokemonTeam.ExportString = string.Concat(pokemonTeam.ExportString, this.FillUserPokemonTeam(pokemonList[i], team.GameId));
                 }
+            }
 
-                return pokemonTeam;
-            }
-            else
-            {
-                return null;
-            }
+            return pokemonTeam;
         }
 
         private string FillUserPokemonTeam(PokemonTeamDetail pokemonTeamDetail, int? gameId)

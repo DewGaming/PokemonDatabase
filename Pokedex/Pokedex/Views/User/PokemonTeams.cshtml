@@ -8,11 +8,8 @@
 
 @section styles
 {
-    <style>
-        .pokemonTeamGroup {
-            margin-right: 10px;
-        }
-    </style>
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/pokemonTeam.css" rel="stylesheet" asp-append-version="true" />
 }
 
 @section scripts
@@ -30,114 +27,87 @@
     <button class="pokemonTeamsButton btn btn-primary hide">Export All Teams</button>
 </p>
 
-<div>
-    @if (Model.AllPokemonTeams.Count > 0)
+<div class="pageButtons gamesList">
+    <button class="gameButton" id="Game0" onclick="lookupTeamsInGame('0')">All Games</button>
+    @foreach (var g in @Model.AllGames)
     {
-        <table class="table pokemonTeam">
-            <tbody>
-                @for(var i = 0; i < Model.AllPokemonTeams.Count; i++)
-                {
-                    <tr>
-                        <th scope="col">Team Name</th>
-                        @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
-                        {
-                            <th scope="col">
-                                Game@{
-                                    foreach (var team in Model.AllPokemonTeams)
-                                    {
-                                        if (team.Game != null && team.Game.Name.Contains('/'))
-                                        {
-                                            @("(s)");
-                                            break;
-                                        }
-                                    }
-                                }
-                            </th>
-                        }
-                        <th scope="col">Actions</th>
-                    </tr>
-                    teamCount++;
-                    pokemonCount = 0;
-                    <tr>
-                        <td>@Model.AllPokemonTeams[i].PokemonTeamName</td>
-                        @if (Model.AllPokemonTeams.Where(x => x.Game != null).Count() > 0)
-                        {
-                            <td>
-                                @if (@Model.AllPokemonTeams[i].Game != null)
-                                {
-                                    @Model.AllPokemonTeams[i].Game.Name
-                                }
-                                else
-                                {
-                                    @("No Game Selected");
-                                }
-                            </td>
-                        }
-                        <td>
-                            <a class="teamButton btn btn-primary" title="Edit @Model.AllPokemonTeams[i].PokemonTeamName" href="@this.Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
-                            @if (@Model.AllPokemonTeams[i].FirstPokemon != null)
-                            {
-                                <button id="@Model.AllPokemonTeams[i].Id" class="pokemonTeamButton teamButton btn btn-primary" title="Export @Model.AllPokemonTeams[i].PokemonTeamName">Export Team</button>
-                            }
-                            <a class="teamButton btn btn-primary" title="Delete @Model.AllPokemonTeams[i].PokemonTeamName" href="@this.Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="col">Pokémon</th>
-                        <td colspan="2">
-                            <table class="pokemonTeamPokemonTable">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            @foreach (var p in @Model.AllPokemonTeams[i].GrabPokemonTeamDetails)
-                                            {
-                                                pokemonCount++;
-                                                <div class="pokemonTeamGroup">
-                                                    <a class="dropdown-toggle pokemonTeamDropdownButton" data-toggle="dropdown">
-                                                        <span class="pokemonTeamPicture">
-                                                            @if (p.IsShiny)
-                                                            {
-                                                                <img loading="lazy" class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyIconImageUrl, @p.PokemonId, ".png"))" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <img loading="lazy" class="lightshadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @p.PokemonId, ".png"))" />
-                                                            }
-                                                        </span>
-                                                    </a>
-                                                    <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
-                                                        <span class="adminMenuTitle">View</span>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View Pokémon Data</a></li>
-                                                        <hr class="adminOptionSeparator">
-                                                        <span class="adminMenuTitle">Update</span>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokémon</a></li>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditEV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update EVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditIV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update IVs</a></li>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("EditMoveset", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Moveset</a></li>
-                                                        <hr class="adminOptionSeparator">
-                                                        <span class="adminMenuTitle">Delete</span>
-                                                        <li><a class="dropdown-item" href="@(this.Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokémon</a></li>
-                                                    </ul>
-                                                </div>
-                                            }
-                                            @if (@Model.AllPokemonTeams[i].GrabPokemonTeamDetails.Count < 6)
-                                            {
-                                                <a href="@this.Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
-                                                    <img loading="lazy" class="lightshadowed addButton" title="Add Pokémon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, "/images/general/addButton.png"))" />
-                                                </a>
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="noPokemonTeams">No teams have been created yet.</div>
+        <button style="@(g.GameColor != string.Empty ? string.Concat("background-color: ", @g.GameColor) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupTeamsInGame('@g.Id')">@g.Name</button>
     }
 </div>
+
+@if (@Model.AllPokemonTeams.Count() > 0)
+{
+    <div class="page active generation pokemonTeams">
+        <div class="grid-container">
+            @foreach (var t in @Model.AllPokemonTeams)
+            {
+                pokemonCount = 0;
+                teamCount++;
+                <div class="pokemonTeam Team@(t.Id) TeamGame@(t.GameId) @t.PokemonTeamName">
+                    <div class="teamDetails">
+                        <div><b>@t.PokemonTeamName</b></div>
+                        <div class="gameTeamIn">
+                            @if(t.Game != null)
+                            {
+                               <b>Game: </b>@t.Game.Name
+                            }
+                            else
+                            {
+                                @("No Game Selected")
+                            }
+                        </div>
+                    </div>
+                    <div class="pokemonList">
+                        @foreach (var p in @t.GrabPokemonTeamDetails)
+                        {
+                            pokemonCount++;
+                            <div class="pokemonTeamGroup">
+                                <a class="dropdown-toggle pokemonTeamDropdownButton" data-toggle="dropdown">
+                                    <span class="pokemonTeamPicture">
+                                        @if (p.IsShiny)
+                                        {
+                                            <img loading="lazy" class="shadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, @p.PokemonId, ".png"))" />
+                                        }
+                                        else
+                                        {
+                                            <img loading="lazy" class="shadowed pokemonTeamPokemon" title="Pokémon: @p.Pokemon.Name@((@p.Nickname != null) ? string.Concat(" (", @p.Nickname, ")") : "")" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @p.PokemonId, ".png"))" />
+                                        }
+                                    </span>
+                                </a>
+                                <ul class="pokemonTeamDropdown dropdown-menu dropdown-menu-right">
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("Pokemon", "Home", new { name = p.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() }))" target="_blank">View @p.Pokemon.Name Data</a></li>
+                                    <hr class="adminOptionSeparator">
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditPokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Pokémon</a></li>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditEV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update EVs</a></li>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditIV", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update IVs</a></li>
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("EditMoveset", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Update Moveset</a></li>
+                                    <hr class="adminOptionSeparator">
+                                    <li><a class="dropdown-item" href="@(this.Url.Action("DeletePokemon", "PokemonTeam", new { pokemonTeamId = teamCount, pokemonTeamDetailId = pokemonCount }))">Delete Pokémon</a></li>
+                                </ul>
+                            </div>
+                        }
+                        @if (@t.GrabPokemonTeamDetails.Count < 6)
+                        {
+                            <a href="@this.Url.Action("CreatePokemon", "PokemonTeam", new { pokemonTeamId = teamCount })">
+                                <img loading="lazy" class="shadowed addButton" title="Add Pokémon" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, "/images/general/addButton.png"))" />
+                            </a>
+                        }
+                    </div>
+                    <hr class="buttonSeparator">
+                    <div class="teamOptionButtons">
+                        <a class="teamButton btn btn-primary" title="Edit @t.PokemonTeamName" href="@this.Url.Action("EditTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Edit Team</a>
+                        @if (@t.FirstPokemon != null)
+                        {
+                            <button id="@t.Id" class="pokemonTeamButton teamButton btn btn-success" title="Export @t.PokemonTeamName">Export Team</button>
+                        }
+                        <a class="teamButton btn btn-danger" title="Delete @t.PokemonTeamName" href="@this.Url.Action("DeleteTeam", "PokemonTeam", new { pokemonTeamId = teamCount })">Delete Team</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="noPokemonTeams">No teams have been created yet.</div>
+}
