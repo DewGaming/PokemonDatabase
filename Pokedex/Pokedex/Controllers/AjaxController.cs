@@ -2768,14 +2768,13 @@ namespace Pokedex.Controllers
         public void DeleteShinyHunt(int shinyHuntId)
         {
             List<ShinyHunt> phaseHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHuntId);
-
-            this.dataService.DeleteObject<ShinyHunt>(shinyHuntId);
-
             foreach (var sh in phaseHunts)
             {
                 sh.PhaseOfHuntId = null;
                 this.dataService.UpdateObject(sh);
             }
+
+            this.dataService.DeleteObject<ShinyHunt>(shinyHuntId);
         }
 
         /// <summary>

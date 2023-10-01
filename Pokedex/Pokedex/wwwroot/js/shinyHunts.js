@@ -339,11 +339,12 @@ function togglePin(shinyHuntId) {
 
 function abandonHunt(shinyHuntId, pokemonName) {
     var typedName = prompt("Abandoning a Hunt is not reverisble. To confirm, please type the pokemon's name:\r\n\r\n" + pokemonName);
-    if (typedName.toLowerCase() == "flabebe") {
-        typedName = "Flabébé";
+    typedName = typedName.toLowerCase();
+    if (typedName == "flabebe") {
+        typedName = typedName.replace("flabebe", "flabébé");
     }
 
-    if (typedName.toLowerCase() == pokemonName.toLowerCase()) {
+    if (typedName == pokemonName.toLowerCase()) {
         $.ajax({
             url: '/abandon-shiny-hunt/',
             data: { "shinyHuntId": shinyHuntId }
