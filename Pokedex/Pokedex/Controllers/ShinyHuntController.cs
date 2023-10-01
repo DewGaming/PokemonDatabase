@@ -442,52 +442,5 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
-
-        /// <summary>
-        /// Deletes a shiny hunt.
-        /// </summary>
-        /// <param name="shinyHuntId">The shiny hunt's id.</param>
-        /// <returns>The shiny hunt delete page.</returns>
-        [HttpGet]
-        [Route("delete_shiny_hunt/{shinyHuntId:int}")]
-        public IActionResult DeleteShinyHunt(int shinyHuntId)
-        {
-            ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Pokemon, Game, HuntingMethod, Pokeball, Mark");
-            List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", shinyHunt.GameId).ConvertAll(x => x.Pokemon);
-            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").ConvertAll(x => x.AltFormPokemon);
-            foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
-            {
-                p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
-            }
-
-            DeleteShinyHuntViewModel model = new DeleteShinyHuntViewModel(shinyHunt)
-            {
-                AppConfig = this.appConfig,
-            };
-
-            return this.View(model);
-        }
-
-        /// <summary>
-        /// Deletes a shiny hunt.
-        /// </summary>
-        /// <param name="shinyHunt">The deleteted shiny hunt.</param>
-        /// <returns>The user's shiny hunt page.</returns>
-        [HttpPost]
-        [Route("delete_shiny_hunt/{shinyHuntId:int}")]
-        public IActionResult DeleteShinyHunt(DeleteShinyHuntViewModel shinyHunt)
-        {
-            List<ShinyHunt> phaseHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHunt.Id);
-
-            this.dataService.DeleteObject<ShinyHunt>(shinyHunt.Id);
-
-            foreach (var sh in phaseHunts)
-            {
-                sh.PhaseOfHuntId = null;
-                this.dataService.UpdateObject(sh);
-            }
-
-            return this.RedirectToAction("ShinyHunts", "User");
-        }
     }
 }

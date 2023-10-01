@@ -2760,6 +2760,25 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Abandon a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The abandoned shiny hunt's Id.</param>
+        /// <returns>The user's shiny hunt page.</returns>
+        [Route("abandon-shiny-hunt")]
+        public void DeleteShinyHunt(int shinyHuntId)
+        {
+            List<ShinyHunt> phaseHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHuntId);
+
+            this.dataService.DeleteObject<ShinyHunt>(shinyHuntId);
+
+            foreach (var sh in phaseHunts)
+            {
+                sh.PhaseOfHuntId = null;
+                this.dataService.UpdateObject(sh);
+            }
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>

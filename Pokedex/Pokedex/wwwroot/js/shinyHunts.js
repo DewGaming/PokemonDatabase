@@ -336,3 +336,23 @@ function togglePin(shinyHuntId) {
             alert("Update Failed!");
         });
 }
+
+function abandonHunt(shinyHuntId, pokemonName) {
+    var typedName = prompt("Abandoning a Hunt is not reverisble. To confirm, please type the pokemon's name:\r\n\r\n" + pokemonName);
+    if (typedName.toLowerCase() == "flabebe") {
+        typedName = "Flabébé";
+    }
+
+    if (typedName.toLowerCase() == pokemonName.toLowerCase()) {
+        $.ajax({
+            url: '/abandon-shiny-hunt/',
+            data: { "shinyHuntId": shinyHuntId }
+        })
+            .done(function () {
+                $('.Hunt' + shinyHuntId).remove();
+            })
+            .fail(function () {
+                alert("Update Failed!");
+            });
+    }
+}

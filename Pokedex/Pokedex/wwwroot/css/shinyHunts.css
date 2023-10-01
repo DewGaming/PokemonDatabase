@@ -47,7 +47,9 @@
 
 .shinyFoundButtons a,
 .huntUncapturedButtons a,
+.huntUncapturedButtons button,
 .huntCapturedButtons a,
+.huntCapturedButtons button,
 .encounterButtons button {
   width: 49%;
 }
@@ -182,10 +184,11 @@
 }
 
 @media (max-width: 449px) {
-
   .shinyFoundButtons a,
   .huntUncapturedButtons a,
+  .huntUncapturedButtons button,
   .huntCapturedButtons a,
+  .huntCapturedButtons button,
   .encounterButtons button {
     height: 62px;
     display: inline-flex;
