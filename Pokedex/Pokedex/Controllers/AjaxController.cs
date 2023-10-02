@@ -1948,20 +1948,18 @@ namespace Pokedex.Controllers
                         }
 
                         eggGroupList = eggGroupList.Where(x => breedablePokemonList.Any(y => y.PokemonId == x.PokemonId)).ToList();
-                        originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                         List<PokemonEggGroupDetail> finalEggGroupList = new List<PokemonEggGroupDetail>(eggGroupList);
 
-                        foreach (var p in eggGroupList.Where(x => x.Pokemon.GenderRatioId == 10 || ((genderRatio.Id == 1 || genderRatio.FemaleRatio == 9) && x.Pokemon.GenderRatioId == genderRatio.Id)).ToList())
+                        foreach (var p in eggGroupList.Where(x => x.Pokemon.GenderRatioId == 10 || ((genderRatio.Id == 1 || genderRatio.Id == 9) && x.Pokemon.GenderRatioId == genderRatio.Id)).ToList())
                         {
                             finalEggGroupList.Remove(p);
                         }
 
                         eggGroupList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
-                        eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
-                        eggGroupList = eggGroupList.OrderBy(x => x.Pokemon.PokedexNumber).ToList();
-                        pokemonList.AddRange(eggGroupList.ConvertAll(x => x.Pokemon));
-
                         eggGroupList = finalEggGroupList;
+                        eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
+                        originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
+                        pokemonList.AddRange(originalPokemon);
                     }
 
                     (originalPokemon ??= eggGroupList.ConvertAll(x => x.Pokemon)).RemoveAll(x => !eggGroupList.Select(y => y.PokemonId).Contains(x.Id));
@@ -1989,10 +1987,10 @@ namespace Pokedex.Controllers
 
                     EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
                     {
-                        AllPokemonWithEggGroups = eggGroupList,
-                        AllPokemon = pokemonList,
-                        AllAltForms = altFormList,
-                        AllOriginalPokemon = originalPokemon.ToList(),
+                        AllPokemonWithEggGroups = eggGroupList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
+                        AllPokemon = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
+                        AllAltForms = altFormList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
+                        AllOriginalPokemon = originalPokemon.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
                         AppConfig = this.appConfig,
                         SearchedPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
                         SearchedGame = game,
