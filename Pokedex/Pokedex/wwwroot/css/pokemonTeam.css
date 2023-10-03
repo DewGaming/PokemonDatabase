@@ -19,7 +19,8 @@
     font-size: 1rem;
 }
 
-.addButton {
+.addButton, .shadowed {
     width: 150px;
     height: 150px;
+    object-fit: contain;
 }
