@@ -185,9 +185,17 @@ namespace Pokedex.Controllers
             PokemonTeamsViewModel model = new PokemonTeamsViewModel()
             {
                 AllPokemonTeams = pokemonTeams,
-                AllGames = pokemonTeams.ConvertAll(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(x => x.Id).ToList(),
                 AppConfig = this.appConfig,
             };
+
+            if (pokemonTeams.Count() > 0)
+            {
+                model.AllGames = pokemonTeams.Where(x => x.GameId != null).Select(x => x.Game).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(x => x.Id).ToList();
+            }
+            else
+            {
+                model.AllGames = new List<Game>();
+            }
 
             return this.View(model);
         }

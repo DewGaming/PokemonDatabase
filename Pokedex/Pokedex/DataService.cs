@@ -883,11 +883,15 @@ namespace Pokedex
         /// <returns>A list of sorted pokemon teams.</returns>
         public List<PokemonTeam> GetPokemonTeams(string username)
         {
+            List<PokemonTeam> pokemonTeams = new List<PokemonTeam>();
             List<PokemonTeam> teams = this.GetObjects<PokemonTeam>("Id", "User, Game, FirstPokemon, FirstPokemon.Pokemon, SecondPokemon, SecondPokemon.Pokemon, ThirdPokemon, ThirdPokemon.Pokemon, FourthPokemon, FourthPokemon.Pokemon, FifthPokemon, FifthPokemon.Pokemon, SixthPokemon, SixthPokemon.Pokemon", "User.Username", username);
-            List<PokemonTeam> teamsWithGames = teams.Where(x => x.Game != null).OrderBy(x => x.Game.ReleaseDate).ThenBy(x => x.GameId).ThenBy(x => x.Id).ToList();
-            List<PokemonTeam> teamsWithoutGames = teams.Where(x => x.Game == null).OrderBy(x => x.Id).ToList();
-            List<PokemonTeam> pokemonTeams = teamsWithoutGames;
-            pokemonTeams.AddRange(teamsWithGames);
+            if (teams.Count() > 0)
+            {
+                List<PokemonTeam> teamsWithGames = teams.Where(x => x.Game != null).OrderBy(x => x.Game.ReleaseDate).ThenBy(x => x.GameId).ThenBy(x => x.Id).ToList();
+                List<PokemonTeam> teamsWithoutGames = teams.Where(x => x.Game == null).OrderBy(x => x.Id).ToList();
+                pokemonTeams = teamsWithoutGames;
+                pokemonTeams.AddRange(teamsWithGames);
+            }
 
             return pokemonTeams;
         }

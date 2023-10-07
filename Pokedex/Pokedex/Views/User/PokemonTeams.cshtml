@@ -27,13 +27,16 @@
     <button class="pokemonTeamsButton btn btn-primary hide">Export All Teams</button>
 </p>
 
-<div class="pageButtons gamesList">
-    <button class="gameButton" id="Game0" onclick="lookupTeamsInGame('0')">All Games</button>
-    @foreach (var g in @Model.AllGames)
-    {
-        <button style="@(g.GameColor != string.Empty ? string.Concat("background-color: ", @g.GameColor) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupTeamsInGame('@g.Id')">@g.Name</button>
-    }
-</div>
+@if (@Model.AllGames.Count() > 0)
+{
+    <div class="pageButtons gamesList">
+        <button class="gameButton" id="Game0" onclick="lookupTeamsInGame('0')">All Games</button>
+        @foreach (var g in @Model.AllGames)
+        {
+            <button style="@(g.GameColor != string.Empty ? string.Concat("background-color: ", @g.GameColor) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupTeamsInGame('@g.Id')">@g.Name</button>
+        }
+    </div>
+}
 
 @if (@Model.AllPokemonTeams.Count() > 0)
 {
