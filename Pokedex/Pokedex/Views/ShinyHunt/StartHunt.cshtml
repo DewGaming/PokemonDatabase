@@ -8,6 +8,33 @@
     <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/shinyHunts.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/select2.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        @@media (min-width: 576px) {
+            .pokemonShinyImage {
+                width: 40% !important;
+                height: 40% !important;
+                max-width: 125px !important;
+                max-height: 125px !important;
+                margin: 10px;
+            }
+        }
+        @@media (max-width: 575px) {
+            .shinyHuntImages {
+                display: none !important;
+            }
+        }
+
+        @@media (min-width: 576px) {
+            .shadowed {
+                min-width: auto !important;
+            }
+        }
+
+        .shinyHuntImages {
+            display: flex;
+            flex-flow: row wrap;
+        }
+    </style>
 }
 
 @section scripts
@@ -71,8 +98,7 @@
             </p>
         }
     </div>
-    <div>
-        <img loading="lazy" alt="Shiny Pokemon Image" class="shadowed pokemonShinyImage hide"/>
+    <div class="shinyHuntImages">
     </div>
 </div>
 

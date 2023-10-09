@@ -1,4 +1,4 @@
-var grabGames = function (gameId, pokemonIds) {
+var pokemonList = [], grabGames = function (gameId, pokemonIds) {
     $(".overlay").fadeIn(300);
 
     $.ajax({
@@ -221,6 +221,18 @@ var grabGames = function (gameId, pokemonIds) {
     checkPokeballs();
     checkShinyCharm();
     checkSparklingPower();
+}, refreshEvents = function () {
+    $('.pokemonShinyImage').unbind("click");
+    $('.pokemonShinyImage').on("click", function () {
+        if ($('.container>div').hasClass('startShinyHunt')) {
+            var pokemonId = $(this).attr('id')
+            if ($('#PokemonIds option[value="' + pokemonId + '"]') !== "undefined" && $('.select2-selection__choice[title="' + pokemonName + '"] .select2-selection__choice__remove') !== "undefined") {
+                var pokemonName = $('#PokemonIds option[value="' + pokemonId + '"]').html();
+                $('.select2-selection__choice[title="' + pokemonName + '"] .select2-selection__choice__remove').trigger('click');
+            }
+        }
+        $(this).remove()
+    });
 }
 
 $(document).ready(function () {
@@ -255,11 +267,15 @@ $('#PokemonId').on('change', function () {
 
 $('#PokemonIds').on('change', function () {
     if ($('#PokemonIds').val().length > 0) {
-        if ($('#PokemonIds').val().length == 1) {
-            $('.pokemonShinyImage').removeClass('hide');
-            $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonIds').val()[0] + '.png');
-        } else {
-            $('.pokemonShinyImage').addClass('hide');
+        if (pokemonList.length < $('#PokemonIds').val().length) {
+            var pokemon = $('#PokemonIds').val().filter(x => !pokemonList.includes(x))[0];
+            $('.shinyHuntImages').append($('<img>').addClass('shadowed pokemonShinyImage').attr('id', pokemon).prop('alt', 'Shiny Pokemon Image').prop('loading', 'lazy').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + pokemon + '.png'));
+            refreshEvents();
+        } else if (pokemonList.length > $('#PokemonIds').val().length) {
+            var pokemonId = pokemonList.filter(x => !$('#PokemonIds').val().includes(x))[0];
+            if ($('.pokemonShinyImage#' + pokemonId) !== "undefined") {
+                $('.pokemonShinyImage#' + pokemonId).remove();
+            }
         }
         grabGames($('#GameId').val(), $('#PokemonIds').val());
     } else {
@@ -267,6 +283,7 @@ $('#PokemonIds').on('change', function () {
         $('.form-group.row').addClass('hide');
         $('.form-group.row').first().removeClass('hide');
     }
+    pokemonList = $('#PokemonIds').val();
 });
 
 $('#HuntingMethodId').on('change', function () {
