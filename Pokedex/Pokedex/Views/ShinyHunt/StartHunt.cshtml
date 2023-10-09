@@ -17,7 +17,7 @@
 
 <h2>Start Shiny Hunt</h2>
 
-<div class="startShinyForm">
+<div class="startShinyHunt">
     <div class="form-horizontal">
         @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
@@ -31,9 +31,9 @@
             @Html.HiddenFor(x => x.UserId)
 
             <div class="form-group row">
-                @Html.LabelFor(x => x.PokemonId, new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.PokemonId)
+                @Html.LabelFor(x => x.PokemonIds, "Pokémon Hunting", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.PokemonIds, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.PokemonIds)
             </div>
 
             <div class="form-group row hide">
@@ -67,8 +67,7 @@
             </div>
 
             <p class="submitButtons">
-                <button type="submit" name="numberOfHunts" value="oneHunt" class="btn btn-primary" role="button">Add</button>
-                <button type="submit" name="numberOfHunts" value="multipleHunts" class="btn btn-primary" role="button">Add and Create Another Hunt</button>
+                <button type="submit" class="btn btn-primary" role="button">Add</button>
             </p>
         }
     </div>

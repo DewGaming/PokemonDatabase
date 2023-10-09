@@ -26,6 +26,11 @@ namespace Pokedex.Models
         }
 
         /// <summary>
+        /// Gets or sets a list of all pokemon Ids.
+        /// </summary>
+        public int[] PokemonIds { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all games.
         /// </summary>
         public List<Game> AllGames { get; set; }
@@ -34,6 +39,11 @@ namespace Pokedex.Models
         /// Gets or sets a list of all pokemon.
         /// </summary>
         public List<Pokemon> AllPokemon { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all pokemon a hunt is being created.
+        /// </summary>
+        public List<Pokemon> AllPokemonHunts { get; set; }
 
         /// <summary>
         /// Gets or sets a list of all hunting methods.

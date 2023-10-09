@@ -936,6 +936,67 @@ namespace Pokedex
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
         /// <returns>The list of shiny huntable games.</returns>
+        public List<Game> GetMultipleShinyHuntGames(List<int> pokemonId)
+        {
+            List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game").Where(x => pokemonId.Any(y => y == x.Id)).ToList();
+            List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
+            List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+            List<Game> pokemonGamesIn = new List<Game>();
+            List<Game> possibleGames = new List<Game>();
+            List<Game> huntableGames = new List<Game>();
+
+            foreach (var p in pokemonList)
+            {
+                pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == p.Id).ToList().ConvertAll(x => x.Game);
+                possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+
+                // Gets other games for extra forms introduced in future generations.
+                if (p.Name == "Deoxys")
+                {
+                    possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
+                    possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 3 && x.Id != 39 && x.Id != 40));
+                }
+                else if (p.Name == "Zygarde")
+                {
+                    possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
+                    possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
+                }
+
+                // Gets other games for evolutions introduced in future generations.
+                List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
+                Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == p.Id);
+                int preevolution = p.Id;
+                while (evolution != null && evolution.PreevolutionPokemon != null)
+                {
+                    preevolution = evolution.PreevolutionPokemonId;
+                    evolution = evolutionList.Find(x => x.EvolutionPokemonId == preevolution);
+                }
+
+                if (preevolution != p.Id)
+                {
+                    pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
+                    gamesAvailable = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                    possibleGames.AddRange(gamesAvailable.Where(x => !possibleGames.Any(y => y.Id == x.Id)).ToList());
+                }
+
+                if (huntableGames.Count() == 0)
+                {
+                    huntableGames = possibleGames;
+                }
+                else
+                {
+                    huntableGames = huntableGames.Where(x => possibleGames.Any(y => y.Id == x.Id)).ToList();
+                }
+            }
+
+            return huntableGames.OrderBy(x => x.GenerationId).ThenBy(x => x.Id).ToList();
+        }
+
+        /// <summary>
+        /// Gets the list of games possible to shiny hunt in and formats it for the shiny hunt pages.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>The list of shiny huntable games.</returns>
         public List<Game> GetShinyHuntGames(int pokemonId)
         {
             List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game");

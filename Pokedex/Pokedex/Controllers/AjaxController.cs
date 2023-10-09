@@ -2530,14 +2530,14 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Grabs all of the games available for the selected pokemon.
         /// </summary>
-        /// <param name="pokemonId">The selected pokemon's Id.</param>
+        /// <param name="pokemonId">The selected pokemon Ids.</param>
         /// <returns>The list of available games.</returns>
         [Route("get-games-by-shiny-huntable-pokemon")]
-        public List<Game> GetGamesByShinyHuntablePokemon(int pokemonId)
+        public List<Game> GetGamesByShinyHuntablePokemon(List<int> pokemonId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.dataService.GetShinyHuntGames(pokemonId);
+                return this.dataService.GetMultipleShinyHuntGames(pokemonId);
             }
 
             return null;

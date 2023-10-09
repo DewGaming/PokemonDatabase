@@ -1,10 +1,10 @@
-var grabGames = function (gameId) {
+var grabGames = function (gameId, pokemonIds) {
     $(".overlay").fadeIn(300);
 
     $.ajax({
         url: '/get-games-by-shiny-huntable-pokemon/',
         method: "POST",
-        data: { 'pokemonId': $('#PokemonId').val() }
+        data: { 'pokemonId': pokemonIds }
     })
         .done(function (data) {
             $('#GameId').empty();
@@ -20,7 +20,7 @@ var grabGames = function (gameId) {
                 });
             }
 
-            $('.hide').not('.gameSpecific').each(function () {
+            $('.hide').not('.gameSpecific').not('.pokemonShinyImage').each(function () {
                 $(this).removeClass('hide');
             })
 
@@ -224,14 +224,23 @@ var grabGames = function (gameId) {
 }
 
 $(document).ready(function () {
-    var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val();
-    if ($('#PokemonId').val() !== "") {
-        grabGames(gameId);
-        grabHuntingMethod(huntingMethodId);
-        $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
+    if ($('.container>div').hasClass('startShinyHunt')) {
+        $('#PokemonIds').select2({
+            multiple: true,
+        }).on('select2:unselecting', function() {
+            $(this).data('unselecting', true);
+        }).on('select2:opening', function(e) {
+            if ($(this).data('unselecting')) {
+                $(this).removeData('unselecting');
+                e.preventDefault();
+            }
+        });
+        $('.select2-selection__choice__remove').each(function () {
+            $(this).trigger('click');
+        })
+    } else {
+        $("#PokemonId").select2();
     }
-
-    $("#PokemonId").select2();
 });
 
 $('#GameId').on('change', function () {
@@ -239,17 +248,29 @@ $('#GameId').on('change', function () {
 });
 
 $('#PokemonId').on('change', function () {
-    grabGames($('#GameId').val());
+    $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
+    grabGames($('#GameId').val(), $('#PokemonId').val());
     refreshGenders();
+});
+
+$('#PokemonIds').on('change', function () {
+    if ($('#PokemonIds').val().length > 0) {
+        if ($('#PokemonIds').val().length == 1) {
+            $('.pokemonShinyImage').removeClass('hide');
+            $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonIds').val()[0] + '.png');
+        } else {
+            $('.pokemonShinyImage').addClass('hide');
+        }
+        grabGames($('#GameId').val(), $('#PokemonIds').val());
+    } else {
+        $('.pokemonShinyImage').addClass('hide');
+        $('.form-group.row').addClass('hide');
+        $('.form-group.row').first().removeClass('hide');
+    }
 });
 
 $('#HuntingMethodId').on('change', function () {
     checkFunctions();
-});
-
-$('#PokemonId').on('change', function () {
-    $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
-    refreshGenders();
 });
 
 $('.submitButtons').on('click', function () {
