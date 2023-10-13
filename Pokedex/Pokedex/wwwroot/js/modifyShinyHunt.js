@@ -251,6 +251,9 @@ $(document).ready(function () {
             $(this).trigger('click');
         })
     } else {
+        grabGames($('#GameId').val(), $("#PokemonId").val());
+        grabHuntingMethod($('#HuntingMethodId').val(), $("#PokemonId").val());
+        $('.pokemonShinyImage').removeClass('hide').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
         $("#PokemonId").select2();
     }
 });
