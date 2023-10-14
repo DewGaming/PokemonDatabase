@@ -1111,6 +1111,59 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Updates the availablity of the pokemon in a specified game.
         /// </summary>
+        /// <param name="regionalDexId">The game's id.</param>
+        /// <param name="pokemonList">The pokemon that are available in the given regional dex.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-regional-dex-entries")]
+        public string UpdateRegionalDexEntries(int regionalDexId, List<string> pokemonList)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                RegionalDex regionalDex = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", regionalDexId);
+                List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>();
+                List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
+                allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
+                allPokemon = allPokemon.Where(x => pokemonList.Any(y => y == x.Name)).OrderBy(x => pokemonList.IndexOf(x.Name)).ToList();
+                List<int> pokemonIds = allPokemon.Select(x => x.Id).ToList();
+                List<RegionalDexEntry> existingDexEntries = this.dataService.GetObjects<RegionalDexEntry>(includes: "Pokemon, RegionalDex", whereProperty: "RegionalDexId", wherePropertyValue: regionalDexId);
+                List<RegionalDexEntry> newDexEntries = new List<RegionalDexEntry>();
+
+                for (var i = 0; i < pokemonIds.Count(); i++)
+                {
+                    if (existingDexEntries.Find(x => x.PokemonId == pokemonIds[i] && x.RegionalDexId == regionalDexId && x.RegionalPokedexNumber == i + 1) == null)
+                    {
+                        newDexEntries.Add(new RegionalDexEntry()
+                        {
+                            PokemonId = pokemonIds[i],
+                            RegionalDexId = regionalDexId,
+                            RegionalPokedexNumber = i + 1,
+                        });
+                    }
+                    else
+                    {
+                        existingDexEntries.Remove(existingDexEntries.Find(x => x.PokemonId == pokemonIds[i] && x.RegionalDexId == regionalDexId));
+                    }
+                }
+
+                foreach (var e in newDexEntries)
+                {
+                    this.dataService.AddObject(e);
+                }
+
+                foreach (var e in existingDexEntries)
+                {
+                    this.dataService.DeleteObject<RegionalDexEntry>(e.Id);
+                }
+
+                return this.Json(this.Url.Action("RegionalDexes", "Owner")).Value.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the availablity of the pokemon in a specified game.
+        /// </summary>
         /// <param name="gameId">The game's id.</param>
         /// <param name="pokemonList">The pokemon that are available in the given game.</param>
         /// <returns>The admin pokemon page.</returns>

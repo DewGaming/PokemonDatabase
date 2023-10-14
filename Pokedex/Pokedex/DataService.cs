@@ -328,8 +328,8 @@ namespace Pokedex
             {
                 Pokemon = pokemon,
                 BaseHappinesses = this.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
-                BaseStats = this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
-                EVYields = this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
+                BaseStats = this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                EVYields = this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 Typings = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 Abilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 EggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
@@ -337,6 +337,8 @@ namespace Pokedex
                 PreEvolutions = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
+                RegionalDexes = this.GetObjects<RegionalDex>(includes: "Game"),
+                RegionalDexEntries = this.GetObjects<RegionalDexEntry>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 GamesAvailableIn = games,
                 AppConfig = appConfig,
             };

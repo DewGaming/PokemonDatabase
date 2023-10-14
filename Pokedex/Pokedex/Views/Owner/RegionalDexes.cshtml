@@ -1,0 +1,35 @@
+@model IEnumerable<Pokedex.Models.RegionalDexViewModel>;
+
+<div class="natureTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("RegionalDex", "Add")" role="button">Add Regional Dex</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Game</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.AllGames.Find(x => x.Id == item.GameId).Name
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("RegionalDex", "Edit", new { id = item.Id }))">Edit</a>
+                    @('|')
+                    <a href="@(this.Url.Action("RegionalDexEntry", "Edit", new { id = item.Id }))">Edit Regional Dex Entries</a>
+                    @('|')
+                    <a href="@(this.Url.Action("RegionalDex", "Delete", new { id = item.Id }))">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

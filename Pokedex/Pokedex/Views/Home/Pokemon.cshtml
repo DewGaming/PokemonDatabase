@@ -659,9 +659,11 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         @for (var i = 0; i < gamesAvailableInReleaseDates.Count(); i+=2)
                         {
                             var gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i]).ToList();
+                            var regionalDexes = @item.RegionalDexes.Where(x => gameList.Any(y => y.Id == x.GameId)).ToList();
+                            var regionalDexEntries = @item.RegionalDexEntries.Where(x => regionalDexes.Any(y => y.Id == x.RegionalDexId));
                             <tr>
                                 <td>
-                                    @for(var j = 0; j < gameList.Count(); j++)
+                                    @for (var j = 0; j < gameList.Count(); j++)
                                     {
                                         @if (j > 0)
                                         {
@@ -669,10 +671,25 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         }
                                         @gameList[j].Name
                                     }
+                                    @if (regionalDexes.Count() > 0 && regionalDexEntries.Count() > 0)
+                                    {
+                                        <br>
+                                        <span class="weak">Regional Dex Number</span>
+                                        @foreach (var dex in regionalDexes)
+                                        {
+                                            @if (item.RegionalDexEntries.Where(x => x.RegionalDexId == dex.Id).Count() > 0)
+                                            {
+                                                <br>
+                                                <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                            }
+                                        }
+                                    }
                                 </td>
                                 @if (@gamesAvailableInReleaseDates.Last() != @gamesAvailableInReleaseDates[i])
                                 {
                                     gameList = gamesAvailableInInGeneration.Where(x => x.ReleaseDate == gamesAvailableInReleaseDates[i+1]).ToList();
+                                    regionalDexes = @item.RegionalDexes.Where(x => gameList.Any(y => y.Id == x.GameId)).ToList();
+                                    regionalDexEntries = @item.RegionalDexEntries.Where(x => regionalDexes.Any(y => y.Id == x.RegionalDexId));
                                     <td>
                                         @for(var j = 0; j < gameList.Count(); j++)
                                         {
@@ -681,6 +698,19 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                                 @(" / ")
                                             }
                                             @gameList[j].Name
+                                        }
+                                        @if (regionalDexes.Count() > 0 && regionalDexEntries.Count() > 0)
+                                        {
+                                            <br>
+                                            <span class="weak">Regional Dex Number</span>
+                                            @foreach (var dex in regionalDexes)
+                                            {
+                                                @if (item.RegionalDexEntries.Where(x => x.RegionalDexId == dex.Id).Count() > 0)
+                                                {
+                                                    <br>
+                                                    <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                }
+                                            }
                                         }
                                     </td>
                                 }

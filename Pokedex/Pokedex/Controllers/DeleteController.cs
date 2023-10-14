@@ -146,11 +146,7 @@ namespace Pokedex.Controllers
         [Route("delete_nature/{id:int}")]
         public IActionResult Nature(int id)
         {
-            Nature nature = this.dataService.GetObjectByPropertyValue<Nature>("Id", id);
-            NatureStatViewModel model = new NatureStatViewModel(nature)
-            {
-                AllStats = this.dataService.GetObjects<Stat>(),
-            };
+            Nature model = this.dataService.GetObjectByPropertyValue<Nature>("Id", id, "RaisedStat, LoweredStat");
 
             return this.View(model);
         }
@@ -163,6 +159,25 @@ namespace Pokedex.Controllers
             this.dataService.DeleteObject<Nature>(nature.Id);
 
             return this.RedirectToAction("Natures", "Owner");
+        }
+
+        [HttpGet]
+        [Route("delete_regional_dex/{id:int}")]
+        public IActionResult RegionalDex(int id)
+        {
+            RegionalDex model = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", id, "Game");
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_regional_dex/{id:int}")]
+        public IActionResult RegionalDex(RegionalDex regionalDex)
+        {
+            this.dataService.DeleteObject<RegionalDex>(regionalDex.Id);
+
+            return this.RedirectToAction("RegionalDexes", "Owner");
         }
 
         /// <summary>

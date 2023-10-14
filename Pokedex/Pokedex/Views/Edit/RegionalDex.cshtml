@@ -1,0 +1,32 @@
+@model Pokedex.Models.RegionalDexViewModel
+
+<h2>Update Regional Dex</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {    
+        @Html.AntiForgeryToken()
+            
+        @Html.HiddenFor(x => x.Id)
+
+        @Html.ValidationSummary()
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Name, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Name)
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(x => x.GameId, "Regional Dex's Game", new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.GameId, new SelectList(Model.AllGames, "Id", "Name"), "", new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.GameId)
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Save</button>
+        </p>
+    }
+
+</div>

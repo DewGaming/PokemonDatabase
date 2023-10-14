@@ -377,6 +377,38 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_regional_dex")]
+        public IActionResult RegionalDex()
+        {
+            RegionalDexViewModel model = new RegionalDexViewModel()
+            {
+                AllGames = this.dataService.GetGamesGroupedByReleaseDate(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_regional_dex")]
+        public IActionResult RegionalDex(RegionalDex regionalDex)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                RegionalDexViewModel model = new RegionalDexViewModel()
+                {
+                    AllGames = this.dataService.GetGamesGroupedByReleaseDate(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.AddObject(regionalDex);
+
+            return this.RedirectToAction("RegionalDexes", "Owner");
+        }
+
+        [HttpGet]
         [Route("add_egg_group")]
         public IActionResult EggGroup()
         {

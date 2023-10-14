@@ -214,6 +214,24 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("edit_regional_dex_entries/{id:int}")]
+        public IActionResult RegionalDexEntry(int id)
+        {
+            RegionalDex regionalDex = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", id);
+            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames();
+            List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
+            pokemonList = pokemonList.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
+
+            EditRegionalDexEntriesViewModel model = new EditRegionalDexEntriesViewModel()
+            {
+                RegionalDex = regionalDex,
+                PokemonList = pokemonList,
+                RegionalDexEntries = this.dataService.GetObjects<RegionalDexEntry>(includes: "Pokemon, RegionalDex"),
+            };
+
+            return this.View(model);
+        }
+
         [Route("edit_game_starters/{id:int}")]
         public IActionResult GameStarter(int id)
         {
@@ -1402,6 +1420,39 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(nature);
 
             return this.RedirectToAction("Natures", "Owner");
+        }
+
+        [HttpGet]
+        [Route("edit_regional_dex/{id:int}")]
+        public IActionResult RegionalDex(int id)
+        {
+            RegionalDex nature = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", id);
+            RegionalDexViewModel model = new RegionalDexViewModel(nature)
+            {
+                AllGames = this.dataService.GetGamesGroupedByReleaseDate(),
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_regional_dex/{id:int}")]
+        public IActionResult RegionalDex(RegionalDex regionalDex)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                RegionalDexViewModel model = new RegionalDexViewModel(regionalDex)
+                {
+                    AllGames = this.dataService.GetGamesGroupedByReleaseDate(),
+                };
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(regionalDex);
+
+            return this.RedirectToAction("RegionalDexes", "Owner");
         }
 
         /// <summary>

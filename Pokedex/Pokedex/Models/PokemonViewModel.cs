@@ -84,6 +84,16 @@ namespace Pokedex.Models
         public List<Game> GamesAvailableIn { get; set; }
 
         /// <summary>
+        /// Gets or sets the regional dexes this pokemon appears in.
+        /// </summary>
+        public List<RegionalDex> RegionalDexes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the regional dex entries for this pokemon.
+        /// </summary>
+        public List<RegionalDexEntry> RegionalDexEntries { get; set; }
+
+        /// <summary>
         /// Gets or sets the pokemon before any edits.
         /// </summary>
         public Pokemon OriginalPokemon { get; set; }

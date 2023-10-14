@@ -308,6 +308,23 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        [Route("regional_dex")]
+        public IActionResult RegionalDexes()
+        {
+            List<RegionalDex> regionalDexes = this.dataService.GetObjects<RegionalDex>("Game.ReleaseDate, Id", "Game");
+            List<Game> allGames = this.dataService.GetGamesGroupedByReleaseDate();
+            List<RegionalDexViewModel> model = new List<RegionalDexViewModel>();
+            foreach (var dex in regionalDexes)
+            {
+                model.Add(new RegionalDexViewModel(dex)
+                {
+                    AllGames = allGames,
+                });
+            }
+
+            return this.View(model);
+        }
+
         /// <summary>
         /// Allows owners to view all users on the site.
         /// </summary>

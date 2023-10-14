@@ -513,6 +513,15 @@ label {
   margin-left: -5px;
 }
 
+span.weak {
+  font-size: .85rem;
+  font-weight: lighter;
+}
+
+.ui-sortable-handle {
+  cursor: grab;
+}
+
 .evolutionImage a {
   padding: 0 10px;
 }

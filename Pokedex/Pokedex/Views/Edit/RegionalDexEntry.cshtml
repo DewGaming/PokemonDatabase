@@ -1,0 +1,79 @@
+@using Pokedex.DataAccess.Models;
+@model Pokedex.Models.EditRegionalDexEntriesViewModel
+
+@section scripts
+{
+    <script src="~/js/editRegionalDexEntries.js" asp-append-version="true"></script>
+}
+
+@section styles
+{
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        .container {
+            max-width: 85% !important;
+        }
+
+        .regionalDexEntriesDiv div {
+            width: 50%;
+        }
+
+        .flexDiv {
+            flex-wrap: wrap;
+        }
+
+        .regionalDexEntryOptions {
+            flex: 0 0 33%;
+            flex-wrap: wrap;
+            max-width: auto;
+        }
+
+        .regionalDexEntryOptions li {
+            list-style: none;
+        }
+    </style>
+}
+
+<h2>Update @(Model.RegionalDex.Name)'s Dex Entries</h2>
+<p>
+    <button onclick="updateRegionalDexEntries(@Model.RegionalDex.Id)" class="btn btn-primary" role="button">Save</button>
+</p>
+
+<div class="regionalDexEntriesDiv flexDiv">
+    <div class="flexDiv">
+        @foreach(var g in Model.PokemonList.Select(x => x.Game.Generation).Distinct().OrderBy(x => x.Id).ToList())
+        {
+            <div class="gen@(g.Id) regionalDexEntryOptions">
+                <p>Generation @g.Id</p>
+                <ul>
+                    @foreach (var p in Model.PokemonList.Where(x => x.Game.GenerationId == g.Id).OrderBy(x => x.PokedexNumber))
+                    {
+                        var entryFound = @Model.RegionalDexEntries.Find(x => x.PokemonId == p.Id && x.RegionalDexId == @Model.RegionalDex.Id);
+                        <li>
+                            <input class="regionalDexEntryOption" id="@(p.Name)" type="checkbox" value="@p.Id" @(entryFound != null ? "checked=checked" : "") />
+                            <label for="@(p.Name)" class="generatorOptionTitle">
+                                <span>@('#')@p.PokedexNumber.ToString().PadLeft(4, '0') @p.Name</span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+    <div>
+        <ul class="regionalDexEntryList">
+            @foreach (var e in Model.RegionalDexEntries.Where(x => x.RegionalDexId == @Model.RegionalDex.Id).OrderBy(x => x.RegionalPokedexNumber))
+            {
+                <li>
+                    <span id="@(e.Pokemon.Name)">@e.Pokemon.Name</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
