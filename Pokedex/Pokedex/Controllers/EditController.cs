@@ -218,7 +218,9 @@ namespace Pokedex.Controllers
         public IActionResult RegionalDexEntry(int id)
         {
             RegionalDex regionalDex = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
+            pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
             List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
             pokemonList = pokemonList.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
 

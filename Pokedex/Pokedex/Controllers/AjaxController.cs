@@ -1120,7 +1120,9 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 RegionalDex regionalDex = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", regionalDexId);
-                List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>();
+                List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
+                List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon");
+                allPokemon = allPokemon.Where(x => !altFormList.Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
                 List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
                 allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
                 allPokemon = allPokemon.Where(x => pokemonList.Any(y => y == x.Name)).OrderBy(x => pokemonList.IndexOf(x.Name)).ToList();
@@ -1138,10 +1140,29 @@ namespace Pokedex.Controllers
                             RegionalDexId = regionalDexId,
                             RegionalPokedexNumber = i + 1,
                         });
+                        if (altFormList.Exists(x => x.OriginalPokemonId == pokemonIds[i]))
+                        {
+                            foreach (var a in altFormList.Where(x => x.OriginalPokemonId == pokemonIds[i]).Select(x => x.AltFormPokemon))
+                            {
+                                newDexEntries.Add(new RegionalDexEntry()
+                                {
+                                    PokemonId = a.Id,
+                                    RegionalDexId = regionalDexId,
+                                    RegionalPokedexNumber = i + 1,
+                                });
+                            }
+                        }
                     }
                     else
                     {
                         existingDexEntries.Remove(existingDexEntries.Find(x => x.PokemonId == pokemonIds[i] && x.RegionalDexId == regionalDexId));
+                        if (altFormList.Exists(x => x.OriginalPokemonId == pokemonIds[i]))
+                        {
+                            foreach (var a in altFormList.Where(x => x.OriginalPokemonId == pokemonIds[i]).Select(x => x.AltFormPokemon))
+                            {
+                                existingDexEntries.Remove(existingDexEntries.Find(x => x.PokemonId == a.Id && x.RegionalDexId == regionalDexId));
+                            }
+                        }
                     }
                 }
 
