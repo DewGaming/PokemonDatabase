@@ -16,7 +16,7 @@ namespace Pokedex.DataAccess.Models
         }
 
         public int Id { get; set; }
-        [StringLength(25), Required, Display(Name = "Regional Dex Name (Will Show in Pokemon Page)")]
+        [Required, Display(Name = "Regional Dex Name (Will Show in Pokemon Page)")]
         public string Name { get; set; }
         [Required, Display(Name = "Regional Dex's Game")]
         public int GameId { get; set; }
