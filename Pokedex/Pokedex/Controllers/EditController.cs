@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System.Collections.Generic;
@@ -218,16 +219,13 @@ namespace Pokedex.Controllers
         public IActionResult RegionalDexEntry(int id)
         {
             RegionalDex regionalDex = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", id);
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
-            pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
-            List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
-            pokemonList = pokemonList.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
+            List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.Game, Pokemon.Game.Generation").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
+            availablePokemon = availablePokemon.DistinctBy(x => x.Name).ToList();
 
             EditRegionalDexEntriesViewModel model = new EditRegionalDexEntriesViewModel()
             {
                 RegionalDex = regionalDex,
-                PokemonList = pokemonList,
+                PokemonList = availablePokemon,
                 RegionalDexEntries = this.dataService.GetObjects<RegionalDexEntry>(includes: "Pokemon, RegionalDex"),
             };
 
