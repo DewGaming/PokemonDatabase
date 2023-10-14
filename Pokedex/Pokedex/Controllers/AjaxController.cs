@@ -1129,6 +1129,24 @@ namespace Pokedex.Controllers
                 List<int> pokemonIds = allPokemon.Select(x => x.Id).ToList();
                 List<RegionalDexEntry> existingDexEntries = this.dataService.GetObjects<RegionalDexEntry>(includes: "Pokemon, RegionalDex", whereProperty: "RegionalDexId", wherePropertyValue: regionalDexId);
                 List<RegionalDexEntry> newDexEntries = new List<RegionalDexEntry>();
+                if (allPokemon.First().Name == "Victini")
+                {
+                    if (existingDexEntries.Find(x => x.PokemonId == pokemonIds.First() && x.RegionalDexId == regionalDexId && x.RegionalPokedexNumber == 0) == null)
+                    {
+                        newDexEntries.Add(new RegionalDexEntry()
+                        {
+                            PokemonId = pokemonIds.First(),
+                            RegionalDexId = regionalDexId,
+                            RegionalPokedexNumber = 0,
+                        });
+                    }
+                    else
+                    {
+                        existingDexEntries.Remove(existingDexEntries.Find(x => x.PokemonId == pokemonIds.First() && x.RegionalDexId == regionalDexId));
+                    }
+
+                    pokemonIds.Remove(pokemonIds.First());
+                }
 
                 for (var i = 0; i < pokemonIds.Count(); i++)
                 {
