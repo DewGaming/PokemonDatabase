@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
@@ -1122,10 +1123,7 @@ namespace Pokedex.Controllers
                 RegionalDex regionalDex = this.dataService.GetObjectByPropertyValue<RegionalDex>("Id", regionalDexId);
                 List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
                 List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon");
-                allPokemon = allPokemon.Where(x => !altFormList.Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                List<Pokemon> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon").Where(x => x.GameId == regionalDex.GameId).Select(x => x.Pokemon).ToList();
-                allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
-                allPokemon = allPokemon.Where(x => pokemonList.Any(y => y == x.Name)).OrderBy(x => pokemonList.IndexOf(x.Name)).ToList();
+                allPokemon = allPokemon.Where(x => pokemonList.Any(y => y == x.Name)).DistinctBy(x => x.Name).OrderBy(x => pokemonList.IndexOf(x.Name)).ToList();
                 List<int> pokemonIds = allPokemon.Select(x => x.Id).ToList();
                 List<RegionalDexEntry> existingDexEntries = this.dataService.GetObjects<RegionalDexEntry>(includes: "Pokemon, RegionalDex", whereProperty: "RegionalDexId", wherePropertyValue: regionalDexId);
                 List<RegionalDexEntry> newDexEntries = new List<RegionalDexEntry>();
