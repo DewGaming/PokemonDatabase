@@ -18,9 +18,6 @@ namespace Pokedex.DataAccess.Models
         public byte Level { get; set; }
 
         [Required]
-        public byte Happiness { get; set; }
-
-        [Required]
         public int PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
 

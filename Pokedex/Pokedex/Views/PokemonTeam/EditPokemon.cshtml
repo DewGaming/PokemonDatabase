@@ -12,13 +12,6 @@
 {
     <script src="~/js/updatePokemonTeamDetail.js" asp-append-version="true"></script>
     <script>
-        $(function() {
-            $('#levelVal').text(@Model.PokemonTeamDetail.Level);
-            $('#happinessVal').text(@Model.PokemonTeamDetail.Happiness);
-            $('.levelSlider').val(@Model.PokemonTeamDetail.Level);
-            $('.happinessSlider').val(@Model.PokemonTeamDetail.Happiness);
-        });
-
         $('.levelSlider').on('input', function() {
             $('#levelVal').text($(this).val());
         });
@@ -112,12 +105,6 @@
             <label class="col-md-2" for="Level">Level: <span id="levelVal"></span></label>
             <input class="levelSlider slider col-md-8" data-val-required="The Level field is required." id="Level" name="PokemonTeamDetail.Level" type="range" min="1" max="100" value="100">
             @Html.ValidationMessageFor(x => x.PokemonTeamDetail.Level)
-        </div>
-
-        <div class="form-group row">
-            <label class="col-md-2" for="Happiness">Happiness: <span id="happinessVal"></span></label>
-            <input class="happinessSlider slider col-md-8" data-val-required="The Happiness field is required." id="Happiness" name="PokemonTeamDetail.Happiness" type="range" min="0" max="255" value="255">
-            @Html.ValidationMessageFor(x => x.PokemonTeamDetail.Happiness)
         </div>
 
         <p>

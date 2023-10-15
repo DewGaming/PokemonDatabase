@@ -368,7 +368,6 @@ namespace Pokedex.Controllers
                                 PokemonId = pokemon.Id,
                                 NatureId = this.dataService.GetObjectByPropertyValue<Nature>("Name", "Serious").Id,
                                 Level = 100,
-                                Happiness = 255,
                             };
 
                             if (selectedGame == 0 || game.GenerationId >= 3)
@@ -3795,9 +3794,9 @@ namespace Pokedex.Controllers
                     pokemonTeamString = string.Concat(pokemonTeamString, "\nTera Type: ", pokemonTeamDetail.TeraType.Name);
                 }
 
-                if (pokemonTeamDetail.Happiness < 255 && generationId != 1)
+                if (generationId != 1 && pokemonTeamDetail.PokemonTeamMoveset.CheckMove("Frustration"))
                 {
-                    pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: ", pokemonTeamDetail.Happiness.ToString());
+                    pokemonTeamString = string.Concat(pokemonTeamString, "\nHappiness: 0");
                 }
 
                 pokemonTeamString = string.Concat(pokemonTeamString, this.FillEVs(pokemonTeamDetail.PokemonTeamEV));

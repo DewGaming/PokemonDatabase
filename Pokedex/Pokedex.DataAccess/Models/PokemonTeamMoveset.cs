@@ -17,5 +17,28 @@ namespace Pokedex.DataAccess.Models
 
         [Display(Name = "Fourth Move")]
         public string FourthMove { get; set; }
+
+        public bool CheckMove(string move)
+        {
+            bool found = false;
+            if (this.FirstMove == move)
+            {
+                found = true;
+            }
+            else if (this.SecondMove == move)
+            {
+                found = true;
+            }
+            else if (this.ThirdMove == move)
+            {
+                found = true;
+            }
+            else if (this.FourthMove == move)
+            {
+                found = true;
+            }
+
+            return found;
+        }
     }
 }

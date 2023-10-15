@@ -183,7 +183,6 @@ namespace Pokedex.Controllers
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeam.GameId,
                     Level = 100,
-                    Happiness = 255,
                 };
 
                 return this.View(model);
@@ -219,7 +218,6 @@ namespace Pokedex.Controllers
                     AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                     GameId = pokemonTeamDetail.GameId,
                     Level = 100,
-                    Happiness = 255,
                 };
 
                 return this.View(model);
@@ -1040,23 +1038,6 @@ namespace Pokedex.Controllers
                     teraType = teraType.Trim();
                     teraType = teraType.Substring(teraType.IndexOf(':') + 2, teraType.Length - (teraType.IndexOf(':') + 2));
                     pokemonTeamDetail.TeraTypeId = this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Name", teraType).Id;
-                }
-
-                // Happiness converter.
-                if (remainingImportedText.Contains("Happiness:"))
-                {
-                    string happiness = remainingImportedText.Split("\r\n")[0];
-                    remainingImportedText = remainingImportedText.Replace(string.Concat(happiness, "\r\n"), string.Empty);
-                    happiness = happiness.Trim();
-                    pokemonTeamDetail.Happiness = Convert.ToByte(happiness.Substring(happiness.IndexOf(':') + 2, happiness.Length - (happiness.IndexOf(':') + 2)));
-                    if (string.Compare(pokemonTeamDetail.Happiness.ToString(), happiness.Substring(happiness.IndexOf(':') + 2)) != 0)
-                    {
-                        pokemonTeamDetail.Happiness = 255;
-                    }
-                }
-                else
-                {
-                    pokemonTeamDetail.Happiness = 255;
                 }
 
                 // EV converter.
