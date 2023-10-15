@@ -70,20 +70,6 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Updates the user's last visit time.
-        /// </summary>
-        [Route("update-last-visit")]
-        public void UpdateLastVisit()
-        {
-            User user = this.dataService.GetCurrentUser(this.User);
-            if (user != null)
-            {
-                user.LastVisit = DateTime.Now.ToUniversalTime();
-                this.dataService.UpdateObject(user);
-            }
-        }
-
-        /// <summary>
         /// Prepares the required information for the admin to view the admin pokemon page.
         /// </summary>
         /// <param name="generationId">The generation requested by the admin.</param>

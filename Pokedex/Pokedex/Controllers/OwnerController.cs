@@ -334,7 +334,7 @@ namespace Pokedex.Controllers
         {
             UserViewModel model = new UserViewModel()
             {
-                UserList = this.dataService.GetObjects<User>().OrderByDescending(x => x.LastVisit).ThenBy(x => x.Id).ToList(),
+                UserList = this.dataService.GetObjects<User>(),
                 UsersWithPokemonTeams = new List<User>(),
             };
 

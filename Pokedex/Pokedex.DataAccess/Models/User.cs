@@ -16,9 +16,6 @@ namespace Pokedex.DataAccess.Models
         public string PasswordHash { get; set; }
 
         [Required]
-        public DateTime LastVisit { get; set; }
-
-        [Required]
         [Display(Name = "Is Owner")]
         public bool IsOwner { get; set; }
 

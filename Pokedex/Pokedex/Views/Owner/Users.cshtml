@@ -8,14 +8,12 @@
         <table class="table">
             <tr>
                 <th scope="col">Username</th>
-                <th scope="col">Last Visit</th>
                 <th scope="col">Actions</th>
             </tr>
             @foreach (var item in Model.UserList)
             {
                 <tr>
                     <td>@item.Username@(item.IsOwner ? " (Owner)" : item.IsTester ? " (Tester)" : "")</td>
-                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.LastVisit, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("MMMM dd yyyy h:mm tt")</td>
                     <td>
                         @if (item.Id != 1)
                         {
