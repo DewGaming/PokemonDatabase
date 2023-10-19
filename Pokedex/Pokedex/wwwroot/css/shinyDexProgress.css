@@ -18,6 +18,6 @@ p {
     margin: 5px;
 }
 
-.shinyHuntButtons button {
+.shinyHuntButtons button, .shinyHuntButtons a {
     margin-bottom: 5px;
 }

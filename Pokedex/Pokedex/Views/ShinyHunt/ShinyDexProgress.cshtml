@@ -27,6 +27,10 @@
     {
         <button class="hideCapturedButton btn btn-primary@(@Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : "")" onclick="hideCaptured()">Hide Captured Pokemon</button>
     }
+    @if (!Model.IsShared)
+    {
+        <a class="sharePage btn btn-primary" href="@this.Url.Action("ShinyDexProgress", "ShinyHunt", new { username = @Model.CurrentUser.Username.ToLower() })" target="_blank">Share With Others</a>
+    }
 </p>
 
 <h5 class="pokemonCount shiniesFoundPercentNoAlts@(!Model.CurrentUser.ShowShinyAltForms ? "" : " hide")">Total Shiny Dex Completion Percentage (@Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured)/@Model.AllPokemon.Count(x => !x.IsAltForm)): <span></span>@Math.Round(100 * (float)Model.AllPokemon.Count(x => !x.IsAltForm && x.IsCaptured) / Model.AllPokemon.Count(x => !x.IsAltForm), 2)%</h5>

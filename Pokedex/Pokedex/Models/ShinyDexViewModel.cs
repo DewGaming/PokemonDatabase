@@ -24,6 +24,11 @@ namespace Pokedex.Models
         public List<Game> AllGames { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this page is shared.
+        /// </summary>
+        public bool IsShared { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all abilities.
         /// </summary>
         public AppConfig AppConfig { get; set; }

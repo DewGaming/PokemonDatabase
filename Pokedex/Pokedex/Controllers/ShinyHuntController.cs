@@ -58,10 +58,52 @@ namespace Pokedex.Controllers
                 AllShinyHunts = shinyHunts,
                 AllGames = this.dataService.GetObjects<Game>(),
                 CurrentUser = this.dataService.GetCurrentUser(this.User),
+                IsShared = false,
                 AppConfig = this.appConfig,
             };
 
             return this.View(model);
+        }
+
+        /// <summary>
+        /// Shows shiny dex progress.
+        /// </summary>
+        /// <param name="username">The name of the user's shiny dex progress.</param>
+        /// <returns>The shiny dex progress page.</returns>
+        [AllowAnonymous]
+        [Route("shiny_dex_progress/{username}")]
+        public IActionResult ShinyDexProgress(string username)
+        {
+            User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
+            if (user != null)
+            {
+                this.dataService.AddPageView("Shared Shiny Dex Progression Page", this.User.IsInRole("Owner"));
+                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", user.Id).Where(x => x.IsCaptured).ToList();
+                List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
+                List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => !x.IsShinyLocked).ToList();
+                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> primals = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: "Primal").ConvertAll(x => x.AltFormPokemon);
+                pokemonList = pokemonList.Where(x => !primals.Any(y => y.Id == x.Id)).ToList();
+
+                List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id) });
+                pokemonShinyHuntList.Where(x => pokemonCaptured.Any(y => y.Id == x.Pokemon.Id)).ToList().ForEach(x => x.IsCaptured = true);
+
+                ShinyDexViewModel model = new ShinyDexViewModel()
+                {
+                    AllPokemon = pokemonShinyHuntList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.Pokemon.Id).ToList(),
+                    AllShinyHunts = shinyHunts,
+                    AllGames = this.dataService.GetObjects<Game>(),
+                    CurrentUser = user,
+                    IsShared = true,
+                    AppConfig = this.appConfig,
+                };
+
+                return this.View(model);
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
         }
 
         /// <summary>
