@@ -2778,6 +2778,7 @@ namespace Pokedex.Controllers
         /// Inserts Ogerpon's Tera ability into the pokemon page.
         /// </summary>
         /// <param name="pokemonId">The Pokemon's Id. Used to modify the description of the ability.</param>
+        /// <returns>Returns the description of the ability Embody Aspect based on Ogerpon's Tera.</returns>
         [Route("grab-ogerpon-tera-ability")]
         public Ability GrabOgerponTeraAbility(int pokemonId)
         {
@@ -2836,7 +2837,6 @@ namespace Pokedex.Controllers
         /// Abandon a shiny hunt.
         /// </summary>
         /// <param name="shinyHuntId">The abandoned shiny hunt's Id.</param>
-        /// <returns>The user's shiny hunt page.</returns>
         [Route("abandon-shiny-hunt")]
         public void DeleteShinyHunt(int shinyHuntId)
         {
