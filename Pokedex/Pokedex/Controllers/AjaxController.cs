@@ -1533,10 +1533,14 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-                shinyHunt.Phases = phases;
-                shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
-                shinyHunt.CurrentPhaseEncounters = 0;
-                this.dataService.UpdateObject(shinyHunt);
+                User user = this.dataService.GetCurrentUser(this.User);
+                if (user != null && user.Id == shinyHunt.UserId)
+                {
+                    shinyHunt.Phases = phases;
+                    shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
+                    shinyHunt.CurrentPhaseEncounters = 0;
+                    this.dataService.UpdateObject(shinyHunt);
+                }
             }
         }
 
@@ -1551,8 +1555,12 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-                shinyHunt.CurrentPhaseEncounters = Math.Max(encounters, 0);
-                this.dataService.UpdateObject(shinyHunt);
+                User user = this.dataService.GetCurrentUser(this.User);
+                if (user != null && user.Id == shinyHunt.UserId)
+                {
+                    shinyHunt.CurrentPhaseEncounters = Math.Max(encounters, 0);
+                    this.dataService.UpdateObject(shinyHunt);
+                }
             }
         }
 
@@ -1567,8 +1575,12 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-                shinyHunt.Phases = Math.Max(phases, 1);
-                this.dataService.UpdateObject(shinyHunt);
+                User user = this.dataService.GetCurrentUser(this.User);
+                if (user != null && user.Id == shinyHunt.UserId)
+                {
+                    shinyHunt.Phases = Math.Max(phases, 1);
+                    this.dataService.UpdateObject(shinyHunt);
+                }
             }
         }
 
@@ -1583,8 +1595,12 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-                shinyHunt.IncrementAmount = Math.Max(increments, 1);
-                this.dataService.UpdateObject(shinyHunt);
+                User user = this.dataService.GetCurrentUser(this.User);
+                if (user != null && user.Id == shinyHunt.UserId)
+                {
+                    shinyHunt.IncrementAmount = Math.Max(increments, 1);
+                    this.dataService.UpdateObject(shinyHunt);
+                }
             }
         }
 
@@ -2840,14 +2856,19 @@ namespace Pokedex.Controllers
         [Route("abandon-shiny-hunt")]
         public void DeleteShinyHunt(int shinyHuntId)
         {
-            List<ShinyHunt> phaseHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHuntId);
-            foreach (var sh in phaseHunts)
+            ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
+            User user = this.dataService.GetCurrentUser(this.User);
+            if (user != null && user.Id == shinyHunt.UserId)
             {
-                sh.PhaseOfHuntId = null;
-                this.dataService.UpdateObject(sh);
-            }
+                List<ShinyHunt> phaseHunts = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHuntId);
+                foreach (var sh in phaseHunts)
+                {
+                    sh.PhaseOfHuntId = null;
+                    this.dataService.UpdateObject(sh);
+                }
 
-            this.dataService.DeleteObject<ShinyHunt>(shinyHuntId);
+                this.dataService.DeleteObject<ShinyHunt>(shinyHuntId);
+            }
         }
 
         /// <summary>

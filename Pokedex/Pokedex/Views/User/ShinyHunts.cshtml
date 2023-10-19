@@ -44,12 +44,19 @@
 }
 
 <p class="shinyHuntButtons">
-    <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
-    <a class="btn btn-primary" href="@this.Url.Action("AddCompletedHunt", "ShinyHunt")" role="button">Add Completed Hunt</a>
+    @if (!Model.IsShared)
+    {
+        <a class="btn btn-primary" href="@this.Url.Action("StartHunt", "ShinyHunt")" role="button">Start New Hunt</a>
+        <a class="btn btn-primary" href="@this.Url.Action("AddCompletedHunt", "ShinyHunt")" role="button">Add Completed Hunt</a>
+    }
     <button class="currentlyHuntingButton btn btn-primary hide" onclick="hideComplete()">View In-Progress Shiny Hunts</button>
     @if (completeHunts.Count > 0)
     {
         <button class="completedHuntsButton btn btn-primary" onclick="hideIncomplete()">View Successful Shiny Hunts</button>
+    }
+    @if (!Model.IsShared)
+    {
+        <a class="sharePage btn btn-primary" href="@this.Url.Action("ShinyHunts", "User", new { username = @Model.Username.ToLower() })" target="_blank">Share With Others</a>
     }
 </p>
 
@@ -108,36 +115,42 @@
                             </a>
                         </div>
                         <div class="description">
-                            <p onclick="togglePin('@s.Id')" class="@(s.IsPinned ? "pinned" : "pin")">📌</p>
+                            @if (!Model.IsShared)
+                            {
+                                <p onclick="togglePin('@s.Id')" class="@(s.IsPinned ? "pinned" : "pin")">📌</p>
+                            }
                             <p><b>@s.Pokemon.Name</b></p>
                             <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
                             <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
-                            <p class="encounterIncrement pointer" onclick="adjustIncrements('@s.Id')"><b>Increment Amount: </b><span class="increments">@s.IncrementAmount</span></p>
+                            <p class="encounterIncrement@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>Increment Amount: </b><span class="increments">@s.IncrementAmount</span></p>
                             @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
                             {
-                                <p class="encounterP pointer" onclick="adjustEncountersManually('@s.Id')"><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
+                                <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
                             else
                             {
-                                <p class="encounterP pointer" onclick="adjustEncountersManually('@s.Id')"><b>@(s.Phases > 1 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
+                                <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>@(s.Phases > 1 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
-                            <p class="phaseCounter pointer@(s.Phases > 1 ? "" : " hide")" onclick="adjustPhasesManually('@s.Id')"><b>Current Phase: </b><span class="phases">@s.Phases</span></p>
+                            <p class="phaseCounter@(Model.IsShared ? "" : " pointer")@(s.Phases > 1 ? "" : " hide")" id="@s.Id"><b>Current Phase: </b><span class="phases">@s.Phases</span></p>
                         </div>
                     </div>
-                    <div class="encounterButtons">
-                        <button class="phaseIncrease btn orangeButton" onclick="incrementPhase('@s.Id')">Increase Phases</button>
-                        <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
-                    </div>
-                    <hr class="buttonSeparator">
-                    <div class="shinyFoundButtons">
-                        <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
-                        <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Target Shiny Found</a>
-                    </div>
-                    <hr class="buttonSeparator">
-                    <div class="huntUncapturedButtons">
-                        <a class="btn orangeButton" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
-                        <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@s.Id, '@s.Pokemon.Name')">Abandon Hunt</button>
-                    </div>
+                    @if (!Model.IsShared)
+                    {
+                        <div class="encounterButtons">
+                            <button class="phaseIncrease btn orangeButton" onclick="incrementPhase('@s.Id')">Increase Phases</button>
+                            <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                        </div>
+                        <hr class="buttonSeparator">
+                        <div class="shinyFoundButtons">
+                            <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
+                            <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Target Shiny Found</a>
+                        </div>
+                        <hr class="buttonSeparator">
+                        <div class="huntUncapturedButtons">
+                            <a class="btn orangeButton" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
+                            <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@s.Id, '@s.Pokemon.Name')">Abandon Hunt</button>
+                        </div>
+                    }
                 </div>
             }
         </div>
@@ -228,10 +241,13 @@
                             }
                         </div>
                     </div>
-                    <div class="huntCapturedButtons">
-                        <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
-                        <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@s.Id, '@s.Pokemon.Name')">Abandon Hunt</button>
-                    </div>
+                    @if (!Model.IsShared)
+                    {
+                        <div class="huntCapturedButtons">
+                            <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny</a>
+                            <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@s.Id, '@s.Pokemon.Name')">Delete Hunt</button>
+                        </div>
+                    }
                 </div>
             }
         </div>

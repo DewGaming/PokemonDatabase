@@ -1,3 +1,65 @@
+var adjustIncrements = function(shinyHuntId) {
+    var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
+    var increments = prompt("Increment Amount", currentIncrements);
+    if ($.isNumeric(increments)) {
+        $('.Hunt' + shinyHuntId + ' .increments').html(increments);
+        $.ajax({
+            url: '/set-shiny-hunt-increments/',
+            method: "POST",
+            data: { "shinyHuntId": shinyHuntId, "increments": increments }
+        })
+            .fail(function () {
+                alert("Update Failed!");
+            });
+    } else if (increments != null) {
+        alert("Entered Phases Need to be a Number")
+    }
+}, adjustEncountersManually = function(shinyHuntId) {
+    var currentEncounters = $('.Hunt' + shinyHuntId + ' .encounters').html();
+    var encounters = prompt("Total Number of Encounters", currentEncounters);
+    if ($.isNumeric(encounters)) {
+        $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
+        $.ajax({
+            url: '/set-shiny-hunt-encounters/',
+            method: "POST",
+            data: { "shinyHuntId": shinyHuntId, "encounters": encounters }
+        })
+            .fail(function () {
+                alert("Update Failed!");
+            });
+    } else if (encounters != null) {
+        alert("Entered Encounters Need to be a Number")
+    }
+}, adjustPhasesManually = function(shinyHuntId) {
+    var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
+    var phases = prompt("Total Number of Phases", currentPhases);
+    if ($.isNumeric(phases)) {
+        $('.Hunt' + shinyHuntId + ' .phases').html(phases);
+        $.ajax({
+            url: '/set-shiny-hunt-phases/',
+            method: "POST",
+            data: { "shinyHuntId": shinyHuntId, "phases": phases }
+        })
+            .fail(function () {
+                alert("Update Failed!");
+            });
+    } else if (phases != null) {
+        alert("Entered Phases Need to be a Number")
+    }
+}
+
+$('.encounterIncrement.pointer').on('click', function () {
+    adjustIncrements($(this).prop('id'));
+});
+
+$('.currentEncounters.pointer').on('click', function () {
+    adjustEncountersManually($(this).prop('id'));
+});
+
+$('.phaseCounter.pointer').on('click', function () {
+    adjustPhasesManually($(this).prop('id'));
+});
+
 function lookupHuntsInGame(element, gameId) {
     if (!$('.active').is($('#Game' + gameId))) {
         $('button').each(function () {
@@ -55,7 +117,7 @@ function incrementEncounter(shinyHuntId) {
 function incrementPhase(shinyHuntId) {
     var currentPhases = parseInt($('.Hunt' + shinyHuntId + ' .phases').html());
     $('.Hunt' + shinyHuntId + ' .phases').html(currentPhases + 1);
-    $('.Hunt' + shinyHuntId + ' .encounterP b').html('Current Phase Encounters: ')
+    $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Current Phase Encounters: ')
     $('.Hunt' + shinyHuntId + ' .encounters').html(0);
     $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
     $.ajax({
@@ -66,60 +128,6 @@ function incrementPhase(shinyHuntId) {
         .fail(function () {
             alert("Update Failed!");
         });
-}
-
-function adjustEncountersManually(shinyHuntId) {
-    var currentEncounters = $('.Hunt' + shinyHuntId + ' .encounters').html();
-    var encounters = prompt("Total Number of Encounters", currentEncounters);
-    if ($.isNumeric(encounters)) {
-        $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
-        $.ajax({
-            url: '/set-shiny-hunt-encounters/',
-            method: "POST",
-            data: { "shinyHuntId": shinyHuntId, "encounters": encounters }
-        })
-            .fail(function () {
-                alert("Update Failed!");
-            });
-    } else if (encounters != null) {
-        alert("Entered Encounters Need to be a Number")
-    }
-}
-
-function adjustPhasesManually(shinyHuntId) {
-    var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
-    var phases = prompt("Total Number of Phases", currentPhases);
-    if ($.isNumeric(phases)) {
-        $('.Hunt' + shinyHuntId + ' .phases').html(phases);
-        $.ajax({
-            url: '/set-shiny-hunt-phases/',
-            method: "POST",
-            data: { "shinyHuntId": shinyHuntId, "phases": phases }
-        })
-            .fail(function () {
-                alert("Update Failed!");
-            });
-    } else if (phases != null) {
-        alert("Entered Phases Need to be a Number")
-    }
-}
-
-function adjustIncrements(shinyHuntId) {
-    var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
-    var increments = prompt("Increment Amount", currentIncrements);
-    if ($.isNumeric(increments)) {
-        $('.Hunt' + shinyHuntId + ' .increments').html(increments);
-        $.ajax({
-            url: '/set-shiny-hunt-increments/',
-            method: "POST",
-            data: { "shinyHuntId": shinyHuntId, "increments": increments }
-        })
-            .fail(function () {
-                alert("Update Failed!");
-            });
-    } else if (increments != null) {
-        alert("Entered Phases Need to be a Number")
-    }
 }
 
 function hideIncomplete() {

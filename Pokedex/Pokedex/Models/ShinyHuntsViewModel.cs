@@ -24,6 +24,16 @@ namespace Pokedex.Models
         public List<Game> UnedittedGames { get; set; }
 
         /// <summary>
+        /// Gets or sets the username of the current user.
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the shiny hunts page is shared.
+        /// </summary>
+        public bool IsShared { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }
