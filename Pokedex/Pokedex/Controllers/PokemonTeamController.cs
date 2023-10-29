@@ -997,7 +997,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, this.dataService.GetObjects<Game>().Where(x => x.ReleaseDate <= DateTime.Now).Last().Id, this.User, this.appConfig)[0];
+                    ability = this.dataService.GetAbilitiesForPokemon(pokemon.Id, this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).Last().Id, this.User, this.appConfig)[0];
                 }
 
                 pokemonTeamDetail.AbilityId = ability.Id;
@@ -1433,7 +1433,7 @@ namespace Pokedex.Controllers
 
             if (availableGames.Count() <= 0)
             {
-                availableGames = this.dataService.GetObjects<Game>("GenerationId, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
+                availableGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.Now).ToList();
                 availableGames.Remove(availableGames.Find(x => x.Id == 43));
             }
 
