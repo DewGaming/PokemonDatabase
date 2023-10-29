@@ -1507,14 +1507,14 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="primaryTypeID">The primary type's id.</param>
         /// <param name="secondaryTypeID">The secondary type's id.</param>
-        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <param name="gameId">The generation used to specify the type chart.</param>
         /// <returns>The file type evaluator chart shared view.</returns>
         [Route("get-typing-evaluator-chart")]
-        public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int generationID)
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int gameId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeID, secondaryTypeID, generationID));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeID, secondaryTypeID, gameId));
             }
             else
             {
@@ -2506,10 +2506,10 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="primaryTypeId">The id of the primary type.</param>
         /// <param name="secondaryTypeId">The id of the secondary type.</param>
-        /// <param name="generationId">The id of the generation.</param>
+        /// <param name="gameId">The id of the generation.</param>
         /// <returns>Returns the type effectiveness given the typing and generation.</returns>
         [Route("get-type-chart-typing")]
-        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId)
+        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int gameId)
         {
             List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<DataAccess.Models.Type> pokemonTypes = new List<DataAccess.Models.Type>();
@@ -2533,9 +2533,10 @@ namespace Pokedex.Controllers
                 typeChart = this.dataService.GetObjects<TypeChart>(includes: "Attack, Defend", whereProperty: "DefendId", wherePropertyValue: type.Id);
 
                 List<int> generations = typeChart.Select(x => x.GenerationId).Distinct().OrderByDescending(x => x).ToList();
-                if (generationId != 0)
+                if (gameId != 0)
                 {
-                    typeChart = typeChart.Where(x => x.GenerationId == generations.First(x => x <= generationId)).ToList();
+                    Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                    typeChart = typeChart.Where(x => x.GenerationId == generations.First(x => x <= game.GenerationId)).ToList();
                 }
                 else
                 {
