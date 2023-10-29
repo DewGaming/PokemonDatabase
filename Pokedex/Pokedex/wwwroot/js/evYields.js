@@ -95,10 +95,6 @@ $(function () {
     $('.gameSelectList').val($('.gameSelectList option:last').val());
 });
 
-$(".gameSelectList").on('change', function () {
-    grabPokemon($('.gameList > select').val(), $('.healthSlider').val(), $('.attackSlider').val(), $('.defenseSlider').val(), $('.specialAttackSlider').val(), $('.specialDefenseSlider').val(), $('.speedSlider').val());
-});
-
-$(".slider").on('change', function () {
+$(".grabPokemon").on('click', function () {
     grabPokemon($('.gameList > select').val(), $('.healthSlider').val(), $('.attackSlider').val(), $('.defenseSlider').val(), $('.specialAttackSlider').val(), $('.specialDefenseSlider').val(), $('.speedSlider').val());
 });
