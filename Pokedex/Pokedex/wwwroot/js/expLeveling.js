@@ -677,6 +677,7 @@ var calculateMaxExpPoints = function (expGroup) {
         }
 
         expNeeded = expMatrix[levelNeeded - 1].Exp - expObtained;
+        $('.neededExp').html("The experience needed to level up to Level " + levelNeeded + " is " + expNeeded.toLocaleString('en-US') + ". Using EXP Candies, you would need:")
         if (Math.trunc(expNeeded / 30000) > 0) {
             xlCandiesNeeded = Math.trunc(expNeeded / 30000);
             expNeeded -= (xlCandiesNeeded * 30000);

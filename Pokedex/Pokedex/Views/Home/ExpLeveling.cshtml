@@ -32,31 +32,37 @@
             @Html.Editor("Wanted Level", new { htmlAttributes = new { @type = "number", @min = "1", @max = "100", @step = "1", @class = "form-control requestedLevel" } })
         </div>
     </div>
+    <p class="neededExp"></p>
     <div class="flexDiv candyImages">
         <div class="xsCandy">
             <img loading="lazy" src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyXS.png"))">
             <p class="candyAmount">0</p>
             <p class="candyName">XS Candies Needed</p>
+            <p class="candyDetails">Grants 100 EXP</p>
         </div>
         <div class="sCandy">
             <img loading="lazy" src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyS.png"))">
             <p class="candyAmount">0</p>
             <p class="candyName">S Candies Needed</p>
+            <p class="candyDetails">Grants 800 EXP</p>
         </div>
         <div class="mCandy">
             <img loading="lazy" src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyM.png"))">
             <p class="candyAmount">0</p>
             <p class="candyName">M Candies Needed</p>
+            <p class="candyDetails">Grants 3,000 EXP</p>
         </div>
         <div class="lCandy">
             <img loading="lazy" src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyL.png"))">
             <p class="candyAmount">0</p>
             <p class="candyName">L Candies Needed</p>
+            <p class="candyDetails">Grants 10,000 EXP</p>
         </div>
         <div class="xlCandy">
             <img loading="lazy" src="@(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "expCandyXL.png"))">
             <p class="candyAmount">0</p>
             <p class="candyName">XL Candies Needed</p>
+            <p class="candyDetails">Grants 30,000 EXP</p>
         </div>
     </div>
 </div>
