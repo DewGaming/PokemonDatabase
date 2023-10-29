@@ -1,0 +1,58 @@
+@using Pokedex.Models;
+@model Pokedex.Models.EditEvolutionViewModel;
+@{
+    string pokemonName;
+}
+
+@section styles
+{
+    <style>
+        main {
+            max-width: 1220px !important;
+        }
+
+        .grid-container > div {
+            flex-basis: 30%;
+        }
+    </style>
+}
+
+<div class="generation">
+    <div class="grid-container">
+        @foreach (var item in Model.AllEvolutions)
+        {
+            @if (item.PreevolutionPokemon.Name.LastIndexOf(" (") != -1)
+            {
+                pokemonName = @item.PreevolutionPokemon.Name.Substring(0, item.PreevolutionPokemon.Name.LastIndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower();
+            }
+            else
+            {
+                pokemonName = @item.PreevolutionPokemon.Name.ToLower();
+            }
+            <div class="@item.PreevolutionPokemon.Name @(item.PreevolutionPokemon.IsComplete ? "" : "incomplete")">
+                @if (item.PreevolutionPokemon.IsComplete)
+                {
+                    <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName, pokemonId = @item.PreevolutionPokemonId, generationId = item.GenerationId })">
+                        <img class="pokemonListPicture" title="@pokemonName" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @item.PreevolutionPokemonId, ".png"))"/>
+                    </a>
+                }
+                else
+                {
+                    <img class="pokemonListPicture" title="@pokemonName" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @item.PreevolutionPokemonId, ".png"))"/>
+                }
+                <div>
+                    @if (item.PreevolutionPokemon.IsComplete)
+                    {
+                        <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName, pokemonId = @item.PreevolutionPokemonId, generationId = item.GenerationId })" class="pokemonName">@item.PreevolutionPokemon.Name</a>
+                    }
+                    else
+                    {
+                        <span>@('#')@item.PreevolutionPokemon.PokedexNumber.ToString().PadLeft(4, '0') @item.PreevolutionPokemon.Name</span>
+                    }
+                    <br>
+                    <a class="btn btn-primary" href="@(this.Url.Action("Evolution", "Edit", new { preevolutionPokemonId = item.PreevolutionPokemonId, evolutionPokemonId = item.EvolutionPokemonId, generationId = item.GenerationId }))">Edit Pre-Evolution</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
