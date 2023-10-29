@@ -33,6 +33,10 @@ var adjustIncrements = function(shinyHuntId) {
 }, adjustPhasesManually = function(shinyHuntId) {
     var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
     var phases = prompt("Total Number of Phases", currentPhases);
+    if (phases == 1) {
+        $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
+        $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
+    }
     if ($.isNumeric(phases)) {
         $('.Hunt' + shinyHuntId + ' .phases').html(phases);
         $.ajax({
