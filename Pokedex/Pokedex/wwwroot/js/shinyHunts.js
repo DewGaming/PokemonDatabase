@@ -339,6 +339,11 @@ function togglePin(shinyHuntId) {
                     $('.Hunt' + shinyHuntId).addClass('hide');
                 }
             }
+
+            if ($('.pinned').length <= 0) {
+                $('.pinnedHunts').addClass('hide');
+                $('#Game0').trigger('click');
+            }
         })
         .fail(function () {
             alert("Update Failed!");
