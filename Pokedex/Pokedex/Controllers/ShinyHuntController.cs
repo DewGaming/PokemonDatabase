@@ -177,7 +177,7 @@ namespace Pokedex.Controllers
             AddCompletedShinyHuntViewModel model = new AddCompletedShinyHuntViewModel()
             {
                 AllPokemon = this.dataService.GetHuntablePokemon(),
-                DateOfCapture = DateTime.Now.Date,
+                DateOfCapture = DateTime.Now.ToLocalTime().Date,
                 Phases = 1,
                 IncrementAmount = 1,
                 UserId = this.dataService.GetCurrentUser(this.User).Id,
@@ -203,7 +203,7 @@ namespace Pokedex.Controllers
                 {
                     AllPokemon = this.dataService.GetHuntablePokemon(),
                     AllMarks = this.dataService.GetObjects<Mark>("Name"),
-                    DateOfCapture = DateTime.Now.Date,
+                    DateOfCapture = DateTime.Now.ToLocalTime().Date,
                     Phases = 1,
                     IncrementAmount = 1,
                     UserId = this.dataService.GetCurrentUser(this.User).Id,
@@ -264,7 +264,7 @@ namespace Pokedex.Controllers
                 Id = shinyHunt.Id,
                 PokemonHunted = pokemon,
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
-                DateOfCapture = DateTime.Now.Date,
+                DateOfCapture = DateTime.Now.ToLocalTime().Date,
                 AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId, this.User, this.appConfig),
                 AllGenders = genders,
                 AllMarks = this.dataService.GetObjects<Mark>("Name"),
