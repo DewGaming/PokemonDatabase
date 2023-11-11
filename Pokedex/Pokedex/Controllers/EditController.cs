@@ -830,7 +830,7 @@ namespace Pokedex.Controllers
 
             if (shinyFileUpload != null || !string.IsNullOrEmpty(shinyUrlUpload))
             {
-                this.dataService.UploadImages(shinyFileUpload, officialUrlUpload, fileName, this.appConfig, "genderDifferenceShiny");
+                this.dataService.UploadImages(shinyFileUpload, shinyUrlUpload, fileName, this.appConfig, "genderDifferenceShiny");
             }
 
             if (homeFileUpload != null || !string.IsNullOrEmpty(homeUrlUpload))
