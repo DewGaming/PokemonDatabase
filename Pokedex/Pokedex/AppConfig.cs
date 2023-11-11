@@ -56,11 +56,6 @@ namespace Pokedex
         public string IconImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the shiny icon image Url.
-        /// </summary>
-        public string ShinyIconImageUrl { get; set; }
-
-        /// <summary>
         /// Gets or sets the grid image Url.
         /// </summary>
         public string GridImageUrl { get; set; }
@@ -79,6 +74,31 @@ namespace Pokedex
         /// Gets or sets the home page image Url.
         /// </summary>
         public string HomePageImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference image Url.
+        /// </summary>
+        public string GenderDifferencePokemonImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference grid image Url.
+        /// </summary>
+        public string GenderDifferenceGridImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference image Url.
+        /// </summary>
+        public string GenderDifferenceShinyPokemonImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference grid image Url.
+        /// </summary>
+        public string GenderDifferenceShinyGridImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference image Url.
+        /// </summary>
+        public string GenderDifferenceHomePokemonImageUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the pokemon image FTP Url.
@@ -111,11 +131,6 @@ namespace Pokedex
         public string IconImageFTPUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the shiny icon image FTP Url.
-        /// </summary>
-        public string ShinyIconImageFTPUrl { get; set; }
-
-        /// <summary>
         /// Gets or sets the grid image FTP Url.
         /// </summary>
         public string GridImageFTPUrl { get; set; }
@@ -124,6 +139,31 @@ namespace Pokedex
         /// Gets or sets the shiny grid image FTP Url.
         /// </summary>
         public string ShinyGridImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference image FTP Url.
+        /// </summary>
+        public string GenderDifferencePokemonImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference grid image FTP Url.
+        /// </summary>
+        public string GenderDifferenceGridImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference shiny image FTP Url.
+        /// </summary>
+        public string GenderDifferenceShinyPokemonImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference grid shiny image FTP Url.
+        /// </summary>
+        public string GenderDifferenceShinyGridImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gender difference home image FTP Url.
+        /// </summary>
+        public string GenderDifferenceHomePokemonImageFTPUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the FTP server username.

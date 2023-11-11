@@ -109,6 +109,16 @@ namespace Pokedex.Models
         public bool HasHome { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a pokemon has a female gender difference image.
+        /// </summary>
+        public bool HasFemaleGenderDifference { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a pokemon has a male gender difference image.
+        /// </summary>
+        public bool HasMaleGenderDifference { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }

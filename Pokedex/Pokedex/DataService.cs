@@ -340,6 +340,10 @@ namespace Pokedex
                 RegionalDexes = this.GetObjects<RegionalDex>(includes: "Game"),
                 RegionalDexEntries = this.GetObjects<RegionalDexEntry>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 GamesAvailableIn = games,
+                HasShiny = false,
+                HasHome = false,
+                HasFemaleGenderDifference = false,
+                HasMaleGenderDifference = false,
                 AppConfig = appConfig,
             };
 
@@ -359,14 +363,9 @@ namespace Pokedex
                 {
                     pokemonViewModel.HasShiny = true;
                 }
-                else
-                {
-                    pokemonViewModel.HasShiny = false;
-                }
             }
             catch
             {
-                pokemonViewModel.HasShiny = false;
             }
 
             try
@@ -377,14 +376,40 @@ namespace Pokedex
                 {
                     pokemonViewModel.HasHome = true;
                 }
-                else
+            }
+            catch
+            {
+            }
+
+            // Female Gender Difference Check
+            try
+            {
+                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-f.png"));
+                imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                if (imageRequest.StatusCode == HttpStatusCode.OK)
                 {
-                    pokemonViewModel.HasHome = false;
+                    pokemonViewModel.HasFemaleGenderDifference = true;
                 }
             }
             catch
             {
-                pokemonViewModel.HasHome = false;
+            }
+
+            // Male Gender Difference Check
+            try
+            {
+                if (!pokemonViewModel.HasFemaleGenderDifference)
+                {
+                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-m.png"));
+                    imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                    if (imageRequest.StatusCode == HttpStatusCode.OK)
+                    {
+                        pokemonViewModel.HasMaleGenderDifference = true;
+                    }
+                }
+            }
+            catch
+            {
             }
 
             PokemonLegendaryDetail legendaryType = this.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
@@ -1264,10 +1289,10 @@ namespace Pokedex
         /// </summary>
         /// <param name="fileUpload">The file being uploaded.</param>
         /// <param name="urlUpload">The URL of an image if no file is provided.</param>
-        /// <param name="pokemonId">The id of the pokemon this image is for.</param>
+        /// <param name="fileName">The name the image will have on the server.</param>
         /// <param name="appConfig">The application config.</param>
         /// <param name="imageType">Whether this image is for the 2d artwork or the 3d render.</param>
-        public async void UploadImages(IFormFile fileUpload, string urlUpload, int pokemonId, AppConfig appConfig, string imageType)
+        public async void UploadImages(IFormFile fileUpload, string urlUpload, string fileName, AppConfig appConfig, string imageType)
         {
             string imageUrlPath = string.Empty;
             string iconUrlPath = string.Empty;
@@ -1288,7 +1313,6 @@ namespace Pokedex
             else if (imageType == "shiny")
             {
                 imageUrlPath = appConfig.ShinyPokemonImageFTPUrl;
-                iconUrlPath = appConfig.ShinyIconImageFTPUrl;
                 gridUrlPath = appConfig.ShinyGridImageFTPUrl;
             }
             else if (imageType == "pokeball")
@@ -1298,6 +1322,20 @@ namespace Pokedex
             else if (imageType == "mark")
             {
                 imageUrlPath = appConfig.OfficialMarkImageFTPUrl;
+            }
+            else if (imageType == "genderDifference")
+            {
+                imageUrlPath = appConfig.GenderDifferencePokemonImageFTPUrl;
+                gridUrlPath = appConfig.GenderDifferenceGridImageFTPUrl;
+            }
+            else if (imageType == "genderDifferenceHome")
+            {
+                imageUrlPath = appConfig.GenderDifferenceHomePokemonImageFTPUrl;
+            }
+            else if (imageType == "genderDifferenceShiny")
+            {
+                imageUrlPath = appConfig.GenderDifferenceShinyPokemonImageFTPUrl;
+                gridUrlPath = appConfig.GenderDifferenceShinyGridImageFTPUrl;
             }
 
             if (fileUpload == null && urlUpload != null)
@@ -1327,7 +1365,7 @@ namespace Pokedex
                     resizedUpload = this.TrimImage(upload, 350, 350);
                 }
 
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, pokemonId.ToString(), ".png"));
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, fileName, ".png"));
                 request.Method = WebRequestMethods.Ftp.UploadFile;
                 request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
 
@@ -1341,33 +1379,36 @@ namespace Pokedex
                     System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
-                if (imageType == "2d" || imageType == "shiny")
+                if (!string.IsNullOrEmpty(gridUrlPath))
                 {
-                    IFormFile iconUpload = this.TrimImage(upload, 64, 64, true);
-
-                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, iconUrlPath, pokemonId.ToString(), ".png"));
-                    request.Method = WebRequestMethods.Ftp.UploadFile;
-                    request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
-
-                    using (Stream requestStream = request.GetRequestStream())
-                    {
-                        await iconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
-                    }
-
-                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
-                    {
-                        System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
-                    }
-
                     IFormFile gridUpload = this.TrimImage(upload, 150, 150);
 
-                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, gridUrlPath, pokemonId.ToString(), ".png"));
+                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, gridUrlPath, fileName, ".png"));
                     request.Method = WebRequestMethods.Ftp.UploadFile;
                     request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
 
                     using (Stream requestStream = request.GetRequestStream())
                     {
                         await gridUpload.CopyToAsync(requestStream).ConfigureAwait(false);
+                    }
+
+                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    {
+                        System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(iconUrlPath))
+                {
+                    IFormFile iconUpload = this.TrimImage(upload, 64, 64, true);
+
+                    request = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, iconUrlPath, fileName, ".png"));
+                    request.Method = WebRequestMethods.Ftp.UploadFile;
+                    request.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
+
+                    using (Stream requestStream = request.GetRequestStream())
+                    {
+                        await iconUpload.CopyToAsync(requestStream).ConfigureAwait(false);
                     }
 
                     using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
@@ -1385,7 +1426,7 @@ namespace Pokedex
 
                 byte[] file = webRequest.DownloadData(string.Concat(appConfig.WebUrl, "/images/general/tempPhoto.png"));
 
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, pokemonId.ToString(), ".png"));
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(string.Concat(appConfig.FTPUrl, imageUrlPath, fileName, ".png"));
                 ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
                 ftpRequest.Credentials = new NetworkCredential(appConfig.FTPUsername, appConfig.FTPPassword);
 

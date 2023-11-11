@@ -1,18 +1,64 @@
 var officialRender = function() {
     $('.current').removeClass('current');
-    $('.official').addClass('current');
+    if ($('.genderSign:not(.hidden)').hasClass('default')) {
+        $('.official').addClass('current');
+    } else {
+        $('.genderDifferenceOfficial').addClass('current');
+    }
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .officialButton').addClass('hidden');
 }, homeRender = function() {
     $('.current').removeClass('current');
-    $('.home').addClass('current');
+    if ($('.genderSign:not(.hidden)').hasClass('default')) {
+        $('.home').addClass('current');
+    } else {
+        $('.genderDifferenceHome').addClass('current');
+    }
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .homeButton').addClass('hidden');
 }, shinyRender = function() {
     $('.current').removeClass('current');
-    $('.shiny').addClass('current');
+    if ($('.genderSign:not(.hidden)').hasClass('default')) {
+        $('.shiny').addClass('current');
+    } else {
+        $('.genderDifferenceShiny').addClass('current');
+    }
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .shinyButton').addClass('hidden');
+}, differenceRender = function() {
+    if ($('.official').hasClass('current') || $('.genderDifferenceOfficial').hasClass('current')) {
+        if ($('.official').hasClass('current')) {
+            $('.official').removeClass('current');
+            $('.genderDifferenceOfficial').addClass('current');
+        } else {
+            $('.official').addClass('current');
+            $('.genderDifferenceOfficial').removeClass('current');
+        }
+    } else if ($('.shiny').hasClass('current') || $('.genderDifferenceShiny').hasClass('current')) {
+        if ($('.shiny').hasClass('current')) {
+            $('.shiny').removeClass('current');
+            $('.genderDifferenceShiny').addClass('current');
+        } else {
+            $('.shiny').addClass('current');
+            $('.genderDifferenceShiny').removeClass('current');
+        }
+    } else if ($('.home').hasClass('current') || $('.genderDifferenceHome').hasClass('current')) {
+        if ($('.home').hasClass('current')) {
+            $('.home').removeClass('current');
+            $('.genderDifferenceHome').addClass('current');
+        } else {
+            $('.home').addClass('current');
+            $('.genderDifferenceHome').removeClass('current');
+        }
+    }
+
+    if ($('.genderSign.default').hasClass('hidden')) {
+        $('.genderSign.default').removeClass('hidden');
+        $('.genderSign.difference').addClass('hidden');
+    } else {
+        $('.genderSign.difference').removeClass('hidden');
+        $('.genderSign.default').addClass('hidden');
+    }
 }, grabTypingChart = function (primaryType, generationId) {
     $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryType, 'secondaryTypeID': '0', 'generationID': generationId }, function () {
         if ($('.typing-table-strong').children().length > 0) {

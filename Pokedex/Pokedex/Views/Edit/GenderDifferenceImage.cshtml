@@ -1,0 +1,86 @@
+@model Pokedex.DataAccess.Models.Pokemon
+
+<h2>Update @Model.Name's Gender Difference Image</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.ValidationSummary()
+
+        @Html.HiddenFor(x => x.IsComplete)
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Name)
+        @Html.HiddenFor(x => x.PokedexNumber)
+        @Html.HiddenFor(x => x.ClassificationId)
+        @Html.HiddenFor(x => x.GameId)
+        @Html.HiddenFor(x => x.Height)
+        @Html.HiddenFor(x => x.Weight)
+        @Html.HiddenFor(x => x.EggCycleId)
+        @Html.HiddenFor(x => x.GenderRatioId)
+        @Html.HiddenFor(x => x.ExperienceGrowthId)
+
+        <div class="form-group row">
+            <label for="PictureFile" class="col-md-2">Upload Official Image With File</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="file" accept="image/png" id="PictureFile" name="officialFileUpload" />
+            </div>
+        </div>
+
+        <p>Or</p>
+
+        <div class="form-group row">
+            <label for="PictureUrl" class="col-md-2">Upload Official Image With URL</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="text" accept="image/png" id="PictureUrl" name="officialUrlUpload" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="PictureFile" class="col-md-2">Upload Shiny Image With File</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="file" accept="image/png" id="PictureFile" name="shinyFileUpload" />
+            </div>
+        </div>
+
+        <p>Or</p>
+
+        <div class="form-group row">
+            <label for="PictureUrl" class="col-md-2">Upload Shiny Image With URL</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="text" accept="image/png" id="PictureUrl" name="shinyUrlUpload" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="PictureFile" class="col-md-2">Upload Home Image With File</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="file" accept="image/png" id="PictureFile" name="homeFileUpload" />
+            </div>
+        </div>
+
+        <p>Or</p>
+
+        <div class="form-group row">
+            <label for="PictureUrl" class="col-md-2">Upload Home Image With URL</label>
+            <div class="col-md-8 addPokemonImage">
+                <input type="text" accept="image/png" id="PictureUrl" name="homeUrlUpload" />
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label for="Gender" class="col-md-2">Gender of Gender Difference</label>
+            <select class="col-md-8 genderOfImage" name="isFemale">
+                <option value="true">Female</option>
+                <option value="false">Male</option>
+            </select>
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-primary" role="button">Add</button>
+        </p>
+    }
+
+</div>

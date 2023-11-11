@@ -45,6 +45,12 @@
             @Html.EditorFor(x => x.IsShinyLocked, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.IsShinyLocked)
         </div>
+        
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Pokemon.HasGenderDifference, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Pokemon.HasGenderDifference, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Pokemon.HasGenderDifference)
+        </div>
 
         <div class="form-group row">
             @Html.LabelFor(x => x.ClassificationId, new { @class = "col-md-2" })

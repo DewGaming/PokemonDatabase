@@ -35,6 +35,8 @@ namespace Pokedex.DataAccess.Models
         public ExperienceGrowth ExperienceGrowth { get; set; }
         [Display(Name = "Is a Starter")]
         public bool IsStarter { get; set; }
+        [Display(Name = "Has Gender Difference (Appearance Only)")]
+        public bool HasGenderDifference { get; set; }
 
         public override bool Equals(object obj)
         {

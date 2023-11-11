@@ -512,7 +512,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "2d");
+            this.dataService.UploadImages(fileUpload, urlUpload, id.ToString(), this.appConfig, "2d");
 
             return this.RedirectToAction("Pokemon", "Owner");
         }
@@ -572,7 +572,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "3d");
+            this.dataService.UploadImages(fileUpload, urlUpload, id.ToString(), this.appConfig, "3d");
 
             return this.RedirectToAction("Pokemon", "Owner");
         }
@@ -632,7 +632,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "shiny");
+            this.dataService.UploadImages(fileUpload, urlUpload, id.ToString(), this.appConfig, "shiny");
 
             return this.RedirectToAction("Pokemon", "Owner");
         }
@@ -672,7 +672,7 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "pokeball");
+            this.dataService.UploadImages(fileUpload, urlUpload, id.ToString(), this.appConfig, "pokeball");
 
             return this.RedirectToAction("Pokeballs", "Owner");
         }
@@ -712,9 +712,133 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            this.dataService.UploadImages(fileUpload, urlUpload, id, this.appConfig, "mark");
+            this.dataService.UploadImages(fileUpload, urlUpload, id.ToString(), this.appConfig, "mark");
 
             return this.RedirectToAction("Marks", "Owner");
+        }
+
+        /// <summary>
+        /// Adds a gender difference.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>The view to add a gender difference to a pokemon.</returns>
+        [HttpGet]
+        [Route("add_gender_difference/{pokemonId:int}")]
+        public IActionResult GenderDifferenceImage(int pokemonId)
+        {
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+            if (this.dataService.CheckIfAltForm(pokemonId))
+            {
+                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemonId), ")");
+            }
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Adds a gender difference.
+        /// </summary>
+        /// <param name="pokemon">The pokemon getting a gender difference.</param>
+        /// <param name="isFemale">True if Female is selected. False if Male is selected.</param>
+        /// <param name="officialFileUpload">The original image used for the gender difference (File).</param>
+        /// <param name="officialUrlUpload">The original image used for the gender difference (URL to file).</param>
+        /// <param name="shinyFileUpload">The shiny image used for the gender difference (File).</param>
+        /// <param name="shinyUrlUpload">The shiny image used for the gender difference (URL to file).</param>
+        /// <param name="homeFileUpload">The home image used for the gender difference (File).</param>
+        /// <param name="homeUrlUpload">The home image used for the gender difference (URL to file).</param>
+        /// <returns>The view to the pokemon admin page.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_gender_difference/{pokemonId:int}")]
+        public IActionResult GenderDifferenceImage(Pokemon pokemon, bool isFemale, IFormFile officialFileUpload, string officialUrlUpload, IFormFile shinyFileUpload, string shinyUrlUpload, IFormFile homeFileUpload, string homeUrlUpload)
+        {
+            if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                }
+
+                return this.View(model);
+            }
+            else if (officialFileUpload == null && string.IsNullOrEmpty(officialUrlUpload) && shinyFileUpload == null && string.IsNullOrEmpty(shinyUrlUpload) && homeFileUpload == null && string.IsNullOrEmpty(homeUrlUpload))
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if ((officialFileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(officialUrlUpload) && !officialUrlUpload.Contains(".png")))
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+            else if ((shinyFileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(shinyUrlUpload) && !shinyUrlUpload.Contains(".png")))
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+            else if ((officialFileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(homeUrlUpload) && !homeUrlUpload.Contains(".png")))
+            {
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+
+                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                {
+                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                }
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+
+            string fileName = pokemon.Id.ToString();
+            if (isFemale)
+            {
+                fileName += "-f";
+            }
+            else
+            {
+                fileName += "-m";
+            }
+
+            if (officialFileUpload != null || !string.IsNullOrEmpty(officialUrlUpload))
+            {
+                this.dataService.UploadImages(officialFileUpload, officialUrlUpload, fileName, this.appConfig, "genderDifference");
+            }
+
+            if (shinyFileUpload != null || !string.IsNullOrEmpty(shinyUrlUpload))
+            {
+                this.dataService.UploadImages(shinyFileUpload, officialUrlUpload, fileName, this.appConfig, "genderDifferenceShiny");
+            }
+
+            if (homeFileUpload != null || !string.IsNullOrEmpty(homeUrlUpload))
+            {
+                this.dataService.UploadImages(homeFileUpload, homeUrlUpload, fileName, this.appConfig, "genderDifferenceHome");
+            }
+
+            return this.RedirectToAction("Pokemon", "Owner");
         }
 
         [HttpGet]

@@ -58,17 +58,16 @@
             position: relative;
         }
 
-        .official, .home, .shiny {
-            backface-visibility: hidden;
+        .official, .home, .shiny, .genderDifference {
             transform-style: preserve-3d;
             transition: all 0.5s ease-out 0s;
         }
 
-        .pokemonImage div:not(.current) {
+        .pokemonImage div:not(.current):not(.genderSign) {
             transform: rotateY(-180deg);
         }
 
-        .official, .shiny {
+        .official, .shiny, .genderDifference {
             position: absolute;
             left: 0;
             right: 0;
@@ -76,6 +75,21 @@
 
         .home {
             position: relative;
+        }
+
+        .genderSign {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px !important;
+            height: 50px !important;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .genderSign.hidden {
+            visibility: hidden;
+            z-index: 1;
         }
 
         .pokemonImage img {
@@ -313,6 +327,60 @@
                             <div class="official current" style="@(!item.HasShiny && !item.HasHome ? "position: relative !important" : "")">
                                 <img title="@item.Pokemon.Name" id="@item.Pokemon.Id" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.OfficialPokemonImageUrl, @item.Pokemon.Id, ".png"))" />
                             </div>
+                            @if (@item.HasFemaleGenderDifference || @item.HasMaleGenderDifference)
+                            {
+                                <div class="genderDifference genderDifferenceOfficial">
+                                    @if (@item.HasFemaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GenderDifferencePokemonImageUrl, @item.Pokemon.Id, "-f.png"))" />
+                                    }
+                                    else if (@item.HasMaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GenderDifferencePokemonImageUrl, @item.Pokemon.Id, "-m.png"))" />
+                                    }
+                                </div>
+                                <div class="genderDifference genderDifferenceShiny">
+                                    @if (@item.HasFemaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GenderDifferenceShinyPokemonImageUrl, @item.Pokemon.Id, "-f.png"))" />
+                                    }
+                                    else if (@item.HasMaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GenderDifferenceShinyPokemonImageUrl, @item.Pokemon.Id, "-m.png"))" />
+                                    }
+                                </div>
+                                <div class="genderDifference genderDifferenceHome">
+                                    @if (@item.HasFemaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GenderDifferenceHomePokemonImageUrl, @item.Pokemon.Id, "-f.png"))" />
+                                    }
+                                    else if (@item.HasMaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GenderDifferenceHomePokemonImageUrl, @item.Pokemon.Id, "-m.png"))" />
+                                    }
+                                </div>
+
+                                <div class="genderSign default pokemonListPicture" onclick="differenceRender()">
+                                    @if (@item.HasFemaleGenderDifference)
+                                    {
+                                        <img loading="lazy" title="default" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GeneralImageUrl, "male.png"))">
+                                    }
+                                    else if (@item.HasMaleGenderDifference)
+                                    {
+                                        <img loading="lazy" title="default" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GeneralImageUrl, "female.png"))">
+                                    }
+                                </div>
+                                <div class="genderSign difference pokemonListPicture hidden" onclick="differenceRender()">
+                                    @if (@item.HasFemaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GeneralImageUrl, "female.png"))">
+                                    }
+                                    else if (@item.HasMaleGenderDifference)
+                                    {
+                                        <img loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.GeneralImageUrl, "male.png"))">
+                                    }
+                                </div>
+                            }
                             @if (@item.HasShiny)
                             {
                                 <div class="shiny" style="@(!item.HasHome ? "position: relative !important" : "")">
