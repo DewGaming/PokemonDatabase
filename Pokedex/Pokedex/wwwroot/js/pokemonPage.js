@@ -1,37 +1,28 @@
-var officialRender = function () {
-    $('.current:not(.official):not(genderDifferenceOfficial)').removeClass('current');
-    if ($('.official').hasClass('current')) {
-        $('.official').removeClass('current');
-        $('.genderDifferenceOfficial').addClass('current');
-    } else {
+var officialRender = function() {
+    $('.current').removeClass('current');
+    if ($('.genderSign:not(.hidden)').hasClass('default') || !$('.genderSign').length) {
         $('.official').addClass('current');
-        $('.genderDifferenceOfficial').removeClass('current');
+    } else {
+        $('.genderDifferenceOfficial').addClass('current');
     }
-
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .officialButton').addClass('hidden');
 }, homeRender = function() {
-    $('.current:not(.home):not(genderDifferenceHome)').removeClass('current');
-    if ($('.home').hasClass('current')) {
-        $('.home').removeClass('current');
-        $('.genderDifferenceHome').addClass('current');
-    } else {
+    $('.current').removeClass('current');
+    if ($('.genderSign:not(.hidden)').hasClass('default') || !$('.genderSign').length) {
         $('.home').addClass('current');
-        $('.genderDifferenceHome').removeClass('current');
+    } else {
+        $('.genderDifferenceHome').addClass('current');
     }
-
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .homeButton').addClass('hidden');
 }, shinyRender = function() {
-    $('.current:not(.shiny):not(genderDifferenceShiny)').removeClass('current');
-    if ($('.shiny').hasClass('current')) {
-        $('.shiny').removeClass('current');
-        $('.genderDifferenceShiny').addClass('current');
-    } else {
+    $('.current').removeClass('current');
+    if ($('.genderSign:not(.hidden)').hasClass('default') || !$('.genderSign').length) {
         $('.shiny').addClass('current');
-        $('.genderDifferenceShiny').removeClass('current');
+    } else {
+        $('.genderDifferenceShiny').addClass('current');
     }
-
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .shinyButton').addClass('hidden');
 }, differenceRender = function() {
