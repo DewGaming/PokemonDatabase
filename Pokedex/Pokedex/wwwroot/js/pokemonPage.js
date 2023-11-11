@@ -1,28 +1,37 @@
-var officialRender = function() {
-    $('.current').removeClass('current');
-    if ($('.genderSign:not(.hidden)').hasClass('default')) {
-        $('.official').addClass('current');
-    } else {
+var officialRender = function () {
+    $('.current:not(.official):not(genderDifferenceOfficial)').removeClass('current');
+    if ($('.official').hasClass('current')) {
+        $('.official').removeClass('current');
         $('.genderDifferenceOfficial').addClass('current');
+    } else {
+        $('.official').addClass('current');
+        $('.genderDifferenceOfficial').removeClass('current');
     }
+
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .officialButton').addClass('hidden');
 }, homeRender = function() {
-    $('.current').removeClass('current');
-    if ($('.genderSign:not(.hidden)').hasClass('default')) {
-        $('.home').addClass('current');
-    } else {
+    $('.current:not(.home):not(genderDifferenceHome)').removeClass('current');
+    if ($('.home').hasClass('current')) {
+        $('.home').removeClass('current');
         $('.genderDifferenceHome').addClass('current');
+    } else {
+        $('.home').addClass('current');
+        $('.genderDifferenceHome').removeClass('current');
     }
+
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .homeButton').addClass('hidden');
 }, shinyRender = function() {
-    $('.current').removeClass('current');
-    if ($('.genderSign:not(.hidden)').hasClass('default')) {
-        $('.shiny').addClass('current');
-    } else {
+    $('.current:not(.shiny):not(genderDifferenceShiny)').removeClass('current');
+    if ($('.shiny').hasClass('current')) {
+        $('.shiny').removeClass('current');
         $('.genderDifferenceShiny').addClass('current');
+    } else {
+        $('.shiny').addClass('current');
+        $('.genderDifferenceShiny').removeClass('current');
     }
+
     $('.pokemonImageButtons>.hidden').removeClass('hidden');
     $('.pokemonImageButtons .shinyButton').addClass('hidden');
 }, differenceRender = function() {
