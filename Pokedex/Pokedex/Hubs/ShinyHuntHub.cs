@@ -37,12 +37,22 @@ namespace Pokedex
         /// <summary>
         /// Sends the shiny hunt's pinned status.
         /// </summary>
-        /// <param name="shinyHuntId">The Id of the Shiny Hunt having their encounters updated.</param>
+        /// <param name="shinyHuntId">The Id of the Shiny Hunt having their pin status updated.</param>
         /// <param name="isPinned">If the hunt is pinned.</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         public async Task UpdatePinStatus(int shinyHuntId, bool isPinned)
         {
             await this.Clients.All.SendAsync("SendPinStatus", shinyHuntId, isPinned);
+        }
+
+        /// <summary>
+        /// Delete the shiny hunt from the shiny hunt page.
+        /// </summary>
+        /// <param name="shinyHuntId">The Id of the Shiny Hunt being deleted.</param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        public async Task DeleteShinyHunt(int shinyHuntId)
+        {
+            await this.Clients.All.SendAsync("RemoveShinyHunt", shinyHuntId);
         }
     }
 }

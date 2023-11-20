@@ -143,6 +143,10 @@ connection.on("SendPinStatus", function (shinyHuntId, isPinned) {
     updatePinStatus(shinyHuntId, isPinned);
 });
 
+connection.on("RemoveShinyHunt", function (shinyHuntId) {
+    $('.Hunt' + shinyHuntId).remove();
+});
+
 function lookupHuntsInGame(element, gameId) {
     if (!$('.active').is($('#Game' + gameId))) {
         $('button').each(function () {
@@ -439,6 +443,9 @@ function abandonHunt(shinyHuntId, pokemonName) {
             data: { "shinyHuntId": shinyHuntId }
         })
             .done(function () {
+                connection.invoke("DeleteShinyHunt", parseInt(shinyHuntId)).catch(function (err) {
+                    return console.error(err.toString());
+                });
                 $('.Hunt' + shinyHuntId).remove();
             })
             .fail(function () {
