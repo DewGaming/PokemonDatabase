@@ -22,14 +22,16 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Updates the encounter count for a given shiny hunt.
+        /// Updates the attributes for a given shiny hunt.
         /// </summary>
         /// <param name="shinyHuntId">The Id of the Shiny Hunt having their encounters updated.</param>
         /// <param name="encounters">The current amount of encounters.</param>
+        /// <param name="phases">The current amount of phases.</param>
+        /// <param name="increment">The current increment amount.</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        public async Task UpdateEncounters(int shinyHuntId, int encounters)
+        public async Task UpdateHuntAttributes(int shinyHuntId, int encounters, int phases, int increment)
         {
-            await this.Clients.All.SendAsync("SendEncounters", shinyHuntId, encounters);
+            await this.Clients.All.SendAsync("SendHuntAttributes", shinyHuntId, encounters, phases, increment);
         }
 
         /// <summary>

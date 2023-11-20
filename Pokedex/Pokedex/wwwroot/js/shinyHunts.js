@@ -1,6 +1,7 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").build(), adjustIncrements = function (shinyHuntId) {
+var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").build();
+var adjustIncrements = function (shinyHuntId) {
     var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
     var increments = prompt("Increment Amount", currentIncrements);
     if ($.isNumeric(increments)) {
@@ -13,6 +14,11 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").b
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "increments": increments }
         })
+            .done(function () {
+                connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(-1), parseInt(-1), parseInt(increments)).catch(function (err) {
+                    return console.error(err.toString());
+                });
+            })
             .fail(function () {
                 alert("Update Failed!");
             });
@@ -33,7 +39,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").b
             data: { "shinyHuntId": shinyHuntId, "encounters": encounters }
         })
             .done(function () {
-                connection.invoke("UpdateEncounters", Number(shinyHuntId), Number(encounters)).catch(function (err) {
+                connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(encounters), parseInt(-1), parseInt(-1)).catch(function (err) {
                     return console.error(err.toString());
                 });
             })
@@ -60,6 +66,11 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").b
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "phases": phases }
         })
+            .done(function () {
+                connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(-1), parseInt(phases), parseInt(-1)).catch(function (err) {
+                    return console.error(err.toString());
+                });
+            })
             .fail(function () {
                 alert("Update Failed!");
             });
@@ -105,6 +116,31 @@ $('.phaseCounter.pointer').on('click', function () {
 connection.start().then(function () {
 }).catch(function (err) {
     return console.error(err.toString());
+});
+
+connection.on("SendHuntAttributes", function (shinyHuntId, encounters, phases, increments) {
+    if (encounters != -1) {
+        $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
+    }
+
+    if (phases != -1) {
+        $('.Hunt' + shinyHuntId + ' .phases').html(phases);
+        if (phases == 1) {
+            $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
+            $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
+        } else {
+            $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Current Phase Encounters: ')
+            $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
+        }
+    }
+
+    if (increments != -1) {
+        $('.Hunt' + shinyHuntId + ' .increments').html(increments);
+    }
+});
+
+connection.on("SendPinStatus", function (shinyHuntId, isPinned) {
+    updatePinStatus(shinyHuntId, isPinned);
 });
 
 function lookupHuntsInGame(element, gameId) {
@@ -157,7 +193,7 @@ function incrementEncounter(shinyHuntId) {
         data: { "shinyHuntId": shinyHuntId, "encounters": currentEncounters + incrementAmount }
     })
         .done(function () {
-            connection.invoke("UpdateEncounters", Number(shinyHuntId), Number(currentEncounters + incrementAmount)).catch(function (err) {
+            connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(currentEncounters + incrementAmount), parseInt(-1), parseInt(-1)).catch(function (err) {
                 return console.error(err.toString());
             });
         })
@@ -177,6 +213,11 @@ function incrementPhase(shinyHuntId) {
         method: "POST",
         data: { "shinyHuntId": shinyHuntId, "phases": currentPhases + 1 }
     })
+        .done(function () {
+            connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(0), parseInt(currentPhases + 1), parseInt(-1)).catch(function (err) {
+                return console.error(err.toString());
+            });
+        })
         .fail(function () {
             alert("Update Failed!");
         });
@@ -376,7 +417,7 @@ function togglePin(shinyHuntId) {
         data: { "shinyHuntId": shinyHuntId }
     })
         .done(function (data) {
-            connection.invoke("UpdatePinStatus", Number(shinyHuntId), Boolean(data)).catch(function (err) {
+            connection.invoke("UpdatePinStatus", parseInt(shinyHuntId), Boolean(data)).catch(function (err) {
                 return console.error(err.toString());
             });
         })
@@ -405,11 +446,3 @@ function abandonHunt(shinyHuntId, pokemonName) {
             });
     }
 }
-
-connection.on("SendEncounters", function (shinyHuntId, encounters) {
-    $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
-});
-
-connection.on("SendPinStatus", function (shinyHuntId, isPinned) {
-    updatePinStatus(shinyHuntId, isPinned);
-});
