@@ -73,6 +73,7 @@ namespace Pokedex
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
+            services.AddSignalR();
 
             services.AddStaticRobotsTxt(robots =>
             {
@@ -124,6 +125,7 @@ namespace Pokedex
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ShinyHuntHub>("/hub/shinyHunts");
             });
         }
     }

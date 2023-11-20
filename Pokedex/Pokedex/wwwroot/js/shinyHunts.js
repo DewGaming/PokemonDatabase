@@ -1,4 +1,6 @@
-var adjustIncrements = function(shinyHuntId) {
+"use strict";
+
+var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").build(), adjustIncrements = function (shinyHuntId) {
     var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
     var increments = prompt("Increment Amount", currentIncrements);
     if ($.isNumeric(increments)) {
@@ -14,7 +16,7 @@ var adjustIncrements = function(shinyHuntId) {
     } else if (increments != null) {
         alert("Entered Phases Need to be a Number")
     }
-}, adjustEncountersManually = function(shinyHuntId) {
+}, adjustEncountersManually = function (shinyHuntId) {
     var currentEncounters = $('.Hunt' + shinyHuntId + ' .encounters').html();
     var encounters = prompt("Total Number of Encounters", currentEncounters);
     if ($.isNumeric(encounters)) {
@@ -24,13 +26,18 @@ var adjustIncrements = function(shinyHuntId) {
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "encounters": encounters }
         })
+            .done(function () {
+                connection.invoke("UpdateEncounters", Number(shinyHuntId), Number(encounters)).catch(function (err) {
+                    return console.error(err.toString());
+                });
+            })
             .fail(function () {
                 alert("Update Failed!");
             });
     } else if (encounters != null) {
         alert("Entered Encounters Need to be a Number")
     }
-}, adjustPhasesManually = function(shinyHuntId) {
+}, adjustPhasesManually = function (shinyHuntId) {
     var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
     var phases = prompt("Total Number of Phases", currentPhases);
     if (phases == 1) {
@@ -50,6 +57,28 @@ var adjustIncrements = function(shinyHuntId) {
     } else if (phases != null) {
         alert("Entered Phases Need to be a Number")
     }
+}, updatePinStatus = function (shinyHuntId, pinned) {
+    if (pinned) {
+        $('.Hunt' + shinyHuntId).addClass('HuntGamePin');
+        $('.Hunt' + shinyHuntId).removeClass('hide');
+        $('.Hunt' + shinyHuntId + ' .pin').addClass('pinned');
+        $('.Hunt' + shinyHuntId + ' .pinned').removeClass('pin');
+        if ($('.pinnedHunts').hasClass('hide')) {
+            $('.pinnedHunts').removeClass('hide');
+        }
+    } else {
+        $('.Hunt' + shinyHuntId).removeClass('HuntGamePin');
+        $('.Hunt' + shinyHuntId + ' .pinned').addClass('pin');
+        $('.Hunt' + shinyHuntId + ' .pin').removeClass('pinned');
+        if ($('.pinnedHunts').hasClass('active')) {
+            $('.Hunt' + shinyHuntId).addClass('hide');
+        }
+    }
+
+    if ($('.HuntGamePin').length <= 0) {
+        $('.pinnedHunts').addClass('hide');
+        $('#Game0').trigger('click');
+    }
 }
 
 $('.encounterIncrement.pointer').on('click', function () {
@@ -62,6 +91,11 @@ $('.currentEncounters.pointer').on('click', function () {
 
 $('.phaseCounter.pointer').on('click', function () {
     adjustPhasesManually($(this).prop('id'));
+});
+
+connection.start().then(function () {
+}).catch(function (err) {
+    return console.error(err.toString());
 });
 
 function lookupHuntsInGame(element, gameId) {
@@ -113,6 +147,11 @@ function incrementEncounter(shinyHuntId) {
         method: "POST",
         data: { "shinyHuntId": shinyHuntId, "encounters": currentEncounters + incrementAmount }
     })
+        .done(function () {
+            connection.invoke("UpdateEncounters", Number(shinyHuntId), Number(currentEncounters + incrementAmount)).catch(function (err) {
+                return console.error(err.toString());
+            });
+        })
         .fail(function () {
             alert("Update Failed!");
         });
@@ -177,11 +216,11 @@ function hideAltForms() {
             $('.hideAltFormsButton').each(function () {
                 $(this).addClass('hide');
             });
-        
+
             $('.showAltFormsButton').each(function () {
                 $(this).removeClass('hide');
             });
-        
+
             $('.shiniesFoundPercentWithAlts').each(function () {
                 $(this).addClass('hide');
             });
@@ -215,11 +254,11 @@ function showAltForms() {
             $('.showAltFormsButton').each(function () {
                 $(this).addClass('hide');
             });
-        
+
             $('.hideAltFormsButton').each(function () {
                 $(this).removeClass('hide');
             });
-        
+
             $('.shiniesFoundPercentNoAlts').each(function () {
                 $(this).addClass('hide');
             });
@@ -247,7 +286,7 @@ function hideCaptured() {
             $('.hideCapturedButton').each(function () {
                 $(this).addClass('hide');
             });
-        
+
             $('.showCapturedButton').each(function () {
                 $(this).removeClass('hide');
             });
@@ -328,26 +367,9 @@ function togglePin(shinyHuntId) {
         data: { "shinyHuntId": shinyHuntId }
     })
         .done(function (data) {
-            if (data) {
-                $('.Hunt' + shinyHuntId).addClass('HuntGamePin');
-                $('.Hunt' + shinyHuntId + ' .pin').addClass('pinned');
-                $('.Hunt' + shinyHuntId + ' .pinned').removeClass('pin');
-                if ($('.pinnedHunts').hasClass('hide')) {
-                    $('.pinnedHunts').removeClass('hide');
-                }
-            } else {
-                $('.Hunt' + shinyHuntId).removeClass('HuntGamePin');
-                $('.Hunt' + shinyHuntId + ' .pinned').addClass('pin');
-                $('.Hunt' + shinyHuntId + ' .pin').removeClass('pinned');
-                if ($('.pinnedHunts').hasClass('active')) {
-                    $('.Hunt' + shinyHuntId).addClass('hide');
-                }
-            }
-
-            if ($('.pinned').length <= 0) {
-                $('.pinnedHunts').addClass('hide');
-                $('#Game0').trigger('click');
-            }
+            connection.invoke("UpdatePinStatus", Number(shinyHuntId), Boolean(data)).catch(function (err) {
+                return console.error(err.toString());
+            });
         })
         .fail(function () {
             alert("Update Failed!");
@@ -374,3 +396,11 @@ function abandonHunt(shinyHuntId, pokemonName) {
             });
     }
 }
+
+connection.on("SendEncounters", function (shinyHuntId, encounters) {
+    $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
+});
+
+connection.on("SendPinStatus", function (shinyHuntId, isPinned) {
+    updatePinStatus(shinyHuntId, isPinned);
+});
