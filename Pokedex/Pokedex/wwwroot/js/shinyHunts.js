@@ -4,6 +4,9 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").b
     var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
     var increments = prompt("Increment Amount", currentIncrements);
     if ($.isNumeric(increments)) {
+        if (increments < 1) {
+            increments = 1;
+        }
         $('.Hunt' + shinyHuntId + ' .increments').html(increments);
         $.ajax({
             url: '/set-shiny-hunt-increments/',
@@ -20,6 +23,9 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").b
     var currentEncounters = $('.Hunt' + shinyHuntId + ' .encounters').html();
     var encounters = prompt("Total Number of Encounters", currentEncounters);
     if ($.isNumeric(encounters)) {
+        if (encounters < 0) {
+            encounters = 0;
+        }
         $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
         $.ajax({
             url: '/set-shiny-hunt-encounters/',
@@ -40,12 +46,15 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").b
 }, adjustPhasesManually = function (shinyHuntId) {
     var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
     var phases = prompt("Total Number of Phases", currentPhases);
-    if (phases == 1) {
-        $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
-        $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
-    }
     if ($.isNumeric(phases)) {
+        if (phases < 1) {
+            phases = 1;
+        }
         $('.Hunt' + shinyHuntId + ' .phases').html(phases);
+        if (phases == 1) {
+            $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
+            $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
+        }
         $.ajax({
             url: '/set-shiny-hunt-phases/',
             method: "POST",
