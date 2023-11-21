@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -126,6 +127,16 @@ namespace Pokedex
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<ShinyHuntHub>("/hub/shinyHunts");
+            });
+
+            app.Use(async (context, next) =>
+            {
+                var hubContext = context.RequestServices.GetRequiredService<IHubContext<ShinyHuntHub>>();
+
+                if (next != null)
+                {
+                    await next.Invoke();
+                }
             });
         }
     }

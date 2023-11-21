@@ -34,6 +34,11 @@ namespace Pokedex.Models
         public bool IsShared { get; set; }
 
         /// <summary>
+        /// Gets or sets a shiny hunt.
+        /// </summary>
+        public ShinyHunt ShinyHunt { get; set; }
+
+        /// <summary>
         /// Gets or sets the application's configuration.
         /// </summary>
         public AppConfig AppConfig { get; set; }

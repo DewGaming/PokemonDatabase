@@ -1,6 +1,5 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").build();
 var adjustIncrements = function (shinyHuntId) {
     var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
     var increments = prompt("Increment Amount", currentIncrements);
@@ -113,8 +112,9 @@ $('.phaseCounter.pointer').on('click', function () {
     adjustPhasesManually($(this).prop('id'));
 });
 
-connection.start().then(function () {
-}).catch(function (err) {
+//#region SignalR Connection
+var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").build();
+connection.start().catch(function (err) {
     return console.error(err.toString());
 });
 
@@ -146,6 +146,22 @@ connection.on("SendPinStatus", function (shinyHuntId, isPinned) {
 connection.on("RemoveShinyHunt", function (shinyHuntId) {
     $('.Hunt' + shinyHuntId).remove();
 });
+
+connection.on("FinishShinyHunt", function (shinyHuntId) {
+    $.ajax({
+        url: '/add-completed-shiny-hunt/',
+        method: "POST",
+        data: { "shinyHuntId": shinyHuntId }
+    })
+        .done(function (view) {
+            $('.incompletedHunts .grid-container .Hunt' + shinyHuntId).remove();
+            $('.completedHunts .grid-container').prepend(view);
+        })
+        .fail(function () {
+            alert("Update Failed!");
+        });
+});
+//#endregion SignalR Connections
 
 function lookupHuntsInGame(element, gameId) {
     if (!$('.active').is($('#Game' + gameId))) {

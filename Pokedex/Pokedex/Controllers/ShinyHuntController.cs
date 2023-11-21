@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MoreLinq;
 using Pokedex.DataAccess.Models;
@@ -7,6 +8,7 @@ using Pokedex.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pokedex.Controllers
 {
@@ -21,16 +23,20 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig appConfig;
 
+        private readonly IHubContext<ShinyHuntHub> hubContext;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ShinyHuntController"/> class.
         /// </summary>
         /// <param name="appConfig">The application's configuration.</param>
         /// <param name="dataContext">The pokemon database context.</param>
-        public ShinyHuntController(IOptions<AppConfig> appConfig, DataContext dataContext)
+        /// <param name="hubContext">The shiny hunting hub.</param>
+        public ShinyHuntController(IOptions<AppConfig> appConfig, DataContext dataContext, IHubContext<ShinyHuntHub> hubContext)
         {
             // Instantiate an instance of the data service.
             this.appConfig = appConfig.Value;
             this.dataService = new DataService(dataContext);
+            this.hubContext = hubContext;
         }
 
         /// <summary>
@@ -282,13 +288,15 @@ namespace Pokedex.Controllers
         /// <returns>The user's shiny hunt page.</returns>
         [HttpPost]
         [Route("complete_shiny_hunt/{shinyHuntId:int}")]
-        public IActionResult ShinyFound(CompleteShinyHuntViewModel shinyHunt)
+        public async Task<ActionResult> ShinyFound(CompleteShinyHuntViewModel shinyHunt)
         {
             if (this.ModelState.IsValid)
             {
                 shinyHunt.IsCaptured = true;
                 this.dataService.UpdateObject(shinyHunt);
             }
+
+            await this.hubContext.Clients.All.SendAsync("FinishShinyHunt", shinyHunt.Id);
 
             return this.RedirectToAction("ShinyHunts", "User");
         }

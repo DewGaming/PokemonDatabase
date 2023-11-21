@@ -1991,6 +1991,45 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Adds a shiny hunt into the completed shiny hunt section.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt that was completed.</param>
+        /// <returns>The fill completed shiny hunt shared view.</returns>
+        [Route("add-completed-shiny-hunt")]
+        public IActionResult AddCompletedShinyHunt(int shinyHuntId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "User, Pokemon, Game, HuntingMethod, Pokeball, Mark, PhaseOfHunt");
+                List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow && x.GenerationId >= 2).ToList();
+                if (gamesList.Exists(x => x.Id == shinyHunt.GameId))
+                {
+                    shinyHunt.Game = new Game()
+                    {
+                        Id = gamesList.First(x => x.ReleaseDate == shinyHunt.Game.ReleaseDate).Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == shinyHunt.Game.ReleaseDate).Select(x => x.Name)),
+                        GenerationId = gamesList.First(x => x.ReleaseDate == shinyHunt.Game.ReleaseDate).GenerationId,
+                        ReleaseDate = shinyHunt.Game.ReleaseDate,
+                        GameColor = gamesList.First(x => x.ReleaseDate == shinyHunt.Game.ReleaseDate).GameColor,
+                    };
+                }
+
+                ShinyHuntsViewModel model = new ShinyHuntsViewModel()
+                {
+                    ShinyHunt = shinyHunt,
+                    AppConfig = this.appConfig,
+                    IsShared = true,
+                };
+
+                return this.PartialView("_FillCompletedShinyHunt", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that is capable of breeding with the given pokemon.
         /// </summary>
         /// <param name="pokemonId">The parent pokemon.</param>
