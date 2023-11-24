@@ -562,6 +562,26 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<Pokemon> pokemonList = new List<Pokemon>();
+                List<int> testPokemonIds = new List<int>();
+
+                // Modify to test errors in team generation.
+                // selectedGameId = 0;
+                // selectedTypeId = this.dataService.GetObjectByPropertyValue<Pokedex.DataAccess.Models.Type>("Name", "").Id;
+                // pokemonCount = 6;
+                // testPokemonIds = new List<int>() {  };
+                // selectedGens = new List<int>() {  };
+                // selectedEvolutions = new List<string>() {  };
+                // selectedForms = new List<string>() {  };
+                // selectedLegendaries = new List<string>() {  };
+                // needsStarter = false;
+                // onlyLegendaries = false;
+                // onlyAltForms = false;
+                // multipleMegas = false;
+                // multipleGMax = false;
+                // onePokemonForm = true;
+                // randomAbility = false;
+                // noRepeatType = false;
+                // allowIncomplete = false;
                 try
                 {
                     Random rnd = new Random();
@@ -676,7 +696,16 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    List<int> pokemonIds = pokemonList.ConvertAll(x => x.Id);
+                    List<int> pokemonIds = new List<int>();
+                    if (testPokemonIds.Count() > 0)
+                    {
+                        pokemonIds = testPokemonIds;
+                        pokemonList = this.GetAllPokemonWithoutForms().Where(x => pokemonIds.Any(y => y == x.Id)).ToList();
+                    }
+                    else
+                    {
+                        pokemonIds = pokemonList.ConvertAll(x => x.Id);
+                    }
 
                     TeamRandomizerViewModel model = new TeamRandomizerViewModel()
                     {
@@ -2705,6 +2734,24 @@ namespace Pokedex.Controllers
                 List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", gameId).ConvertAll(x => x.HuntingMethod);
 
                 return huntingMethods;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Grabs the given pokemon by the provided id.
+        /// </summary>
+        /// <param name="pokemonId">The selected pokemon's Id.</param>
+        /// <returns>The selected pokemon.</returns>
+        [Route("get-pokemon-by-id")]
+        public Pokemon GetPokemonById(int pokemonId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "Game");
+
+                return pokemon;
             }
 
             return null;

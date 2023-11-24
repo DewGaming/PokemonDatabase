@@ -471,10 +471,10 @@ namespace Pokedex
                 List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
                 futureEvolutions = futureEvolutions.Where(x => x.Game.GenerationId > game.GenerationId).Distinct().ToList();
                 futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
-                pokemonList.AddRange(futureEvolutions.Distinct());
+                pokemonList.AddRange(futureEvolutions);
             }
 
-            return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            return pokemonList.Distinct().OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
 
         /// <summary>

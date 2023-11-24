@@ -101,6 +101,29 @@ var checkShinyCharm = function () {
                 alert("Failed to grab marks!");
             });
     }
+}, checkHOMETransfer = function () {
+    if ($('#GameId').val() == 43) {
+        $.ajax({
+            url: '/get-pokemon-by-id/',
+            method: "POST",
+            data: { 'pokemonId': $('#PokemonId').val() }
+        })
+            .done(function (data) {
+                if ((data.pokedexNumber > 150 && data.name != "Meltan" && data.name != "Melmetal") || (data.pokedexNumber <= 150 && data.game.generationId >= 8)) {
+                    if (!$('.directHOMETransferCheckbox').hasClass('hide')) {
+                        $('.directHOMETransferCheckbox').addClass('hide');
+                        $('#DirectHOMETransfer').prop('checked', false)
+                    }
+                } else {
+                    if ($('.directHOMETransferCheckbox').hasClass('hide')) {
+                        $('.directHOMETransferCheckbox').removeClass('hide');
+                    }
+                }
+            })
+            .fail(function () {
+                alert("Failed to grab marks!");
+            });
+    }
 }, checkPokeballs = function () {
     if ($('#PokeballId').length) {
         var gameId = $('#GameId').val(), pokeballId = $('#PokeballId').val();
@@ -137,6 +160,7 @@ var checkShinyCharm = function () {
     checkMarks();
     checkPokeballs();
     checkShinyCharm();
+    checkHOMETransfer();
     checkSparklingPower();
 }
 

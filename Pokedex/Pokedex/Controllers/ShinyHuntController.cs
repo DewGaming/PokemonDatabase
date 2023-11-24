@@ -293,6 +293,17 @@ namespace Pokedex.Controllers
             if (this.ModelState.IsValid)
             {
                 shinyHunt.IsCaptured = true;
+
+                // If game is Pokemon GO.
+                if (shinyHunt.GameId == 43)
+                {
+                    Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", shinyHunt.PokemonId, "Game");
+                    if ((pokemon.PokedexNumber > 150 && pokemon.Name != "Meltan" && pokemon.Name != "Melmetal") || (pokemon.PokedexNumber <= 150 && pokemon.Game.GenerationId >= 8))
+                    {
+                        shinyHunt.DirectHOMETransfer = true;
+                    }
+                }
+
                 this.dataService.UpdateObject(shinyHunt);
             }
 
