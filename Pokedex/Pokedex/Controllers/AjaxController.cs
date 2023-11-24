@@ -2744,17 +2744,29 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="pokemonId">The selected pokemon's Id.</param>
         /// <returns>The selected pokemon.</returns>
-        [Route("get-pokemon-by-id")]
-        public Pokemon GetPokemonById(int pokemonId)
+        [Route("go-transfer-without-symbol")]
+        public bool GoTransferWithoutSymbol(int pokemonId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "Game");
-
-                return pokemon;
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game");
+                List<Pokemon> updatedPokemonList = pokemonList.Where(x => (x.PokedexNumber <= 150 || x.Name == "Meltan" || x.Name == "Melmetal") && x.Game.GenerationId <= 7).ToList();
+                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game");
+                List<Pokemon> futureEvolutions = evolutions.Where(x => updatedPokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
+                List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
+                futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+                updatedPokemonList.AddRange(futureEvolutions);
+                if (updatedPokemonList.Exists(x => x.Id == pokemonId))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
-            return null;
+            return false;
         }
 
         /// <summary>

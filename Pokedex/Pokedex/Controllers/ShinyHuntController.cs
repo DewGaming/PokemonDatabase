@@ -358,6 +358,24 @@ namespace Pokedex.Controllers
                 shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
                 shinyHunt.PhaseOfHuntId = shinyHuntId;
                 shinyHunt.Phases = 1;
+
+                // If game is Pokemon GO.
+                if (shinyHunt.GameId == 43)
+                {
+                    List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game");
+                    List<Pokemon> updatedPokemonList = pokemonList.Where(x => (x.PokedexNumber <= 150 || x.Name == "Meltan" || x.Name == "Melmetal") && x.Game.GenerationId <= 7).ToList();
+
+                    List<Evolution> evolutions = this.dataService.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game");
+                    List<Pokemon> futureEvolutions = evolutions.Where(x => updatedPokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
+                    List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
+                    futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
+                    updatedPokemonList.AddRange(futureEvolutions);
+                    if (!updatedPokemonList.Exists(x => x.Id == shinyHunt.PokemonId))
+                    {
+                        shinyHunt.DirectHOMETransfer = true;
+                    }
+                }
+
                 this.dataService.AddObject(shinyHunt);
 
                 ShinyHunt originalShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);

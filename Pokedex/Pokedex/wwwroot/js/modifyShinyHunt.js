@@ -187,19 +187,19 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
 }, checkHOMETransfer = function () {
     if ($('#GameId').val() == 43) {
         $.ajax({
-            url: '/get-pokemon-by-id/',
+            url: '/go-transfer-without-symbol/',
             method: "POST",
             data: { 'pokemonId': $('#PokemonId').val() }
         })
             .done(function (data) {
-                if ((data.pokedexNumber > 150 && data.name != "Meltan" && data.name != "Melmetal") || (data.pokedexNumber <= 150 && data.game.generationId >= 8)) {
+                if (data) {
+                    if ($('.directHOMETransferCheckbox').hasClass('hide')) {
+                        $('.directHOMETransferCheckbox').removeClass('hide');
+                    }
+                } else {
                     if (!$('.directHOMETransferCheckbox').hasClass('hide')) {
                         $('.directHOMETransferCheckbox').addClass('hide');
                         $('#DirectHOMETransfer').prop('checked', false)
-                    }
-                } else {
-                    if ($('.directHOMETransferCheckbox').hasClass('hide')) {
-                        $('.directHOMETransferCheckbox').removeClass('hide');
                     }
                 }
             })

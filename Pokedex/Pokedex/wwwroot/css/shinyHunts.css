@@ -100,14 +100,14 @@
   z-index: 1;
 }
 
-.shinyCharm {
+.shinyCharm,
+.directHOMETransfer  {
   top: 0;
   left: 0;
 }
 
 .pokemonMark,
-.pokemonAlpha,
-.directHOMETransfer {
+.pokemonAlpha{
   top: 50px;
   left: 0;
 }
