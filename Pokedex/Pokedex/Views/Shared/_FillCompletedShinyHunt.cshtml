@@ -10,7 +10,7 @@
                 }
                 @if (Model.ShinyHunt.Mark != null)
                 {
-                    <img loading="lazy" class="pokemonMark pokemonListPicture" title="@Model.ShinyHunt.Mark.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @Model.ShinyHunt.Mark.Id, ".png"))">
+                    <img loading="lazy" class="pokemonMark pokemonListPicture" title="@Model.ShinyHunt.Mark.Name Mark" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @Model.ShinyHunt.Mark.Id, ".png"))">
                 }
                 @if (Model.ShinyHunt.IsAlpha)
                 {
@@ -23,6 +23,10 @@
                 @if (Model.ShinyHunt.Gender == "Male" || Model.ShinyHunt.Gender == "Female")
                 {
                     <img loading="lazy" class="gender pokemonListPicture" title="@Model.ShinyHunt.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @Model.ShinyHunt.Gender.ToLower(), ".png"))">
+                }
+                @if (Model.ShinyHunt.DirectHOMETransfer)
+                {
+                    <img loading="lazy" class="directHOMETransfer pokemonListPicture" title="Transferred Directly Into Pokémon HOME" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "directHOMETransfer.png"))">
                 }
             </div>
             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @Model.ShinyHunt.Pokemon.Id, generationId = @Model.ShinyHunt.Game.GenerationId })" target="_blank">
