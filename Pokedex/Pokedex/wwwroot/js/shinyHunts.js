@@ -113,7 +113,7 @@ $('.phaseCounter.pointer').on('click', function () {
 });
 
 //#region SignalR Connection
-var connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").build();
+const connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").WithAutomaticReconnect().build();
 connection.start().catch(function (err) {
     return console.error(err.toString());
 });
