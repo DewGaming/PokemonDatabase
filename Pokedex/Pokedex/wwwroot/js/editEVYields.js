@@ -1,7 +1,7 @@
 var checkTotalEVs = function (slider, label) {
     var totalEVs = Number($('.healthSlider').val()) + Number($('.attackSlider').val()) + Number($('.defenseSlider').val()) + Number($('.specialAttackSlider').val()) + Number($('.specialDefenseSlider').val()) + Number($('.speedSlider').val());
 
-    if (totalEVs > 3) {
+    if (totalEVs > 4) {
         var otherEVTotal = 0;
         if (!$(slider).hasClass('healthSlider')) {
             otherEVTotal += Number($('.healthSlider').val());
