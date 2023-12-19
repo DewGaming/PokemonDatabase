@@ -2613,6 +2613,15 @@ namespace Pokedex.Controllers
             List<string> immuneTo = new List<string>();
             List<TypeChart> typeChart;
             string effectiveValue, attackType;
+            Game game;
+            if (gameId != 0)
+            {
+                game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+            }
+            else
+            {
+                game = this.dataService.GetObjects<Game>().Last();
+            }
 
             pokemonTypes.Add(this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", primaryTypeId));
 
@@ -2628,7 +2637,6 @@ namespace Pokedex.Controllers
                 List<int> generations = typeChart.Select(x => x.GenerationId).Distinct().OrderByDescending(x => x).ToList();
                 if (gameId != 0)
                 {
-                    Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
                     typeChart = typeChart.Where(x => x.GenerationId == generations.First(x => x <= game.GenerationId)).ToList();
                 }
                 else
@@ -2690,7 +2698,7 @@ namespace Pokedex.Controllers
             weakAgainst.Sort();
             superWeakAgainst.Sort();
 
-            if (!string.IsNullOrEmpty(teraType))
+            if (!string.IsNullOrEmpty(teraType) && game.GenerationId == 9)
             {
                 weakAgainst.Add("Stellar");
             }
