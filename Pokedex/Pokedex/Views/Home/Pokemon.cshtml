@@ -896,7 +896,14 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 }
                                 else
                                 {
-                                    @Html.DropDownList("TeraTypes", new SelectList(@Model.AllTypes.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                                    if (g != 9)
+                                    {
+                                        @Html.DropDownList("TeraTypes", new SelectList(@Model.AllTypes.Where(x => x.GenerationId <= g && x.Id != 99).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownList("TeraTypes", new SelectList(@Model.AllTypes.Where(x => x.GenerationId <= g).ToList(), "Id", "Name"), new { @class = "form-control teraTypeSelectList" })
+                                    }
                                 }
                             </div>
                         }

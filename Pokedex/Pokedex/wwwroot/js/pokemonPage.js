@@ -168,6 +168,9 @@ $('.teraTypeSelectList').on('change', function () {
     }
 
     if (pokemonId == '741' || pokemonId == '1301') {
+        if (teraType == 99) {
+            teraType = 0;
+        }
         $('.pokemonPicture .pokemonImage').load('/get-pokemon-images-with-type/', { 'pokemonId': pokemonId, 'typeId': teraType, 'currentImage': currentImage });
     } else if ($('#Pokemon_Name').val() == 'Ogerpon') {
         if (teraType != 0) {

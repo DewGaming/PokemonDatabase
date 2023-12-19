@@ -1524,7 +1524,8 @@ namespace Pokedex.Controllers
                 PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationId);
                 int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
                 int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationId, teraType));
+                List<Game> games = this.dataService.GetObjects<Game>().Where(x => x.GenerationId == generationId).ToList();
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, games.Last().Id, teraType));
             }
             else
             {
@@ -1546,7 +1547,8 @@ namespace Pokedex.Controllers
                 PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationId);
                 int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
                 int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationId));
+                List<Game> games = this.dataService.GetObjects<Game>().Where(x => x.GenerationId == generationId).ToList();
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, games.Last().Id));
             }
             else
             {
@@ -2620,7 +2622,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                game = this.dataService.GetObjects<Game>().Last();
+                game = this.dataService.GetObjects<Game>().OrderBy(x => x.ReleaseDate).Last();
             }
 
             pokemonTypes.Add(this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", primaryTypeId));
