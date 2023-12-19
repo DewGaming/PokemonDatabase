@@ -167,7 +167,7 @@
             @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ThenBy(x => x.DateOfCapture).ThenBy(x => x.Id).ToList())
             {
                 Model.ShinyHunt = s;
-                @Html.Partial("_FillCompletedShinyHunt", @Model);
+                @Html.PartialAsync("_FillCompletedShinyHunt", @Model);
             }
         </div>
     </div>

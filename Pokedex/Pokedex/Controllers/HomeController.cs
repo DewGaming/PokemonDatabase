@@ -621,6 +621,11 @@ namespace Pokedex.Controllers
                         model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
                     }
 
+                    if (generationId == 9)
+                    {
+                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 99, Name = "Stellar" });
+                    }
+
                     model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
 
                     return this.View(model);

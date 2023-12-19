@@ -833,6 +833,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             <h2>Plate/Tera</h2>
                                         }
+                                        else if (g == 7)
+                                        {
+                                            <h2>Plate/Z Crystal</h2>
+                                        }
                                         else
                                         {
                                             <h2>Arceus Plate</h2>
@@ -849,7 +853,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             <h2>RKS Memory</h2>
                                         }
                                     }
-                                    else if (Model.PokemonList.First().Pokemon.Name == "Ogerpon")
+                                    else if (Model.PokemonList.First().Pokemon.Name == "Ogerpon" || Model.PokemonList.First().Pokemon.Name == "Terapagos")
                                     {
                                         <h2>Terastallized</h2>
                                     }
@@ -877,6 +881,16 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         else if (item.Pokemon.Id == 1881)
                                         {
                                             <option value="18">Rock</option>
+                                        }
+                                    </select>
+                                }
+                                else if (Model.PokemonList.First().Pokemon.Name == "Terapagos")
+                                {
+                                    <select class="form-control teraTypeSelectList terapagosTera" id="TeraTypes" name="TeraTypes">
+                                        <option value="0">Not Terastallized</option>
+                                        @if (item.Pokemon.Id == 1768)
+                                        {
+                                            <option value="99">Stellar</option>
                                         }
                                     </select>
                                 }

@@ -1512,18 +1512,41 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
-        /// <param name="pokemonID">The pokemon's id.</param>
-        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="generationId">The generation used to specify the type chart.</param>
+        /// <param name="teraType">The tera type of the pokemon.</param>
         /// <returns>The file type evaluator chart shared view.</returns>
-        [Route("get-typing-evaluator-chart-by-pokemon")]
-        public IActionResult GetTypingEvaluatorChartByPokemon(int pokemonID, int generationID)
+        [Route("get-stellar-typing-chart")]
+        public IActionResult GetStellarTypingChart(int pokemonId, int generationId, string teraType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonID).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationID);
+                PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationId);
                 int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
                 int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationID));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationId, teraType));
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+        }
+
+        /// <summary>
+        /// Gets the type chart for the given typing combination.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <param name="generationId">The generation used to specify the type chart.</param>
+        /// <returns>The file type evaluator chart shared view.</returns>
+        [Route("get-typing-evaluator-chart-by-pokemon")]
+        public IActionResult GetTypingEvaluatorChartByPokemon(int pokemonId, int generationId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationId);
+                int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
+                int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationId));
             }
             else
             {
@@ -1537,13 +1560,14 @@ namespace Pokedex.Controllers
         /// <param name="primaryTypeID">The primary type's id.</param>
         /// <param name="secondaryTypeID">The secondary type's id.</param>
         /// <param name="gameId">The generation used to specify the type chart.</param>
+        /// <param name="teraType">The tera type of the pokemon.</param>
         /// <returns>The file type evaluator chart shared view.</returns>
         [Route("get-typing-evaluator-chart")]
-        public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int gameId)
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int gameId, string teraType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeID, secondaryTypeID, gameId));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeID, secondaryTypeID, gameId, teraType));
             }
             else
             {
@@ -2575,9 +2599,10 @@ namespace Pokedex.Controllers
         /// <param name="primaryTypeId">The id of the primary type.</param>
         /// <param name="secondaryTypeId">The id of the secondary type.</param>
         /// <param name="gameId">The id of the generation.</param>
+        /// <param name="teraType">The tera type of the pokemon. Used only if terastallized.</param>
         /// <returns>Returns the type effectiveness given the typing and generation.</returns>
         [Route("get-type-chart-typing")]
-        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int gameId)
+        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int gameId, string teraType = "")
         {
             List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<DataAccess.Models.Type> pokemonTypes = new List<DataAccess.Models.Type>();
@@ -2664,6 +2689,11 @@ namespace Pokedex.Controllers
             superStrongAgainst.Sort();
             weakAgainst.Sort();
             superWeakAgainst.Sort();
+
+            if (!string.IsNullOrEmpty(teraType))
+            {
+                weakAgainst.Add("Stellar");
+            }
 
             TypeEffectivenessViewModel effectivenessChart = new TypeEffectivenessViewModel()
             {
