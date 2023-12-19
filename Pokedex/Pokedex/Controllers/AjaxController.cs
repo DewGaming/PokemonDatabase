@@ -565,7 +565,7 @@ namespace Pokedex.Controllers
                 List<int> testPokemonIds = new List<int>();
 
                 // Modify to test errors in team generation.
-                // selectedGameId = 0;
+                // selectedGameId = this.dataService.GetObjectByPropertyValue<Game>("Name", "").Id;
                 // selectedTypeId = this.dataService.GetObjectByPropertyValue<Pokedex.DataAccess.Models.Type>("Name", "").Id;
                 // pokemonCount = 6;
                 // testPokemonIds = new List<int>() {  };
@@ -1670,10 +1670,31 @@ namespace Pokedex.Controllers
         {
             try
             {
-                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-                if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && gameId != 43 && ((game != null && game.GenerationId >= 6) || gameId == 11 || gameId == 29) && huntingMethodId != 8 && huntingMethodId != 14)
+                if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    return true;
+                    bool shinyCharm = true;
+                    if (huntingMethodId == 8 || huntingMethodId == 14 || gameId == 43)
+                    {
+                        shinyCharm = false;
+                    }
+                    else
+                    {
+                        Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                        if (game == null)
+                        {
+                            shinyCharm = false;
+                        }
+                        else if (game.GenerationId < 6 && gameId != 11 && gameId != 29)
+                        {
+                            shinyCharm = false;
+                        }
+                        else if ((gameId == 35 || gameId == 36) && huntingMethodId != 4 && huntingMethodId != 5)
+                        {
+                            shinyCharm = false;
+                        }
+                    }
+
+                    return shinyCharm;
                 }
                 else
                 {
