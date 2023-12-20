@@ -553,11 +553,12 @@ namespace Pokedex.Controllers
         /// <param name="multipleGMax">Whether or not multiple gigantimax pokemon are allowed for generation.</param>
         /// <param name="onePokemonForm">Whether or not only one form of a pokemon is allowed for generation.</param>
         /// <param name="randomAbility">Whether or not randomized abilities will also be generated.</param>
+        /// <param name="monotypeOnly">Whether or not only monotypes are allowed for generation.</param>
         /// <param name="noRepeatType">Whether or not repeat types are allowed for generation.</param>
         /// <param name="allowIncomplete">Whether or not incomplete pokemon can appear.</param>
         /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedTypeId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool needsStarter, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool noRepeatType, bool allowIncomplete)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, int selectedGameId, int selectedTypeId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool needsStarter, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool monotypeOnly, bool noRepeatType, bool allowIncomplete)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -580,6 +581,7 @@ namespace Pokedex.Controllers
                 // multipleGMax = false;
                 // onePokemonForm = true;
                 // randomAbility = false;
+                // monotypeOnly = false;
                 // noRepeatType = false;
                 // allowIncomplete = false;
                 try
@@ -621,16 +623,30 @@ namespace Pokedex.Controllers
                         availablePokemon = availablePokemon.Where(x => x.GameId == selectedGame.Id).ToList();
                     }
 
+                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType");
+                    if (selectedGame.Id != 0)
+                    {
+                        pokemonTypeDetails = pokemonTypeDetails.Where(x => x.GenerationId <= selectedGame.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+                    }
+                    else
+                    {
+                        pokemonTypeDetails = pokemonTypeDetails.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+                    }
+
                     allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     allPokemon = this.FilterLegendaries(allPokemon, selectedLegendaries, onlyLegendaries);
                     allPokemon = this.FilterForms(allPokemon, selectedForms, selectedGame, onlyAltForms, multipleMegas, multipleGMax);
                     (allPokemon, starterList) = this.FilterEvolutions(allPokemon, starterList, selectedEvolutions, selectedGame);
                     allPokemon = this.FilterTypes(allPokemon, selectedTypeId, selectedGame);
 
+                    if (monotypeOnly)
+                    {
+                        allPokemon = allPokemon.Where(x => pokemonTypeDetails.Any(y => (y.PrimaryTypeId == selectedTypeId && y.SecondaryTypeId == null) && y.PokemonId == x.Id)).ToList();
+                    }
+
                     if (allPokemon.Count > 0)
                     {
                         Pokemon pokemon;
-                        List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "PrimaryType, SecondaryType");
                         List<PokemonFormDetail> pokemonFormDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form");
 
                         while (allPokemon.Count() > 0 && pokemonList.Count() < pokemonCount)
@@ -3643,7 +3659,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 evolutions.Add(p);
                             }
@@ -3651,7 +3667,26 @@ namespace Pokedex.Controllers
 
                         foreach (var p in starterList)
                         {
-                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            {
+                                starterEvolutions.Add(p);
+                            }
+                        }
+                    }
+
+                    if (evolutionList.Contains("noEvolutionLine"))
+                    {
+                        foreach (var p in pokemonList)
+                        {
+                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            {
+                                evolutions.Add(p);
+                            }
+                        }
+
+                        foreach (var p in starterList)
+                        {
+                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
                             {
                                 starterEvolutions.Add(p);
                             }
@@ -3770,7 +3805,7 @@ namespace Pokedex.Controllers
 
         private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, Game game)
         {
-            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => x.GenerationId <= game.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             if (game.Id != 0)
             {

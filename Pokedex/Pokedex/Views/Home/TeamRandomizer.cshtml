@@ -109,6 +109,10 @@
                 <input id="onlyFullyEvolved" type="checkbox" value="onlyFullyEvolved" checked="checked" />
                 <label for="onlyFullyEvolved" class="generatorOptionTitle">Final Evolution</label>
             </li>
+            <li class="dropdown-item generatorOption evolutionCheckbox">
+                <input id="noEvolutionLine" type="checkbox" value="noEvolutionLine" checked="checked" />
+                <label for="noEvolutionLine" class="generatorOptionTitle">No Evolution Line</label>
+            </li>
             <span class="generationOptionTitle" id="alternateForms">Alternate Forms</span>
             @foreach (var formGroup in Model.AllFormGroupGameDetails.Select(x => x.FormGroup).Distinct())
             {
@@ -159,6 +163,10 @@
             <li class="dropdown-item generatorOption otherOption onePokemonFormBoolCheckbox">
                 <input id="onePokemonFormBool" type="checkbox" value="onePokemonFormBool" checked="checked" />
                 <label for="onePokemonFormBool" class="generatorOptionTitle">Only One Form Per Pokémon</label>
+            </li>
+            <li class="dropdown-item generatorOption otherOption monotypeBoolCheckbox">
+                <input id="monotypeBool" type="checkbox" value="monotypeBool" />
+                <label for="monotypeBool" class="generatorOptionTitle">Monotypes Only</label>
             </li>
             <li class="dropdown-item generatorOption otherOption noRepeatTypeBoolCheckbox">
                 <input id="noRepeatTypeBool" type="checkbox" value="noRepeatTypeBool" />
