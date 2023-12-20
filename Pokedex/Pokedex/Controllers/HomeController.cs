@@ -218,6 +218,7 @@ namespace Pokedex.Controllers
                 AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
                 AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
                 AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup", "AppearInTeamRandomizer", true),
+                IncompleteCount = allPokemon.Where(x => !x.IsComplete).Count(),
             };
 
             return this.View(model);

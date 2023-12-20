@@ -164,10 +164,13 @@
                 <input id="noRepeatTypeBool" type="checkbox" value="noRepeatTypeBool" />
                 <label for="noRepeatTypeBool" class="generatorOptionTitle">No Repeating Types</label>
             </li>
-            <li class="dropdown-item generatorOption otherOption allowIncompleteBoolCheckbox">
-                <input id="allowIncompleteBool" type="checkbox" value="allowIncompleteBool" />
-                <label for="allowIncompleteBool" class="generatorOptionTitle">Show Incomplete Pokemon</label>
-            </li>
+            @if (Model.IncompleteCount > 0)
+            {
+                <li class="dropdown-item generatorOption otherOption allowIncompleteBoolCheckbox">
+                    <input id="allowIncompleteBool" type="checkbox" value="allowIncompleteBool" />
+                    <label for="allowIncompleteBool" class="generatorOptionTitle">Show Incomplete Pokemon</label>
+                </li>
+            }
         </section>
     </ul>
 </div>

@@ -39,8 +39,8 @@ namespace Pokedex.Models
         public List<FormGroupGameDetail> AllFormGroupGameDetails { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all games with megas.
+        /// Gets or sets the number of incomplete pokemon.
         /// </summary>
-        public List<Game> AllMegaGames { get; set; }
+        public int IncompleteCount { get; set; }
     }
 }
