@@ -150,6 +150,12 @@ var officialRender = function() {
         });
 }
 
+$(document).ready(function () {
+    if ($('#TerapagosStellar').length) {
+        $('#TerapagosStellar.page .teraTypeSelectList').val(99);
+    }
+})
+
 $('span[title]').on('click', function() {
     alert($(this).attr('title'))
 })
@@ -160,11 +166,27 @@ $('.teraTypeSelectList').on('change', function () {
     var currentImage = $('.page.active .pokemonImage .current').attr("class").split(' ')[0];
     var pokemonId = $('.page.active .pokemonImage .current img').attr("id");
     if (teraType == 99) {
-        grabStellarChart(pokemonId, generationId);
+        if (pokemonId == 1770) {
+            $('#TerapagosTerastal.page.active .teraTypeSelectList').val(0);
+            $('#TerapagosTerastal.page').removeClass('active');
+            $('#TerapagosTerastal.generations').removeClass('active');
+            $('#TerapagosStellar.page').addClass('active');
+            $('#TerapagosStellar.generations').addClass('active');
+        } else {
+            grabStellarChart(pokemonId, generationId);
+        } 
     } else if (teraType != 0) {
         grabTypingChart(teraType, generationId);
     } else {
-        grabTypingChartByPokemon(pokemonId, generationId);
+        if (pokemonId == 1882) {
+            $('#TerapagosStellar.page.active .teraTypeSelectList').val(99);
+            $('#TerapagosStellar.page').removeClass('active');
+            $('#TerapagosStellar.generations').removeClass('active');
+            $('#TerapagosTerastal.page').addClass('active');
+            $('#TerapagosTerastal.generations').addClass('active');
+        } else {
+            grabTypingChartByPokemon(pokemonId, generationId);
+        }
     }
 
     if (pokemonId == '741' || pokemonId == '1301') {

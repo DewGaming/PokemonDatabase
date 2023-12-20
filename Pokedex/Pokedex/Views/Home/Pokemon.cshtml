@@ -245,6 +245,7 @@
 @{
     List<Evolution> preEvolutions = new List<Evolution>();
     List<Evolution> evolutions = new List<Evolution>();
+    string pokemonName = Model.PokemonList.First().Pokemon.Name;
 }
 @foreach (var item in Model.PokemonList)
 {
@@ -312,12 +313,12 @@
         <div class="page generation@(g) pokemon@(@item.Pokemon.Id == @Model.PokemonId && @g == @Model.GenerationId ? " active" : string.Empty)" id="@item.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace(".",string.Empty).Replace("'", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)">
             <div class="pokemonInfo pokemonPicture pokemonTables">
                 <div style="@(Model.PokemonList.Count() > 1 ? "display: flex" : string.Empty)">
-                    @if (Model.PokemonList.Count() > 1)
+                    @if (Model.PokemonList.Count() > 1 && item.Pokemon.Id != 1882)
                     {
                         <div class="differentForms">
                             <h2 class="formHeader">Forms</h2>
                             <div class="formButtons">
-                            @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
+                            @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id && x.Pokemon.Id != 1882))
                             {
                                 iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.IconImageUrl, button.Pokemon.Id, ".png"));
                                 <div class="@button.Pokemon.Name">
@@ -401,12 +402,12 @@
                                 </div>
                             }
                         </div>
-                        @if (Model.PokemonList.Count() > 1)
+                        @if (Model.PokemonList.Count() > 1 && item.Pokemon.Id != 1882)
                         {
                             <div class="differentFormsMobile">
                                 <h2>Different Forms</h2>
                                 <div class="formButtonsMobile">
-                                    @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id))
+                                    @foreach (var button in Model.PokemonList.Where(x => x.Pokemon.Id != item.Pokemon.Id && x.Pokemon.Id != 1882))
                                     {
                                         iconLink = Url.Content(string.Concat(button.AppConfig.WebUrl, button.AppConfig.IconImageUrl, button.Pokemon.Id, ".png"));
                                         <button onclick="lookupPokemon('@button.Pokemon.Name.Replace("!", "Exclamation").Replace("?", "Question").Replace("%", string.Empty).Replace("'", string.Empty).Replace(".", string.Empty).Replace("(", string.Empty).Replace(")", string.Empty).Replace(" ", string.Empty)', '@iconLink', '@button.Pokemon.Name.Replace("'", "&apos;")', '@g')">
@@ -803,7 +804,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                 <div class="pokemonInfo pokemonTypingTable pokemonTables">
                     <div class="typingChart">
                         <div class="typing">
-                            @if(g == 9 || Model.PokemonList.First().Pokemon.Name == "Arceus" || Model.PokemonList.First().Pokemon.Name == "Silvally")
+                            @if(g == 9 || pokemonName == "Arceus" || pokemonName == "Silvally")
                             {
                                 <h2>Base Typing</h2>
                             }
@@ -823,11 +824,11 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                 </tr>
                             </table>
                         </div>
-                        @if(g == 9 || Model.PokemonList.First().Pokemon.Name == "Arceus" || Model.PokemonList.First().Pokemon.Name == "Silvally")
+                        @if(g == 9 || pokemonName == "Arceus" || pokemonName == "Silvally")
                         {
                             <div class="teraTypingList">
                                 <label for="TeraTypes">
-                                    @if (Model.PokemonList.First().Pokemon.Name == "Arceus")
+                                    @if (pokemonName == "Arceus")
                                     {
                                         if (g == 9)
                                         {
@@ -842,7 +843,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             <h2>Arceus Plate</h2>
                                         }
                                     }
-                                    else if (Model.PokemonList.First().Pokemon.Name == "Silvally")
+                                    else if (pokemonName == "Silvally")
                                     {
                                         if (g == 9)
                                         {
@@ -853,16 +854,16 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             <h2>RKS Memory</h2>
                                         }
                                     }
-                                    else if (Model.PokemonList.First().Pokemon.Name == "Ogerpon" || Model.PokemonList.First().Pokemon.Name == "Terapagos")
+                                    else if (pokemonName == "Ogerpon" || (pokemonName == "Terapagos" && item.Pokemon.Id != Model.PokemonList.First().Pokemon.Id))
                                     {
                                         <h2>Terastallized</h2>
                                     }
-                                    else
+                                    else if (pokemonName != "Terapagos" || (pokemonName == "Terapagos" && item.Pokemon.Id != Model.PokemonList.First().Pokemon.Id))
                                     {
                                         <h2>Tera Typing</h2>
                                     }
                                 </label>
-                                @if (Model.PokemonList.First().Pokemon.Name == "Ogerpon")
+                                @if (pokemonName == "Ogerpon")
                                 {
                                     <select class="form-control teraTypeSelectList ogerponTera" id="TeraTypes" name="TeraTypes">
                                         <option value="0">Not Terastallized</option>
@@ -884,15 +885,15 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         }
                                     </select>
                                 }
-                                else if (Model.PokemonList.First().Pokemon.Name == "Terapagos")
+                                else if (pokemonName == "Terapagos")
                                 {
-                                    <select class="form-control teraTypeSelectList terapagosTera" id="TeraTypes" name="TeraTypes">
-                                        <option value="0">Not Terastallized</option>
-                                        @if (item.Pokemon.Id == 1768)
-                                        {
+                                    if (item.Pokemon.Id != Model.PokemonList.First().Pokemon.Id)
+                                    {
+                                        <select class="form-control teraTypeSelectList terapagosTera" id="TeraTypes" name="TeraTypes">
+                                            <option value="0">Not Terastallized</option>
                                             <option value="99">Stellar</option>
-                                        }
-                                    </select>
+                                        </select>
+                                    }
                                 }
                                 else
                                 {
@@ -968,6 +969,11 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             StrongAgainst.Sort();
                             WeakAgainst.Sort();
                             ImmuneTo.Sort();
+
+                            if (pokemonName == "Terapagos" && Model.PokemonList.Last().Pokemon.Id == item.Pokemon.Id)
+                            {
+                                WeakAgainst.Add("Stellar");
+                            }
 
                             List<string> SuperStrong = StrongAgainst.Where(x => x.Contains("Quad")).ToList();
                             foreach(var s in SuperStrong)
