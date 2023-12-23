@@ -30,6 +30,7 @@ var grabPokemonDropdown = function (gameId) {
 
 $(function () {
     grabPokemonDropdown($('.gameSelectList option:selected').val());
+    $('.gameSelectList').select2();
 });
 
 $(".gameSelectList").on('change', function () {
