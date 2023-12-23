@@ -1,5 +1,5 @@
 @using Pokedex.DataAccess.Models;
-@model Pokedex.Models.EditMarkGameViewModel;
+@model Pokedex.Models.EditPokeballGameViewModel;
 
 @section scripts
 {
@@ -10,22 +10,22 @@
 {
     <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
-        .markGameAvailability li {
+        .pokeballGameAvailability li {
             list-style: none;
         }
     </style>
 }
 
-<h2>Update @(Model.Game.Name)'s Marks</h2>
+<h2>Update @(Model.Game.Name)'s Pokeballs</h2>
 <p>
-    <button onclick="updateMarkGames(@Model.Game.Id)" class="btn btn-primary" role="button">Save</button>
+    <button onclick="updatePokeballGames(@Model.Game.Id)" class="btn btn-primary" role="button">Save</button>
 </p>
 
-<div class="markGameAvailability">
+<div class="pokeballGameAvailability">
     <ul>
-        @foreach (var m in Model.AllMarks.OrderBy(x => x.Name))
+        @foreach (var m in Model.AllPokeballs.OrderBy(x => x.Name))
         {
-            var gameAvail = @Model.MarkGameDetails.Find(x => x.MarkId == m.Id && x.GameId == @Model.Game.Id);
+            var gameAvail = @Model.PokeballGameDetails.Find(x => x.PokeballId == m.Id && x.GameId == @Model.Game.Id);
             <li>
                 <input id="@(m.Name)" type="checkbox" value="@m.Id" @(gameAvail != null ? "checked=checked" : "") />
                 <label for="@(m.Name)" class="generatorOptionTitle"><span>@m.Name</span></label>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231223194224_AddPokeballGameDetails")]
+    partial class AddPokeballGameDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -569,9 +571,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GenerationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -581,8 +580,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GenerationId");
 
                     b.ToTable("Marks");
                 });
@@ -1664,13 +1661,6 @@ namespace Pokedex.DataAccess.Migrations
                         .HasForeignKey("HuntingMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Pokedex.DataAccess.Models.Mark", b =>
-                {
-                    b.HasOne("Pokedex.DataAccess.Models.Generation", "Generation")
-                        .WithMany()
-                        .HasForeignKey("GenerationId");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.MarkGameDetail", b =>

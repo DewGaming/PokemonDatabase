@@ -1443,6 +1443,62 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Updates the availablity of the pokemon in a specified game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <param name="pokeballList">The pokeballs that are available in the given game.</param>
+        /// <returns>The admin pokemon page.</returns>
+        [Route("update-pokeball-games")]
+        public string UpdatePokeballGame(int gameId, List<int> pokeballList)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                List<PokeballGameDetail> existingPokeballStarters = new List<PokeballGameDetail>();
+                List<PokeballGameDetail> newPokeballStarters = new List<PokeballGameDetail>();
+                List<Game> games = this.dataService.GetObjects<Game>("ReleaseDate, Id");
+                DateTime releaseDate = games.Find(x => x.Id == gameId).ReleaseDate;
+                games = games.Where(x => x.ReleaseDate == releaseDate).ToList();
+                int generationId = games.First().GenerationId;
+
+                foreach (var game in games.ConvertAll(x => x.Id))
+                {
+                    newPokeballStarters = new List<PokeballGameDetail>();
+                    existingPokeballStarters = this.dataService.GetObjects<PokeballGameDetail>(includes: "Pokeball, Game", whereProperty: "GameId", wherePropertyValue: game);
+
+                    foreach (var m in pokeballList)
+                    {
+                        if (existingPokeballStarters.Find(x => x.PokeballId == m && x.GameId == game) == null)
+                        {
+                            newPokeballStarters.Add(new PokeballGameDetail()
+                            {
+                                GameId = game,
+                                PokeballId = m,
+                            });
+                        }
+                        else
+                        {
+                            existingPokeballStarters.Remove(existingPokeballStarters.Find(x => x.PokeballId == m && x.GameId == game));
+                        }
+                    }
+
+                    foreach (var g in newPokeballStarters)
+                    {
+                        this.dataService.AddObject(g);
+                    }
+
+                    foreach (var g in existingPokeballStarters)
+                    {
+                        this.dataService.DeleteObject<PokeballGameDetail>(g.Id);
+                    }
+                }
+
+                return this.Json(this.Url.Action("Games", "Owner")).Value.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Updates the pokemon list that give the specified evs.
         /// </summary>
         /// <param name="gameId">The generation's id.</param>

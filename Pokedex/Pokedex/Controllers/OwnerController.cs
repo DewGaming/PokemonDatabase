@@ -287,7 +287,7 @@ namespace Pokedex.Controllers
         [Route("mark")]
         public IActionResult Marks()
         {
-            List<Mark> model = this.dataService.GetObjects<Mark>("Name");
+            List<Mark> model = this.dataService.GetObjects<Mark>("GenerationId, Name");
 
             return this.View(model);
         }
@@ -295,7 +295,7 @@ namespace Pokedex.Controllers
         [Route("pokeball")]
         public IActionResult Pokeballs()
         {
-            List<Pokeball> model = this.dataService.GetObjects<Pokeball>("Name");
+            List<Pokeball> model = this.dataService.GetObjects<Pokeball>("GenerationId, Name");
 
             return this.View(model);
         }

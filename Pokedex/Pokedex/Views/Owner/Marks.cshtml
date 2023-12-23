@@ -10,6 +10,7 @@
     <table class="table">
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Generation of Introduction</th>
             <th scope="col">Actions</th>
         </tr>
         @foreach (var item in Model)
@@ -17,6 +18,9 @@
             <tr>
                 <td>
                     @item.Name (@item.NameAddition)
+                </td>
+                <td>
+                    Generation @item.GenerationId
                 </td>
                 <td>
                     <a href="@(this.Url.Action("Mark", "Edit", new { id = item.Id }))">Edit</a>

@@ -252,11 +252,26 @@ namespace Pokedex.Controllers
         [Route("edit_mark_game_availability/{id:int}")]
         public IActionResult MarkGameAvailability(int id)
         {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
             EditMarkGameViewModel model = new EditMarkGameViewModel()
             {
-                Game = this.dataService.GetObjectByPropertyValue<Game>("Id", id),
-                AllMarks = this.dataService.GetObjects<Mark>(),
+                Game = game,
+                AllMarks = this.dataService.GetObjects<Mark>().Where(x => x.GenerationId <= game.GenerationId).ToList(),
                 MarkGameDetails = this.dataService.GetObjects<MarkGameDetail>(includes: "Game, Mark", whereProperty: "GameId", wherePropertyValue: id),
+            };
+
+            return this.View(model);
+        }
+
+        [Route("edit_pokeball_game_availability/{id:int}")]
+        public IActionResult PokeballGameAvailability(int id)
+        {
+            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
+            EditPokeballGameViewModel model = new EditPokeballGameViewModel()
+            {
+                Game = game,
+                AllPokeballs = this.dataService.GetObjects<Pokeball>().Where(x => x.GenerationId <= game.GenerationId).ToList(),
+                PokeballGameDetails = this.dataService.GetObjects<PokeballGameDetail>(includes: "Game, Pokeball", whereProperty: "GameId", wherePropertyValue: id),
             };
 
             return this.View(model);
@@ -1653,7 +1668,15 @@ namespace Pokedex.Controllers
         [Route("edit_mark/{id:int}")]
         public IActionResult Mark(int id)
         {
-            Mark model = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+            Mark mark = this.dataService.GetObjectByPropertyValue<Mark>("Id", id);
+            MarkViewModel model = new MarkViewModel()
+            {
+                Id = mark.Id,
+                Name = mark.Name,
+                NameAddition = mark.NameAddition,
+                GenerationId = mark.GenerationId,
+                AllGenerations = this.dataService.GetObjects<Generation>().Where(x => x.Id >= 8).ToList(),
+            };
 
             return this.View(model);
         }
