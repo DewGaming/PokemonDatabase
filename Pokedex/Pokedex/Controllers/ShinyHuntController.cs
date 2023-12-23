@@ -78,7 +78,7 @@ namespace Pokedex.Controllers
         /// <returns>The shiny dex progress page.</returns>
         [AllowAnonymous]
         [Route("shiny_dex_progress/{username}")]
-        public IActionResult ShinyDexProgress(string username)
+        public IActionResult SharableShinyDexProgress(string username)
         {
             User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
             if (user != null)
@@ -104,7 +104,7 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
-                return this.View(model);
+                return this.View("ShinyDexProgress", model);
             }
             else
             {

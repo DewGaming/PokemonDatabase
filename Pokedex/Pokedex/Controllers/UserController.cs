@@ -259,7 +259,7 @@ namespace Pokedex.Controllers
         /// <returns>The shiny hunt page.</returns>
         [AllowAnonymous]
         [Route("shiny_hunts/{username}")]
-        public IActionResult ShinyHunts(string username)
+        public IActionResult SharableShinyHunts(string username)
         {
             User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
             if (user != null)
@@ -305,7 +305,7 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
-                return this.View(model);
+                return this.View("ShinyHunts", model);
             }
             else
             {
