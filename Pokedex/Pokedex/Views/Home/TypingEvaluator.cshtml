@@ -96,11 +96,11 @@
         <div class="typeLists flexDiv">
             <div class="primaryList">
                 @Html.Label("Primary Type")
-                @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+                @Html.DropDownList("Primary Type", new SelectList(@primaryItems, "Id", "Name"), new { @class = "form-control typingSelectList primaryTypeSelectList" })
             </div>
             <div class="secondaryList">
                 @Html.Label("Secondary Type")
-                @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList" })
+                @Html.DropDownList("Secondary Type", new SelectList(@secondaryItems, "Id", "Name"), new { @class = "form-control typingSelectList secondaryTypeSelectList" })
             </div>
         </div>
     </div>

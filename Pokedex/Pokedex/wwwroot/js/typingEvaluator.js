@@ -106,13 +106,18 @@ var checkTypings = function () {
             grabPokemon();
         });
 
+        $('.primaryTypeSelectList').select2();
+        $('.secondaryTypeSelectList').select2();
+
         grabPokemon();
     });
 };
 
 $(function () {
-    grabTypes($('.gameList > select').val());
     $('.gameSelectList').select2();
+    $('.primaryTypeSelectList').select2();
+    $('.secondaryTypeSelectList').select2();
+    grabTypes($('.gameList > select').val());
 });
 
 $(".gameSelectList").on('change', function () {
