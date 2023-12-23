@@ -176,4 +176,8 @@ $(document).ready(function () {
     image.onerror = function () {
         $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.officialUrl').prop('name') + $('#PokemonId').val() + '.png');
     }
+    $("#HuntingMethodId").select2();
+    $("#PokeballId").select2();
+    $("#MarkId").select2();
+    $("#GameId").select2();
 });

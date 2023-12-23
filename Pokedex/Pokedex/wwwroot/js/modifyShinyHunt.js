@@ -105,8 +105,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             alert("Failed to check shiny charm!");
         });
 }, checkAlpha = function () {
-    var gameId = $('#GameId').val()
-    if (gameId == 37) {
+    if ($('#GameId').val() == 37) {
         if ($('.alphaCheckbox').hasClass('hide')) {
             $('.alphaCheckbox').removeClass('hide');
         }
@@ -288,6 +287,7 @@ $(document).ready(function () {
     $("#HuntingMethodId").select2();
     $("#PokeballId").select2();
     $("#MarkId").select2();
+    $("#GameId").select2();
 });
 
 $('#GameId').on('change', function () {
