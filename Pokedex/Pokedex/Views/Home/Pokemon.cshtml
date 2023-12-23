@@ -815,10 +815,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             <table>
                                 <tr>
                                     <td>
-                                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower(), ".png"))">
+                                        <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).PrimaryType.Name.ToLower(), ".png"))">
                                         @if (@item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType != null)
                                         {
-                                            <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower(), ".png"))">
+                                            <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @item.Typings.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= g).SecondaryType.Name.ToLower(), ".png"))">
                                         }
                                     </td>
                                 </tr>
@@ -991,7 +991,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                         {
                             <div class="StrongAgainst">
                                 <h2>Resistances</h2>
-                                <table class="StrongAgainstTable">
+                                <table class="typing-table-strong typing-table">
                                     <tbody>
                                         @if (SuperStrong.Count() > 0)
                                         {
@@ -1004,10 +1004,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 <tr>
                                                     <td>
-                                                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperStrong[i].ToLower().Substring(0, @SuperStrong[i].IndexOf(" Quad")).ToLower(), ".png"))">
+                                                        <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperStrong[i].ToLower().Substring(0, @SuperStrong[i].IndexOf(" Quad")).ToLower(), ".png"))">
                                                         @if (SuperStrong.ElementAtOrDefault(i+1) != null)
                                                         {
-                                                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperStrong[i+1].ToLower().Substring(0, @SuperStrong[i+1].IndexOf(" Quad")).ToLower(), ".png"))">
+                                                        <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperStrong[i+1].ToLower().Substring(0, @SuperStrong[i+1].IndexOf(" Quad")).ToLower(), ".png"))">
                                                         }
                                                     </td>
                                                 </tr>
@@ -1025,10 +1025,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             <tr>
                                                 <td>
-                                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @StrongAgainst[i].ToLower(), ".png"))">
+                                                    <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @StrongAgainst[i].ToLower(), ".png"))">
                                                     @if (StrongAgainst.ElementAtOrDefault(i+1) != null)
                                                     {
-                                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @StrongAgainst[i+1].ToLower(), ".png"))">
+                                                    <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @StrongAgainst[i+1].ToLower(), ".png"))">
                                                     }
                                                 </td>
                                             </tr>
@@ -1047,7 +1047,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             {
                                 <div class="WeakAgainst">
                                     <h2>Weaknesses</h2>
-                                    <table class="WeakAgainstTable">
+                                    <table class="typing-table-weak typing-table">
                                         <tbody>
                                         @if (SuperWeak.Count() > 0)
                                         {
@@ -1060,10 +1060,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             {
                                                 <tr>
                                                     <td>
-                                                        <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperWeak[i].ToLower().Substring(0, @SuperWeak[i].IndexOf(" Quad")).ToLower(), ".png"))">
+                                                        <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperWeak[i].ToLower().Substring(0, @SuperWeak[i].IndexOf(" Quad")).ToLower(), ".png"))">
                                                         @if (SuperWeak.ElementAtOrDefault(i+1) != null)
                                                         {
-                                                            <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperWeak[i+1].ToLower().Substring(0, @SuperWeak[i+1].IndexOf(" Quad")).ToLower(), ".png"))">
+                                                            <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @SuperWeak[i+1].ToLower().Substring(0, @SuperWeak[i+1].IndexOf(" Quad")).ToLower(), ".png"))">
                                                         }
                                                     </td>
                                                 </tr>
@@ -1081,10 +1081,10 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         {
                                             <tr>
                                                 <td>
-                                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @WeakAgainst[i].ToLower(), ".png"))">
+                                                    <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @WeakAgainst[i].ToLower(), ".png"))">
                                                     @if (WeakAgainst.ElementAtOrDefault(i+1) != null)
                                                     {
-                                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @WeakAgainst[i+1].ToLower(), ".png"))">
+                                                    <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @WeakAgainst[i+1].ToLower(), ".png"))">
                                                     }
                                                 </td>
                                             </tr>
@@ -1097,16 +1097,16 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                             {
                                 <div class="ImmuneTo">
                                     <h2>Immunities</h2>
-                                    <table class="ImmuneToTable">
+                                    <table class="typing-table-immune typing-table">
                                         <tbody>
                                         @for (var i = 0; i < ImmuneTo.Count(); i += 2)
                                         {
                                             <tr>
                                                 <td>
-                                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @ImmuneTo[i].ToLower(), ".png"))">
+                                                    <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @ImmuneTo[i].ToLower(), ".png"))">
                                                     @if (ImmuneTo.ElementAtOrDefault(i+1) != null)
                                                     {
-                                                    <img class="pokemon-type type-icon" loading="lazy" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @ImmuneTo[i+1].ToLower(), ".png"))">
+                                                    <img loading="lazy" class="pokemon-type type-icon" src="@Url.Content(string.Concat(@item.AppConfig.WebUrl, @item.AppConfig.TypeImageUrl, @ImmuneTo[i+1].ToLower(), ".png"))">
                                                     }
                                                 </td>
                                             </tr>
