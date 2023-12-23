@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Pokedex.Models
 {
     /// <summary>
-    /// The class that is used to represent the typing evaluator page view model.
+    /// The class that is used to represent the ability evaluator page view model.
     /// </summary>
     public class AbilityEvaluatorViewModel
     {
@@ -14,8 +14,8 @@ namespace Pokedex.Models
         public List<Ability> AllAbilities { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all generations.
+        /// Gets or sets a list of all games.
         /// </summary>
-        public List<Generation> AllGenerations { get; set; }
+        public List<Game> AllGames { get; set; }
     }
 }

@@ -2082,28 +2082,31 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets a list of all pokemon by their ability.
         /// </summary>
-        /// <param name="abilityID">The ability's id.</param>
-        /// <param name="generationID">The generation used to specify the type chart.</param>
+        /// <param name="abilityId">The ability's id.</param>
+        /// <param name="gameId">The game the ability is in.</param>
         /// <returns>The fill typing evaluator shared view.</returns>
         [Route("get-pokemon-by-ability")]
-        public IActionResult GetPokemonByAbility(int abilityID, int generationID)
+        public IActionResult GetPokemonByAbility(int abilityId, int gameId)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
-                List<PokemonAbilityDetail> abilityList = this.GetPokemonByAbilityAndGeneration(abilityID, generationID);
-
+                List<PokemonAbilityDetail> abilityList = this.GetPokemonByAbilityAndGame(abilityId, gameId);
                 abilityList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
-
                 List<Pokemon> pokemonList = abilityList.ConvertAll(x => x.Pokemon);
+                int generationId = 0;
+                if (gameId != 0)
+                {
+                    generationId = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId).GenerationId;
+                }
 
                 AbilityEvaluatorPageViewModel model = new AbilityEvaluatorPageViewModel()
                 {
                     AllPokemonWithAbility = abilityList,
                     AllPokemon = pokemonList,
                     AppConfig = this.appConfig,
-                    GenerationId = generationID,
-                    Ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityID),
+                    GenerationId = generationId,
+                    Ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityId),
                 };
 
                 return this.PartialView("_FillAbilityEvaluator", model);
@@ -2470,19 +2473,20 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Gets a list of abilities that are available in the given generation.
+        /// Gets a list of abilities that are available in the given game.
         /// </summary>
-        /// <param name="generationId">The generation's id.</param>
+        /// <param name="gameId">The game's id.</param>
         /// <returns>The fill ability evaluator abilities shared view.</returns>
-        [Route("get-abilities-by-generation")]
-        public IActionResult GrabAbilityEvaluatorAbilities(int generationId)
+        [Route("get-abilities-by-game")]
+        public IActionResult GrabAbilityEvaluatorAbilities(int gameId)
         {
             List<Ability> model = new List<Ability>();
-            if (generationId != 0)
+            if (gameId != 0)
             {
-                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.Pokemon).ToList();
+                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon", whereProperty: "GameId", wherePropertyValue: gameId).Select(x => x.Pokemon).ToList();
                 pokemonList = pokemonList.Distinct().ToList();
-                List<PokemonAbilityDetail> pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Where(x => x.GenerationId <= generationId).ToList();
+                List<PokemonAbilityDetail> pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Where(x => x.GenerationId <= game.GenerationId).ToList();
                 pokemonAbilities = pokemonAbilities.Where(x => pokemonList.Any(y => y.Id == x.PokemonId)).ToList();
                 if (pokemonAbilities.ConvertAll(x => x.PrimaryAbility).Any(x => x != null))
                 {
@@ -3128,20 +3132,21 @@ namespace Pokedex.Controllers
             return finalPokemonList.Distinct().ToList();
         }
 
-        private List<PokemonAbilityDetail> GetPokemonByAbilityAndGeneration(int abilityId, int generationId)
+        private List<PokemonAbilityDetail> GetPokemonByAbilityAndGame(int abilityId, int gameId)
         {
             List<PokemonAbilityDetail> pokemonList = new List<PokemonAbilityDetail>();
-            if (generationId != 0)
+            if (gameId != 0)
             {
+                Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
                 pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game")
-                    .Where(x => x.Pokemon.Game.GenerationId <= generationId)
-                    .Where(x => x.GenerationId <= generationId)
+                    .Where(x => x.Pokemon.Game.GenerationId <= game.GenerationId)
+                    .Where(x => x.GenerationId <= game.GenerationId)
                     .OrderBy(x => x.GenerationId)
                     .GroupBy(x => new { x.PokemonId })
                     .Select(x => x.LastOrDefault())
                     .ToList();
 
-                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game, Game.Generation", whereProperty: "Game.GenerationId", wherePropertyValue: generationId).Select(x => x.PokemonId)).ToList();
+                List<int> exclusionList = pokemonList.Select(x => x.PokemonId).Except(this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: gameId).Select(x => x.PokemonId)).ToList();
 
                 foreach (var pokemon in exclusionList)
                 {

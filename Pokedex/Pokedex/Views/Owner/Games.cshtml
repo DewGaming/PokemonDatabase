@@ -12,6 +12,7 @@
             <th scope="col">Games</th>
             <th scope="col">Release Date</th>
             <th scope="col">Generation</th>
+            <th scope="col">Is Breeding Possible</th>
             @if (Model.AllGameRegionDetails.Count > 0)
             {
                 <th scope="col">Games Available</th>
@@ -24,6 +25,7 @@
                 <td>@item.Name</td>
                 <td>@item.ReleaseDate.ToString("MMMM dd, yyyy")</td>
                 <td>@item.Generation.GenerationName</td>
+                <td>@(item.IsBreedingPossible ? "X" : "")</td>
                 @if (Model.AllGameRegionDetails.Find(x => x.GameId == item.Id) != null)
                 {
                     <td>@string.Join(", ", Model.AllGameRegionDetails.Where(x => x.GameId == item.Id).Select(x => x.Region.Name))</td>

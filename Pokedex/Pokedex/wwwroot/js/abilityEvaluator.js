@@ -3,7 +3,7 @@ var grabPokemon = function () {
         $(".overlay").fadeIn(300);
         $('.pokemonWithAbility').css('display', 'none');
         $('.pokemonWithAbility').empty();
-        $('.pokemonWithAbility').load('/get-pokemon-by-ability/', { 'abilityId': $('.abilityList > select').val(), 'generationID': $('.generationList > select').val() }, function () {
+        $('.pokemonWithAbility').load('/get-pokemon-by-ability/', { 'abilityId': $('.abilityList > select').val(), 'gameId': $('.gameList > select').val() }, function () {
             $('.pokemonWithAbility').css('display', 'block');
             if ($('.grid-container').children().length > 0) {
                 $('.pokemonList').css('display', 'block');
@@ -22,10 +22,10 @@ var grabPokemon = function () {
     else {
         $('.pokemonWithAbility').css('display', 'none');
     }
-}, grabAbilities = function (generationId) {
+}, grabAbilities = function (gameId) {
     var abilityId = $('.abilityList > select').val();
     $('.abilityList > select').val(0);
-    $('.abilityList').load('/get-abilities-by-generation/', { 'generationId': generationId }, function () {
+    $('.abilityList').load('/get-abilities-by-game/', { 'gameId': gameId }, function () {
         if ($('.abilityList option[value=' + abilityId + ']').length != 0) {
             $('.abilityList > select').val(abilityId);
         }
@@ -43,10 +43,11 @@ var grabPokemon = function () {
 };
 
 $(function () {
-    grabAbilities($('.generationList > select').val());
+    grabAbilities($('.gameList > select').val());
+    $('.gameSelectList').select2();
 });
 
-$(".generationSelectList").on('change', function () {
-    grabAbilities($('.generationList > select').val());
+$(".gameSelectList").on('change', function () {
+    grabAbilities($('.gameList > select').val());
     grabPokemon();
 });

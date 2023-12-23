@@ -11,7 +11,7 @@
     <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/select2.css" rel="stylesheet" asp-append-version="true" />
     <style>
-        .generationList {
+        .gameList {
             margin-right: 10px;
             margin-bottom: 10px;
         }
@@ -25,7 +25,7 @@
           margin-bottom: 7.5px;
         }
 
-        .abilityList, .abilityList>select, .generationList, .generationList>select {
+        .abilityList, .abilityList>select, .gameList, .gameList>select {
           width: 12rem;
         }
 
@@ -70,15 +70,9 @@
 <div>
     <div class="evaluator">
         <div class="flexDiv">
-            <div class="generationList">
-                <label for="Generation">Generation</label>
-                <select class="form-control generationSelectList" id="Generation_List" name="Generation List">
-                    <option value="0">Any Generation</option>
-                    @foreach (var g in Model.AllGenerations)
-                    {
-                        <option value="@g.Id">@g.GenerationName</option>
-                    }
-                </select>
+            <div class="gameList">
+                @Html.Label("Games")
+                @Html.DropDownList("Games", new SelectList(@Model.AllGames, "Id", "Name"), "Select Game", new { @class = "form-control gameSelectList" })
             </div>
             <div class="abilityList">
                 @Html.Label("Ability")

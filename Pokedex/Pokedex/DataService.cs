@@ -1089,6 +1089,7 @@ namespace Pokedex
                         Id = uniqueGames[i].Id,
                         Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
                         GenerationId = uniqueGames[i].GenerationId,
+                        IsBreedingPossible = uniqueGames[i].IsBreedingPossible,
                     });
                 }
                 else
@@ -1105,6 +1106,7 @@ namespace Pokedex
                             Id = uniqueGames[i].Id,
                             Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
                             GenerationId = uniqueGames[i].GenerationId,
+                            IsBreedingPossible = uniqueGames[i].IsBreedingPossible,
                         });
                     }
                 }

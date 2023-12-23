@@ -143,6 +143,7 @@ namespace Pokedex.Controllers
                 Name = game.Name,
                 ReleaseDate = game.ReleaseDate,
                 GenerationId = game.GenerationId,
+                IsBreedingPossible = game.IsBreedingPossible,
                 GameColor = game.GameColor,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
                 AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),

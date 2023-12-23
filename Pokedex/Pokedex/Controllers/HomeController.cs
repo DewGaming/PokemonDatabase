@@ -200,7 +200,7 @@ namespace Pokedex.Controllers
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
-            List<Game> selectableGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO").ToList();
+            List<Game> selectableGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 39 && x.Id != 40 && x.Id != 43).ToList();
 
             foreach (var gen in generations)
             {
@@ -233,53 +233,10 @@ namespace Pokedex.Controllers
         public IActionResult TypingEvaluator()
         {
             this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
-            List<Generation> generations = this.dataService.GetObjects<Generation>().ToList();
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").ToList();
-            List<Game> selectableGames = new List<Game>();
-
-            foreach (var gen in generations)
-            {
-                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id && x.Id != 43).ToList();
-                List<Game> uniqueGames = allGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
-                for (var i = 0; i < uniqueGames.Count; i++)
-                {
-                    if (i == uniqueGames.Count - 1)
-                    {
-                        selectableGames.Add(new Game()
-                        {
-                            Id = uniqueGames[i].Id,
-                            Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
-                            GenerationId = gen.Id,
-                            ReleaseDate = uniqueGames[i].ReleaseDate,
-                        });
-                    }
-                    else
-                    {
-                        List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
-                        if (games.Count == 0)
-                        {
-                            selectableGames.Add(uniqueGames[i]);
-                        }
-                        else
-                        {
-                            selectableGames.Add(new Game()
-                            {
-                                Id = uniqueGames[i].Id,
-                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
-                                GenerationId = gen.Id,
-                                ReleaseDate = uniqueGames[i].ReleaseDate,
-                            });
-                        }
-                    }
-                }
-            }
-
-            selectableGames = selectableGames.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
-
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
-                AllGames = selectableGames,
+                AllGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43).ToList(),
             };
 
             return this.View(model);
@@ -294,15 +251,11 @@ namespace Pokedex.Controllers
         public IActionResult AbilityEvaluator()
         {
             this.dataService.AddPageView("Ability Evalutator Page", this.User.IsInRole("Owner"));
-            List<Generation> generations = this.dataService.GetObjects<Generation>();
             AbilityEvaluatorViewModel model = new AbilityEvaluatorViewModel()
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                AllGenerations = new List<Generation>(),
+                AllGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 16 && x.Id != 37 && x.Id != 43 && x.GenerationId >= 3).ToList(),
             };
-
-            // Removes the first and second generation from the list, as abilities were introduced in the third generation.
-            model.AllGenerations = generations.Where(x => x.Id != 1 && x.Id != 2).ToList();
 
             return this.View(model);
         }
@@ -316,48 +269,9 @@ namespace Pokedex.Controllers
         public IActionResult DayCareEvaluator()
         {
             this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
-            List<Generation> generations = this.dataService.GetObjects<Generation>();
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.IsBreedingPossible).ToList();
-            List<Game> selectableGames = new List<Game>();
-
-            foreach (var gen in generations)
-            {
-                List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
-                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
-                for (var i = 0; i < uniqueGames.Count; i++)
-                {
-                    if (i == uniqueGames.Count - 1)
-                    {
-                        selectableGames.Add(new Game()
-                        {
-                            Id = uniqueGames[i].Id,
-                            Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
-                            GenerationId = gen.Id,
-                        });
-                    }
-                    else
-                    {
-                        List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
-                        if (games.Count == 0)
-                        {
-                            selectableGames.Add(uniqueGames[i]);
-                        }
-                        else
-                        {
-                            selectableGames.Add(new Game()
-                            {
-                                Id = uniqueGames[i].Id,
-                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
-                                GenerationId = gen.Id,
-                            });
-                        }
-                    }
-                }
-            }
-
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
-                AllGames = selectableGames,
+                AllGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.IsBreedingPossible).ToList(),
                 AppConfig = this.appConfig,
                 GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
             };
@@ -421,50 +335,9 @@ namespace Pokedex.Controllers
         public IActionResult EVTrainer()
         {
             this.dataService.AddPageView("EV Trainer Page", this.User.IsInRole("Owner"));
-            List<Generation> generations = this.dataService.GetObjects<Generation>();
-            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.Name != "Colosseum" && x.Name != "XD: Gale of Darkness" && x.Name != "Pokémon GO" && x.GenerationId != 1 && x.GenerationId != 2).ToList();
-            List<Game> selectableGames = new List<Game>();
-            foreach (var gen in generations)
-            {
-                List<Game> uniqueGames = gamesList.Where(x => x.GenerationId == gen.Id).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).DistinctBy(y => y.ReleaseDate).ToList();
-                List<Game> allGames = gamesList.Where(x => x.GenerationId == gen.Id).ToList();
-                for (var i = 0; i < uniqueGames.Count; i++)
-                {
-                    if (uniqueGames[i].Name == "Fire Red")
-                    {
-                        selectableGames.Add(uniqueGames[i]);
-                        selectableGames.Add(this.dataService.GetObjectByPropertyValue<Game>("Name", "Leaf Green"));
-                    }
-                    else if (i == uniqueGames.Count - 1)
-                    {
-                        selectableGames.Add(new Game()
-                        {
-                            Id = uniqueGames[i].Id,
-                            Name = string.Join(" / ", allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate).Select(x => x.Name)),
-                            GenerationId = gen.Id,
-                        });
-                    }
-                    else
-                    {
-                        List<Game> games = allGames.Where(x => x.ReleaseDate >= uniqueGames[i].ReleaseDate && x.ReleaseDate < uniqueGames[i + 1].ReleaseDate && !selectableGames.Any(y => y.ReleaseDate == x.ReleaseDate)).ToList();
-                        if (games.Count == 0)
-                        {
-                            selectableGames.Add(uniqueGames[i]);
-                        }
-                        else
-                        {
-                            selectableGames.Add(new Game()
-                            {
-                                Id = uniqueGames[i].Id,
-                                Name = string.Join(" / ", games.ConvertAll(x => x.Name)),
-                                GenerationId = gen.Id,
-                            });
-                        }
-                    }
-                }
-            }
+            List<Game> games = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43 && x.GenerationId >= 3).ToList();
 
-            return this.View(selectableGames);
+            return this.View(games);
         }
 
         /// <summary>
@@ -811,6 +684,11 @@ namespace Pokedex.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// Returns the two pokemon that surround the searched pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The viewed Pokemon.</param>
+        /// <returns>Returns the two pokemon who's pokedex number surround this pokemon's pokedex number.</returns>
         private List<Pokemon> GetSurroundingPokemon(int pokemonId)
         {
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon().OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();

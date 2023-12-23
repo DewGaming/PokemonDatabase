@@ -348,7 +348,7 @@
                 <tr>
                     @if (firstPokemon.Pokemon.GameId == secondPokemon.Pokemon.GameId)
                     {
-                        @if (firstPokemon.Pokemon.Game.Name == "Pokémon GO")
+                        @if (firstPokemon.Pokemon.GameId == 43)
                         {
                             gameOrigin = "Pokémon GO";
                         }
@@ -362,7 +362,7 @@
                     {
                         @for (var i = 0; i < 2; i++)
                         {
-                            @if (Model.AllPokemon[i].Pokemon.Game.Name == "Pokémon GO")
+                            @if (Model.AllPokemon[i].Pokemon.GameId == 43)
                             {
                                 gameOrigin = "Pokémon GO";
                             }
