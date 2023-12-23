@@ -150,7 +150,7 @@
                         <hr class="buttonSeparator">
                         <div class="huntUncapturedButtons">
                             <a class="btn orangeButton" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
-                            <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@s.Id, '@s.Pokemon.Name')">Abandon Hunt</button>
+                            <button class="btn btn-danger abandonHunt" onclick="@("abandonHunt(" + @s.Id + ", \"" + @s.Pokemon.Name + "\")")">Abandon Hunt</button>
                         </div>
                     }
                 </div>
