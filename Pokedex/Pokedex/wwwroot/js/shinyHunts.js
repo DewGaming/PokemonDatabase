@@ -469,3 +469,17 @@ function abandonHunt(shinyHuntId, pokemonName) {
             });
     }
 }
+
+function giveSharableLink(username) {
+    var url = window.location.href + '/' + username.toLowerCase();
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                if (window.confirm('Sharable link has been copied to your clipboard. If you would like to see this page for yourself, press OK. Otherwise, press Cancel.')) {
+                    window.open(url, '_blank');
+                };
+            })
+
+        console.log(url);
+    }
+}

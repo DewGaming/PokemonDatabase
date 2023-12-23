@@ -56,7 +56,7 @@
     }
     @if (!Model.IsShared)
     {
-        <a class="sharePage btn btn-primary" href="@this.Url.Action("SharableShinyHunts", "User", new { username = @Model.Username.ToLower() })" target="_blank">Share With Others</a>
+        <button class="sharePage btn btn-primary" onclick="giveSharableLink('@Model.Username')">Share With Others</button>
     }
 </p>
 

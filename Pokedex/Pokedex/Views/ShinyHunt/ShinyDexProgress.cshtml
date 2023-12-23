@@ -29,7 +29,7 @@
     }
     @if (!Model.IsShared)
     {
-        <a class="sharePage btn btn-primary" href="@this.Url.Action("SharableShinyDexProgress", "ShinyHunt", new { username = @Model.CurrentUser.Username.ToLower() })" target="_blank">Share With Others</a>
+        <button class="sharePage btn btn-primary" onclick="giveSharableLink('@Model.CurrentUser.Username')">Share With Others</button>
     }
 </p>
 
