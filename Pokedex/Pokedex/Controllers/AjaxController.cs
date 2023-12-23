@@ -2808,7 +2808,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Id", "HuntingMethod", "GameId", gameId).ConvertAll(x => x.HuntingMethod);
+                List<HuntingMethod> huntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>("HuntingMethod.Name", "HuntingMethod", "GameId", gameId).ConvertAll(x => x.HuntingMethod);
 
                 return huntingMethods;
             }

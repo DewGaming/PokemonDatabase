@@ -68,12 +68,14 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 $('#HuntingMethodId').append($('<option>').val(item.id).text(item.name));
             });
 
-            if (huntingMethodId !== "") {
+            if (huntingMethodId != "" && huntingMethodId != null && data.find(x => x.id = huntingMethodId)) {
                 $('#HuntingMethodId option').each(function () {
                     if (this.value == huntingMethodId) {
                         $('#HuntingMethodId').val(huntingMethodId);
                     }
                 });
+            } else {
+                $('#HuntingMethodId').val(1);
             }
 
             checkFunctions();
@@ -282,6 +284,10 @@ $(document).ready(function () {
         }
         $("#PokemonId").select2();
     }
+
+    $("#HuntingMethodId").select2();
+    $("#PokeballId").select2();
+    $("#MarkId").select2();
 });
 
 $('#GameId').on('change', function () {
