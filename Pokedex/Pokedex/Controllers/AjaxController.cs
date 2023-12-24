@@ -587,68 +587,64 @@ namespace Pokedex.Controllers
                 try
                 {
                     Random rnd = new Random();
-                    if (pokemonCount > 6)
-                    {
-                        pokemonCount = 6;
-                    }
-
-                    List<Pokemon> pokemonDetails = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-
                     Game selectedGame = new Game();
-                    if (selectedGameId != 0)
-                    {
-                        selectedGame = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
-                    }
-                    else
-                    {
-                        needsStarter = false;
-                    }
-
                     List<Pokemon> starterList = new List<Pokemon>();
-                    if (needsStarter && selectedGame.Id != 0)
-                    {
-                        starterList = this.dataService.GetObjects<GameStarterDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", selectedGame.Id).ConvertAll(x => x.Pokemon);
-                    }
-
+                    List<Pokemon> pokemonDetails = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                    List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game");
+                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType");
                     List<Pokemon> allPokemon = this.GetAllPokemonWithoutForms();
+                    List<PokemonFormDetail> pokemonFormDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form");
+                    Pokemon pokemon;
+                    PokemonFormDetail pokemonForm;
+                    List<Pokemon> altForms = new List<Pokemon>();
+                    PokemonTypeDetail typing;
+
                     allPokemon = allPokemon.Where(x => selectedGens.Contains(x.Game.GenerationId)).ToList();
                     if (!allowIncomplete)
                     {
                         allPokemon = allPokemon.Where(x => x.IsComplete).ToList();
                     }
 
-                    List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game");
-                    if (selectedGame.Id != 0)
+                    if (pokemonCount > 6)
                     {
-                        availablePokemon = availablePokemon.Where(x => x.GameId == selectedGame.Id).ToList();
+                        pokemonCount = 6;
                     }
 
-                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType");
-                    if (selectedGame.Id != 0)
+                    if (selectedGameId != 0)
                     {
-                        pokemonTypeDetails = pokemonTypeDetails.Where(x => x.GenerationId <= selectedGame.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+                        selectedGame = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
+                        availablePokemon = availablePokemon.Where(x => x.GameId == selectedGame.Id).ToList();
+                        pokemonTypeDetails = pokemonTypeDetails.Where(x => x.GenerationId <= selectedGame.GenerationId).ToList();
+                        if (needsStarter)
+                        {
+                            starterList = this.dataService.GetObjects<GameStarterDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", selectedGame.Id).ConvertAll(x => x.Pokemon);
+                        }
                     }
                     else
                     {
-                        pokemonTypeDetails = pokemonTypeDetails.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+                        needsStarter = false;
                     }
 
+                    pokemonTypeDetails = pokemonTypeDetails.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
                     allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                     allPokemon = this.FilterLegendaries(allPokemon, selectedLegendaries, onlyLegendaries);
+                    (allPokemon, starterList) = this.FilterEvolutions(allPokemon, starterList, selectedEvolutions, selectedGame);
                     allPokemon = this.FilterForms(allPokemon, selectedForms, selectedGame, onlyAltForms, multipleMegas, multipleGMax);
                     (allPokemon, starterList) = this.FilterEvolutions(allPokemon, starterList, selectedEvolutions, selectedGame);
                     allPokemon = this.FilterTypes(allPokemon, selectedTypeId, selectedGame);
 
                     if (monotypeOnly)
                     {
-                        allPokemon = allPokemon.Where(x => pokemonTypeDetails.Any(y => (y.PrimaryTypeId == selectedTypeId && y.SecondaryTypeId == null) && y.PokemonId == x.Id)).ToList();
+                        allPokemon = allPokemon.Where(x => pokemonTypeDetails.Any(y => (y.PrimaryTypeId == selectedTypeId || y.SecondaryTypeId == selectedTypeId) && y.PokemonId == x.Id)).ToList();
+                        List<Pokemon> startersWithType = starterList.Where(x => pokemonTypeDetails.Any(y => (y.PrimaryTypeId == selectedTypeId || y.SecondaryTypeId == selectedTypeId) && y.PokemonId == x.Id)).ToList();
+                        if (startersWithType.Count() > 0)
+                        {
+                            starterList = startersWithType;
+                        }
                     }
 
                     if (allPokemon.Count > 0)
                     {
-                        Pokemon pokemon;
-                        List<PokemonFormDetail> pokemonFormDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form");
-
                         while (allPokemon.Count() > 0 && pokemonList.Count() < pokemonCount)
                         {
                             if (needsStarter && pokemonList.Count() == 0)
@@ -662,18 +658,14 @@ namespace Pokedex.Controllers
 
                             if (onePokemonForm)
                             {
-                                int originalPokemonId;
-                                PokemonFormDetail pokemonForm = pokemonFormDetails.Find(x => x.AltFormPokemonId == pokemon.Id);
+                                int originalPokemonId = pokemon.Id;
+                                pokemonForm = pokemonFormDetails.Find(x => x.AltFormPokemonId == pokemon.Id);
                                 if (pokemonForm != null)
                                 {
                                     originalPokemonId = pokemonForm.OriginalPokemonId;
                                 }
-                                else
-                                {
-                                    originalPokemonId = pokemon.Id;
-                                }
 
-                                List<Pokemon> altForms = pokemonFormDetails.Where(x => x.OriginalPokemonId == originalPokemonId).Select(x => x.AltFormPokemon).ToList();
+                                altForms = pokemonFormDetails.Where(x => x.OriginalPokemonId == originalPokemonId).Select(x => x.AltFormPokemon).ToList();
 
                                 if (pokemonForm != null)
                                 {
@@ -686,8 +678,7 @@ namespace Pokedex.Controllers
 
                             if (noRepeatType)
                             {
-                                pokemonTypeDetails = pokemonTypeDetails.Where(x => allPokemon.Any(y => x.PokemonId == y.Id)).ToList();
-                                PokemonTypeDetail typing = pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id);
+                                typing = pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id);
 
                                 if (typing != null)
                                 {
@@ -3664,6 +3655,7 @@ namespace Pokedex.Controllers
             try
             {
                 List<Evolution> allEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod");
+                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form");
                 if (game.Id != 0)
                 {
                     allEvolutions = allEvolutions.Where(x => x.PreevolutionPokemon.Game.ReleaseDate <= game.ReleaseDate && x.EvolutionPokemon.Game.ReleaseDate <= game.ReleaseDate).ToList();
@@ -3755,6 +3747,9 @@ namespace Pokedex.Controllers
                     }
 
                     pokemonList = evolutions;
+                    altForms = altForms.Where(x => pokemonList.Any(y => y.Id == x.OriginalPokemonId)).ToList();
+                    altForms = altForms.Where(x => !pokemonList.Any(y => y.Id == x.AltFormPokemonId)).ToList();
+                    pokemonList = pokemonList.Where(x => !altForms.Any(y => y.AltFormPokemonId == x.Id)).ToList();
                     starterList = starterEvolutions;
                 }
 
