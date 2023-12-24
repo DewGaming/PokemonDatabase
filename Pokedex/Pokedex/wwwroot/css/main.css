@@ -20,6 +20,14 @@
   cursor: pointer;
 }
 
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+    pointer-events: none;
+}
+
 .pointer:hover {
   text-decoration: underline;
 }
