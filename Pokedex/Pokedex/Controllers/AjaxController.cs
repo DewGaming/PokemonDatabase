@@ -3708,7 +3708,7 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    if (evolutionList.Contains("onlyFullyEvolved"))
+                    if (evolutionList.Contains("onlyFullyEvolved") || (game.Id != 16 && game.Id != 20 && evolutionList.Contains("noEvolutionLine")))
                     {
                         foreach (var p in pokemonList)
                         {
@@ -3737,11 +3737,14 @@ namespace Pokedex.Controllers
                             }
                         }
 
-                        foreach (var p in starterList)
+                        if (game.Id == 20 || game.Id == 16)
                         {
-                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                            foreach (var p in starterList)
                             {
-                                starterEvolutions.Add(p);
+                                if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)) || (p.Id == 89 && game.Id == 20 && !starterEvolutions.Exists(x => x.Id == p.Id)) || ((p.Id == 1595 || p.Id == 1596) && game.Id == 16 && !starterEvolutions.Exists(x => x.Id == p.Id)))
+                                {
+                                    starterEvolutions.Add(p);
+                                }
                             }
                         }
                     }
