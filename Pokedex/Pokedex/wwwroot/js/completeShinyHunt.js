@@ -179,5 +179,4 @@ $(document).ready(function () {
     $("#HuntingMethodId").select2();
     $("#PokeballId").select2();
     $("#MarkId").select2();
-    $("#GameId").select2();
 });
