@@ -324,6 +324,8 @@ function lookupDay(day) {
 }
 
 function lookupPopularity() {
+  $(".overlay").fadeIn(300);
+
   $('.year button').each(function () {
     $(this).removeClass('active');
   });
@@ -334,5 +336,6 @@ function lookupPopularity() {
 
   $('.year.pageStatList').load('/get-stats-by-popularity/', function () {
     $('.year.pageStatList').addClass('active');
+    $(".overlay").fadeOut(300);
   });
 }

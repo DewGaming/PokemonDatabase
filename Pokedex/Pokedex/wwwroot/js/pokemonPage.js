@@ -154,6 +154,10 @@ $(document).ready(function () {
     if ($('#TerapagosStellar').length) {
         $('#TerapagosStellar.page .teraTypeSelectList').val(99);
     }
+
+    if ($('#TerapagosTerastal').length) {
+        $('#TerapagosTerastal.page .teraTypeSelectList').val(0);
+    }
 })
 
 $('span[title]').on('click', function() {
