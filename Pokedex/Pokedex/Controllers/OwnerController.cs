@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +39,16 @@ namespace Pokedex.Controllers
         [Route("page_stats")]
         public IActionResult PageStats()
         {
-            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
+            DateTime year = this.appConfig.PageStatStartDate;
+            List<int> model = new List<int>()
+            {
+                year.Year,
+            };
+            while (year.Year < DateTime.Now.Year)
+            {
+                year = year.AddYears(1);
+                model.Add(year.Year);
+            }
 
             return this.View(model);
         }
@@ -50,7 +60,16 @@ namespace Pokedex.Controllers
         [Route("pokemon_page_stats")]
         public IActionResult PokemonPageStats()
         {
-            List<PageStat> model = this.dataService.GetObjects<PageStat>().Where(x => x.Name.Contains("Pokemon Page -")).ToList();
+            DateTime year = this.appConfig.PageStatStartDate;
+            List<int> model = new List<int>()
+            {
+                year.Year,
+            };
+            while (year.Year < DateTime.Now.Year)
+            {
+                year = year.AddYears(1);
+                model.Add(year.Year);
+            }
 
             return this.View(model);
         }
@@ -108,7 +127,7 @@ namespace Pokedex.Controllers
         {
             TypeViewModel model = new TypeViewModel()
             {
-                AllTypes = this.dataService.GetObjects<Type>("Name"),
+                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                 AllPokemon = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
             };
 

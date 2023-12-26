@@ -23,7 +23,7 @@ else
         {
             <tr>
                 <td>@p</td>
-                <td>@Model.Where(x => x.Name == p).Count()</td>
+                <td>@Model.Where(x => x.Name == p).Count().ToString("N0")</td>
             </tr>
         }
     </tbody>

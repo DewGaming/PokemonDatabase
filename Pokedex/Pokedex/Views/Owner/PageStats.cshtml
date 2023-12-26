@@ -1,5 +1,5 @@
 @using MoreLinq;
-@model List<Pokedex.DataAccess.Models.PageStat>;
+@model List<int>;
 @{
     ViewBag.Title = "Page Stats";
 }
@@ -7,6 +7,7 @@
 @section styles
 {
     <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
     <style>
         .page table th{
             font-weight: bold;
@@ -31,10 +32,15 @@
 <div style="display: none" class="pokemonPageCheck" id="noPokemonPage"></div>
 
 <div class="pageButtons year">
-    @foreach (var item in Model.DistinctBy(x => x.VisitDate.ToString("yyyy")).ToList())
+    @foreach (var year in Model)
     {
-        int year = Convert.ToInt16(item.VisitDate.ToString("yyyy"));
         <button id="Year@(year)" onclick="lookupYear(@year)">@year</button>
     }
 </div>
 <div class="page year pageStatList"></div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>

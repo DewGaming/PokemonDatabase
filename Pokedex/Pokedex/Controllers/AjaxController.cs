@@ -6,6 +6,7 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 
@@ -2518,18 +2519,23 @@ namespace Pokedex.Controllers
         [Route("get-month-by-year/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabMonthByYear(int year, string pokemonPageCheck)
         {
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate");
-            if (pokemonPageCheck == "noPokemonPage")
+            DateTime month = new DateTime(year, 1, 1);
+            DateTime finalMonth = new DateTime(year, 12, 1);
+            if (DateTime.Now.Year == year && finalMonth.Month > DateTime.Now.Month)
             {
-                pageStats = pageStats.Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
-            }
-            else
-            {
-                pageStats = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList();
+                finalMonth = DateTime.Now;
             }
 
-            pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) == year).ToList();
-            List<string> model = pageStats.Select(x => x.VisitDate.ToString("MMMM")).Distinct().ToList();
+            List<string> model = new List<string>()
+            {
+                month.ToString("MMMM"),
+            };
+            while (month.Month < finalMonth.Month)
+            {
+                month = month.AddMonths(1);
+                model.Add(month.ToString("MMMM"));
+            }
+
             return this.PartialView("_FillMonthInYear", model);
         }
 
@@ -2543,17 +2549,22 @@ namespace Pokedex.Controllers
         [Route("get-day-by-month/{month}/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabDayByMonth(string month, int year, string pokemonPageCheck)
         {
-            List<string> model = new List<string>();
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) == year).ToList();
-            pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
-
-            if (pokemonPageCheck == "noPokemonPage")
+            int monthInt = DateTime.ParseExact(month, "MMMM", CultureInfo.CurrentCulture).Month;
+            DateTime day = new DateTime(year, monthInt, 1);
+            DateTime finalDay = new DateTime(year, monthInt, DateTime.DaysInMonth(year, monthInt));
+            if (DateTime.Now.Year == year && DateTime.Now.Month == monthInt && finalDay.Day > DateTime.Now.Day)
             {
-                model = pageStats.Where(x => !x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.VisitDate.ToString("dd")).Distinct().ToList();
+                finalDay = DateTime.Now;
             }
-            else
+
+            List<string> model = new List<string>()
             {
-                model = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList().Select(x => x.VisitDate.ToString("dd")).Distinct().ToList();
+                day.ToString("dd"),
+            };
+            while (day.Day < finalDay.Day)
+            {
+                day = day.AddDays(1);
+                model.Add(day.ToString("dd"));
             }
 
             return this.PartialView("_FillDayInMonth", model);
@@ -2570,13 +2581,13 @@ namespace Pokedex.Controllers
         [Route("get-stats-by-date/{day:int}/{month}/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabStatsByDate(int day, string month, int year, string pokemonPageCheck)
         {
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => Convert.ToInt16(x.VisitDate.ToString("yyyy")) == year).ToList();
+            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => x.VisitDate.Year == year).ToList();
             if (month != "0")
             {
                 pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
                 if (day != 0)
                 {
-                    pageStats = pageStats.Where(x => Convert.ToInt16(x.VisitDate.ToString("dd")) == day).ToList();
+                    pageStats = pageStats.Where(x => x.VisitDate.Day == day).ToList();
                 }
             }
 
