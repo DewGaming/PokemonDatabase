@@ -299,6 +299,7 @@ $('#GameId').on('change', function () {
 
 $('#PokemonId').on('change', function () {
     $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
+    $('.pokemonShinyImage.hide').removeClass('hide');
     grabGames($('#GameId').val(), $('#PokemonId').val());
     refreshGenders();
 });
