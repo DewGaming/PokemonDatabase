@@ -52,6 +52,11 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
       $(this).addClass('hidden');
     })
   }
+  
+  if ($('.genderSign.default').hasClass('hidden')) {
+    $('.genderSign.default').removeClass('hidden');
+    $('.genderSign.difference').addClass('hidden');
+  }
 
   $('.tabIcon').attr("href", iconLink);
   $('.pageTitle').text(pokemonName + " | Pokéluna");
