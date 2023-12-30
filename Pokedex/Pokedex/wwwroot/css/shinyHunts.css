@@ -121,6 +121,10 @@
   top: 100px;
   right: 0;
 }
+.pokemonSweet  {
+  top: 0;
+  right: 0;
+}
 
 .pokemonDetails>div {
   position: relative;

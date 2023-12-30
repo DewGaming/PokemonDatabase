@@ -31,6 +31,8 @@ namespace Pokedex.DataAccess.Models
             IncrementAmount = shinyHunt.IncrementAmount;
             PokeballId = shinyHunt.PokeballId;
             Pokeball = shinyHunt.Pokeball;
+            SweetId = shinyHunt.SweetId;
+            Sweet = shinyHunt.Sweet;
             MarkId = shinyHunt.MarkId;
             Mark = shinyHunt.Mark;
             Gender = shinyHunt.Gender;

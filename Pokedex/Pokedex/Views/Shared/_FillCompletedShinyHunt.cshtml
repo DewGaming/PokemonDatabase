@@ -28,6 +28,10 @@
                 {
                     <img loading="lazy" class="directHOMETransfer pokemonListPicture" title="Transferred Directly Into Pokémon HOME" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "directHOMETransfer.png"))">
                 }
+                @if (Model.ShinyHunt.Sweet != null)
+                {
+                    <img loading="lazy" class="pokemonSweet pokemonListPicture" title="@Model.ShinyHunt.Sweet.Name Sweet" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialSweetImageUrl, @Model.ShinyHunt.Sweet.Id, ".png"))">
+                }
             </div>
             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @Model.ShinyHunt.Pokemon.Id, generationId = @Model.ShinyHunt.Game.GenerationId })" target="_blank">
                 @if (Model.ShinyHunt.Pokemon.HasGenderDifference)
