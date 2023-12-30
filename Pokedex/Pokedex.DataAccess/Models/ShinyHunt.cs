@@ -95,6 +95,10 @@ namespace Pokedex.DataAccess.Models
         public int? PokeballId { get; set; }
         public Pokeball Pokeball { get; set; }
 
+        [Display(Name = "Alcremie Sweet")]
+        public int? SweetId { get; set; }
+        public Sweet Sweet { get; set; }
+
         [Display(Name = "Mark")]
         public int? MarkId { get; set; }
         public Mark Mark { get; set; }

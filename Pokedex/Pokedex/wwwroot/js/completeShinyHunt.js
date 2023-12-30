@@ -154,10 +154,36 @@ var checkShinyCharm = function () {
                 alert("Failed to grab pokeballs!");
             });
     }
+}, checkSweets = function () {
+    $.ajax({
+        url: '/get-pokemon-sweets/',
+        method: "POST",
+        data: { 'pokemonId': $('#PokemonId').val() }
+    })
+        .done(function (data) {
+            $('#SweetId').empty();
+            $.each(data, function (index, item) {
+                $('#SweetId').append($('<option>').val(item.id).text(item.name));
+            });
+
+            if (data.length > 0) {
+                if ($('.sweets').hasClass('hide')) {
+                    $('.sweets').removeClass('hide');
+                }
+            } else {
+                if (!$('.sweets').hasClass('hide')) {
+                    $('.sweets').addClass('hide');
+                }
+            }
+        })
+        .fail(function () {
+            alert("Failed to grab sweets!");
+        });
 }, checkFunctions = function () {
     checkLure();
     checkAlpha();
     checkMarks();
+    checkSweets();
     checkPokeballs();
     checkShinyCharm();
     checkHOMETransfer();

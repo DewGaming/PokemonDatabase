@@ -20,7 +20,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 });
             }
 
-            $('.hide').not('.gameSpecific').not('.pokemonShinyImage').each(function () {
+            $('.hide').not('.gameSpecific').not('.pokemonSpecific').not('.pokemonShinyImage').each(function () {
                 $(this).removeClass('hide');
             })
 
@@ -55,6 +55,31 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
         })
         .fail(function () {
             alert("Failed to grab genders!");
+        });
+}, checkSweets = function () {
+    $.ajax({
+        url: '/get-pokemon-sweets/',
+        method: "POST",
+        data: { 'pokemonId': $('#PokemonId').val() }
+    })
+        .done(function (data) {
+            $('#SweetId').empty();
+            $.each(data, function (index, item) {
+                $('#SweetId').append($('<option>').val(item.id).text(item.name));
+            });
+
+            if (data.length > 0) {
+                if ($('.sweets').hasClass('hide')) {
+                    $('.sweets').removeClass('hide');
+                }
+            } else {
+                if (!$('.sweets').hasClass('hide')) {
+                    $('.sweets').addClass('hide');
+                }
+            }
+        })
+        .fail(function () {
+            alert("Failed to grab sweets!");
         });
 }, grabHuntingMethod = function (huntingMethodId) {
     $.ajax({
@@ -279,6 +304,7 @@ $(document).ready(function () {
         if ($('#PokemonId').val() !== "") {
             grabGames($('#GameId').val(), $("#PokemonId").val());
             grabHuntingMethod($('#HuntingMethodId').val(), $("#PokemonId").val());
+            checkSweets();
             $('.pokemonShinyImage').removeClass('hide').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
         }
         $("#PokemonId").select2();
@@ -286,6 +312,7 @@ $(document).ready(function () {
 
     $("#HuntingMethodId").select2();
     $("#PokeballId").select2();
+    $("#SweetId").select2();
     $("#MarkId").select2();
 
     if (!$('.container>div').hasClass('completeShinyHunt')) {
@@ -302,6 +329,7 @@ $('#PokemonId').on('change', function () {
     $('.pokemonShinyImage.hide').removeClass('hide');
     grabGames($('#GameId').val(), $('#PokemonId').val());
     refreshGenders();
+    checkSweets();
 });
 
 $('#PokemonIds').on('change', function () {

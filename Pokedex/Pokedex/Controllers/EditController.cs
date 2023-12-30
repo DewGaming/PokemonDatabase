@@ -733,6 +733,46 @@ namespace Pokedex.Controllers
             return this.RedirectToAction("Marks", "Owner");
         }
 
+        [HttpGet]
+        [Route("edit_sweet_image/{id:int}")]
+        public IActionResult SweetImage(int id)
+        {
+            Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_sweet_image/{id:int}")]
+        public IActionResult SweetImage(int id, IFormFile fileUpload, string urlUpload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", id);
+
+                return this.View(model);
+            }
+            else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
+            {
+                Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", id);
+
+                this.ModelState.AddModelError("Picture", "An image is needed to update.");
+                return this.View(model);
+            }
+            else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
+            {
+                Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", id);
+
+                this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
+                return this.View(model);
+            }
+
+            this.dataService.UploadImages(fileUpload, urlUpload, id.ToString(), this.appConfig, "sweet");
+
+            return this.RedirectToAction("Sweets", "Owner");
+        }
+
         /// <summary>
         /// Adds a gender difference.
         /// </summary>
@@ -1697,6 +1737,32 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(mark);
 
             return this.RedirectToAction("Marks", "Owner");
+        }
+
+        [HttpGet]
+        [Route("edit_sweet/{id:int}")]
+        public IActionResult Sweet(int id)
+        {
+            Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit_sweet/{id:int}")]
+        public IActionResult Sweet(Sweet sweet)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", sweet.Id);
+
+                return this.View(model);
+            }
+
+            this.dataService.UpdateObject(sweet);
+
+            return this.RedirectToAction("Sweets", "Owner");
         }
 
         [HttpGet]

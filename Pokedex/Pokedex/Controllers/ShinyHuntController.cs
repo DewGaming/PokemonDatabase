@@ -479,6 +479,7 @@ namespace Pokedex.Controllers
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId, this.User, this.appConfig),
                 AllMarks = this.dataService.GetObjects<Mark>(),
+                AllSweets = this.dataService.GetObjects<Sweet>(),
                 AllGenders = genders,
                 AppConfig = this.appConfig,
             };
@@ -510,6 +511,7 @@ namespace Pokedex.Controllers
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AllPokeballs = this.dataService.GetPokeballs(oldShinyHunt.GameId, oldShinyHunt.HuntingMethodId, this.User, this.appConfig),
                     AllMarks = this.dataService.GetObjects<Mark>(),
+                    AllSweets = this.dataService.GetObjects<Sweet>(),
                     AllGenders = genders,
                     UserId = this.dataService.GetCurrentUser(this.User).Id,
                     AppConfig = this.appConfig,

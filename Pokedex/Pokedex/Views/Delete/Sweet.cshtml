@@ -1,0 +1,23 @@
+@model Pokedex.DataAccess.Models.Sweet
+
+<h2>Delete Sweet Confirm</h2>
+
+<div class="form-horizontal">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.HiddenFor(x => x.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Name):
+            @Html.DisplayFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <p>
+            <button type="submit" class="btn btn-danger" role="button">Delete</button>
+        </p>
+    }
+
+</div>

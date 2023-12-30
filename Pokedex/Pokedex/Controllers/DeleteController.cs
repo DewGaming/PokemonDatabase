@@ -229,6 +229,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("delete_sweet/{id:int}")]
+        public IActionResult Sweet(int id)
+        {
+            Sweet model = this.dataService.GetObjectByPropertyValue<Sweet>("Id", id);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete_sweet/{id:int}")]
+        public IActionResult Sweet(Sweet sweet)
+        {
+            this.dataService.DeleteObject<Sweet>(sweet.Id);
+
+            return this.RedirectToAction("Sweets", "Owner");
+        }
+
+        [HttpGet]
         [Route("delete_pokeball/{id:int}")]
         public IActionResult Pokeball(int id)
         {

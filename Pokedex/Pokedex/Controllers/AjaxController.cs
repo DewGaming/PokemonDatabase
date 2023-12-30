@@ -1574,6 +1574,29 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Gets the available sweets for a pokemon.
+        /// </summary>
+        /// <param name="pokemonId">The pokemon's id.</param>
+        /// <returns>A list of available sweets.</returns>
+        [Route("get-pokemon-sweets")]
+        public List<Sweet> GetPokemonSweets(int pokemonId)
+        {
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
+                List<Sweet> model = new List<Sweet>();
+                if (pokemon.Name == "Alcremie")
+                {
+                    model = this.dataService.GetObjects<Sweet>();
+                }
+
+                return model;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>

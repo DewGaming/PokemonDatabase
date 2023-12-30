@@ -1286,6 +1286,10 @@ namespace Pokedex
             {
                 imageUrlPath = appConfig.OfficialMarkImageFTPUrl;
             }
+            else if (imageType == "sweet")
+            {
+                imageUrlPath = appConfig.OfficialSweetImageFTPUrl;
+            }
             else if (imageType == "genderDifference")
             {
                 imageUrlPath = appConfig.GenderDifferencePokemonImageFTPUrl;

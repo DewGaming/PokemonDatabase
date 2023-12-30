@@ -311,6 +311,18 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The owner's page for managing Sweets in the database.
+        /// </summary>
+        /// <returns>The owner Sweets page.</returns>
+        [Route("sweet")]
+        public IActionResult Sweets()
+        {
+            List<Sweet> model = this.dataService.GetObjects<Sweet>("Name");
+
+            return this.View(model);
+        }
+
         [Route("pokeball")]
         public IActionResult Pokeballs()
         {

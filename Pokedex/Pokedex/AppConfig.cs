@@ -48,6 +48,11 @@ namespace Pokedex
         public string OfficialMarkImageUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the sweet image Url.
+        /// </summary>
+        public string OfficialSweetImageUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the type image Url.
         /// </summary>
         public string TypeImageUrl { get; set; }
@@ -126,6 +131,11 @@ namespace Pokedex
         /// Gets or sets the mark image FTP Url.
         /// </summary>
         public string OfficialMarkImageFTPUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sweet image FTP Url.
+        /// </summary>
+        public string OfficialSweetImageFTPUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the icon image FTP Url.

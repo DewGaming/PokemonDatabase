@@ -72,6 +72,12 @@
                 @Html.DropDownListFor(x => x.Gender, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.Gender)
             </div>
+
+            <div class="form-group row pokemonSpecific sweets hide">
+                @Html.LabelFor(x => x.SweetId, "Alcremie Sweet", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.SweetId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.Sweet)
+            </div>
             
             <div class="form-group row hide">
                 @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })

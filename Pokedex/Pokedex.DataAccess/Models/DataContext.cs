@@ -74,5 +74,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<RegionalDex> RegionalDexes { get; set; }
         public DbSet<RegionalDexEntry> RegionalDexEntries { get; set; }
         public DbSet<PokeballGameDetail> PokeballGameDetails { get; set; }
+        public DbSet<Sweet> Sweets { get; set; }
     }
 }

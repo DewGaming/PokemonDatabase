@@ -51,6 +51,11 @@ namespace Pokedex.Models
         public List<Mark> AllMarks { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all sweets.
+        /// </summary>
+        public List<Sweet> AllSweets { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all games.
         /// </summary>
         public List<Game> AllGames { get; set; }

@@ -595,6 +595,30 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
+        [Route("add_sweet")]
+        public IActionResult Sweet()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("add_sweet")]
+        public IActionResult Sweet(Sweet sweet, IFormFile officialUpload, string officialUrlUpload)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            this.dataService.AddObject(sweet);
+
+            this.dataService.UploadImages(officialUpload, officialUrlUpload, sweet.Id.ToString(), this.appConfig, "sweet");
+
+            return this.RedirectToAction("Sweets", "Owner");
+        }
+
+        [HttpGet]
         [Route("add_hunting_method")]
         public IActionResult HuntingMethod()
         {
