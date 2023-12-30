@@ -51,11 +51,11 @@ function lookupPokemon(pageName, iconLink, pokemonName, generation) {
     $('.pokemonImageButtons .officialButton').each(function () {
       $(this).addClass('hidden');
     })
-  }
   
-  if ($('.genderSign.default').hasClass('hidden')) {
-    $('.genderSign.default').removeClass('hidden');
-    $('.genderSign.difference').addClass('hidden');
+    if ($('.genderSign.default').hasClass('hidden')) {
+      $('.genderSign.default').removeClass('hidden');
+      $('.genderSign.difference').addClass('hidden');
+    }
   }
 
   $('.tabIcon').attr("href", iconLink);
