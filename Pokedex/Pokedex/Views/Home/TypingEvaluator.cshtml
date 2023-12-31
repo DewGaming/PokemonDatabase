@@ -23,8 +23,8 @@
         }
 
         .flexDiv {
-            padding: 0 0 1rem;
             flex-wrap: wrap;
+            margin-bottom: 4px;
         }
 
         .pokemonTables {
@@ -35,17 +35,16 @@
             min-width: 216.75px;
         }
 
-        .primaryList, .gameList {
-          margin-right: 10px;
-          margin-bottom: 10px;
+        .primaryList, .gameList, .regionalDexList {
+            margin-right: 10px;
+        }
+
+        .lookupTypingsButton {
+            margin-bottom: 4px;
         }
 
         .flexDiv label {
-          margin-bottom: 7.5px;
-        }
-
-        .effectivenessChart {
-            margin: -25px 0 20px;
+            margin-bottom: 7.5px;
         }
         
         .effectivenessChart th, .effectivenessChart td {
@@ -66,6 +65,10 @@
 
         .gameList {
             width: 12rem;
+        }
+
+        .nonResistances {
+            display: flex;
         }
     </style>
 }
@@ -93,6 +96,11 @@
                 }
             </select>
         </div>
+        <div class="regionalDexList hide">
+            @Html.Label("RegionalDex", "Regional Dex")
+            <select class="form-control regionalDexSelectList" id="RegionalDex" name="RegionalDex">
+                <option value="0">Any Regional Dex</option>
+            </select></div>
         <div class="typeLists flexDiv">
             <div class="primaryList">
                 @Html.Label("Primary Type")
@@ -104,6 +112,7 @@
             </div>
         </div>
     </div>
+    <button onclick="grabPokemon()" class="btn-primary btn lookupTypingsButton">Lookup Typings</button>
     <div style="display: none;" class="effectivenessChart page pokemonTables tableWithHeaders noRowBorders"></div>
 </div>
 <div style="display: none;" class="pokemonWithTyping">

@@ -24,7 +24,7 @@ var checkTypings = function () {
     if ($('.primaryList > select').val() != '0' && $('.secondaryList > select').val() != '100') {
         $('.effectivenessChart').empty();
 
-        $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': $('.primaryList > select').val(), 'secondaryTypeID': $('.secondaryList > select').val(), 'gameID': $('.gameList > select').val() }, function () {
+        $('.effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeId': $('.primaryList > select').val(), 'secondaryTypeId': $('.secondaryList > select').val(), 'gameId': $('.gameList > select').val() }, function () {
             if ($('.typing-table-strong').children().length > 0) {
                 $(".StrongAgainst").css("display", "block");
             }
@@ -59,7 +59,7 @@ var checkTypings = function () {
         $('.pokemonWithTyping').css('display', 'none');
         $('.effectivenessChart').css('display', 'none');
         $('.pokemonList').empty();
-        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeID': $('.primaryList > select').val(), 'secondaryTypeID': $('.secondaryList > select').val(), 'gameID': $('.gameList > select').val() }, function () {
+        $('.pokemonList').load('/get-pokemon-by-typing/', { 'primaryTypeId': $('.primaryList > select').val(), 'secondaryTypeId': $('.secondaryList > select').val(), 'gameId': $('.gameList > select').val(), 'regionalDexId': $('.regionalDexList > select').val() }, function () {
             if ($('.pokemonList').children().length > 0) {
                 $('.pokemonWithTyping').css('display', 'block');
             }
@@ -83,34 +83,32 @@ var checkTypings = function () {
             $(".overlay").fadeOut(300);
         });
     }
-}, grabTypes = function (gameID) {
-    var primaryTypeID = $('.primaryList > select').val(), secondaryTypeID = $('.secondaryList > select').val();
-    $('.typeLists').load('/get-types-by-game/', { 'gameID': gameID }, function () {
-        if ($('.primaryList option[value=' + primaryTypeID + ']').length != 0) {
-            $('.primaryList > select').val(primaryTypeID);
+}, grabTypes = function (gameId) {
+    var primaryTypeId = $('.primaryList > select').val(), secondaryTypeId = $('.secondaryList > select').val();
+    $('.typeLists').load('/get-types-by-game/', { 'gameId': gameId }, function () {
+        if ($('.primaryList option[value=' + primaryTypeId + ']').length != 0) {
+            $('.primaryList > select').val(primaryTypeId);
         }
         else {
             $('.primaryList > select').val(0);
         }
 
-        if ($('.secondaryList option[value=' + secondaryTypeID + ']').length != 0) {
-            $('.secondaryList > select').val(secondaryTypeID);
+        if ($('.secondaryList option[value=' + secondaryTypeId + ']').length != 0) {
+            $('.secondaryList > select').val(secondaryTypeId);
         }
         else {
             $('.secondaryList > select').val(0);
         }
-
-        $('.typingSelectList').off();
-
-        $('.typingSelectList').on('change', function () {
-            grabPokemon();
-        });
-
-        $('.primaryTypeSelectList').select2();
-        $('.secondaryTypeSelectList').select2();
-
-        grabPokemon();
     });
+}, grabRegionalDexes = function (gameId) {
+    if (gameId != 0) {
+        $('.regionalDexList').load('/get-regional-dexes-by-game/', { 'gameId': gameId }, function () {
+            $('.regionalDexList > select').val(0);
+            $('.regionalDexList.hide').removeClass('hide')
+        });
+    } else {
+        $('.regionalDexList:not(.hide)').addClass('hide')
+    }
 };
 
 $(function () {
@@ -118,8 +116,10 @@ $(function () {
     $('.primaryTypeSelectList').select2();
     $('.secondaryTypeSelectList').select2();
     grabTypes($('.gameList > select').val());
+    grabRegionalDexes($('.gameList > select').val());
 });
 
 $(".gameSelectList").on('change', function () {
     grabTypes($('.gameList > select').val());
+    grabRegionalDexes($('.gameList > select').val());
 });

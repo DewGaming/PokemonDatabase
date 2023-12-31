@@ -60,7 +60,7 @@ var officialRender = function() {
         $('.genderSign.default').addClass('hidden');
     }
 }, grabTypingChart = function (primaryType, generationId) {
-    $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeID': primaryType, 'secondaryTypeID': '0', 'generationID': generationId, 'teraType': $('.teraTypeSelectList').find(":selected").html() }, function () {
+    $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart/', { 'primaryTypeId': primaryType, 'secondaryTypeId': '0', 'generationId': generationId, 'teraType': $('.teraTypeSelectList').find(":selected").html() }, function () {
         if ($('.typing-table-strong').children().length > 0) {
             $(".StrongAgainst").css("display", "block");
         }
@@ -83,7 +83,7 @@ var officialRender = function() {
         }
     });
 }, grabTypingChartByPokemon = function (pokemonId, generationId) {
-    $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart-by-pokemon/', { 'pokemonId': pokemonId, 'generationID': generationId }, function () {
+    $('.page.active .effectivenessChart').load('/get-typing-evaluator-chart-by-pokemon/', { 'pokemonId': pokemonId, 'generationId': generationId }, function () {
         if ($('.typing-table-strong').children().length > 0) {
             $(".StrongAgainst").css("display", "block");
         }
@@ -106,7 +106,7 @@ var officialRender = function() {
         }
     });
 }, grabStellarChart = function (pokemonId, generationId) {
-    $('.page.active .effectivenessChart').load('/get-stellar-typing-chart/', { 'pokemonId': pokemonId, 'generationID': generationId, 'teraType': 'stellar' }, function () {
+    $('.page.active .effectivenessChart').load('/get-stellar-typing-chart/', { 'pokemonId': pokemonId, 'generationId': generationId, 'teraType': 'stellar' }, function () {
         if ($('.typing-table-strong').children().length > 0) {
             $(".StrongAgainst").css("display", "block");
         }

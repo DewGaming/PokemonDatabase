@@ -1,0 +1,7 @@
+@model List<Pokedex.DataAccess.Models.RegionalDex>;
+@{
+    var regionalDexes = Model.Prepend(new Pokedex.DataAccess.Models.RegionalDex { Id = 0, Name = "Any Regional Dex" });
+}
+
+@Html.Label("Regional Dex")
+@Html.DropDownList("Regional Dex", new SelectList(@regionalDexes, "Id", "Name"), new { @class = "form-control typingSelectList regionalDexSelectList" })

@@ -343,8 +343,8 @@ namespace Pokedex.Controllers
         /// <summary>
         /// The method that is used to specify a generation and alternate form for the pokemon page.
         /// </summary>
-        /// <param name="pokemonId">The ID of the pokemon.</param>
-        /// <param name="generationId">The ID of the generation.</param>
+        /// <param name="pokemonId">The Id of the pokemon.</param>
+        /// <param name="generationId">The Id of the generation.</param>
         /// <returns>Returns the pokemon page's method.</returns>
         [AllowAnonymous]
         [Route("pokemon/{pokemonId:int}/{generationId:int}")]
@@ -359,8 +359,8 @@ namespace Pokedex.Controllers
         /// The method that is used to specify a generation and alternate form for the pokemon page.
         /// </summary>
         /// <param name="pokemonName">The name of the pokemon.</param>
-        /// <param name="pokemonId">The ID of the pokemon.</param>
-        /// <param name="generationId">The ID of the generation.</param>
+        /// <param name="pokemonId">The Id of the pokemon.</param>
+        /// <param name="generationId">The Id of the generation.</param>
         /// <returns>Returns the pokemon page's method.</returns>
         [AllowAnonymous]
         [Route("pokemon/{pokemonName}/{pokemonId:int}/{generationId:int}")]

@@ -1646,17 +1646,17 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets the type chart for the given typing combination.
         /// </summary>
-        /// <param name="primaryTypeID">The primary type's id.</param>
-        /// <param name="secondaryTypeID">The secondary type's id.</param>
+        /// <param name="primaryTypeId">The primary type's id.</param>
+        /// <param name="secondaryTypeId">The secondary type's id.</param>
         /// <param name="gameId">The generation used to specify the type chart.</param>
         /// <param name="teraType">The tera type of the pokemon.</param>
         /// <returns>The file type evaluator chart shared view.</returns>
         [Route("get-typing-evaluator-chart")]
-        public IActionResult GetTypingEvaluatorChart(int primaryTypeID, int secondaryTypeID, int gameId, string teraType)
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId, int gameId, string teraType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeID, secondaryTypeID, gameId, teraType));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeId, secondaryTypeId, gameId, teraType));
             }
             else
             {
@@ -2051,12 +2051,13 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Gets a list of all pokemon by their type combination.
         /// </summary>
-        /// <param name="primaryTypeID">The primary type's id.</param>
-        /// <param name="secondaryTypeID">The secondary type's id.</param>
-        /// <param name="gameID">The game used to specify the type chart.</param>
+        /// <param name="primaryTypeId">The primary type's id.</param>
+        /// <param name="secondaryTypeId">The secondary type's id.</param>
+        /// <param name="gameId">The game used to specify the type chart.</param>
+        /// <param name="regionalDexId">The game's regional dex used to specify the type chart.</param>
         /// <returns>The fill typing evaluator shared view.</returns>
         [Route("get-pokemon-by-typing")]
-        public IActionResult GetPokemonByTyping(int primaryTypeID, int secondaryTypeID, int gameID)
+        public IActionResult GetPokemonByTyping(int primaryTypeId, int secondaryTypeId, int gameId, int regionalDexId)
         {
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -2067,12 +2068,12 @@ namespace Pokedex.Controllers
                     Name = "Any Game",
                 };
 
-                if (gameID != 0)
+                if (gameId != 0)
                 {
-                    game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameID);
+                    game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
                 }
 
-                List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeID, secondaryTypeID, game);
+                List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId, game, regionalDexId);
 
                 typingList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
 
@@ -2384,9 +2385,9 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Gets a list of types that are available in the given generation.
+        /// Gets a list of types that are available in the given game.
         /// </summary>
-        /// <param name="gameId">The generation's id.</param>
+        /// <param name="gameId">The game's id.</param>
         /// <returns>The fill typing evaluator types shared view.</returns>
         [Route("get-types-by-game")]
         public IActionResult GrabTypingEvaluatorTypes(int gameId)
@@ -2399,6 +2400,18 @@ namespace Pokedex.Controllers
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
             List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= game.GenerationId).ToList();
             return this.PartialView("_FillTypingEvaluatorTypes", model);
+        }
+
+        /// <summary>
+        /// Gets a list of regional dexes that are available in the given game.
+        /// </summary>
+        /// <param name="gameId">The game's id.</param>
+        /// <returns>The fill typing evaluator regional dexes shared view.</returns>
+        [Route("get-regional-dexes-by-game")]
+        public IActionResult GrabTypingEvaluatorRegionalDexes(int gameId)
+        {
+            List<RegionalDex> model = this.dataService.GetObjects<RegionalDex>().Where(x => x.GameId == gameId).ToList();
+            return this.PartialView("_FillTypingEvaluatorRegionalDexes", model);
         }
 
         /// <summary>
@@ -3896,9 +3909,14 @@ namespace Pokedex.Controllers
             }
         }
 
-        private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, Game game)
+        private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, Game game, int regionalDexId)
         {
             List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => x.GenerationId <= game.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            if (regionalDexId != 0)
+            {
+                List<RegionalDexEntry> regionalDexEntries = this.dataService.GetObjects<RegionalDexEntry>(whereProperty: "RegionalDexId", wherePropertyValue: regionalDexId);
+                pokemonList = pokemonList.Where(x => regionalDexEntries.Any(y => y.PokemonId == x.PokemonId)).ToList();
+            }
 
             if (game.Id != 0)
             {
