@@ -93,6 +93,12 @@
                 @Html.ValidationMessageFor(x => x.HasShinyCharm)
             </div>
 
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.IsPinned, "Pin Hunt Immediately", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.IsPinned, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.IsPinned)
+            </div>
+
             <p class="submitButtons">
                 <button type="submit" class="btn btn-primary" role="button">Add</button>
             </p>
