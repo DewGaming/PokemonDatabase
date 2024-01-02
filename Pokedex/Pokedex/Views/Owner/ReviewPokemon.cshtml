@@ -17,37 +17,6 @@
     <link href="~/css/pokemonPage.css" rel="stylesheet" asp-append-version="true" />
     <link class="tabIcon" rel="icon" type="image/png" href="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.IconImageUrl, @Model.Pokemon.Id, ".png"))" />
     <style>
-        .pokemonImage h4 {
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .pokemonImage {
-            perspective: 720px;
-            position: relative;
-        }
-
-        .pokemonImage img {
-            backface-visibility: hidden;
-        }
-        
-        .differentForms img {
-            margin-left: 0;
-        }
-
-        .pokemonTypingTable table {
-            width: 100% !important;
-        }
-        
-        .typingChart .typing td, .effectivenessChart td {
-          margin-left: 2px;
-          display: block;
-        }
-
-        .type-icon {
-            width: 49% !important;
-        }
-
         .pokemonEvos p {
             margin-bottom: 0;
         }
