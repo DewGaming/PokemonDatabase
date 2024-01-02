@@ -599,6 +599,7 @@ namespace Pokedex.Controllers
                     PokemonFormDetail pokemonForm;
                     List<Pokemon> altForms = new List<Pokemon>();
                     PokemonTypeDetail typing;
+                    int originalPokemonId = 0;
 
                     allPokemon = allPokemon.Where(x => selectedGens.Contains(x.Game.GenerationId)).ToList();
                     if (!allowIncomplete)
@@ -644,63 +645,57 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    if (allPokemon.Count > 0)
+                    while (allPokemon.Count() > 0 && pokemonList.Count() < pokemonCount)
                     {
-                        while (allPokemon.Count() > 0 && pokemonList.Count() < pokemonCount)
+                        if (needsStarter && pokemonList.Count() == 0)
                         {
-                            if (needsStarter && pokemonList.Count() == 0)
+                            pokemon = starterList[rnd.Next(starterList.Count)];
+                        }
+                        else
+                        {
+                            pokemon = allPokemon[rnd.Next(allPokemon.Count)];
+                        }
+
+                        if (onePokemonForm)
+                        {
+                            originalPokemonId = pokemon.Id;
+                            pokemonForm = pokemonFormDetails.Find(x => x.AltFormPokemonId == pokemon.Id);
+                            if (pokemonForm != null)
                             {
-                                pokemon = starterList[rnd.Next(starterList.Count)];
-                            }
-                            else
-                            {
-                                pokemon = allPokemon[rnd.Next(allPokemon.Count)];
-                            }
-
-                            if (onePokemonForm)
-                            {
-                                int originalPokemonId = pokemon.Id;
-                                pokemonForm = pokemonFormDetails.Find(x => x.AltFormPokemonId == pokemon.Id);
-                                if (pokemonForm != null)
-                                {
-                                    originalPokemonId = pokemonForm.OriginalPokemonId;
-                                }
-
-                                altForms = pokemonFormDetails.Where(x => x.OriginalPokemonId == originalPokemonId).Select(x => x.AltFormPokemon).ToList();
-
-                                if (pokemonForm != null)
-                                {
-                                    altForms.Remove(altForms.Find(x => x.Id == pokemon.Id));
-                                    altForms.Add(pokemonDetails.Find(x => x.Id == originalPokemonId));
-                                }
-
-                                allPokemon = allPokemon.Where(x => !altForms.Any(y => y.Id == x.Id)).ToList();
+                                originalPokemonId = pokemonForm.OriginalPokemonId;
                             }
 
-                            if (noRepeatType)
+                            altForms = pokemonFormDetails.Where(x => x.OriginalPokemonId == originalPokemonId).Select(x => x.AltFormPokemon).ToList();
+                            if (pokemonForm != null)
                             {
-                                typing = pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id);
+                                altForms.Remove(altForms.Find(x => x.Id == pokemon.Id));
+                                altForms.Add(pokemonDetails.Find(x => x.Id == originalPokemonId));
+                            }
 
-                                if (typing != null)
+                            allPokemon = allPokemon.Where(x => !altForms.Any(y => y.Id == x.Id)).ToList();
+                        }
+
+                        if (noRepeatType)
+                        {
+                            typing = pokemonTypeDetails.Find(x => x.PokemonId == pokemon.Id);
+                            if (typing != null)
+                            {
+                                allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == typing.PrimaryTypeId || y.SecondaryTypeId == typing.PrimaryTypeId) && y.PokemonId == x.Id)).ToList();
+                                if (typing.SecondaryType != null)
                                 {
-                                    allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == typing.PrimaryTypeId || y.SecondaryTypeId == typing.PrimaryTypeId) && y.PokemonId == x.Id)).ToList();
-
-                                    if (typing.SecondaryType != null)
-                                    {
-                                        allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == typing.SecondaryTypeId || y.SecondaryTypeId == typing.SecondaryTypeId) && y.PokemonId == x.Id)).ToList();
-                                    }
+                                    allPokemon = allPokemon.Where(x => !pokemonTypeDetails.Any(y => (y.PrimaryTypeId == typing.SecondaryTypeId || y.SecondaryTypeId == typing.SecondaryTypeId) && y.PokemonId == x.Id)).ToList();
                                 }
                             }
+                        }
 
-                            pokemonList.Add(pokemon);
-                            if (needsStarter && pokemonList.Count() == 1)
-                            {
-                                allPokemon = allPokemon.Where(x => !starterList.Any(y => y.Id == x.Id)).ToList();
-                            }
-                            else
-                            {
-                                allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
-                            }
+                        pokemonList.Add(pokemon);
+                        if (needsStarter && pokemonList.Count() == 1)
+                        {
+                            allPokemon = allPokemon.Where(x => !starterList.Any(y => y.Id == x.Id)).ToList();
+                        }
+                        else
+                        {
+                            allPokemon.Remove(allPokemon.Find(x => x.Id == pokemon.Id));
                         }
                     }
 
@@ -736,7 +731,7 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    if (selectedGame.GenerationId != 1 && selectedGame.GenerationId != 2 && randomAbility)
+                    if (selectedGame.GenerationId >= 3 && randomAbility)
                     {
                         List<Ability> abilities;
                         PokemonAbilityDetail pokemonAbilities;

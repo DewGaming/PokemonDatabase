@@ -158,6 +158,8 @@ $(document).ready(function () {
     if ($('#TerapagosTerastal').length) {
         $('#TerapagosTerastal.page .teraTypeSelectList').val(0);
     }
+
+    $('.teraTypeSelectList').select2();
 })
 
 $('span[title]').on('click', function() {
