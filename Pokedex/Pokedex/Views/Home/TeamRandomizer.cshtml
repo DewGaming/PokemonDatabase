@@ -52,14 +52,10 @@
     <ul class="generatorDropdownMenu dropdown-menu">
         <section class="generatorSection">
             <span class="generationOptionTitle" id="types">Types</span>
-            <li class="dropdown-item generatorOption typeRadioOption">
-                <input id="type0" name="typeSelection" type="radio" value="0" checked="checked" />
-                <label for="type0" class="generatorOptionTitle">Any Type</label>
-            </li>
             @for (var i = 0; i < (int)Math.Ceiling(Model.AllTypes.Count() / 2m); i++ )
             {
-                <li class="dropdown-item generatorOption typeRadioOption">
-                    <input id="type@(Model.AllTypes[i].Id)" name="typeSelection" type="radio" value="@(Model.AllTypes[i].Id)" />
+                <li class="dropdown-item generatorOption typeCheckboxOption">
+                    <input id="type@(Model.AllTypes[i].Id)" name="typeSelection" type="checkbox" value="@(Model.AllTypes[i].Id)" />
                     <label for="type@(Model.AllTypes[i].Id)" class="generatorOptionTitle">@Model.AllTypes[i].Name</label>
                 </li>
             }
@@ -67,8 +63,8 @@
         <section class="generatorSection">
             @for (var i = (int)Math.Ceiling(Model.AllTypes.Count() / 2m); i < Model.AllTypes.Count(); i++ )
             {
-                <li class="dropdown-item generatorOption typeRadioOption">
-                    <input id="type@(Model.AllTypes[i].Id)" name="typeSelection" type="radio" value="@(Model.AllTypes[i].Id)" />
+                <li class="dropdown-item generatorOption typeCheckboxOption">
+                    <input id="type@(Model.AllTypes[i].Id)" name="typeSelection" type="checkbox" value="@(Model.AllTypes[i].Id)" />
                     <label for="type@(Model.AllTypes[i].Id)" class="generatorOptionTitle">@Model.AllTypes[i].Name</label>
                 </li>
             }

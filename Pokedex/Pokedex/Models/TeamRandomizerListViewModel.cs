@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Pokedex.Models
 {
     /// <summary>
-    /// The class that is used to represent the pokemon team radio lists view model for the randomizer page.
+    /// The class that is used to represent the pokemon team randomizer lists view model for the randomizer page.
     /// </summary>
     public class TeamRandomizerListViewModel
     {
