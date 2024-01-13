@@ -15,7 +15,9 @@ var abilityId = 0, gender = "Empty", grabAbilities = function () {
             });
         })
         .fail(function () {
-            alert("Failed to grab abilities!");
+            if (isLocalhost) {
+                alert("Failed to grab abilities!");
+            }
         });
 }, refreshGenders = function () {
     $.ajax({
@@ -40,7 +42,9 @@ var abilityId = 0, gender = "Empty", grabAbilities = function () {
             }
         })
         .fail(function () {
-            alert("Failed to grab genders!");
+            if (isLocalhost) {
+                alert("Failed to grab genders!");
+            }
         });
 }
 

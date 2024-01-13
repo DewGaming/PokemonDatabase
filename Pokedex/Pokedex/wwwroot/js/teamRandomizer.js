@@ -177,7 +177,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
             .done(function (data) {
                 alert(data);
             })
-            .fail(function (jqXHR) {
+            .fail(function () {
                 alert('Failed to save pokemon team. Website owner has been notified.');
             });
     });
@@ -301,7 +301,9 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
             checkOtherOptions();
         })
         .fail(function () {
-            alert("Failed To Get Generations!");
+            if (isLocalhost) {
+                alert("Failed To Get Generations!");
+            }
         });
 }, checkTyping = function () {
     var boxChecked = false;
@@ -444,10 +446,8 @@ $('.generatorButton').on('click', function () {
             fillGeneratedTable(data.appConfig);
         })
         .fail(function () {
-            setTimeout(function () {
-                $(".overlay").fadeOut(300);
-            });
-
-            alert("Failed To Get Team!");
+            alert("Failed To Get Team! Please Try Again.");
+            
+            $(".overlay").fadeOut(300);
         });
 });

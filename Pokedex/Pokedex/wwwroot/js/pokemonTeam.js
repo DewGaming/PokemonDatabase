@@ -38,7 +38,7 @@ var pokemonTeams, exportString, deleteTeams = function () {
             window.location = data;
         })
         .fail(function () {
-            alert("Update Failed!");
+            alert("Deleting a Team has Failed! Please reload this page and try again.");
         });
 }, lookupTeamsInGame = function(gameId) {
     if (!$('.active').is($('#Game' + gameId))) {
@@ -97,7 +97,7 @@ $(document).ready(function () {
                 }
             })
             .fail(function (jqXHR) {
-                if (jqXHR.statusText != "error") {
+                if (jqXHR.statusText != "error" && isLocalhost) {
                     alert(jqXHR.statusText);
                 }
             });
@@ -156,7 +156,7 @@ $(document).ready(function () {
             }
         })
         .fail(function (jqXHR) {
-            if (jqXHR.statusText != "error") {
+            if (jqXHR.statusText != "error" && isLocalhost) {
                 alert(jqXHR.statusText);
             }
         });

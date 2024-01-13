@@ -15,7 +15,7 @@
                     
                 })
                 .fail(function (jqXHR) {
-                    if (jqXHR.statusText != "error") {
+                    if (jqXHR.statusText != "error" && isLocalhost) {
                         alert(jqXHR.statusText);
                     }
                 });

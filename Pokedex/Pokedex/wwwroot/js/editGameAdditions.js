@@ -16,12 +16,10 @@ function updateMarkGames(gameId) {
         .done(function (data) {
             window.location = data;
         })
-        .fail(function () { 
-            setTimeout(function () {
-                $(".overlay").fadeOut(300);
-            });
-
+        .fail(function () {
             alert("Update Failed!");
+
+            $(".overlay").fadeOut(300);
         });
 }
 
@@ -43,11 +41,9 @@ function updatePokeballGames(gameId) {
         .done(function (data) {
             window.location = data;
         })
-        .fail(function () { 
-            setTimeout(function () {
-                $(".overlay").fadeOut(300);
-            });
-
+        .fail(function () {
             alert("Update Failed!");
+
+            $(".overlay").fadeOut(300);
         });
 }

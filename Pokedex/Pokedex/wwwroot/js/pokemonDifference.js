@@ -41,7 +41,9 @@ var grabGames = function (gameList) {
             $(".overlay").fadeOut(300);
         })
         .fail(function () {
-            alert("Failed to grab games!");
+            if (isLocalhost) {
+                alert("Failed to grab games!");
+            }
 
             $(".overlay").fadeOut(300);
         });

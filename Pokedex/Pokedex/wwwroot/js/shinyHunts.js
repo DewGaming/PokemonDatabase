@@ -19,7 +19,9 @@ var adjustIncrements = function (shinyHuntId) {
                 });
             })
             .fail(function () {
-                alert("Update Failed!");
+                if (isLocalHost) {
+                    alert("Update Failed!");
+                }
             });
     } else if (increments != null) {
         alert("Entered Phases Need to be a Number")
@@ -43,7 +45,9 @@ var adjustIncrements = function (shinyHuntId) {
                 });
             })
             .fail(function () {
-                alert("Update Failed!");
+                if (isLocalhost) {
+                    alert("Update Failed!");
+                }
             });
     } else if (encounters != null) {
         alert("Entered Encounters Need to be a Number")
@@ -71,7 +75,9 @@ var adjustIncrements = function (shinyHuntId) {
                 });
             })
             .fail(function () {
-                alert("Update Failed!");
+                if (isLocalhost) {
+                    alert("Update Failed!");
+                }
             });
     } else if (phases != null) {
         alert("Entered Phases Need to be a Number")
@@ -158,7 +164,9 @@ connection.on("FinishShinyHunt", function (shinyHuntId) {
             $('.completedHunts .grid-container').prepend(view);
         })
         .fail(function () {
-            alert("Update Failed!");
+            if (isLocalhost) {
+                alert("Update Failed!");
+            }
         });
 });
 //#endregion SignalR Connections
@@ -218,7 +226,9 @@ function incrementEncounter(shinyHuntId) {
             });
         })
         .fail(function () {
-            alert("Update Failed!");
+            if (isLocalhost) {
+                alert("Update Failed!");
+            }
         });
 }
 
@@ -239,7 +249,9 @@ function incrementPhase(shinyHuntId) {
             });
         })
         .fail(function () {
-            alert("Update Failed!");
+            if (isLocalhost) {
+                alert("Update Failed!");
+            }
         });
 }
 
@@ -442,7 +454,9 @@ function togglePin(shinyHuntId) {
             });
         })
         .fail(function () {
-            alert("Update Failed!");
+            if (isLocalhost) {
+                alert("Update Failed!");
+            }
         });
 }
 
@@ -465,7 +479,9 @@ function abandonHunt(shinyHuntId, pokemonName) {
                 $('.Hunt' + shinyHuntId).remove();
             })
             .fail(function () {
-                alert("Update Failed!");
+                if (isLocalhost) {
+                    alert("Update Failed!");
+                }
             });
     }
 }

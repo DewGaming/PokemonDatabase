@@ -1,5 +1,5 @@
 var pokemonList = [], grabGames = function (gameId, pokemonIds) {
-    $(".overlay").fadeIn(300);
+    // $(".overlay").fadeIn(300);
 
     $.ajax({
         url: '/get-games-by-shiny-huntable-pokemon/',
@@ -29,7 +29,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             $(".overlay").fadeOut(300);
         })
         .fail(function () {
-            alert("Failed to grab games!");
+            if (isLocalhost) {
+                alert("Failed to grab games!");
+            }
 
             $(".overlay").fadeOut(300);
         });
@@ -54,7 +56,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             }
         })
         .fail(function () {
-            alert("Failed to grab genders!");
+            if (isLocalhost) {
+                alert("Failed to grab genders!");
+            }
         });
 }, checkSweets = function () {
     $.ajax({
@@ -79,7 +83,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             }
         })
         .fail(function () {
-            alert("Failed to grab sweets!");
+            if (isLocalhost) {
+                alert("Failed to grab sweets!");
+            }
         });
 }, grabHuntingMethod = function (huntingMethodId) {
     $.ajax({
@@ -106,7 +112,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             checkFunctions();
         })
         .fail(function () {
-            alert("Failed to grab hunting methods!");
+            if (isLocalhost) {
+                alert("Failed to grab hunting methods!");
+            }
         });
 }, checkShinyCharm = function () {
     $.ajax({
@@ -127,7 +135,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             }
         })
         .fail(function () {
-            alert("Failed to check shiny charm!");
+            if (isLocalhost) {
+                alert("Failed to check shiny charm!");
+            }
         });
 }, checkAlpha = function () {
     if ($('#GameId').val() == 37) {
@@ -159,7 +169,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             }
         })
         .fail(function () {
-            alert("Failed to check sparkling power!");
+            if (isLocalhost) {
+                alert("Failed to check sparkling power!");
+            }
         });
 }, checkLure = function () {
     var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val()
@@ -207,7 +219,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
             })
             .fail(function () {
-                alert("Failed to grab marks!");
+                if (isLocalhost) {
+                    alert("Failed to grab marks!");
+                }
             });
     }
 }, checkHOMETransfer = function () {
@@ -230,7 +244,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
             })
             .fail(function () {
-                alert("Failed to grab marks!");
+                if (isLocalhost) {
+                    alert("Failed to check HOME Transfer!");
+                }
             });
     }
 }, checkPokeballs = function () {
@@ -260,7 +276,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
             })
             .fail(function () {
-                alert("Failed to grab pokeballs!");
+                if (isLocalhost) {
+                    alert("Failed to grab pokeballs!");
+                }
             });
     }
 }, checkFunctions = function () {

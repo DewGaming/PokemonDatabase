@@ -17,7 +17,9 @@ var checkShinyCharm = function () {
             }
         })
         .fail(function () {
-            alert("Failed to check shiny charm!");
+            if (isLocalhost) {
+                alert("Failed to check shiny charm!");
+            }
         });
 }, checkAlpha = function () {
     var gameId = $('#GameId').val()
@@ -50,7 +52,9 @@ var checkShinyCharm = function () {
             }
         })
         .fail(function () {
-            alert("Failed to check sparkling power!");
+            if (isLocalhost) {
+                alert("Failed to check sparkling power!");
+            }
         });
 }, checkLure = function () {
     var gameId = $('#GameId').val(), huntingMethodId = $('#HuntingMethodId').val()
@@ -98,7 +102,9 @@ var checkShinyCharm = function () {
                 }
             })
             .fail(function () {
-                alert("Failed to grab marks!");
+                if (isLocalhost) {
+                    alert("Failed to grab marks!");
+                }
             });
     }
 }, checkHOMETransfer = function () {
@@ -121,7 +127,9 @@ var checkShinyCharm = function () {
                 }
             })
             .fail(function () {
-                alert("Failed to grab marks!");
+                if (isLocalhost) {
+                    alert("Failed to check HOME Transfer!");
+                }
             });
     }
 }, checkPokeballs = function () {
@@ -151,7 +159,9 @@ var checkShinyCharm = function () {
                 }
             })
             .fail(function () {
-                alert("Failed to grab pokeballs!");
+                if (isLocalhost) {
+                    alert("Failed to grab pokeballs!");
+                }
             });
     }
 }, checkSweets = function () {
@@ -177,7 +187,9 @@ var checkShinyCharm = function () {
             }
         })
         .fail(function () {
-            alert("Failed to grab sweets!");
+            if (isLocalhost) {
+                alert("Failed to grab sweets!");
+            }
         });
 }, checkFunctions = function () {
     checkLure();
