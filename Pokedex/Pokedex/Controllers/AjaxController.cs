@@ -2062,15 +2062,20 @@ namespace Pokedex.Controllers
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                Game game = new Game()
-                {
-                    Id = 0,
-                    Name = "Any Game",
-                };
+                Game game = new Game();
 
                 if (gameId != 0)
                 {
                     game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
+                }
+                else
+                {
+                    game = new Game()
+                    {
+                        Id = 0,
+                        GenerationId = this.dataService.GetObjects<Generation>("Id").Last().Id,
+                        Name = "Any Game",
+                    };
                 }
 
                 List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId, game, regionalDexId);
