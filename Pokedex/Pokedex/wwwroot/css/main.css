@@ -709,6 +709,16 @@ a {
   .typeSelector section:last-of-type {
     margin-top: 25px;
   }
+
+  .generatorDropdownMenu {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 782px) {
+  .generatorDropdownMenu {
+    flex-wrap: wrap;
+  }
 }
 
 @media(min-width: 346px) {

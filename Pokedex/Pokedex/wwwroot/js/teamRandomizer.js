@@ -105,13 +105,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
     else {
         $(".multipleGMaxBoolCheckbox").show();
     }
-}, generatorMenuCheck = function () {
-    if ($(window).width() < 768) {
-        $('.generatorDropdownMenu').css('flex-wrap', 'wrap');
-    }
-    else {
-        $('.generatorDropdownMenu').css('flex-wrap', 'nowrap');
-    }
 }, removeEventButtons = function () {
     $('.exportTeamButton').remove();
     $('.saveTeamButton').remove();
@@ -324,7 +317,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
     checkMegaCheck();
     checkGigantamaxCheck();
     checkOtherOptions();
-    generatorMenuCheck();
 };
 
 $(function () {
