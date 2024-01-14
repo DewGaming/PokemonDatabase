@@ -586,6 +586,7 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         }
                                         @gameList[j].Name
                                     }
+
                                     @if (regionalDexes.Count() > 0 && regionalDexEntries.Count() > 0)
                                     {
                                         <br>
@@ -595,7 +596,22 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             @if (item.RegionalDexEntries.Where(x => x.RegionalDexId == dex.Id).Count() > 0)
                                             {
                                                 <br>
-                                                <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                if (gameList.First().Id == 37)
+                                                {
+                                                    if (regionalDexes.First().Id == dex.Id)
+                                                    {
+                                                        <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                        <span class="weak"> Appears in:</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="weak">@(dex.Name)</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                }
                                             }
                                         }
                                     }
@@ -623,7 +639,22 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                                 @if (item.RegionalDexEntries.Where(x => x.RegionalDexId == dex.Id).Count() > 0)
                                                 {
                                                     <br>
-                                                    <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                    if (gameList.First().Id == 37)
+                                                    {
+                                                        if (regionalDexes.First().Id == dex.Id)
+                                                        {
+                                                            <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                            <span>Appears in:</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="weak">@(dex.Name)</span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
+                                                    }
                                                 }
                                             }
                                         }
