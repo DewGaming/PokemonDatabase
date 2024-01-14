@@ -601,7 +601,8 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                                     if (regionalDexes.First().Id == dex.Id)
                                                     {
                                                         <span class="weak">@(dex.Name): @('#')@item.RegionalDexEntries.Find(x => x.RegionalDexId == dex.Id && x.PokemonId == item.Pokemon.Id).RegionalPokedexNumber.ToString().PadLeft(4, '0')</span>
-                                                        <span class="weak"> Appears in:</span>
+                                                        <br>
+                                                        <span>Appears in:</span>
                                                     }
                                                     else
                                                     {
