@@ -2978,9 +2978,14 @@ namespace Pokedex.Controllers
         public List<Mark> GetShinyHuntMarks(int gameId, int huntingMethodId)
         {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && game.GenerationId >= 8 && gameId != 35 && gameId != 36 && gameId != 37 && huntingMethodId != 4 && huntingMethodId != 5)
+            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest" && huntingMethodId != 4 && huntingMethodId != 5 && huntingMethodId != 15)
             {
-                List<Mark> marks = this.dataService.GetObjects<MarkGameDetail>("Mark.Name", "Mark", "GameId", gameId).ConvertAll(x => x.Mark);
+                List<MarkGameDetail> markGameDetails = this.dataService.GetObjects<MarkGameDetail>("Mark.Name", "Mark", "GameId", gameId);
+                List<Mark> marks = null;
+                if (markGameDetails.Count() > 0)
+                {
+                    marks = this.dataService.GetObjects<MarkGameDetail>("Mark.Name", "Mark", "GameId", gameId).ConvertAll(x => x.Mark);
+                }
 
                 return marks;
             }

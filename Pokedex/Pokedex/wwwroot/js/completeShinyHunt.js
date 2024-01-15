@@ -79,19 +79,20 @@ var checkShinyCharm = function () {
             .done(function (data) {
                 $('#MarkId').empty();
                 $('#MarkId').append($('<option>'));
-                $.each(data, function (index, item) {
-                    $('#MarkId').append($('<option>').val(item.id).text(item.name));
-                });
-
-                if (markId != "" && markId != null && data.find(x => x.id = markId)) {
-                    $('#MarkId option').each(function () {
-                        if (this.value == markId) {
-                            $('#MarkId').val(markId);
-                        }
-                    });
-                }
 
                 if (data != null) {
+                    $.each(data, function (index, item) {
+                        $('#MarkId').append($('<option>').val(item.id).text(item.name));
+                    });
+    
+                    if (markId != "" && markId != null && data.find(x => x.id = markId)) {
+                        $('#MarkId option').each(function () {
+                            if (this.value == markId) {
+                                $('#MarkId').val(markId);
+                            }
+                        });
+                    }
+
                     if ($('.marks').hasClass('hide')) {
                         $('.marks').removeClass('hide');
                     }
@@ -218,4 +219,8 @@ $(document).ready(function () {
     $("#PokeballId").select2();
     $("#SweetId").select2();
     $("#MarkId").select2();
+});
+
+$('#HuntingMethodId').on('change', function () {
+    checkFunctions();
 });

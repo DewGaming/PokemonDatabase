@@ -1147,7 +1147,7 @@ namespace Pokedex
                         }
                         else
                         {
-                            selectablePokeballs = selectablePokeballs.Where(x => x.Id == 24).ToList();
+                            selectablePokeballs = this.GetObjects<Pokeball>(whereProperty: "Id", wherePropertyValue: 24);
                         }
 
                         break;
