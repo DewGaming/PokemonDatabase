@@ -10,7 +10,7 @@
     <link href="~/css/shinyHunts.css" rel="stylesheet" asp-append-version="true" />
 }
 
-<h3>Phases for @Model.ShinyHunt.Pokemon.Name@(!string.IsNullOrEmpty(Model.ShinyHunt.Pokemon.Nickname) ? string.Concat("(", Model.ShinyHunt.Pokemon.Nickname, ")"))</h3>
+<h3>Phases for @Model.ShinyHunt.Pokemon.Name@(!string.IsNullOrEmpty(Model.ShinyHunt.Nickname) ? string.Concat("(", Model.ShinyHunt.Nickname, ")") : string.Empty)</h3>
 
 <div class="grid-container">
     @foreach (var shinyHunt in Model.AllShinyHunts)
