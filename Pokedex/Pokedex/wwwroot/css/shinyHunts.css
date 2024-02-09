@@ -52,10 +52,15 @@
 .shinyFoundButtons a,
 .huntUncapturedButtons a,
 .huntUncapturedButtons button,
-.huntCapturedButtons a,
+.huntCapturedButtons a:not(.phasesButton),
 .huntCapturedButtons button,
 .encounterButtons button {
   width: 49%;
+}
+
+.phasesButton {
+  margin-top: 5px;
+  width: 99%;
 }
 
 .shinyHuntButtons a {

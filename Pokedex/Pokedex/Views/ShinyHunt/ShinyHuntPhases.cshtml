@@ -1,0 +1,111 @@
+@model Pokedex.Models.ShinyHuntsViewModel;
+@using System;
+@{
+    ViewBag.Title = "Shiny Hunts";
+    ViewBag.Description = "Keep track of all of you current and successful shiny hunts!";
+}
+
+@section styles
+{
+    <link href="~/css/shinyHunts.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<h3>Phases for @Model.ShinyHunt.Pokemon.Name@(!string.IsNullOrEmpty(Model.ShinyHunt.Pokemon.Nickname) ? string.Concat("(", Model.ShinyHunt.Pokemon.Nickname, ")"))</h3>
+
+<div class="grid-container">
+    @foreach (var shinyHunt in Model.AllShinyHunts)
+    {
+        <div class="Hunt@(shinyHunt.Id) HuntGame@(shinyHunt.GameId) shadowed @shinyHunt.Pokemon.Name">
+            <div class="pokemonDetails">
+                <div class="pokemonImages">
+                    <div class="bonusImages">
+                        @if (shinyHunt.HasShinyCharm)
+                        {
+                            <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                        }
+                        @if (shinyHunt.Mark != null)
+                        {
+                            <img loading="lazy" class="pokemonMark pokemonListPicture" title="@shinyHunt.Mark.Name Mark" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @shinyHunt.Mark.Id, ".png"))">
+                        }
+                        @if (shinyHunt.IsAlpha)
+                        {
+                            <img loading="lazy" class="pokemonAlpha pokemonListPicture" title="Alpha" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, "alpha.png"))">
+                        }
+                        @if (shinyHunt.Pokeball != null)
+                        {
+                            <img loading="lazy" class="pokeball pokemonListPicture" title="@shinyHunt.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @shinyHunt.Pokeball.Id, ".png"))">
+                        }
+                        @if (shinyHunt.Gender == "Male" || shinyHunt.Gender == "Female")
+                        {
+                            <img loading="lazy" class="gender pokemonListPicture" title="@shinyHunt.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @shinyHunt.Gender.ToLower(), ".png"))">
+                        }
+                        @if (shinyHunt.DirectHOMETransfer)
+                        {
+                            <img loading="lazy" class="directHOMETransfer pokemonListPicture" title="Transferred Directly Into Pokémon HOME" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "directHOMETransfer.png"))">
+                        }
+                        @if (shinyHunt.Sweet != null)
+                        {
+                            <img loading="lazy" class="pokemonSweet pokemonListPicture" title="@shinyHunt.Sweet.Name Sweet" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialSweetImageUrl, @shinyHunt.Sweet.Id, ".png"))">
+                        }
+                    </div>
+                    <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @shinyHunt.Pokemon.Id, generationId = @shinyHunt.Game.GenerationId })" target="_blank">
+                        @if (shinyHunt.Pokemon.HasGenderDifference)
+                        {
+                            <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @shinyHunt.Pokemon.Name@((shinyHunt.Nickname != null) ? string.Concat(" (", shinyHunt.Nickname, ")") : "")" alt="@shinyHunt.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GenderDifferenceShinyGridImageUrl, shinyHunt.Pokemon.Id, "-", shinyHunt.Gender.ToLower()[0], ".png"))" onerror = "this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, shinyHunt.Pokemon.Id, ".png"))'; this.onerror = null;" />
+                        }
+                        else
+                        {
+                            <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @shinyHunt.Pokemon.Name@((shinyHunt.Nickname != null) ? string.Concat(" (", shinyHunt.Nickname, ")") : "")" alt="@shinyHunt.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, shinyHunt.Pokemon.Id, ".png"))" onerror = "this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, shinyHunt.Pokemon.Id, ".png"))'; this.onerror = null;" />
+                        }
+                    </a>
+                </div>
+                <div class="description">
+                    <p>
+                        <b>@shinyHunt.Pokemon.Name</b>
+                        @if (shinyHunt.Nickname != null)
+                        {
+                            @string.Concat(" (", shinyHunt.Nickname, ")")
+                        }
+                    </p>
+                    <p class="gameHuntedIn"><b>Game: </b>@shinyHunt.Game.Name</p>
+                    <p><b>Hunting Method: </b>@shinyHunt.HuntingMethod.Name</p>
+                    @if (@shinyHunt.TotalEncounters > 0)
+                    {
+                        @if (@shinyHunt.CurrentPhaseEncounters > 0 && @shinyHunt.CurrentPhaseEncounters != @shinyHunt.TotalEncounters)
+                        {
+                            if (@shinyHunt.HuntingMethodId == 4 || @shinyHunt.HuntingMethodId == 5)
+                            {
+                                <p><b>Last Phase Eggs: </b>@shinyHunt.CurrentPhaseEncounters</p>
+                            }
+                            else
+                            {
+                                <p><b>Last Phase Encounters: </b>@shinyHunt.CurrentPhaseEncounters</p>
+                            }
+                        }
+                        if (@shinyHunt.HuntingMethodId == 4 || @shinyHunt.HuntingMethodId == 5 )
+                        {
+                            <p><b>Total Eggs: </b>@shinyHunt.TotalEncounters</p>
+                        }
+                        else
+                        {
+                            <p><b>Total Encounters: </b>@shinyHunt.TotalEncounters</p>
+                        }
+                    }
+                    @if (@shinyHunt.Phases > 1)
+                    {
+                        <p><b>Total Phases: </b>@shinyHunt.Phases</p>
+                    }
+                    <p><b>Date of Capture: </b>@shinyHunt.DateOfCapture.ToString("MMMM d, yyyy")</p>
+                    @if (@shinyHunt.SparklingPowerLevel > 0)
+                    {
+                        <p><b>Sparkling Power Level: </b>@shinyHunt.SparklingPowerLevel</p>
+                    }
+                    @if (@shinyHunt.PhaseOfHunt != null)
+                    {
+                        <p><b>Found While Hunting: </b>@shinyHunt.PhaseOfHunt.Pokemon.Name</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

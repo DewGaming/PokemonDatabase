@@ -533,5 +533,28 @@ namespace Pokedex.Controllers
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
+
+        /// <summary>
+        /// Grabs all of the prior phases for a shiny hunt.
+        /// </summary>
+        /// <param name="shinyHuntId">The shiny hunt.</param>
+        /// <returns>The shiny hunt phases page.</returns>
+        [HttpGet]
+        [Route("shiny_hunt_phases/{shinyHuntId:int}")]
+        public IActionResult ShinyHuntPhases(int shinyHuntId)
+        {
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>(includes: "Pokemon, Mark, Pokeball, Sweet, Game, HuntingMethod");
+
+            ShinyHuntsViewModel model = new ShinyHuntsViewModel()
+            {
+                AllShinyHunts = shinyHunts.Where(x => x.PhaseOfHuntId == shinyHuntId).ToList(),
+                ShinyHunt = shinyHunts.Find(x => x.Id == shinyHuntId),
+                IsShared = true,
+                AppConfig = this.appConfig,
+            };
+
+            this.dataService.AddPageView("Shiny Hunt Phases Page", this.User.IsInRole("Owner"));
+            return this.View("ShinyHuntPhases", model);
+        }
     }
 }
