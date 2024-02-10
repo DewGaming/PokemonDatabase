@@ -228,6 +228,7 @@ $(document).ready(function () {
     }
     $("#HuntingMethodId").select2();
     $("#PokeballId").select2();
+    $("#PokemonId").select2();
     $("#SweetId").select2();
     $("#MarkId").select2();
 });
