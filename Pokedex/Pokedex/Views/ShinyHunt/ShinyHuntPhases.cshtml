@@ -1,7 +1,7 @@
 @model Pokedex.Models.ShinyHuntsViewModel;
 @using System;
 @{
-    ViewBag.Title = "Shiny Hunts";
+    ViewBag.Title = "Shiny Hunt Phases";
     ViewBag.Description = "Keep track of all of you current and successful shiny hunts!";
 }
 
@@ -10,7 +10,12 @@
     <link href="~/css/shinyHunts.css" rel="stylesheet" asp-append-version="true" />
 }
 
-<h3>Phases for @Model.ShinyHunt.Pokemon.Name@(!string.IsNullOrEmpty(Model.ShinyHunt.Nickname) ? string.Concat("(", Model.ShinyHunt.Nickname, ")") : string.Empty)</h3>
+@section scripts
+{
+    <script src="~/js/shinyHunts.js" asp-append-version="true"></script>
+}
+
+<h2>Phases for @Model.ShinyHunt.Pokemon.Name@(!string.IsNullOrEmpty(Model.ShinyHunt.Nickname) ? string.Concat("(", Model.ShinyHunt.Nickname, ")") : string.Empty)</h2>
 
 <div class="grid-container">
     @foreach (var shinyHunt in Model.AllShinyHunts)
@@ -34,6 +39,10 @@
                         @if (shinyHunt.Pokeball != null)
                         {
                             <img loading="lazy" class="pokeball pokemonListPicture" title="@shinyHunt.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @shinyHunt.Pokeball.Id, ".png"))">
+                        }
+                        @if (!shinyHunt.IsCaptured)
+                        {
+                            <img loading="lazy" class="flee pokemonListPicture" title="Fled" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "flee.png"))">
                         }
                         @if (shinyHunt.Gender == "Male" || shinyHunt.Gender == "Female")
                         {
@@ -91,11 +100,7 @@
                             <p><b>Total Encounters: </b>@shinyHunt.TotalEncounters</p>
                         }
                     }
-                    @if (@shinyHunt.Phases > 1)
-                    {
-                        <p><b>Total Phases: </b>@shinyHunt.Phases</p>
-                    }
-                    <p><b>Date of Capture: </b>@shinyHunt.DateOfCapture.ToString("MMMM d, yyyy")</p>
+                    <p><b>Date of Encounter: </b>@shinyHunt.DateOfCapture.ToString("MMMM d, yyyy")</p>
                     @if (@shinyHunt.SparklingPowerLevel > 0)
                     {
                         <p><b>Sparkling Power Level: </b>@shinyHunt.SparklingPowerLevel</p>
@@ -105,6 +110,10 @@
                         <p><b>Found While Hunting: </b>@shinyHunt.PhaseOfHunt.Pokemon.Name</p>
                     }
                 </div>
+            </div>
+            <div class="huntCapturedButtons">
+                <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = shinyHunt.Id })" role="button">Modify Phase</a>
+                <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@shinyHunt.Id, '@shinyHunt.Pokemon.Name')">Delete Phase</button>
             </div>
         </div>
     }

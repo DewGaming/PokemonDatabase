@@ -20,7 +20,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 });
             }
 
-            $('.hide').not('.gameSpecific').not('.pokemonSpecific').not('.pokemonShinyImage').each(function () {
+            $('.hide').not('.gameSpecific').not('.pokemonSpecific').not('.pokemonShinyImage').not('.isCaptured').each(function () {
                 $(this).removeClass('hide');
             })
 
@@ -281,7 +281,18 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
             });
     }
+}, checkCapturedStatus = function () {
+        if ($('#IsCaptured').is(':checked')) {
+            $.each($('.captureRequired:not(.gameSpecific):not(.pokemonSpecific)'), function (index, item) {
+                $(this).removeClass('hide');
+            });
+        } else {
+            $.each($('.captureRequired'), function (index, item) {
+                $(this).addClass('hide');
+            });
+        }
 }, checkFunctions = function () {
+    checkCapturedStatus();
     checkLure();
     checkAlpha();
     checkMarks();
@@ -378,3 +389,7 @@ $('#HuntingMethodId').on('change', function () {
 $('.submitButtons').on('click', function () {
     $(".overlay").fadeIn(300);
 });
+
+$('#IsCaptured').on('change', function() {
+    checkFunctions();
+})

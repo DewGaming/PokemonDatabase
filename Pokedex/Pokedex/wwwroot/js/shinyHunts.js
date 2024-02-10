@@ -52,36 +52,6 @@ var adjustIncrements = function (shinyHuntId) {
     } else if (encounters != null) {
         alert("Entered Encounters Need to be a Number")
     }
-}, adjustPhasesManually = function (shinyHuntId) {
-    var currentPhases = $('.Hunt' + shinyHuntId + ' .phases').html();
-    var phases = prompt("Total Number of Phases", currentPhases);
-    if ($.isNumeric(phases)) {
-        if (phases < 1) {
-            phases = 1;
-        }
-        $('.Hunt' + shinyHuntId + ' .phases').html(phases);
-        if (phases == 1) {
-            $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
-            $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
-        }
-        $.ajax({
-            url: '/set-shiny-hunt-phases/',
-            method: "POST",
-            data: { "shinyHuntId": shinyHuntId, "phases": phases }
-        })
-            .done(function () {
-                connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(-1), parseInt(phases), parseInt(-1)).catch(function (err) {
-                    return console.error(err.toString());
-                });
-            })
-            .fail(function () {
-                if (isLocalhost) {
-                    alert("Update Failed!");
-                }
-            });
-    } else if (phases != null) {
-        alert("Entered Phases Need to be a Number")
-    }
 }, updatePinStatus = function (shinyHuntId, pinned) {
     if (pinned) {
         $('.Hunt' + shinyHuntId).addClass('HuntGamePin');
@@ -112,10 +82,6 @@ $('.encounterIncrement.pointer').on('click', function () {
 
 $('.currentEncounters.pointer').on('click', function () {
     adjustEncountersManually($(this).prop('id'));
-});
-
-$('.phaseCounter.pointer').on('click', function () {
-    adjustPhasesManually($(this).prop('id'));
 });
 
 //#region SignalR Connection
@@ -222,29 +188,6 @@ function incrementEncounter(shinyHuntId) {
     })
         .done(function () {
             connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(currentEncounters + incrementAmount), parseInt(-1), parseInt(-1)).catch(function (err) {
-                return console.error(err.toString());
-            });
-        })
-        .fail(function () {
-            if (isLocalhost) {
-                alert("Update Failed!");
-            }
-        });
-}
-
-function incrementPhase(shinyHuntId) {
-    var currentPhases = parseInt($('.Hunt' + shinyHuntId + ' .phases').html());
-    $('.Hunt' + shinyHuntId + ' .phases').html(currentPhases + 1);
-    $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Current Phase Encounters: ')
-    $('.Hunt' + shinyHuntId + ' .encounters').html(0);
-    $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
-    $.ajax({
-        url: '/increment-shiny-hunt-phases/',
-        method: "POST",
-        data: { "shinyHuntId": shinyHuntId, "phases": currentPhases + 1 }
-    })
-        .done(function () {
-            connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(0), parseInt(currentPhases + 1), parseInt(-1)).catch(function (err) {
                 return console.error(err.toString());
             });
         })

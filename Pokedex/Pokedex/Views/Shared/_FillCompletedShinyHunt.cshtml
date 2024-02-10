@@ -54,33 +54,38 @@
             </p>
             <p class="gameHuntedIn"><b>Game: </b>@Model.ShinyHunt.Game.Name</p>
             <p><b>Hunting Method: </b>@Model.ShinyHunt.HuntingMethod.Name</p>
-            @if (@Model.ShinyHunt.TotalEncounters > 0)
+            @if (@Model.ShinyHunt.CurrentPhaseEncounters > 0)
             {
                 @if (@Model.ShinyHunt.CurrentPhaseEncounters > 0 && @Model.ShinyHunt.CurrentPhaseEncounters != @Model.ShinyHunt.TotalEncounters)
                 {
                     if (@Model.ShinyHunt.HuntingMethodId == 4 || @Model.ShinyHunt.HuntingMethodId == 5)
                     {
                         <p><b>Last Phase Eggs: </b>@Model.ShinyHunt.CurrentPhaseEncounters</p>
+                        <p><b>Total Eggs: </b>@Model.ShinyHunt.TotalEncounters</p>
                     }
                     else
                     {
                         <p><b>Last Phase Encounters: </b>@Model.ShinyHunt.CurrentPhaseEncounters</p>
+                        <p><b>Total Encounters: </b>@Model.ShinyHunt.TotalEncounters</p>
                     }
-                }
-                if (@Model.ShinyHunt.HuntingMethodId == 4 || @Model.ShinyHunt.HuntingMethodId == 5 )
-                {
-                    <p><b>Total Eggs: </b>@Model.ShinyHunt.TotalEncounters</p>
                 }
                 else
                 {
-                    <p><b>Total Encounters: </b>@Model.ShinyHunt.TotalEncounters</p>
+                    if (@Model.ShinyHunt.HuntingMethodId == 4 || @Model.ShinyHunt.HuntingMethodId == 5 )
+                    {
+                        <p><b>Total Eggs: </b>@Model.ShinyHunt.CurrentPhaseEncounters</p>
+                    }
+                    else
+                    {
+                        <p><b>Total Encounters: </b>@Model.ShinyHunt.CurrentPhaseEncounters</p>
+                    }
                 }
             }
-            @if (@Model.ShinyHunt.Phases > 1)
+            @if (@Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == Model.ShinyHunt.Id).Count() > 0)
             {
-                <p><b>Total Phases: </b>@Model.ShinyHunt.Phases</p>
+                <p><b>Total Phases: </b>@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == Model.ShinyHunt.Id).Count() + 1)</p>
             }
-            <p><b>Date of Capture: </b>@Model.ShinyHunt.DateOfCapture.ToString("MMMM d, yyyy")</p>
+            <p><b>Date of Encounter: </b>@Model.ShinyHunt.DateOfCapture.ToString("MMMM d, yyyy")</p>
             @if (@Model.ShinyHunt.SparklingPowerLevel > 0)
             {
                 <p><b>Sparkling Power Level: </b>@Model.ShinyHunt.SparklingPowerLevel</p>
@@ -98,7 +103,8 @@
             <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@Model.ShinyHunt.Id, '@Model.ShinyHunt.Pokemon.Name')">Delete Hunt</button>
             @if (@Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == Model.ShinyHunt.Id).Count() > 0)
             {
-                <a class="btn btn-success phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = @Model.ShinyHunt.Id })" role="button">View Prior Phases</a>
+                <hr class="buttonSeparator">
+                <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = @Model.ShinyHunt.Id })" role="button">View Prior Phases</a>
             }
         </div>
     }

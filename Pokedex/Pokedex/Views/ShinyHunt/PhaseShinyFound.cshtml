@@ -66,24 +66,30 @@
             }
 
             <div class="form-group row">
+                @Html.LabelFor(x => x.IsCaptured, "Phase Shiny Captured", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.IsCaptured, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" }})
+                @Html.ValidationMessageFor(x => x.IsCaptured)
+            </div>
+
+            <div class="form-group row captureRequired">
                 @Html.LabelFor(x => x.PokeballId, "Pokeball", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.PokeballId)
             </div>
                 
-            <div class="form-group row">
+            <div class="form-group row captureRequired">
                 @Html.LabelFor(x => x.Nickname, "Nickname", new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
                 @Html.ValidationMessageFor(x => x.Nickname)
             </div>
 
             <div class="form-group row">
-                @Html.LabelFor(x => x.DateOfCapture, "Date of Capture", new { @class = "col-md-4" })
+                @Html.LabelFor(x => x.DateOfCapture, "Date of Encounter", new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.DateOfCapture, new { htmlAttributes = new { @class = "form-control col-md-6" } })
                 @Html.ValidationMessageFor(x => x.DateOfCapture)
             </div>
 
-            <div class="form-group row">
+            <div class="form-group row captureRequired">
                 @Html.LabelFor(x => x.Gender, "Gender", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.Gender, new SelectList(Model.AllGenders), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.Gender)
@@ -119,7 +125,7 @@
                 @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
             </div>
 
-            <div class="form-group row gameSpecific marks hide">
+            <div class="form-group row gameSpecific captureRequired marks hide">
                 @Html.LabelFor(x => x.MarkId, "Mark", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.MarkId)

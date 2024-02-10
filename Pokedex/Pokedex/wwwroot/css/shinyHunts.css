@@ -49,18 +49,18 @@
   margin-bottom: 3px;
 }
 
-.shinyFoundButtons a,
+.shinyFoundButtons a:not(.unknownHunt),
 .huntUncapturedButtons a,
 .huntUncapturedButtons button,
 .huntCapturedButtons a:not(.phasesButton),
 .huntCapturedButtons button,
-.encounterButtons button {
+.encounterButtons a,
+.encounterButtons button:not(.encounterIncrease.singlePhase) {
   width: 49%;
 }
 
-.phasesButton {
-  margin-top: 5px;
-  width: 99%;
+.huntCapturedButtons .phasesButton, .encounterIncrease.singlePhase, .unknownHunt {
+  width: calc(98% + 5px);
 }
 
 .shinyHuntButtons a {
@@ -117,7 +117,7 @@
   left: 0;
 }
 
-.pokeball {
+.pokeball, .flee {
   top: 100px;
   left: 0;
 }

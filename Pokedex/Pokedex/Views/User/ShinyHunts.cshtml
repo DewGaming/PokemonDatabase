@@ -10,7 +10,7 @@
     List<ShinyHunt> completeHunts = new List<ShinyHunt>();
     List<Game> uncapturedGames = new List<Game>();
     List<Game> capturedGames = new List<Game>();
-    incompleteHunts = Model.AllShinyHunts.Where(x => !x.IsCaptured).ToList();
+    incompleteHunts = Model.AllShinyHunts.Where(x => !x.IsCaptured && x.PhaseOfHuntId == null).ToList();
     completeHunts = Model.AllShinyHunts.Where(x => x.IsCaptured).ToList();
     uncapturedGames = @Model.EdittedGames.Where(x => incompleteHunts.DistinctBy(x => x.Game).Any(y => y.GameId == x.Id)).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
     capturedGames = @Model.EdittedGames.Where(x => completeHunts.DistinctBy(x => x.Game).Any(y => y.GameId == x.Id)).OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList();
@@ -138,21 +138,31 @@
                             }
                             else
                             {
-                                <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>@(s.Phases > 1 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
+                                <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
-                            <p class="phaseCounter@(Model.IsShared ? "" : " pointer")@(s.Phases > 1 ? "" : " hide")" id="@s.Id"><b>Current Phase: </b><span class="phases">@s.Phases</span></p>
+                            <p class="phaseCounter@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0 ? "" : " hide")" id="@s.Id"><b>Current Phase: </b><span class="phases">@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() + 1)</span></p>
                         </div>
                     </div>
                     @if (!Model.IsShared)
                     {
                         <div class="encounterButtons">
-                            <button class="phaseIncrease btn orangeButton" onclick="incrementPhase('@s.Id')">Increase Phases</button>
-                            <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                            @if (Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0)
+                            {
+                                <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = s.Id })" role="button">View Prior Phases</a>
+                                <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                            }
+                            else
+                            {
+                                <button class="encounterIncrease singlePhase btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                            }
                         </div>
                         <hr class="buttonSeparator">
                         <div class="shinyFoundButtons">
-                            <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
-                            <a class="shinyFound btn btn-success" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Target Shiny Found</a>
+                            @if (s.PokemonId != null)
+                            {
+                                <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
+                            }
+                            <a class="shinyFound btn btn-success@(s.PokemonId != null ? "" : " unknownHunt")" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">@(s.PokemonId != null ? "Target " : "")Shiny Found</a>
                         </div>
                         <hr class="buttonSeparator">
                         <div class="huntUncapturedButtons">

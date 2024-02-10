@@ -28,7 +28,6 @@
 
 @section scripts
 {
-    <script src="~/js/modifyShinyHunt.js" asp-append-version="true"></script>
     <script src="~/js/completeShinyHunt.js" asp-append-version="true"></script>
 }
 
@@ -76,7 +75,7 @@
             </div>
 
             <div class="form-group row">
-                @Html.LabelFor(x => x.DateOfCapture, "Date of Capture", new { @class = "col-md-4" })
+                @Html.LabelFor(x => x.DateOfCapture, "Date of Encounter", new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.DateOfCapture, new { htmlAttributes = new { @class = "form-control col-md-6" } })
                 @Html.ValidationMessageFor(x => x.DateOfCapture)
             </div>
@@ -99,18 +98,6 @@
                     @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
                     @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
                     @Html.ValidationMessageFor(x => x.CurrentPhaseEncounters)
-                </div>
-
-                <div class="form-group row">
-                    @Html.LabelFor(x => x.TotalEncounters, new { @class = "col-md-4" })
-                    @Html.EditorFor(x => x.TotalEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
-                    @Html.ValidationMessageFor(x => x.TotalEncounters)
-                </div>
-
-                <div class="form-group row">
-                    @Html.LabelFor(x => x.Phases, new { @class = "col-md-4" })
-                    @Html.EditorFor(x => x.Phases, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
-                    @Html.ValidationMessageFor(x => x.Phases)
                 </div>
             }
 

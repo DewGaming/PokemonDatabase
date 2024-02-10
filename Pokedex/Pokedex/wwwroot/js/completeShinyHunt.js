@@ -192,7 +192,18 @@ var checkShinyCharm = function () {
                 alert("Failed to grab sweets!");
             }
         });
+}, checkCapturedStatus = function () {
+    if ($('#IsCaptured').is(':checked')) {
+        $.each($('.captureRequired:not(.gameSpecific):not(.pokemonSpecific)'), function (index, item) {
+            $(this).removeClass('hide');
+        });
+    } else {
+        $.each($('.captureRequired'), function (index, item) {
+            $(this).addClass('hide');
+        });
+    }
 }, checkFunctions = function () {
+    checkCapturedStatus();
     checkLure();
     checkAlpha();
     checkMarks();
@@ -228,3 +239,7 @@ $('#HuntingMethodId').on('change', function () {
 $('#PokemonId').on('change', function () {
     $('.pokemonTitle').text($('#PokemonId option:selected').text())
 });
+
+$('#IsCaptured').on('change', function() {
+    checkFunctions();
+})

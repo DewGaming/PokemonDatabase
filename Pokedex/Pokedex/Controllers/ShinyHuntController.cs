@@ -152,7 +152,6 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            shinyHunt.Phases = 1;
             shinyHunt.IncrementAmount = 1;
 
             foreach (var p in shinyHunt.PokemonIds.Distinct())
@@ -190,7 +189,6 @@ namespace Pokedex.Controllers
             {
                 AllPokemon = pokemonList,
                 DateOfCapture = DateTime.Now.ToLocalTime().Date,
-                Phases = 1,
                 IncrementAmount = 1,
                 UserId = this.dataService.GetCurrentUser(this.User).Id,
                 AppConfig = this.appConfig,
@@ -218,7 +216,6 @@ namespace Pokedex.Controllers
                     AllPokemon = pokemonList,
                     AllMarks = this.dataService.GetObjects<Mark>("Name"),
                     DateOfCapture = DateTime.Now.ToLocalTime().Date,
-                    Phases = 1,
                     IncrementAmount = 1,
                     UserId = this.dataService.GetCurrentUser(this.User).Id,
                     AppConfig = this.appConfig,
@@ -296,10 +293,6 @@ namespace Pokedex.Controllers
             }
 
             shinyHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
-            if (shinyHunt.Phases < 1)
-            {
-                shinyHunt.Phases = 1;
-            }
 
             CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
@@ -330,6 +323,12 @@ namespace Pokedex.Controllers
             if (this.ModelState.IsValid)
             {
                 shinyHunt.IsCaptured = true;
+                shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
+                List<ShinyHunt> phases = this.dataService.GetObjects<ShinyHunt>(whereProperty: "PhaseOfHuntId", wherePropertyValue: shinyHunt.Id);
+                if (phases.Count() > 0)
+                {
+                    shinyHunt.TotalEncounters += phases.Select(x => x.CurrentPhaseEncounters).Sum();
+                }
 
                 // If game is Pokemon GO.
                 if (shinyHunt.GameId == 43)
@@ -402,10 +401,12 @@ namespace Pokedex.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                shinyHunt.IsCaptured = true;
                 shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
                 shinyHunt.PhaseOfHuntId = shinyHuntId;
-                shinyHunt.Phases = 1;
+                if (!shinyHunt.IsCaptured)
+                {
+                    shinyHunt.PokeballId = null;
+                }
 
                 // If game is Pokemon GO.
                 if (shinyHunt.GameId == 43)
@@ -429,7 +430,6 @@ namespace Pokedex.Controllers
                 ShinyHunt originalShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
                 originalShinyHunt.TotalEncounters += originalShinyHunt.CurrentPhaseEncounters;
                 originalShinyHunt.CurrentPhaseEncounters = 0;
-                originalShinyHunt.Phases++;
                 this.dataService.UpdateObject(originalShinyHunt);
             }
 
@@ -552,16 +552,34 @@ namespace Pokedex.Controllers
                 return this.View(model);
             }
 
-            if (shinyHunt.CurrentPhaseEncounters > 0 && shinyHunt.TotalEncounters == 0)
+            if (!shinyHunt.IsCaptured)
             {
-                shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
+                shinyHunt.PokeballId = null;
             }
-            else if (shinyHunt.TotalEncounters > 0 && shinyHunt.CurrentPhaseEncounters == 0)
+
+            shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
+            List<ShinyHunt> allHunts = this.dataService.GetObjects<ShinyHunt>();
+            List<ShinyHunt> phases = allHunts.Where(x => x.PhaseOfHuntId == shinyHunt.Id).ToList();
+            if (phases.Count() > 0)
             {
-                shinyHunt.CurrentPhaseEncounters = shinyHunt.TotalEncounters;
+                shinyHunt.TotalEncounters += phases.Select(x => x.CurrentPhaseEncounters).Sum();
             }
 
             this.dataService.UpdateObject(shinyHunt);
+
+            if (shinyHunt.PhaseOfHuntId != null)
+            {
+                ShinyHunt parentHunt = allHunts.Find(x => x.Id == shinyHunt.PhaseOfHuntId);
+                parentHunt.TotalEncounters = parentHunt.CurrentPhaseEncounters;
+                parentHunt.TotalEncounters += shinyHunt.CurrentPhaseEncounters;
+                phases = allHunts.Where(x => x.PhaseOfHuntId == parentHunt.Id && x.Id != shinyHunt.Id).ToList();
+                if (phases.Count() > 0)
+                {
+                    parentHunt.TotalEncounters += phases.Select(x => x.CurrentPhaseEncounters).Sum();
+                }
+
+                this.dataService.UpdateObject(parentHunt);
+            }
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
