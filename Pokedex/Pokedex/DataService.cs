@@ -931,6 +931,15 @@ namespace Pokedex
         public List<Pokemon> GetHuntablePokemon(int gameId = 0)
         {
             List<Pokemon> pokemonList = this.GetNonBattlePokemonWithFormNames(gameId).Where(x => !x.IsShinyLocked).ToList();
+            pokemonList.Add(new Pokemon()
+            {
+                Id = 0,
+                PokedexNumber = 0,
+                Name = "Unknown",
+                IsShinyLocked = false,
+                IsComplete = true,
+                GenderRatioId = 10,
+            });
             if (gameId != 0)
             {
                 Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
@@ -965,54 +974,61 @@ namespace Pokedex
         /// <returns>The list of shiny huntable games.</returns>
         public List<Game> GetMultipleShinyHuntGames(List<int> pokemonId)
         {
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game").Where(x => pokemonId.Any(y => y == x.Id)).ToList();
-            List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
-            List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
-            List<Game> pokemonGamesIn = new List<Game>();
-            List<Game> possibleGames = new List<Game>();
             List<Game> huntableGames = new List<Game>();
-
-            foreach (var p in pokemonList)
+            if (pokemonId.Exists(x => x == 0))
             {
-                pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == p.Id).ToList().ConvertAll(x => x.Game);
-                possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                huntableGames = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+            }
+            else
+            {
+                List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game").Where(x => pokemonId.Any(y => y == x.Id)).ToList();
+                List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
+                List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+                List<Game> pokemonGamesIn = new List<Game>();
+                List<Game> possibleGames = new List<Game>();
 
-                // Gets other games for extra forms introduced in future generations.
-                if (p.Name == "Deoxys")
+                foreach (var p in pokemonList)
                 {
-                    possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
-                    possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 3 && x.Id != 39 && x.Id != 40));
-                }
-                else if (p.Name == "Zygarde")
-                {
-                    possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
-                    possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
-                }
+                    pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == p.Id).ToList().ConvertAll(x => x.Game);
+                    possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
 
-                // Gets other games for evolutions introduced in future generations.
-                List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
-                Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == p.Id);
-                int preevolution = p.Id;
-                while (evolution != null && evolution.PreevolutionPokemon != null)
-                {
-                    preevolution = evolution.PreevolutionPokemonId;
-                    evolution = evolutionList.Find(x => x.EvolutionPokemonId == preevolution);
-                }
+                    // Gets other games for extra forms introduced in future generations.
+                    if (p.Name == "Deoxys")
+                    {
+                        possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
+                        possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 3 && x.Id != 39 && x.Id != 40));
+                    }
+                    else if (p.Name == "Zygarde")
+                    {
+                        possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
+                        possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
+                    }
 
-                if (preevolution != p.Id)
-                {
-                    pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
-                    gamesAvailable = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
-                    possibleGames.AddRange(gamesAvailable.Where(x => !possibleGames.Any(y => y.Id == x.Id)).ToList());
-                }
+                    // Gets other games for evolutions introduced in future generations.
+                    List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
+                    Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == p.Id);
+                    int preevolution = p.Id;
+                    while (evolution != null && evolution.PreevolutionPokemon != null)
+                    {
+                        preevolution = evolution.PreevolutionPokemonId;
+                        evolution = evolutionList.Find(x => x.EvolutionPokemonId == preevolution);
+                    }
 
-                if (huntableGames.Count() == 0)
-                {
-                    huntableGames = possibleGames;
-                }
-                else
-                {
-                    huntableGames = huntableGames.Where(x => possibleGames.Any(y => y.Id == x.Id)).ToList();
+                    if (preevolution != p.Id)
+                    {
+                        pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
+                        gamesAvailable = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                        possibleGames.AddRange(gamesAvailable.Where(x => !possibleGames.Any(y => y.Id == x.Id)).ToList());
+                    }
+
+                    if (huntableGames.Count() == 0)
+                    {
+                        huntableGames = possibleGames;
+                    }
+                    else
+                    {
+                        huntableGames = huntableGames.Where(x => possibleGames.Any(y => y.Id == x.Id)).ToList();
+                    }
                 }
             }
 
@@ -1024,42 +1040,50 @@ namespace Pokedex
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
         /// <returns>The list of shiny huntable games.</returns>
-        public List<Game> GetShinyHuntGames(int pokemonId)
+        public List<Game> GetShinyHuntGames(int? pokemonId)
         {
-            List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game");
-            Pokemon pokemon = pokemonList.Find(x => x.Id == pokemonId);
-            List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
-            List<Game> pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == pokemon.Id).ToList().ConvertAll(x => x.Game);
-            List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
-            List<Game> possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
-
-            // Gets other games for extra forms introduced in future generations.
-            if (pokemon.Name == "Deoxys")
+            List<Game> possibleGames = new List<Game>();
+            if (pokemonId == null)
             {
-                possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
-                possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 3 && x.Id != 39 && x.Id != 40));
+                possibleGames = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
             }
-            else if (pokemon.Name == "Zygarde")
+            else
             {
-                possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
-                possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
-            }
+                List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game");
+                Pokemon pokemon = pokemonList.Find(x => x.Id == (int)pokemonId);
+                List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
+                List<Game> pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == pokemon.Id).ToList().ConvertAll(x => x.Game);
+                List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+                possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
 
-            // Gets other games for evolutions introduced in future generations.
-            List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
-            Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == pokemon.Id);
-            int preevolution = pokemon.Id;
-            while (evolution != null && evolution.PreevolutionPokemon != null)
-            {
-                preevolution = evolution.PreevolutionPokemonId;
-                evolution = evolutionList.Find(x => x.EvolutionPokemonId == preevolution);
-            }
+                // Gets other games for extra forms introduced in future generations.
+                if (pokemon.Name == "Deoxys")
+                {
+                    possibleGames = possibleGames.Where(x => x.GenerationId >= 4).ToList();
+                    possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 3 && x.Id != 39 && x.Id != 40));
+                }
+                else if (pokemon.Name == "Zygarde")
+                {
+                    possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
+                    possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
+                }
 
-            if (preevolution != pokemon.Id)
-            {
-                pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
-                gamesAvailable = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
-                possibleGames.AddRange(gamesAvailable.Where(x => !possibleGames.Any(y => y.Id == x.Id)).ToList());
+                // Gets other games for evolutions introduced in future generations.
+                List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
+                Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == pokemon.Id);
+                int preevolution = pokemon.Id;
+                while (evolution != null && evolution.PreevolutionPokemon != null)
+                {
+                    preevolution = evolution.PreevolutionPokemonId;
+                    evolution = evolutionList.Find(x => x.EvolutionPokemonId == preevolution);
+                }
+
+                if (preevolution != pokemon.Id)
+                {
+                    pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == preevolution).ToList().ConvertAll(x => x.Game);
+                    gamesAvailable = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
+                    possibleGames.AddRange(gamesAvailable.Where(x => !possibleGames.Any(y => y.Id == x.Id)).ToList());
+                }
             }
 
             return possibleGames.OrderBy(x => x.GenerationId).ThenBy(x => x.Id).ToList();
@@ -1214,34 +1238,41 @@ namespace Pokedex
         /// <param name="pokemonId">The pokemon's id.</param>
         /// <param name="useCase">The use case of this method. Only used to determine what no gender is listed as.</param>
         /// <returns>A list of genders in string form.</returns>
-        public List<string> GrabGenders(int pokemonId, string useCase)
+        public List<string> GrabGenders(int? pokemonId, string useCase)
         {
             List<string> genders = new List<string>();
-            GenderRatio genderRatio = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").GenderRatio;
-            if (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0)
+            if (pokemonId == 0)
             {
-                if (useCase == "shinyHunt")
-                {
-                    genders.Add("Gender Unknown");
-                }
-                else
-                {
-                    genders.Add("None");
-                }
-            }
-            else if (genderRatio.MaleRatio == 0)
-            {
-                genders.Add("Female");
-            }
-            else if (genderRatio.FemaleRatio == 0)
-            {
-                genders.Add("Male");
+                genders.Add("Gender Unknown");
             }
             else
             {
-                genders.Add(string.Empty);
-                genders.Add("Male");
-                genders.Add("Female");
+                GenderRatio genderRatio = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").GenderRatio;
+                if (genderRatio.MaleRatio == 0 && genderRatio.FemaleRatio == 0)
+                {
+                    if (useCase == "shinyHunt")
+                    {
+                        genders.Add("Gender Unknown");
+                    }
+                    else
+                    {
+                        genders.Add("None");
+                    }
+                }
+                else if (genderRatio.MaleRatio == 0)
+                {
+                    genders.Add("Female");
+                }
+                else if (genderRatio.FemaleRatio == 0)
+                {
+                    genders.Add("Male");
+                }
+                else
+                {
+                    genders.Add(string.Empty);
+                    genders.Add("Male");
+                    genders.Add("Female");
+                }
             }
 
             return genders;

@@ -236,8 +236,9 @@ namespace Pokedex.Controllers
             }
 
             shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
-            shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
-            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.Id == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon = this.dataService.GetAltFormWithFormName(x.PhaseOfHunt.PokemonId));
+            shinyHunts.Where(x => x.PokemonId == null).ToList().ForEach(x => x.Pokemon = new Pokemon() { Id = 0, Name = "Unknown", PokedexNumber = 0 });
+            shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName((int)x.PokemonId));
+            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.Id == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon = this.dataService.GetAltFormWithFormName((int)x.PhaseOfHunt.PokemonId));
 
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
@@ -293,8 +294,9 @@ namespace Pokedex.Controllers
                 }
 
                 shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
-                shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
-                shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.Id == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon = this.dataService.GetAltFormWithFormName(x.PhaseOfHunt.PokemonId));
+                shinyHunts.Where(x => x.PokemonId == null).ToList().ForEach(x => x.Pokemon = new Pokemon() { Id = 0, Name = "Unknown", PokedexNumber = 0 });
+                shinyHunts.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName((int)x.PokemonId));
+                shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.Id == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon = this.dataService.GetAltFormWithFormName((int)x.PhaseOfHunt.PokemonId));
 
                 ShinyHuntsViewModel model = new ShinyHuntsViewModel()
                 {

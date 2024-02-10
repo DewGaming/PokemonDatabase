@@ -224,3 +224,7 @@ $(document).ready(function () {
 $('#HuntingMethodId').on('change', function () {
     checkFunctions();
 });
+
+$('#PokemonId').on('change', function () {
+    $('.pokemonTitle').text($('#PokemonId option:selected').text())
+});

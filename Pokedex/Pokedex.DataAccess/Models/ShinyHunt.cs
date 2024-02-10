@@ -50,8 +50,8 @@ namespace Pokedex.DataAccess.Models
 
         public User User { get; set; }
 
-        [Required, Display(Name = "Pokémon Hunting")]
-        public int PokemonId { get; set; }
+        [Display(Name = "Pokémon Hunting")]
+        public int? PokemonId { get; set; }
         public Pokemon Pokemon { get; set; }
 
         [StringLength(12), Display(Name = "Nickname")]
