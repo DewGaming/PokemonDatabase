@@ -122,12 +122,18 @@
   left: 0;
 }
 
-.gender {
-  top: 100px;
+.excludeFromShinyDex {
+  top: 0;
   right: 0;
 }
+
 .pokemonSweet  {
-  top: 0;
+  top: 50px;
+  right: 0;
+}
+
+.gender {
+  top: 100px;
   right: 0;
 }
 

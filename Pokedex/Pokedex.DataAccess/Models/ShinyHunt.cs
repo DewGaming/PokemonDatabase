@@ -41,6 +41,7 @@ namespace Pokedex.DataAccess.Models
             IsPinned = shinyHunt.IsPinned;
             PhaseOfHuntId = shinyHunt.PhaseOfHuntId;
             PhaseOfHunt = shinyHunt.PhaseOfHunt;
+            ExcludeFromShinyDex = shinyHunt.ExcludeFromShinyDex;
         }
 
         public int Id { get; set; }
@@ -120,5 +121,8 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Phase of This Hunt")]
         public int? PhaseOfHuntId { get; set; }
         public ShinyHunt PhaseOfHunt { get; set; }
+
+        [Display(Name = "Exclude from Shiny Dex Page")]
+        public bool ExcludeFromShinyDex { get; set; }
     }
 }

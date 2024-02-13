@@ -49,7 +49,7 @@ namespace Pokedex.Controllers
         {
             this.dataService.AddPageView("Shiny Dex Progression Page", this.User.IsInRole("Owner"));
             int userId = this.dataService.GetCurrentUser(this.User).Id;
-            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured).ToList();
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured && !x.ExcludeFromShinyDex).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
             List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => !x.IsShinyLocked).ToList();
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);

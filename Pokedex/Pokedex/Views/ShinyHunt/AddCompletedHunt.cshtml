@@ -109,6 +109,12 @@
                 @Html.ValidationMessageFor(x => x.MarkId)
             </div>
 
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.ExcludeFromShinyDex, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.ExcludeFromShinyDex, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.ExcludeFromShinyDex)
+            </div>
+
             <div class="form-group row gameSpecific shinyCharmCheckbox hide">
                 @Html.LabelFor(x => x.HasShinyCharm, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.HasShinyCharm, new { @class = "form-control col-md-6" })
