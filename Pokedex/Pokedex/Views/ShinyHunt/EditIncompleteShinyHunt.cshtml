@@ -53,7 +53,7 @@
 
             <div class="form-group row hide">
                 @Html.LabelFor(x => x.PokeballId, "Preferred Pokeball", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), "No Preffered Pokeball", new { @class = "form-control col-md-6 preferredPokeball" })
+                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), "No Preferred Pokeball", new { @class = "form-control col-md-6 preferredPokeball" })
                 @Html.ValidationMessageFor(x => x.PokeballId)
             </div>
 
