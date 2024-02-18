@@ -1156,7 +1156,7 @@ namespace Pokedex
                 List<Pokeball> selectablePokeballs = this.GetObjects<PokeballGameDetail>("Pokeball.Name", "Pokeball", "GameId", gameId).Select(x => x.Pokeball).ToList();
                 switch (huntingMethod.Name)
                 {
-                    case "Breeding":
+                    case "Egg Hatching":
                     case "Masuda Method":
                         if (game.GenerationId <= 5)
                         {

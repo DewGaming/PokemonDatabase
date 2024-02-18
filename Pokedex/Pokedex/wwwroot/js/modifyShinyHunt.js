@@ -1,5 +1,5 @@
 var pokemonList = [], grabGames = function (gameId, pokemonIds) {
-    // $(".overlay").fadeIn(300);
+    $(".overlay").fadeIn(300);
 
     $.ajax({
         url: '/get-games-by-shiny-huntable-pokemon/',
@@ -209,7 +209,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
 
                 if (data != null) {
-                    if ($('.marks').hasClass('hide')) {
+                    if ($('.marks').hasClass('hide') && $('#IsCaptured').is(':checked')) {
                         $('.marks').removeClass('hide');
                     }
                 } else {
@@ -259,6 +259,10 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
         })
             .done(function (data) {
                 $('#PokeballId').empty();
+                if ($('select').hasClass('preferredPokeball')) {
+                    $('#PokeballId').append($('<option>').val("").text("No Preferred Pokeball"));
+                }
+
                 $.each(data, function (index, item) {
                     $('#PokeballId').append($('<option>').val(item.id).text(item.name));
                 });
@@ -271,7 +275,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                     });
                 } else if (gameId == 37) {
                     $('#PokeballId').val(11);
-                } else {
+                } else if (!$('select').hasClass('preferredPokeball')) {
                     $('#PokeballId').val(1);
                 }
             })

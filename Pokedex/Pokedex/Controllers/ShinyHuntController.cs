@@ -446,12 +446,12 @@ namespace Pokedex.Controllers
         public IActionResult EditIncompleteShinyHunt(int shinyHuntId)
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId);
-            List<Game> gamesList = this.dataService.GetShinyHuntGames(shinyHunt.PokemonId);
 
             EditShinyHuntViewModel model = new EditShinyHuntViewModel(shinyHunt)
             {
                 AllPokemon = this.dataService.GetHuntablePokemon(),
-                AllGames = gamesList,
+                AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId, this.User, this.appConfig),
+                AllGames = this.dataService.GetShinyHuntGames(shinyHunt.PokemonId),
                 AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: shinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                 AppConfig = this.appConfig,
             };
@@ -471,12 +471,12 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 ShinyHunt oldShinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHunt.Id);
-                List<Game> gamesList = this.dataService.GetShinyHuntGames(oldShinyHunt.PokemonId);
 
                 EditShinyHuntViewModel model = new EditShinyHuntViewModel(oldShinyHunt)
                 {
                     AllPokemon = this.dataService.GetHuntablePokemon(),
-                    AllGames = gamesList,
+                    AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId, this.User, this.appConfig),
+                    AllGames = this.dataService.GetShinyHuntGames(oldShinyHunt.PokemonId),
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AppConfig = this.appConfig,
                 };

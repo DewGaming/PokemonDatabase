@@ -93,7 +93,7 @@ var checkShinyCharm = function () {
                         });
                     }
 
-                    if ($('.marks').hasClass('hide')) {
+                    if ($('.marks').hasClass('hide') && $('#IsCaptured').is(':checked')) {
                         $('.marks').removeClass('hide');
                     }
                 } else {

@@ -51,6 +51,12 @@
                 @Html.ValidationMessageFor(x => x.HuntingMethodId)
             </div>
 
+            <div class="form-group row hide">
+                @Html.LabelFor(x => x.PokeballId, "Preferred Pokeball", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), "No Preffered Pokeball", new { @class = "form-control col-md-6 preferredPokeball" })
+                @Html.ValidationMessageFor(x => x.PokeballId)
+            </div>
+
             <div class="form-group row gameSpecific currentPhaseEncounters">
                 @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0" } })

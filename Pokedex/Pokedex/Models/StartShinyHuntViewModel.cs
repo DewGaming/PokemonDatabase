@@ -41,6 +41,11 @@ namespace Pokedex.Models
         public List<Pokemon> AllPokemon { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of all pokeballs.
+        /// </summary>
+        public List<Pokeball> AllPokeballs { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of all pokemon a hunt is being created.
         /// </summary>
         public List<Pokemon> AllPokemonHunts { get; set; }
