@@ -977,13 +977,13 @@ namespace Pokedex
             List<Game> huntableGames = new List<Game>();
             if (pokemonId.Exists(x => x == 0))
             {
-                huntableGames = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+                huntableGames = this.GetGamesGroupedByReleaseDate().ToList();
             }
             else
             {
                 List<Pokemon> pokemonList = this.GetObjects<Pokemon>(includes: "Game").Where(x => pokemonId.Any(y => y == x.Id)).ToList();
                 List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
-                List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+                List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().ToList();
                 List<Game> pokemonGamesIn = new List<Game>();
                 List<Game> possibleGames = new List<Game>();
 
@@ -1045,7 +1045,7 @@ namespace Pokedex
             List<Game> possibleGames = new List<Game>();
             if (pokemonId == null)
             {
-                possibleGames = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+                possibleGames = this.GetGamesGroupedByReleaseDate().ToList();
             }
             else
             {
@@ -1053,7 +1053,7 @@ namespace Pokedex
                 Pokemon pokemon = pokemonList.Find(x => x.Id == (int)pokemonId);
                 List<PokemonGameDetail> pokemonGameDetails = this.GetObjects<PokemonGameDetail>("GameId", "Game");
                 List<Game> pokemonGamesIn = pokemonGameDetails.Where(x => x.PokemonId == pokemon.Id).ToList().ConvertAll(x => x.Game);
-                List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().Where(x => x.GenerationId >= 2).ToList();
+                List<Game> gamesAvailable = this.GetGamesGroupedByReleaseDate().ToList();
                 possibleGames = gamesAvailable.Where(x => pokemonGamesIn.Any(y => y.Id == x.Id)).ToList();
 
                 // Gets other games for extra forms introduced in future generations.
