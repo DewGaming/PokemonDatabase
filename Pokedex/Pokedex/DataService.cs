@@ -1032,7 +1032,7 @@ namespace Pokedex
                 }
             }
 
-            return huntableGames.OrderBy(x => x.GenerationId).ThenBy(x => x.Id).ToList();
+            return huntableGames.OrderByDescending(x => x.GenerationId).ThenByDescending(x => x.Id).ToList();
         }
 
         /// <summary>

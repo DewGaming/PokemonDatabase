@@ -108,7 +108,7 @@ namespace Pokedex.Controllers
             {
                 HuntingMethod = this.dataService.GetObjectByPropertyValue<HuntingMethod>("Id", huntingMethodId),
                 HuntingMethodGameDetails = this.dataService.GetObjects<HuntingMethodGameDetail>("Game.GenerationId, GameId, Id", "HuntingMethod, Game", "HuntingMethodId", huntingMethodId),
-                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.GenerationId >= 2).ToList(),
+                AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
             };
 
             return this.View(model);
