@@ -1,6 +1,6 @@
 "use strict";
 
-var adjustIncrements = function (shinyHuntId) {
+var isShared, adjustIncrements = function (shinyHuntId) {
     var currentIncrements = $('.Hunt' + shinyHuntId + ' .increments').html();
     var increments = prompt("Increment Amount", currentIncrements);
     if ($.isNumeric(increments)) {
@@ -91,23 +91,25 @@ connection.start().catch(function (err) {
 });
 
 connection.on("SendHuntAttributes", function (shinyHuntId, encounters, phases, increments) {
-    if (encounters != -1) {
-        $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
-    }
-
-    if (phases != -1) {
-        $('.Hunt' + shinyHuntId + ' .phases').html(phases);
-        if (phases == 1) {
-            $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
-            $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
-        } else {
-            $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Current Phase Encounters: ')
-            $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
+    if (isShared == "True") {
+        if (encounters != -1) {
+            $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
         }
-    }
 
-    if (increments != -1) {
-        $('.Hunt' + shinyHuntId + ' .increments').html(increments);
+        if (phases != -1) {
+            $('.Hunt' + shinyHuntId + ' .phases').html(phases);
+            if (phases == 1) {
+                $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
+                $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
+            } else {
+                $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Current Phase Encounters: ')
+                $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
+            }
+        }
+
+        if (increments != -1) {
+            $('.Hunt' + shinyHuntId + ' .increments').html(increments);
+        }
     }
 });
 
@@ -175,6 +177,10 @@ function lookupHuntsInGame(element, gameId) {
         $('.pokemonList').addClass('active');
         $('.active.hide').removeClass('active');
     }
+}
+
+function checkIfShared(sharedBool) {
+    isShared = sharedBool;
 }
 
 function incrementEncounter(shinyHuntId) {
@@ -392,6 +398,7 @@ function togglePin(shinyHuntId) {
         data: { "shinyHuntId": shinyHuntId }
     })
         .done(function (data) {
+            updatePinStatus(shinyHuntId, !($('.Hunt' + shinyHuntId).hasClass("HuntGamePin")));
             connection.invoke("UpdatePinStatus", parseInt(shinyHuntId), Boolean(data)).catch(function (err) {
                 return console.error(err.toString());
             });

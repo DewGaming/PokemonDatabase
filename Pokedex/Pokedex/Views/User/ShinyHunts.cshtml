@@ -25,8 +25,9 @@
 @section scripts
 {
     <script src="~/js/pageLookup.js" asp-append-version="true"></script>
-    <script src="~/js/shinyHunts.js" asp-append-version="true"></script>
+    <script src="~/js/shinyHunts.js" isShared="@Html.Raw(Model.IsShared)" asp-append-version="true"></script>
     <script>
+        checkIfShared("@Html.Raw(Model.IsShared)")
         $(document).on("keyup", function (e) {
             if (!$(".incompletedHunts").hasClass("hide")) {
                 var key = e.which - 49;
