@@ -6,11 +6,7 @@ using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace Pokedex.Controllers
 {

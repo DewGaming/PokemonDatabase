@@ -1,5 +1,4 @@
 using Pokedex.DataAccess.Models;
-using System.Collections.Generic;
 
 namespace Pokedex.Models
 {

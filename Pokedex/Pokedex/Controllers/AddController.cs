@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
 
 namespace Pokedex.Controllers
 {
