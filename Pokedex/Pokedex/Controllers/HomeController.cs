@@ -82,7 +82,6 @@ namespace Pokedex.Controllers
         [Route("search/{search}")]
         public IActionResult SearchRedirect(string search)
         {
-            this.dataService.AddPageView("Search Page", this.User.IsInRole("Owner"));
             search = HttpUtility.UrlDecode(search);
 
             if (!string.IsNullOrEmpty(search))
@@ -126,6 +125,7 @@ namespace Pokedex.Controllers
                     altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
+                this.dataService.AddPageView("Search Page", this.User.IsInRole("Owner"));
                 if (model.Count == 1)
                 {
                     return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
@@ -158,13 +158,12 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
-            this.dataService.AddPageView("All Pokemon Page", this.User.IsInRole("Owner"));
             List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
             List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
-
             List<Game> model = this.dataService.GetObjects<Game>("ReleaseDate, Id");
 
+            this.dataService.AddPageView("All Pokemon Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -176,7 +175,6 @@ namespace Pokedex.Controllers
         [Route("exp_leveling")]
         public IActionResult ExpLeveling()
         {
-            this.dataService.AddPageView("Exp Leveling Page", this.User.IsInRole("Owner"));
             List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames();
             ExpLevelingViewModel model = new ExpLevelingViewModel()
             {
@@ -184,6 +182,7 @@ namespace Pokedex.Controllers
                 AppConfig = this.appConfig,
             };
 
+            this.dataService.AddPageView("Exp Leveling Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -195,7 +194,6 @@ namespace Pokedex.Controllers
         [Route("team_randomizer")]
         public IActionResult TeamRandomizer()
         {
-            this.dataService.AddPageView("Team Randomizer Page", this.User.IsInRole("Owner"));
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
@@ -220,6 +218,7 @@ namespace Pokedex.Controllers
                 IncompleteCount = allPokemon.Where(x => !x.IsComplete).Count(),
             };
 
+            this.dataService.AddPageView("Team Randomizer Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -231,13 +230,13 @@ namespace Pokedex.Controllers
         [Route("typing_lookup")]
         public IActionResult TypingEvaluator()
         {
-            this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
             TypeEvaluatorViewModel model = new TypeEvaluatorViewModel()
             {
                 AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
                 AllGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43).ToList(),
             };
 
+            this.dataService.AddPageView("Typing Lookup Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -249,13 +248,13 @@ namespace Pokedex.Controllers
         [Route("ability_lookup")]
         public IActionResult AbilityEvaluator()
         {
-            this.dataService.AddPageView("Ability Evalutator Page", this.User.IsInRole("Owner"));
             AbilityEvaluatorViewModel model = new AbilityEvaluatorViewModel()
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                 AllGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 16 && x.Id != 37 && x.Id != 43 && x.GenerationId >= 3).ToList(),
             };
 
+            this.dataService.AddPageView("Ability Evalutator Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -267,7 +266,6 @@ namespace Pokedex.Controllers
         [Route("day_care_combinations")]
         public IActionResult DayCareEvaluator()
         {
-            this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
             EggGroupEvaluatorViewModel model = new EggGroupEvaluatorViewModel()
             {
                 AllGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.IsBreedingPossible).ToList(),
@@ -275,6 +273,7 @@ namespace Pokedex.Controllers
                 GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
             };
 
+            this.dataService.AddPageView("Day Care Combinations Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -286,7 +285,6 @@ namespace Pokedex.Controllers
         [Route("form_viewer")]
         public IActionResult FormEvaluator()
         {
-            this.dataService.AddPageView("Form Viewer Page", this.User.IsInRole("Owner"));
             List<Form> model = this.dataService.GetObjects<Form>();
             List<FormGroup> formGroupList = this.dataService.GetObjects<FormGroup>();
 
@@ -303,7 +301,7 @@ namespace Pokedex.Controllers
             }
 
             model = model.OrderBy(x => x.Name).ToList();
-
+            this.dataService.AddPageView("Form Viewer Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -315,13 +313,13 @@ namespace Pokedex.Controllers
         [Route("game_availability")]
         public IActionResult GameAvailability()
         {
-            this.dataService.AddPageView("Game Availability Page", this.User.IsInRole("Owner"));
             GameAvailabilityViewModel model = new GameAvailabilityViewModel()
             {
                 EdittedGames = this.GetGamesForEachReleaseDate(),
                 UnedittedGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
             };
 
+            this.dataService.AddPageView("Game Availability Page", this.User.IsInRole("Owner"));
             return this.View(model);
         }
 
@@ -333,9 +331,9 @@ namespace Pokedex.Controllers
         [Route("ev_trainer")]
         public IActionResult EVTrainer()
         {
-            this.dataService.AddPageView("EV Trainer Page", this.User.IsInRole("Owner"));
             List<Game> games = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43 && x.GenerationId >= 3).ToList();
 
+            this.dataService.AddPageView("EV Trainer Page", this.User.IsInRole("Owner"));
             return this.View(games);
         }
 

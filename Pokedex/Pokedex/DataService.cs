@@ -321,7 +321,7 @@ namespace Pokedex
         /// <returns>Returns the pokemon's details.</returns>
         public PokemonViewModel GetPokemonDetails(Pokemon pokemon, AppConfig appConfig, Form form = null)
         {
-            List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
+            List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game).Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
             games.Remove(games.Find(x => x.Id == 43));
 
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
