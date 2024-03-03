@@ -63,7 +63,10 @@
 
 <div class="pageButtons uncapturedGamesList">
     <button class="gameButton pinnedHunts@(incompleteHunts.Count(x => x.IsPinned) > 0 ? " active" : " hide")" id="GamePin" onclick="lookupHuntsInGame(this, 'Pin')">Pinned Hunts</button>
-    <button class="gameButton incompleteAllGames@(incompleteHunts.Count(x => x.IsPinned) > 0 ? "" : " active")" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
+    @if (uncapturedGames.Count() > 1)
+    {
+        <button class="gameButton incompleteAllGames@(incompleteHunts.Count(x => x.IsPinned) > 0 ? "" : " active")" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
+    }
     @foreach (var g in uncapturedGames)
     {
         string gameColors = string.Concat(g.GameColor, " 50%, ");
@@ -81,7 +84,10 @@
 </div>
 
 <div class="pageButtons capturedGamesList hide">
-    <button class="gameButton completeAllGames active" id="Game0" onclick="lookupHuntsInGame(this, '0')">All Games</button>
+    @if (capturedGames.Count() > 1)
+    {
+        <button class="gameButton completeAllGames active" id="Game0" onclick="lookupHuntsInGame(this, '0')">All Games</button>
+    }
     @foreach (var g in capturedGames)
     {
         string gameColors = string.Concat(g.GameColor, " 50%, ");
