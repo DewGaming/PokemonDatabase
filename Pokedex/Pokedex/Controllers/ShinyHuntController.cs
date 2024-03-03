@@ -593,10 +593,36 @@ namespace Pokedex.Controllers
         public IActionResult ShinyHuntPhases(int shinyHuntId)
         {
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>(includes: "Pokemon, Mark, Pokeball, Sweet, Game, HuntingMethod");
+            List<ShinyHunt> phases = shinyHunts.Where(x => x.PhaseOfHuntId == shinyHuntId).ToList();
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
+            gamesList = gamesList.Where(x => phases.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+            List<Game> edittedGamesList = new List<Game>();
+            foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                if (gamesList.First(x => x.ReleaseDate == r).Id != 4)
+                {
+                    edittedGamesList.Add(new Game()
+                    {
+                        Id = gamesList.First(x => x.ReleaseDate == r).Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                        GenerationId = gamesList.First(x => x.ReleaseDate == r).GenerationId,
+                        ReleaseDate = r,
+                        GameColor = gamesList.First(x => x.ReleaseDate == r).GameColor,
+                    });
+                }
+                else
+                {
+                    foreach (var g in gamesList.Where(x => x.ReleaseDate == r).ToList())
+                    {
+                        edittedGamesList.Add(g);
+                    }
+                }
+            }
 
+            phases.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
-                AllShinyHunts = shinyHunts.Where(x => x.PhaseOfHuntId == shinyHuntId).ToList(),
+                AllShinyHunts = phases,
                 ShinyHunt = shinyHunts.Find(x => x.Id == shinyHuntId),
                 IsShared = true,
                 AppConfig = this.appConfig,
