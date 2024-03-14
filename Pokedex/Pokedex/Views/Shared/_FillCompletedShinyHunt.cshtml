@@ -38,7 +38,7 @@
                 }
             </div>
             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @Model.ShinyHunt.Pokemon.Id, generationId = @Model.ShinyHunt.Game.GenerationId })" target="_blank">
-                @if (Model.ShinyHunt.Pokemon.HasGenderDifference)
+                @if (Model.ShinyHunt.Pokemon.HasGenderDifference && !string.IsNullOrEmpty(Model.ShinyHunt.Gender))
                 {
                     <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @Model.ShinyHunt.Pokemon.Name@((Model.ShinyHunt.Nickname != null) ? string.Concat(" (", Model.ShinyHunt.Nickname, ")") : "")" alt="@Model.ShinyHunt.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GenderDifferenceShinyGridImageUrl, Model.ShinyHunt.Pokemon.Id, "-", Model.ShinyHunt.Gender.ToLower()[0], ".png"))" onerror = "this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, Model.ShinyHunt.Pokemon.Id, ".png"))'; this.onerror = null;" />
                 }
