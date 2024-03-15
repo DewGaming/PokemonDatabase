@@ -209,7 +209,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
 
                 if (data != null) {
-                    if ($('.marks').hasClass('hide') && $('#IsCaptured').is(':checked')) {
+                    if ($('.marks').hasClass('hide') && ($('#IsCaptured').is(':checked') || $('.completeShinyHunt').length > 0)) {
                         $('.marks').removeClass('hide');
                     }
                 } else {
