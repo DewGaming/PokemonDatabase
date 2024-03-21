@@ -308,13 +308,11 @@ namespace Pokedex.Controllers
         /// <param name="selectedGame">The game selected in the randomizer.</param>
         /// <param name="pokemonIdList">The list of ids of the pokemon generated.</param>
         /// <param name="shinyPokemonList">The list of trues and falses if the pokemon generated is shiny.</param>
-        /// <param name="abilityIdList">The list of abilities generated alongside the pokemon.</param>
-        /// <param name="exportAbilities">Check to see if generated abilities are to be exported.</param>
         /// <param name="pokemonTeamName">The given pokemon team name. Defaults to "Save from Team Randomizer" if no name given.</param>
         /// <returns>The string confirming the team has been generated. Tells a user they need to be logged in if they aren't.</returns>
         [AllowAnonymous]
         [Route("save-pokemon-team")]
-        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<bool> shinyPokemonList, List<int> abilityIdList, bool exportAbilities, string pokemonTeamName)
+        public string SavePokemonTeam(int selectedGame, List<int> pokemonIdList, List<bool> shinyPokemonList, string pokemonTeamName)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -330,11 +328,6 @@ namespace Pokedex.Controllers
                     // {
                     //     false, false, false, false, false, false
                     // };
-                    // abilityIdList = new List<int>()
-                    // {
-                    //     107, 49, 51, 236, 161, 162
-                    // };
-                    // exportAbilities = false;
                     // pokemonTeamName = "test";
                     if (string.IsNullOrEmpty(pokemonTeamName))
                     {
@@ -373,11 +366,6 @@ namespace Pokedex.Controllers
 
                             if (selectedGame == 0 || game.GenerationId >= 3)
                             {
-                                if (exportAbilities)
-                                {
-                                    ability = this.dataService.GetObjectByPropertyValue<Ability>("Id", abilityIdList[i]);
-                                }
-
                                 if (ability != null)
                                 {
                                     pokemonTeamDetail.AbilityId = ability.Id;
@@ -430,8 +418,6 @@ namespace Pokedex.Controllers
 
                         commentBody = string.Concat(commentBody, " - Generated Pokemon Ids: {", string.Join(", ", pokemonIdList), "}");
                         commentBody = string.Concat(commentBody, " - Generated Shiny Pokemon: {", string.Join(", ", shinyPokemonList), "}");
-                        commentBody = string.Concat(commentBody, " - Generated Ability List: {", string.Join(", ", abilityIdList), "}");
-                        commentBody = string.Concat(commentBody, " - Export Abilities: ", exportAbilities);
                         commentBody = string.Concat(commentBody, " - Pokemon Team Name: ", pokemonTeamName);
 
                         Comment comment = new Comment()
@@ -552,13 +538,12 @@ namespace Pokedex.Controllers
         /// <param name="multipleMegas">Whether or not multiple mega pokemon are allowed for generation.</param>
         /// <param name="multipleGMax">Whether or not multiple gigantimax pokemon are allowed for generation.</param>
         /// <param name="onePokemonForm">Whether or not only one form of a pokemon is allowed for generation.</param>
-        /// <param name="randomAbility">Whether or not randomized abilities will also be generated.</param>
         /// <param name="monotypeOnly">Whether or not only monotypes are allowed for generation.</param>
         /// <param name="noRepeatType">Whether or not repeat types are allowed for generation.</param>
         /// <param name="allowIncomplete">Whether or not incomplete pokemon can appear.</param>
         /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, List<int> selectedTypes, int selectedGameId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool randomAbility, bool monotypeOnly, bool noRepeatType, bool allowIncomplete)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, List<int> selectedTypes, int selectedGameId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool monotypeOnly, bool noRepeatType, bool allowIncomplete)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -579,7 +564,6 @@ namespace Pokedex.Controllers
                 // multipleMegas = false;
                 // multipleGMax = false;
                 // onePokemonForm = true;
-                // randomAbility = false;
                 // monotypeOnly = false;
                 // noRepeatType = false;
                 // allowIncomplete = false;
@@ -686,7 +670,6 @@ namespace Pokedex.Controllers
                     {
                         AllPokemonChangedNames = pokemonList,
                         AllPokemonOriginalNames = pokemonDetails.Where(x => pokemonIds.Any(y => y == x.Id)).OrderBy(x => pokemonIds.IndexOf(x.Id)).ToList(),
-                        PokemonAbilities = new List<Ability>(),
                         PokemonURLs = new List<string>(),
                         AppConfig = this.appConfig,
                     };
@@ -703,57 +686,7 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    if (selectedGame.GenerationId >= 3 && randomAbility)
-                    {
-                        List<Ability> abilities;
-                        PokemonAbilityDetail pokemonAbilities;
-                        List<PokemonAbilityDetail> pokemonAbilityDetails = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility");
-                        foreach (var p in model.AllPokemonOriginalNames)
-                        {
-                            abilities = new List<Ability>();
-                            if (pokemonAbilityDetails.Find(x => x.PokemonId == p.Id) != null)
-                            {
-                                if (selectedGame.Id != 0)
-                                {
-                                    pokemonAbilities = pokemonAbilityDetails.Where(x => x.PokemonId == p.Id).Last(x => x.GenerationId <= selectedGame.GenerationId);
-                                }
-                                else
-                                {
-                                    pokemonAbilities = pokemonAbilityDetails.Where(x => x.PokemonId == p.Id).Last();
-                                }
-
-                                abilities.Add(pokemonAbilities.PrimaryAbility);
-                                if (pokemonAbilities.SecondaryAbility != null)
-                                {
-                                    abilities.Add(pokemonAbilities.SecondaryAbility);
-                                }
-
-                                if (pokemonAbilities.HiddenAbility != null)
-                                {
-                                    abilities.Add(pokemonAbilities.HiddenAbility);
-                                }
-
-                                if (pokemonAbilities.SpecialEventAbility != null)
-                                {
-                                    abilities.Add(pokemonAbilities.SpecialEventAbility);
-                                }
-
-                                model.PokemonAbilities.Add(abilities[rnd.Next(abilities.Count)]);
-                            }
-                            else
-                            {
-                                model.PokemonAbilities.Add(new Ability() { Id = 0, Name = "Unknown", Description = "Unknown" });
-                            }
-                        }
-                    }
-
-                    List<string> abilityNames = new List<string>();
-                    if (model.PokemonAbilities.Count() > 0)
-                    {
-                        abilityNames = model.PokemonAbilities.ConvertAll(x => x.Name);
-                    }
-
-                    model.ExportString = this.ExportPokemonTeam(model.AllPokemonOriginalNames.ConvertAll(x => x.Id), abilityNames, randomAbility);
+                    model.ExportString = this.ExportPokemonTeam(model.AllPokemonOriginalNames.ConvertAll(x => x.Id));
 
                     this.dataService.AddPageView("Random Team Generated", this.User.IsInRole("Owner"));
 
@@ -797,7 +730,6 @@ namespace Pokedex.Controllers
                         commentBody = string.Concat(commentBody, " - Multiple Megas: ", multipleMegas);
                         commentBody = string.Concat(commentBody, " - Multiple Gigantamax: ", multipleGMax);
                         commentBody = string.Concat(commentBody, " - Only One Form per Pokemon: ", onePokemonForm);
-                        commentBody = string.Concat(commentBody, " - Randomized Ability: ", randomAbility);
                         commentBody = string.Concat(commentBody, " - No Repeating Types: ", noRepeatType);
                         commentBody = string.Concat(commentBody, " - Allow Incomplete Pokemon: ", allowIncomplete);
 
@@ -3194,17 +3126,12 @@ namespace Pokedex.Controllers
             return movesetString;
         }
 
-        private string ExportPokemonTeam(List<int> pokemonIdList, List<string> abilityList, bool exportAbilities)
+        private string ExportPokemonTeam(List<int> pokemonIdList)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 try
                 {
-                    if (abilityList.Count() <= 0)
-                    {
-                        exportAbilities = false;
-                    }
-
                     string pokemonTeam = string.Empty;
                     Pokemon pokemon;
 
@@ -3224,10 +3151,6 @@ namespace Pokedex.Controllers
                         }
 
                         pokemonTeam = string.Concat(pokemonTeam, pokemonName);
-                        if (exportAbilities && this.dataService.GetObjectByPropertyValue<PokemonAbilityDetail>("PokemonId", pokemonIdList[i]) != null)
-                        {
-                            pokemonTeam = string.Concat(pokemonTeam, "\nAbility: ", abilityList[i]);
-                        }
 
                         pokemonTeam = string.Concat(pokemonTeam, "\nEVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe");
                     }
@@ -3249,8 +3172,6 @@ namespace Pokedex.Controllers
                         }
 
                         commentBody = string.Concat(commentBody, " - Pokemon Id List: {", string.Join(", ", pokemonIdList), "}");
-                        commentBody = string.Concat(commentBody, " - Ability List: {", string.Join(", ", abilityList), "}");
-                        commentBody = string.Concat(commentBody, " - Export Abilities? ", exportAbilities.ToString());
                         Comment comment = new Comment()
                         {
                             Name = commentBody,
@@ -3552,7 +3473,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)))
+                            if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
                             {
                                 evolutions.Add(p);
                             }
@@ -3563,7 +3484,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if ((allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)))
+                            if (allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
                             {
                                 evolutions.Add(p);
                             }
@@ -3574,7 +3495,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)))
+                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
                             {
                                 evolutions.Add(p);
                             }
@@ -3585,7 +3506,7 @@ namespace Pokedex.Controllers
                     {
                         foreach (var p in pokemonList)
                         {
-                            if ((!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id)))
+                            if (!allEvolutions.Exists(x => x.PreevolutionPokemonId == p.Id) && !allEvolutions.Exists(x => x.EvolutionPokemonId == p.Id))
                             {
                                 evolutions.Add(p);
                             }

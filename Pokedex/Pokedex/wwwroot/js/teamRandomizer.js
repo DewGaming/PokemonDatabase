@@ -1,4 +1,4 @@
-var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGeneratedTable = function (appConfig) {
+var pokemonList, pokemonURLs, typeList, exportString, fillGeneratedTable = function (appConfig) {
     for (var i = 0; i < 6; i++) {
         $('.teamRandomizerResults').append($('<div>', {
             class: "generatorPicture shadowed pokemon" + (i + 1)
@@ -17,9 +17,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
             })
         }
         $('.pokemon' + (i + 1)).append('<a href="' + pokemonURLs[i] + '" target="_blank"><img loading="lazy" title="' + pokemonList[i].name.replace('_', ' ') + ' (Click to learn more)" src="' + appConfig.webUrl + imageLocation + pokemonList[i].id + '.png" /></a>');
-        if ($(randomAbilityBool).prop('checked')) {
-            $('.pokemon' + (i + 1)).append('<p title="Description: ' + abilityList[i].description + '" class="pokemonAbility">Ability: ' + abilityList[i].name + '</p>')
-        }
     }
 
     if ($(window).width() >= 406) {
@@ -136,7 +133,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
     $('.saveTeamButton').off();
 
     $('.saveTeamButton').on('click', function () {
-        var pokemonStringList = [], shinyPokemonList = [], abilityIdList = [];
+        var pokemonStringList = [], shinyPokemonList = [];
         var teamName = prompt("Please Enter Team Name");
         pokemonList.forEach(function (item) {
             pokemonStringList.push(item.id);
@@ -150,12 +147,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
             }
         });
 
-        if (randomAbilityBool) {
-            abilityList.forEach(function (item) {
-                abilityIdList.push(item.id);
-            });
-        }
-
         $('.gameRadioOption input').each(function () {
             if ($(this).prop('checked')) {
                 selectedGame = this.value;
@@ -165,7 +156,7 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
         $.ajax({
             url: '/save-pokemon-team/',
             method: 'POST',
-            data: { 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'shinyPokemonList': shinyPokemonList, 'abilityIdList': abilityIdList, 'exportAbilities': $("#randomAbilityBool").is(":checked"), 'pokemonTeamName': teamName }
+            data: { 'selectedGame': selectedGame, 'pokemonIdList': pokemonStringList, 'shinyPokemonList': shinyPokemonList, 'pokemonTeamName': teamName }
         })
             .done(function (data) {
                 alert(data);
@@ -206,14 +197,6 @@ var pokemonList, pokemonURLs, abilityList, typeList, exportString, fillGenerated
             $.each(gensChecked, function (index, gen) {
                 $('.' + gen + ' input').prop('checked', true);
             })
-
-            if ($.inArray(selectedGame, ['1', '2', '16', '20', '23', '37']) != -1) {
-                $(".randomAbilityCheckbox").hide();
-                $("#randomAbilityBool").prop('checked', false);
-            }
-            else {
-                $(".randomAbilityCheckbox").show();
-            }
 
             if ($.inArray(selectedGame, ['1', '2', '20', '23']) != -1) {
                 $("#alternateForms").hide();
@@ -394,13 +377,12 @@ $('.generatorButton').on('click', function () {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'pokemonCount': $('input[name=pokemonCount]').val(), 'selectedGens': selectedGens, 'selectedTypes': selectedTypes, 'selectedGameId': selectedGameId, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'randomAbility': $("#randomAbilityBool").is(":checked"), 'monotypeOnly': $("#monotypeBool").is(":checked"), 'noRepeatType': $("#noRepeatTypeBool").is(":checked"), 'allowIncomplete': $("#allowIncompleteBool").is(":checked") }
+        data: { 'pokemonCount': $('input[name=pokemonCount]').val(), 'selectedGens': selectedGens, 'selectedTypes': selectedTypes, 'selectedGameId': selectedGameId, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'monotypeOnly': $("#monotypeBool").is(":checked"), 'noRepeatType': $("#noRepeatTypeBool").is(":checked"), 'allowIncomplete': $("#allowIncompleteBool").is(":checked") }
     })
         .done(function (data) {
             pokemonList = data.allPokemonChangedNames;
             originalNames = data.allPokemonOriginalNames;
             pokemonURLs = data.pokemonURLs;
-            abilityList = data.pokemonAbilities;
             exportString = data.exportString;
             setTimeout(function () {
                 $(".overlay").fadeOut(300);

@@ -19,16 +19,6 @@ namespace Pokedex.Models
         public List<Pokemon> AllPokemonOriginalNames { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of abilities.
-        /// </summary>
-        public List<Ability> PokemonAbilities { get; set; }
-
-        /// <summary>
-        /// Gets or sets a list of abilities.
-        /// </summary>
-        public List<Type> PokemonTypes { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of URLs for pokemon.
         /// </summary>
         public List<string> PokemonURLs { get; set; }
