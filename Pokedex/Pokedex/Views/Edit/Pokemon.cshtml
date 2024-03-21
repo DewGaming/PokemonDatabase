@@ -26,12 +26,6 @@
         </div>
         
         <div class="form-group row">
-            @Html.LabelFor(x => x.Pokemon.IsStarter, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Pokemon.IsStarter, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
-            @Html.ValidationMessageFor(x => x.Pokemon.IsStarter)
-        </div>
-        
-        <div class="form-group row">
             @Html.LabelFor(x => x.Pokemon.IsShinyLocked, new { @class = "col-md-2" })
             @Html.EditorFor(x => x.Pokemon.IsShinyLocked, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
             @Html.ValidationMessageFor(x => x.Pokemon.IsShinyLocked)

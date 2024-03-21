@@ -230,22 +230,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("edit_game_starters/{id:int}")]
-        public IActionResult GameStarter(int id)
-        {
-            Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames().Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
-            pokemonList = pokemonList.Where(x => x.IsStarter).ToList();
-            EditGameStarterViewModel model = new EditGameStarterViewModel()
-            {
-                Game = game,
-                PokemonList = pokemonList,
-                GameStarters = this.dataService.GetObjects<GameStarterDetail>(includes: "Pokemon, Game"),
-            };
-
-            return this.View(model);
-        }
-
         [Route("edit_mark_game_availability/{id:int}")]
         public IActionResult MarkGameAvailability(int id)
         {

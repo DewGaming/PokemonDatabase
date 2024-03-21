@@ -63,7 +63,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<GameRegionDetail> GameRegionDetails { get; set; }
         public DbSet<PokemonCaptureRateDetail> PokemonCaptureRateDetails { get; set; }
         public DbSet<PageStat> PageStats { get; set; }
-        public DbSet<GameStarterDetail> GameStarterDetails { get; set; }
         public DbSet<FormGroupGameDetail> FormGroupGameDetails { get; set; }
         public DbSet<ShinyHunt> ShinyHunts { get; set; }
         public DbSet<HuntingMethod> HuntingMethods { get; set; }
