@@ -329,6 +329,11 @@ namespace Pokedex.Controllers
                     shinyHunt.TotalEncounters += phases.Select(x => x.CurrentPhaseEncounters).Sum();
                 }
 
+                if (shinyHunt.Phases < phases.Count())
+                {
+                    shinyHunt.Phases = phases.Count();
+                }
+
                 // If game is Pokemon GO.
                 if (shinyHunt.GameId == 43)
                 {
