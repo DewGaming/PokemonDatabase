@@ -46,33 +46,6 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_region/{id:int}")]
-        public IActionResult Region(int id)
-        {
-            Region region = this.dataService.GetObjectByPropertyValue<Region>("Id", id, "Generation");
-            RegionAdminViewModel model = new RegionAdminViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-                Id = region.Id,
-                Name = region.Name,
-                GenerationId = region.GenerationId,
-                Generation = region.Generation,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("delete_region/{id:int}")]
-        public IActionResult Region(Region region)
-        {
-            this.dataService.DeleteObject<Region>(region.Id);
-
-            return this.RedirectToAction("Regions", "Owner");
-        }
-
-        [HttpGet]
         [Route("delete_pageStat/{id:int}")]
         public IActionResult PageStat(int id)
         {
@@ -105,12 +78,6 @@ namespace Pokedex.Controllers
         [Route("delete_game/{id:int}")]
         public IActionResult Game(Game game)
         {
-            List<GameRegionDetail> gameRegionDetails = this.dataService.GetObjects<GameRegionDetail>().Where(x => x.GameId == game.Id).ToList();
-            foreach (var r in gameRegionDetails)
-            {
-                this.dataService.DeleteObject<GameRegionDetail>(r.Id);
-            }
-
             this.dataService.DeleteObject<Game>(game.Id);
 
             return this.RedirectToAction("Games", "Owner");

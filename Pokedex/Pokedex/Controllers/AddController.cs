@@ -113,47 +113,6 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Adds a region.
-        /// </summary>
-        /// <returns>The view to add the region.</returns>
-        [HttpGet]
-        [Route("add_region")]
-        public IActionResult Region()
-        {
-            RegionAdminViewModel model = new RegionAdminViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-            };
-
-            return this.View(model);
-        }
-
-        /// <summary>
-        /// Adds a region.
-        /// </summary>
-        /// <param name="region">The region being added.</param>
-        /// <returns>The view to the region admin page.</returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_region")]
-        public IActionResult Region(Region region)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                RegionAdminViewModel model = new RegionAdminViewModel()
-                {
-                    AllGenerations = this.dataService.GetObjects<Generation>(),
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.AddObject(region);
-
-            return this.RedirectToAction("Regions", "Owner");
-        }
-
-        /// <summary>
         /// Adds a form item.
         /// </summary>
         /// <returns>The view to add the form item.</returns>
@@ -759,51 +718,6 @@ namespace Pokedex.Controllers
             this.dataService.AddObject(baseHappiness);
 
             return this.RedirectToAction("BaseHappinesses", "Owner");
-        }
-
-        [HttpGet]
-        [Route("add_game")]
-        public IActionResult Game()
-        {
-            GameViewModel model = new GameViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_game")]
-        public IActionResult Game(Game game, List<int> regionIds)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                GameViewModel model = new GameViewModel()
-                {
-                    AllGenerations = this.dataService.GetObjects<Generation>(),
-                    AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.AddObject(game);
-
-            foreach (var r in regionIds)
-            {
-                GameRegionDetail gameRegionDetail = new GameRegionDetail()
-                {
-                    GameId = game.Id,
-                    RegionId = r,
-                };
-
-                this.dataService.AddObject(gameRegionDetail);
-            }
-
-            return this.RedirectToAction("Games", "Owner");
         }
 
         [HttpGet]

@@ -98,24 +98,12 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("regions")]
-        public IActionResult Regions()
-        {
-            RegionViewModel model = new RegionViewModel()
-            {
-                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id", "Generation"),
-            };
-
-            return this.View(model);
-        }
-
         [Route("games")]
         public IActionResult Games()
         {
             AdminGameViewModel model = new AdminGameViewModel()
             {
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id", "Generation").ToList(),
-                AllGameRegionDetails = this.dataService.GetObjects<GameRegionDetail>(includes: "Region").ToList(),
                 AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
             };
 

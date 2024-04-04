@@ -142,7 +142,6 @@ namespace Pokedex.Controllers
                 IsBreedingPossible = game.IsBreedingPossible,
                 GameColor = game.GameColor,
                 AllGenerations = this.dataService.GetObjects<Generation>(),
-                AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
             };
 
             return this.View(model);
@@ -164,27 +163,9 @@ namespace Pokedex.Controllers
                     GenerationId = oldGame.GenerationId,
                     GameColor = oldGame.GameColor,
                     AllGenerations = this.dataService.GetObjects<Generation>(),
-                    AllRegions = this.dataService.GetObjects<Region>("GenerationId, Id"),
                 };
 
                 return this.View(model);
-            }
-
-            GameRegionDetail gameRegionDetail;
-            List<GameRegionDetail> existingEntries = this.dataService.GetObjects<GameRegionDetail>().Where(x => x.GameId == game.Id).ToList();
-            foreach (var r in regionIds)
-            {
-                gameRegionDetail = new GameRegionDetail()
-                {
-                    RegionId = r,
-                    GameId = game.Id,
-                };
-                this.dataService.AddObject(gameRegionDetail);
-            }
-
-            foreach (var e in existingEntries)
-            {
-                this.dataService.DeleteObject<GameRegionDetail>(e.Id);
             }
 
             this.dataService.UpdateObject(game);
@@ -1422,48 +1403,6 @@ namespace Pokedex.Controllers
             this.dataService.UpdateObject(baseHappiness);
 
             return this.RedirectToAction("BaseHappinesses", "Owner");
-        }
-
-        [HttpGet]
-        [Route("edit_region/{id:int}")]
-        public IActionResult Region(int id)
-        {
-            Region region = this.dataService.GetObjectByPropertyValue<Region>("Id", id, "Generation");
-            RegionAdminViewModel model = new RegionAdminViewModel()
-            {
-                AllGenerations = this.dataService.GetObjects<Generation>(),
-                Id = region.Id,
-                Name = region.Name,
-                GenerationId = region.GenerationId,
-                Generation = region.Generation,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit_region/{id:int}")]
-        public IActionResult Region(Region region)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                Region newRegion = this.dataService.GetObjectByPropertyValue<Region>("Id", region.Id, "Generation");
-                RegionAdminViewModel model = new RegionAdminViewModel()
-                {
-                    AllGenerations = this.dataService.GetObjects<Generation>(),
-                    Id = newRegion.Id,
-                    Name = newRegion.Name,
-                    GenerationId = newRegion.GenerationId,
-                    Generation = newRegion.Generation,
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.UpdateObject(region);
-
-            return this.RedirectToAction("Regions", "Owner");
         }
 
         [HttpGet]
