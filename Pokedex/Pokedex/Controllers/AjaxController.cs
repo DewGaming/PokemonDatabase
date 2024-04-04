@@ -1400,8 +1400,7 @@ namespace Pokedex.Controllers
                 PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationId);
                 int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
                 int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
-                List<Game> games = this.dataService.GetObjects<Game>().Where(x => x.GenerationId == generationId).ToList();
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, games.Last().Id, teraType));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationId, teraType));
             }
             else
             {
@@ -1423,8 +1422,7 @@ namespace Pokedex.Controllers
                 PokemonTypeDetail pokemonTypeDetail = this.dataService.GetObjects<PokemonTypeDetail>(whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= generationId);
                 int primaryId = pokemonTypeDetail.PrimaryTypeId ?? 0;
                 int secondaryId = pokemonTypeDetail.SecondaryTypeId ?? 0;
-                List<Game> games = this.dataService.GetObjects<Game>().Where(x => x.GenerationId == generationId).ToList();
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, games.Last().Id));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryId, secondaryId, generationId));
             }
             else
             {
@@ -1437,15 +1435,15 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="primaryTypeId">The primary type's id.</param>
         /// <param name="secondaryTypeId">The secondary type's id.</param>
-        /// <param name="gameId">The generation used to specify the type chart.</param>
+        /// <param name="generationId">The generation used to specify the type chart.</param>
         /// <param name="teraType">The tera type of the pokemon.</param>
         /// <returns>The file type evaluator chart shared view.</returns>
         [Route("get-typing-evaluator-chart")]
-        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId, int gameId, string teraType)
+        public IActionResult GetTypingEvaluatorChart(int primaryTypeId, int secondaryTypeId, int generationId, string teraType)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeId, secondaryTypeId, gameId, teraType));
+                return this.PartialView("_FillTypeEvaluatorChart", this.GetTypeChartTyping(primaryTypeId, secondaryTypeId, generationId, teraType));
             }
             else
             {
@@ -2487,11 +2485,11 @@ namespace Pokedex.Controllers
         /// </summary>
         /// <param name="primaryTypeId">The id of the primary type.</param>
         /// <param name="secondaryTypeId">The id of the secondary type.</param>
-        /// <param name="gameId">The id of the generation.</param>
+        /// <param name="generationId">The id of the generation.</param>
         /// <param name="teraType">The tera type of the pokemon. Used only if terastallized.</param>
         /// <returns>Returns the type effectiveness given the typing and generation.</returns>
         [Route("get-type-chart-typing")]
-        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int gameId, string teraType = "")
+        public TypeEffectivenessViewModel GetTypeChartTyping(int primaryTypeId, int secondaryTypeId, int generationId, string teraType = "")
         {
             List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<DataAccess.Models.Type> pokemonTypes = new List<DataAccess.Models.Type>();
@@ -2502,14 +2500,9 @@ namespace Pokedex.Controllers
             List<string> immuneTo = new List<string>();
             List<TypeChart> typeChart;
             string effectiveValue, attackType;
-            Game game;
-            if (gameId != 0)
+            if (generationId == 0)
             {
-                game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            }
-            else
-            {
-                game = this.dataService.GetObjects<Game>().OrderBy(x => x.ReleaseDate).Last();
+                generationId = this.dataService.GetObjects<Generation>().Last().Id;
             }
 
             pokemonTypes.Add(this.dataService.GetObjectByPropertyValue<DataAccess.Models.Type>("Id", primaryTypeId));
@@ -2524,14 +2517,7 @@ namespace Pokedex.Controllers
                 typeChart = this.dataService.GetObjects<TypeChart>(includes: "Attack, Defend", whereProperty: "DefendId", wherePropertyValue: type.Id);
 
                 List<int> generations = typeChart.Select(x => x.GenerationId).Distinct().OrderByDescending(x => x).ToList();
-                if (gameId != 0)
-                {
-                    typeChart = typeChart.Where(x => x.GenerationId == generations.First(x => x <= game.GenerationId)).ToList();
-                }
-                else
-                {
-                    typeChart = typeChart.Where(x => x.GenerationId == generations.First()).ToList();
-                }
+                typeChart = typeChart.Where(x => x.GenerationId == generations.First(x => x <= generationId)).ToList();
 
                 foreach (var t in typeList)
                 {
@@ -2587,7 +2573,7 @@ namespace Pokedex.Controllers
             weakAgainst.Sort();
             superWeakAgainst.Sort();
 
-            if (!string.IsNullOrEmpty(teraType) && game.GenerationId == 9)
+            if (!string.IsNullOrEmpty(teraType) && generationId == 9)
             {
                 weakAgainst.Add("Stellar");
             }
