@@ -36,7 +36,6 @@ namespace Pokedex.DataAccess.Models
             MarkId = shinyHunt.MarkId;
             Mark = shinyHunt.Mark;
             Gender = shinyHunt.Gender;
-            DirectHOMETransfer = shinyHunt.DirectHOMETransfer;
             IsCaptured = shinyHunt.IsCaptured;
             IsPinned = shinyHunt.IsPinned;
             PhaseOfHuntId = shinyHunt.PhaseOfHuntId;
@@ -108,9 +107,6 @@ namespace Pokedex.DataAccess.Models
 
         [Display(Name = "Gender")]
         public string Gender { get; set; }
-
-        [Display(Name = "Transferred Directly into HOME")]
-        public bool DirectHOMETransfer { get; set; }
 
         [Display(Name = "Captured")]
         public bool IsCaptured { get; set; }

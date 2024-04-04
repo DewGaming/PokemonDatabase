@@ -121,12 +121,6 @@
                 @Html.ValidationMessageFor(x => x.HasShinyCharm)
             </div>
 
-            <div class="form-group row gameSpecific directHOMETransferCheckbox hide">
-                @Html.LabelFor(x => x.DirectHOMETransfer, new { @class = "col-md-4" })
-                @Html.EditorFor(x => x.DirectHOMETransfer, new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.DirectHOMETransfer)
-            </div>
-
             <p class="submitButtons">
                 <button type="submit" name="numberOfHunts" value="oneHunt" class="btn btn-primary" role="button">Add</button>
                 <button type="submit" name="numberOfHunts" value="multipleHunts" class="btn btn-primary" role="button">Add and Add Another Hunt</button>

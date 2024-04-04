@@ -225,22 +225,6 @@ namespace Pokedex.Controllers
 
             shinyHunt.IsCaptured = true;
 
-            // If game is Pokemon GO.
-            if (shinyHunt.GameId == 43)
-            {
-                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game");
-                List<Pokemon> updatedPokemonList = pokemonList.Where(x => (x.PokedexNumber <= 150 || x.Name == "Meltan" || x.Name == "Melmetal") && x.Game.GenerationId <= 7).ToList();
-                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game");
-                List<Pokemon> futureEvolutions = evolutions.Where(x => updatedPokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
-                List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
-                futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                updatedPokemonList.AddRange(futureEvolutions);
-                if (!updatedPokemonList.Exists(x => x.Id == shinyHunt.PokemonId))
-                {
-                    shinyHunt.DirectHOMETransfer = true;
-                }
-            }
-
             if (shinyHunt.CurrentPhaseEncounters > 0 && shinyHunt.TotalEncounters == 0)
             {
                 shinyHunt.TotalEncounters = shinyHunt.CurrentPhaseEncounters;
@@ -334,16 +318,6 @@ namespace Pokedex.Controllers
                     shinyHunt.Phases = phases.Count();
                 }
 
-                // If game is Pokemon GO.
-                if (shinyHunt.GameId == 43)
-                {
-                    Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", shinyHunt.PokemonId, "Game");
-                    if ((pokemon.PokedexNumber > 150 && pokemon.Name != "Meltan" && pokemon.Name != "Melmetal") || (pokemon.PokedexNumber <= 150 && pokemon.Game.GenerationId >= 8))
-                    {
-                        shinyHunt.DirectHOMETransfer = true;
-                    }
-                }
-
                 this.dataService.UpdateObject(shinyHunt);
             }
 
@@ -410,23 +384,6 @@ namespace Pokedex.Controllers
                 if (!shinyHunt.IsCaptured)
                 {
                     shinyHunt.PokeballId = null;
-                }
-
-                // If game is Pokemon GO.
-                if (shinyHunt.GameId == 43)
-                {
-                    List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game");
-                    List<Pokemon> updatedPokemonList = pokemonList.Where(x => (x.PokedexNumber <= 150 || x.Name == "Meltan" || x.Name == "Melmetal") && x.Game.GenerationId <= 7).ToList();
-
-                    List<Evolution> evolutions = this.dataService.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game");
-                    List<Pokemon> futureEvolutions = evolutions.Where(x => updatedPokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
-                    List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
-                    futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                    updatedPokemonList.AddRange(futureEvolutions);
-                    if (!updatedPokemonList.Exists(x => x.Id == shinyHunt.PokemonId))
-                    {
-                        shinyHunt.DirectHOMETransfer = true;
-                    }
                 }
 
                 this.dataService.AddObject(shinyHunt);

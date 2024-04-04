@@ -224,31 +224,6 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
             });
     }
-}, checkHOMETransfer = function () {
-    if ($('#GameId').val() == 43) {
-        $.ajax({
-            url: '/go-transfer-without-symbol/',
-            method: "POST",
-            data: { 'pokemonId': $('#PokemonId').val() }
-        })
-            .done(function (data) {
-                if (data) {
-                    if ($('.directHOMETransferCheckbox').hasClass('hide')) {
-                        $('.directHOMETransferCheckbox').removeClass('hide');
-                    }
-                } else {
-                    if (!$('.directHOMETransferCheckbox').hasClass('hide')) {
-                        $('.directHOMETransferCheckbox').addClass('hide');
-                        $('#DirectHOMETransfer').prop('checked', false)
-                    }
-                }
-            })
-            .fail(function () {
-                if (isLocalhost) {
-                    alert("Failed to check HOME Transfer!");
-                }
-            });
-    }
 }, checkPokeballs = function () {
     if ($('#PokeballId').length) {
         var gameId = $('#GameId').val(), pokeballId = $('#PokeballId').val();
@@ -302,7 +277,6 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
     checkMarks();
     checkPokeballs();
     checkShinyCharm();
-    checkHOMETransfer();
     checkSparklingPower();
 }, refreshEvents = function () {
     $('.pokemonShinyImage').unbind("click");

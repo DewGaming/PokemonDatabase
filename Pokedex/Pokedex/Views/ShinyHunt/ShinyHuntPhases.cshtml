@@ -48,10 +48,6 @@
                         {
                             <img loading="lazy" class="gender pokemonListPicture" title="@Model.AllShinyHunts[i].Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @Model.AllShinyHunts[i].Gender.ToLower(), ".png"))">
                         }
-                        @if (Model.AllShinyHunts[i].DirectHOMETransfer)
-                        {
-                            <img loading="lazy" class="directHOMETransfer pokemonListPicture" title="Transferred Directly Into Pokémon HOME" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "directHOMETransfer.png"))">
-                        }
                         @if (Model.AllShinyHunts[i].Sweet != null)
                         {
                             <img loading="lazy" class="pokemonSweet pokemonListPicture" title="@Model.AllShinyHunts[i].Sweet.Name Sweet" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialSweetImageUrl, @Model.AllShinyHunts[i].Sweet.Id, ".png"))">

@@ -24,10 +24,6 @@
                 {
                     <img loading="lazy" class="gender pokemonListPicture" title="@Model.ShinyHunt.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @Model.ShinyHunt.Gender.ToLower(), ".png"))">
                 }
-                @if (Model.ShinyHunt.DirectHOMETransfer)
-                {
-                    <img loading="lazy" class="directHOMETransfer pokemonListPicture" title="Transferred Directly Into Pokémon HOME" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "directHOMETransfer.png"))">
-                }
                 @if (Model.ShinyHunt.ExcludeFromShinyDex)
                 {
                     <img loading="lazy" class="excludeFromShinyDex pokemonListPicture" title="Excluded from the Shiny Dex Progress page" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "noPokedex.png"))">
