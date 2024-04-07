@@ -21,5 +21,15 @@ namespace Pokedex.Models
         /// Gets or sets a value indicating whether or not the pokemon is an alternate form.
         /// </summary>
         public bool IsAltForm { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the pokemon is a male gender difference.
+        /// </summary>
+        public bool IsMaleGenderDifference { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the pokemon is a female gender difference.
+        /// </summary>
+        public bool IsFemaleGenderDifference { get; set; }
     }
 }

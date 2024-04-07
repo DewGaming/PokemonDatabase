@@ -28,7 +28,7 @@ namespace Pokedex.DataAccess.Models
 
         [Required]
         [Display(Name = "Show Shiny Gender Differences")]
-        public bool ShowShinyGenderDifferences { get; set; }
+        public bool HideShinyGenderDifferences { get; set; }
 
         [Required]
         [Display(Name = "Hide Captured Shiny Pokemon")]

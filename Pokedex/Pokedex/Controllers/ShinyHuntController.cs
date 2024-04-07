@@ -8,6 +8,7 @@ using Pokedex.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Pokedex.Controllers
@@ -55,8 +56,14 @@ namespace Pokedex.Controllers
             List<Pokemon> primals = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: "Primal").ConvertAll(x => x.AltFormPokemon);
             pokemonList = pokemonList.Where(x => !primals.Any(y => y.Id == x.Id)).ToList();
 
-            List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id) });
+            List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.Where(x => x.HasGenderDifference == false).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = false });
             pokemonShinyHuntList.Where(x => pokemonCaptured.Any(y => y.Id == x.Pokemon.Id)).ToList().ForEach(x => x.IsCaptured = true);
+            List<PokemonShinyHuntDetails> maleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = true, IsFemaleGenderDifference = false });
+            maleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Male")).ToList().ForEach(x => x.IsCaptured = true);
+            List<PokemonShinyHuntDetails> femaleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = true });
+            femaleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Female")).ToList().ForEach(x => x.IsCaptured = true);
+            pokemonShinyHuntList.AddRange(maleGenderDifferencesList);
+            pokemonShinyHuntList.AddRange(femaleGenderDifferencesList);
 
             ShinyDexViewModel model = new ShinyDexViewModel()
             {
@@ -91,8 +98,14 @@ namespace Pokedex.Controllers
                 List<Pokemon> primals = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: "Primal").ConvertAll(x => x.AltFormPokemon);
                 pokemonList = pokemonList.Where(x => !primals.Any(y => y.Id == x.Id)).ToList();
 
-                List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id) });
+                List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.Where(x => x.HasGenderDifference == false).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = false });
                 pokemonShinyHuntList.Where(x => pokemonCaptured.Any(y => y.Id == x.Pokemon.Id)).ToList().ForEach(x => x.IsCaptured = true);
+                List<PokemonShinyHuntDetails> maleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = true, IsFemaleGenderDifference = false });
+                maleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Male")).ToList().ForEach(x => x.IsCaptured = true);
+                List<PokemonShinyHuntDetails> femaleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = true });
+                femaleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Female")).ToList().ForEach(x => x.IsCaptured = true);
+                pokemonShinyHuntList.AddRange(maleGenderDifferencesList);
+                pokemonShinyHuntList.AddRange(femaleGenderDifferencesList);
 
                 ShinyDexViewModel model = new ShinyDexViewModel()
                 {

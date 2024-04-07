@@ -204,193 +204,6 @@ function incrementEncounter(shinyHuntId) {
         });
 }
 
-function hideIncomplete() {
-    $('.incompletedHunts').addClass('hide');
-    $('.completedHunts').removeClass('hide');
-    if ($('.incompletedHunts').hasClass('active')) {
-        $('.incompletedHunts').removeClass('active');
-        $('.completedHunts').addClass('active');
-    }
-    $('.completedHuntsButton').addClass('hide');
-    $('.currentlyHuntingButton').removeClass('hide');
-    $('.uncapturedGamesList').addClass('hide');
-    $('.capturedGamesList').removeClass('hide');
-    if ($('.shiniesFoundCount').html() == "") {
-        $('.shiniesFoundCount').html($('.completedHunts .grid-container').children().length)
-    }
-}
-
-function hideComplete() {
-    $('.completedHunts').addClass('hide');
-    $('.incompletedHunts').removeClass('hide');
-    if ($('.completedHunts').hasClass('active')) {
-        $('.completedHunts').removeClass('active');
-        $('.incompletedHunts').addClass('active');
-    }
-    $('.currentlyHuntingButton').addClass('hide');
-    $('.completedHuntsButton').removeClass('hide');
-    $('.capturedGamesList').addClass('hide');
-    $('.uncapturedGamesList').removeClass('hide');
-}
-
-function hideAltForms() {
-    $('.altForm').each(function () {
-        $(this).addClass('hide');
-    });
-
-    $.ajax({
-        url: '/toggle-shiny-alt-forms/',
-        method: "POST",
-        data: { 'altFormToggle': 'hide' }
-    })
-        .done(function () {
-            $('.hideAltFormsButton').each(function () {
-                $(this).addClass('hide');
-            });
-
-            $('.showAltFormsButton').each(function () {
-                $(this).removeClass('hide');
-            });
-
-            $('.shiniesFoundPercentWithAlts').each(function () {
-                $(this).addClass('hide');
-            });
-
-            $('.shiniesFoundPercentNoAlts').each(function () {
-                $(this).removeClass('hide');
-            });
-        })
-        .fail(function () {
-            alert("Failed to toggle shiny alt forms!");
-        });
-}
-
-function showAltForms() {
-    $('.altForm.uncaptured').each(function () {
-        $(this).removeClass('hide');
-    });
-
-    if ($('.showCapturedButton').hasClass('hide')) {
-        $('.altForm:not(.uncaptured)').each(function () {
-            $(this).removeClass('hide');
-        });
-    }
-
-    $.ajax({
-        url: '/toggle-shiny-alt-forms/',
-        method: "POST",
-        data: { 'altFormToggle': 'show' }
-    })
-        .done(function () {
-            $('.showAltFormsButton').each(function () {
-                $(this).addClass('hide');
-            });
-
-            $('.hideAltFormsButton').each(function () {
-                $(this).removeClass('hide');
-            });
-
-            $('.shiniesFoundPercentNoAlts').each(function () {
-                $(this).addClass('hide');
-            });
-
-            $('.shiniesFoundPercentWithAlts').each(function () {
-                $(this).removeClass('hide');
-            });
-        })
-        .fail(function () {
-            alert("Failed to toggle shiny alt forms!");
-        });
-}
-
-function hideCaptured() {
-    $('.shadowed:not(.uncaptured)').each(function () {
-        $(this).addClass('hide');
-    });
-
-    $.ajax({
-        url: '/toggle-captured-shinies/',
-        method: "POST",
-        data: { 'capturedShiniesToggle': 'hide' }
-    })
-        .done(function () {
-            $('.hideCapturedButton').each(function () {
-                $(this).addClass('hide');
-            });
-
-            $('.showCapturedButton').each(function () {
-                $(this).removeClass('hide');
-            });
-        })
-        .fail(function () {
-            alert("Failed to toggle captured shinies!");
-        });
-}
-
-function showCaptured() {
-    $('.shadowed:not(.uncaptured):not(.altForm)').each(function () {
-        $(this).removeClass('hide');
-    });
-
-    if ($('.showAltFormsButton').hasClass('hide')) {
-        $('.shadowed.altForm:not(.uncaptured)').each(function () {
-            $(this).removeClass('hide');
-        });
-    }
-
-    $.ajax({
-        url: '/toggle-captured-shinies/',
-        method: "POST",
-        data: { 'capturedShiniesToggle': 'show' }
-    })
-        .done(function () {
-            $('.showCapturedButton').each(function () {
-                $(this).addClass('hide');
-            });
-
-            $('.hideCapturedButton').each(function () {
-                $(this).removeClass('hide');
-            });
-        })
-        .fail(function () {
-            alert("Failed to toggle captured shinies!");
-        });
-}
-
-function lookupGeneration(generationId) {
-    $('.active').each(function () {
-        $(this).removeClass('active');
-    });
-
-    $('.generationPercentage:not(.hide)').each(function () {
-        $(this).addClass('hide');
-    });
-
-    $('button#Generation' + generationId).addClass('active');
-
-    $('.generationPercentage.generation' + generationId).each(function () {
-        $(this).removeClass('hide');
-    });
-
-    if (generationId != 0) {
-        $('.page.generation' + generationId).each(function () {
-            $(this).addClass('active');
-        });
-
-        $('.generationHeaders').each(function () {
-            $(this).hide();
-        });
-    } else {
-        $('.page').each(function () {
-            $(this).addClass('active');
-        });
-
-        $('.generationHeaders').each(function () {
-            $(this).show();
-        });
-    }
-}
-
 function togglePin(shinyHuntId) {
     $.ajax({
         url: '/toggle-hunt-pin/',
@@ -448,4 +261,30 @@ function giveSharableLink(username) {
 
         console.log(url);
     }
+}
+
+function hideIncomplete() {
+    $('.incompletedHunts').addClass('hide');
+    $('.completedHunts').removeClass('hide');
+    if ($('.incompletedHunts').hasClass('active')) {
+        $('.incompletedHunts').removeClass('active');
+        $('.completedHunts').addClass('active');
+    }
+    $('.completedHuntsButton').addClass('hide');
+    $('.currentlyHuntingButton').removeClass('hide');
+    $('.uncapturedGamesList').addClass('hide');
+    $('.capturedGamesList').removeClass('hide');
+}
+
+function hideComplete() {
+    $('.completedHunts').addClass('hide');
+    $('.incompletedHunts').removeClass('hide');
+    if ($('.completedHunts').hasClass('active')) {
+        $('.completedHunts').removeClass('active');
+        $('.incompletedHunts').addClass('active');
+    }
+    $('.currentlyHuntingButton').addClass('hide');
+    $('.completedHuntsButton').removeClass('hide');
+    $('.capturedGamesList').addClass('hide');
+    $('.uncapturedGamesList').removeClass('hide');
 }

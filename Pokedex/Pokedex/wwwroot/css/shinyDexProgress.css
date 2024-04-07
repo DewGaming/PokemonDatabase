@@ -21,3 +21,23 @@ p {
 .shinyHuntButtons button, .shinyHuntButtons a {
     margin-bottom: 5px;
 }
+
+.bonusImages img {
+  filter: none !important;
+}
+
+.bonusImages img {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  z-index: 1;
+}
+
+.gender {
+  top: 100px;
+  right: 0;
+}
+
+.pokemonDetails>div {
+  position: relative;
+}

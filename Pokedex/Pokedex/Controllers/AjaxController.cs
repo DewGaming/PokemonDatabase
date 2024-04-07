@@ -2766,13 +2766,13 @@ namespace Pokedex.Controllers
                 switch (genderDifferenceToggle)
                 {
                     case "hide":
-                        user.ShowShinyGenderDifferences = false;
+                        user.HideShinyGenderDifferences = true;
                         break;
                     case "show":
-                        user.ShowShinyGenderDifferences = true;
+                        user.HideShinyGenderDifferences = false;
                         break;
                     default:
-                        user.ShowShinyGenderDifferences = false;
+                        user.HideShinyGenderDifferences = false;
                         break;
                 }
 

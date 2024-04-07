@@ -33,7 +33,7 @@
 }
 
 .bonusImages img {
-  filter: none;
+  filter: none !important;
 }
 
 .pokemonDetails {
