@@ -96,16 +96,26 @@
             }
         </div>
     </div>
-    @if (!Model.IsShared)
+    @if (!Model.IsShared || @Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == Model.ShinyHunt.Id).Count() > 0)
     {
         <div class="huntCapturedButtons">
             @if (@Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == Model.ShinyHunt.Id).Count() > 0)
             {
-                <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = @Model.ShinyHunt.Id })" role="button">View Prior Phases</a>
-                <hr class="buttonSeparator">
+                @if (@Model.IsShared)
+                {
+                    <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShareableShinyHuntPhases", "ShinyHunt", new { username = @Model.ShinyHunt.User.Username.ToLower(), shinyHuntId = @Model.ShinyHunt.Id })" role="button">View Prior Phases</a>
+                }
+                else
+                {
+                    <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = @Model.ShinyHunt.Id })" role="button">View Prior Phases</a>
+                    <hr class="buttonSeparator">
+                }
             }
-            <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @Model.ShinyHunt.Id })" role="button">Modify Shiny</a>
-            <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@Model.ShinyHunt.Id, '@Model.ShinyHunt.Pokemon.Name')">Delete Hunt</button>
+            @if (!@Model.IsShared)
+            {
+                <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @Model.ShinyHunt.Id })" role="button">Modify Shiny</a>
+                <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@Model.ShinyHunt.Id, '@Model.ShinyHunt.Pokemon.Name')">Delete Hunt</button>
+            }
         </div>
     }
 </div>

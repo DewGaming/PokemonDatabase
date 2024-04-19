@@ -108,10 +108,13 @@
                     }
                 </div>
             </div>
-            <div class="huntCapturedButtons">
-                <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = Model.AllShinyHunts[i].Id })" role="button">Modify Phase</a>
-                <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@Model.AllShinyHunts[i].Id, '@Model.AllShinyHunts[i].Pokemon.Name')">Delete Phase</button>
-            </div>
+            @if (!Model.IsShared)
+            {
+                <div class="huntCapturedButtons">
+                    <a class="btn orangeButton" href="@this.Url.Action("EditCompleteShinyHunt", "ShinyHunt", new { shinyHuntId = Model.AllShinyHunts[i].Id })" role="button">Modify Phase</a>
+                    <button class="btn btn-danger abandonHunt" onclick="abandonHunt(@Model.AllShinyHunts[i].Id, '@Model.AllShinyHunts[i].Pokemon.Name')">Delete Phase</button>
+                </div>
+            }
         </div>
     }
 </div>
