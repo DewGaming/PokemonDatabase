@@ -410,7 +410,7 @@ namespace Pokedex.Controllers
 
                     if (generationId == 0)
                     {
-                        generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId).Last().Game.GenerationId;
+                        generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game").Where(x => x.Game.ReleaseDate <= DateTime.UtcNow && x.PokemonId == pokemonId).Last().Game.GenerationId;
                     }
 
                     List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
