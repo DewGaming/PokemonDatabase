@@ -122,6 +122,10 @@
                                 {
                                     <img loading="lazy" class="pokeball pokemonListPicture" title="Preferred Pokemon: @s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.Pokeball.Id, ".png"))">
                                 }
+                                @if (s.Gender == "Male" || s.Gender == "Female")
+                                {
+                                    <img loading="lazy" class="gender pokemonListPicture" title="@s.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @s.Gender.ToLower(), ".png"))">
+                                }
                             </div>
                             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
                                 @if (Model.IsShared)

@@ -57,6 +57,15 @@
                 @Html.ValidationMessageFor(x => x.PokeballId)
             </div>
 
+            @if (Model.AllGenders.Count > 1)
+            {
+                <div class="form-group row hide">
+                    @Html.LabelFor(x => x.Gender, "Preferred Gender", new { @class = "col-md-4" })
+                    @Html.DropDownListFor(x => x.Gender, new SelectList(Model.AllGenders), "No Preferred Gender", new { @class = "form-control col-md-6 preferredGender" })
+                    @Html.ValidationMessageFor(x => x.Gender)
+                </div>
+            }
+
             <div class="form-group row gameSpecific currentPhaseEncounters">
                 @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0" } })
