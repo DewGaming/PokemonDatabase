@@ -659,7 +659,7 @@ namespace Pokedex.Controllers
                     if (testPokemonIds.Count() > 0)
                     {
                         pokemonIds = testPokemonIds;
-                        pokemonList = this.GetAllPokemonWithoutForms().Where(x => pokemonIds.Any(y => y == x.Id)).ToList();
+                        pokemonList = pokemonDetails.Where(x => pokemonIds.Any(y => y == x.Id)).ToList();
                     }
                     else
                     {
