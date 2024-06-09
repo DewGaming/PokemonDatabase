@@ -596,7 +596,7 @@ namespace Pokedex.Controllers
                     }
 
                     pokemonTypeDetails = pokemonTypeDetails.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
-                    if (selectedLegendaries.Count() < legendaryTypeCount && !onlyLegendaries)
+                    if (selectedLegendaries.Count() < legendaryTypeCount || onlyLegendaries)
                     {
                         allPokemon = this.FilterLegendaries(allPokemon, selectedLegendaries, onlyLegendaries);
                     }
@@ -606,7 +606,7 @@ namespace Pokedex.Controllers
                         allPokemon = this.FilterEvolutions(allPokemon, selectedEvolutions, selectedGame);
                     }
 
-                    if (selectedForms.Count() < 7 && !onlyAltForms)
+                    if (selectedForms.Count() < 7 || onlyAltForms)
                     {
                         allPokemon = this.FilterForms(allPokemon, selectedForms, selectedGame, onlyAltForms, multipleMegas, multipleGMax);
                     }
@@ -3292,7 +3292,7 @@ namespace Pokedex.Controllers
                 List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form");
                 altFormList.ForEach(x => x.AltFormPokemon.Name = string.Concat(x.AltFormPokemon.Name, " (", x.Form.Name, ")"));
 
-                if (formList.Count() != 0)
+                if (formList.Count() != 0 && formList.Count() < 7)
                 {
                     List<PokemonFormDetail> altForm = new List<PokemonFormDetail>();
                     List<Pokemon> allAltForms = new List<Pokemon>();
