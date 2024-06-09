@@ -3492,7 +3492,7 @@ namespace Pokedex.Controllers
                         }
                     }
 
-                    if (evolutionList.Contains("onlyFullyEvolved") || (game.Id != 16 && game.Id != 20 && evolutionList.Contains("noEvolutionLine")))
+                    if (evolutionList.Contains("onlyFullyEvolved"))
                     {
                         foreach (var p in pokemonList)
                         {
