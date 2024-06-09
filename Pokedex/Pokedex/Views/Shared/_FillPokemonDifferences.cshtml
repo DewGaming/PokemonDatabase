@@ -382,6 +382,22 @@
     <h2 class="morePokemonDetails">More Pokémon Details</h2>
     <table>
         <tbody>
+            <tr>
+                <th colspan="2">Pokémon Name</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.Name == secondPokemon.Pokemon.Name)
+                {
+                    <td colspan="2" class="match">@firstPokemon.Pokemon.Name</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <td class="noMatch">@Model.AllPokemon[i].Pokemon.Name</td>
+                    }
+                }
+            </tr>
             @if ((firstGame.GenerationId != 1 && firstPokemon.EggGroups.Count() > 0) || (secondGame.GenerationId != 1 && secondPokemon.EggGroups.Count() > 0) || (firstGame.GenerationId >= 3 && firstPokemon.EVYields.Count() > 0) || (secondGame.GenerationId >= 3 && secondPokemon.EVYields.Count() > 0) || firstPokemon.CaptureRates.Count() > 0 || secondPokemon.CaptureRates.Count() > 0 || firstPokemon.Pokemon.ExperienceGrowthId != 8 || secondPokemon.Pokemon.ExperienceGrowthId != 8 || firstPokemon.BaseHappinesses.Count() > 0 || secondPokemon.BaseHappinesses.Count() > 0)
             {
                 @if ((firstGame.GenerationId >= 3 && firstPokemon.EVYields.Count() > 0) || (secondGame.GenerationId >= 3 && secondPokemon.EVYields.Count() > 0))
@@ -787,6 +803,22 @@
     <h2>Base Stats</h2>
     <table>
         <tbody>
+            <tr>
+                <th colspan="2">Pokémon Name</th>
+            </tr>
+            <tr>
+                @if (firstPokemon.Pokemon.Name == secondPokemon.Pokemon.Name)
+                {
+                    <td colspan="2" class="match">@firstPokemon.Pokemon.Name</td>
+                }
+                else
+                {
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <td class="noMatch">@Model.AllPokemon[i].Pokemon.Name</td>
+                    }
+                }
+            </tr>
             <tr>
                 <th colspan="2">Health</th>
             </tr>
