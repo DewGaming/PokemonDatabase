@@ -596,7 +596,7 @@ namespace Pokedex.Controllers
                     }
 
                     pokemonTypeDetails = pokemonTypeDetails.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
-                    if (selectedLegendaries.Count() < legendaryTypeCount)
+                    if (selectedLegendaries.Count() < legendaryTypeCount && !onlyLegendaries)
                     {
                         allPokemon = this.FilterLegendaries(allPokemon, selectedLegendaries, onlyLegendaries);
                     }
@@ -606,7 +606,7 @@ namespace Pokedex.Controllers
                         allPokemon = this.FilterEvolutions(allPokemon, selectedEvolutions, selectedGame);
                     }
 
-                    if (selectedForms.Count() < 7)
+                    if (selectedForms.Count() < 7 && !onlyAltForms)
                     {
                         allPokemon = this.FilterForms(allPokemon, selectedForms, selectedGame, onlyAltForms, multipleMegas, multipleGMax);
                     }
