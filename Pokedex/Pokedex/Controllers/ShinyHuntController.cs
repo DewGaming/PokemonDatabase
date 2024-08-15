@@ -140,6 +140,16 @@ namespace Pokedex.Controllers
                 AppConfig = this.appConfig,
             };
 
+            model.AllPokemon.Prepend(new Pokemon()
+            {
+                Id = 0,
+                PokedexNumber = 0,
+                Name = "Unknown",
+                IsShinyLocked = false,
+                IsComplete = true,
+                GenderRatioId = 10,
+            });
+
             return this.View(model);
         }
 
@@ -160,6 +170,16 @@ namespace Pokedex.Controllers
                     UserId = this.dataService.GetCurrentUser(this.User).Id,
                     AppConfig = this.appConfig,
                 };
+
+                model.AllPokemon.Prepend(new Pokemon()
+                {
+                    Id = 0,
+                    PokedexNumber = 0,
+                    Name = "Unknown",
+                    IsShinyLocked = false,
+                    IsComplete = true,
+                    GenderRatioId = 10,
+                });
 
                 return this.View(model);
             }
@@ -196,7 +216,6 @@ namespace Pokedex.Controllers
         public IActionResult AddCompletedHunt()
         {
             List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon();
-            pokemonList.RemoveAt(0);
             AddCompletedShinyHuntViewModel model = new AddCompletedShinyHuntViewModel()
             {
                 AllPokemon = pokemonList,
@@ -222,7 +241,6 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon();
-                pokemonList.RemoveAt(0);
                 AddCompletedShinyHuntViewModel model = new AddCompletedShinyHuntViewModel()
                 {
                     AllPokemon = pokemonList,
@@ -274,7 +292,6 @@ namespace Pokedex.Controllers
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Game");
             List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
-            pokemonList.RemoveAt(0);
             Pokemon pokemon;
             List<string> genders = new List<string>();
             if (shinyHunt.PokemonId == null)
@@ -350,7 +367,6 @@ namespace Pokedex.Controllers
         {
             ShinyHunt shinyHunt = this.dataService.GetObjectByPropertyValue<ShinyHunt>("Id", shinyHuntId, "Game");
             List<Pokemon> pokemonList = this.dataService.GetHuntablePokemon(shinyHunt.GameId);
-            pokemonList.RemoveAt(0);
             Pokemon pokemon;
             List<string> genders = new List<string>();
             if (shinyHunt.PokemonId == null)
@@ -436,6 +452,16 @@ namespace Pokedex.Controllers
                 AppConfig = this.appConfig,
             };
 
+            model.AllPokemon.Prepend(new Pokemon()
+            {
+                Id = 0,
+                PokedexNumber = 0,
+                Name = "Unknown",
+                IsShinyLocked = false,
+                IsComplete = true,
+                GenderRatioId = 10,
+            });
+
             return this.View(model);
         }
 
@@ -466,6 +492,16 @@ namespace Pokedex.Controllers
                     AllHuntingMethods = this.dataService.GetObjects<HuntingMethodGameDetail>(includes: "HuntingMethod", whereProperty: "GameId", wherePropertyValue: oldShinyHunt.GameId).ConvertAll(x => x.HuntingMethod),
                     AppConfig = this.appConfig,
                 };
+
+                model.AllPokemon.Prepend(new Pokemon()
+                {
+                    Id = 0,
+                    PokedexNumber = 0,
+                    Name = "Unknown",
+                    IsShinyLocked = false,
+                    IsComplete = true,
+                    GenderRatioId = 10,
+                });
 
                 return this.View(model);
             }

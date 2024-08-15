@@ -931,15 +931,6 @@ namespace Pokedex
         public List<Pokemon> GetHuntablePokemon(int gameId = 0)
         {
             List<Pokemon> pokemonList = this.GetNonBattlePokemonWithFormNames(gameId).Where(x => !x.IsShinyLocked).ToList();
-            pokemonList.Add(new Pokemon()
-            {
-                Id = 0,
-                PokedexNumber = 0,
-                Name = "Unknown",
-                IsShinyLocked = false,
-                IsComplete = true,
-                GenderRatioId = 10,
-            });
             if (gameId != 0)
             {
                 Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
@@ -963,6 +954,9 @@ namespace Pokedex
                     pokemonList.AddRange(zygardeList);
                 }
             }
+
+            // Removes Minior's Shields Up form
+            pokemonList.Remove(pokemonList.Find(x => x.Id == 1302));
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }

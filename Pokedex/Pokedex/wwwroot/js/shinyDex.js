@@ -50,7 +50,7 @@ function showCaptured() {
 
     if ($('.showAltFormsButton').hasClass('hide')) {
         if ($('.showGenderDifferenceButton').hasClass('hide')) {
-            $('.captured.altForm').each(function () {
+            $('.captured').each(function () {
                 $(this).removeClass('hide');
             });
         } else {
@@ -118,7 +118,7 @@ function showAltForms() {
 
     if ($('.showCapturedButton').hasClass('hide')) {
         if ($('.showGenderDifferenceButton').hasClass('hide')) {
-            $('.captured.altForm').each(function () {
+            $('.altForm').each(function () {
                 $(this).removeClass('hide');
             });
         } else {
@@ -158,13 +158,15 @@ function hideGenderDifferences() {
         $(this).addClass('hide');
     });
 
-    $('.maleGenderDifference .captureTotal').each(function () {
-        $(this).addClass('hide');
-    })
-
-    $('.captureCompleteTotal').each(function () {
-        $(this).removeClass('hide');
-    })
+    if ($('.showCapturedButton').hasClass('hide')) {
+        $('.maleGenderDifference .captureTotal').each(function () {
+            $(this).addClass('hide');
+        })
+        
+        $('.captureCompleteTotal').each(function () {
+            $(this).removeClass('hide');
+        })
+    }
 
     $('.bonusImages').each(function () {
         $(this).addClass('hide');
@@ -198,7 +200,7 @@ function showGenderDifferences() {
 
     if ($('.showCapturedButton').hasClass('hide')) {
         if ($('.showAltFormsButton').hasClass('hide')) {
-            $('.captured').each(function () {
+            $('.femaleGenderDifference').each(function () {
                 $(this).removeClass('hide');
             });
         } else {
@@ -212,33 +214,19 @@ function showGenderDifferences() {
         });
     }
 
-    $('.femaleGenderDifference.uncaptured:not(.altForm)').each(function () {
-        $(this).removeClass('hide');
-    });
-
-    $('.maleGenderDifference .captureTotal').each(function () {
-        $(this).removeClass('hide');
-    })
-
-    $('.captureCompleteTotal').each(function () {
-        $(this).addClass('hide');
-    })
+    if ($('.showCapturedButton').hasClass('hide')) {
+        $('.maleGenderDifference .captureTotal').each(function () {
+            $(this).removeClass('hide');
+        })
+    
+        $('.captureCompleteTotal').each(function () {
+            $(this).addClass('hide');
+        })
+    }
 
     $('.bonusImages').each(function () {
         $(this).removeClass('hide');
     })
-
-    if ($('.showCapturedButton').hasClass('hide')) {
-        $('.femaleGenderDifference:not(.uncaptured):not(.altForm)').each(function () {
-            $(this).removeClass('hide');
-        });
-    }
-
-    if ($('.showAltFormsButton').hasClass('hide')) {
-        $('.femaleGenderDifference:not(.uncaptured)').each(function () {
-            $(this).removeClass('hide');
-        });
-    }
 
     $.ajax({
         url: '/toggle-shiny-gender-differences/',
