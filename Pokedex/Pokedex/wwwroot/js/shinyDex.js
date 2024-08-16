@@ -2,6 +2,7 @@ var generationId = 0;
 
 function updatePercentage() {
     var uncaptured, total;
+
     if (generationId == '0') {
         uncaptured = $('.completedHunts .grid-container').children().not('.hide').not('.uncaptured').length;
         total = $('.completedHunts .grid-container').children().not('.hide').length;
@@ -47,6 +48,21 @@ function showCaptured() {
     $('.captured:not(.altForm):not(.femaleGenderDifference)').each(function () {
         $(this).removeClass('hide');
     });
+    
+    if ($('.hideGenderDifferenceButton').hasClass('hide')) {
+        $('.maleGenderDifference .captureTotal').each(function () {
+            $(this).addClass('hide');
+        })
+
+        $('.shadowed.uncaptured:not(.totalCaught0)').each(function () {
+            $(this).removeClass('uncaptured');
+            $(this).addClass('captured');
+        })
+        
+        $('.shadowed:not(.uncaptured) .captureCompleteTotal').each(function () {
+            $(this).removeClass('hide');
+        })
+    }
 
     if ($('.showAltFormsButton').hasClass('hide')) {
         if ($('.showGenderDifferenceButton').hasClass('hide')) {
@@ -162,8 +178,13 @@ function hideGenderDifferences() {
         $('.maleGenderDifference .captureTotal').each(function () {
             $(this).addClass('hide');
         })
+
+        $('.shadowed.uncaptured:not(.totalCaught0)').each(function () {
+            $(this).removeClass('uncaptured');
+            $(this).addClass('captured');
+        })
         
-        $('.captureCompleteTotal').each(function () {
+        $('.shadowed:not(.uncaptured) .captureCompleteTotal').each(function () {
             $(this).removeClass('hide');
         })
     }
@@ -214,15 +235,18 @@ function showGenderDifferences() {
         });
     }
 
-    if ($('.showCapturedButton').hasClass('hide')) {
-        $('.maleGenderDifference .captureTotal').each(function () {
-            $(this).removeClass('hide');
-        })
-    
-        $('.captureCompleteTotal').each(function () {
-            $(this).addClass('hide');
-        })
-    }
+    $('.maleGenderDifference .captureTotal').each(function () {
+        $(this).removeClass('hide');
+    })
+
+    $('.individualCaught0').each(function () {
+        $(this).addClass('uncaptured');
+        $(this).removeClass('captured');
+    })
+
+    $('.captureCompleteTotal').each(function () {
+        $(this).addClass('hide');
+    })
 
     $('.bonusImages').each(function () {
         $(this).removeClass('hide');
@@ -293,5 +317,19 @@ function giveSharableLink(username) {
 }
 
 $(function () {
+    if ($('.showCapturedButton').hasClass('hide') && $('.hideGenderDifferenceButton').hasClass('hide')) {
+        $('.maleGenderDifference .captureTotal').each(function () {
+            $(this).addClass('hide');
+        })
+
+        $('.shadowed.uncaptured:not(.totalCaught0)').each(function () {
+            $(this).removeClass('uncaptured');
+            $(this).addClass('captured');
+        })
+        
+        $('.shadowed:not(.uncaptured) .captureCompleteTotal').each(function () {
+            $(this).removeClass('hide');
+        })
+    }
     updatePercentage();
 });

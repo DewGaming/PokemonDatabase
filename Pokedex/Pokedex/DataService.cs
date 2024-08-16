@@ -956,7 +956,7 @@ namespace Pokedex
             }
 
             // Removes Minior's Shields Up form
-            // pokemonList.Remove(pokemonList.Find(x => x.Id == 1302));
+            pokemonList.Remove(pokemonList.Find(x => x.Id == 1302));
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }

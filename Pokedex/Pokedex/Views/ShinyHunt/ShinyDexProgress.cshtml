@@ -67,7 +67,19 @@
             @foreach (var p in Model.AllPokemon.Where(x => x.Pokemon.Game.GenerationId == g))
             {
                 gender = string.Empty;
-                <div class="shadowed @p.Pokemon.Name@(!p.IsCaptured ? " uncaptured" : (@Model.CurrentUser.HideCapturedShinyPokemon ? " captured hide" : " captured"))@(p.IsAltForm ? (@Model.CurrentUser.ShowShinyAltForms ? " altForm" : " altForm hide") : "")@(p.IsFemaleGenderDifference ? (@Model.CurrentUser.HideShinyGenderDifferences ? " femaleGenderDifference hide" : " femaleGenderDifference") : p.IsMaleGenderDifference ? " maleGenderDifference" : "")">
+                @if (p.IsMaleGenderDifference)
+                {
+                    shinyCount = @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id && x.Gender == "Male").Count();
+                }
+                else if (p.IsFemaleGenderDifference)
+                {
+                    shinyCount = @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id && x.Gender == "Female").Count();
+                }
+                else
+                {
+                    shinyCount = @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id).Count();
+                }
+                <div class="shadowed @p.Pokemon.Name individualCaught@(shinyCount) totalCaught@(@Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id).Count())@(!p.IsCaptured ? " uncaptured" : (@Model.CurrentUser.HideCapturedShinyPokemon ? " captured hide" : " captured"))@(p.IsAltForm ? (@Model.CurrentUser.ShowShinyAltForms ? " altForm" : " altForm hide") : "")@(p.IsFemaleGenderDifference ? (@Model.CurrentUser.HideShinyGenderDifferences ? " femaleGenderDifference hide" : " femaleGenderDifference") : p.IsMaleGenderDifference ? " maleGenderDifference" : "")">
                     <div class="pokemonDetails">
                         <div class="pokemonImages">
                             @if (p.IsFemaleGenderDifference || p.IsMaleGenderDifference)
@@ -97,18 +109,6 @@
                             </a>
                         </div>
                         <div class="description">
-                            @if (p.IsMaleGenderDifference)
-                            {
-                                shinyCount = @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id && x.Gender == "Male").Count();
-                            }
-                            else if (p.IsFemaleGenderDifference)
-                            {
-                                shinyCount = @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id && x.Gender == "Female").Count();
-                            }
-                            else
-                            {
-                                shinyCount = @Model.AllShinyHunts.Where(x => x.PokemonId == p.Pokemon.Id).Count();
-                            }
                             <p>#@p.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @p.Pokemon.Name</p>
                             <p class="captureTotal@(!p.IsCaptured ? " uncaptured" : "")"><b>Total Captured:</b> @shinyCount</p>
                             @if (p.IsMaleGenderDifference)
