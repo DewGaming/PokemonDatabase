@@ -385,6 +385,7 @@ namespace Pokedex.Controllers
                 PokemonHunted = pokemon,
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
                 DateOfCapture = DateTime.Now.Date,
+                IsCaptured = true,
                 AllPokemon = pokemonList,
                 AllPokeballs = this.dataService.GetPokeballs(shinyHunt.GameId, shinyHunt.HuntingMethodId, this.User, this.appConfig),
                 AllGenders = genders,

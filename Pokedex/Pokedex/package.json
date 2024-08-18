@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "npm run remove-build-folders && npm run build-app && npm run copy-to-dist && npm run minify && echo Done!",
-    "build-app": "dotnet publish --configuration Release",
+    "build-app": "dotnet publish Pokedex.generated.sln -c Release",
     "clean-build": "npm run remove-build-folders && dotnet build",
     "copy-to-dist": "npx kpy bin/Release/netcoreapp3.1/publish/ ** !package.json !package-lock.json !stylecop.json .dist",
     "database-update": "npm run remove-build-folders && dotnet ef database update -p ..\\Pokedex.DataAccess\\Pokedex.DataAccess.csproj -c DataContext",
