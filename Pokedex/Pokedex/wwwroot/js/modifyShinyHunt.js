@@ -195,7 +195,11 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
         })
             .done(function (data) {
                 $('#MarkId').empty();
-                $('#MarkId').append($('<option>'));
+                if ($('select').hasClass('preferredMark')) {
+                    $('#MarkId').append($('<option>').val("").text("No Preferred Mark"));
+                } else {
+                    $('#MarkId').append($('<option>'));
+                }
                 $.each(data, function (index, item) {
                     $('#MarkId').append($('<option>').val(item.id).text(item.name));
                 });
@@ -209,7 +213,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 }
 
                 if (data != null) {
-                    if ($('.marks').hasClass('hide') && ($('#IsCaptured').is(':checked') || $('.completeShinyHunt').length > 0)) {
+                    if ($('.marks').hasClass('hide')) {
                         $('.marks').removeClass('hide');
                     }
                 } else {
@@ -364,7 +368,7 @@ $('#HuntingMethodId').on('change', function () {
     checkFunctions();
 });
 
-$('.submitButtons').on('click', function () {
+$('.addShinyHunt').on('click', function () {
     $(".overlay").fadeIn(300);
 });
 

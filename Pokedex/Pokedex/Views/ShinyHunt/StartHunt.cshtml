@@ -81,6 +81,12 @@
                 @Html.ValidationMessageFor(x => x.PokeballId)
             </div>
 
+            <div class="form-group row gameSpecific marks hide">
+                @Html.LabelFor(x => x.MarkId, "Preferred Mark", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.MarkId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6 preferredMark" })
+                @Html.ValidationMessageFor(x => x.MarkId)
+            </div>
+
             <div class="form-group row gameSpecific sparklingPower hide">
                 @Html.LabelFor(x => x.SparklingPowerLevel, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
@@ -106,7 +112,7 @@
             </div>
 
             <p class="submitButtons">
-                <button type="submit" class="btn btn-primary" role="button">Add</button>
+                <button type="submit" class="btn btn-primary addShinyHunt" role="button">Add</button>
             </p>
         }
     </div>
