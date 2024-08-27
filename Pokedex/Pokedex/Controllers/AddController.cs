@@ -1116,7 +1116,7 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(typing);
 
-            if (this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: typing.PokemonId).Count() == 0 && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", typing.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
+            if (this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: typing.PokemonId).Count() == 0 && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", typing.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
             {
                 return this.RedirectToAction("Abilities", "Add", new { pokemonId = typing.PokemonId, generationId = typing.GenerationId });
             }
@@ -1173,45 +1173,6 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("Pokemon", "Owner");
             }
-        }
-
-        [HttpGet]
-        [Route("add_special_event_ability/{pokemonId:int}/{generationId:int}")]
-        public IActionResult SpecialEventAbility(int pokemonId, int generationId)
-        {
-            SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
-            {
-                AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                PokemonId = pokemonId,
-                GenerationId = generationId,
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("add_special_event_ability/{pokemonId:int}/{generationId:int}")]
-        public IActionResult SpecialEventAbility(SpecialEventAbilityViewModel ability, int generationId)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                SpecialEventAbilityViewModel model = new SpecialEventAbilityViewModel()
-                {
-                    AllAbilities = this.dataService.GetObjects<Ability>("Name"),
-                    PokemonId = ability.PokemonId,
-                };
-
-                return this.View(model);
-            }
-
-            PokemonAbilityDetail pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon").FirstOrDefault(x => x.PokemonId == ability.PokemonId && x.GenerationId == generationId);
-
-            pokemonAbilities.SpecialEventAbilityId = ability.AbilityId;
-
-            this.dataService.UpdateObject(pokemonAbilities);
-
-            return this.RedirectToAction("Pokemon", "Owner");
         }
 
         [HttpGet]

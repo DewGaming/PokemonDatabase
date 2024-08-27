@@ -159,7 +159,9 @@ $(document).ready(function () {
         $('#TerapagosTerastal.page .teraTypeSelectList').val(0);
     }
 
-    $('.teraTypeSelectList').select2();
+    $('.teraTypeSelectList').each(function () {
+        $(this).select2();
+    });
 })
 
 $('span[title]').on('click', function() {

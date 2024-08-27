@@ -293,7 +293,7 @@ namespace Pokedex
                 AllAltForms = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form"),
                 AllEvolutions = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod, Generation"),
                 AllTypings = this.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
-                AllAbilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility"),
+                AllAbilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility"),
                 AllEggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.GetObjects<EVYield>(includes: "Pokemon"),
@@ -331,7 +331,7 @@ namespace Pokedex
                 BaseStats = this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 EVYields = this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 Typings = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                Abilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                Abilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 EggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 CaptureRates = this.GetPokemonWithCaptureRates(pokemon.Id),
                 PreEvolutions = this.GetPreEvolution(pokemon.Id),
@@ -581,7 +581,7 @@ namespace Pokedex
                 if (gameId != 1 && gameId != 21 && gameId != 20 && gameId != 2 && gameId != 22 && gameId != 23 && gameId != 37)
                 {
                     Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
-                    List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
+                    List<PokemonAbilityDetail> availableAbilityDetails = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).OrderByDescending(x => x.GenerationId).ToList();
                     PokemonAbilityDetail pokemonAbilityDetail = availableAbilityDetails.Find(x => x.GenerationId <= game.GenerationId);
 
                     abilityList.Add(pokemonAbilityDetail.PrimaryAbility);
@@ -593,11 +593,6 @@ namespace Pokedex
                     if (pokemonAbilityDetail.HiddenAbility != null)
                     {
                         abilityList.Add(pokemonAbilityDetail.HiddenAbility);
-                    }
-
-                    if (pokemonAbilityDetail.SpecialEventAbility != null)
-                    {
-                        abilityList.Add(pokemonAbilityDetail.SpecialEventAbility);
                     }
                 }
 

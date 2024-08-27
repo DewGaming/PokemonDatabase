@@ -185,7 +185,7 @@ namespace Pokedex.Controllers
             AbilityViewModel model = new AbilityViewModel()
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("GenerationId, Name"),
-                AllPokemon = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility"),
+                AllPokemon = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility"),
             };
 
             return this.View(model);
@@ -509,7 +509,7 @@ namespace Pokedex.Controllers
         {
             // Ensuring that the pokemon really has all of these added.
             bool pokemonIsComplete = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Exists(x => x.PokemonId == pokemonId) &&
+                   this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
                    this.dataService.GetObjects<EVYield>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId);
@@ -531,7 +531,7 @@ namespace Pokedex.Controllers
                     BaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
                     EVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "Pokemon.Id", wherePropertyValue: pokemon.Id),
                     Typings = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                    Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
+                    Abilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     EggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                     CaptureRates = this.dataService.GetPokemonWithCaptureRates(pokemon.Id),
                     BaseHappinesses = this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),

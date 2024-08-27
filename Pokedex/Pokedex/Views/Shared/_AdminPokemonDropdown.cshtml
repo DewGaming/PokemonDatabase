@@ -134,10 +134,6 @@
             <li><a target="_blank" class="dropdown-item" href="@(this.Url.Action("GenderDifferenceImage", "Edit", new { pokemonId = Model.Pokemon.Id }))">Update Gender Difference Artwork</a></li>
         }
         <li><a class="dropdown-item" href="@(this.Url.Action("PokemonGameDetails", "Edit", new { pokemonId = Model.Pokemon.Id }))">Update Games Available In</a></li>
-        @if (Model.DropdownViewModel.AllPokemon.AllAbilities.Exists(x => x.PokemonId == Model.Pokemon.Id && x.SpecialEventAbilityId == null))
-        {
-            <li><a class="dropdown-item" href="@(this.Url.Action("SpecialEventAbility", "Add", new { pokemonId = Model.Pokemon.Id, generationId = Model.GenerationId }))">Add Special Event Ability</a></li>
-        }
         @if (!Model.DropdownViewModel.AllPokemon.AllLegendaryDetails.Exists(x => x.PokemonId == Model.Pokemon.Id))
         {
             <li><a class="dropdown-item" href="@(this.Url.Action("PokemonLegendaryDetails", "Add", new { pokemonId = Model.Pokemon.Id }))">Set As Legendary</a></li>

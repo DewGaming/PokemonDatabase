@@ -144,13 +144,6 @@
                                 @Model.Abilities.OrderByDescending(x => x.GenerationId).First().HiddenAbility.Name (Hidden)
                             </span>
                         }
-                        @if (@Model.Abilities.OrderByDescending(x => x.GenerationId).First().SpecialEventAbility != null)
-                        {
-                            <br>
-                            <span title="Description: @Model.Abilities.OrderByDescending(x => x.GenerationId).First().SpecialEventAbility.Description">
-                                @Model.Abilities.OrderByDescending(x => x.GenerationId).First().SpecialEventAbility.Name (Special Event Ability)
-                            </span>
-                        }
                     </td>
                 </tr>
                 <tr>

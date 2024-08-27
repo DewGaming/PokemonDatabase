@@ -231,7 +231,7 @@
             {
                 <tr>
                     <th colspan="2">
-                        @if ((firstPokemonAbility != null && (firstPokemonAbility.SecondaryAbility != null || firstPokemonAbility.HiddenAbility != null || firstPokemonAbility.SpecialEventAbility != null)) || (secondPokemonAbility != null && (secondPokemonAbility.SecondaryAbility != null || secondPokemonAbility.HiddenAbility != null || secondPokemonAbility.SpecialEventAbility != null)))
+                        @if ((firstPokemonAbility != null && (firstPokemonAbility.SecondaryAbility != null || firstPokemonAbility.HiddenAbility != null)) || (secondPokemonAbility != null && (secondPokemonAbility.SecondaryAbility != null || secondPokemonAbility.HiddenAbility != null)))
                         {
                             @("Abilities")
                         }
@@ -305,29 +305,6 @@
                                 else
                                 {
                                     <td class="noMatch">No Hidden Ability</td>
-                                }
-                            }
-                        }
-                    </tr>
-                }
-                @if ((firstPokemonAbility != null && firstPokemonAbility.SpecialEventAbility != null) || (secondPokemonAbility != null && secondPokemonAbility.SpecialEventAbility != null))
-                {
-                    <tr class="abilities specialEventAbility">
-                        @if (firstPokemonAbility != null && firstPokemonAbility.SpecialEventAbility != null && secondPokemonAbility != null && secondPokemonAbility.SpecialEventAbility != null && firstPokemonAbility.SpecialEventAbilityId == secondPokemonAbility.SpecialEventAbilityId)
-                        {
-                            <td colspan="2" class="match">@firstPokemonAbility.SpecialEventAbility.Name</td>
-                        }
-                        else
-                        {
-                            @for (var i = 0; i < 2; i++)
-                            {
-                                @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialEventAbility != null)
-                                {
-                                    <td class="noMatch">@Model.AllPokemon[i].Abilities.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SpecialEventAbility.Name</td>
-                                }
-                                else
-                                {
-                                    <td class="noMatch">No Special Event Ability</td>
                                 }
                             }
                         }

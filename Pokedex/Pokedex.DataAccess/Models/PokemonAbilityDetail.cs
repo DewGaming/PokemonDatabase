@@ -17,9 +17,6 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Hidden Ability")]
         public int? HiddenAbilityId { get; set; }
         public Ability HiddenAbility { get; set; }
-        [Display(Name = "Special Event Ability")]
-        public int? SpecialEventAbilityId { get; set; }
-        public Ability SpecialEventAbility { get; set; }
         [Required]
         public int GenerationId { get; set; }
         public Generation Generation { get; set; }

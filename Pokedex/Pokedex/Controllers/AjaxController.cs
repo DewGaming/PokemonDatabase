@@ -2280,7 +2280,7 @@ namespace Pokedex.Controllers
                 Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
                 List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon", whereProperty: "GameId", wherePropertyValue: gameId).Select(x => x.Pokemon).ToList();
                 pokemonList = pokemonList.Distinct().ToList();
-                List<PokemonAbilityDetail> pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility").Where(x => x.GenerationId <= game.GenerationId).ToList();
+                List<PokemonAbilityDetail> pokemonAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "PrimaryAbility, SecondaryAbility, HiddenAbility").Where(x => x.GenerationId <= game.GenerationId).ToList();
                 pokemonAbilities = pokemonAbilities.Where(x => pokemonList.Any(y => y.Id == x.PokemonId)).ToList();
                 if (pokemonAbilities.ConvertAll(x => x.PrimaryAbility).Any(x => x != null))
                 {
@@ -2295,11 +2295,6 @@ namespace Pokedex.Controllers
                 if (pokemonAbilities.ConvertAll(x => x.HiddenAbility).Any(x => x != null))
                 {
                     model.AddRange(pokemonAbilities.ConvertAll(x => x.HiddenAbility).Where(x => x != null).ToList());
-                }
-
-                if (pokemonAbilities.ConvertAll(x => x.SpecialEventAbility).Any(x => x != null))
-                {
-                    model.AddRange(pokemonAbilities.ConvertAll(x => x.SpecialEventAbility).Where(x => x != null).ToList());
                 }
 
                 model = model.Distinct().ToList();
@@ -2965,7 +2960,7 @@ namespace Pokedex.Controllers
                     .ToList();
             }
 
-            return pokemonList.Where(x => x.PrimaryAbilityId == abilityId || x.SecondaryAbilityId == abilityId || x.HiddenAbilityId == abilityId || x.SpecialEventAbilityId == abilityId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+            return pokemonList.Where(x => x.PrimaryAbilityId == abilityId || x.SecondaryAbilityId == abilityId || x.HiddenAbilityId == abilityId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
         }
 
         private string FillEVs(PokemonTeamEV evs)

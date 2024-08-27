@@ -913,7 +913,7 @@ namespace Pokedex.Controllers
         [Route("edit_abilities/{pokemonId:int}/{generationId:int}")]
         public IActionResult Abilities(int pokemonId, int generationId)
         {
-            PokemonAbilityDetail abilityDetail = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Find(x => x.GenerationId == generationId);
+            PokemonAbilityDetail abilityDetail = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Find(x => x.GenerationId == generationId);
             PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
             {
                 Id = abilityDetail.Id,
@@ -936,7 +936,7 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                PokemonAbilityDetail abilityDetail = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonAbilityDetail.PokemonId).Find(x => x.GenerationId == pokemonAbilityDetail.GenerationId);
+                PokemonAbilityDetail abilityDetail = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: pokemonAbilityDetail.PokemonId).Find(x => x.GenerationId == pokemonAbilityDetail.GenerationId);
                 PokemonAbilitiesViewModel model = new PokemonAbilitiesViewModel()
                 {
                     Id = abilityDetail.Id,
@@ -1927,7 +1927,7 @@ namespace Pokedex.Controllers
                 AllAltForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form"),
                 AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
                 AllTypings = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),
-                AllAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility, SpecialEventAbility"),
+                AllAbilities = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility"),
                 AllEggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon"),
