@@ -105,6 +105,7 @@ namespace Pokedex.Controllers
             {
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id", "Generation").ToList(),
                 AllPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                CurrentTime = DateTime.UtcNow,
             };
 
             return this.View(model);

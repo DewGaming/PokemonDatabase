@@ -15,6 +15,8 @@ namespace Pokedex.DataAccess.Models
         public Generation Generation { get; set; }
         [Required, Display(Name = "Is Breeding Possible in Game")]
         public bool IsBreedingPossible { get; set; }
+        [Required, Display(Name = "Is Marks Available for Wild Pokemon in Game")]
+        public bool WildMarksPossible { get; set; }
         [Required, Display(Name = "Game Background Color")]
         public string GameColor { get; set; }
     }

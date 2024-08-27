@@ -26,12 +26,12 @@
                     <a href="@(this.Url.Action("Game", "Edit", new { id = item.Id }))">Edit</a>
                     @("|")
                     <a href="@(this.Url.Action("PokeballGameAvailability", "Edit", new { id = item.Id }))">Edit Pokeballs</a>
-                    @if (item.GenerationId >= 8 && item.Id != 35 && item.Id != 36 && item.Id != 37)
+                    @if (item.WildMarksPossible)
                     {
                         @("|")
                         <a href="@(this.Url.Action("MarkGameAvailability", "Edit", new { id = item.Id }))">Edit Marks</a>
                     }
-                    @if (!Model.AllPokemon.Exists(x => x.Game.Id == item.Id))
+                    @if (item.ReleaseDate > Model.CurrentTime)
                     {
                         @("|")
                         <a href="@(this.Url.Action("Game", "Delete", new { id = item.Id }))">Delete</a>
