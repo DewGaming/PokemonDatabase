@@ -1448,8 +1448,8 @@ namespace Pokedex
             {
                 if (comment.CommentorId != 1)
                 {
-                    MailAddress fromAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Website");
-                    MailAddress toAddress = new MailAddress(appConfig.EmailAddress, "Pokemon Database Email");
+                    MailAddress fromAddress = new MailAddress(appConfig.SenderEmailAddress, "Pokemon Database Website");
+                    MailAddress toAddress = new MailAddress(appConfig.ReceiverEmailAddress, "Pokemon Database Email");
                     MailMessage message = new MailMessage(fromAddress, toAddress)
                     {
                         Subject = string.Concat("New Comment for ", appConfig.AppName),
@@ -1474,7 +1474,7 @@ namespace Pokedex
                         EnableSsl = true,
                         DeliveryMethod = SmtpDeliveryMethod.Network,
                         UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential(fromAddress.Address, appConfig.EmailAddressPassword),
+                        Credentials = new NetworkCredential(fromAddress.Address, appConfig.SenderEmailAddressPassword),
                     };
                     smtp.Send(message);
                 }

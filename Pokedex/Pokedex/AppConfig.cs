@@ -188,14 +188,19 @@ namespace Pokedex
         public string FTPPassword { get; set; }
 
         /// <summary>
-        /// Gets or sets the email address.
+        /// Gets or sets the sender email address.
         /// </summary>
-        public string EmailAddress { get; set; }
+        public string SenderEmailAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the email address password.
+        /// Gets or sets the sender email address password.
         /// </summary>
-        public string EmailAddressPassword { get; set; }
+        public string SenderEmailAddressPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the receiver email address.
+        /// </summary>
+        public string ReceiverEmailAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the date page stat tracking started.
