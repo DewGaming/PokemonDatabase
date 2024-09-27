@@ -12,17 +12,7 @@ var isShared, adjustIncrements = function (shinyHuntId) {
             url: '/set-shiny-hunt-increments/',
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "increments": increments }
-        })
-            .done(function () {
-                connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(-1), parseInt(-1), parseInt(increments)).catch(function (err) {
-                    return console.error(err.toString());
-                });
-            })
-            .fail(function () {
-                if (isLocalHost) {
-                    alert("Update Failed!");
-                }
-            });
+        });
     } else if (increments != null) {
         alert("Entered Phases Need to be a Number")
     }
@@ -38,17 +28,7 @@ var isShared, adjustIncrements = function (shinyHuntId) {
             url: '/set-shiny-hunt-encounters/',
             method: "POST",
             data: { "shinyHuntId": shinyHuntId, "encounters": encounters }
-        })
-            .done(function () {
-                connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(encounters), parseInt(-1), parseInt(-1)).catch(function (err) {
-                    return console.error(err.toString());
-                });
-            })
-            .fail(function () {
-                if (isLocalhost) {
-                    alert("Update Failed!");
-                }
-            });
+        });
     } else if (encounters != null) {
         alert("Entered Encounters Need to be a Number")
     }
@@ -136,17 +116,7 @@ function incrementEncounter(shinyHuntId) {
         url: '/set-shiny-hunt-encounters/',
         method: "POST",
         data: { "shinyHuntId": shinyHuntId, "encounters": currentEncounters + incrementAmount }
-    })
-        .done(function () {
-            connection.invoke("UpdateHuntAttributes", parseInt(shinyHuntId), parseInt(currentEncounters + incrementAmount), parseInt(-1), parseInt(-1)).catch(function (err) {
-                return console.error(err.toString());
-            });
-        })
-        .fail(function () {
-            if (isLocalhost) {
-                alert("Update Failed!");
-            }
-        });
+    });
 }
 
 function togglePin(shinyHuntId) {
@@ -154,18 +124,7 @@ function togglePin(shinyHuntId) {
         url: '/toggle-hunt-pin/',
         method: "POST",
         data: { "shinyHuntId": shinyHuntId }
-    })
-        .done(function (data) {
-            updatePinStatus(shinyHuntId, !($('.Hunt' + shinyHuntId).hasClass("HuntGamePin")));
-            connection.invoke("UpdatePinStatus", parseInt(shinyHuntId), Boolean(data)).catch(function (err) {
-                return console.error(err.toString());
-            });
-        })
-        .fail(function () {
-            if (isLocalhost) {
-                alert("Update Failed!");
-            }
-        });
+    });
 }
 
 function abandonHunt(shinyHuntId, pokemonName) {
@@ -181,15 +140,7 @@ function abandonHunt(shinyHuntId, pokemonName) {
             data: { "shinyHuntId": shinyHuntId }
         })
             .done(function () {
-                connection.invoke("DeleteShinyHunt", parseInt(shinyHuntId)).catch(function (err) {
-                    return console.error(err.toString());
-                });
                 $('.Hunt' + shinyHuntId).remove();
-            })
-            .fail(function () {
-                if (isLocalhost) {
-                    alert("Update Failed!");
-                }
             });
     }
 }
