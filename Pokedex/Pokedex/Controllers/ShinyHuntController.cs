@@ -23,20 +23,16 @@ namespace Pokedex.Controllers
 
         private readonly AppConfig appConfig;
 
-        private readonly IHubContext<ShinyHuntHub> hubContext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ShinyHuntController"/> class.
         /// </summary>
         /// <param name="appConfig">The application's configuration.</param>
         /// <param name="dataContext">The pokemon database context.</param>
-        /// <param name="hubContext">The shiny hunting hub.</param>
-        public ShinyHuntController(IOptions<AppConfig> appConfig, DataContext dataContext, IHubContext<ShinyHuntHub> hubContext)
+        public ShinyHuntController(IOptions<AppConfig> appConfig, DataContext dataContext)
         {
             // Instantiate an instance of the data service.
             this.appConfig = appConfig.Value;
             this.dataService = new DataService(dataContext);
-            this.hubContext = hubContext;
         }
 
         /// <summary>
@@ -349,8 +345,6 @@ namespace Pokedex.Controllers
 
                 this.dataService.UpdateObject(shinyHunt);
             }
-
-            await this.hubContext.Clients.All.SendAsync("FinishShinyHunt", shinyHunt.Id);
 
             return this.RedirectToAction("ShinyHunts", "User");
         }
