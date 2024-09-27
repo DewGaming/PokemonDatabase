@@ -1505,9 +1505,9 @@ namespace Pokedex
                     image.Trim();
                 }
 
-                image.Resize(new MagickGeometry(width, height));
+                image.Resize(new MagickGeometry(Convert.ToUInt32(width), Convert.ToUInt32(height)));
                 MemoryStream strm = new MemoryStream();
-                image.RePage();
+                image.ResetPage();
                 if (icon)
                 {
                     image.Quality = 75;

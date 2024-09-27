@@ -84,61 +84,6 @@ $('.currentEncounters.pointer').on('click', function () {
     adjustEncountersManually($(this).prop('id'));
 });
 
-//#region SignalR Connection
-const connection = new signalR.HubConnectionBuilder().withUrl("/hub/shinyHunts").withAutomaticReconnect().build();
-connection.start().catch(function (err) {
-    return console.error(err.toString());
-});
-
-connection.on("SendHuntAttributes", function (shinyHuntId, encounters, phases, increments) {
-    if (isShared == "True") {
-        if (encounters != -1) {
-            $('.Hunt' + shinyHuntId + ' .encounters').html(encounters);
-        }
-
-        if (phases != -1) {
-            $('.Hunt' + shinyHuntId + ' .phases').html(phases);
-            if (phases == 1) {
-                $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Encounters: ')
-                $('.Hunt' + shinyHuntId + ' .phaseCounter').addClass('hide');
-            } else {
-                $('.Hunt' + shinyHuntId + ' .currentEncounters b').html('Current Phase Encounters: ')
-                $('.Hunt' + shinyHuntId + ' .phaseCounter').removeClass('hide');
-            }
-        }
-
-        if (increments != -1) {
-            $('.Hunt' + shinyHuntId + ' .increments').html(increments);
-        }
-    }
-});
-
-connection.on("SendPinStatus", function (shinyHuntId, isPinned) {
-    updatePinStatus(shinyHuntId, isPinned);
-});
-
-connection.on("RemoveShinyHunt", function (shinyHuntId) {
-    $('.Hunt' + shinyHuntId).remove();
-});
-
-connection.on("FinishShinyHunt", function (shinyHuntId) {
-    $.ajax({
-        url: '/add-completed-shiny-hunt/',
-        method: "POST",
-        data: { "shinyHuntId": shinyHuntId }
-    })
-        .done(function (view) {
-            $('.incompletedHunts .grid-container .Hunt' + shinyHuntId).remove();
-            $('.completedHunts .grid-container').prepend(view);
-        })
-        .fail(function () {
-            if (isLocalhost) {
-                alert("Update Failed!");
-            }
-        });
-});
-//#endregion SignalR Connections
-
 function lookupHuntsInGame(element, gameId) {
     if (!$('.active').is($('#Game' + gameId))) {
         $('button').each(function () {

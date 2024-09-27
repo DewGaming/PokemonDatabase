@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR;
 using Pokedex.DataAccess.Models;
 using System.Threading.Tasks;
 
