@@ -109,6 +109,11 @@
   text-align: center;
 }
 
+.shinyCount {
+  margin-top: 1rem;
+  text-align: center;
+}
+
 .container {
   max-width: 85% !important;
 }

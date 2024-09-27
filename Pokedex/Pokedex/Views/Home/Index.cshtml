@@ -46,8 +46,8 @@
         <img class="modalPreview" loading="lazy" data-modalUrl="@this.Url.Action("TeamRandomizer", "Home")" alt="Team Randomizer" title="Utilize the options in the dropdown menus to create a randomized Pokémon team!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "teamRandomizer.png"))">
     </div>
     <div class="feature shinyHunts">
-        <a href="@this.Url.Action("ShinyHunts", "User")"><p><b>Track Shiny Hunts!</b></p></a>
-        <img class="modalPreview" loading="lazy" data-modalUrl="@this.Url.Action("ShinyHunts", "User")" alt="Shiny Hunts" title="Keep track of all of you current and successful shiny hunts! Additional &quot;Shiny Dex Completion&quot; page available to track progress for a shiny living dex!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunts.png"))">
+        <a href="@this.Url.Action("IncompleteShinyHunts", "User")"><p><b>Track Shiny Hunts!</b></p></a>
+        <img class="modalPreview" loading="lazy" data-modalUrl="@this.Url.Action("IncompleteShinyHunts", "User")" alt="Shiny Hunts" title="Keep track of all of you current shiny hunts! Additional &quot;Completed Shiny Hunts&quot; and &quot;Shiny Dex Completion&quot; page available to track progress for a shiny living dex!" src="@(string.Concat(@Model.WebUrl, @Model.HomePageImageUrl, "shinyHunts.png"))">
     </div>
     <div class="feature teamBuilder">
         <a href="@this.Url.Action("PokemonTeams", "User")"><p><b>Build Teams!</b></p></a>

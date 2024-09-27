@@ -1,0 +1,61 @@
+@model Pokedex.Models.ShinyHuntsViewModel;
+@using MoreLinq;
+@using Pokedex.DataAccess.Models;
+@using System.Collections.Generic;
+@using System.Net;
+@{
+    ViewBag.Title = "Completed Shiny Hunts";
+    ViewBag.Description = "Keep track of all of you successful shiny hunts!";
+}
+
+@section styles
+{
+    <link href="~/css/pageLookup.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/shinyHunts.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/ajaxSpinner.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section scripts
+{
+    <script src="~/js/pageLookup.js" asp-append-version="true"></script>
+    <script src="~/js/shinyHunts.js" asp-append-version="true"></script>
+}
+
+<p class="shinyHuntButtons">
+    @if (!Model.IsShared)
+    {
+        <a class="btn btn-primary" href="@this.Url.Action("AddCompletedHunt", "ShinyHunt")" role="button">Add Completed Hunt</a>
+        <button class="sharePage btn btn-primary" onclick="giveSharableLink('@Model.Username')">Share With Others</button>
+    }
+</p>
+
+<div class="pageButtons gamesList">
+    @foreach (var g in @Model.EdittedGames)
+    {
+        string gameColors = string.Concat(g.GameColor, " 50%, ");
+        if (@Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).Count() > 1 && g.Name != "Fire Red" && g.Name != "Leaf Green")
+        {
+            gameColors = string.Concat(gameColors, @Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).ToList()[1].GameColor, " 50%)");
+        }
+        else
+        {
+            gameColors = string.Concat(gameColors, g.GameColor, " 50%)");
+        }
+
+        <button style="@(g.GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupCompletedShinyHunts('@g.Id', '@Model.IsShared', '@Model.Username')">@g.Name</button>
+    }
+</div>
+
+<div class="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+
+<h4 class="shinyCount">Total Shinies Found: @Model.ShinyHuntCount</h4>
+<div class="page active generation pokemonList completedHunts"></div>
+
+@if (Model.AllShinyHunts.Count() == 0)
+{
+    <div class="noShinyHunts">No incomplete hunts are available.</div>
+}

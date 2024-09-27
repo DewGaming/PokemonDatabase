@@ -207,29 +207,3 @@ function giveSharableLink(username) {
         console.log(url);
     }
 }
-
-function hideIncomplete() {
-    $('.incompletedHunts').addClass('hide');
-    $('.completedHunts').removeClass('hide');
-    if ($('.incompletedHunts').hasClass('active')) {
-        $('.incompletedHunts').removeClass('active');
-        $('.completedHunts').addClass('active');
-    }
-    $('.completedHuntsButton').addClass('hide');
-    $('.currentlyHuntingButton').removeClass('hide');
-    $('.uncapturedGamesList').addClass('hide');
-    $('.capturedGamesList').removeClass('hide');
-}
-
-function hideComplete() {
-    $('.completedHunts').addClass('hide');
-    $('.incompletedHunts').removeClass('hide');
-    if ($('.completedHunts').hasClass('active')) {
-        $('.completedHunts').removeClass('active');
-        $('.incompletedHunts').addClass('active');
-    }
-    $('.currentlyHuntingButton').addClass('hide');
-    $('.completedHuntsButton').removeClass('hide');
-    $('.capturedGamesList').addClass('hide');
-    $('.uncapturedGamesList').removeClass('hide');
-}

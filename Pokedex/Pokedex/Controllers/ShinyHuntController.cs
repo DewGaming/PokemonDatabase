@@ -198,7 +198,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("ShinyHunts", "User");
+                return this.RedirectToAction("IncompleteShinyHunts", "User");
             }
         }
 
@@ -264,7 +264,7 @@ namespace Pokedex.Controllers
 
             if (numberOfHunts == "oneHunt")
             {
-                return this.RedirectToAction("ShinyHunts", "User");
+                return this.RedirectToAction("IncompleteShinyHunts", "User");
             }
             else if (numberOfHunts == "multipleHunts")
             {
@@ -272,7 +272,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("ShinyHunts", "User");
+                return this.RedirectToAction("IncompleteShinyHunts", "User");
             }
         }
 
@@ -346,7 +346,7 @@ namespace Pokedex.Controllers
                 this.dataService.UpdateObject(shinyHunt);
             }
 
-            return this.RedirectToAction("ShinyHunts", "User");
+            return this.RedirectToAction("IncompleteShinyHunts", "User");
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace Pokedex.Controllers
                 this.dataService.UpdateObject(originalShinyHunt);
             }
 
-            return this.RedirectToAction("ShinyHunts", "User");
+            return this.RedirectToAction("IncompleteShinyHunts", "User");
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace Pokedex.Controllers
 
             this.dataService.UpdateObject(shinyHunt);
 
-            return this.RedirectToAction("ShinyHunts", "User");
+            return this.RedirectToAction("IncompleteShinyHunts", "User");
         }
 
         /// <summary>
@@ -597,7 +597,7 @@ namespace Pokedex.Controllers
                 this.dataService.UpdateObject(parentHunt);
             }
 
-            return this.RedirectToAction("ShinyHunts", "User");
+            return this.RedirectToAction("IncompleteShinyHunts", "User");
         }
 
         /// <summary>
@@ -696,6 +696,126 @@ namespace Pokedex.Controllers
 
             this.dataService.AddPageView("Shiny Hunt Phases Page", this.User.IsInRole("Owner"));
             return this.View("ShinyHuntPhases", model);
+        }
+
+        /// <summary>
+        /// Transport the user to their shiny hunt page.
+        /// </summary>
+        /// <returns>The shiny hunt page.</returns>
+        [Route("completed_shiny_hunts")]
+        public IActionResult CompletedShinyHunts()
+        {
+            this.dataService.AddPageView("Completed Shiny Hunting Page", this.User.IsInRole("Owner"));
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
+            List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
+            gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+            List<Game> edittedGamesList = new List<Game>();
+            foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                if (gamesList.First(x => x.ReleaseDate == r).Id != 4)
+                {
+                    edittedGamesList.Add(new Game()
+                    {
+                        Id = gamesList.First(x => x.ReleaseDate == r).Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                        GenerationId = gamesList.First(x => x.ReleaseDate == r).GenerationId,
+                        ReleaseDate = r,
+                        GameColor = gamesList.First(x => x.ReleaseDate == r).GameColor,
+                    });
+                }
+                else
+                {
+                    foreach (var g in gamesList.Where(x => x.ReleaseDate == r).ToList())
+                    {
+                        edittedGamesList.Add(g);
+                    }
+                }
+            }
+
+            shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
+            shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
+            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
+
+            ShinyHuntsViewModel model = new ShinyHuntsViewModel()
+            {
+                AllShinyHunts = shinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
+                EdittedGames = edittedGamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
+                UnedittedGames = gamesList,
+                Username = this.User.Identity.Name,
+                IsShared = false,
+                AppConfig = this.appConfig,
+            };
+
+            model.ShinyHuntCount = model.AllShinyHunts.Count();
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// Transport the user to their shiny hunt page.
+        /// </summary>
+        /// <param name="username">The username of the user being searched.</param>
+        /// <returns>The shiny hunt page.</returns>
+        [AllowAnonymous]
+        [Route("completed_shiny_hunts/{username}")]
+        public IActionResult ShareableCompletedShinyHunts(string username)
+        {
+            User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
+            if (user != null)
+            {
+                this.dataService.AddPageView("Share Completed Shiny Hunting Page", this.User.IsInRole("Owner"));
+                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", user.Username);
+                List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
+                List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
+                shinyHunts = shinyHunts.Where(x => x.IsCaptured).ToList();
+                gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+                List<Game> edittedGamesList = new List<Game>();
+                foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
+                {
+                    if (gamesList.First(x => x.ReleaseDate == r).Id != 4)
+                    {
+                        edittedGamesList.Add(new Game()
+                        {
+                            Id = gamesList.First(x => x.ReleaseDate == r).Id,
+                            Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                            GenerationId = gamesList.First(x => x.ReleaseDate == r).GenerationId,
+                            ReleaseDate = r,
+                            GameColor = gamesList.First(x => x.ReleaseDate == r).GameColor,
+                        });
+                    }
+                    else
+                    {
+                        foreach (var g in gamesList.Where(x => x.ReleaseDate == r).ToList())
+                        {
+                            edittedGamesList.Add(g);
+                        }
+                    }
+                }
+
+                shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
+                shinyHunts.Where(x => x.PokemonId == null).ToList().ForEach(x => x.Pokemon = new Pokemon() { Id = 0, Name = "Unknown", PokedexNumber = 0 });
+                shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
+                shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
+
+                ShinyHuntsViewModel model = new ShinyHuntsViewModel()
+                {
+                    AllShinyHunts = shinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
+                    EdittedGames = edittedGamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
+                    UnedittedGames = gamesList,
+                    Username = username,
+                    IsShared = true,
+                    AppConfig = this.appConfig,
+                };
+
+                model.ShinyHuntCount = model.AllShinyHunts.Count();
+
+                return this.View("CompletedShinyHunts", model);
+            }
+            else
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
         }
     }
 }

@@ -2907,6 +2907,68 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
+        /// Transport the user to their shiny hunt page.
+        /// </summary>
+        /// <returns>The shiny hunt page.</returns>
+        [Route("completed-shiny-hunt-data/{gameId:int}/{isShared}/{username}")]
+        public IActionResult CompletedShinyHuntData(int gameId, bool isShared, string username = "")
+        {
+            List<ShinyHunt> shinyHunts = new List<ShinyHunt>();
+            if (isShared)
+            {
+                User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
+                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", user.Username).Where(x => x.IsCaptured && x.GameId == gameId).ToList();
+            }
+            else
+            {
+                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured && x.GameId == gameId).ToList();
+            }
+
+            List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
+            List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
+            gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+            List<Game> edittedGamesList = new List<Game>();
+            foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
+            {
+                if (gamesList.First(x => x.ReleaseDate == r).Id != 4)
+                {
+                    edittedGamesList.Add(new Game()
+                    {
+                        Id = gamesList.First(x => x.ReleaseDate == r).Id,
+                        Name = string.Join(" / ", gamesList.Where(x => x.ReleaseDate == r).Select(x => x.Name)),
+                        GenerationId = gamesList.First(x => x.ReleaseDate == r).GenerationId,
+                        ReleaseDate = r,
+                        GameColor = gamesList.First(x => x.ReleaseDate == r).GameColor,
+                    });
+                }
+                else
+                {
+                    foreach (var g in gamesList.Where(x => x.ReleaseDate == r).ToList())
+                    {
+                        edittedGamesList.Add(g);
+                    }
+                }
+            }
+
+            shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
+            shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
+            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
+
+            ShinyHuntsViewModel model = new ShinyHuntsViewModel()
+            {
+                AllShinyHunts = shinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
+                EdittedGames = edittedGamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
+                UnedittedGames = gamesList,
+                IsShared = isShared,
+                AppConfig = this.appConfig,
+            };
+
+            model.ShinyHuntCount = model.AllShinyHunts.Count();
+
+            return this.PartialView("_FillCompletedShinyHunts", model);
+        }
+
+        /// <summary>
         /// Gets a list of all pokemon that are not alternate forms.
         /// </summary>
         /// <returns>Returns the list of original pokemon.</returns>

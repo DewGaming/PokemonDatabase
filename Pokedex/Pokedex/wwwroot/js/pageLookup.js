@@ -344,3 +344,22 @@ function lookupPopularity() {
     $(".overlay").fadeOut(300);
   });
 }
+
+function lookupCompletedShinyHunts(gameId, isShared, username) {
+  $(".overlay").fadeIn(300);
+
+  $('button').each(function () {
+    $(this).removeClass('active');
+  });
+
+  $('.pokemonList').removeClass('active');
+  $('.pokemonList > .grid-container').empty();
+  $('button#Game' + gameId).addClass('active');
+
+  $('.pokemonList').load('/completed-shiny-hunt-data/' + gameId + '/' + isShared + '/' + username, function () {
+    $('.pokemonList').addClass('active');
+    setTimeout(function () {
+      $(".overlay").fadeOut(300);
+    });
+  });
+}

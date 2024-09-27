@@ -124,17 +124,6 @@ namespace Pokedex
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<ShinyHuntHub>("/hub/shinyHunts");
-            });
-
-            app.Use(async (context, next) =>
-            {
-                var hubContext = context.RequestServices.GetRequiredService<IHubContext<ShinyHuntHub>>();
-
-                if (next != null)
-                {
-                    await next.Invoke();
-                }
             });
         }
     }

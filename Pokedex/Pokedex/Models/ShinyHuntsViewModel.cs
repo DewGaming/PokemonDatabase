@@ -34,6 +34,11 @@ namespace Pokedex.Models
         public bool IsShared { get; set; }
 
         /// <summary>
+        /// Gets or sets the count of total of items in AllShinyHunts.
+        /// </summary>
+        public int ShinyHuntCount { get; set; }
+
+        /// <summary>
         /// Gets or sets a shiny hunt.
         /// </summary>
         public ShinyHunt ShinyHunt { get; set; }
