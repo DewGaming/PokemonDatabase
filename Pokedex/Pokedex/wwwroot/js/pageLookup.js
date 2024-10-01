@@ -288,6 +288,8 @@ function lookupMonth(month) {
 }
 
 function lookupYearStats(month) {
+  $(".overlay").fadeIn(300);
+
   $('.month button').each(function () {
     $(this).removeClass('active');
   });
@@ -303,6 +305,7 @@ function lookupYearStats(month) {
 
   $('.month.pageStatList').load('/get-stats-by-date/' + 0 + '/' + 0 + '/' + $('.pageButtons.year .active').attr('id').replace('Year', '') + '/' + $('.pokemonPageCheck').attr('id'), function () {
     $('.month.pageStatList').addClass('active');
+    $(".overlay").fadeOut(300);
   });
 }
 

@@ -477,8 +477,6 @@ namespace Pokedex.Controllers
                         model.AdminDropdown = adminDropdown;
                     }
 
-                    this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
-                    this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
                     if (name == "Arceus")
                     {
                         model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
@@ -495,6 +493,9 @@ namespace Pokedex.Controllers
                     model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 99, Name = "Stellar" });
 
                     model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
+
+                    this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
+                    this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
 
                     return this.View(model);
                 }

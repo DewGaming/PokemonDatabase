@@ -2909,6 +2909,9 @@ namespace Pokedex.Controllers
         /// <summary>
         /// Transport the user to their shiny hunt page.
         /// </summary>
+        /// <param name="gameId">The id of the game used to search for specific completed shiny hunts.</param>
+        /// <param name="isShared">The boolean determining if the complete shiny hunt page was shared.</param>
+        /// <param name="username">The username used during the search in case the page was shared.</param>
         /// <returns>The shiny hunt page.</returns>
         [Route("completed-shiny-hunt-data/{gameId:int}/{isShared}/{username}")]
         public IActionResult CompletedShinyHuntData(int gameId, bool isShared, string username = "")

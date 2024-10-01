@@ -326,7 +326,7 @@ namespace Pokedex.Controllers
         /// <returns>The user's shiny hunt page.</returns>
         [HttpPost]
         [Route("complete_shiny_hunt/{shinyHuntId:int}")]
-        public async Task<ActionResult> ShinyFound(CompleteShinyHuntViewModel shinyHunt)
+        public IActionResult ShinyFound(CompleteShinyHuntViewModel shinyHunt)
         {
             if (this.ModelState.IsValid)
             {

@@ -124,6 +124,9 @@ function togglePin(shinyHuntId) {
         url: '/toggle-hunt-pin/',
         method: "POST",
         data: { "shinyHuntId": shinyHuntId }
+    })
+    .done(function (data) {
+        updatePinStatus(shinyHuntId, data);
     });
 }
 
