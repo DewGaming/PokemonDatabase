@@ -46,6 +46,27 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Records a page's view.
+        /// </summary>
+        /// <param name="pokemonId">The id of the pokemon the view is being counted for.</param>
+        /// <param name="formId">The id of the form the view is being counted for. Optional.</param>
+        /// <param name="isOwner">A check to ensure the user is not the owner.</param>
+        public void AddPokemonPageView(int pokemonId, int formId, bool isOwner)
+        {
+            if (!isOwner)
+            {
+                if (formId == 0)
+                {
+                    this.AddObject(new PokemonPageStat() { PokemonId = pokemonId, VisitTime = System.DateTime.Now.ToUniversalTime(), VisitDate = System.DateTime.Now.ToUniversalTime() });
+                }
+                else
+                {
+                    this.AddObject(new PokemonPageStat() { PokemonId = pokemonId, FormId = formId, VisitTime = System.DateTime.Now.ToUniversalTime(), VisitDate = System.DateTime.Now.ToUniversalTime() });
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns a list of objects from the passed-through TEntity class.
         /// </summary>
         /// <typeparam name="TEntity">The generic type parameter.</typeparam>
@@ -509,7 +530,7 @@ namespace Pokedex
         /// </summary>
         /// <param name="pokemonId">The id of a pokemon.</param>
         /// <returns>Returns a list of all alternate forms of a pokemon.</returns>
-        public List<Pokemon> GetAltForms(int pokemonId)
+        public List<PokemonFormDetail> GetAltForms(int pokemonId)
         {
             List<PokemonFormDetail> pokemonList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form");
             if (this.CheckIfAltForm(pokemonId))
@@ -525,7 +546,7 @@ namespace Pokedex
                 pokemonList = pokemonList.Where(x => x.OriginalPokemonId == pokemonId).ToList();
             }
 
-            return pokemonList.Select(x => x.AltFormPokemon).ToList();
+            return pokemonList;
         }
 
         /// <summary>

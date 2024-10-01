@@ -387,6 +387,7 @@ namespace Pokedex.Controllers
         {
             int pokemonId = selectedPokemonId;
             int generationId = selectedGenerationId;
+            int formId = 0;
             selectedPokemonId = 0;
             selectedGenerationId = 0;
             name = this.FormatPokemonName(name);
@@ -419,21 +420,18 @@ namespace Pokedex.Controllers
 
                     pokemonList.Add(pokemonDetails);
 
-                    List<Pokemon> altForms = this.dataService.GetAltForms(pokemonId);
+                    List<PokemonFormDetail> altForms = this.dataService.GetAltForms(pokemonId);
                     if (altForms.Count > 0)
                     {
                         if (this.dataService.CheckIfAltForm(pokemonId))
                         {
                             pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
+                            formId = altForms.Find(x => x.AltFormPokemonId == pokemonId).FormId;
                         }
 
-                        Form form;
-                        List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
                         foreach (var p in altForms)
                         {
-                            form = formDetails.Find(x => x.AltFormPokemonId == p.Id).Form;
-                            pokemonDetails = this.dataService.GetPokemonDetails(p, this.appConfig, form);
-
+                            pokemonDetails = this.dataService.GetPokemonDetails(p.AltFormPokemon, this.appConfig, p.Form);
                             pokemonList.Add(pokemonDetails);
                         }
                     }
@@ -494,8 +492,8 @@ namespace Pokedex.Controllers
 
                     model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
 
-                    this.dataService.AddPageView(string.Concat("Pokemon Page - ", pokemonName), this.User.IsInRole("Owner"));
                     this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
+                    this.dataService.AddPokemonPageView(pokemonId, formId, this.User.IsInRole("Owner"));
 
                     return this.View(model);
                 }
