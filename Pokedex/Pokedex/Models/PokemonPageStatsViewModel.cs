@@ -16,7 +16,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of page stats for pokemon.
         /// </summary>
-        public List<PageStat> PageStatList { get; set; }
+        public List<PokemonPageStat> PageStatList { get; set; }
 
         /// <summary>
         /// Gets or sets the application's configuration.

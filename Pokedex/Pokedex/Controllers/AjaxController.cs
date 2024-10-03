@@ -2378,54 +2378,51 @@ namespace Pokedex.Controllers
         [Route("get-stats-by-date/{day:int}/{month}/{year:int}/{pokemonPageCheck}")]
         public IActionResult GrabStatsByDate(int day, string month, int year, string pokemonPageCheck)
         {
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => x.VisitDate.Year == year).ToList();
-            if (month != "0")
-            {
-                pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
-                if (day != 0)
-                {
-                    pageStats = pageStats.Where(x => x.VisitDate.Day == day).ToList();
-                }
-            }
-
             if (pokemonPageCheck == "noPokemonPage")
             {
+                List<PageStat> pageStats = this.dataService.GetObjects<PageStat>("VisitDate").Where(x => x.VisitDate.Year == year).ToList();
+                if (month != "0")
+                {
+                    pageStats = pageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
+                    if (day != 0)
+                    {
+                        pageStats = pageStats.Where(x => x.VisitDate.Day == day).ToList();
+                    }
+                }
+
                 pageStats = pageStats.Where(x => !x.Name.Contains("Pokemon Page -")).ToList();
                 return this.PartialView("_FillStatsInDate", pageStats);
             }
             else
             {
-                pageStats = pageStats.Where(x => x.Name.Contains("Pokemon Page -")).ToList();
-                static PageStat Selector(PageStat x)
+                List<PokemonPageStat> pokemonPageStats = this.dataService.GetObjects<PokemonPageStat>("VisitDate", "Pokemon, Form").Where(x => x.VisitDate.Year == year).ToList();
+                if (month != "0")
                 {
-                    x.Name = x.Name.Replace("Pokemon Page - ", string.Empty);
-                    return x;
+                    pokemonPageStats = pokemonPageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
+                    if (day != 0)
+                    {
+                        pokemonPageStats = pokemonPageStats.Where(x => x.VisitDate.Day == day).ToList();
+                    }
                 }
 
-                pageStats = pageStats.Select(Selector).ToList();
-                List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id");
                 List<Pokemon> pokemonList = new List<Pokemon>();
-                Form altForm;
-                Pokemon pokemon;
-                foreach (var p in pageStats.Select(x => x.Name).Distinct())
+                foreach (var p in pokemonPageStats.DistinctBy(x => x.PokemonId))
                 {
-                    if (p.Contains("(") && !p.Contains("Nidoran"))
+                    if (p.FormId != null)
                     {
-                        altForm = this.dataService.GetObjectByPropertyValue<Form>("Name", p.Split("(")[1].Replace(")", string.Empty));
-                        pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Split(" (")[0], altForm.Id);
-                        pokemon.Name = string.Concat(pokemon.Name, " (", altForm.Name, ")");
-                        pokemonList.Add(pokemon);
+                        p.Pokemon.Name = string.Concat(p.Pokemon.Name, " (", p.Form.Name, ")");
+                        pokemonList.Add(p.Pokemon);
                     }
                     else
                     {
-                        pokemonList.Add(allPokemon.First(x => x.Name == p));
+                        pokemonList.Add(p.Pokemon);
                     }
                 }
 
                 PokemonPageStatsViewModel model = new PokemonPageStatsViewModel()
                 {
                     PokemonList = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
-                    PageStatList = pageStats,
+                    PageStatList = pokemonPageStats,
                     AppConfig = this.appConfig,
                     Generation = this.dataService.GetObjects<Generation>().Last(),
                 };
@@ -2441,23 +2438,17 @@ namespace Pokedex.Controllers
         [Route("get-stats-by-popularity")]
         public IActionResult GrabStatsByPopularity()
         {
-            List<PageStat> pageStats = this.dataService.GetObjects<PageStat>().Where(x => x.Name.Contains("Pokemon Page -")).ToList();
-            static PageStat Selector(PageStat x)
-            {
-                x.Name = x.Name.Replace("Pokemon Page - ", string.Empty);
-                return x;
-            }
-
-            pageStats = pageStats.Select(Selector).ToList();
+            List<PokemonPageStat> pokemonPageStats = this.dataService.GetObjects<PokemonPageStat>("VisitDate", "Pokemon, Form");
             List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id");
             List<Pokemon> unOrderedPokemonList = new List<Pokemon>();
             List<Pokemon> pokemonList = new List<Pokemon>();
-            Form altForm;
+            PokemonPageStat pageStat;
             Pokemon pokemon;
             int viewCount = 0;
-            List<IGrouping<string, string>> pokemonNames = pageStats.Select(x => x.Name).ToList().GroupBy(x => x).OrderByDescending(x => x.Count()).ToList();
+            List<IGrouping<int, int>> pokemonNames = pokemonPageStats.Select(x => x.PokemonId).ToList().GroupBy(x => x).OrderByDescending(x => x.Count()).ToList();
             foreach (var p in pokemonNames)
             {
+                pageStat = pokemonPageStats.First(x => x.PokemonId == p.Key);
                 if (p.Count() != viewCount)
                 {
                     viewCount = p.Count();
@@ -2465,16 +2456,15 @@ namespace Pokedex.Controllers
                     unOrderedPokemonList = new List<Pokemon>();
                 }
 
-                if (p.Key.Contains("(") && !p.Key.Contains("Nidoran"))
+                if (pageStat.FormId != null)
                 {
-                    altForm = this.dataService.GetObjectByPropertyValue<Form>("Name", p.Key.Split("(")[1].Replace(")", string.Empty));
-                    pokemon = this.dataService.GetPokemonFromNameAndFormName(p.Key.Split(" (")[0], altForm.Id);
-                    pokemon.Name = string.Concat(pokemon.Name, " (", altForm.Name, ")");
+                    pokemon = pageStat.Pokemon;
+                    pokemon.Name = string.Concat(pokemon.Name, " (", pageStat.Form.Name, ")");
                     unOrderedPokemonList.Add(pokemon);
                 }
                 else
                 {
-                    unOrderedPokemonList.Add(allPokemon.First(x => x.Name == p.Key));
+                    unOrderedPokemonList.Add(allPokemon.First(x => x.Id == p.Key));
                 }
             }
 
@@ -2483,7 +2473,7 @@ namespace Pokedex.Controllers
             PokemonPageStatsViewModel model = new PokemonPageStatsViewModel()
             {
                 PokemonList = pokemonList,
-                PageStatList = pageStats,
+                PageStatList = pokemonPageStats,
                 AppConfig = this.appConfig,
                 Generation = this.dataService.GetObjects<Generation>().Last(),
             };
