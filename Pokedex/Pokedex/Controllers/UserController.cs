@@ -211,7 +211,7 @@ namespace Pokedex.Controllers
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name);
             List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
-            shinyHunts = shinyHunts.Where(x => !x.IsCaptured && x.PhaseOfHuntId == null).ToList();
+            shinyHunts = shinyHunts.Where(x => (!x.IsCaptured && x.PhaseOfHuntId == null) || (x.IsCaptured && x.PhaseOfHuntId != null)).ToList();
             gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
             List<Game> edittedGamesList = new List<Game>();
             foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
