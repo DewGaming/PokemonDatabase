@@ -262,17 +262,13 @@ namespace Pokedex.Controllers
 
             this.dataService.AddObject(shinyHunt);
 
-            if (numberOfHunts == "oneHunt")
-            {
-                return this.RedirectToAction("IncompleteShinyHunts", "User");
-            }
-            else if (numberOfHunts == "multipleHunts")
+            if (numberOfHunts == "multipleHunts")
             {
                 return this.RedirectToAction("AddCompletedHunt", "ShinyHunt");
             }
             else
             {
-                return this.RedirectToAction("IncompleteShinyHunts", "User");
+                return this.RedirectToAction("CompleteShinyHunts", "ShinyHunt");
             }
         }
 
@@ -597,7 +593,7 @@ namespace Pokedex.Controllers
                 this.dataService.UpdateObject(parentHunt);
             }
 
-            return this.RedirectToAction("IncompleteShinyHunts", "User");
+            return this.RedirectToAction("CompletedShinyHunts", "ShinyHunt");
         }
 
         /// <summary>
