@@ -268,7 +268,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                return this.RedirectToAction("CompleteShinyHunts", "ShinyHunt");
+                return this.RedirectToAction("CompletedShinyHunts", "ShinyHunt");
             }
         }
 
