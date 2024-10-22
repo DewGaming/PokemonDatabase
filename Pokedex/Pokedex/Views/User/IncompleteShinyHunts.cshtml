@@ -68,7 +68,7 @@
 
 <div class="page active generation pokemonList incompleteHunts">
     <div class="grid-container">
-        @foreach (var s in Model.AllShinyHunts.Where(x => !x.IsCaptured))
+        @foreach (var s in Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == null))
         {
             <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? (s.IsPinned ? " HuntGamePin" : " hide") : "") shadowed @s.Pokemon.Name">
                 <div class="pokemonDetails">

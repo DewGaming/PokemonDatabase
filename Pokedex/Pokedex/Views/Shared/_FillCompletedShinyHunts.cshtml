@@ -2,7 +2,7 @@
 
 <h5 class="pokemonCount">Total Shinies Found in @Model.AllShinyHunts.First().Game.Name: @Model.AllShinyHunts.Count()</h5>
 <div class="grid-container">
-    @foreach (var s in Model.AllShinyHunts)
+    @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured))
     {
         <div class="Hunt@(s.Id) HuntGame@(s.GameId) shadowed @s.Pokemon.Name">
             <div class="pokemonDetails">
