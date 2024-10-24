@@ -2910,11 +2910,16 @@ namespace Pokedex.Controllers
             if (isShared)
             {
                 User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
-                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", user.Username).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null)) && x.GameId == gameId).ToList();
+                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", user.Username).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null))).ToList();
             }
             else
             {
-                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null)) && x.GameId == gameId).ToList();
+                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null))).ToList();
+            }
+
+            if (gameId != 0)
+            {
+                shinyHunts = shinyHunts.Where(x => x.GameId == gameId).ToList();
             }
 
             List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");

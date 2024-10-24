@@ -30,6 +30,7 @@
 </p>
 
 <div class="pageButtons gamesList">
+    <button class="gameButton" id="Game0" onclick="lookupCompletedShinyHunts('0', '@Model.IsShared', '@Model.Username')">All Games</button>
     @foreach (var g in @Model.EdittedGames)
     {
         string gameColors = string.Concat(g.GameColor, " 50%, ");

@@ -1,6 +1,9 @@
 @model Pokedex.Models.ShinyHuntsViewModel;
 
-<h5 class="pokemonCount">Total Shinies Found in @Model.AllShinyHunts.First().Game.Name: @Model.AllShinyHunts.Count()</h5>
+@if (@Model.EdittedGames.Count() == 1)
+{
+    <h5 class="pokemonCount">Total Shinies Found in @Model.AllShinyHunts.First().Game.Name: @Model.AllShinyHunts.Where(x => x.IsCaptured).Count()</h5>
+}
 <div class="grid-container">
     @foreach (var s in Model.AllShinyHunts.Where(x => x.IsCaptured))
     {
