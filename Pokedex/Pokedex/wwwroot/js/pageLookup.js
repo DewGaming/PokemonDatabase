@@ -1,4 +1,4 @@
-var currentGeneration = 0, sortMethod = "Pokedex"
+var currentGeneration = 0, sortMethod = "Pokedex", orderGameId, orderIsShared, orderUsername;
 
 function lookupPage(pageName) {
   $('.active').each(function () {
@@ -357,10 +357,17 @@ function orderHunts(orderMethod) {
     $('.sortByPokedex').removeClass('hide');
     $('.sortByDate').addClass('hide');
   }
+
+  if ($('.gamesList .active').length > 0) {
+    lookupCompletedShinyHunts(orderGameId, orderIsShared, orderUsername);
+  }
 }
 
 function lookupCompletedShinyHunts(gameId, isShared, username) {
   $(".overlay").fadeIn(300);
+  orderGameId = gameId;
+  orderIsShared = isShared;
+  orderUsername = username;
 
   $('button').each(function () {
     $(this).removeClass('active');
