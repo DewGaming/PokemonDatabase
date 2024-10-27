@@ -604,6 +604,7 @@ namespace Pokedex.Controllers
         [Route("shiny_hunt_phases/{shinyHuntId:int}")]
         public IActionResult ShinyHuntPhases(int shinyHuntId)
         {
+            List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>(includes: "Pokemon, Mark, Pokeball, Sweet, Game, HuntingMethod");
             List<ShinyHunt> phases = shinyHunts.Where(x => x.PhaseOfHuntId == shinyHuntId).ToList();
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
@@ -632,6 +633,7 @@ namespace Pokedex.Controllers
             }
 
             phases.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
+            shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
                 AllShinyHunts = phases,
