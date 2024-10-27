@@ -27,6 +27,8 @@
         <a class="btn btn-primary" href="@this.Url.Action("AddCompletedHunt", "ShinyHunt")" role="button">Add Completed Hunt</a>
         <button class="sharePage btn btn-primary" onclick="giveSharableLink('@Model.Username')">Share With Others</button>
     }
+    <button class="sortByPokedex btn btn-primary hide" onclick="orderHunts('Pokedex')">Sort Hunts by Pokedex Number</button>
+    <button class="sortByDate btn btn-primary" onclick="orderHunts('Date')">Sort Hunts by Date</button>
 </p>
 
 <div class="pageButtons gamesList">

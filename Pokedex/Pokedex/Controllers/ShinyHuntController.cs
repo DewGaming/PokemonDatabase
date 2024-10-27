@@ -636,7 +636,7 @@ namespace Pokedex.Controllers
             shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
-                AllShinyHunts = phases,
+                AllShinyHunts = phases.OrderBy(x => x.DateOfCapture).ThenBy(x => x.Id).ToList(),
                 ShinyHunt = shinyHunts.Find(x => x.Id == shinyHuntId),
                 IsShared = false,
                 AppConfig = this.appConfig,

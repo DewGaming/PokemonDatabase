@@ -1,4 +1,4 @@
-var currentGeneration = 0
+var currentGeneration = 0, sortMethod = "Pokedex"
 
 function lookupPage(pageName) {
   $('.active').each(function () {
@@ -348,6 +348,17 @@ function lookupPopularity() {
   });
 }
 
+function orderHunts(orderMethod) {
+  sortMethod = orderMethod;
+  if (orderMethod == "Pokedex") {
+    $('.sortByPokedex').addClass('hide');
+    $('.sortByDate').removeClass('hide');
+  } else {
+    $('.sortByPokedex').removeClass('hide');
+    $('.sortByDate').addClass('hide');
+  }
+}
+
 function lookupCompletedShinyHunts(gameId, isShared, username) {
   $(".overlay").fadeIn(300);
 
@@ -359,7 +370,7 @@ function lookupCompletedShinyHunts(gameId, isShared, username) {
   $('.pokemonList > .grid-container').empty();
   $('button#Game' + gameId).addClass('active');
 
-  $('.pokemonList').load('/completed-shiny-hunt-data/' + gameId + '/' + isShared + '/' + username, function () {
+  $('.pokemonList').load('/completed-shiny-hunt-data/' + gameId + '/' + isShared + '/' + username + '/' + sortMethod, function () {
     $('.pokemonList').addClass('active');
     setTimeout(function () {
       $(".overlay").fadeOut(300);

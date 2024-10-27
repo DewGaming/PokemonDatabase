@@ -2902,9 +2902,10 @@ namespace Pokedex.Controllers
         /// <param name="gameId">The id of the game used to search for specific completed shiny hunts.</param>
         /// <param name="isShared">The boolean determining if the complete shiny hunt page was shared.</param>
         /// <param name="username">The username used during the search in case the page was shared.</param>
+        /// <param name="sortMethod">The method in which the completed hunts will be sorted upon request.</param>
         /// <returns>The shiny hunt page.</returns>
-        [Route("completed-shiny-hunt-data/{gameId:int}/{isShared}/{username}")]
-        public IActionResult CompletedShinyHuntData(int gameId, bool isShared, string username = "")
+        [Route("completed-shiny-hunt-data/{gameId:int}/{isShared}/{username}/{sortMethod}")]
+        public IActionResult CompletedShinyHuntData(int gameId, bool isShared, string username = "", string sortMethod = "Pokedex")
         {
             List<ShinyHunt> shinyHunts = new List<ShinyHunt>();
             if (isShared)
@@ -2952,9 +2953,18 @@ namespace Pokedex.Controllers
             shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
             shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
 
+            if (sortMethod == "Pokedex")
+            {
+                shinyHunts = shinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
+            }
+            else
+            {
+                shinyHunts = shinyHunts.OrderBy(x => x.DateOfCapture).ThenBy(x => x.Id).ToList();
+            }
+
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
-                AllShinyHunts = shinyHunts.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
+                AllShinyHunts = shinyHunts,
                 EdittedGames = edittedGamesList.OrderBy(x => x.ReleaseDate).ThenBy(x => x.Id).ToList(),
                 UnedittedGames = gamesList,
                 IsShared = isShared,
