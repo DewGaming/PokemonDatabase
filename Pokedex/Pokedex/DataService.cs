@@ -485,12 +485,12 @@ namespace Pokedex
 
             if (gameId != 0)
             {
-                // Gets future evolutions that are possible.
+                // Gets evolutions that are possible in other games.
                 Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
-                List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game").Where(x => x.GenerationId > game.GenerationId).ToList();
+                List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game, PreevolutionPokemon, PreevolutionPokemon.Game");
                 List<Pokemon> futureEvolutions = evolutions.Where(x => pokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
                 List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
-                futureEvolutions = futureEvolutions.Where(x => x.Game.GenerationId > game.GenerationId).Distinct().ToList();
+                futureEvolutions = futureEvolutions.Distinct().ToList();
                 futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
                 pokemonList.AddRange(futureEvolutions);
             }

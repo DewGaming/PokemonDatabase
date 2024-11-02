@@ -106,6 +106,7 @@
 
 .pokemonImage img {
   backface-visibility: hidden;
+  transform:rotateY(0deg);
 }
 
 .cursorHelp:hover {
