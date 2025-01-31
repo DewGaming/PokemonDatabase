@@ -1202,6 +1202,7 @@ namespace Pokedex.Controllers
                         comment.CommentorId = this.dataService.GetCurrentUser(this.User).Id;
                     }
 
+                    this.dataService.AddObject(comment);
                     this.dataService.EmailComment(this.appConfig, comment);
                 }
 
