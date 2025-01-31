@@ -3892,10 +3892,6 @@ namespace Pokedex.Controllers
                     {
                         pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: ", pokemonTeamDetail.Ability.Name);
                     }
-                    else
-                    {
-                        pokemonTeamString = string.Concat(pokemonTeamString, "\nAbility: No Ability");
-                    }
                 }
 
                 if (pokemonTeamDetail.Level < 100)

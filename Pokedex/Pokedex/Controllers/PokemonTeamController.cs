@@ -988,7 +988,7 @@ namespace Pokedex.Controllers
 
                 // Ability converter.
                 Ability ability;
-                if (remainingImportedText.Contains("Ability: "))
+                if (remainingImportedText.Contains("Ability: ") && !remainingImportedText.Contains("Ability: No Ability"))
                 {
                     string abilityName = remainingImportedText.Split("\r\n")[0];
                     remainingImportedText = remainingImportedText.Replace(string.Concat(abilityName, "\r\n"), string.Empty);
