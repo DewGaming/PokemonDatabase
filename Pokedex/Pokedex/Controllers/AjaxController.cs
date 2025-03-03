@@ -1521,7 +1521,7 @@ namespace Pokedex.Controllers
                 if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
                     bool shinyCharm = true;
-                    if (huntingMethodId == 8 || huntingMethodId == 14 || gameId == 43)
+                    if (huntingMethodId == 8 || huntingMethodId == 14 || huntingMethodId == 38 || gameId == 43)
                     {
                         shinyCharm = false;
                     }

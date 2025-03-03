@@ -1175,6 +1175,7 @@ namespace Pokedex
 
                         break;
                     case "Event":
+                    case "HOME Pokedex Completion":
                         if (game.GenerationId <= 3)
                         {
                             selectablePokeballs = selectablePokeballs.Where(x => x.Id == 1).ToList();
