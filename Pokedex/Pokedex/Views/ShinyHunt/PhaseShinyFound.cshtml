@@ -34,7 +34,7 @@
 
 <h2>Complete Phase for @Model.PokemonHunted.Name</h2>
 
-<div class="completeShinyHunt">
+<div class="completePhase">
     <div class="form-horizontal">
         @using (Html.BeginForm(FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
@@ -55,6 +55,12 @@
                 @Html.DropDownListFor(x => x.PokemonId, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.PokemonId)
             </div>
+                
+            <div class="form-group row captureRequired">
+                @Html.LabelFor(x => x.Nickname, "Nickname", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
+                @Html.ValidationMessageFor(x => x.Nickname)
+            </div>
 
             @if (@Model.HuntingMethodId != 8)
             {
@@ -65,16 +71,16 @@
                 </div>
             }
 
+            <div class="form-group row">
+                @Html.LabelFor(x => x.HuntingMethodId, "Shiny Hunting Method", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.HuntingMethodId, new SelectList(Model.AllHuntingMethods, "Id", "Name"), new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.HuntingMethodId)
+            </div>
+
             <div class="form-group row captureRequired">
                 @Html.LabelFor(x => x.PokeballId, "Pokeball", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), new { @class = "form-control col-md-6" })
+                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), "No Specific Pokeball", new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.PokeballId)
-            </div>
-                
-            <div class="form-group row captureRequired">
-                @Html.LabelFor(x => x.Nickname, "Nickname", new { @class = "col-md-4" })
-                @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
-                @Html.ValidationMessageFor(x => x.Nickname)
             </div>
 
             <div class="form-group row">
@@ -83,7 +89,7 @@
                 @Html.ValidationMessageFor(x => x.DateOfCapture)
             </div>
 
-            <div class="form-group row captureRequired">
+            <div class="form-group row">
                 @Html.LabelFor(x => x.Gender, "Gender", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.Gender, new SelectList(Model.AllGenders), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.Gender)
@@ -93,12 +99,6 @@
                 @Html.LabelFor(x => x.SweetId, "Alcremie Sweet", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.SweetId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.Sweet)
-            </div>
-
-            <div class="form-group row">
-                @Html.LabelFor(x => x.HuntingMethodId, "Shiny Hunting Method", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.HuntingMethodId, new SelectList(Model.AllHuntingMethods, "Id", "Name"), new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.HuntingMethodId)
             </div>
 
             <div class="form-group row gameSpecific lureCheckbox hide">
@@ -121,7 +121,7 @@
 
             <div class="form-group row gameSpecific captureRequired marks hide">
                 @Html.LabelFor(x => x.MarkId, "Mark", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
+                @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), "No Mark", new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.MarkId)
             </div>
 

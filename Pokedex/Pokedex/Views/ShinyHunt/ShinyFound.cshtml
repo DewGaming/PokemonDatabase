@@ -62,9 +62,18 @@
                 @Html.ValidationMessageFor(x => x.Nickname)
             </div>
 
+            @if (@Model.HuntingMethodId != 8)
+            {
+                <div class="form-group row">
+                    @Html.LabelFor(x => x.CurrentPhaseEncounters, "Number of Encounters", new { @class = "col-md-4" })
+                    @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
+                    @Html.ValidationMessageFor(x => x.CurrentPhaseEncounters)
+                </div>
+            }
+
             <div class="form-group row">
                 @Html.LabelFor(x => x.PokeballId, "Pokeball", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), new { @class = "form-control col-md-6" })
+                @Html.DropDownListFor(x => x.PokeballId, new SelectList(Model.AllPokeballs, "Id", "Name"), "No Specific Pokeball", new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.PokeballId)
             </div>
 
@@ -92,20 +101,11 @@
                 @Html.ValidationMessageFor(x => x.Sweet)
             </div>
 
-            <div class="form-group row">
-                @Html.LabelFor(x => x.ExcludeFromShinyDex, new { @class = "col-md-4" })
-                @Html.EditorFor(x => x.ExcludeFromShinyDex, new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.ExcludeFromShinyDex)
+            <div class="form-group row gameSpecific lureCheckbox hide">
+                @Html.LabelFor(x => x.UsingLures, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.UsingLures, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.UsingLures)
             </div>
-
-            @if (@Model.HuntingMethodId != 8)
-            {
-                <div class="form-group row">
-                    @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
-                    @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
-                    @Html.ValidationMessageFor(x => x.CurrentPhaseEncounters)
-                </div>
-            }
 
             <div class="form-group row gameSpecific alphaCheckbox hide">
                 @Html.LabelFor(x => x.IsAlpha, "Found as Alpha", new { @class = "col-md-4" })
@@ -113,22 +113,22 @@
                 @Html.ValidationMessageFor(x => x.IsAlpha)
             </div>
 
-            <div class="form-group row gameSpecific marks hide">
-                @Html.LabelFor(x => x.MarkId, "Mark", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), string.Empty, new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.MarkId)
-            </div>
-
             <div class="form-group row gameSpecific sparklingPower hide">
-                @Html.LabelFor(x => x.SparklingPowerLevel, new { @class = "col-md-4" })
+                @Html.LabelFor(x => x.SparklingPowerLevel, "Sparkling Sandwich Power Level", new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.SparklingPowerLevel, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0", @max="3", @value="0" } })
                 @Html.ValidationMessageFor(x => x.SparklingPowerLevel)
             </div>
 
-            <div class="form-group row gameSpecific lureCheckbox hide">
-                @Html.LabelFor(x => x.UsingLures, new { @class = "col-md-4" })
-                @Html.EditorFor(x => x.UsingLures, new { @class = "form-control col-md-6" })
-                @Html.ValidationMessageFor(x => x.UsingLures)
+            <div class="form-group row gameSpecific marks hide">
+                @Html.LabelFor(x => x.MarkId, "Mark", new { @class = "col-md-4" })
+                @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), "No Mark", new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.MarkId)
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(x => x.ExcludeFromShinyDex, new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.ExcludeFromShinyDex, new { @class = "form-control col-md-6" })
+                @Html.ValidationMessageFor(x => x.ExcludeFromShinyDex)
             </div>
 
             <div class="form-group row gameSpecific shinyCharmCheckbox hide">

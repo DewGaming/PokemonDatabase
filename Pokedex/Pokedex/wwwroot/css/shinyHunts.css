@@ -169,6 +169,7 @@
   .startShinyHunt,
   .addCompleteShinyHunt,
   .completeShinyHunt,
+  .completePhase,
   .editShinyHunt {
     display: flex;
   }
@@ -176,6 +177,7 @@
   .startShinyHunt>div,
   .addCompleteShinyHunt>div,
   .completeShinyHunt>div,
+  .completePhase>div,
   .editShinyHunt>div {
     width: 50%;
   }

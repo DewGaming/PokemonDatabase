@@ -78,7 +78,7 @@ var checkShinyCharm = function () {
         })
             .done(function (data) {
                 $('#MarkId').empty();
-                $('#MarkId').append($('<option>'));
+                $('#MarkId').append($('<option>').val("").text("No Mark"));
 
                 if (data != null) {
                     $.each(data, function (index, item) {
@@ -118,6 +118,8 @@ var checkShinyCharm = function () {
         })
             .done(function (data) {
                 $('#PokeballId').empty();
+                $('#PokeballId').append($('<option>').val("").text("No Specific Pokeball"));
+
                 $.each(data, function (index, item) {
                     $('#PokeballId').append($('<option>').val(item.id).text(item.name));
                 });
@@ -130,8 +132,6 @@ var checkShinyCharm = function () {
                     });
                 } else if (gameId == 37) {
                     $('#PokeballId').val(11);
-                } else {
-                    $('#PokeballId').val(1);
                 }
             })
             .fail(function () {
@@ -178,7 +178,6 @@ var checkShinyCharm = function () {
         });
     }
 }, checkFunctions = function () {
-    checkCapturedStatus();
     checkLure();
     checkAlpha();
     checkMarks();
@@ -186,6 +185,7 @@ var checkShinyCharm = function () {
     checkPokeballs();
     checkShinyCharm();
     checkSparklingPower();
+    checkCapturedStatus();
 }
 
 $(document).ready(function () {

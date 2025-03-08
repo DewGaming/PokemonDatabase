@@ -978,6 +978,18 @@ namespace Pokedex
         }
 
         /// <summary>
+        /// Gets a list of marks.
+        /// </summary>
+        /// <param name="gameId">The game's id. Defaults to 0.</param>
+        /// <returns>A list of marks.</returns>
+        public List<Mark> GetMarks(int gameId = 0)
+        {
+            List<Mark> marks = this.GetObjects<Mark>("Name");
+
+            return marks;
+        }
+
+        /// <summary>
         /// Gets the list of games possible to shiny hunt in and formats it for the shiny hunt pages.
         /// </summary>
         /// <param name="pokemonId">The pokemon's id.</param>
@@ -1280,7 +1292,7 @@ namespace Pokedex
                 }
                 else
                 {
-                    genders.Add(string.Empty);
+                    genders.Add("No Specific Gender");
                     genders.Add("Male");
                     genders.Add("Female");
                 }

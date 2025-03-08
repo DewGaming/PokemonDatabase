@@ -198,8 +198,9 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                 if ($('select').hasClass('preferredMark')) {
                     $('#MarkId').append($('<option>').val("").text("No Preferred Mark"));
                 } else {
-                    $('#MarkId').append($('<option>'));
+                    $('#MarkId').append($('<option>').val("").text("No Mark"));
                 }
+
                 $.each(data, function (index, item) {
                     $('#MarkId').append($('<option>').val(item.id).text(item.name));
                 });
@@ -238,9 +239,7 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
         })
             .done(function (data) {
                 $('#PokeballId').empty();
-                if ($('select').hasClass('preferredPokeball')) {
-                    $('#PokeballId').append($('<option>').val("").text("No Preferred Pokeball"));
-                }
+                $('#PokeballId').append($('<option>').val("").text("No Specific Pokeball"));
 
                 $.each(data, function (index, item) {
                     $('#PokeballId').append($('<option>').val(item.id).text(item.name));
@@ -254,8 +253,6 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                     });
                 } else if (gameId == 37) {
                     $('#PokeballId').val(11);
-                } else if (!$('select').hasClass('preferredPokeball')) {
-                    $('#PokeballId').val(1);
                 }
             })
             .fail(function () {
@@ -275,13 +272,13 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             });
         }
 }, checkFunctions = function () {
-    checkCapturedStatus();
     checkLure();
     checkAlpha();
     checkMarks();
     checkPokeballs();
     checkShinyCharm();
     checkSparklingPower();
+    checkCapturedStatus();
 }, refreshEvents = function () {
     $('.pokemonShinyImage').unbind("click");
     $('.pokemonShinyImage').on("click", function () {
@@ -338,6 +335,7 @@ $('#GameId').on('change', function () {
 $('#PokemonId').on('change', function () {
     $('.pokemonShinyImage').prop('src', $('.webUrl').prop('name') + $('.shinyUrl').prop('name') + $('#PokemonId').val() + '.png');
     $('.pokemonShinyImage.hide').removeClass('hide');
+    $('#PokemonId option[value=""]').remove();
     grabGames($('#GameId').val(), $('#PokemonId').val());
     refreshGenders();
     checkSweets();
