@@ -24,16 +24,13 @@
     {
         <button class="showAltFormsButton btn btn-primary@(!@Model.CurrentUser.ShowShinyAltForms ? "" : " hide")" onclick="showAltForms()">Show Alternate Forms</button>
     }
-    <button class="showCapturedButton btn btn-primary@(!Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : "")"" onclick="showCaptured()">Show Captured Pokemon</button>
+    <button class="showCapturedButton btn btn-primary@(!Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : "")" onclick="showCaptured()">Show Captured Pokemon</button>
     @if (Model.AllPokemon.Count(x => x.IsCaptured) > 0)
     {
         <button class="hideCapturedButton btn btn-primary@(@Model.CurrentUser.HideCapturedShinyPokemon ? " hide" : "")" onclick="hideCaptured()">Hide Captured Pokemon</button>
     }
-    <button class="showGenderDifferenceButton btn btn-primary@(!Model.CurrentUser.HideShinyGenderDifferences ? " hide" : "")"" onclick="showGenderDifferences()">Show Gender Differences</button>
-    @if (Model.AllPokemon.Count(x => x.IsCaptured) > 0)
-    {
-        <button class="hideGenderDifferenceButton btn btn-primary@(@Model.CurrentUser.HideShinyGenderDifferences ? " hide" : "")" onclick="hideGenderDifferences()">Hide Gender Differences</button>
-    }
+    <button class="showGenderDifferenceButton btn btn-primary@(!Model.CurrentUser.HideShinyGenderDifferences ? " hide" : "")" onclick="showGenderDifferences()">Show Gender Differences</button>
+    <button class="hideGenderDifferenceButton btn btn-primary@(@Model.CurrentUser.HideShinyGenderDifferences ? " hide" : "")" onclick="hideGenderDifferences()">Hide Gender Differences</button>
     @if (!Model.IsShared)
     {
         <button class="sharePage btn btn-primary" onclick="giveSharableLink('@Model.CurrentUser.Username')">Share With Others</button>
