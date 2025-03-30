@@ -373,6 +373,7 @@ namespace Pokedex.Controllers
             CompleteShinyHuntViewModel model = new CompleteShinyHuntViewModel(shinyHunt)
             {
                 PokemonHunted = pokemon,
+                Nickname = string.Empty,
                 GameHuntedIn = this.dataService.GetObjectByPropertyValue<Game>("Id", shinyHunt.GameId),
                 DateOfCapture = DateTime.Now.Date,
                 IsCaptured = true,

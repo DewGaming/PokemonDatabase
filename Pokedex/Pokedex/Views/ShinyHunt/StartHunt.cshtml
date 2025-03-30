@@ -57,25 +57,31 @@
             @Html.Hidden(@Model.AppConfig.OfficialPokemonImageUrl, string.Empty, new { @class = "officialUrl" })
             @Html.HiddenFor(x => x.UserId)
 
-            <div class="form-group row">
+            <div class="form-group pokemon row">
                 @Html.LabelFor(x => x.PokemonIds, "Pokémon Hunting", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.PokemonIds, new SelectList(Model.AllPokemon, "Id", "Name"), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.PokemonIds)
             </div>
 
-            <div class="form-group row hide">
+            <div class="form-group row game hide">
                 @Html.LabelFor(x => x.GameId, new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.GameId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.GameId)
             </div>
+                
+            <div class="form-group row nickname hide">
+                @Html.LabelFor(x => x.Nickname, "Nickname", new { @class = "col-md-4" })
+                @Html.EditorFor(x => x.Nickname, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6" } })
+                @Html.ValidationMessageFor(x => x.Nickname)
+            </div>
 
-            <div class="form-group row hide">
+            <div class="form-group row huntingMethod hide">
                 @Html.LabelFor(x => x.HuntingMethodId, new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.HuntingMethodId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.HuntingMethodId)
             </div>
 
-            <div class="form-group row hide">
+            <div class="form-group row pokeball hide">
                 @Html.LabelFor(x => x.PokeballId, "Preferred Pokeball", new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.PokeballId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-md-6 preferredPokeball" })
                 @Html.ValidationMessageFor(x => x.PokeballId)
@@ -105,7 +111,7 @@
                 @Html.ValidationMessageFor(x => x.HasShinyCharm)
             </div>
 
-            <div class="form-group row hide">
+            <div class="form-group row isPinned hide">
                 @Html.LabelFor(x => x.IsPinned, "Pin Hunt Immediately", new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.IsPinned, new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.IsPinned)

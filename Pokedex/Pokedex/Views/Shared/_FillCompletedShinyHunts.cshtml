@@ -48,8 +48,7 @@
                                 src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialSweetImageUrl, @s.Sweet.Id, ".png"))">
                         }
                     </div>
-                    <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })"
-                        target="_blank">
+                    <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
                         @if (s.Pokemon.HasGenderDifference && !string.IsNullOrEmpty(s.Gender))
                         {
                             <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon"

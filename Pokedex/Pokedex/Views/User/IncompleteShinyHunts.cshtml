@@ -44,121 +44,138 @@
     }
 </p>
 
-<div class="pageButtons gamesList">
-    <button class="gameButton pinnedHunts@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? " active" : " hide")" id="GamePin" onclick="lookupHuntsInGame(this, 'Pin')">Pinned Hunts</button>
-    @if (@Model.EdittedGames.Count() > 1)
-    {
-        <button class="gameButton incompleteAllGames@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? "" : " active")" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
-    }
-    @foreach (var g in @Model.EdittedGames)
-    {
-        string gameColors = string.Concat(g.GameColor, " 50%, ");
-        if (@Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).Count() > 1 && g.Name != "Fire Red" && g.Name != "Leaf Green")
+@if (Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == null).Count() > 0)
+{
+    <div class="pageButtons gamesList">
+        <button class="gameButton pinnedHunts@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? " active" : " hide")" id="GamePin" onclick="lookupHuntsInGame(this, 'Pin')">Pinned Hunts</button>
+        @if (@Model.EdittedGames.Count() > 1)
         {
-            gameColors = string.Concat(gameColors, @Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).ToList()[1].GameColor, " 50%)");
+            <button class="gameButton incompleteAllGames@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? "" : " active")" id="Game0" onload="lookupHuntsInGame(this, '0')" onclick="lookupHuntsInGame(this, '0')">All Games</button>
         }
-        else
+        @foreach (var g in @Model.EdittedGames)
         {
-            gameColors = string.Concat(gameColors, g.GameColor, " 50%)");
+            string gameColors = string.Concat(g.GameColor, " 50%, ");
+            if (@Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).Count() > 1 && g.Name != "Fire Red" && g.Name != "Leaf Green")
+            {
+                gameColors = string.Concat(gameColors, @Model.UnedittedGames.Where(x => x.ReleaseDate == g.ReleaseDate).ToList()[1].GameColor, " 50%)");
+            }
+            else
+            {
+                gameColors = string.Concat(gameColors, g.GameColor, " 50%)");
+            }
+    
+            <button style="@(g.GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupHuntsInGame(this, '@g.Id')">@g.Name</button>
         }
+    </div>
 
-        <button style="@(g.GameColor != string.Empty ? string.Concat("background: linear-gradient(135deg, ", gameColors) : string.Empty)" class="gameButton" id="Game@(g.Id)" onclick="lookupHuntsInGame(this, '@g.Id')">@g.Name</button>
-    }
-</div>
-
-<div class="page active generation pokemonList incompleteHunts">
-    <div class="grid-container">
-        @foreach (var s in Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == null))
-        {
-            <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? (s.IsPinned ? " HuntGamePin" : " hide") : "") shadowed @s.Pokemon.Name">
-                <div class="pokemonDetails">
-                    <div class="pokemonImages">
-                        <div class="bonusImages">
-                            @if (s.HasShinyCharm)
-                            {
-                                <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
-                            }
-                            @if (s.Mark != null)
-                            {
-                                <img loading="lazy" class="pokemonMark pokemonListPicture" title="Preferred Mark: @s.Mark.Name Mark" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.Mark.Id, ".png"))">
-                            }
-                            @if (s.IsAlpha)
-                            {
-                                <img loading="lazy" class="pokemonAlpha pokemonListPicture" title="Preferred as Alpha" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, "alpha.png"))">
-                            }
-                            @if (s.Pokeball != null)
-                            {
-                                <img loading="lazy" class="pokeball pokemonListPicture" title="Preferred Pokemon: @s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.Pokeball.Id, ".png"))">
-                            }
-                            @if (s.Gender == "Male" || s.Gender == "Female")
-                            {
-                                <img loading="lazy" class="gender pokemonListPicture" title="Preferred Gender: @s.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @s.Gender.ToLower(), ".png"))">
-                            }
+    <div class="page active generation pokemonList incompleteHunts">
+        <div class="grid-container">
+            @foreach (var s in Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == null))
+            {
+                <div class="Hunt@(s.Id) HuntGame@(s.GameId)@(Model.AllShinyHunts.Count(x => x.IsPinned) > 0 ? (s.IsPinned ? " HuntGamePin" : " hide") : "") shadowed @s.Pokemon.Name">
+                    <div class="pokemonDetails">
+                        <div class="pokemonImages">
+                            <div class="bonusImages">
+                                @if (s.HasShinyCharm)
+                                {
+                                    <img loading="lazy" class="shinyCharm pokemonListPicture" title="Shiny Charm Used" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "shinyCharm.png"))">
+                                }
+                                @if (s.Mark != null)
+                                {
+                                    <img loading="lazy" class="pokemonMark pokemonListPicture" title="Preferred Mark: @s.Mark.Name Mark" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, @s.Mark.Id, ".png"))">
+                                }
+                                @if (s.IsAlpha)
+                                {
+                                    <img loading="lazy" class="pokemonAlpha pokemonListPicture" title="Preferred as Alpha" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialMarkImageUrl, "alpha.png"))">
+                                }
+                                @if (s.Pokeball != null)
+                                {
+                                    <img loading="lazy" class="pokeball pokemonListPicture" title="Preferred Pokemon: @s.Pokeball.Name" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokeballImageUrl, @s.Pokeball.Id, ".png"))">
+                                }
+                                @if (s.Gender == "Male" || s.Gender == "Female")
+                                {
+                                    <img loading="lazy" class="gender pokemonListPicture" title="Preferred Gender: @s.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @s.Gender.ToLower(), ".png"))">
+                                }
+                            </div>
+                            <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
+                                @if (s.Pokemon.HasGenderDifference && !string.IsNullOrEmpty(s.Gender))
+                                {
+                                    <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon"
+                                        title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")"
+                                        alt="@s.Pokemon.Name Shiny Image"
+                                        src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GenderDifferenceShinyGridImageUrl, s.Pokemon.Id, "-", s.Gender.ToLower()[0], ".png"))"
+                                        onerror="this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))'; this.onerror = null;" />
+                                }
+                                else
+                                {
+                                    <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon"
+                                        title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")"
+                                        alt="@s.Pokemon.Name Shiny Image"
+                                        src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))"
+                                        onerror="this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, s.Pokemon.Id, ".png"))'; this.onerror = null;" />
+                                }
+                            </a>
                         </div>
-                        <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
-                            @if (s.Pokemon.HasGenderDifference && !string.IsNullOrEmpty(s.Gender))
+                        <div class="description">
+                            @if (!Model.IsShared)
                             {
-                                <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: @s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" alt="s.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GenderDifferenceShinyGridImageUrl, s.Pokemon.Id, "-", s.Gender.ToLower()[0], ".png"))" onerror = "this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))'; this.onerror = null;" />
+                                <p onclick="togglePin('@s.Id')" class="@(s.IsPinned ? "pinned" : "pin")">📌</p>
+                            }
+                            <p>
+                                <b>@s.Pokemon.Name</b>
+                                @if (s.Nickname != null)
+                                {
+                                    @string.Concat(" (", s.Nickname, ")")
+                                }
+                            </p>
+                            <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
+                            <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
+                            <p class="encounterIncrement@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>Increment Amount: </b><span class="increments">@s.IncrementAmount</span></p>
+                            @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
+                            {
+                                <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
                             else
                             {
-                                <img loading="lazy" class="pokemonListPicture pokemonShinyHuntPokemon" title="Pokémon: s.Pokemon.Name@((s.Nickname != null) ? string.Concat(" (", s.Nickname, ")") : "")" alt="s.Pokemon.Name Shiny Image" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.ShinyGridImageUrl, s.Pokemon.Id, ".png"))" onerror = "this.src = '@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, s.Pokemon.Id, ".png"))'; this.onerror = null;" />
+                                <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
                             }
-                        </a>
+                            <p class="phaseCounter@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0 ? "" : " hide")" id="@s.Id"><b>Current Phase: </b><span class="phases">@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() + 1)</span></p>
+                        </div>
                     </div>
-                    <div class="description">
-                        @if (!Model.IsShared)
-                        {
-                            <p onclick="togglePin('@s.Id')" class="@(s.IsPinned ? "pinned" : "pin")">📌</p>
-                        }
-                        <p><b>@s.Pokemon.Name</b></p>
-                        <p class="gameHuntedIn"><b>Game: </b>@s.Game.Name</p>
-                        <p><b>Hunting Method: </b>@s.HuntingMethod.Name</p>
-                        <p class="encounterIncrement@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>Increment Amount: </b><span class="increments">@s.IncrementAmount</span></p>
-                        @if (@s.HuntingMethodId == 4 || @s.HuntingMethodId == 5 )
-                        {
-                            <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>Eggs: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
-                        }
-                        else
-                        {
-                            <p class="currentEncounters@(Model.IsShared ? "" : " pointer")" id="@s.Id"><b>@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0 ? "Current Phase " : "")Encounters: </b><span class="encounters">@s.CurrentPhaseEncounters</span></p>
-                        }
-                        <p class="phaseCounter@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0 ? "" : " hide")" id="@s.Id"><b>Current Phase: </b><span class="phases">@(Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() + 1)</span></p>
-                    </div>
+                    @if (!Model.IsShared)
+                    {
+                        <div class="encounterButtons">
+                            @if (Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0)
+                            {
+                                <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = s.Id })" role="button">View Prior Phases</a>
+                                <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                            }
+                            else
+                            {
+                                <button class="encounterIncrease singlePhase btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
+                            }
+                        </div>
+                        <hr class="buttonSeparator">
+                        <div class="shinyFoundButtons">
+                            @if (s.PokemonId != null)
+                            {
+                                <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
+                            }
+                            <a class="shinyFound btn btn-success@(s.PokemonId != null ? "" : " unknownHunt")" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">@(s.PokemonId != null ? "Target " : "")Shiny Found</a>
+                        </div>
+                        <hr class="buttonSeparator">
+                        <div class="huntUncapturedButtons">
+                            <a class="btn orangeButton" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
+                            <button class="btn btn-danger abandonHunt" onclick="@("abandonHunt(" + @s.Id + ", \"" + @s.Pokemon.Name + "\")")">Abandon Hunt</button>
+                        </div>
+                    }
                 </div>
-                @if (!Model.IsShared)
-                {
-                    <div class="encounterButtons">
-                        @if (Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == s.Id).Count() > 0)
-                        {
-                            <a target="_blank" class="btn orangeButton phasesButton" href="@this.Url.Action("ShinyHuntPhases", "ShinyHunt", new { shinyHuntId = s.Id })" role="button">View Prior Phases</a>
-                            <button class="encounterIncrease btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
-                        }
-                        else
-                        {
-                            <button class="encounterIncrease singlePhase btn btn-primary" onclick="incrementEncounter('@s.Id')">Increase Encounters</button>
-                        }
-                    </div>
-                    <hr class="buttonSeparator">
-                    <div class="shinyFoundButtons">
-                        @if (s.PokemonId != null)
-                        {
-                            <a class="shinyFound btn btn-success" href="@this.Url.Action("PhaseShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Phase Shiny Found</a>
-                        }
-                        <a class="shinyFound btn btn-success@(s.PokemonId != null ? "" : " unknownHunt")" href="@this.Url.Action("ShinyFound", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">@(s.PokemonId != null ? "Target " : "")Shiny Found</a>
-                    </div>
-                    <hr class="buttonSeparator">
-                    <div class="huntUncapturedButtons">
-                        <a class="btn orangeButton" href="@this.Url.Action("EditIncompleteShinyHunt", "ShinyHunt", new { shinyHuntId = @s.Id })" role="button">Modify Shiny Hunt</a>
-                        <button class="btn btn-danger abandonHunt" onclick="@("abandonHunt(" + @s.Id + ", \"" + @s.Pokemon.Name + "\")")">Abandon Hunt</button>
-                    </div>
-                }
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
+}
 
-@if (Model.AllShinyHunts.Count() == 0)
+@if (Model.AllShinyHunts.Where(x => x.PhaseOfHuntId == null).Count() == 0)
 {
     <div class="noShinyHunts">No incomplete hunts are available.</div>
 }
