@@ -52,7 +52,7 @@
             </div>
 
             <div class="form-group row hide">
-                @Html.LabelFor(x => x.HuntingMethodId, "Shiny Hunting Method", new { @class = "col-md-4" })
+                @Html.LabelFor(x => x.HuntingMethodId, new { @class = "col-md-4" })
                 @Html.DropDownListFor(x => x.HuntingMethodId, new SelectList(Model.AllHuntingMethods, "Id", "Name"), new { @class = "form-control col-md-6" })
                 @Html.ValidationMessageFor(x => x.HuntingMethodId)
             </div>
@@ -82,6 +82,12 @@
                 @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0" } })
                 @Html.ValidationMessageFor(x => x.CurrentPhaseEncounters)
+            </div>
+
+            <div class="form-group row notesTextArea hide">
+                @Html.LabelFor(x => x.Notes, "Notes", new { @class = "col-md-4" })
+                @Html.TextAreaFor(x => x.Notes, new { @class = "form-control col-md-6 notesTextArea" })
+                @Html.ValidationMessageFor(x => x.Notes)
             </div>
 
             <div class="form-group row gameSpecific lureCheckbox hide">

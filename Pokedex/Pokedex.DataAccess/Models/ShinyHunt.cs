@@ -41,6 +41,7 @@ namespace Pokedex.DataAccess.Models
             PhaseOfHuntId = shinyHunt.PhaseOfHuntId;
             PhaseOfHunt = shinyHunt.PhaseOfHunt;
             ExcludeFromShinyDex = shinyHunt.ExcludeFromShinyDex;
+            Notes = shinyHunt.Notes;
         }
 
         public int Id { get; set; }
@@ -61,7 +62,7 @@ namespace Pokedex.DataAccess.Models
         public int GameId { get; set; }
         public Game Game { get; set; }
 
-        [Required, Display(Name = "Shiny Hunting Method")]
+        [Required, Display(Name = "Hunting Method")]
         public int HuntingMethodId { get; set; }
         public HuntingMethod HuntingMethod { get; set; }
 
@@ -120,5 +121,8 @@ namespace Pokedex.DataAccess.Models
 
         [Display(Name = "Exclude from Shiny Dex Page")]
         public bool ExcludeFromShinyDex { get; set; }
+
+        [StringLength(1000), Display(Name = "Notes")]
+        public string Notes { get; set; }
     }
 }

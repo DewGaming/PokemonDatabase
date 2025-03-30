@@ -53,6 +53,11 @@
                         {
                             <img loading="lazy" class="pokemonSweet pokemonListPicture" title="@Model.AllShinyHunts[i].Sweet.Name Sweet" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialSweetImageUrl, @Model.AllShinyHunts[i].Sweet.Id, ".png"))">
                         }
+                        @if (!string.IsNullOrEmpty(Model.AllShinyHunts[i].Notes))
+                        {
+                            <img loading="lazy" class="pokemonNotes pokemonListPicture" title="Notes: @Model.AllShinyHunts[i].Notes"
+                                src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "notes.png"))">
+                        }
                     </div>
                     <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @Model.AllShinyHunts[i].Pokemon.Id, generationId = @Model.AllShinyHunts[i].Game.GenerationId })" target="_blank">
                         @if (Model.AllShinyHunts[i].Pokemon.HasGenderDifference && !string.IsNullOrEmpty(Model.AllShinyHunts[i].Gender))
@@ -106,6 +111,10 @@
                     @if (@Model.AllShinyHunts[i].PhaseOfHunt != null)
                     {
                         <p><b>Found While Hunting: </b>@Model.AllShinyHunts[i].PhaseOfHunt.Pokemon.Name</p>
+                    }
+                    @if (@Model.AllShinyHunts[i].ExcludeFromShinyDex)
+                    {
+                        <p><b>Excluded From Shiny Dex</b></p>
                     }
                 </div>
             </div>

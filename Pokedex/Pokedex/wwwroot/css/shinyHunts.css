@@ -122,11 +122,6 @@
   left: 0;
 }
 
-.excludeFromShinyDex {
-  top: 0;
-  right: 0;
-}
-
 .pokemonSweet  {
   top: 50px;
   right: 0;
@@ -135,6 +130,18 @@
 .gender {
   top: 100px;
   right: 0;
+}
+
+.pokemonNotes {
+  top: 0;
+  right: 0;
+  cursor: -moz-help; 
+  cursor: -webkit-help; 
+  cursor: help;
+}
+
+.notesTextArea {
+  resize: both;
 }
 
 .pokemonDetails>div {

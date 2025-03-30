@@ -96,6 +96,10 @@
                                 {
                                     <img loading="lazy" class="gender pokemonListPicture" title="Preferred Gender: @s.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @s.Gender.ToLower(), ".png"))">
                                 }
+                                @if (!string.IsNullOrEmpty(s.Notes))
+                                {
+                                    <img loading="lazy" class="pokemonNotes pokemonListPicture" title="Notes: @s.Notes" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "notes.png"))">
+                                }
                             </div>
                             <a href="@this.Url.Action("PokemonWithOnlyId", "Home", new { pokemonId = @s.Pokemon.Id, generationId = @s.Game.GenerationId })" target="_blank">
                                 @if (s.Pokemon.HasGenderDifference && !string.IsNullOrEmpty(s.Gender))
