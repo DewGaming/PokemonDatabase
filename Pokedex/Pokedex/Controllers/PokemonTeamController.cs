@@ -227,7 +227,7 @@ namespace Pokedex.Controllers
 
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
-            if (pokemon.GenderRatioId == 10)
+            if (pokemon.GenderRatioId == 10 || (pokemonTeamDetail.Gender != "Male" && pokemonTeamDetail.Gender != "Female"))
             {
                 pokemonTeamDetail.Gender = null;
             }
@@ -350,7 +350,7 @@ namespace Pokedex.Controllers
 
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonTeamDetail.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
 
-            if (pokemon.GenderRatioId == 10)
+            if (pokemon.GenderRatioId == 10 || (pokemonTeamDetail.Gender != "Male" && pokemonTeamDetail.Gender != "Female"))
             {
                 pokemonTeamDetail.Gender = null;
             }

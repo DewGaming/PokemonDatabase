@@ -11,7 +11,6 @@ namespace Pokedex.DataAccess.Models
         [Required]
         public bool IsShiny { get; set; }
 
-        [StringLength(6)]
         public string Gender { get; set; }
 
         [Required]
