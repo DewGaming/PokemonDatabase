@@ -541,9 +541,10 @@ namespace Pokedex.Controllers
         /// <param name="monotypeOnly">Whether or not only monotypes are allowed for generation.</param>
         /// <param name="noRepeatType">Whether or not repeat types are allowed for generation.</param>
         /// <param name="allowIncomplete">Whether or not incomplete pokemon can appear.</param>
+        /// <param name="onlyUseRegionalDexes">Whether or not pokemon only in the regional dex are allowed for generation.</param>
         /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, List<int> selectedTypes, int selectedGameId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool monotypeOnly, bool noRepeatType, bool allowIncomplete)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, List<int> selectedTypes, int selectedGameId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool monotypeOnly, bool noRepeatType, bool allowIncomplete, bool onlyUseRegionalDexes)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -567,6 +568,7 @@ namespace Pokedex.Controllers
                 // monotypeOnly = false;
                 // noRepeatType = false;
                 // allowIncomplete = false;
+                // onlyUseRegionalDexes = false;
                 try
                 {
                     Random rnd = new Random();
@@ -590,8 +592,17 @@ namespace Pokedex.Controllers
                     if (selectedGameId != 0)
                     {
                         selectedGame = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGameId);
-                        List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame.Id).ToList();
-                        allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
+                        List<Pokemon> availablePokemon = new List<Pokemon>();
+                        if (onlyUseRegionalDexes)
+                        {
+                            availablePokemon = this.dataService.GetObjects<RegionalDexEntry>(includes: "Pokemon, RegionalDex.Game", whereProperty: "RegionalDex.GameId", wherePropertyValue: selectedGame.Id).ConvertAll(x => x.Pokemon);
+                        }
+                        else
+                        {
+                            availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame.Id).ConvertAll(x => x.Pokemon);
+                        }
+
+                        allPokemon = allPokemon.Where(x => availablePokemon.Any(y => y.Id == x.Id)).ToList();
                         pokemonTypeDetails = pokemonTypeDetails.Where(x => x.GenerationId <= selectedGame.GenerationId).ToList();
                     }
 
@@ -748,6 +759,7 @@ namespace Pokedex.Controllers
                         commentBody = string.Concat(commentBody, " - Only One Form per Pokemon: ", onePokemonForm);
                         commentBody = string.Concat(commentBody, " - No Repeating Types: ", noRepeatType);
                         commentBody = string.Concat(commentBody, " - Allow Incomplete Pokemon: ", allowIncomplete);
+                        commentBody = string.Concat(commentBody, " - Only Use Regional Dexes: ", onlyUseRegionalDexes);
 
                         Comment comment = new Comment()
                         {
