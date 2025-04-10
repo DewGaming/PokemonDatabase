@@ -197,7 +197,7 @@ namespace Pokedex.Controllers
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
             List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
-            List<Game> selectableGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 39 && x.Id != 40 && x.Id != 43).ToList();
+            List<Game> selectableGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43).ToList();
 
             foreach (var gen in generations)
             {

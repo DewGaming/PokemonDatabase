@@ -710,6 +710,18 @@ namespace Pokedex.Controllers
             List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
             gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+            if (shinyHunts.Count(x => x.Game.Name == "Fire Red") > 0)
+            {
+                if (shinyHunts.Count(x => x.Game.Name == "Leaf Green") == 0)
+                {
+                    gamesList.Remove(gamesList.Find(x => x.Name == "Leaf Green"));
+                }
+            }
+            else if (shinyHunts.Count(x => x.Game.Name == "Leaf Green") > 0)
+            {
+                    gamesList.Remove(gamesList.Find(x => x.Name == "Fire Red"));
+            }
+
             List<Game> edittedGamesList = new List<Game>();
             foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
             {
@@ -770,6 +782,18 @@ namespace Pokedex.Controllers
                 List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
                 shinyHunts = shinyHunts.Where(x => x.IsCaptured).ToList();
                 gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
+                if (shinyHunts.Count(x => x.Game.Name == "Fire Red") > 0)
+                {
+                    if (shinyHunts.Count(x => x.Game.Name == "Leaf Green") == 0)
+                    {
+                        gamesList.Remove(gamesList.Find(x => x.Name == "Leaf Green"));
+                    }
+                }
+                else if (shinyHunts.Count(x => x.Game.Name == "Leaf Green") > 0)
+                {
+                        gamesList.Remove(gamesList.Find(x => x.Name == "Fire Red"));
+                }
+
                 List<Game> edittedGamesList = new List<Game>();
                 foreach (var r in gamesList.ConvertAll(x => x.ReleaseDate).Distinct())
                 {
