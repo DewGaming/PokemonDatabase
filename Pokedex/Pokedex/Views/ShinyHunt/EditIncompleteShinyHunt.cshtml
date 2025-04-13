@@ -65,7 +65,7 @@
 
             <div class="form-group row gameSpecific marks hide">
                 @Html.LabelFor(x => x.MarkId, "Preferred Mark", new { @class = "col-md-4" })
-                @Html.DropDownListFor(x => x.MarkId, Enumerable.Empty<SelectListItem>(), "No Preferred Mark", new { @class = "form-control col-md-6 preferredMark" })
+                @Html.DropDownListFor(x => x.MarkId, new SelectList(Model.AllMarks, "Id", "Name"), "No Preferred Mark", new { @class = "form-control col-md-6 preferredMark" })
                 @Html.ValidationMessageFor(x => x.MarkId)
             </div>
 
