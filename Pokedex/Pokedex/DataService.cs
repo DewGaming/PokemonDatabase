@@ -984,7 +984,15 @@ namespace Pokedex
         /// <returns>A list of marks.</returns>
         public List<Mark> GetMarks(int gameId = 0)
         {
-            List<Mark> marks = this.GetObjects<Mark>("Name");
+            List<Mark> marks = new List<Mark>();
+            if (gameId == 0)
+            {
+                marks = this.GetObjects<Mark>("Name");
+            }
+            else
+            {
+                marks = this.GetObjects<Mark>("Name", whereProperty: "GameId", wherePropertyValue: gameId);
+            }
 
             return marks;
         }
