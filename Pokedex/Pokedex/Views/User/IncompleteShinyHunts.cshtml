@@ -96,6 +96,10 @@
                                 {
                                     <img loading="lazy" class="gender pokemonListPicture" title="Preferred Gender: @s.Gender" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, @s.Gender.ToLower(), ".png"))">
                                 }
+                                @if (s.Sweet != null)
+                                {
+                                    <img loading="lazy" class="pokemonSweet pokemonListPicture" title="@s.Sweet.Name Sweet" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialSweetImageUrl, @s.Sweet.Id, ".png"))">
+                                }
                                 @if (!string.IsNullOrEmpty(s.Notes))
                                 {
                                     <img loading="lazy" class="pokemonNotes pokemonListPicture" title="Notes: @s.Notes" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GeneralImageUrl, "notes.png"))">

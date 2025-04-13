@@ -61,32 +61,49 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
             }
         });
 }, checkSweets = function () {
-    $.ajax({
-        url: '/get-pokemon-sweets/',
-        method: "POST",
-        data: { 'pokemonId': $('#PokemonId').val() }
-    })
-        .done(function (data) {
-            $('#SweetId').empty();
-            $.each(data, function (index, item) {
-                $('#SweetId').append($('<option>').val(item.id).text(item.name));
-            });
-
-            if (data.length > 0) {
-                if ($('.sweets').hasClass('hide')) {
-                    $('.sweets').removeClass('hide');
-                }
-            } else {
-                if (!$('.sweets').hasClass('hide')) {
-                    $('.sweets').addClass('hide');
-                }
-            }
+    if ($('#SweetId').length) {
+        sweetId = $('#SweetId').val();
+        $.ajax({
+            url: '/get-pokemon-sweets/',
+            method: "POST",
+            data: { 'pokemonId': $('#PokemonId').val() }
         })
-        .fail(function () {
-            if (isLocalhost) {
-                alert("Failed to grab sweets!");
-            }
-        });
+            .done(function (data) {
+                $('#SweetId').empty();
+                if ($('select').hasClass('preferredSweet')) {
+                    $('#SweetId').append($('<option>').val("").text("No Preferred Sweet"));
+                } else {
+                    $('#SweetId').append($('<option>').val("").text("No Sweet"));
+                }
+
+                $.each(data, function (index, item) {
+                    $('#SweetId').append($('<option>').val(item.id).text(item.name));
+                });
+
+                if (sweetId != "" && sweetId != null && data.find(x => x.id = sweetId)) {
+                    $('#SweetId option').each(function () {
+                        if (this.value == sweetId) {
+                            $('#SweetId').val(sweetId);
+                        }
+                    });
+                }
+
+                if (data.length > 0) {
+                    if ($('.sweets').hasClass('hide')) {
+                        $('.sweets').removeClass('hide');
+                    }
+                } else {
+                    if (!$('.sweets').hasClass('hide')) {
+                        $('.sweets').addClass('hide');
+                    }
+                }
+            })
+            .fail(function () {
+                if (isLocalhost) {
+                    alert("Failed to grab sweets!");
+                }
+            });
+    }
 }, grabHuntingMethod = function (huntingMethodId) {
     $.ajax({
         url: '/get-hunting-methods/',

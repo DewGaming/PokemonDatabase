@@ -78,6 +78,15 @@
                 </div>
             }
 
+            @if (Model.Pokemon.Name.Contains("Alcremie"))
+            {
+                <div class="form-group row sweets hide">
+                    @Html.LabelFor(x => x.SweetId, "Alcremie Sweet", new { @class = "col-md-4" })
+                    @Html.DropDownListFor(x => x.SweetId, new SelectList(Model.AllSweets, "Id", "Name"), "No Preferred Sweet", new { @class = "form-control col-md-6 preferredSweet" })
+                    @Html.ValidationMessageFor(x => x.SweetId)
+                </div>
+            }
+
             <div class="form-group row gameSpecific currentPhaseEncounters">
                 @Html.LabelFor(x => x.CurrentPhaseEncounters, new { @class = "col-md-4" })
                 @Html.EditorFor(x => x.CurrentPhaseEncounters, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-6", @min="0" } })
