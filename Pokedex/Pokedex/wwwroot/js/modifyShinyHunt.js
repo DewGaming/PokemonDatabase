@@ -268,8 +268,6 @@ var pokemonList = [], grabGames = function (gameId, pokemonIds) {
                             $('#PokeballId').val(pokeballId);
                         }
                     });
-                } else if (gameId == 37) {
-                    $('#PokeballId').val(11);
                 }
             })
             .fail(function () {
