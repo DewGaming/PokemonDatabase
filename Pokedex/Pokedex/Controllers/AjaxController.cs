@@ -3306,7 +3306,7 @@ namespace Pokedex.Controllers
                     List<string> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type").ConvertAll(x => x.Type);
                     foreach (var legendary in legendaryTypes.Except(selectedLegendaries).ToList())
                     {
-                        pokemonList = pokemonList.Where(x => allLegendaries.Any(y => y.LegendaryType.Type != legendary && y.PokemonId == x.Id)).ToList();
+                        pokemonList.RemoveAll(x => allLegendaries.Any(y => y.LegendaryType.Type == legendary && y.PokemonId == x.Id));
                     }
 
                     if (onlyLegendaries)
