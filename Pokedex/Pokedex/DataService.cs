@@ -1034,6 +1034,11 @@ namespace Pokedex
                         possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
                     }
 
+                    if (p.Game.GenerationId <= 2 && p.PokedexNumber != 251)
+                    {
+                        possibleGames.InsertRange(0, gamesAvailable.Where(x => x.GenerationId == 1));
+                    }
+
                     // Gets other games for evolutions introduced in future generations.
                     List<Evolution> evolutionList = this.GetObjects<Evolution>(includes: "PreevolutionPokemon");
                     Evolution evolution = evolutionList.Find(x => x.EvolutionPokemonId == p.Id);
@@ -1096,6 +1101,11 @@ namespace Pokedex
                 {
                     possibleGames = possibleGames.Where(x => x.GenerationId >= 7).ToList();
                     possibleGames.AddRange(gamesAvailable.Where(x => x.GenerationId == 6));
+                }
+
+                if (pokemon.Game.GenerationId <= 2 && pokemon.PokedexNumber != 251)
+                {
+                    possibleGames.InsertRange(0, gamesAvailable.Where(x => x.GenerationId == 1));
                 }
 
                 // Gets other games for evolutions introduced in future generations.
