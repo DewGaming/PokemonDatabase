@@ -5,7 +5,6 @@
 
 @section styles
 {
-    <link href="~/css/typeChart.css" rel="stylesheet" asp-append-version="true" />
     <style>
         main {
             max-width: 1220px !important;
@@ -17,21 +16,14 @@
     <div class="grid-container">
         @foreach (var item in Model.AllPokemon)
         {
-            <div class="shadowed @item.Pokemon.Name@(item.Pokemon.IsComplete ? "" : " incomplete")">
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">
-                    <img class="pokemonListPicture" title="@item.Pokemon.Name" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @item.Pokemon.Id, ".png"))"/>
+            <div class="shadowed @item.Name@(item.IsComplete ? "" : " incomplete")">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
+                    <img class="pokemonListPicture" title="@item.Name" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @item.Id, ".png"))"/>
                 </a>
                 <div>
-                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.PokemonId, generationId = 0 })">
-                        @('#')@item.Pokemon.PokedexNumber.ToString().PadLeft(4, '0') @item.Pokemon.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.PokemonId).Form.Name, ")") : string.Empty)
+                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
+                        @('#')@item.PokedexNumber.ToString().PadLeft(4, '0') @item.Name@(Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id) != null ? string.Concat(" (", Model.AllAltForms.Find(x => x.AltFormPokemonId == item.Id).Form.Name, ")") : string.Empty)
                     </a>
-                    <div class="typing">
-                        <div class="pokemon-type type-icon type-@item.PrimaryType.Name.ToLower()">@item.PrimaryType.Name</div>
-                        @if (@item.SecondaryType != null)
-                        {
-                            <div class="pokemon-type type-icon type-@item.SecondaryType.Name.ToLower()">@item.SecondaryType.Name</div>
-                        }
-                    </div>
                 </div>
             </div>
         }

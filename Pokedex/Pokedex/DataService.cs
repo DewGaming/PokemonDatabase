@@ -41,7 +41,7 @@ namespace Pokedex
             {
                 PageStat pageStat = this.GetObjects<PageStat>().Find(x => x.Name == pageName);
 
-                this.AddObject(new PageStat() { Name = pageName, VisitTime = System.DateTime.Now.ToUniversalTime(), VisitDate = System.DateTime.Now.ToUniversalTime() });
+                this.AddObject(new PageStat() { Name = pageName, VisitTime = DateTime.Now.ToUniversalTime(), VisitDate = DateTime.Now.ToUniversalTime() });
             }
         }
 
@@ -57,11 +57,11 @@ namespace Pokedex
             {
                 if (formId == 0)
                 {
-                    this.AddObject(new PokemonPageStat() { PokemonId = pokemonId, VisitTime = System.DateTime.Now.ToUniversalTime(), VisitDate = System.DateTime.Now.ToUniversalTime() });
+                    this.AddObject(new PokemonPageStat() { PokemonId = pokemonId, VisitTime = DateTime.Now.ToUniversalTime(), VisitDate = DateTime.Now.ToUniversalTime() });
                 }
                 else
                 {
-                    this.AddObject(new PokemonPageStat() { PokemonId = pokemonId, FormId = formId, VisitTime = System.DateTime.Now.ToUniversalTime(), VisitDate = System.DateTime.Now.ToUniversalTime() });
+                    this.AddObject(new PokemonPageStat() { PokemonId = pokemonId, FormId = formId, VisitTime = DateTime.Now.ToUniversalTime(), VisitDate = DateTime.Now.ToUniversalTime() });
                 }
             }
         }
@@ -358,6 +358,7 @@ namespace Pokedex
                 PreEvolutions = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
+                SurroundingPokemon = this.GetSurroundingPokemon(pokemon.PokedexNumber),
                 RegionalDexes = this.GetObjects<RegionalDex>(includes: "Game"),
                 RegionalDexEntries = this.GetObjects<RegionalDexEntry>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
                 GamesAvailableIn = games,
@@ -378,7 +379,7 @@ namespace Pokedex
             HttpWebResponse imageRequest;
             try
             {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
+                webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
                 imageRequest = (HttpWebResponse)webRequest.GetResponse();
                 if (imageRequest.StatusCode == HttpStatusCode.OK)
                 {
@@ -391,7 +392,7 @@ namespace Pokedex
 
             try
             {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
+                webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
                 imageRequest = (HttpWebResponse)webRequest.GetResponse();
                 if (imageRequest.StatusCode == HttpStatusCode.OK)
                 {
@@ -405,7 +406,7 @@ namespace Pokedex
             // Female Gender Difference Check
             try
             {
-                webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-f.png"));
+                webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-f.png"));
                 imageRequest = (HttpWebResponse)webRequest.GetResponse();
                 if (imageRequest.StatusCode == HttpStatusCode.OK)
                 {
@@ -421,7 +422,7 @@ namespace Pokedex
             {
                 if (!pokemonViewModel.HasFemaleGenderDifference)
                 {
-                    webRequest = (HttpWebRequest)HttpWebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-m.png"));
+                    webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-m.png"));
                     imageRequest = (HttpWebResponse)webRequest.GetResponse();
                     if (imageRequest.StatusCode == HttpStatusCode.OK)
                     {
@@ -595,7 +596,7 @@ namespace Pokedex
                 {
                     List<Game> games = this.GetObjects<PokemonGameDetail>("Game.ReleaseDate, Game.Id", "Game", "PokemonId", pokemonId).Select(x => x.Game).ToList();
                     games = games.Where(x => x.Id != 37).ToList();
-                    gameId = games.Where(x => x.ReleaseDate <= System.DateTime.Now).Last().Id;
+                    gameId = games.Where(x => x.ReleaseDate <= DateTime.Now).Last().Id;
                 }
 
                 List<Ability> abilityList = new List<Ability>();
@@ -1415,7 +1416,7 @@ namespace Pokedex
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                 {
-                    System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                    Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                 }
 
                 if (!string.IsNullOrEmpty(gridUrlPath))
@@ -1433,7 +1434,7 @@ namespace Pokedex
 
                     using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                     {
-                        System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                        Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                     }
                 }
 
@@ -1452,7 +1453,7 @@ namespace Pokedex
 
                     using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                     {
-                        System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                        Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
                     }
                 }
             }
@@ -1475,7 +1476,7 @@ namespace Pokedex
                 }
 
                 using FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
-                System.Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
+                Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
         }
 
@@ -1533,8 +1534,52 @@ namespace Pokedex
             }
             catch (System.Exception ex)
             {
-                System.Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
+                Console.WriteLine("Email could not be sent. ", (ex.InnerException != null) ? ex.InnerException.ToString() : ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Returns the two pokemon that surround the searched pokemon.
+        /// </summary>
+        /// <param name="pokedexNumber">The viewed Pokemon.</param>
+        /// <returns>Returns the two pokemon who's pokedex number surround this pokemon's pokedex number.</returns>
+        private List<Pokemon> GetSurroundingPokemon(int pokedexNumber)
+        {
+            List<Pokemon> pokemonList = this.GetAllPokemon().OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
+            Pokemon priorPokemon = pokemonList.FirstOrDefault(x => x.PokedexNumber == (pokedexNumber - 1));
+            Pokemon nextPokemon = pokemonList.FirstOrDefault(x => x.PokedexNumber == (pokedexNumber + 1));
+
+            if (priorPokemon == null)
+            {
+                if (pokemonList.First().PokedexNumber != pokedexNumber)
+                {
+                    priorPokemon = pokemonList.Last(x => x.PokedexNumber < pokedexNumber);
+                }
+                else
+                {
+                    priorPokemon = pokemonList.Last();
+                }
+            }
+
+            if (nextPokemon == null)
+            {
+                if (pokemonList.Last().PokedexNumber != pokedexNumber)
+                {
+                    nextPokemon = pokemonList.First(x => x.PokedexNumber > pokedexNumber);
+                }
+                else
+                {
+                    nextPokemon = pokemonList.First();
+                }
+            }
+
+            List<Pokemon> surroundingPokemon = new List<Pokemon>
+            {
+                priorPokemon,
+                nextPokemon,
+            };
+
+            return surroundingPokemon;
         }
 
         /// <summary>

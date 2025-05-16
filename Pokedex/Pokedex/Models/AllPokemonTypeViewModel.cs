@@ -11,7 +11,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all pokemon type details.
         /// </summary>
-        public List<PokemonTypeDetail> AllPokemon { get; set; }
+        public List<Pokemon> AllPokemon { get; set; }
 
         /// <summary>
         /// Gets or sets a list of all alt form pokemon.

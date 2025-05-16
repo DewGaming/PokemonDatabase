@@ -87,63 +87,39 @@ namespace Pokedex.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 this.ViewData["Search"] = search;
-                bool pokedexNumber = false;
                 search = this.FormatPokemonName(search);
-
-                List<PokemonTypeDetail> typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
-                                                                 .Where(x => x.Pokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
-                                                                 .OrderByDescending(x => x.GenerationId)
-                                                                 .ToList();
-
-                if (typeDetails.Count() == 0)
+                List<Pokemon> model = this.dataService.GetObjects<Pokemon>();
+                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form");
+                if (model.Where(x => x.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).Count() > 0)
                 {
-                    pokedexNumber = true;
-                    typeDetails = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game, PrimaryType, SecondaryType")
-                        .Where(x => x.Pokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase))
-                        .OrderByDescending(x => x.GenerationId)
-                        .ToList();
-                }
-
-                List<PokemonTypeDetail> model = new List<PokemonTypeDetail>();
-                foreach (var t in typeDetails)
-                {
-                    if (model.Find(x => x.PokemonId == t.PokemonId) == null)
-                    {
-                        model.Add(t);
-                    }
-                }
-
-                model = model.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
-
-                List<PokemonFormDetail> altForms = new List<PokemonFormDetail>();
-                if (pokedexNumber)
-                {
-                    altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    model = model.Where(x => x.Name.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    altForms = altForms.Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
                 else
                 {
-                    altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form").Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    model = model.Where(x => x.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                    altForms = altForms.Where(x => x.OriginalPokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
                 this.dataService.AddPageView("Search Page", this.User.IsInRole("Owner"));
                 if (model.Count == 1)
                 {
-                    return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Pokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
+                    return this.RedirectToAction("Pokemon", "Home", new { Name = model[0].Name.Replace(": ", "_").Replace(' ', '_').ToLower() });
                 }
-                else if (model.Count == 0)
-                {
-                    return this.RedirectToAction("AllPokemon", "Home");
-                }
-                else
+                else if (model.Count > 1)
                 {
                     AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel()
                     {
-                        AllPokemon = model,
+                        AllPokemon = model.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
                         AllAltForms = altForms,
                         AppConfig = this.appConfig,
                     };
 
                     return this.View("Search", viewModel);
+                }
+                else
+                {
+                    return this.RedirectToAction("AllPokemon", "Home");
                 }
             }
 
@@ -394,8 +370,8 @@ namespace Pokedex.Controllers
 
             try
             {
-                Pokemon pokemon = this.dataService.GetAllPokemon().Find(x => x.Name == name);
-
+                List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+                Pokemon pokemon = pokemonList.Find(x => x.Name == name);
                 if (pokemon == null)
                 {
                     return this.RedirectToAction("AllPokemon", "Home");
@@ -403,7 +379,7 @@ namespace Pokedex.Controllers
                 else
                 {
                     string pokemonName = pokemon.Name;
-
+                    List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
                     if (pokemonId == 0)
                     {
                         pokemonId = pokemon.Id;
@@ -411,15 +387,12 @@ namespace Pokedex.Controllers
 
                     if (generationId == 0)
                     {
-                        generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game").Where(x => x.Game.ReleaseDate <= DateTime.UtcNow && x.PokemonId == pokemonId).Last().Game.GenerationId;
+                        generationId = this.dataService.GetObjects<PokemonGameDetail>("Game.GenerationId, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemonId).Where(x => x.Game.ReleaseDate <= DateTime.UtcNow).Last().Game.GenerationId;
                     }
 
-                    List<PokemonViewModel> pokemonList = new List<PokemonViewModel>();
+                    List<PokemonViewModel> pokemonDetailList = new List<PokemonViewModel>();
                     PokemonViewModel pokemonDetails = this.dataService.GetPokemonDetails(pokemon, this.appConfig);
-                    pokemonDetails.SurroundingPokemon = this.GetSurroundingPokemon(pokemon.Id);
-
-                    pokemonList.Add(pokemonDetails);
-
+                    pokemonDetailList.Add(pokemonDetails);
                     List<PokemonFormDetail> altForms = this.dataService.GetAltForms(pokemonId);
                     if (altForms.Count > 0)
                     {
@@ -432,11 +405,11 @@ namespace Pokedex.Controllers
                         foreach (var p in altForms)
                         {
                             pokemonDetails = this.dataService.GetPokemonDetails(p.AltFormPokemon, this.appConfig, p.Form);
-                            pokemonList.Add(pokemonDetails);
+                            pokemonDetailList.Add(pokemonDetails);
                         }
                     }
 
-                    List<int> pokemonIds = pokemonList.ConvertAll(x => x.Pokemon.Id);
+                    List<int> pokemonIds = pokemonDetailList.ConvertAll(x => x.Pokemon.Id);
 
                     if (pokemonIds.IndexOf(pokemonId) == -1)
                     {
@@ -445,11 +418,11 @@ namespace Pokedex.Controllers
 
                     AdminPokemonDropdownViewModel model = new AdminPokemonDropdownViewModel()
                     {
-                        PokemonList = pokemonList,
+                        PokemonList = pokemonDetailList,
                         PokemonId = pokemonId,
                         GenerationId = generationId,
                         LatestGenerationId = this.dataService.GetObjects<Generation>(orderedProperty: "Id").Last().Id,
-                        AllTypes = new List<DataAccess.Models.Type>(),
+                        AllTypes = typeList,
                     };
 
                     if (this.User.IsInRole("Owner"))
@@ -467,7 +440,7 @@ namespace Pokedex.Controllers
                             AppConfig = this.appConfig,
                         };
 
-                        foreach (var p in pokemonList)
+                        foreach (var p in pokemonDetailList)
                         {
                             adminDropdown.PokemonList.Add(p.Pokemon);
                         }
@@ -477,21 +450,19 @@ namespace Pokedex.Controllers
 
                     if (name == "Arceus")
                     {
-                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Plate" });
+                        model.AllTypes.Add(new DataAccess.Models.Type { Id = 0, Name = "No Plate" });
                     }
                     else if (name == "Silvally")
                     {
-                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "No Memory" });
+                        model.AllTypes.Add(new DataAccess.Models.Type { Id = 0, Name = "No Memory" });
                     }
                     else
                     {
-                        model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
+                        model.AllTypes.Add(new DataAccess.Models.Type { Id = 0, Name = "Not Terastallized" });
                     }
 
-                    model.AllTypes.Add(new Pokedex.DataAccess.Models.Type { Id = 99, Name = "Stellar" });
-
-                    model.AllTypes.AddRange(this.dataService.GetObjects<DataAccess.Models.Type>("Name"));
-
+                    model.AllTypes.Add(new DataAccess.Models.Type { Id = 99, Name = "Stellar" });
+                    model.AllTypes.AddRange(typeList);
                     this.dataService.AddPageView(string.Concat("Pokemon Page"), this.User.IsInRole("Owner"));
                     this.dataService.AddPokemonPageView(pokemonId, formId, this.User.IsInRole("Owner"));
 
@@ -681,53 +652,6 @@ namespace Pokedex.Controllers
         }
 
         /// <summary>
-        /// Returns the two pokemon that surround the searched pokemon.
-        /// </summary>
-        /// <param name="pokemonId">The viewed Pokemon.</param>
-        /// <returns>Returns the two pokemon who's pokedex number surround this pokemon's pokedex number.</returns>
-        private List<Pokemon> GetSurroundingPokemon(int pokemonId)
-        {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon().OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
-            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
-            List<Pokemon> originalPokemonList = pokemonList.Where(x => !altForms.Contains(x)).ToList();
-            Pokemon pokemon = pokemonList.Find(x => x.Id == pokemonId);
-            Pokemon priorPokemon = originalPokemonList.FirstOrDefault(x => x.PokedexNumber == (pokemon.PokedexNumber - 1));
-            Pokemon nextPokemon = originalPokemonList.FirstOrDefault(x => x.PokedexNumber == (pokemon.PokedexNumber + 1));
-
-            if (priorPokemon == null)
-            {
-                if (originalPokemonList.First().PokedexNumber != pokemon.PokedexNumber)
-                {
-                    priorPokemon = originalPokemonList.Last(x => x.PokedexNumber < pokemon.PokedexNumber);
-                }
-                else
-                {
-                    priorPokemon = originalPokemonList.Last();
-                }
-            }
-
-            if (nextPokemon == null)
-            {
-                if (originalPokemonList.Last().PokedexNumber != pokemon.PokedexNumber)
-                {
-                    nextPokemon = originalPokemonList.First(x => x.PokedexNumber > pokemon.PokedexNumber);
-                }
-                else
-                {
-                    nextPokemon = originalPokemonList.First();
-                }
-            }
-
-            List<Pokemon> surroundingPokemon = new List<Pokemon>
-            {
-                priorPokemon,
-                nextPokemon,
-            };
-
-            return surroundingPokemon;
-        }
-
-        /// <summary>
         /// Formats the name of the pokemon to how the database stores their names.
         /// </summary>
         /// <param name="pokemonName">The name being formatted.</param>
@@ -758,11 +682,6 @@ namespace Pokedex.Controllers
 
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             pokemonName = textInfo.ToTitleCase(pokemonName);
-
-            if (pokemonName.Length > 1 && pokemonName.Substring(pokemonName.Length - 2, 2) == "-O")
-            {
-                pokemonName = string.Concat(pokemonName.Remove(pokemonName.Length - 2, 2), "-o");
-            }
 
             return pokemonName;
         }
