@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -35,6 +36,14 @@ namespace Pokedex.DataAccess.Models
         public ExperienceGrowth ExperienceGrowth { get; set; }
         [Display(Name = "Has Gender Difference (Appearance Only)")]
         public bool HasGenderDifference { get; set; }
+        
+        public virtual ICollection<PokemonBaseHappinessDetail> BaseHappinesses {get; set;}
+        public virtual ICollection<BaseStat> BaseStats  {get; set;}
+        public virtual ICollection<EVYield> EVYields {get; set;}
+        public virtual ICollection<PokemonTypeDetail> Typings {get; set;}
+        public virtual ICollection<PokemonAbilityDetail> Abilities  {get; set;}
+        public virtual ICollection<PokemonEggGroupDetail> EggGroups  {get; set;}
+        public virtual ICollection<PokemonCaptureRateDetail> CaptureRates {get; set;}
 
         public override bool Equals(object obj)
         {

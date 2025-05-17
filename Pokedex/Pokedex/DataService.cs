@@ -128,8 +128,9 @@ namespace Pokedex
         /// <param name="property">The property the object will be searched for.</param>
         /// <param name="propertyValue">The property's value.</param>
         /// <param name="includes">The property that is used if an include is needed. Separate includes by commas for multiples. I.E. "Game, Ability".</param>
+        /// <param name="collections">The property that is used if a collection is needed. Separate includes by commas for multiples. I.E. "Game, Ability".</param>
         /// <returns>Returns the object with the correct class and id.</returns>
-        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue, string includes = "")
+        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue, string includes = "", string collections = "")
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
@@ -330,7 +331,7 @@ namespace Pokedex
         /// <returns>Returns the list of all pokemon.</returns>
         public List<Pokemon> GetAllPokemon()
         {
-            return this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            return this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappinesses, BaseHappinesses.BaseHappiness, BaseStats, EVYields, Typings.PrimaryType, Typings.SecondaryType, Typings.Generation, Abilities.PrimaryAbility, Abilities.SecondaryAbility, Abilities.HiddenAbility, EggGroups.PrimaryEggGroup, EggGroups.SecondaryEggGroup, CaptureRates.CaptureRate, CaptureRates.Generation");
         }
 
         /// <summary>
@@ -348,13 +349,13 @@ namespace Pokedex
             PokemonViewModel pokemonViewModel = new PokemonViewModel()
             {
                 Pokemon = pokemon,
-                BaseHappinesses = this.GetObjects<PokemonBaseHappinessDetail>(includes: "BaseHappiness", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id).OrderByDescending(x => x.GenerationId).ToList(),
-                BaseStats = this.GetObjects<BaseStat>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                EVYields = this.GetObjects<EVYield>(includes: "Pokemon", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                Typings = this.GetObjects<PokemonTypeDetail>(includes: "Pokemon, PrimaryType, SecondaryType, Generation", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                Abilities = this.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                EggGroups = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemon.Id),
-                CaptureRates = this.GetPokemonWithCaptureRates(pokemon.Id),
+                BaseHappinesses = pokemon.BaseHappinesses.OrderByDescending(x => x.GenerationId).ToList(),
+                BaseStats = pokemon.BaseStats.OrderByDescending(x => x.GenerationId).ToList(),
+                EVYields = pokemon.EVYields.OrderByDescending(x => x.GenerationId).ToList(),
+                Typings = pokemon.Typings.OrderByDescending(x => x.GenerationId).ToList(),
+                Abilities = pokemon.Abilities.OrderByDescending(x => x.GenerationId).ToList(),
+                EggGroups = pokemon.EggGroups.OrderByDescending(x => x.GenerationId).ToList(),
+                CaptureRates = pokemon.CaptureRates.OrderByDescending(x => x.GenerationId).ToList(),
                 PreEvolutions = this.GetPreEvolution(pokemon.Id),
                 Evolutions = this.GetPokemonEvolutions(pokemon.Id),
                 Effectiveness = this.GetTypeChartPokemon(pokemon.Id),
@@ -691,18 +692,6 @@ namespace Pokedex
         public List<PokemonBaseHappinessDetail> GetAllPokemonWithBaseHappinesses()
         {
             return this.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness, Generation")
-                .OrderByDescending(x => x.GenerationId)
-                .ToList();
-        }
-
-        /// <summary>
-        /// Gets the capture rates of a pokemon.
-        /// </summary>
-        /// <param name="pokemonId">The pokemon's id.</param>
-        /// <returns>Returns the list of capture rates for a pokemon.</returns>
-        public List<PokemonCaptureRateDetail> GetPokemonWithCaptureRates(int pokemonId)
-        {
-            return this.GetObjects<PokemonCaptureRateDetail>(includes: "Pokemon, CaptureRate, Generation", whereProperty: "Pokemon.Id", wherePropertyValue: pokemonId)
                 .OrderByDescending(x => x.GenerationId)
                 .ToList();
         }
