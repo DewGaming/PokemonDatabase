@@ -243,7 +243,7 @@ namespace Pokedex
 
             foreach (var p in preEvolution)
             {
-                if (this.CheckIfAltForm(p.PreevolutionPokemonId))
+                if (p.PreevolutionPokemon.OriginalFormId != null)
                 {
                     p.PreevolutionPokemon.Name = string.Concat(p.PreevolutionPokemon.Name, " (", this.GetPokemonFormName(p.PreevolutionPokemonId), ")");
                 }
@@ -263,7 +263,7 @@ namespace Pokedex
 
             foreach (var e in evolutions)
             {
-                if (this.CheckIfAltForm(e.EvolutionPokemonId))
+                if (e.EvolutionPokemon.OriginalFormId != null)
                 {
                     e.EvolutionPokemon.Name = string.Concat(e.EvolutionPokemon.Name, " (", this.GetPokemonFormName(e.EvolutionPokemonId), ")");
                 }
@@ -331,7 +331,7 @@ namespace Pokedex
         /// <returns>Returns the list of all pokemon.</returns>
         public List<Pokemon> GetAllPokemon()
         {
-            return this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappinesses, BaseHappinesses.BaseHappiness, BaseStats, EVYields, Typings.PrimaryType, Typings.SecondaryType, Typings.Generation, Abilities.PrimaryAbility, Abilities.SecondaryAbility, Abilities.HiddenAbility, EggGroups.PrimaryEggGroup, EggGroups.SecondaryEggGroup, CaptureRates.CaptureRate, CaptureRates.Generation");
+            return this.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form, BaseHappinesses, BaseHappinesses.BaseHappiness, BaseStats, EVYields, Typings.PrimaryType, Typings.SecondaryType, Typings.Generation, Abilities.PrimaryAbility, Abilities.SecondaryAbility, Abilities.HiddenAbility, EggGroups.PrimaryEggGroup, EggGroups.SecondaryEggGroup, CaptureRates.CaptureRate, CaptureRates.Generation");
         }
 
         /// <summary>
@@ -380,59 +380,78 @@ namespace Pokedex
             HttpWebResponse imageRequest;
             try
             {
-                webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
-                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                if (pokemon.HasShinyArtwork)
                 {
                     pokemonViewModel.HasShiny = true;
                 }
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
-                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                if (imageRequest.StatusCode == HttpStatusCode.OK)
+                else
                 {
-                    pokemonViewModel.HasHome = true;
-                }
-            }
-            catch
-            {
-            }
-
-            // Female Gender Difference Check
-            try
-            {
-                webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-f.png"));
-                imageRequest = (HttpWebResponse)webRequest.GetResponse();
-                if (imageRequest.StatusCode == HttpStatusCode.OK)
-                {
-                    pokemonViewModel.HasFemaleGenderDifference = true;
-                }
-            }
-            catch
-            {
-            }
-
-            // Male Gender Difference Check
-            try
-            {
-                if (!pokemonViewModel.HasFemaleGenderDifference)
-                {
-                    webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-m.png"));
+                    webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.ShinyPokemonImageUrl, pokemon.Id, ".png"));
                     imageRequest = (HttpWebResponse)webRequest.GetResponse();
                     if (imageRequest.StatusCode == HttpStatusCode.OK)
                     {
-                        pokemonViewModel.HasMaleGenderDifference = true;
+                        pokemonViewModel.HasShiny = true;
+                        this.UpdateImageBools(pokemon.Id, "Shiny");
                     }
                 }
             }
             catch
             {
+            }
+
+            try
+            {
+                if (pokemon.HasHomeArtwork)
+                {
+                    pokemonViewModel.HasHome = true;
+                }
+                else
+                {
+                    webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.HomePokemonImageUrl, pokemon.Id, ".png"));
+                    imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                    if (imageRequest.StatusCode == HttpStatusCode.OK)
+                    {
+                        pokemonViewModel.HasHome = true;
+                        this.UpdateImageBools(pokemon.Id, "Home");
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            if (pokemon.HasGenderDifference)
+            {
+                // Female Gender Difference Check
+                try
+                {
+                    webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-f.png"));
+                    imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                    if (imageRequest.StatusCode == HttpStatusCode.OK)
+                    {
+                        pokemonViewModel.HasFemaleGenderDifference = true;
+                    }
+                }
+                catch
+                {
+                }
+
+                // Male Gender Difference Check
+                try
+                {
+                    if (!pokemonViewModel.HasFemaleGenderDifference)
+                    {
+                        webRequest = (HttpWebRequest)WebRequest.Create(string.Concat(appConfig.WebUrl, appConfig.GenderDifferenceGridImageUrl, pokemon.Id, "-m.png"));
+                        imageRequest = (HttpWebResponse)webRequest.GetResponse();
+                        if (imageRequest.StatusCode == HttpStatusCode.OK)
+                        {
+                            pokemonViewModel.HasMaleGenderDifference = true;
+                        }
+                    }
+                }
+                catch
+                {
+                }
             }
 
             PokemonLegendaryDetail legendaryType = this.GetObjectByPropertyValue<PokemonLegendaryDetail>("PokemonId", pokemon.Id, "LegendaryType");
@@ -525,30 +544,6 @@ namespace Pokedex
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
 
             return eggGroupDetails;
-        }
-
-        /// <summary>
-        /// Used to get all of the alternate forms of a pokemon.
-        /// </summary>
-        /// <param name="pokemonId">The id of a pokemon.</param>
-        /// <returns>Returns a list of all alternate forms of a pokemon.</returns>
-        public List<PokemonFormDetail> GetAltForms(int pokemonId)
-        {
-            List<PokemonFormDetail> pokemonList = this.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.ExperienceGrowth, Form");
-            if (this.CheckIfAltForm(pokemonId))
-            {
-                PokemonFormDetail formDetail = pokemonList.Find(x => x.AltFormPokemonId == pokemonId);
-
-                pokemonList = pokemonList.Where(x => x.OriginalPokemonId == formDetail.OriginalPokemonId && x.AltFormPokemonId != pokemonId).ToList();
-
-                pokemonList.Add(formDetail);
-            }
-            else
-            {
-                pokemonList = pokemonList.Where(x => x.OriginalPokemonId == pokemonId).ToList();
-            }
-
-            return pokemonList;
         }
 
         /// <summary>
@@ -1610,6 +1605,29 @@ namespace Pokedex
             }
 
             return file;
+        }
+
+        /// <summary>
+        /// Updates the boolean fields of a pokemon to mark an image as available.
+        /// </summary>
+        /// <param name="pokemonId">The Id of the pokemon that will be updated.</param>
+        /// <param name="imageType">The type of image that is available. Options are Shiny or Home.</param>
+        private void UpdateImageBools(int pokemonId, string imageType)
+        {
+            Pokemon pokemon = this.GetObjectByPropertyValue<Pokemon>("Id", pokemonId);
+            switch (imageType)
+            {
+                case "Shiny":
+                    pokemon.HasShinyArtwork = true;
+                    break;
+                case "Home":
+                    pokemon.HasHomeArtwork = true;
+                    break;
+                default:
+                    return;
+            }
+
+            this.UpdateObject(pokemon);
         }
     }
 }

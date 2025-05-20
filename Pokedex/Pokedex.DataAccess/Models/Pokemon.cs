@@ -34,8 +34,18 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Experience Growth"), Required]
         public int ExperienceGrowthId { get; set; }
         public ExperienceGrowth ExperienceGrowth { get; set; }
+        [Display(Name = "Original Pokemon")]
+        public int? OriginalFormId { get; set; }
+        public Pokemon OriginalForm { get; set; }
+        [Display(Name = "Form")]
+        public int? FormId { get; set; }
+        public Form Form { get; set; }
         [Display(Name = "Has Gender Difference (Appearance Only)")]
         public bool HasGenderDifference { get; set; }
+        [Display(Name = "Has Home Artwork")]
+        public bool HasHomeArtwork { get; set; }
+        [Display(Name = "Has Shiny Artwork")]
+        public bool HasShinyArtwork { get; set; }
         
         public virtual ICollection<PokemonBaseHappinessDetail> BaseHappinesses {get; set;}
         public virtual ICollection<BaseStat> BaseStats  {get; set;}

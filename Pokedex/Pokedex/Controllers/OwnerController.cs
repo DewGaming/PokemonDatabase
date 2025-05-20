@@ -312,6 +312,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The owner's page for managing Pokeballs in the database.
+        /// </summary>
+        /// <returns>The owner Pokeballs page.</returns>
         [Route("pokeball")]
         public IActionResult Pokeballs()
         {
@@ -320,6 +324,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The owner's page for managing Hunting Methods in the database.
+        /// </summary>
+        /// <returns>The owner Hunting Methods page.</returns>
         [Route("hunting_method")]
         public IActionResult HuntingMethods()
         {
@@ -328,6 +336,10 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// The owner's page for managing Regional Dexes in the database.
+        /// </summary>
+        /// <returns>The owner Regional Dexes page.</returns>
         [Route("regional_dex")]
         public IActionResult RegionalDexes()
         {
@@ -519,7 +531,7 @@ namespace Pokedex.Controllers
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {
-                if (this.dataService.CheckIfAltForm(pokemonId))
+                if (pokemon.OriginalFormId != null)
                 {
                     pokemon.Name = this.dataService.GetAltFormWithFormName(pokemonId).Name;
                 }
@@ -543,7 +555,7 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
-                if (this.dataService.CheckIfAltForm(pokemonId))
+                if (pokemon.OriginalFormId != null)
                 {
                     model.OriginalPokemon = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemon.Id, "AltFormPokemon, OriginalPokemon").OriginalPokemon;
                 }

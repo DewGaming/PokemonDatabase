@@ -370,8 +370,18 @@ namespace Pokedex.Controllers
 
             try
             {
-                List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-                Pokemon pokemon = pokemonList.Find(x => x.Name == name);
+                Pokemon pokemon;
+                List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => x.Name == name).ToList();
+                if (pokemonId != 0)
+                {
+                    pokemon = pokemonList.Find(x => x.Id == pokemonId);
+                }
+                else
+                {
+                    pokemon = pokemonList.Find(x => x.Name == name);
+                    pokemonId = pokemon.Id;
+                }
+
                 if (pokemon == null)
                 {
                     return this.RedirectToAction("AllPokemon", "Home");
@@ -379,11 +389,7 @@ namespace Pokedex.Controllers
                 else
                 {
                     string pokemonName = pokemon.Name;
-                    List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
-                    if (pokemonId == 0)
-                    {
-                        pokemonId = pokemon.Id;
-                    }
+                    List<DataAccess.Models.Type> typeList = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.Name != "Stellar").ToList();
 
                     if (generationId == 0)
                     {
@@ -394,21 +400,20 @@ namespace Pokedex.Controllers
                     {
                         this.dataService.GetPokemonDetails(pokemon, this.appConfig),
                     };
-                    List<PokemonFormDetail> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
-                    if (altFormsList.Where(x => x.AltFormPokemonId == pokemonId || x.OriginalPokemonId == pokemonId).Count() > 0)
+
+                    if (pokemonList.Where(x => x.OriginalFormId == pokemonId).Count() > 0 || pokemon.OriginalFormId != null)
                     {
                         int originalPokemonId = pokemonId;
-                        if (altFormsList.Exists(x => x.AltFormPokemonId == pokemonId))
+                        if (pokemon.OriginalFormId != null)
                         {
-                            PokemonFormDetail altForm = altFormsList.Find(x => x.AltFormPokemonId == pokemonId);
-                            pokemonName = this.dataService.GetAltFormWithFormName(pokemonId).Name;
-                            originalPokemonId = altForm.OriginalPokemonId;
-                            formId = altForm.FormId;
+                            pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
+                            originalPokemonId = (int)pokemon.OriginalFormId;
+                            formId = (int)pokemon.FormId;
                         }
 
-                        foreach (var p in altFormsList.Where(x => x.OriginalPokemonId == originalPokemonId))
+                        foreach (var p in pokemonList.Where(x => (x.OriginalFormId == originalPokemonId || x.Id == originalPokemonId) && x.Id != pokemonId))
                         {
-                            pokemonDetailList.Add(this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == p.AltFormPokemonId), this.appConfig, p.Form));
+                            pokemonDetailList.Add(this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == p.Id), this.appConfig, p.Form));
                         }
                     }
 
