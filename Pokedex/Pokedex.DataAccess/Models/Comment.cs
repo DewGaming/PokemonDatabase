@@ -11,5 +11,7 @@ namespace Pokedex.DataAccess.Models
         public User Commentor { get; set; }
         [Required]
         public bool IsCompleted { get; set; }
+        [Required]
+        public bool IsAutomatedError { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Pokedex.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Pokedex.Controllers
 {
@@ -507,6 +508,24 @@ namespace Pokedex.Controllers
             comment.IsCompleted = true;
 
             this.dataService.UpdateObject(comment);
+
+            return this.RedirectToAction("Comments", "Owner");
+        }
+
+        /// <summary>
+        /// Marks automated errors as being completed.
+        /// </summary>
+        /// <returns>The comments page.</returns>
+        [Route("complete_automated_errors")]
+        public IActionResult CompleteAutomatedErrors()
+        {
+            List<Comment> comments = this.dataService.GetObjects<Comment>().Where(x => x.IsAutomatedError && !x.IsCompleted).ToList();
+
+            foreach (var c in comments)
+            {
+                c.IsCompleted = true;
+                this.dataService.UpdateObject(c);
+            }
 
             return this.RedirectToAction("Comments", "Owner");
         }

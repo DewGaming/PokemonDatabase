@@ -1,5 +1,10 @@
 @model List<Pokedex.DataAccess.Models.Comment>;
 
+@if (Model.Where(x => x.IsAutomatedError && !x.IsCompleted).Count() > 0)
+{
+    <a class="btn btn-primary" href="@this.Url.Action("CompleteAutomatedErrors", "Owner")">Complete All Automated Errors</a>
+}
+
 @if (@Model.Where(x => !x.IsCompleted).ToList().Count() > 0)
 {
     <table class="table">
@@ -22,12 +27,12 @@
                 </td>
                 <td>
                     <a class="btn btn-primary" href="@this.Url.Action("CompleteComment", "Owner", new { id = @item.Id })">Complete Comment</a>
-                @if (item.CommentorId != null && item.CommentorId != 1)
-                {
-                    <br>
-                    <br>
+                    @if (item.CommentorId != null && item.CommentorId != 1)
+                    {
+                        <br>
+                        <br>
                         <a class="btn btn-primary" href="@this.Url.Action("SendMessage", "Owner", new { commentId = @item.Id })">Send Message</a>
-                }
+                    }
                 </td>
             </tr>
         }

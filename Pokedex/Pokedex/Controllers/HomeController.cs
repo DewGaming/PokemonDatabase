@@ -625,6 +625,7 @@ namespace Pokedex.Controllers
                 Comment comment = new Comment()
                 {
                     Name = string.Concat(error.GetType().ToString(), " (", error.Message, ")"),
+                    IsAutomatedError = true,
                 };
 
                 if (error.InnerException != null)
