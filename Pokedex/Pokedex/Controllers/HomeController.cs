@@ -367,7 +367,7 @@ namespace Pokedex.Controllers
             try
             {
                 Pokemon pokemon;
-                List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => x.Name == name).ToList();
+                List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => x.Name.ToString().Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
                 if (pokemonId != 0)
                 {
                     pokemon = pokemonList.Find(x => x.Id == pokemonId);
