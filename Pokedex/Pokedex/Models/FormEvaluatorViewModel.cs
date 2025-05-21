@@ -11,7 +11,7 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all alternate form pokemon.
         /// </summary>
-        public List<Pokemon> AllAltFormPokemon { get; set; }
+        public List<Pokemon> AllPokemon { get; set; }
 
         /// <summary>
         /// Gets or sets the application's configuration.

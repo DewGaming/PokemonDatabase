@@ -39,7 +39,7 @@
 
 <hr>
 
-<div class="pokemon page active" id="@Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "")@(@Model.Form != null ? @Model.Form.Name.Replace(" ", "") : "")">
+<div class="pokemon page active" id="@(@Model.Pokemon.IsAltForm ? @Model.Pokemon.NameWithForm.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", "") : Model.Pokemon.Name.Replace("%", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace(" ", ""))">
     <div class="pokemonInfo pokemonPicture pokemonTables">
         @if (Model.OriginalPokemon != null)
         {
@@ -54,7 +54,7 @@
                 </div>
                 <div class="shadowed pokemonWithForms">
                     <div class="pokemonImage">
-                        <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+                        <img title="@(@Model.Pokemon.IsAltForm ? Model.Pokemon.NameWithForm : Model.Pokemon.Name)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
         {
             <div class="shadowed pokemonWithForms">
                 <div class="pokemonImage">
-                    <img title="@Model.Pokemon.Name@(@Model.Form != null ? string.Concat(" (", @Model.Form.Name, ")") : string.Empty)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
+                    <img title="@(@Model.Pokemon.IsAltForm ? Model.Pokemon.Name : Model.Pokemon.NameWithForm)" loading="lazy" src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.OfficialPokemonImageUrl, @Model.Pokemon.Id, ".png"))" />
                 </div>
             </div>
         }
@@ -77,7 +77,7 @@
                     <td>
                         @if (Model.Form != null)
                         {
-                            @(string.Concat(Model.Pokemon.Name, " (", Model.Form.Name, ")"))
+                            @(Model.Pokemon.NameWithForm)
                         }
                         else
                         {

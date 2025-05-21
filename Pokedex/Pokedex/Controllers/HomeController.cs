@@ -130,9 +130,7 @@ namespace Pokedex.Controllers
         [Route("pokemon")]
         public IActionResult AllPokemon()
         {
-            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
-            pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => !x.IsAltForm).ToList();
             List<Game> model = this.dataService.GetObjects<Game>("ReleaseDate, Id");
 
             this.dataService.AddPageView("All Pokemon Page", this.User.IsInRole("Owner"));
@@ -402,14 +400,13 @@ namespace Pokedex.Controllers
                         int originalPokemonId = pokemonId;
                         if (pokemon.IsAltForm)
                         {
-                            pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
                             originalPokemonId = (int)pokemon.OriginalFormId;
                             formId = (int)pokemon.FormId;
                         }
 
                         foreach (var p in pokemonList.Where(x => (x.OriginalFormId == originalPokemonId || x.Id == originalPokemonId) && x.Id != pokemonId))
                         {
-                            pokemonDetailList.Add(this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == p.Id), this.appConfig, p.Form));
+                            pokemonDetailList.Add(this.dataService.GetPokemonDetails(p, this.appConfig));
                         }
                     }
 

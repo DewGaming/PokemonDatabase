@@ -1,7 +1,7 @@
 @model Pokedex.Models.EggGroupEvaluatorViewModel;
 
 <div class="shadowed dayCarePokemon">
-    @if (Model.AllAltForms.Any(x => x.Id == @Model.SearchedPokemon.Id))
+    @if (Model.AllPokemon.Where(x => x.IsAltForm).Any(x => x.Id == @Model.SearchedPokemon.Id))
     {
         <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.SearchedPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.SearchedPokemon.Id, generationId = Model.GenerationId } )">
             <img loading="lazy" class="pokemonListPicture eggGroupImage" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.OfficialPokemonImageUrl, Model.SearchedPokemon.Id, ".png")" title="@Model.SearchedPokemon.Name">
@@ -21,29 +21,17 @@
     </div>
 </div>
 
-<h2>Pokémon @Model.SearchedPokemon.Name Can Breed With In @Model.SearchedGame.Name</h2>
+<h2>Pokémon @(Model.SearchedPokemon.IsAltForm ? Model.SearchedPokemon.NameWithForm : Model.SearchedPokemon.Name) Can Breed With In @Model.SearchedGame.Name</h2>
 <div class="grid-container pokemonList">
     @for(var i = 0; i < Model.AllPokemonWithEggGroups.Count(); i++)
     {
         <div class="shadowed @Model.AllPokemonWithEggGroups[i].Pokemon.Name">
-            @if (Model.AllAltForms.Any(x => x.Id == Model.AllPokemonWithEggGroups[i].Pokemon.Id))
-            {
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">
-                    <img loading="lazy" class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.GridImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
-                </a>
-                <div>
-                    <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllPokemon[i].Name</a>
-                </div>
-            }
-            else
-            {
-                <a href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">
-                    <img loading="lazy" class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.GridImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
-                </a>
-                <div>
-                    <a class="pokemonName" href="@this.Url.Action("Pokemon", "Home", new { name = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower() } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllPokemon[i].Name</a>
-                </div>
-            }
+            <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">
+                <img loading="lazy" class="pokemonListPicture" title="@Model.AllPokemonWithEggGroups[i].Pokemon.Name" src="@string.Concat(Model.AppConfig.WebUrl, Model.AppConfig.GridImageUrl, Model.AllPokemonWithEggGroups[i].PokemonId, ".png")">
+            </a>
+            <div>
+                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllOriginalPokemon[i].Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllOriginalPokemon[i].Id, generationId = Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @(Model.AllPokemon[i].IsAltForm ? Model.AllPokemon[i].NameWithForm : Model.AllPokemon[i].Name)</a>
+            </div>    
         </div>
     }
 </div>

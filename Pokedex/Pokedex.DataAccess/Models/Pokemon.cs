@@ -48,6 +48,21 @@ namespace Pokedex.DataAccess.Models
         public bool HasShinyArtwork { get; set; }
         [Required, NotMapped]
         public bool IsAltForm { get { return OriginalFormId != null; } }
+        [Required, NotMapped]
+        public string NameWithForm
+        {
+            get
+            {
+                if (this.IsAltForm)
+                {
+                    return string.Concat(this.Name, " (", this.Form.Name, ")");
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
         
         public virtual ICollection<PokemonBaseHappinessDetail> BaseHappinesses {get; set;}
         public virtual ICollection<BaseStat> BaseStats  {get; set;}

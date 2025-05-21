@@ -16,6 +16,6 @@ namespace Pokedex.Models
         /// <summary>
         /// Gets or sets a list of all pokemon form details.
         /// </summary>
-        public List<PokemonFormDetail> AllPokemon { get; set; }
+        public List<Pokemon> AllPokemon { get; set; }
     }
 }

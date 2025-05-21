@@ -22,7 +22,7 @@
                 </a>
                 <div>
                     <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @item.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @item.Id, generationId = 0 })">
-                        @('#')@item.PokedexNumber.ToString().PadLeft(4, '0') @item.Name@(item.IsAltForm ? string.Concat(" (", item.Form.Name, ")") : string.Empty)
+                        @('#')@item.PokedexNumber.ToString().PadLeft(4, '0') @(item.IsAltForm ? item.NameWithForm : item.Name)
                     </a>
                 </div>
             </div>

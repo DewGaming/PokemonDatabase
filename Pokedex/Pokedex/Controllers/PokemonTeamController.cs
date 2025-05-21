@@ -968,11 +968,11 @@ namespace Pokedex.Controllers
 
                     if (form != null)
                     {
-                        pokemon = this.dataService.GetPokemonFromNameAndFormName(pokemonName.Replace(string.Concat("-", form.Name), string.Empty), form.Id);
+                        pokemon = this.dataService.GetObjects<Pokemon>(whereProperty: "Name", wherePropertyValue: pokemonName.Replace(string.Concat("-", form.Name), string.Empty)).Find(x => x.FormId == form.Id);
                     }
                     else
                     {
-                        pokemon = this.dataService.GetPokemon(pokemonName);
+                        pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Name", pokemonName);
                     }
                 }
                 else if (pokemonName == "Maushold-Four")

@@ -128,9 +128,8 @@ namespace Pokedex
         /// <param name="property">The property the object will be searched for.</param>
         /// <param name="propertyValue">The property's value.</param>
         /// <param name="includes">The property that is used if an include is needed. Separate includes by commas for multiples. I.E. "Game, Ability".</param>
-        /// <param name="collections">The property that is used if a collection is needed. Separate includes by commas for multiples. I.E. "Game, Ability".</param>
         /// <returns>Returns the object with the correct class and id.</returns>
-        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue, string includes = "", string collections = "")
+        public TEntity GetObjectByPropertyValue<TEntity>(string property, object propertyValue, string includes = "")
             where TEntity : class
         {
             IQueryable<TEntity> objects = this.dataContext.Set<TEntity>();
@@ -207,23 +206,13 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Checks to see if the provided pokemon id is an alternate form of another pokemon.
-        /// </summary>
-        /// <param name="id">The pokemon's id.</param>
-        /// <returns>Returns whether the pokemon is an alternate form or not.</returns>
-        public bool CheckIfAltForm(int id)
-        {
-            return this.GetObjects<PokemonFormDetail>().Exists(x => x.AltFormPokemonId == id);
-        }
-
-        /// <summary>
         /// Gets the list of form items with form names added to it.
         /// </summary>
         /// <returns>The list of formatted form items.</returns>
         public List<FormItem> GetFormItems()
         {
             List<FormItem> formItemList = this.GetObjects<FormItem>("Pokemon.PokedexNumber", "Pokemon, Pokemon.Form");
-            formItemList.ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", x.Pokemon.Form.Name, ")"));
+            formItemList.ForEach(x => x.Pokemon.Name = x.Pokemon.NameWithForm);
 
             return formItemList;
         }
@@ -236,14 +225,7 @@ namespace Pokedex
         public List<Evolution> GetPreEvolution(int pokemonId)
         {
             List<Evolution> preEvolution = this.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, PreevolutionPokemon.Form, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod", whereProperty: "EvolutionPokemon.Id", wherePropertyValue: pokemonId);
-
-            foreach (var p in preEvolution)
-            {
-                if (p.PreevolutionPokemon.IsAltForm)
-                {
-                    p.PreevolutionPokemon.Name = string.Concat(p.PreevolutionPokemon.Name, " (", p.PreevolutionPokemon.Form.Name, ")");
-                }
-            }
+            preEvolution.Where(x => x.PreevolutionPokemon.IsAltForm).ForEach(x => x.PreevolutionPokemon.Name = x.PreevolutionPokemon.NameWithForm);
 
             return preEvolution;
         }
@@ -256,14 +238,7 @@ namespace Pokedex
         public List<Evolution> GetPokemonEvolutions(int pokemonId)
         {
             List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemon.Id",  "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionPokemon.Form, EvolutionMethod", "PreevolutionPokemon.Id", pokemonId);
-
-            foreach (var e in evolutions)
-            {
-                if (e.EvolutionPokemon.IsAltForm)
-                {
-                    e.EvolutionPokemon.Name = string.Concat(e.EvolutionPokemon.Name, " (", e.EvolutionPokemon.Form.Name, ")");
-                }
-            }
+            evolutions.Where(x => x.EvolutionPokemon.IsAltForm).ForEach(x => x.EvolutionPokemon.Name = x.EvolutionPokemon.NameWithForm);
 
             return evolutions;
         }
@@ -276,17 +251,6 @@ namespace Pokedex
         public Pokemon GetPokemon(string name)
         {
             return this.GetObjectByPropertyValue<Pokemon>("Name", name);
-        }
-
-        /// <summary>
-        /// Gets the pokemon from a name. This pokemon will be an alternate form and will have the form name be used in the process of searching for it.
-        /// </summary>
-        /// <param name="pokemonName">The name of the pokemon.</param>
-        /// <param name="formId">The id of the alternate form.</param>
-        /// <returns>Returns the alternate pokemon.</returns>
-        public Pokemon GetPokemonFromNameAndFormName(string pokemonName, int formId)
-        {
-            return this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form", whereProperty: "FormId", wherePropertyValue: formId).FirstOrDefault(x => x.AltFormPokemon.Name == pokemonName).AltFormPokemon;
         }
 
         /// <summary>
@@ -355,10 +319,10 @@ namespace Pokedex
                 AppConfig = appConfig,
             };
 
-            if (form != null)
+            if (pokemon.IsAltForm)
             {
-                pokemonViewModel.Form = form;
-                pokemonViewModel.Pokemon.Name = string.Concat(pokemonViewModel.Pokemon.Name, " (", form.Name, ")");
+                pokemonViewModel.Form = pokemon.Form;
+                pokemonViewModel.Pokemon.Name = pokemon.NameWithForm;
             }
 
             HttpWebRequest webRequest;
@@ -484,7 +448,7 @@ namespace Pokedex
                 pokemonList = pokemonList.Where(x => !x.IsAltForm || (!x.Form.OnlyDuringBattle && !x.Form.FusionForm)).ToList();
             }
 
-            pokemonList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
+            pokemonList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
 
             return pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList();
         }
@@ -502,11 +466,10 @@ namespace Pokedex
             {
                 // Gets evolutions that are possible in other games.
                 Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
-                List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game, PreevolutionPokemon, PreevolutionPokemon.Game");
+                List<Evolution> evolutions = this.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game, EvolutionPokemon.Form, PreevolutionPokemon, PreevolutionPokemon.Game, PreevolutionPokemon.Form");
                 List<Pokemon> futureEvolutions = evolutions.Where(x => pokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
-                List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
                 futureEvolutions = futureEvolutions.Distinct().ToList();
-                futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                futureEvolutions.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
                 pokemonList.AddRange(futureEvolutions);
             }
 
@@ -520,8 +483,8 @@ namespace Pokedex
         /// <returns>The list of breedable pokemon.</returns>
         public List<PokemonEggGroupDetail> GetAllBreedablePokemon(int gameId = 0)
         {
-            List<Pokemon> battleOnlyForms = this.GetObjects<PokemonFormDetail>(includes: "OriginalPokemon, AltFormPokemon, Form", whereProperty: "Form.OnlyDuringBattle", wherePropertyValue: true).ConvertAll(x => x.AltFormPokemon);
-            List<PokemonEggGroupDetail> eggGroupDetails = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup");
+            List<Pokemon> battleOnlyForms = this.GetObjects<Pokemon>(includes: "Form", whereProperty: "Form.OnlyDuringBattle", wherePropertyValue: true);
+            List<PokemonEggGroupDetail> eggGroupDetails = this.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, Pokemon.Form, PrimaryEggGroup, SecondaryEggGroup");
             List<Pokemon> unbreedablePokemon = this.GetAllPokemon().Where(x => !eggGroupDetails.Any(y => y.PokemonId == x.Id && y.PrimaryEggGroupId != 15)).ToList();
 
             eggGroupDetails = eggGroupDetails.Where(x => !battleOnlyForms.Any(y => y.Id == x.PokemonId)).ToList();
@@ -541,30 +504,12 @@ namespace Pokedex
         }
 
         /// <summary>
-        /// Gets the pokemon given an id. This pokemon will be an alternate form and will have its form name added to the pokemon's name.
-        /// </summary>
-        /// <param name="pokemonId">The pokemon id.</param>
-        /// <returns>Returns the pokemon.</returns>
-        public Pokemon GetAltFormWithFormName(int pokemonId)
-        {
-            PokemonFormDetail pokemonForm = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form")
-                .Find(x => x.AltFormPokemonId == pokemonId);
-
-            Pokemon pokemon = pokemonForm.AltFormPokemon;
-
-            pokemon.Name = string.Concat(pokemon.Name, " (", pokemonForm.Form.Name, ")");
-
-            return pokemon;
-        }
-
-        /// <summary>
         /// Gets a list of all pokemon, alongside all of their possible typings.
         /// </summary>
         /// <returns>Returns the pokemon type detail list.</returns>
         public List<PokemonTypeDetail> GetAllPokemonWithTypes()
         {
-            List<Pokemon> altFormList = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
-            List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => !altFormList.Any(y => y.Id == x.PokemonId)).ToList();
+            List<PokemonTypeDetail> pokemonList = this.GetObjects<PokemonTypeDetail>("Pokemon.PokedexNumber, PokemonId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => !x.Pokemon.IsAltForm).ToList();
             List<int> pokemonIds = pokemonList.Select(x => x.PokemonId).Distinct().ToList();
 
             return pokemonList.OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
@@ -934,18 +879,15 @@ namespace Pokedex
                 if (game.GenerationId == 3)
                 {
                     pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Deoxys")));
-                    List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Deoxys").ToList();
-                    List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Deoxys").ToList();
-                    deoxysList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                    List<Pokemon> deoxysList = this.GetObjects<Pokemon>(includes: "GenderRatio, Form").Where(x => x.Name == "Deoxys").ToList();
+                    deoxysList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
                     pokemonList.AddRange(deoxysList);
                 }
                 else if (game.GenerationId == 6)
                 {
                     pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
-                    List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio").Where(x => x.Name == "Zygarde").ToList();
-                    List<PokemonFormDetail> formDetails = this.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form").Where(x => x.AltFormPokemon.Name == "Zygarde").ToList();
-                    zygardeList = zygardeList.Where(x => !formDetails.Where(x => x.Form.Name == "Complete").Select(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                    zygardeList.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.GetAltFormWithFormName(x.Id).Name);
+                    List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio, Form").Where(x => x.Name == "Zygarde" && x.Form.Name != "Complete").ToList();
+                    zygardeList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
                     pokemonList.AddRange(zygardeList);
                 }
             }

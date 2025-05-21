@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Pokedex.Controllers
 {
@@ -53,11 +55,7 @@ namespace Pokedex.Controllers
             };
 
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form").Where(x => x.Id != pokemonId).ToList();
-            foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
-            {
-                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
-            }
-
+            pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
             model.AllPokemon = pokemonList;
 
             return this.View(model);
@@ -83,11 +81,7 @@ namespace Pokedex.Controllers
                     GenerationId = evolution.GenerationId,
                 };
                 List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form").Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
-                {
-                    pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
-                }
-
+                pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
                 model.AllPokemon = pokemonList;
 
                 return this.View(model);
@@ -127,12 +121,7 @@ namespace Pokedex.Controllers
             }
 
             altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
-
-            foreach (var p in altForms)
-            {
-                p.Name = string.Concat(p.Name, " (", p.Form.Name, ")");
-            }
-
+            altForms.ForEach(x => x.Name = x.NameWithForm);
             model.AllPokemon = altForms;
 
             return this.View(model);
@@ -151,11 +140,7 @@ namespace Pokedex.Controllers
             if (!this.ModelState.IsValid)
             {
                 List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Form").Where(x => x.IsAltForm).OrderBy(x => x.PokedexNumber).ToList();
-
-                foreach (var p in pokemonList)
-                {
-                    p.Name = string.Concat(p.Name, " (", p.Form.Name, ")");
-                }
+                pokemonList.ForEach(x => x.Name = x.NameWithForm);
 
                 FormItemViewModel model = new FormItemViewModel()
                 {
@@ -1132,7 +1117,7 @@ namespace Pokedex.Controllers
             {
                 AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                 PokemonId = pokemonId,
-                Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form"),
                 GenerationId = generationId,
             };
 
@@ -1150,7 +1135,7 @@ namespace Pokedex.Controllers
                 {
                     AllAbilities = this.dataService.GetObjects<Ability>("Name"),
                     PokemonId = abilities.PokemonId,
-                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form"),
                     GenerationId = abilities.GenerationId,
                 };
 
@@ -1163,7 +1148,7 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("BaseHappinesses", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
             }
-            else if (this.dataService.CheckIfAltForm(abilities.PokemonId) && this.dataService.GetPokemonBaseStats(abilities.PokemonId, abilities.GenerationId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
+            else if (abilities.Pokemon.IsAltForm && this.dataService.GetPokemonBaseStats(abilities.PokemonId, abilities.GenerationId) == null && !this.dataService.GetObjectByPropertyValue<Pokemon>("Id", abilities.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").IsComplete)
             {
                 return this.RedirectToAction("BaseStats", "Add", new { pokemonId = abilities.PokemonId, generationId = abilities.GenerationId });
             }

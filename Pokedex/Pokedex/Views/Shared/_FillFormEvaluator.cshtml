@@ -1,23 +1,14 @@
 @model Pokedex.Models.FormEvaluatorViewModel;
 
 <div class="grid-container pokemonList">
-    @for(var i = 0; i < Model.AllAltFormPokemon.Count(); i++)
+    @for(var i = 0; i < Model.AllPokemon.Count(); i++)
     {
-        <div class="shadowed @Model.AllAltFormPokemon[i].OriginalForm.Name">
-            @if (Model.AllAltFormPokemon[i].Name.IndexOf(" (") > -1)
-            {
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllAltFormPokemon[i].OriginalForm.Name.ToLower(), pokemonId = @Model.AllAltFormPokemon[i].Id, generationId = @Model.GenerationId })">
-                    <img class="pokemonListPicture" loading="lazy" title="@Model.AllAltFormPokemon[i].Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllAltFormPokemon[i].Id, ".png"))">
-                </a>
-            }
-            else
-            {
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllAltFormPokemon[i].OriginalForm.Name.ToLower(), pokemonId = @Model.AllAltFormPokemon[i].Id, generationId = @Model.GenerationId })">
-                    <img class="pokemonListPicture" loading="lazy" title="@Model.AllAltFormPokemon[i].Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllAltFormPokemon[i].Id, ".png"))">
-                </a>
-            }
+        <div class="shadowed @Model.AllPokemon[i].Name">
+            <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllPokemon[i].Name.ToLower(), pokemonId = @Model.AllPokemon[i].Id, generationId = @Model.GenerationId })">
+                <img class="pokemonListPicture" loading="lazy" title="@(Model.AllPokemon[i].IsAltForm ? Model.AllPokemon[i].NameWithForm : Model.AllPokemon[i].Name)", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllPokemon[i].Id, ".png"))">
+            </a>
             <div>
-                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllAltFormPokemon[i].OriginalForm.Name.ToLower(), pokemonId = @Model.AllAltFormPokemon[i].Id, generationId = @Model.GenerationId } )">@('#')@Model.AllAltFormPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllAltFormPokemon[i].Name</a>
+                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllPokemon[i].Name.ToLower(), pokemonId = @Model.AllPokemon[i].Id, generationId = @Model.GenerationId } )">@('#')@Model.AllPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @(Model.AllPokemon[i].IsAltForm ? Model.AllPokemon[i].NameWithForm : Model.AllPokemon[i].Name)</a>
             </div>
         </div>
     }

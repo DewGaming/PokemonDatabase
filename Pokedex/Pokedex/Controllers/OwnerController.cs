@@ -75,13 +75,14 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
+        /// <summary>
+        /// Opens the page to view all pokemon by generation.
+        /// </summary>
+        /// <returns>The all pokemon page.</returns>
         [Route("pokemon")]
         public IActionResult Pokemon()
         {
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
-            pokemonList = pokemonList.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
-
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Game.Generation").Where(x => !x.IsAltForm).ToList();
             List<int> model = pokemonList.Select(x => x.Game.GenerationId).Distinct().OrderBy(x => x).ToList();
 
             return this.View(model);
@@ -211,7 +212,7 @@ namespace Pokedex.Controllers
             FormViewModel model = new FormViewModel()
             {
                 AllForms = this.dataService.GetObjects<Form>("Name", "FormGroup"),
-                AllPokemon = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form"),
+                AllPokemon = this.dataService.GetObjects<Pokemon>(),
             };
 
             return this.View(model);
@@ -548,7 +549,7 @@ namespace Pokedex.Controllers
             {
                 if (pokemon.IsAltForm)
                 {
-                    pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
+                    pokemon.Name = pokemon.NameWithForm;
                 }
 
                 List<Game> games = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);

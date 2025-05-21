@@ -114,7 +114,6 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
-
                 DropdownViewModel dropdownViewModel = new DropdownViewModel()
                 {
                     AllPokemon = allAdminPokemon,
@@ -129,10 +128,7 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
-                foreach (var a in model.PokemonList)
-                {
-                    a.Name = string.Concat(a.Name, " (", a.Form.Name, ")");
-                }
+                model.PokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -154,8 +150,7 @@ namespace Pokedex.Controllers
                 HttpWebRequest webRequest;
                 HttpWebResponse imageRequest;
                 AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
-                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon.EggCycle, AltFormPokemon.GenderRatio, AltFormPokemon.Classification, AltFormPokemon.Game, AltFormPokemon.Game.Generation, AltFormPokemon.ExperienceGrowth").ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
                 List<int> pokemonIds = pokemonList.ConvertAll(x => x.Id);
 
                 DropdownViewModel dropdownViewModel = new DropdownViewModel()
@@ -189,7 +184,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                model.PokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
+                model.PokemonList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -211,8 +206,7 @@ namespace Pokedex.Controllers
                 HttpWebRequest webRequest;
                 HttpWebResponse imageRequest;
                 AllAdminPokemonViewModel allAdminPokemon = this.dataService.GetAllAdminPokemonDetails();
-                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>().ConvertAll(x => x.AltFormPokemon);
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
                 List<int> pokemonIds = pokemonList.ConvertAll(x => x.Id);
 
                 DropdownViewModel dropdownViewModel = new DropdownViewModel()
@@ -246,7 +240,7 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                model.PokemonList.Where(x => altFormList.Any(y => y.Id == x.Id)).ToList().ForEach(x => x.Name = this.dataService.GetAltFormWithFormName(x.Id).Name);
+                model.PokemonList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
 
                 return this.PartialView("_FillAdminGenerationTable", model);
             }
@@ -452,9 +446,7 @@ namespace Pokedex.Controllers
                 };
 
                 List<PokemonTypeDetail> typingDetail = this.dataService.GetObjects<PokemonTypeDetail>(includes: "Pokemon, Pokemon.Game", whereProperty: "Pokemon.Game.GenerationId", wherePropertyValue: generationId).ToList();
-                List<Pokemon> noTypingPokemon = this.dataService.GetAllPokemon().Where(x => x.Game.GenerationId == generationId).Except(typingDetail.Select(x => x.Pokemon)).ToList();
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon").Select(x => x.AltFormPokemon).ToList();
-                noTypingPokemon = noTypingPokemon.Where(x => !altFormList.Any(y => y.Id == x.Id)).ToList();
+                List<Pokemon> noTypingPokemon = this.dataService.GetAllPokemon().Where(x => x.Game.GenerationId == generationId && !x.IsAltForm).Except(typingDetail.Select(x => x.Pokemon)).ToList();
 
                 foreach (var p in noTypingPokemon)
                 {
@@ -492,18 +484,13 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonGameDetail> pokemonGameDetails = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: gameId);
-                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
                 pokemonList = pokemonList.Where(x => pokemonGameDetails.Any(y => y.PokemonId == x.Id)).ToList();
-                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                foreach (var p in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
-                {
-                    p.Name = string.Concat(p.Name, " (", this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", p.Id, "Form").Form.Name, ")");
-                }
+                pokemonList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
 
                 GenerationTableViewModel model = new GenerationTableViewModel()
                 {
                     PokemonNoTypeList = pokemonList,
-                    AltFormsList = altFormsList,
                     AppConfig = this.appConfig,
                     Generation = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId, "Generation").Generation,
                 };
@@ -566,9 +553,8 @@ namespace Pokedex.Controllers
                 {
                     Random rnd = new Random();
                     Game selectedGame = new Game();
-                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType");
+                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, Pokemon.Form, PrimaryType, SecondaryType");
                     List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "Game, Form").Where(x => selectedGens.Contains(x.Game.GenerationId)).ToList();
-                    List<PokemonFormDetail> pokemonFormDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon");
                     int legendaryTypeCount = this.dataService.GetObjects<LegendaryType>().Count();
                     Pokemon pokemon;
                     List<Pokemon> altForms = new List<Pokemon>();
@@ -660,7 +646,7 @@ namespace Pokedex.Controllers
                     }
 
                     List<int> pokemonIds = new List<int>();
-                    List<Pokemon> pokemonDetails = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id");
+                    List<Pokemon> pokemonDetails = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "Form");
                     if (testPokemonIds.Count() > 0)
                     {
                         pokemonIds = testPokemonIds;
@@ -1299,9 +1285,8 @@ namespace Pokedex.Controllers
             {
                 int evYieldTotal = health + attack + defense + specialAttack + specialDefense + speed;
                 Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
-                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon", "GameId", game.Id).Select(x => x.Pokemon).ToList();
-                List<EVYield> allEVYields = this.dataService.GetObjects<EVYield>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon").Where(x => x.GenerationId <= game.GenerationId).ToList();
+                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonGameDetail>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Form", "GameId", game.Id).Select(x => x.Pokemon).ToList();
+                List<EVYield> allEVYields = this.dataService.GetObjects<EVYield>("Pokemon.PokedexNumber, Pokemon.Id", "Pokemon, Pokemon.Form").Where(x => x.GenerationId <= game.GenerationId).ToList();
                 List<EVYield> evYields = new List<EVYield>();
                 foreach (var ev in allEVYields)
                 {
@@ -1329,17 +1314,8 @@ namespace Pokedex.Controllers
                 EVTrainerViewModel pokemonEVYields = new EVTrainerViewModel()
                 {
                     AllPokemon = pokemonList,
-                    AllAltForms = new List<PokemonFormDetail>(),
                     AppConfig = this.appConfig,
                 };
-
-                foreach (var p in pokemonList)
-                {
-                    if (p.IsAltForm)
-                    {
-                        pokemonEVYields.AllAltForms.Add(altForms.Find(x => x.AltFormPokemonId == p.Id));
-                    }
-                }
 
                 return this.PartialView("_FillEVTrainer", pokemonEVYields);
             }
@@ -1717,8 +1693,7 @@ namespace Pokedex.Controllers
                 {
                     if (selectedGame != 0)
                     {
-                        List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                        List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame).Where(x => !altFormsList.Any(y => y.Id == x.PokemonId)).ToList();
+                        List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame).Where(x => !x.Pokemon.IsAltForm).ToList();
                         List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                         Generation selectedGen = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame, "Generation").Generation;
                         List<Generation> generationList = this.dataService.GetObjects<Generation>().Where(x => x.Id <= selectedGen.Id).ToList();
@@ -1809,7 +1784,6 @@ namespace Pokedex.Controllers
         [Route("get-pokemon-by-typing")]
         public IActionResult GetPokemonByTyping(int primaryTypeId, int secondaryTypeId, int gameId, int regionalDexId)
         {
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 Game game = new Game();
@@ -1829,9 +1803,6 @@ namespace Pokedex.Controllers
                 }
 
                 List<PokemonTypeDetail> typingList = this.GetAllPokemonWithSpecificTypes(primaryTypeId, secondaryTypeId, game, regionalDexId);
-
-                typingList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
-
                 List<Pokemon> pokemonList = typingList.ConvertAll(x => x.Pokemon);
 
                 TypingEvaluatorViewModel model = new TypingEvaluatorViewModel()
@@ -1861,9 +1832,7 @@ namespace Pokedex.Controllers
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon").ConvertAll(x => x.AltFormPokemon);
                 List<PokemonAbilityDetail> abilityList = this.GetPokemonByAbilityAndGame(abilityId, gameId);
-                abilityList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
                 List<Pokemon> pokemonList = abilityList.ConvertAll(x => x.Pokemon);
                 int generationId = 0;
                 if (gameId != 0)
@@ -1899,10 +1868,6 @@ namespace Pokedex.Controllers
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 List<PokemonEggGroupDetail> eggGroupDetails = this.dataService.GetAllBreedablePokemon(gameId);
-
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-
-                eggGroupDetails.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
 
                 return this.PartialView("_FillDayCareEvaluatorDropdown", eggGroupDetails.ConvertAll(x => x.Pokemon));
             }
@@ -1964,9 +1929,8 @@ namespace Pokedex.Controllers
             {
                 try
                 {
-                    PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Last();
+                    PokemonEggGroupDetail searchedEggGroupDetails = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, Pokemon.Form, PrimaryEggGroup, SecondaryEggGroup", whereProperty: "PokemonId", wherePropertyValue: pokemonId).Last();
                     GenderRatio genderRatio = this.dataService.GetObjectByPropertyValue<GenderRatio>("Id", searchedEggGroupDetails.Pokemon.GenderRatioId);
-                    List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
                     List<PokemonEggGroupDetail> eggGroupList = new List<PokemonEggGroupDetail>();
                     List<Pokemon> pokemonList = new List<Pokemon>();
                     List<Pokemon> originalPokemon = new List<Pokemon>();
@@ -1981,7 +1945,6 @@ namespace Pokedex.Controllers
                     {
                         eggGroupList = this.dataService.GetAllBreedablePokemon(gameId).OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList();
                         eggGroupList.Remove(eggGroupList.Find(x => x.PokemonId == pokemonId));
-                        eggGroupList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
                         pokemonList.AddRange(eggGroupList.ConvertAll(x => x.Pokemon));
                         originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
                     }
@@ -2007,7 +1970,6 @@ namespace Pokedex.Controllers
                             finalEggGroupList.Remove(p);
                         }
 
-                        eggGroupList.Where(x => altFormList.Any(y => y.Id == x.PokemonId)).ToList().ForEach(x => x.Pokemon = this.dataService.GetAltFormWithFormName(x.PokemonId));
                         eggGroupList = finalEggGroupList;
                         eggGroupList.Add(this.dataService.GetObjectByPropertyValue<PokemonEggGroupDetail>("Pokemon.Name", "Ditto", "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup"));
                         originalPokemon = eggGroupList.ConvertAll(x => x.Pokemon);
@@ -2041,10 +2003,9 @@ namespace Pokedex.Controllers
                     {
                         AllPokemonWithEggGroups = eggGroupList.OrderBy(x => x.Pokemon.PokedexNumber).ThenBy(x => x.PokemonId).ToList(),
                         AllPokemon = pokemonList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
-                        AllAltForms = altFormList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
                         AllOriginalPokemon = originalPokemon.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
                         AppConfig = this.appConfig,
-                        SearchedPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                        SearchedPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form"),
                         SearchedGame = game,
                         PokemonEggGroups = pokemonEggGroupList,
                         GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
@@ -2111,18 +2072,17 @@ namespace Pokedex.Controllers
                     List<Form> formList = this.dataService.GetObjects<Form>(whereProperty: "FormGroupId", wherePropertyValue: form.FormGroupId);
                     foreach (var f in formList)
                     {
-                        pokemonFormList.AddRange(this.dataService.GetObjects<Pokemon>(includes: "Form, OriginalForm", whereProperty: "FormId", wherePropertyValue: f.Id));
+                        pokemonFormList.AddRange(this.dataService.GetObjects<Pokemon>(includes: "Form", whereProperty: "FormId", wherePropertyValue: f.Id));
                     }
                 }
                 else
                 {
-                    pokemonFormList = this.dataService.GetObjects<Pokemon>(includes: "Form, OriginalForm", whereProperty: "FormId", wherePropertyValue: form.Id);
+                    pokemonFormList = this.dataService.GetObjects<Pokemon>(includes: "Form", whereProperty: "FormId", wherePropertyValue: form.Id);
                 }
 
-                pokemonFormList.ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
                 FormEvaluatorViewModel model = new FormEvaluatorViewModel()
                 {
-                    AllAltFormPokemon = pokemonFormList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
+                    AllPokemon = pokemonFormList.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
                     AppConfig = this.appConfig,
                     GenerationId = this.dataService.GetObjects<Generation>().Last().Id,
                 };
@@ -2179,20 +2139,8 @@ namespace Pokedex.Controllers
             try
             {
                 List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
-                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "Form");
-                Form form = null;
-                if (altForms.Exists(x => x.AltFormPokemonId == firstPokemonId))
-                {
-                    form = altForms.Find(x => x.AltFormPokemonId == firstPokemonId).Form;
-                }
-
-                PokemonViewModel firstPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == firstPokemonId), this.appConfig, form);
-                if (altForms.Exists(x => x.AltFormPokemonId == secondPokemonId))
-                {
-                    form = altForms.Find(x => x.AltFormPokemonId == secondPokemonId).Form;
-                }
-
-                PokemonViewModel secondPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == secondPokemonId), this.appConfig, form);
+                PokemonViewModel firstPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == firstPokemonId), this.appConfig);
+                PokemonViewModel secondPokemonDetails = this.dataService.GetPokemonDetails(pokemonList.Find(x => x.Id == secondPokemonId), this.appConfig);
                 List<Game> games = this.dataService.GetObjects<Game>();
                 List<Game> selectedGames = new List<Game>
                 {
@@ -2380,7 +2328,7 @@ namespace Pokedex.Controllers
             }
             else
             {
-                List<PokemonPageStat> pokemonPageStats = this.dataService.GetObjects<PokemonPageStat>("VisitDate", "Pokemon, Form").Where(x => x.VisitDate.Year == year).ToList();
+                List<PokemonPageStat> pokemonPageStats = this.dataService.GetObjects<PokemonPageStat>("VisitDate", "Pokemon, Pokemon.Form, Form").Where(x => x.VisitDate.Year == year).ToList();
                 if (month != "0")
                 {
                     pokemonPageStats = pokemonPageStats.Where(x => x.VisitDate.ToString("MMMM") == month).ToList();
@@ -2390,19 +2338,8 @@ namespace Pokedex.Controllers
                     }
                 }
 
-                List<Pokemon> pokemonList = new List<Pokemon>();
-                foreach (var p in pokemonPageStats.DistinctBy(x => x.PokemonId))
-                {
-                    if (p.FormId != null)
-                    {
-                        p.Pokemon.Name = string.Concat(p.Pokemon.Name, " (", p.Form.Name, ")");
-                        pokemonList.Add(p.Pokemon);
-                    }
-                    else
-                    {
-                        pokemonList.Add(p.Pokemon);
-                    }
-                }
+                List<Pokemon> pokemonList = pokemonPageStats.DistinctBy(x => x.PokemonId).Select(x => x.Pokemon).ToList();
+                pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
 
                 PokemonPageStatsViewModel model = new PokemonPageStatsViewModel()
                 {
@@ -2444,7 +2381,7 @@ namespace Pokedex.Controllers
                 if (pageStat.FormId != null)
                 {
                     pokemon = pageStat.Pokemon;
-                    pokemon.Name = string.Concat(pokemon.Name, " (", pageStat.Form.Name, ")");
+                    pokemon.Name = pokemon.NameWithForm;
                     unOrderedPokemonList.Add(pokemon);
                 }
                 else
@@ -2636,36 +2573,6 @@ namespace Pokedex.Controllers
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Grabs the given pokemon by the provided id.
-        /// </summary>
-        /// <param name="pokemonId">The selected pokemon's Id.</param>
-        /// <returns>The selected pokemon.</returns>
-        [Route("go-transfer-without-symbol")]
-        public bool GoTransferWithoutSymbol(int pokemonId)
-        {
-            if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game");
-                List<Pokemon> updatedPokemonList = pokemonList.Where(x => (x.PokedexNumber <= 150 || x.Name == "Meltan" || x.Name == "Melmetal") && x.Game.GenerationId <= 7).ToList();
-                List<Evolution> evolutions = this.dataService.GetObjects<Evolution>("EvolutionPokemon.PokedexNumber, EvolutionPokemonId", "EvolutionPokemon, EvolutionPokemon.Game");
-                List<Pokemon> futureEvolutions = evolutions.Where(x => updatedPokemonList.Any(y => y.Id == x.PreevolutionPokemonId)).ToList().ConvertAll(x => x.EvolutionPokemon);
-                List<PokemonFormDetail> formDetails = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, Form");
-                futureEvolutions.Where(x => formDetails.ConvertAll(x => x.AltFormPokemon).Any(y => y.Id == x.Id)).ToList();
-                updatedPokemonList.AddRange(futureEvolutions);
-                if (updatedPokemonList.Exists(x => x.Id == pokemonId))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -2896,11 +2803,11 @@ namespace Pokedex.Controllers
             if (isShared)
             {
                 User user = this.dataService.GetObjectByPropertyValue<User>("Username", username);
-                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", user.Username).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null))).ToList();
+                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Form, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon, PhaseOfHunt.Pokemon.Form", "User.Username", user.Username).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null))).ToList();
             }
             else
             {
-                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null))).ToList();
+                shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Form, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon, PhaseOfHunt.Pokemon.Form", "User.Username", this.User.Identity.Name).Where(x => (x.IsCaptured || (!x.IsCaptured && x.PhaseOfHuntId != null))).ToList();
             }
 
             if (gameId != 0)
@@ -2908,7 +2815,6 @@ namespace Pokedex.Controllers
                 shinyHunts = shinyHunts.Where(x => x.GameId == gameId).ToList();
             }
 
-            List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
             gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
             List<Game> edittedGamesList = new List<Game>();
@@ -2935,8 +2841,8 @@ namespace Pokedex.Controllers
             }
 
             shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
-            shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
-            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
+            shinyHunts.Where(x => x.Pokemon.IsAltForm).ToList().ForEach(x => x.Pokemon.Name = x.Pokemon.NameWithForm);
+            shinyHunts.Where(x => x.PhaseOfHunt != null && x.PhaseOfHunt.Pokemon.IsAltForm).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = x.PhaseOfHunt.Pokemon.NameWithForm);
 
             if (sortMethod == "Pokedex")
             {
@@ -2963,7 +2869,7 @@ namespace Pokedex.Controllers
 
         private List<PokemonEggGroupDetail> GetAllPokemonWithSpecificEggGroups(int primaryEggGroupId, int? secondaryEggGroupId)
         {
-            List<PokemonEggGroupDetail> pokemonList = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, Pokemon.GenderRatio, PrimaryEggGroup, SecondaryEggGroup").OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            List<PokemonEggGroupDetail> pokemonList = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, Pokemon.GenderRatio, Pokemon.Form, PrimaryEggGroup, SecondaryEggGroup").OrderBy(x => x.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
 
             List<PokemonEggGroupDetail> finalPokemonList = pokemonList.Where(x => x.PrimaryEggGroupId == primaryEggGroupId || x.SecondaryEggGroupId == primaryEggGroupId).ToList();
 
@@ -2981,7 +2887,7 @@ namespace Pokedex.Controllers
             if (gameId != 0)
             {
                 Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-                pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game")
+                pokemonList = this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, Pokemon.Game, Pokemon.Form")
                     .Where(x => x.Pokemon.Game.GenerationId <= game.GenerationId)
                     .Where(x => x.GenerationId <= game.GenerationId)
                     .OrderBy(x => x.GenerationId)
@@ -3238,10 +3144,8 @@ namespace Pokedex.Controllers
         private string GetFormDetails(int pokemonId)
         {
             string formDetails = string.Empty, itemName = string.Empty;
-            PokemonFormDetail pokemonFormDetail = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId, "AltFormPokemon, OriginalPokemon, Form");
-
-            formDetails = string.Concat(formDetails, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
-
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "Form");
+            formDetails = string.Concat(pokemon.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
             List<FormItem> formItems = this.dataService.GetObjects<FormItem>();
             FormItem formItem = formItems.Find(x => x.PokemonId == pokemonId);
             if (formItem != null)
@@ -3349,7 +3253,7 @@ namespace Pokedex.Controllers
                     }
 
                     availableForms = this.RemoveExtraPokemonForms(availableForms, multipleMegas, multipleGMax);
-                    availableForms.ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
+                    availableForms.ForEach(x => x.Name = x.NameWithForm);
                     pokemonList = pokemonList.Where(x => !x.IsAltForm).ToList();
                     pokemonList.AddRange(availableForms);
                 }
@@ -3635,7 +3539,7 @@ namespace Pokedex.Controllers
 
         private List<PokemonTypeDetail> GetAllPokemonWithSpecificTypes(int primaryTypeId, int secondaryTypeId, Game game, int regionalDexId)
         {
-            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, PrimaryType, SecondaryType").Where(x => x.GenerationId <= game.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
+            List<PokemonTypeDetail> pokemonList = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, Pokemon.Form, PrimaryType, SecondaryType").Where(x => x.GenerationId <= game.GenerationId).GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
             if (regionalDexId != 0)
             {
                 List<RegionalDexEntry> regionalDexEntries = this.dataService.GetObjects<RegionalDexEntry>(whereProperty: "RegionalDexId", wherePropertyValue: regionalDexId);
@@ -3902,8 +3806,8 @@ namespace Pokedex.Controllers
             }
             else
             {
-                PokemonFormDetail pokemonFormDetail = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemonId, "AltFormPokemon, OriginalPokemon, Form");
-                form = string.Concat(form, pokemonFormDetail.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
+                Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "Form");
+                form = string.Concat(pokemon.Form.Name.Replace(' ', '-').Replace("Gigantamax", "Gmax"));
             }
 
             List<FormItem> formItems = this.dataService.GetObjects<FormItem>();

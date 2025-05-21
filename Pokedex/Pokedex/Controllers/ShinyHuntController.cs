@@ -47,15 +47,13 @@ namespace Pokedex.Controllers
             List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", userId).Where(x => x.IsCaptured && !x.ExcludeFromShinyDex).ToList();
             List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
             List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => !x.IsShinyLocked).ToList();
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
-            List<Pokemon> primals = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: "Primal").ConvertAll(x => x.AltFormPokemon);
-            pokemonList = pokemonList.Where(x => !primals.Any(y => y.Id == x.Id)).ToList();
+            pokemonList = pokemonList.Where(x => x.Form == null || x.Form.Name != "Primal").ToList();
 
-            List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.Where(x => x.HasGenderDifference == false).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = false });
+            List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.Where(x => x.HasGenderDifference == false).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = x.IsAltForm, IsMaleGenderDifference = false, IsFemaleGenderDifference = false });
             pokemonShinyHuntList.Where(x => pokemonCaptured.Any(y => y.Id == x.Pokemon.Id)).ToList().ForEach(x => x.IsCaptured = true);
-            List<PokemonShinyHuntDetails> maleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = true, IsFemaleGenderDifference = false });
+            List<PokemonShinyHuntDetails> maleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = x.IsAltForm, IsMaleGenderDifference = true, IsFemaleGenderDifference = false });
             maleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Male")).ToList().ForEach(x => x.IsCaptured = true);
-            List<PokemonShinyHuntDetails> femaleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = true });
+            List<PokemonShinyHuntDetails> femaleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = x.IsAltForm, IsMaleGenderDifference = false, IsFemaleGenderDifference = true });
             femaleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Female")).ToList().ForEach(x => x.IsCaptured = true);
             pokemonShinyHuntList.AddRange(maleGenderDifferencesList);
             pokemonShinyHuntList.AddRange(femaleGenderDifferencesList);
@@ -89,15 +87,13 @@ namespace Pokedex.Controllers
                 List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Game, Game, HuntingMethod, Mark, Pokeball", "UserId", user.Id).Where(x => x.IsCaptured && !x.ExcludeFromShinyDex).ToList();
                 List<Pokemon> pokemonCaptured = shinyHunts.ConvertAll(x => x.Pokemon).DistinctBy(x => x.Id).ToList();
                 List<Pokemon> pokemonList = this.dataService.GetNonBattlePokemonWithFormNames().Where(x => !x.IsShinyLocked).ToList();
-                List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, AltFormPokemon.Game").ConvertAll(x => x.AltFormPokemon);
-                List<Pokemon> primals = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form", whereProperty: "Form.Name", wherePropertyValue: "Primal").ConvertAll(x => x.AltFormPokemon);
-                pokemonList = pokemonList.Where(x => !primals.Any(y => y.Id == x.Id)).ToList();
+                pokemonList = pokemonList.Where(x => x.Form == null || x.Form.Name != "Primal").ToList();
 
-                List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.Where(x => x.HasGenderDifference == false).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = false });
+                List<PokemonShinyHuntDetails> pokemonShinyHuntList = pokemonList.Where(x => x.HasGenderDifference == false).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = x.IsAltForm, IsMaleGenderDifference = false, IsFemaleGenderDifference = false });
                 pokemonShinyHuntList.Where(x => pokemonCaptured.Any(y => y.Id == x.Pokemon.Id)).ToList().ForEach(x => x.IsCaptured = true);
-                List<PokemonShinyHuntDetails> maleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = true, IsFemaleGenderDifference = false });
+                List<PokemonShinyHuntDetails> maleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = x.IsAltForm, IsMaleGenderDifference = true, IsFemaleGenderDifference = false });
                 maleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Male")).ToList().ForEach(x => x.IsCaptured = true);
-                List<PokemonShinyHuntDetails> femaleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = altFormList.Exists(y => x.Id == y.Id), IsMaleGenderDifference = false, IsFemaleGenderDifference = true });
+                List<PokemonShinyHuntDetails> femaleGenderDifferencesList = pokemonList.Where(x => x.HasGenderDifference == true).ToList().ConvertAll(x => new PokemonShinyHuntDetails() { Pokemon = x, IsCaptured = false, IsAltForm = x.IsAltForm, IsMaleGenderDifference = false, IsFemaleGenderDifference = true });
                 femaleGenderDifferencesList.Where(x => shinyHunts.Any(y => y.PokemonId == x.Pokemon.Id && y.Gender == "Female")).ToList().ForEach(x => x.IsCaptured = true);
                 pokemonShinyHuntList.AddRange(maleGenderDifferencesList);
                 pokemonShinyHuntList.AddRange(femaleGenderDifferencesList);
@@ -598,8 +594,7 @@ namespace Pokedex.Controllers
         [Route("shiny_hunt_phases/{shinyHuntId:int}")]
         public IActionResult ShinyHuntPhases(int shinyHuntId)
         {
-            List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
-            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>(includes: "Pokemon, Mark, Pokeball, Sweet, Game, HuntingMethod");
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>(includes: "Pokemon, Pokemon.Form, Mark, Pokeball, Sweet, Game, HuntingMethod");
             List<ShinyHunt> phases = shinyHunts.Where(x => x.PhaseOfHuntId == shinyHuntId).ToList();
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
             gamesList = gamesList.Where(x => phases.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
@@ -627,7 +622,7 @@ namespace Pokedex.Controllers
             }
 
             phases.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
-            shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
+            shinyHunts.Where(x => x.Pokemon.IsAltForm).ToList().ForEach(x => x.Pokemon.Name = x.Pokemon.NameWithForm);
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
                 AllShinyHunts = phases.OrderBy(x => x.DateOfCapture).ThenBy(x => x.Id).ToList(),
@@ -698,8 +693,7 @@ namespace Pokedex.Controllers
         public IActionResult CompletedShinyHunts()
         {
             this.dataService.AddPageView("Completed Shiny Hunting Page", this.User.IsInRole("Owner"));
-            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
-            List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
+            List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon.Form, Game, HuntingMethod, Mark, Sweet, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon, PhaseOfHunt.Pokemon.Form", "User.Username", this.User.Identity.Name).Where(x => x.IsCaptured).ToList();
             List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
             gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
             if (shinyHunts.Count(x => x.Game.Name == "Fire Red") > 0)
@@ -738,8 +732,8 @@ namespace Pokedex.Controllers
             }
 
             shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
-            shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
-            shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
+            shinyHunts.Where(x => x.Pokemon.IsAltForm).ToList().ForEach(x => x.Pokemon.Name = x.Pokemon.NameWithForm);
+            shinyHunts.Where(x => x.PhaseOfHunt != null && x.PhaseOfHunt.Pokemon.IsAltForm).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = x.PhaseOfHunt.Pokemon.NameWithForm);
 
             ShinyHuntsViewModel model = new ShinyHuntsViewModel()
             {
@@ -769,8 +763,7 @@ namespace Pokedex.Controllers
             if (user != null)
             {
                 this.dataService.AddPageView("Share Completed Shiny Hunting Page", this.User.IsInRole("Owner"));
-                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Game, HuntingMethod, Mark, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon", "User.Username", user.Username);
-                List<PokemonFormDetail> altFormList = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form");
+                List<ShinyHunt> shinyHunts = this.dataService.GetObjects<ShinyHunt>("Game.GenerationId, Pokemon.PokedexNumber, PokemonId, Id", "User, Pokemon, Pokemon.Form, Game, HuntingMethod, Mark, Pokeball, PhaseOfHunt, PhaseOfHunt.Pokemon, PhaseOfHunt.Pokemon.Form", "User.Username", user.Username);
                 List<Game> gamesList = this.dataService.GetObjects<Game>("ReleaseDate, Id").Where(x => x.ReleaseDate <= DateTime.UtcNow).ToList();
                 shinyHunts = shinyHunts.Where(x => x.IsCaptured).ToList();
                 gamesList = gamesList.Where(x => shinyHunts.DistinctBy(x => x.Game).Any(y => y.Game.ReleaseDate == x.ReleaseDate)).ToList();
@@ -811,8 +804,8 @@ namespace Pokedex.Controllers
 
                 shinyHunts.ForEach(x => x.Game.Name = edittedGamesList.Find(y => y.Id == x.GameId).Name);
                 shinyHunts.Where(x => x.PokemonId == null).ToList().ForEach(x => x.Pokemon = new Pokemon() { Id = 0, Name = "Unknown", PokedexNumber = 0 });
-                shinyHunts.Where(x => altFormList.Any(y => y.AltFormPokemonId == x.PokemonId)).ToList().ForEach(x => x.Pokemon.Name = string.Concat(x.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.Pokemon.Id).Form.Name, ")"));
-                shinyHunts.Where(x => x.PhaseOfHunt != null && altFormList.Any(y => y.AltFormPokemonId == x.PhaseOfHunt.PokemonId)).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = string.Concat(x.PhaseOfHunt.Pokemon.Name, " (", altFormList.Find(y => y.AltFormPokemonId == x.PhaseOfHunt.Pokemon.Id).Form.Name, ")"));
+                shinyHunts.Where(x => x.Pokemon.IsAltForm).ToList().ForEach(x => x.Pokemon.Name = x.Pokemon.NameWithForm);
+                shinyHunts.Where(x => x.PhaseOfHunt != null && x.PhaseOfHunt.Pokemon.IsAltForm).ToList().ForEach(x => x.PhaseOfHunt.Pokemon.Name = x.PhaseOfHunt.Pokemon.NameWithForm);
 
                 ShinyHuntsViewModel model = new ShinyHuntsViewModel()
                 {

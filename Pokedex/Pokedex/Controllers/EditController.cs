@@ -85,7 +85,7 @@ namespace Pokedex.Controllers
             Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
             if (pokemon.IsAltForm)
             {
-                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
+                pokemon.Name = pokemon.NameWithForm;
             }
 
             PokemonGameViewModel model = new PokemonGameViewModel()
@@ -178,7 +178,8 @@ namespace Pokedex.Controllers
         public IActionResult GameAvailability(int id)
         {
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", id);
-            List<Pokemon> pokemonList = this.GetAllPokemonWithFormNames();
+            List<Pokemon> pokemonList = this.dataService.GetAllPokemon();
+            pokemonList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
             if (id != 43)
             {
                 pokemonList = pokemonList.Where(x => x.Game.ReleaseDate <= game.ReleaseDate).ToList();
@@ -290,7 +291,7 @@ namespace Pokedex.Controllers
 
             if (model.Pokemon.IsAltForm)
             {
-                model.Name = string.Concat(model.Pokemon.Name, " (", model.Pokemon.Form.Name, ")");
+                model.Name = model.NameWithForm;
             }
 
             return this.View(model);
@@ -309,7 +310,7 @@ namespace Pokedex.Controllers
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
-                if (!this.dataService.CheckIfAltForm(pokemon.Id))
+                if (!pokemon.IsAltForm)
                 {
                     model.AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness");
                     model.AllClassifications = this.dataService.GetObjects<Classification>("Name");
@@ -352,7 +353,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    model.Name = string.Concat(model.Pokemon.Name, " (", pokemon.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 return this.View(model);
@@ -408,7 +409,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    model.Name = string.Concat(model.Pokemon.Name, " (", pokemon.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("PokedexNumber", "A pokemon with a this pokedex number already exists.");
@@ -417,7 +418,7 @@ namespace Pokedex.Controllers
             }
 
             Pokemon oldPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.Game.ReleaseDate, AltFormPokemon.PokedexNumber, AltFormPokemon.Id", "AltFormPokemon, Form", "OriginalPokemonId", pokemon.Id).Select(x => x.AltFormPokemon).ToList();
+            List<Pokemon> altForms = this.dataService.GetObjects<Pokemon>("Game.ReleaseDate, PokedexNumber, Id", "Form", "OriginalFormId", pokemon.Id);
             if (oldPokemon.PokedexNumber != pokemon.PokedexNumber)
             {
                 foreach (var p in altForms)
@@ -443,7 +444,7 @@ namespace Pokedex.Controllers
 
             if (model.IsAltForm)
             {
-                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                model.Name = model.NameWithForm;
             }
 
             return this.View(model);
@@ -458,9 +459,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 return this.View(model);
@@ -469,9 +470,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -481,9 +482,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -501,9 +502,9 @@ namespace Pokedex.Controllers
         {
             Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-            if (this.dataService.CheckIfAltForm(id))
+            if (model.IsAltForm)
             {
-                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                model.Name = model.NameWithForm;
             }
 
             return this.View(model);
@@ -518,9 +519,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 return this.View(model);
@@ -529,9 +530,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -541,9 +542,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -561,9 +562,9 @@ namespace Pokedex.Controllers
         {
             Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-            if (this.dataService.CheckIfAltForm(id))
+            if (model.IsAltForm)
             {
-                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                model.Name = model.NameWithForm;
             }
 
             return this.View(model);
@@ -578,9 +579,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 return this.View(model);
@@ -589,9 +590,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -601,9 +602,9 @@ namespace Pokedex.Controllers
             {
                 Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -748,7 +749,7 @@ namespace Pokedex.Controllers
 
             if (model.IsAltForm)
             {
-                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                model.Name = model.NameWithForm;
             }
 
             return this.View(model);
@@ -777,7 +778,7 @@ namespace Pokedex.Controllers
 
                 if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 return this.View(model);
@@ -788,7 +789,7 @@ namespace Pokedex.Controllers
 
                 if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -800,7 +801,7 @@ namespace Pokedex.Controllers
 
                 if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -812,7 +813,7 @@ namespace Pokedex.Controllers
 
                 if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -824,7 +825,7 @@ namespace Pokedex.Controllers
 
                 if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
+                    model.Name = model.NameWithForm;
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -1211,7 +1212,7 @@ namespace Pokedex.Controllers
 
             List<Pokemon> altForms = this.dataService.GetObjects<Pokemon>(includes: "Form").Where(x => x.IsAltForm && x.Form.NeedsItem).ToList();
             altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
-            altForms.ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
+            altForms.ForEach(x => x.Name = x.NameWithForm);
             model.AllPokemon = altForms;
 
             return this.View(model);
@@ -1233,7 +1234,7 @@ namespace Pokedex.Controllers
 
                 List<Pokemon> altForms = this.dataService.GetObjects<Pokemon>(includes: "Form").Where(x => x.IsAltForm && x.Form.NeedsItem).ToList();
                 altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
-                altForms.ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
+                altForms.ForEach(x => x.Name = x.NameWithForm);
                 model.AllPokemon = altForms;
 
                 return this.View(model);
@@ -1808,14 +1809,7 @@ namespace Pokedex.Controllers
             List<Evolution> preevolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Form").Where(x => x.EvolutionPokemonId == pokemonId && x.GenerationId == generationId).ToList();
             if (preevolutions.Count() > 1)
             {
-                foreach (var pokemon in preevolutions)
-                {
-                    if (pokemon.PreevolutionPokemon.IsAltForm)
-                    {
-                        pokemon.PreevolutionPokemon.Name = string.Concat(pokemon.PreevolutionPokemon.Name, " (", pokemon.PreevolutionPokemon.Form.Name, ")");
-                    }
-                }
-
+                preevolutions.Where(x => x.PreevolutionPokemon.IsAltForm).ForEach(x => x.PreevolutionPokemon.Name = x.PreevolutionPokemon.NameWithForm);
                 EditEvolutionViewModel model = new EditEvolutionViewModel()
                 {
                     AllEvolutions = preevolutions,
@@ -1850,10 +1844,7 @@ namespace Pokedex.Controllers
             };
 
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
-            foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
-            {
-                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
-            }
+            pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
 
             model.AllPokemon = pokemonList;
 
@@ -1883,10 +1874,7 @@ namespace Pokedex.Controllers
                 };
 
                 List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
-                foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
-                {
-                    pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
-                }
+                pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
 
                 model.AllPokemon = pokemonList;
 
@@ -1903,10 +1891,7 @@ namespace Pokedex.Controllers
         {
             Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
             List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Form").Where(x => x.Name == originalPokemon.Name && x.IsAltForm).ToList().ToList();
-            foreach (var pokemon in pokemonList)
-            {
-                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
-            }
+            pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
 
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel()
             {
@@ -1976,33 +1961,6 @@ namespace Pokedex.Controllers
         private PokemonBaseHappinessDetail GetPokemonWithBaseHappinesssFromGenerationId(int pokemonId, int generationId)
         {
             return this.dataService.GetObjects<PokemonBaseHappinessDetail>(includes: "Pokemon, BaseHappiness, Generation").First(x => x.Pokemon.Id == pokemonId && x.Generation.Id == generationId);
-        }
-
-        /// <summary>
-        /// Gets a list of all pokemon and adds the form name to it if it is an alternate form.
-        /// </summary>
-        /// <returns>Returns all pokemon with the form name attached.</returns>
-        private List<Pokemon> GetAllPokemonWithFormNames()
-        {
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<PokemonFormDetail> pokemonForm = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, Form");
-            List<Pokemon> altFormList = pokemonForm.ConvertAll(x => x.AltFormPokemon);
-
-            foreach (var p in pokemonForm)
-            {
-                p.AltFormPokemon.Name = string.Concat(p.AltFormPokemon.Name, " (", p.Form.Name, ")");
-                altFormList.Add(p.AltFormPokemon);
-            }
-
-            Pokemon pokemon;
-
-            foreach (var a in altFormList)
-            {
-                pokemon = pokemonList.Find(x => x.Id == a.Id);
-                pokemon.Name = a.Name;
-            }
-
-            return pokemonList;
         }
     }
 }
