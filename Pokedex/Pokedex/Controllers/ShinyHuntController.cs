@@ -135,16 +135,6 @@ namespace Pokedex.Controllers
                 AppConfig = this.appConfig,
             };
 
-            model.AllPokemon.Prepend(new Pokemon()
-            {
-                Id = 0,
-                PokedexNumber = 0,
-                Name = "Unknown",
-                IsShinyLocked = false,
-                IsComplete = true,
-                GenderRatioId = 10,
-            });
-
             return this.View(model);
         }
 

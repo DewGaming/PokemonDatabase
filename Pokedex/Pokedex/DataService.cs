@@ -457,10 +457,22 @@ namespace Pokedex
         /// <returns>Returns the list of all pokemon.</returns>
         public List<Pokemon> GetPokemonWithFormNames(int gameId = 0, bool noBattleOnlyForms = false)
         {
+            Game game = this.GetObjectByPropertyValue<Game>("Id", gameId);
             List<Pokemon> pokemonList = new List<Pokemon>();
             if (gameId != 0)
             {
+                if (game.GenerationId == 1)
+                {
+                    // gameId is overwritten with the ID for Pokemon Gold.
+                    gameId = 2;
+                }
+
                 pokemonList = this.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.GenderRatio, Pokemon.Game, Pokemon.Form", whereProperty: "GameId", wherePropertyValue: gameId).ConvertAll(x => x.Pokemon).ToList();
+                if (game.GenerationId == 1)
+                {
+                    // Celebi is removed as it can't be hunted in Generation 1.
+                    pokemonList.Remove(pokemonList.Find(x => x.PokedexNumber == 251));
+                }
             }
             else
             {

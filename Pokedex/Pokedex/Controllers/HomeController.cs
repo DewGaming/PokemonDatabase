@@ -374,7 +374,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    pokemon = pokemonList.Find(x => x.Name == name);
+                    pokemon = pokemonList.Find(x => x.Name.ToString().Contains(name, StringComparison.OrdinalIgnoreCase));
                     pokemonId = pokemon.Id;
                 }
 
