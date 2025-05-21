@@ -539,20 +539,16 @@ namespace Pokedex.Controllers
         [Route("review_pokemon/{pokemonId:int}")]
         public IActionResult ReviewPokemon(int pokemonId)
         {
-            // Ensuring that the pokemon really has all of these added.
-            bool pokemonIsComplete = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetObjects<PokemonAbilityDetail>(includes: "Pokemon, PrimaryAbility, SecondaryAbility, HiddenAbility").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetObjects<BaseStat>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId) &&
-                   this.dataService.GetObjects<EVYield>(includes: "Pokemon").Exists(x => x.PokemonId == pokemonId);
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form, BaseHappinesses, BaseHappinesses.BaseHappiness, BaseStats, EVYields, Typings.PrimaryType, Typings.SecondaryType, Typings.Generation, Abilities.PrimaryAbility, Abilities.SecondaryAbility, Abilities.HiddenAbility, EggGroups.PrimaryEggGroup, EggGroups.SecondaryEggGroup, CaptureRates.CaptureRate, CaptureRates.Generation");
 
-            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, BaseHappinesses, BaseHappinesses.BaseHappiness, BaseStats, EVYields, Typings.PrimaryType, Typings.SecondaryType, Typings.Generation, Abilities.PrimaryAbility, Abilities.SecondaryAbility, Abilities.HiddenAbility, EggGroups.PrimaryEggGroup, EggGroups.SecondaryEggGroup, CaptureRates.CaptureRate, CaptureRates.Generation");
+            // Ensuring that the pokemon really has all of these added.
+            bool pokemonIsComplete = pokemon.Typings.Count() > 0 && pokemon.Abilities.Count() > 0 && pokemon.EggGroups.Count() > 0 && pokemon.BaseStats.Count() > 0 && pokemon.EVYields.Count() > 0;
 
             if (pokemonIsComplete && !pokemon.IsComplete)
             {
-                if (pokemon.OriginalFormId != null)
+                if (pokemon.IsAltForm)
                 {
-                    pokemon.Name = this.dataService.GetAltFormWithFormName(pokemonId).Name;
+                    pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
                 }
 
                 List<Game> games = this.dataService.GetObjects<PokemonGameDetail>("Game.ReleaseDate, GameId, Id", "Pokemon, Pokemon.Game, Game", "PokemonId", pokemon.Id).ConvertAll(x => x.Game);
@@ -574,9 +570,9 @@ namespace Pokedex.Controllers
                     AppConfig = this.appConfig,
                 };
 
-                if (pokemon.OriginalFormId != null)
+                if (pokemon.IsAltForm)
                 {
-                    model.OriginalPokemon = this.dataService.GetObjectByPropertyValue<PokemonFormDetail>("AltFormPokemonId", pokemon.Id, "AltFormPokemon, OriginalPokemon").OriginalPokemon;
+                    model.OriginalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.OriginalFormId);
                 }
 
                 return this.View(model);

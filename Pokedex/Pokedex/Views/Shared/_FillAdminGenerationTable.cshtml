@@ -11,10 +11,6 @@
 @foreach (var p in Model.PokemonList)
 {
     string pokemonName = p.Name;
-    if (Model.AltFormList.Find(x => x.Id == p.Id) != null)
-    {
-        pokemonName = Model.PokemonList.Find(x => x.Id == p.Id).Name;
-    }
 
     adminPokemon.Pokemon = p;
     adminPokemon.GenerationId = p.Game.GenerationId;

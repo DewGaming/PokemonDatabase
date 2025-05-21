@@ -46,6 +46,8 @@ namespace Pokedex.DataAccess.Models
         public bool HasHomeArtwork { get; set; }
         [Display(Name = "Has Shiny Artwork")]
         public bool HasShinyArtwork { get; set; }
+        [Required, NotMapped]
+        public bool IsAltForm { get { return OriginalFormId != null; } }
         
         public virtual ICollection<PokemonBaseHappinessDetail> BaseHappinesses {get; set;}
         public virtual ICollection<BaseStat> BaseStats  {get; set;}

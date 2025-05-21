@@ -3,21 +3,21 @@
 <div class="grid-container pokemonList">
     @for(var i = 0; i < Model.AllAltFormPokemon.Count(); i++)
     {
-        <div class="shadowed @Model.AllAltFormPokemon[i].OriginalPokemon.Name">
-            @if (Model.AllAltFormPokemon[i].AltFormPokemon.Name.IndexOf(" (") > -1)
+        <div class="shadowed @Model.AllAltFormPokemon[i].OriginalForm.Name">
+            @if (Model.AllAltFormPokemon[i].Name.IndexOf(" (") > -1)
             {
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllAltFormPokemon[i].AltFormPokemon.Name.Substring(0, Model.AllAltFormPokemon[i].AltFormPokemon.Name.IndexOf(" (")).Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllAltFormPokemon[i].AltFormPokemon.Id, generationId = @Model.GenerationId })">
-                    <img class="pokemonListPicture" loading="lazy" title="@Model.AllAltFormPokemon[i].AltFormPokemon.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllAltFormPokemon[i].AltFormPokemon.Id, ".png"))">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllAltFormPokemon[i].OriginalForm.Name.ToLower(), pokemonId = @Model.AllAltFormPokemon[i].Id, generationId = @Model.GenerationId })">
+                    <img class="pokemonListPicture" loading="lazy" title="@Model.AllAltFormPokemon[i].Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllAltFormPokemon[i].Id, ".png"))">
                 </a>
             }
             else
             {
-                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllAltFormPokemon[i].AltFormPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllAltFormPokemon[i].AltFormPokemon.Id, generationId = @Model.GenerationId })">
-                    <img class="pokemonListPicture" loading="lazy" title="@Model.AllAltFormPokemon[i].AltFormPokemon.Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllAltFormPokemon[i].AltFormPokemon.Id, ".png"))">
+                <a href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = Model.AllAltFormPokemon[i].OriginalForm.Name.ToLower(), pokemonId = @Model.AllAltFormPokemon[i].Id, generationId = @Model.GenerationId })">
+                    <img class="pokemonListPicture" loading="lazy" title="@Model.AllAltFormPokemon[i].Name", src="@Url.Content(string.Concat(@Model.AppConfig.WebUrl, @Model.AppConfig.GridImageUrl, @Model.AllAltFormPokemon[i].Id, ".png"))">
                 </a>
             }
             <div>
-                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllAltFormPokemon[i].AltFormPokemon.Name.Replace(": ", "_").Replace(' ', '_').ToLower(), pokemonId = @Model.AllAltFormPokemon[i].AltFormPokemon.Id, generationId = @Model.GenerationId } )">@('#')@Model.AllAltFormPokemon[i].AltFormPokemon.PokedexNumber.ToString().PadLeft(4, '0') @Model.AllAltFormPokemon[i].AltFormPokemon.Name</a>
+                <a class="pokemonName" href="@this.Url.Action("PokemonWithId", "Home", new { pokemonName = @Model.AllAltFormPokemon[i].OriginalForm.Name.ToLower(), pokemonId = @Model.AllAltFormPokemon[i].Id, generationId = @Model.GenerationId } )">@('#')@Model.AllAltFormPokemon[i].PokedexNumber.ToString().PadLeft(4, '0') @Model.AllAltFormPokemon[i].Name</a>
             </div>
         </div>
     }

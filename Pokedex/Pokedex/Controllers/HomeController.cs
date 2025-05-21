@@ -88,17 +88,14 @@ namespace Pokedex.Controllers
             {
                 this.ViewData["Search"] = search;
                 search = this.FormatPokemonName(search);
-                List<Pokemon> model = this.dataService.GetObjects<Pokemon>();
-                List<PokemonFormDetail> altForms = this.dataService.GetObjects<PokemonFormDetail>("AltFormPokemon.PokedexNumber, AltFormPokemonId", "OriginalPokemon, AltFormPokemon, Form");
+                List<Pokemon> model = this.dataService.GetObjects<Pokemon>(includes: "Form");
                 if (model.Where(x => x.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).Count() > 0)
                 {
                     model = model.Where(x => x.Name.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-                    altForms = altForms.Where(x => x.OriginalPokemon.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
                 else
                 {
                     model = model.Where(x => x.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-                    altForms = altForms.Where(x => x.OriginalPokemon.PokedexNumber.ToString().Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
                 this.dataService.AddPageView("Search Page", this.User.IsInRole("Owner"));
@@ -111,7 +108,6 @@ namespace Pokedex.Controllers
                     AllPokemonTypeViewModel viewModel = new AllPokemonTypeViewModel()
                     {
                         AllPokemon = model.OrderBy(x => x.PokedexNumber).ThenBy(x => x.Id).ToList(),
-                        AllAltForms = altForms,
                         AppConfig = this.appConfig,
                     };
 
@@ -401,10 +397,10 @@ namespace Pokedex.Controllers
                         this.dataService.GetPokemonDetails(pokemon, this.appConfig),
                     };
 
-                    if (pokemonList.Where(x => x.OriginalFormId == pokemonId).Count() > 0 || pokemon.OriginalFormId != null)
+                    if (pokemonList.Where(x => x.OriginalFormId == pokemonId).Count() > 0 || pokemon.IsAltForm)
                     {
                         int originalPokemonId = pokemonId;
-                        if (pokemon.OriginalFormId != null)
+                        if (pokemon.IsAltForm)
                         {
                             pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
                             originalPokemonId = (int)pokemon.OriginalFormId;

@@ -7,6 +7,7 @@ using Pokedex.DataAccess.Models;
 using Pokedex.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Pokedex.Controllers
 {
@@ -81,10 +82,10 @@ namespace Pokedex.Controllers
         [Route("game_availability/{pokemonId:int}")]
         public IActionResult PokemonGameDetails(int pokemonId)
         {
-            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            if (this.dataService.CheckIfAltForm(pokemonId))
+            Pokemon pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
+            if (pokemon.IsAltForm)
             {
-                pokemon.Name = this.dataService.GetAltFormWithFormName(pokemon.Id).Name;
+                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
             }
 
             PokemonGameViewModel model = new PokemonGameViewModel()
@@ -245,7 +246,7 @@ namespace Pokedex.Controllers
         {
             BasePokemonViewModel model = new BasePokemonViewModel
             {
-                Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form"),
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 AllClassifications = this.dataService.GetObjects<Classification>("Name"),
                 AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness"),
@@ -287,9 +288,9 @@ namespace Pokedex.Controllers
                 model.AllGenderRatios.OrderBy(x => x.GenderRatioString).ToList();
             }
 
-            if (this.dataService.CheckIfAltForm(id))
+            if (model.Pokemon.IsAltForm)
             {
-                model.Name = string.Concat(model.Pokemon.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                model.Name = string.Concat(model.Pokemon.Name, " (", model.Pokemon.Form.Name, ")");
             }
 
             return this.View(model);
@@ -304,7 +305,7 @@ namespace Pokedex.Controllers
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form"),
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
@@ -351,7 +352,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    model.Name = string.Concat(model.Pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Pokemon.Name, " (", pokemon.Form.Name, ")");
                 }
 
                 return this.View(model);
@@ -360,11 +361,11 @@ namespace Pokedex.Controllers
             {
                 BasePokemonViewModel model = new BasePokemonViewModel()
                 {
-                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
+                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form"),
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
-                if (!this.dataService.CheckIfAltForm(pokemon.Id))
+                if (!pokemon.IsAltForm)
                 {
                     model.AllBaseHappinesses = this.dataService.GetObjects<BaseHappiness>("Happiness");
                     model.AllClassifications = this.dataService.GetObjects<Classification>("Name");
@@ -407,7 +408,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    model.Name = string.Concat(model.Pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Pokemon.Name, " (", pokemon.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("PokedexNumber", "A pokemon with a this pokedex number already exists.");
@@ -438,11 +439,11 @@ namespace Pokedex.Controllers
         [Route("edit_official_pokemon_image/{id:int}")]
         public IActionResult OfficialPokemonImage(int id)
         {
-            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-            if (this.dataService.CheckIfAltForm(id))
+            if (model.IsAltForm)
             {
-                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
             }
 
             return this.View(model);
@@ -455,22 +456,22 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 return this.View(model);
             }
             else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -478,11 +479,11 @@ namespace Pokedex.Controllers
             }
             else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -498,11 +499,11 @@ namespace Pokedex.Controllers
         [Route("edit_home_pokemon_image/{id:int}")]
         public IActionResult HomePokemonImage(int id)
         {
-            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
             if (this.dataService.CheckIfAltForm(id))
             {
-                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
             }
 
             return this.View(model);
@@ -515,22 +516,22 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 return this.View(model);
             }
             else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -538,11 +539,11 @@ namespace Pokedex.Controllers
             }
             else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -558,11 +559,11 @@ namespace Pokedex.Controllers
         [Route("edit_shiny_pokemon_image/{id:int}")]
         public IActionResult ShinyPokemonImage(int id)
         {
-            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
             if (this.dataService.CheckIfAltForm(id))
             {
-                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
             }
 
             return this.View(model);
@@ -575,22 +576,22 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 return this.View(model);
             }
             else if (fileUpload == null && string.IsNullOrEmpty(urlUpload))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -598,11 +599,11 @@ namespace Pokedex.Controllers
             }
             else if ((fileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(urlUpload) && !urlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
                 if (this.dataService.CheckIfAltForm(id))
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -743,11 +744,11 @@ namespace Pokedex.Controllers
         [Route("add_gender_difference/{pokemonId:int}")]
         public IActionResult GenderDifferenceImage(int pokemonId)
         {
-            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+            Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-            if (this.dataService.CheckIfAltForm(pokemonId))
+            if (model.IsAltForm)
             {
-                model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemonId), ")");
+                model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
             }
 
             return this.View(model);
@@ -772,22 +773,22 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid && pokemon.Name.Length <= 25)
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 return this.View(model);
             }
             else if (officialFileUpload == null && string.IsNullOrEmpty(officialUrlUpload) && shinyFileUpload == null && string.IsNullOrEmpty(shinyUrlUpload) && homeFileUpload == null && string.IsNullOrEmpty(homeUrlUpload))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "An image is needed to update.");
@@ -795,11 +796,11 @@ namespace Pokedex.Controllers
             }
             else if ((officialFileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(officialUrlUpload) && !officialUrlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -807,11 +808,11 @@ namespace Pokedex.Controllers
             }
             else if ((shinyFileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(shinyUrlUpload) && !shinyUrlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -819,11 +820,11 @@ namespace Pokedex.Controllers
             }
             else if ((officialFileUpload?.FileName.Contains(".png") == false) || (!string.IsNullOrEmpty(homeUrlUpload) && !homeUrlUpload.Contains(".png")))
             {
-                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
+                Pokemon model = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemon.Id, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
 
-                if (this.dataService.CheckIfAltForm(pokemon.Id))
+                if (model.IsAltForm)
                 {
-                    model.Name = string.Concat(model.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    model.Name = string.Concat(model.Name, " (", model.Form.Name, ")");
                 }
 
                 this.ModelState.AddModelError("Picture", "The image must be in the .png format.");
@@ -1208,15 +1209,9 @@ namespace Pokedex.Controllers
                 Name = item.Name,
             };
 
-            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form").Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
-
+            List<Pokemon> altForms = this.dataService.GetObjects<Pokemon>(includes: "Form").Where(x => x.IsAltForm && x.Form.NeedsItem).ToList();
             altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
-
-            foreach (var p in altForms)
-            {
-                p.Name = string.Concat(p.Name, " (", this.dataService.GetPokemonFormName(p.Id), ")");
-            }
-
+            altForms.ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
             model.AllPokemon = altForms;
 
             return this.View(model);
@@ -1236,15 +1231,9 @@ namespace Pokedex.Controllers
                     Name = item.Name,
                 };
 
-                List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form").Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
-
+                List<Pokemon> altForms = this.dataService.GetObjects<Pokemon>(includes: "Form").Where(x => x.IsAltForm && x.Form.NeedsItem).ToList();
                 altForms.Remove(altForms.Find(x => x.Name == "Rayquaza"));
-
-                foreach (var p in altForms)
-                {
-                    p.Name = string.Concat(p.Name, " (", this.dataService.GetPokemonFormName(p.Id), ")");
-                }
-
+                altForms.ForEach(x => x.Name = string.Concat(x.Name, " (", x.Form.Name, ")"));
                 model.AllPokemon = altForms;
 
                 return this.View(model);
@@ -1816,14 +1805,14 @@ namespace Pokedex.Controllers
         [Route("edit_preevolutions/{pokemonId:int}/{generationId:int}")]
         public IActionResult Preevolutions(int pokemonId, int generationId)
         {
-            List<Evolution> preevolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon").Where(x => x.EvolutionPokemonId == pokemonId && x.GenerationId == generationId).ToList();
+            List<Evolution> preevolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Form").Where(x => x.EvolutionPokemonId == pokemonId && x.GenerationId == generationId).ToList();
             if (preevolutions.Count() > 1)
             {
                 foreach (var pokemon in preevolutions)
                 {
-                    if (this.dataService.CheckIfAltForm(pokemon.PreevolutionPokemonId))
+                    if (pokemon.PreevolutionPokemon.IsAltForm)
                     {
-                        pokemon.PreevolutionPokemon.Name = string.Concat(pokemon.PreevolutionPokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.PreevolutionPokemonId), ")");
+                        pokemon.PreevolutionPokemon.Name = string.Concat(pokemon.PreevolutionPokemon.Name, " (", pokemon.PreevolutionPokemon.Form.Name, ")");
                     }
                 }
 
@@ -1860,11 +1849,10 @@ namespace Pokedex.Controllers
                 GenerationId = preEvolution.GenerationId,
             };
 
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
+            foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
             {
-                pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
             }
 
             model.AllPokemon = pokemonList;
@@ -1894,11 +1882,10 @@ namespace Pokedex.Controllers
                     GenerationId = preEvolution.GenerationId,
                 };
 
-                List<Pokemon> pokemonList = this.dataService.GetAllPokemon().Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form");
+                foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
                 {
-                    pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
                 }
 
                 model.AllPokemon = pokemonList;
@@ -1915,15 +1902,15 @@ namespace Pokedex.Controllers
         public IActionResult AltForms(int pokemonId)
         {
             Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> altFormList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").Select(x => x.AltFormPokemon).Where(x => x.Name == originalPokemon.Name).ToList();
-            foreach (var pokemon in altFormList)
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Form").Where(x => x.Name == originalPokemon.Name && x.IsAltForm).ToList().ToList();
+            foreach (var pokemon in pokemonList)
             {
-                pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
             }
 
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel()
             {
-                AllPokemon = altFormList,
+                AllPokemon = pokemonList,
                 AllAltForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form"),
                 AllEvolutions = this.dataService.GetObjects<Evolution>(includes: "PreevolutionPokemon, PreevolutionPokemon.Game, EvolutionPokemon, EvolutionPokemon.Game, EvolutionMethod"),
                 AllTypings = this.dataService.GetObjects<PokemonTypeDetail>("PokemonId", "Pokemon, PrimaryType, SecondaryType"),

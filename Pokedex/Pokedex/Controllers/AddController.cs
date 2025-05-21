@@ -52,11 +52,10 @@ namespace Pokedex.Controllers
                 GenerationId = generationId,
             };
 
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Id != pokemonId).ToList();
-            List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-            foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form").Where(x => x.Id != pokemonId).ToList();
+            foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
             {
-                pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
             }
 
             model.AllPokemon = pokemonList;
@@ -83,11 +82,10 @@ namespace Pokedex.Controllers
                     EvolutionPokemonId = evolution.EvolutionPokemon.Id,
                     GenerationId = evolution.GenerationId,
                 };
-                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth").Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
-                List<Pokemon> altFormsList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").ConvertAll(x => x.AltFormPokemon);
-                foreach (var pokemon in pokemonList.Where(x => altFormsList.Any(y => y.Id == x.Id)))
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, Form").Where(x => x.Id != evolution.EvolutionPokemonId).ToList();
+                foreach (var pokemon in pokemonList.Where(x => x.IsAltForm))
                 {
-                    pokemon.Name = string.Concat(pokemon.Name, " (", this.dataService.GetPokemonFormName(pokemon.Id), ")");
+                    pokemon.Name = string.Concat(pokemon.Name, " (", pokemon.Form.Name, ")");
                 }
 
                 model.AllPokemon = pokemonList;
@@ -121,7 +119,7 @@ namespace Pokedex.Controllers
         public IActionResult FormItem()
         {
             FormItemViewModel model = new FormItemViewModel();
-            List<Pokemon> altForms = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, OriginalPokemon, Form").Where(x => x.Form.NeedsItem).ToList().ConvertAll(x => x.AltFormPokemon);
+            List<Pokemon> altForms = this.dataService.GetObjects<Pokemon>(includes: "Form").Where(x => x.IsAltForm && x.Form.NeedsItem).ToList();
 
             foreach (var p in this.dataService.GetFormItems().Select(x => x.Pokemon))
             {
@@ -132,7 +130,7 @@ namespace Pokedex.Controllers
 
             foreach (var p in altForms)
             {
-                p.Name = string.Concat(p.Name, " (", this.dataService.GetPokemonFormName(p.Id), ")");
+                p.Name = string.Concat(p.Name, " (", p.Form.Name, ")");
             }
 
             model.AllPokemon = altForms;
@@ -152,11 +150,11 @@ namespace Pokedex.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                List<Pokemon> pokemonList = this.dataService.GetObjects<PokemonFormDetail>(includes: "AltFormPokemon, AltFormPokemon.Game, OriginalPokemon, OriginalPokemon.Game, Form").Select(x => x.AltFormPokemon).OrderBy(x => x.PokedexNumber).ToList();
+                List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Form").Where(x => x.IsAltForm).OrderBy(x => x.PokedexNumber).ToList();
 
                 foreach (var p in pokemonList)
                 {
-                    p.Name = string.Concat(p.Name, " (", this.dataService.GetPokemonFormName(p.Id), ")");
+                    p.Name = string.Concat(p.Name, " (", p.Form.Name, ")");
                 }
 
                 FormItemViewModel model = new FormItemViewModel()
