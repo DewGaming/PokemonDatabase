@@ -2102,7 +2102,7 @@ namespace Pokedex.Controllers
             }
 
             Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", gameId);
-            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= game.GenerationId).ToList();
+            List<Pokedex.DataAccess.Models.Type> model = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= game.GenerationId && x.Name != "Stellar").ToList();
             return this.PartialView("_FillTypingEvaluatorTypes", model);
         }
 

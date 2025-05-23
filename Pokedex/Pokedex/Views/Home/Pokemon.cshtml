@@ -722,16 +722,16 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                             <h2>RKS Memory</h2>
                                         }
                                     }
-                                    else if (pokemonName == "Ogerpon" || (pokemonName == "Terapagos" && item.Pokemon.Id != Model.PokemonList.First().Pokemon.Id))
+                                    else if (pokemonName.Contains("Ogerpon") || pokemonName.Contains("Terapagos") && item.Pokemon.Id != 1769)
                                     {
                                         <h2>Terastallized</h2>
                                     }
-                                    else if (pokemonName != "Terapagos" || (pokemonName == "Terapagos" && item.Pokemon.Id != Model.PokemonList.First().Pokemon.Id))
+                                    else if (!pokemonName.Contains("Terapagos"))
                                     {
                                         <h2>Tera Typing</h2>
                                     }
                                 </label>
-                                @if (pokemonName == "Ogerpon")
+                                @if (pokemonName.Contains("Ogerpon"))
                                 {
                                     <select class="form-control teraTypeSelectList ogerponTera" id="TeraTypes" name="TeraTypes">
                                         <option value="0">Not Terastallized</option>
@@ -753,9 +753,9 @@ Description: @item.Abilities.OrderByDescending(x => x.GenerationId).First(x => x
                                         }
                                     </select>
                                 }
-                                else if (pokemonName == "Terapagos")
+                                else if (pokemonName.Contains("Terapagos"))
                                 {
-                                    if (item.Pokemon.Id != Model.PokemonList.First().Pokemon.Id)
+                                    if (item.Pokemon.Id != 1769)
                                     {
                                         <select class="form-control teraTypeSelectList terapagosTera" id="TeraTypes" name="TeraTypes">
                                             <option value="0">Not Terastallized</option>

@@ -200,7 +200,7 @@ $('.teraTypeSelectList').on('change', function () {
             teraType = 0;
         }
         $('.pokemonPicture .pokemonImage').load('/get-pokemon-images-with-type/', { 'pokemonId': pokemonId, 'typeId': teraType, 'currentImage': currentImage });
-    } else if ($('#Pokemon_Name').val() == 'Ogerpon') {
+    } else if ($('#Pokemon_Name').val().indexOf('Ogerpon') >= 0) {
         if (teraType != 0) {
             grabOgerponTeraAbility(pokemonId);
         } else {

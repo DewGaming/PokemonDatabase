@@ -180,7 +180,7 @@ namespace Pokedex.Controllers
             TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
             {
                 AllGames = selectableGames,
-                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
+                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.Name != "Stellar").ToList(),
                 AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                 AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
                 AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup", "AppearInTeamRandomizer", true),
