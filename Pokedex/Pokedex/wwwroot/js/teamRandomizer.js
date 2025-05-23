@@ -30,9 +30,9 @@ var pokemonList, pokemonURLs, typeList, exportString, fillGeneratedTable = funct
     }
 
     refreshEvents();
-}, checkLegendaryChecks = function () {
+}, checkSpecialGroupings = function () {
     var boxChecked = false;
-    $('.legendaryCheckbox input').each(function () {
+    $('.specialGroupingCheckbox input').each(function () {
         if ($(this).prop('checked')) {
             boxChecked = true;
             return false;
@@ -173,7 +173,7 @@ var pokemonList, pokemonURLs, typeList, exportString, fillGeneratedTable = funct
         data: { 'selectedGame': selectedGame }
     })
         .done(function (data) {
-            var gensChecked = [], formsAvailable = $.grep(data.allFormGroupGameDetails, function (n) { return n.gameId == selectedGame; });
+            var gensChecked = [], specialGroupingsChecked = [], formsAvailable = $.grep(data.allFormGroupGameDetails, function (n) { return n.gameId == selectedGame; });
             if (selectedGame == 0) {
                 formsAvailable = data.allFormGroupGameDetails;
             }
@@ -196,6 +196,26 @@ var pokemonList, pokemonURLs, typeList, exportString, fillGeneratedTable = funct
 
             $.each(gensChecked, function (index, gen) {
                 $('.' + gen + ' input').prop('checked', true);
+            })
+
+            $('.specialGroupingCheckbox').each(function () {
+                if ($(this).find('input').prop('checked')) {
+                    specialGroupingsChecked.push($(this).attr('class').split(' ').pop());
+                }
+            })
+
+            $(".specialGroupingCheckbox").remove();
+
+            $.each(data.allSpecialGroupings, function () {
+                var dropdownItem = $("<li>").addClass("dropdown-item generationOption specialGroupingCheckbox specialGrouping" + this.id + "Checkbox");
+                var dropdownInput = $("<input>").attr("id", "specialGrouping" + this.id).attr("type", "checkbox").val(this.name);
+                var dropdownLabel = $("<label>").attr("for", "specialGrouping" + this.id).addClass("generatorOptionTitle").text(this.name);
+                $(dropdownItem).append(dropdownInput).append(dropdownLabel);
+                $("#specialGroupings").append($(dropdownItem));
+            });
+
+            $.each(specialGroupingsChecked, function (index, grouping) {
+                $('.' + grouping + ' input').prop('checked', true);
             })
 
             if ($.inArray(selectedGame, ['1', '2', '20', '23']) != -1) {
@@ -262,7 +282,7 @@ var pokemonList, pokemonURLs, typeList, exportString, fillGeneratedTable = funct
 
             megaCheck = checkMegaCheck();
             altCheck = checkAltFormChecks();
-            legendCheck = checkLegendaryChecks();
+            legendCheck = checkSpecialGroupings();
             checkOtherOptions();
         })
         .fail(function () {
@@ -288,7 +308,7 @@ var pokemonList, pokemonURLs, typeList, exportString, fillGeneratedTable = funct
 }, updateDropdown = function () {
     refreshGenerationsByGame();
     checkAltFormChecks();
-    checkLegendaryChecks();
+    checkSpecialGroupings();
     checkMegaCheck();
     checkGigantamaxCheck();
     checkOtherOptions();
@@ -307,8 +327,8 @@ $('.alternateFormCheckbox').on('click', function () {
     checkOtherOptions();
 });
 
-$('.legendaryCheckbox').on('click', function () {
-    checkLegendaryChecks();
+$('.specialGroupingCheckbox').on('click', function () {
+    checkSpecialGroupings();
     checkOtherOptions();
 });
 
@@ -331,7 +351,7 @@ $('.typeCheckboxOption input').on('click', function () {
 });
 
 $('.generatorButton').on('click', function () {
-    var selectedGens = [], selectedLegendaries = [], selectedForms = [], selectedEvolutions = [], selectedTypes = [], selectedGameId;
+    var selectedGens = [], selectedSpecialGroupings = [], selectedForms = [], selectedEvolutions = [], selectedTypes = [], selectedGameId;
     $('.generationCheckbox input').each(function () {
         if ($(this).prop('checked')) {
             selectedGens.push(this.value);
@@ -344,9 +364,9 @@ $('.generatorButton').on('click', function () {
         }
     });
 
-    $('.legendaryCheckbox input').each(function () {
+    $('.specialGroupingCheckbox input').each(function () {
         if ($(this).prop('checked')) {
-            selectedLegendaries.push(this.value);
+            selectedSpecialGroupings.push(this.value);
         }
     });
 
@@ -377,7 +397,7 @@ $('.generatorButton').on('click', function () {
     $.ajax({
         url: '/get-pokemon-team/',
         method: 'POST',
-        data: { 'pokemonCount': $('input[name=pokemonCount]').val(), 'selectedGens': selectedGens, 'selectedTypes': selectedTypes, 'selectedGameId': selectedGameId, 'selectedLegendaries': selectedLegendaries, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'monotypeOnly': $("#monotypeBool").is(":checked"), 'noRepeatType': $("#noRepeatTypeBool").is(":checked"), 'allowIncomplete': $("#allowIncompleteBool").is(":checked"), 'onlyUseRegionalDexes': $("#onlyUseRegionalDexesBool").is(":checked") }
+        data: { 'pokemonCount': $('input[name=pokemonCount]').val(), 'selectedGens': selectedGens, 'selectedTypes': selectedTypes, 'selectedGameId': selectedGameId, 'selectedSpecialGroupings': selectedSpecialGroupings, 'selectedForms': selectedForms, 'selectedEvolutions': selectedEvolutions, 'onlyLegendaries': $("#legendaryBool").is(":checked"), 'onlyAltForms': $("#altFormBool").is(":checked"), 'multipleMegas': $("#multipleMegaBool").is(":checked"), 'multipleGMax': $("#multipleGMaxBool").is(":checked"), 'onePokemonForm': $("#onePokemonFormBool").is(":checked"), 'monotypeOnly': $("#monotypeBool").is(":checked"), 'noRepeatType': $("#noRepeatTypeBool").is(":checked"), 'allowIncomplete': $("#allowIncompleteBool").is(":checked"), 'onlyUseRegionalDexes': $("#onlyUseRegionalDexesBool").is(":checked") }
     })
         .done(function (data) {
             pokemonList = data.allPokemonChangedNames;

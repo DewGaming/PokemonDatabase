@@ -79,6 +79,12 @@
             @Html.ValidationMessageFor(x => x.Pokemon.ExperienceGrowthId)
         </div>
 
+        <div class="form-group row">
+            @Html.LabelFor(x => x.Pokemon.SpecialGroupingId, new { @class = "col-md-2" })
+            @Html.DropDownListFor(x => x.Pokemon.SpecialGroupingId, new SelectList(Model.AllSpecialGroupings, "Id", "Name"), new { @class = "form-control col-md-8" })
+            @Html.ValidationMessageFor(x => x.Pokemon.SpecialGroupingId)
+        </div>
+
         <p>
             <button type="submit" class="btn btn-primary" role="button">Update</button>
         </p>

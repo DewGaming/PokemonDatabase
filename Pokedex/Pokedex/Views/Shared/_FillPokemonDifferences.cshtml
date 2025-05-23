@@ -95,28 +95,21 @@
                     }
                 }
             </tr>
-            @if (firstPokemon.LegendaryType != null || secondPokemon.LegendaryType != null)
+            @if (firstPokemon.Pokemon.SpecialGrouping != null || secondPokemon.Pokemon.SpecialGrouping != null)
             {
                 <tr>
-                    <th colspan="2">Legendary Classification</th>
+                    <th colspan="2">Special Grouping</th>
                 </tr>
                 <tr>
-                    @if (firstPokemon.LegendaryType != null && secondPokemon.LegendaryType != null && firstPokemon.LegendaryType.Type == secondPokemon.LegendaryType.Type)
+                    @if (firstPokemon.Pokemon.SpecialGrouping != null && secondPokemon.Pokemon.SpecialGrouping != null && firstPokemon.Pokemon.SpecialGroupingId == secondPokemon.Pokemon.SpecialGroupingId)
                     {
-                        <td colspan="2" class="match">@firstPokemon.LegendaryType.Type</td>
+                        <td colspan="2" class="match">@firstPokemon.Pokemon.SpecialGrouping.Name</td>
                     }
                     else
                     {
                         @for (var i = 0; i < 2; i++)
                         {
-                            @if (Model.AllPokemon[i].LegendaryType != null)
-                            {
-                                <td class="noMatch">@Model.AllPokemon[i].LegendaryType.Type</td>
-                            }
-                            else
-                            {
-                                <td class="noMatch">Not Legendary</td>
-                            }
+                            <td class="noMatch">@Model.AllPokemon[i].Pokemon.SpecialGrouping.Name</td>
                         }
                     }
                 </tr>
@@ -136,7 +129,7 @@
                             feet++;
                             inches -= 12;
                         }
-                        height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (firstPokemon.Form != null && firstPokemon.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @firstPokemon.Pokemon.Height.ToString("F1"), (firstPokemon.Form != null && firstPokemon.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                        height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (firstPokemon.Pokemon.IsAltForm && firstPokemon.Pokemon.NameWithForm.Contains("Gigantamax")) ? "+" : string.Empty, " (", @firstPokemon.Pokemon.Height.ToString("F1"), (firstPokemon.Pokemon.IsAltForm && firstPokemon.Pokemon.NameWithForm.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
                     }
                     else
                     {
@@ -157,7 +150,7 @@
                                 feet++;
                                 inches -= 12;
                             }
-                            height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (Model.AllPokemon[i].Form != null && Model.AllPokemon[i].Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @Model.AllPokemon[i].Pokemon.Height.ToString("F1"), (Model.AllPokemon[i].Form != null && Model.AllPokemon[i].Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                            height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (Model.AllPokemon[i].Pokemon.IsAltForm && Model.AllPokemon[i].Pokemon.NameWithForm.Contains("Gigantamax")) ? "+" : string.Empty, " (", @Model.AllPokemon[i].Pokemon.Height.ToString("F1"), (Model.AllPokemon[i].Pokemon.IsAltForm && Model.AllPokemon[i].Pokemon.NameWithForm.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
                         }
                         else
                         {

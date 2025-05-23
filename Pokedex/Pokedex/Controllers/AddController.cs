@@ -294,25 +294,25 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("add_legendary_type")]
-        public IActionResult LegendaryType()
+        [Route("add_special_grouping")]
+        public IActionResult SpecialGrouping()
         {
             return this.View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("add_legendary_type")]
-        public IActionResult LegendaryType(LegendaryType legendaryType)
+        [Route("add_special_grouping")]
+        public IActionResult SpecialGrouping(SpecialGrouping specialGrouping)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            this.dataService.AddObject(legendaryType);
+            this.dataService.AddObject(specialGrouping);
 
-            return this.RedirectToAction("LegendaryTypes", "Owner");
+            return this.RedirectToAction("SpecialGroupings", "Owner");
         }
 
         [HttpGet]
@@ -801,6 +801,7 @@ namespace Pokedex.Controllers
                 AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
                 AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
                 AllGenderRatios = new List<GenderRatioViewModel>(),
+                AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                 AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
             };
 
@@ -856,6 +857,7 @@ namespace Pokedex.Controllers
                     AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
                     AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
                     AllGenderRatios = new List<GenderRatioViewModel>(),
+                    AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
@@ -903,6 +905,7 @@ namespace Pokedex.Controllers
                     AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
                     AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
                     AllGenderRatios = new List<GenderRatioViewModel>(),
+                    AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                     AllGames = this.dataService.GetObjects<Game>("ReleaseDate, Id"),
                 };
 
@@ -1286,42 +1289,6 @@ namespace Pokedex.Controllers
             {
                 return this.RedirectToAction("Pokemon", "Owner");
             }
-        }
-
-        [HttpGet]
-        [Route("set_legendary_type/{pokemonId:int}")]
-        public IActionResult PokemonLegendaryDetails(int pokemonId)
-        {
-            PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
-            {
-                AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                PokemonId = pokemonId,
-                Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
-            };
-
-            return this.View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("set_legendary_type/{pokemonId:int}")]
-        public IActionResult PokemonLegendaryDetails(PokemonLegendaryViewModel pokemonLegendaryDetails)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                PokemonLegendaryViewModel model = new PokemonLegendaryViewModel()
-                {
-                    AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                    PokemonId = pokemonLegendaryDetails.PokemonId,
-                    Pokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonLegendaryDetails.PokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth"),
-                };
-
-                return this.View(model);
-            }
-
-            this.dataService.AddObject(pokemonLegendaryDetails);
-
-            return this.RedirectToAction("Pokemon", "Owner");
         }
     }
 }

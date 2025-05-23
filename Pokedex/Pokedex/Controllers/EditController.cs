@@ -254,6 +254,7 @@ namespace Pokedex.Controllers
                 AllCaptureRates = this.dataService.GetObjects<CaptureRate>("CatchRate"),
                 AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount"),
                 AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name"),
+                AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                 AllGenderRatios = new List<GenderRatioViewModel>(),
             };
 
@@ -318,6 +319,7 @@ namespace Pokedex.Controllers
                     model.AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount");
                     model.AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name");
                     model.AllGenderRatios = new List<GenderRatioViewModel>();
+                    model.AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>();
 
                     foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
                     {
@@ -374,6 +376,7 @@ namespace Pokedex.Controllers
                     model.AllEggCycles = this.dataService.GetObjects<EggCycle>("CycleCount");
                     model.AllExperienceGrowths = this.dataService.GetObjects<ExperienceGrowth>("Name");
                     model.AllGenderRatios = new List<GenderRatioViewModel>();
+                    model.AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>();
 
                     foreach (GenderRatio genderRatio in this.dataService.GetObjects<GenderRatio>())
                     {
@@ -426,6 +429,18 @@ namespace Pokedex.Controllers
                     if (p.PokedexNumber != pokemon.PokedexNumber)
                     {
                         p.PokedexNumber = pokemon.PokedexNumber;
+                        this.dataService.UpdateObject(p);
+                    }
+                }
+            }
+
+            if (oldPokemon.SpecialGroupingId != pokemon.SpecialGroupingId)
+            {
+                foreach (var p in altForms)
+                {
+                    if (p.SpecialGroupingId != pokemon.SpecialGroupingId)
+                    {
+                        p.SpecialGroupingId = pokemon.SpecialGroupingId;
                         this.dataService.UpdateObject(p);
                     }
                 }
@@ -1701,29 +1716,29 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("edit_legendary_type/{id:int}")]
-        public IActionResult LegendaryType(int id)
+        [Route("edit_special_grouping/{id:int}")]
+        public IActionResult SpecialGrouping(int id)
         {
-            LegendaryType model = this.dataService.GetObjectByPropertyValue<LegendaryType>("Id", id);
+            SpecialGrouping model = this.dataService.GetObjectByPropertyValue<SpecialGrouping>("Id", id);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("edit_legendary_type/{id:int}")]
-        public IActionResult LegendaryType(LegendaryType legendaryType)
+        [Route("edit_special_grouping/{id:int}")]
+        public IActionResult SpecialGrouping(SpecialGrouping specialGrouping)
         {
             if (!this.ModelState.IsValid)
             {
-                LegendaryType model = this.dataService.GetObjectByPropertyValue<LegendaryType>("Id", legendaryType.Id);
+                SpecialGrouping model = this.dataService.GetObjectByPropertyValue<SpecialGrouping>("Id", specialGrouping.Id);
 
                 return this.View(model);
             }
 
-            this.dataService.UpdateObject(legendaryType);
+            this.dataService.UpdateObject(specialGrouping);
 
-            return this.RedirectToAction("LegendaryTypes", "Owner");
+            return this.RedirectToAction("SpecialGroupings", "Owner");
         }
 
         [HttpGet]
@@ -1889,8 +1904,8 @@ namespace Pokedex.Controllers
         [Route("edit_alternate_forms/{pokemonId:int}")]
         public IActionResult AltForms(int pokemonId)
         {
-            Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth");
-            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Form").Where(x => x.Name == originalPokemon.Name && x.IsAltForm).ToList().ToList();
+            Pokemon originalPokemon = this.dataService.GetObjectByPropertyValue<Pokemon>("Id", pokemonId, "EggCycle, GenderRatio, Classification, Game, Game.Generation, ExperienceGrowth, SpecialGrouping");
+            List<Pokemon> pokemonList = this.dataService.GetObjects<Pokemon>(includes: "Game, Form, SpecialGrouping").Where(x => x.OriginalFormId == pokemonId).ToList();
             pokemonList.Where(x => x.IsAltForm).ForEach(x => x.Name = x.NameWithForm);
 
             AllAdminPokemonViewModel allPokemon = new AllAdminPokemonViewModel()
@@ -1903,7 +1918,6 @@ namespace Pokedex.Controllers
                 AllEggGroups = this.dataService.GetObjects<PokemonEggGroupDetail>(includes: "Pokemon, PrimaryEggGroup, SecondaryEggGroup"),
                 AllBaseStats = this.dataService.GetObjects<BaseStat>(includes: "Pokemon"),
                 AllEVYields = this.dataService.GetObjects<EVYield>(includes: "Pokemon"),
-                AllLegendaryDetails = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType"),
                 AllPokemonCaptureRates = this.dataService.GetAllPokemonWithCaptureRates(),
                 AllPokemonBaseHappinesses = this.dataService.GetAllPokemonWithBaseHappinesses(),
             };

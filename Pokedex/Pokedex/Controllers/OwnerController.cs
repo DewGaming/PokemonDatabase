@@ -194,18 +194,6 @@ namespace Pokedex.Controllers
             return this.View(model);
         }
 
-        [Route("legendary_type")]
-        public IActionResult LegendaryTypes()
-        {
-            LegendaryTypeViewModel model = new LegendaryTypeViewModel()
-            {
-                AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
-                AllPokemon = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType"),
-            };
-
-            return this.View(model);
-        }
-
         [Route("form")]
         public IActionResult Forms()
         {
@@ -310,6 +298,22 @@ namespace Pokedex.Controllers
         public IActionResult Sweets()
         {
             List<Sweet> model = this.dataService.GetObjects<Sweet>("Name");
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// The owner's page for managing Special Groupings in the database.
+        /// </summary>
+        /// <returns>The owner Special Groupings page.</returns>
+        [Route("special_groupings")]
+        public IActionResult SpecialGroupings()
+        {
+            SpecialGroupingViewModel model = new SpecialGroupingViewModel()
+            {
+                AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>("Name"),
+                AllPokemon = this.dataService.GetObjects<Pokemon>(includes: "SpecialGrouping"),
+            };
 
             return this.View(model);
         }

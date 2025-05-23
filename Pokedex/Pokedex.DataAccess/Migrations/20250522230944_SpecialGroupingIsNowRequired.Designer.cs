@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pokedex.DataAccess.Models;
 
 namespace Pokedex.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250522230944_SpecialGroupingIsNowRequired")]
+    partial class SpecialGroupingIsNowRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -507,6 +509,23 @@ namespace Pokedex.DataAccess.Migrations
                     b.ToTable("HuntingMethodGameDetails");
                 });
 
+            modelBuilder.Entity("Pokedex.DataAccess.Models.LegendaryType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LegendaryTypes");
+                });
+
             modelBuilder.Entity("Pokedex.DataAccess.Models.Mark", b =>
                 {
                     b.Property<int>("Id")
@@ -939,6 +958,28 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasIndex("PokemonId");
 
                     b.ToTable("PokemonGameDetails");
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonLegendaryDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LegendaryTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PokemonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LegendaryTypeId");
+
+                    b.HasIndex("PokemonId");
+
+                    b.ToTable("PokemonLegendaryDetails");
                 });
 
             modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonPageStat", b =>
@@ -1858,6 +1899,21 @@ namespace Pokedex.DataAccess.Migrations
                     b.HasOne("Pokedex.DataAccess.Models.Game", "Game")
                         .WithMany()
                         .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Pokedex.DataAccess.Models.Pokemon", "Pokemon")
+                        .WithMany()
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pokedex.DataAccess.Models.PokemonLegendaryDetail", b =>
+                {
+                    b.HasOne("Pokedex.DataAccess.Models.LegendaryType", "LegendaryType")
+                        .WithMany()
+                        .HasForeignKey("LegendaryTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

@@ -75,7 +75,7 @@
                 <tr>
                     <th>Pokémon Name</th>
                     <td>
-                        @if (Model.Form != null)
+                        @if (Model.Pokemon.IsAltForm)
                         {
                             @(Model.Pokemon.NameWithForm)
                         }

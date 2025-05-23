@@ -1,0 +1,32 @@
+@model Pokedex.Models.SpecialGroupingViewModel;
+
+<div class="specialGroupingsTable">
+    @if (this.User.IsInRole("Owner"))
+    {
+        <p>
+            <a class="btn btn-primary" href="@this.Url.Action("SpecialGrouping", "Add")" role="button">Add Special Grouping</a>
+        </p>
+    }
+    <table class="table">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        @foreach (var item in Model.AllSpecialGroupings)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a href="@(this.Url.Action("SpecialGrouping", "Edit", new { id = item.Id }))">Edit</a>
+                    @if (!(Model.AllPokemon.Exists(x => x.SpecialGroupingId == item.Id)))
+                    {
+                        @('|')
+                        <a href="@(this.Url.Action("SpecialGrouping", "Delete", new { id = item.Id }))">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

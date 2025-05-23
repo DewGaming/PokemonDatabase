@@ -123,19 +123,15 @@
             </li>
         </section>
         <section class="generatorSection">
-            <span class="generationOptionTitle" id=legendary>Legendaries</span>
-            @foreach(var l in Model.AllLegendaryTypes)
+            <span class="generationOptionTitle" id=specialGroupings>Special Groupings</span>
+            @foreach(var s in Model.AllSpecialGroupings)
             {
-                <li class="dropdown-item generatorOption legendaryCheckbox">
-                    <input id=@l.Type.Replace(" ", @String.Empty) type="checkbox" value=@l.Type.Replace(" ", @String.Empty) checked="checked" />
-                    <label for=@l.Type.Replace(" ", @String.Empty) class="generatorOptionTitle">@(l.Type.Last() == 'y' ? @l.Type.Replace("y", "ies") : @l.Type += 's')</label>
+                <li class="dropdown-item generatorOption specialGroupingCheckbox">
+                    <input id=specialGrouping@(s.Name.Replace(" ", @String.Empty)) type="checkbox" value=@s.Name.Replace(" ", @String.Empty) checked="checked" />
+                    <label for=specialGrouping@(s.Name.Replace(" ", @String.Empty)) class="generatorOptionTitle">@(s.Name.Last() == 'y' ? s.Name.Replace("y", "ies") : s.Name += 's')</label>
                 </li>
             }
             <span class="generationOptionTitle" id="otherOptions">Other Options</span>
-            <li class="dropdown-item generatorOption otherOption legendaryBoolCheckbox">
-                <input id="legendaryBool" type="checkbox" value="legendaryBool" />
-                <label for="legendaryBool" class="generatorOptionTitle">Only Show Legendaries</label>
-            </li>
             <li class="dropdown-item generatorOption otherOption multipleMegaBoolCheckbox">
                 <input id="multipleMegaBool" type="checkbox" value="multipleMegaBool" />
                 <label for="multipleMegaBool" class="generatorOptionTitle">Show Multiple Megas</label>

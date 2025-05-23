@@ -24,9 +24,9 @@ namespace Pokedex.Models
         public List<Type> AllTypes { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of all legendary types.
+        /// Gets or sets a list of all special groupings.
         /// </summary>
-        public List<LegendaryType> AllLegendaryTypes { get; set; }
+        public List<SpecialGrouping> AllSpecialGroupings { get; set; }
 
         /// <summary>
         /// Gets or sets a list of all form groups.

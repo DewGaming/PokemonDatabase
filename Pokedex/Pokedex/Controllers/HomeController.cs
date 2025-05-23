@@ -166,7 +166,6 @@ namespace Pokedex.Controllers
         {
             List<Pokemon> allPokemon = this.dataService.GetAllPokemon();
             List<Generation> generations = this.dataService.GetObjects<Generation>();
-            List<DataAccess.Models.Type> types = this.dataService.GetObjects<DataAccess.Models.Type>("Name");
             List<Game> selectableGames = this.dataService.GetGamesGroupedByReleaseDate().Where(x => x.Id != 43).ToList();
 
             foreach (var gen in generations)
@@ -181,8 +180,8 @@ namespace Pokedex.Controllers
             TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
             {
                 AllGames = selectableGames,
-                AllTypes = types,
-                AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
+                AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
+                AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                 AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
                 AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup", "AppearInTeamRandomizer", true),
                 IncompleteCount = allPokemon.Where(x => !x.IsComplete).Count(),
@@ -372,7 +371,7 @@ namespace Pokedex.Controllers
                 }
                 else
                 {
-                    pokemon = pokemonList.Find(x => x.Name.ToString().Contains(name, StringComparison.OrdinalIgnoreCase));
+                    pokemon = pokemonList.Find(x => x.Name.ToString().Equals(name, StringComparison.OrdinalIgnoreCase));
                     pokemonId = pokemon.Id;
                 }
 

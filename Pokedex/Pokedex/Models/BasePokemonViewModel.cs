@@ -47,5 +47,10 @@ namespace Pokedex.Models
         /// Gets or sets a list of all base happiness.
         /// </summary>
         public List<BaseHappiness> AllBaseHappinesses { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all base happiness.
+        /// </summary>
+        public List<SpecialGrouping> AllSpecialGroupings { get; set; }
     }
 }

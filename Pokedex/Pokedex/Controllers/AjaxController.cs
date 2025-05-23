@@ -510,7 +510,7 @@ namespace Pokedex.Controllers
         /// <param name="selectedGens">The generations allowed for generation.</param>
         /// <param name="selectedTypes">The types allowed for generation.</param>
         /// <param name="selectedGameId">The specific game used for generation.</param>
-        /// <param name="selectedLegendaries">The specific legendary classifications available for generation.</param>
+        /// <param name="selectedSpecialGroupings">The specific special groupings available for generation.</param>
         /// <param name="selectedForms">The specific forms available for generation.</param>
         /// <param name="selectedEvolutions">The specific evolution classification available for generation.</param>
         /// <param name="onlyLegendaries">Whether or not only legendaries are allowed for generation.</param>
@@ -524,7 +524,7 @@ namespace Pokedex.Controllers
         /// <param name="onlyUseRegionalDexes">Whether or not pokemon only in the regional dex are allowed for generation.</param>
         /// <returns>The view model of the generated pokemon team.</returns>
         [Route("get-pokemon-team")]
-        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, List<int> selectedTypes, int selectedGameId, List<string> selectedLegendaries, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool monotypeOnly, bool noRepeatType, bool allowIncomplete, bool onlyUseRegionalDexes)
+        public TeamRandomizerViewModel GetPokemonTeam(int pokemonCount, List<int> selectedGens, List<int> selectedTypes, int selectedGameId, List<string> selectedSpecialGroupings, List<string> selectedForms, List<string> selectedEvolutions, bool onlyLegendaries, bool onlyAltForms, bool multipleMegas, bool multipleGMax, bool onePokemonForm, bool monotypeOnly, bool noRepeatType, bool allowIncomplete, bool onlyUseRegionalDexes)
         {
             if (this.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -539,7 +539,7 @@ namespace Pokedex.Controllers
                 // selectedGens = new List<int>() {  };
                 // selectedEvolutions = new List<string>() {  };
                 // selectedForms = new List<string>() {  };
-                // selectedLegendaries = new List<string>() {  };
+                // selectedSpecialGroupings = new List<string>() {  };
                 // onlyLegendaries = false;
                 // onlyAltForms = false;
                 // multipleMegas = false;
@@ -553,9 +553,8 @@ namespace Pokedex.Controllers
                 {
                     Random rnd = new Random();
                     Game selectedGame = new Game();
-                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, Pokemon.Form, PrimaryType, SecondaryType");
-                    List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "Game, Form").Where(x => selectedGens.Contains(x.Game.GenerationId)).ToList();
-                    int legendaryTypeCount = this.dataService.GetObjects<LegendaryType>().Count();
+                    List<PokemonTypeDetail> pokemonTypeDetails = this.dataService.GetObjects<PokemonTypeDetail>("GenerationId", "Pokemon, Pokemon.Game, Pokemon.Form, Pokemon.SpecialGrouping, PrimaryType, SecondaryType");
+                    List<Pokemon> allPokemon = this.dataService.GetObjects<Pokemon>("PokedexNumber, Id", "Game, Form, SpecialGrouping").Where(x => selectedGens.Contains(x.Game.GenerationId)).ToList();
                     Pokemon pokemon;
                     List<Pokemon> altForms = new List<Pokemon>();
                     PokemonTypeDetail typing;
@@ -585,9 +584,9 @@ namespace Pokedex.Controllers
                     }
 
                     pokemonTypeDetails = pokemonTypeDetails.GroupBy(x => new { x.PokemonId }).Select(x => x.LastOrDefault()).ToList();
-                    if (selectedLegendaries.Count() < legendaryTypeCount || onlyLegendaries)
+                    if (selectedSpecialGroupings.Count() < this.dataService.GetObjects<SpecialGrouping>().Count())
                     {
-                        allPokemon = this.FilterLegendaries(allPokemon.Where(x => !x.IsAltForm).ToList(), selectedLegendaries, onlyLegendaries);
+                        allPokemon = this.FilterSpecialGroupings(allPokemon, selectedSpecialGroupings);
                     }
 
                     allPokemon = this.FilterForms(allPokemon, selectedForms, selectedGame, onlyAltForms, multipleMegas, multipleGMax);
@@ -715,7 +714,7 @@ namespace Pokedex.Controllers
                         commentBody = string.Concat(commentBody, " - Selected Types: {", string.Join(", ", allTypes.Where(x => selectedTypes.Any(y => y == x.Id)).Select(x => x.Name)), "}");
                         commentBody = string.Concat(commentBody, " - Selected Evolutions: {", string.Join(", ", selectedEvolutions), "}");
                         commentBody = string.Concat(commentBody, " - Selected Forms: {", string.Join(", ", selectedForms), "}");
-                        commentBody = string.Concat(commentBody, " - Selected Legendary Types: {", string.Join(", ", selectedLegendaries), "}");
+                        commentBody = string.Concat(commentBody, " - Selected Special Grouping: {", string.Join(", ", selectedSpecialGroupings), "}");
                         commentBody = string.Concat(commentBody, " - Only Legendaries: ", onlyLegendaries);
                         commentBody = string.Concat(commentBody, " - Only Alternate Forms: ", onlyAltForms);
                         commentBody = string.Concat(commentBody, " - Multiple Megas: ", multipleMegas);
@@ -1693,11 +1692,10 @@ namespace Pokedex.Controllers
                 {
                     if (selectedGame != 0)
                     {
-                        List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Game", whereProperty: "GameId", wherePropertyValue: selectedGame).Where(x => !x.Pokemon.IsAltForm).ToList();
+                        List<PokemonGameDetail> availablePokemon = this.dataService.GetObjects<PokemonGameDetail>(includes: "Pokemon, Pokemon.SpecialGrouping, Game", whereProperty: "GameId", wherePropertyValue: selectedGame).Where(x => !x.Pokemon.IsAltForm).ToList();
                         List<Pokemon> allPokemon = this.dataService.GetAllPokemon().Where(x => availablePokemon.Any(y => y.PokemonId == x.Id)).ToList();
                         Generation selectedGen = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame, "Generation").Generation;
                         List<Generation> generationList = this.dataService.GetObjects<Generation>().Where(x => x.Id <= selectedGen.Id).ToList();
-                        List<LegendaryType> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type");
                         List<Generation> availableGenerations = new List<Generation>();
                         Game game = this.dataService.GetObjectByPropertyValue<Game>("Id", selectedGame);
 
@@ -1709,16 +1707,11 @@ namespace Pokedex.Controllers
                             }
                         }
 
-                        if (game.ReleaseDate < new DateTime(2016, 11, 18))
-                        {
-                            legendaryTypes.Remove(legendaryTypes.Find(x => x.Type == "Ultra Beast"));
-                        }
-
                         TeamRandomizerListViewModel model = new TeamRandomizerListViewModel()
                         {
                             AllGenerations = availableGenerations,
                             AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name").Where(x => x.GenerationId <= selectedGen.Id).ToList(),
-                            AllLegendaryTypes = legendaryTypes,
+                            AllSpecialGroupings = availablePokemon.Select(x => x.Pokemon.SpecialGrouping).DistinctBy(x => x.Id).OrderBy(x => x.Id).ToList(),
                             AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
                             AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup"),
                         };
@@ -1731,7 +1724,7 @@ namespace Pokedex.Controllers
                         {
                             AllGenerations = this.dataService.GetObjects<Generation>().Where(x => this.dataService.GetObjects<Pokemon>(includes: "Game").Where(x => !x.IsAltForm).Any(y => y.Game.GenerationId == x.Id)).ToList(),
                             AllTypes = this.dataService.GetObjects<DataAccess.Models.Type>("Name"),
-                            AllLegendaryTypes = this.dataService.GetObjects<LegendaryType>("Type"),
+                            AllSpecialGroupings = this.dataService.GetObjects<SpecialGrouping>(),
                             AllFormGroups = this.dataService.GetObjects<FormGroup>("Name", whereProperty: "AppearInTeamRandomizer", wherePropertyValue: true),
                             AllFormGroupGameDetails = this.dataService.GetObjects<FormGroupGameDetail>("FormGroup.Name", "FormGroup"),
                         };
@@ -3161,30 +3154,16 @@ namespace Pokedex.Controllers
             return formDetails;
         }
 
-        private List<Pokemon> FilterLegendaries(List<Pokemon> pokemonList, List<string> selectedLegendaries, bool onlyLegendaries)
+        private List<Pokemon> FilterSpecialGroupings(List<Pokemon> pokemonList, List<string> selectedSpecialGroupings)
         {
             try
             {
-                List<PokemonLegendaryDetail> allLegendaries = this.dataService.GetObjects<PokemonLegendaryDetail>(includes: "Pokemon, LegendaryType");
-
-                if (selectedLegendaries.Count() > 0)
+                if (selectedSpecialGroupings.Count() > 0)
                 {
-                    List<string> legendaryTypes = this.dataService.GetObjects<LegendaryType>("Type").ConvertAll(x => x.Type);
-                    foreach (var legendary in legendaryTypes.Except(selectedLegendaries).ToList())
+                    List<string> specialGroupings = this.dataService.GetObjects<SpecialGrouping>().ConvertAll(x => x.Name);
+                    foreach (var specialGrouping in specialGroupings.Except(selectedSpecialGroupings).ToList())
                     {
-                        pokemonList.RemoveAll(x => allLegendaries.Any(y => y.LegendaryType.Type == legendary && y.PokemonId == x.Id));
-                    }
-
-                    if (onlyLegendaries)
-                    {
-                        pokemonList = pokemonList.Where(x => allLegendaries.Any(y => y.PokemonId == x.Id)).ToList();
-                    }
-                }
-                else
-                {
-                    foreach (var p in allLegendaries)
-                    {
-                        pokemonList.Remove(pokemonList.Find(x => x.Id == p.PokemonId));
+                        pokemonList = pokemonList.Where(x => x.SpecialGrouping.Name != specialGrouping).ToList();
                     }
                 }
 
@@ -3198,15 +3177,14 @@ namespace Pokedex.Controllers
 
                     if (e != null)
                     {
-                        commentBody = string.Concat(e.GetType().ToString(), " error during team generation. More specifically while filtering legendaries.");
+                        commentBody = string.Concat(e.GetType().ToString(), " error during team generation. More specifically while filtering special groupings.");
                     }
                     else
                     {
-                        commentBody = "Unknown error during team generation. More specifically while filtering legendaries.";
+                        commentBody = "Unknown error during team generation. More specifically while filtering special groupings.";
                     }
 
-                    commentBody = string.Concat(commentBody, " - Selected Legendary Types: {", string.Join(", ", selectedLegendaries), "}");
-                    commentBody = string.Concat(commentBody, " - Only Legendaries: ", onlyLegendaries);
+                    commentBody = string.Concat(commentBody, " - Selected Special Groupings: {", string.Join(", ", selectedSpecialGroupings), "}");
 
                     Comment comment = new Comment()
                     {
@@ -3231,7 +3209,7 @@ namespace Pokedex.Controllers
         {
             try
             {
-                if (formList.Count() != 0 && formList.Count() < 7)
+                if (formList.Count() > 0)
                 {
                     List<Pokemon> availableForms = new List<Pokemon>();
                     if (formList.Where(x => x != "Other").Count() > 0)
@@ -3261,6 +3239,10 @@ namespace Pokedex.Controllers
                 if (onlyAltForms)
                 {
                     pokemonList = pokemonList.Where(x => x.IsAltForm).ToList();
+                }
+                else if (formList.Count() == 0)
+                {
+                    pokemonList = pokemonList.Where(x => !x.IsAltForm).ToList();
                 }
 
                 return pokemonList;

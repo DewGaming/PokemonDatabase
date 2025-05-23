@@ -405,22 +405,22 @@ namespace Pokedex.Controllers
         }
 
         [HttpGet]
-        [Route("delete_legendary_type/{id:int}")]
-        public IActionResult LegendaryType(int id)
+        [Route("delete_special_grouping/{id:int}")]
+        public IActionResult SpecialGrouping(int id)
         {
-            LegendaryType model = this.dataService.GetObjectByPropertyValue<LegendaryType>("Id", id);
+            SpecialGrouping model = this.dataService.GetObjectByPropertyValue<SpecialGrouping>("Id", id);
 
             return this.View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("delete_legendary_type/{id:int}")]
-        public IActionResult LegendaryType(LegendaryType legendaryType)
+        [Route("delete_special_grouping/{id:int}")]
+        public IActionResult SpecialGrouping(SpecialGrouping specialGrouping)
         {
-            this.dataService.DeleteObject<LegendaryType>(legendaryType.Id);
+            this.dataService.DeleteObject<SpecialGrouping>(specialGrouping.Id);
 
-            return this.RedirectToAction("LegendaryTypes", "Owner");
+            return this.RedirectToAction("SpecialGroupings", "Owner");
         }
 
         [HttpGet]

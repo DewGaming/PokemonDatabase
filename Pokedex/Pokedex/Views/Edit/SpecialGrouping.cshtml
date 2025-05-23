@@ -1,6 +1,6 @@
-@model Pokedex.DataAccess.Models.LegendaryType
+@model Pokedex.DataAccess.Models.SpecialGrouping
 
-<h2>Update Legendary Type</h2>
+<h2>Update Special Grouping</h2>
 
 <div class="form-horizontal">
 
@@ -13,9 +13,9 @@
         @Html.ValidationSummary()
 
         <div class="form-group row">
-            @Html.LabelFor(x => x.Type, new { @class = "col-md-2" })
-            @Html.EditorFor(x => x.Type, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
-            @Html.ValidationMessageFor(x => x.Type)
+            @Html.LabelFor(x => x.Name, new { @class = "col-md-2" })
+            @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @autocomplete = "off", @class = "form-control col-md-8" } })
+            @Html.ValidationMessageFor(x => x.Name)
         </div>
 
         <p>

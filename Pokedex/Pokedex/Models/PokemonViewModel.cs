@@ -14,16 +14,6 @@ namespace Pokedex.Models
         public Pokemon Pokemon { get; set; }
 
         /// <summary>
-        /// Gets or sets the pokemon's form, if applicable.
-        /// </summary>
-        public Form Form { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pokemon's legendary type, if applicable.
-        /// </summary>
-        public LegendaryType LegendaryType { get; set; }
-
-        /// <summary>
         /// Gets or sets the pokemon's base happinesses.
         /// </summary>
         public List<PokemonBaseHappinessDetail> BaseHappinesses { get; set; }

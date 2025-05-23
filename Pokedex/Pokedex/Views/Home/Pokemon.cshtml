@@ -45,6 +45,7 @@
     <script src="~/js/pageLookup.js" asp-append-version="true"></script>
 }
 
+<meta name="robots" content="noindex, nofollow" />
 @Html.HiddenFor(x => x.LatestGenerationId)
 @Html.HiddenFor(x => x.PokemonList.First().Pokemon.Name)
 
@@ -295,11 +296,11 @@
                             <th>Classification</th>
                             <td>@item.Pokemon.Classification.Name</td>
                         </tr>
-                        @if (item.LegendaryType != null)
+                        @if (item.Pokemon.SpecialGroupingId != 1)
                         {
                             <tr>
-                                <th>Legendary Classification</th>
-                                <td>@item.LegendaryType.Type</td>
+                                <th>Special Grouping</th>
+                                <td>@item.Pokemon.SpecialGrouping.Name</td>
                             </tr>
                         }
                         <tr>
@@ -318,7 +319,7 @@
                                             inches -= 12;
                                         }
 
-                                        height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Form != null && item.Form.Name.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
+                                        height = string.Concat(feet, "'", inches.ToString("D2"), "\"", (item.Pokemon.IsAltForm && item.Pokemon.NameWithForm.Contains("Gigantamax")) ? "+" : string.Empty, " (", @item.Pokemon.Height.ToString("F1"), (item.Pokemon.IsAltForm && item.Pokemon.NameWithForm.Contains("Gigantamax")) ? "+" : string.Empty, " m)");
                                     }
                                     else
                                     {

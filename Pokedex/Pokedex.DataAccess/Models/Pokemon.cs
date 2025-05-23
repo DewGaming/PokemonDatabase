@@ -40,15 +40,18 @@ namespace Pokedex.DataAccess.Models
         [Display(Name = "Form")]
         public int? FormId { get; set; }
         public Form Form { get; set; }
+        [Required, Display(Name = "Special Group")]
+        public int SpecialGroupingId { get; set; }
+        public SpecialGrouping SpecialGrouping { get; set; }
         [Display(Name = "Has Gender Difference (Appearance Only)")]
         public bool HasGenderDifference { get; set; }
         [Display(Name = "Has Home Artwork")]
         public bool HasHomeArtwork { get; set; }
         [Display(Name = "Has Shiny Artwork")]
         public bool HasShinyArtwork { get; set; }
-        [Required, NotMapped]
+        [NotMapped]
         public bool IsAltForm { get { return OriginalFormId != null; } }
-        [Required, NotMapped]
+        [NotMapped]
         public string NameWithForm
         {
             get

@@ -46,8 +46,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<Type> Types { get; set; }
         public DbSet<TypeChart> TypeCharts { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<PokemonLegendaryDetail> PokemonLegendaryDetails { get; set; }
-        public DbSet<LegendaryType> LegendaryTypes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<FormItem> FormItems { get; set; }
@@ -73,5 +71,6 @@ namespace Pokedex.DataAccess.Models
         public DbSet<RegionalDexEntry> RegionalDexEntries { get; set; }
         public DbSet<PokeballGameDetail> PokeballGameDetails { get; set; }
         public DbSet<Sweet> Sweets { get; set; }
+        public DbSet<SpecialGrouping> SpecialGroupings { get; set; }
     }
 }

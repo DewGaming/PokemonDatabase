@@ -1,6 +1,6 @@
-@model Pokedex.DataAccess.Models.LegendaryType
+@model Pokedex.DataAccess.Models.SpecialGrouping
 
-<h2>Delete Legendary Type Confirm</h2>
+<h2>Delete Special Grouping Confirm</h2>
 
 <div class="form-horizontal">
 
@@ -11,8 +11,8 @@
         @Html.HiddenFor(x => x.Id)
 
         <div class="form-group">
-            @Html.LabelFor(x => x.Type):
-            @Html.DisplayFor(x => x.Type, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(x => x.Name):
+            @Html.DisplayFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" } })
         </div>
 
         <p>
