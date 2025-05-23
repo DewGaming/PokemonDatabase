@@ -76,7 +76,7 @@ namespace Pokedex
 
             services.AddStaticRobotsTxt(robots =>
             {
-                robots.AddSection(section => section.AddUserAgent("*").Disallow("/admin/"));
+                robots.AddSection(section => section.AddUserAgent("*").Disallow("/admin/").Disallow("/pokemon/"));
 
                 return robots;
             });
