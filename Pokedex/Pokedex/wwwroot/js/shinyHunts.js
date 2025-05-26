@@ -64,6 +64,10 @@ $('.currentEncounters.pointer').on('click', function () {
     adjustEncountersManually($(this).prop('id'));
 });
 
+$('.pokemonNotes[title]').on('click', function() {
+    alert($(this).attr('title'))
+})
+
 function lookupHuntsInGame(element, gameId) {
     if (!$('.active').is($('#Game' + gameId))) {
         $('button').each(function () {

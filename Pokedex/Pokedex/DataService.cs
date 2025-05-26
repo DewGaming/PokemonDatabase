@@ -877,7 +877,7 @@ namespace Pokedex
                 else if (game.GenerationId == 6)
                 {
                     pokemonList.Remove(pokemonList.Find(x => x.Name.Contains("Zygarde")));
-                    List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio, Form").Where(x => x.Name == "Zygarde" && x.Form.Name != "Complete").ToList();
+                    List<Pokemon> zygardeList = this.GetObjects<Pokemon>(includes: "GenderRatio, Form").Where(x => x.Name == "Zygarde" && (!x.IsAltForm || x.Form.Name != "Complete")).ToList();
                     zygardeList.Where(x => x.IsAltForm).ToList().ForEach(x => x.Name = x.NameWithForm);
                     pokemonList.AddRange(zygardeList);
                 }
