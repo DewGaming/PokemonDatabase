@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "kpy": "^1.9.0",
+    "copyfiles": "^2.4.1",
     "npm": "^11.4.1",
-    "npx": "^10.2.2",
+    "npm-check-updates": "^18.0.1",
     "rimraf": "^6.0.1",
     "set-value": "^4.1.0",
     "uglifyjs-folder": "^3.3.0"
@@ -18,7 +18,8 @@
     "build": "npm run remove-build-folders && npm run build-app && npm run copy-to-dist && npm run minify && echo Done!",
     "build-app": "dotnet publish Pokedex.generated.sln -c Release",
     "clean-build": "npm run remove-build-folders && npm run build-app",
-    "copy-to-dist": "npx kpy bin/Release/netcoreapp3.1/publish/ ** !package.json !package-lock.json !stylecop.json .dist",
+    "copy-to-dist": "npx copyfiles -u 4 bin/Release/netcoreapp3.1/publish/**/* .dist && npm run remove-json-files",
+    "remove-json-files": "rm .dist/package.json && rm .dist/package-lock.json && rm .dist/stylecop.json",
     "database-update": "npm run remove-build-folders && dotnet ef database update -p ..\\Pokedex.DataAccess\\Pokedex.DataAccess.csproj -c DataContext",
     "dependencies-update": "npx ncu -u && npm install",
     "minify": "npm run minify-css & npm run minify-js",
