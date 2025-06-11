@@ -489,6 +489,7 @@ namespace Pokedex
                 eggGroupDetails = eggGroupDetails.Where(x => gameAvailability.Any(z => z.Id == x.PokemonId)).ToList();
             }
 
+            eggGroupDetails.Where(x => x.Pokemon.IsAltForm).ForEach(x => x.Pokemon.Name = x.Pokemon.NameWithForm);
             eggGroupDetails = eggGroupDetails.OrderBy(x => x.Pokemon.Name).ToList();
 
             return eggGroupDetails;
