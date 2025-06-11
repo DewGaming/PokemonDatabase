@@ -13,6 +13,8 @@ else
     <h2>Stats for @Model.First().VisitDate.ToString("yyyy")</h2>
 }
 
+<h2>Total Page Visits: @Model.Where(x => x.Name != "Random Team Generated" && x.Name != "Save Pokemon Team from Team Randomizer" && x.Name != "Shiny Pokemon found in Team Randomizer").Count()</h2>
+
 <table class="table">
     <tbody>
         <tr>
