@@ -654,9 +654,13 @@
                             for (var i = 0; i < 2; i++)
                             {
                                 <td class="noMatch">
-                                    @if ((Model.AllPokemon[i].Pokemon.GenderRatio.MaleRatio == 0 && Model.AllPokemon[i].Pokemon.GenderRatio.FemaleRatio == 0) || Model.AllGames[i].GenerationId == 1)
+                                    @if ((i == 0 && firstGame.GenerationId == 1) || (i == 1 && secondGame.GenerationId == 1))
                                     {
                                         @("No Gender")
+                                    }
+                                    else if ((Model.AllPokemon[i].Pokemon.GenderRatio.MaleRatio == 0 && Model.AllPokemon[i].Pokemon.GenderRatio.FemaleRatio == 0) || Model.AllGames[i].GenerationId == 1)
+                                    {
+                                        @("Gender Unknown")
                                     }
                                     else
                                     {
@@ -709,7 +713,7 @@
                             {
                                 @for (var i = 0; i < 2; i++)
                                 {
-                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryEggGroup != null)
+                                    @if (Model.AllGames[i].GenerationId >= 2 && Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryEggGroup != null)
                                     {
                                         <td class="noMatch">@Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).PrimaryEggGroup.Name</td>
                                     }
@@ -732,7 +736,7 @@
                             {
                                 @for (var i = 0; i < 2; i++)
                                 {
-                                    @if (Model.AllGames[i].GenerationId >= 3 && Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryEggGroup != null)
+                                    @if (Model.AllGames[i].GenerationId >= 2 && Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryEggGroup != null)
                                     {
                                         <td class="noMatch">@Model.AllPokemon[i].EggGroups.OrderByDescending(x => x.GenerationId).First(x => x.GenerationId <= Model.AllGames[i].GenerationId).SecondaryEggGroup.Name</td>
                                     }
@@ -868,9 +872,18 @@
                     <th colspan="2">Sp. Defense</th>
                 </tr>
                 <tr>
-                    @if (firstPokemonBaseStats.SpecialDefense == secondPokemonBaseStats.SpecialDefense)
+                    @if ((firstGame.GenerationId > 1 && secondGame.GenerationId > 1 && firstPokemonBaseStats.SpecialDefense == secondPokemonBaseStats.SpecialDefense) || (firstGame.GenerationId == 1 && secondGame.GenerationId > 1 && firstPokemonBaseStats.SpecialAttack == secondPokemonBaseStats.SpecialDefense) || (firstGame.GenerationId > 1 && secondGame.GenerationId == 1 && firstPokemonBaseStats.SpecialDefense == secondPokemonBaseStats.SpecialAttack))
                     {
-                        <td colspan="2" class="match">@firstPokemonBaseStats.SpecialDefense</td>
+                        <td colspan="2" class="match">
+                            @if (firstGame.GenerationId > 1)
+                            {
+                                @firstPokemonBaseStats.SpecialDefense
+                            }
+                            else
+                            {
+                                @secondPokemonBaseStats.SpecialDefense
+                            }
+                        </td>
                     }
                     else
                     {
